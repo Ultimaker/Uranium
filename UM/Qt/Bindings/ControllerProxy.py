@@ -16,18 +16,29 @@ class ControllerProxy(QObject):
         self._selection_pass = None
         self._tools_enabled = True
 
+        # bind needed signals
         self._controller.toolOperationStarted.connect(self._onToolOperationStarted)
         self._controller.toolOperationStopped.connect(self._onToolOperationStopped)
+        self._controller.activeStageChanged.connect(self._onActiveStageChanged)
 
     toolsEnabledChanged = pyqtSignal()
+    activeStageChanged = pyqtSignal()
 
     @pyqtProperty(bool, notify = toolsEnabledChanged)
     def toolsEnabled(self):
         return self._tools_enabled
 
+    @pyqtProperty(QObject, notify = activeStageChanged)
+    def activeStage(self):
+        return self._controller.getActiveStage()
+
     @pyqtSlot(str)
     def setActiveView(self, view):
         self._controller.setActiveView(view)
+
+    @pyqtSlot(str)
+    def setActiveStage(self, stage):
+        self._controller.setActiveStage(stage)
 
     @pyqtSlot(str)
     def setActiveTool(self, tool):
@@ -52,6 +63,14 @@ class ControllerProxy(QObject):
     def disableModelRendering(self):
         self._controller.disableModelRendering()
 
+    @pyqtSlot(str, int)
+    def rotateView(self,coordinate, angle):
+        self._controller.rotateView(coordinate, angle)
+
+    @pyqtSlot()
+    def homeView(self, angle):
+        self._controller.homeView()
+
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 
     def _onContextMenuRequested(self, x, y):
@@ -74,3 +93,6 @@ class ControllerProxy(QObject):
         self._tools_enabled = True
         self._controller.setToolsEnabled(True)
         self.toolsEnabledChanged.emit()
+
+    def _onActiveStageChanged(self):
+        self.activeStageChanged.emit()

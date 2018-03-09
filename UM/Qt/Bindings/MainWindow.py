@@ -36,6 +36,11 @@ class MainWindow(QQuickWindow):
         self._previous_focus = None  # type: Optional["QQuickItem"]
 
         self._app = QCoreApplication.instance()
+
+        # Remove previously added input devices (if any). This can happen if the window was re-loaded.
+        self._app.getController().removeInputDevice("qt_mouse")
+        self._app.getController().removeInputDevice("qt_key")
+
         self._app.getController().addInputDevice(self._mouse_device)
         self._app.getController().addInputDevice(self._key_device)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
@@ -65,10 +70,28 @@ class MainWindow(QQuickWindow):
         self._mouse_x = 0
         self._mouse_y = 0
 
+        self._mouse_pressed = False
+
         self._viewport_rect = QRectF(0, 0, 1.0, 1.0)
 
         Application.getInstance().setMainWindow(self)
         self._fullscreen = False
+
+        self._allow_resize = True
+
+    def setAllowResize(self, allow_resize: bool):
+        if self._allow_resize != allow_resize:
+            if not allow_resize:
+                self.setMaximumHeight(self.height())
+                self.setMinimumHeight(self.height())
+                self.setMaximumWidth(self.width())
+                self.setMinimumWidth(self.width())
+            else:
+                self.setMaximumHeight(16777215)
+                self.setMinimumHeight(0)
+                self.setMaximumWidth(16777215)
+                self.setMinimumWidth(0)
+            self._allow_resize = allow_resize
 
     @pyqtSlot()
     def toggleFullscreen(self):
@@ -123,10 +146,14 @@ class MainWindow(QQuickWindow):
 
         self._previous_focus = self.activeFocusItem()
         self._mouse_device.handleEvent(event)
+        self._mouse_pressed = True
 
     def mouseMoveEvent(self, event):
         self._mouse_x = event.x()
         self._mouse_y = event.y()
+
+        if self._mouse_pressed and self._app.getController().isModelRenderingEnabled():
+            self.mousePositionChanged.emit()
 
         super().mouseMoveEvent(event)
         if event.isAccepted():
@@ -139,6 +166,7 @@ class MainWindow(QQuickWindow):
         if event.isAccepted():
             return
         self._mouse_device.handleEvent(event)
+        self._mouse_pressed = False
 
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
@@ -175,13 +203,15 @@ class MainWindow(QQuickWindow):
         QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection)
 
     def hideEvent(self, event):
-        Application.getInstance().windowClosed()
+        if Application.getInstance().getMainWindow() == self:
+            Application.getInstance().windowClosed()
 
     renderCompleted = Signal(type = Signal.Queued)
 
     def _render(self):
         renderer = self._app.getRenderer()
         view = self._app.getController().getActiveView()
+
         renderer.beginRendering()
         view.beginRendering()
         renderer.render()

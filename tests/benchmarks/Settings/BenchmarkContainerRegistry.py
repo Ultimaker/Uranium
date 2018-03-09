@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os.path
@@ -6,8 +6,9 @@ import pytest
 
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Resources import Resources
-from UM.PluginRegistry import PluginRegistry
+
 from UM.Settings.ContainerRegistry import ContainerRegistry
+from UM.PluginRegistry import PluginRegistry
 
 @pytest.fixture
 def container_registry(application):
@@ -35,9 +36,22 @@ def container_registry(application):
         )
     )
 
+    ContainerRegistry.getInstance()._containers = {} # clear containers from previous iteration
+
+    PluginRegistry.getInstance().loadPlugin("LocalContainerProvider")
+    plugin = PluginRegistry.getInstance().getPluginObject("LocalContainerProvider")
+    ContainerRegistry.getInstance()._providers.append(plugin)
+
+    PluginRegistry.getInstance()._plugins.clear() # remove plugins
+
     Resources.addSearchPath(os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Settings")))
-    ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    PluginRegistry.getInstance().removeType("settings_container")
+
+
+    empty_container = ContainerRegistry.getInstance().getEmptyInstanceContainer()
+    empty_definition_changes_container = empty_container
+    empty_definition_changes_container.setMetaDataEntry("id", "empty_definition_changes")
+    empty_definition_changes_container.addMetaDataEntry("type", "definition_changes")
+    ContainerRegistry.getInstance().addContainer(empty_definition_changes_container)
 
     ContainerRegistry.getInstance().load()
 
@@ -45,12 +59,12 @@ def container_registry(application):
 
 
 benchmark_findContainers_data = [
-    { "id": "basic" },
+    { "id": 'basic_definition' },
     { "name": "Test"},
     { "name": "T*" },
     { "name": "Test", "category": "Test" },
     { "name": "*", "category": "*" },
-    { "id": "*setting*" }
+    { "id": "*metadata*" }
 ]
 
 @pytest.mark.parametrize("query_args", benchmark_findContainers_data)

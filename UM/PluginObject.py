@@ -7,6 +7,7 @@
 #   This class should be inherited by any class that can be provided
 #   by a plugin. Its only function is to serve as a mapping between
 #   the plugin and the object.
+
 class PluginObject:
     def __init__(self):
         self._plugin_id = None

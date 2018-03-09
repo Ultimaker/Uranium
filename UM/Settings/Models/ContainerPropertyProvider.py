@@ -96,7 +96,7 @@ class ContainerPropertyProvider(QObject):
         if not self._container or not self._key:
             return
 
-        if self._container.isReadOnly():
+        if ContainerRegistry.getInstance().isReadOnly(self._container_id):
             return
 
         if property_name not in self._watched_properties:

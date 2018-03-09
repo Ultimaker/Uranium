@@ -2,15 +2,11 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Job import Job
-from UM.Application import Application
 from UM.Message import Message
-from UM.Math.Vector import Vector
-from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshReader import MeshReader
 
 import time
-import math
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
@@ -52,7 +48,7 @@ class ReadFileJob(Job):
                 result_message.show()
             return
 
-        self._loading_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Loading <filename>{0}</filename>", self._filename),
+        self._loading_message = Message(self._filename,
                                         lifetime=0,
                                         dismissable=False,
                                         title = i18n_catalog.i18nc("@info:title", "Loading"))

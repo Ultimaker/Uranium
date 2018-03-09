@@ -72,7 +72,7 @@ class Vector(object):
     
     def normalized(self):
         l = self.length()
-        if l !=0:
+        if l != 0:
             new_data = self._data / l
             return Vector(data=new_data)
         else:

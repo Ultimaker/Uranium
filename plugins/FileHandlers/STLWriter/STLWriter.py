@@ -3,13 +3,10 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Mesh.MeshWriter import MeshWriter
-from UM.Scene.SceneNode import SceneNode
-from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Logger import Logger
 
 import time
 import struct
-import os
 
 class STLWriter(MeshWriter):
     ##  Write the specified sequence of nodes to a stream in the STL format.
@@ -23,6 +20,7 @@ class STLWriter(MeshWriter):
         try:
             MeshWriter._meshNodes(nodes).__next__()
         except:
+            Logger.log("e", "There is no mesh to write.")
             return False #Don't try to write a file if there is no mesh.
 
         if mode == MeshWriter.OutputMode.TextMode:
@@ -61,7 +59,7 @@ class STLWriter(MeshWriter):
                     stream.write("endfacet\n")
             else:
                 num_verts = mesh_data.getVertexCount()
-                for index in range(0, num_verts - 1, 3):
+                for index in range(0, num_verts - 2, 3):
                     stream.write("facet normal 0.0 0.0 0.0\n")
                     stream.write("  outer loop\n")
                     v1 = verts[index]

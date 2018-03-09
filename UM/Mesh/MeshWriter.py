@@ -34,6 +34,6 @@ class MeshWriter(FileWriter):
     def _meshNodes(nodes):
         for root in nodes:
             yield from filter(
-                lambda child: type(child) is SceneNode and child.getMeshData(),
+                lambda child: isinstance(child, SceneNode) and child.isSelectable() and child.getMeshData(),
                 BreadthFirstIterator(root)
             )

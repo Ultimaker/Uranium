@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 # This is a set of tests to test roundtripping for containers.
@@ -9,7 +9,8 @@
 # This is not strictly a unit test but more of a systems test.
 
 import pytest
-import multiprocessing
+import multiprocessing.pool
+import unittest.mock #For MagicMock and patch.
 
 from UM.SaveFile import SaveFile
 from UM.Settings.ContainerStack import ContainerStack
@@ -24,8 +25,6 @@ def write_data(path, data):
     if not isinstance(data, str):
         data = data.serialize()
 
-    print(data)
-
     with SaveFile(str(path), "wt") as f:
         f.write(data)
 
@@ -36,7 +35,7 @@ def read_data(path):
 ##  Run a function in one or more separate processes, waiting until all are finished.
 def mp_run(process_count, function, *args):
     results = []
-    with multiprocessing.Pool(process_count) as p:
+    with multiprocessing.pool.Pool(process_count) as p:
         for i in range(process_count):
             results.append(p.apply_async(function, args))
 
@@ -64,11 +63,9 @@ def test_roundtrip_basic(tmpdir, process_count):
         assert result == data
 
 def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
-    definition = loaded_container_registry.findDefinitionContainers(id = "inherits")[0]
-
     instance_container = InstanceContainer("test_container")
     instance_container.setName("Test Instance Container")
-    instance_container.setDefinition(definition)
+    instance_container.setDefinition("inherits")
     instance_container.addMetaDataEntry("test", "test")
     instance_container.setProperty("test_setting_1", "value", 20)
 
@@ -82,8 +79,9 @@ def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
 
     for result in results:
         deserialized_container = InstanceContainer("test_container")
-        deserialized_container.setDefinition(definition)
-        deserialized_container.deserialize(result)
+        deserialized_container.setDefinition("inherits")
+        with unittest.mock.patch("UM.Settings.ContainerRegistry.ContainerRegistry.getInstance", unittest.mock.MagicMock(return_value = loaded_container_registry)):
+            deserialized_container.deserialize(result)
 
         assert deserialized_container.getName() == instance_container.getName()
         assert deserialized_container.getMetaData() == instance_container.getMetaData()
@@ -117,7 +115,7 @@ def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
         assert deserialized_stack.getTop() == container_stack.getTop()
 
 
-def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
+def test_roundtrip_definition(tmpdir, process_count, loaded_container_registry):
     definition = loaded_container_registry.findDefinitionContainers(id = "multiple_settings")[0]
 
     temp_file = tmpdir.join("container_stack_test")
@@ -129,7 +127,7 @@ def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
     results = mp_run(process_count, read_data, temp_file)
 
     for result in results:
-        deserialized_definition = DefinitionContainer("test_definition")
+        deserialized_definition = DefinitionContainer("multiple_settings")
         deserialized_definition.deserialize(result)
 
         assert deserialized_definition.getName() == definition.getName()

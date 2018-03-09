@@ -11,6 +11,7 @@ from UM.Settings.SettingFunction import SettingFunction
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Settings.Interfaces import PropertyEvaluationContext
 from UM.Settings.SettingInstance import InstanceState
 from UM.Settings.SettingRelation import RelationType
 from UM.Settings.SettingDefinition import SettingDefinition
@@ -38,6 +39,8 @@ class SettingPropertyProvider(QObject):
         self._stack_levels = []
         self._remove_unused_value = True
         self._validator = None
+
+        self.storeIndexChanged.connect(self._update)
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
@@ -140,7 +143,7 @@ class SettingPropertyProvider(QObject):
     @pyqtProperty("QVariantList", notify = stackLevelChanged)
     def stackLevels(self):
         if not self._stack:
-            return -1
+            return [-1]
         return self._stack_levels
 
     ##  Set the value of a property.
@@ -327,12 +330,16 @@ class SettingPropertyProvider(QObject):
             self.stackLevelChanged.emit()
 
     def _getPropertyValue(self, property_name):
-        property_value = self._stack.getProperty(self._key, property_name)
+        # Use the evaluation context to skip certain containers
+        context = PropertyEvaluationContext(self._stack)
+        context.context["evaluate_from_container_index"] = self._store_index
+
+        property_value = self._stack.getProperty(self._key, property_name, context = context)
         if isinstance(property_value, SettingFunction):
             property_value = property_value(self._stack)
 
         if property_name == "value":
-            setting_type =self._stack.getProperty(self._key, "type")
+            setting_type = self._stack.getProperty(self._key, "type")
             if setting_type is not None:
                 property_value = SettingDefinition.settingValueToString(setting_type, property_value)
             else:
@@ -344,9 +351,10 @@ class SettingPropertyProvider(QObject):
             if property_value is None:
                 if not self._validator:
                     definition = self._stack.getSettingDefinition(self._key)
-                    validator_type = SettingDefinition.getValidatorForType(definition.type)
-                    if validator_type:
-                        self._validator = validator_type(self._key)
+                    if definition:
+                        validator_type = SettingDefinition.getValidatorForType(definition.type)
+                        if validator_type:
+                            self._validator = validator_type(self._key)
                 if self._validator:
                     property_value = self._validator(self._stack)
         return str(property_value)

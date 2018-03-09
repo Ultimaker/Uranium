@@ -39,7 +39,9 @@ class UpdateCheckerJob(Job):
         except Exception as e:
             Logger.log("w", "Failed to check for new version: %s" % e)
             if not self.silent:
-                Message(i18n_catalog.i18nc("@info", "Could not access update information."), title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
+                Message(i18n_catalog.i18nc("@info", "Could not access update information."),
+                    title = i18n_catalog.i18nc("@info:title", "Version Upgrade")
+                ).show()
             return
 
         try:
@@ -80,7 +82,7 @@ class UpdateCheckerJob(Job):
                 Logger.log("w", "Did not find any version information for %s." % application_name)
         except Exception:
             Logger.logException("e", "Exception in update checker while parsing the JSON file.")
-            Message(i18n_catalog.i18nc("@info", "An exception occurred while checking for updates."), title = i18n_catalog.i18nc("@info:title", "Error")).show()
+            Message(i18n_catalog.i18nc("@info", "An error occurred while checking for updates."), title = i18n_catalog.i18nc("@info:title", "Error")).show()
             no_new_version = False  # Just to suppress the message below.
 
         if no_new_version and not self.silent:

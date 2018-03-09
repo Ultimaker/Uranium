@@ -23,7 +23,7 @@ class RenderPass:
     #   less than this.
     MaximumPriority = 999
 
-    def __init__(self, name, width, height, priority = 0):
+    def __init__(self, name: str, width: int, height: int, priority:int = 0):
         self._name = name
         self._width = width
         self._height = height
@@ -38,6 +38,9 @@ class RenderPass:
     #   \return \type{string} The name of the render pass.
     def getName(self):
         return self._name
+
+    def getSize(self):
+        return self._width, self._height
 
     ##  Get the priority of this RenderPass.
     #
@@ -57,7 +60,7 @@ class RenderPass:
     #   \note This will recreate the storage object used by the render
     #   pass. Due to that, the contents will be invalid after resizing
     #   until the render pass is rendered again.
-    def setSize(self, width, height):
+    def setSize(self, width: int, height: int):
         if self._width != width or self._height != height:
             self._width = width
             self._height = height

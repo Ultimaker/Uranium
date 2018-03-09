@@ -1,14 +1,14 @@
 # Uranium
-# Copyright (C) 2017 Ultimaker
+# Copyright (C) 2018 Ultimaker
 # This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.0\n"
+"Project-Id-Version: Uranium 3.2\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-09-27 12:27+0200\n"
+"POT-Creation-Date: 2018-01-29 09:48+0000\n"
+"PO-Revision-Date: 2018-02-05 13:25+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Turkish <info@bothof.nl>\n"
 "Language: tr_TR\n"
@@ -43,59 +43,59 @@ msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
 msgstr "STL Dosyası (İkili)"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
 msgctxt "@info"
 msgid "Could not access update information."
 msgstr "Güncelleme bilgilerine erişilemedi."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Sürüm Yükseltme"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "Kullandığınız sürüm güncellemeleri denetlemeyi desteklemiyor."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Uyarı"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
 msgctxt "@info"
 msgid "A new version is available!"
 msgstr "Yeni bir sürüm mevcut!"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:80
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:72
 msgctxt "@action:button"
 msgid "Download"
 msgstr "İndir"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:92
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 msgctxt "@info"
-msgid "An exception occurred while checking for updates."
-msgstr "Güncellemelerin kontrolü sırasında olağanüstü bir durum oluştu."
+msgid "An error occurred while checking for updates."
+msgstr "Güncellemelerin kontrolü sırasında bir hata oluştu."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:92
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Hata"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Yeni sürüm bulunamadı."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:23
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Güncellemeleri Denetle"
@@ -221,19 +221,19 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Ayna Modeli"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:160
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:77
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:67
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:70
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Tüm desteklenen türler ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:163
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:192
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:78
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:68
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Tüm Dosyalar (*)"
@@ -277,17 +277,17 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} dakika"
 msgstr[1] "{0} dakika"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:111
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:114
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Eklentiler yükleniyor..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:117
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:119
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Yapılandırma güncelleniyor..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:128
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:130
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Tercihler yükleniyor..."
@@ -328,18 +328,18 @@ msgid ""
 "<message>{0}</message>"
 msgstr "Eklenti kurulumu başarısız oldu;\n<message>{0}</message>"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "Eski {0} versiyonundan bir yapılandırma içe aktarıldı."
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:46
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:50
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "OpenGL Başlatılamadı"
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:56
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:60
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteği gerektirir. Lütfen ekran kartı sürücülerinizi kontrol edin."
@@ -347,8 +347,8 @@ msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteğ
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> dosya türü açılamıyor"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr " <filename>{0}</filename> türündeki dosyalar açılamaz"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
@@ -364,12 +364,6 @@ msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "<filename>{0}</filename> yüklemesi başarısız oldu"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Loading <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> yükleniyor"
-
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
 msgctxt "@info:title"
 msgid "Loading"
@@ -381,15 +375,20 @@ msgctxt "@action:button"
 msgid "Reset"
 msgstr "Sıfırla"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:84
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Ölçeklendirmeyi Tuttur"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:101
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:104
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Ölçeklendirmeyi Aynı Yap"
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "Kilit Modeli"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
@@ -417,47 +416,47 @@ msgctxt "@label"
 msgid "You will need to restart the application before changes in plugins have effect."
 msgstr "Eklentilerde yapılan değişikliklerin geçerli olması için uygulamayı yeniden başlatmanız gerekecektir."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:94
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
 msgstr "Bu eklenti uygulamanın çalışması için gereklidir."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:110
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:111
 msgctxt "@label"
 msgid "Info..."
 msgstr "Bilgi..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:129
 msgctxt "@window:title"
 msgid "Install Plugin"
 msgstr "Eklenti Kur"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:137
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:138
 msgctxt "@title:window"
 msgid "Open file(s)"
 msgstr "Dosya aç"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:172
 msgctxt "@label"
 msgid "No text available"
 msgstr "Metin yok"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:177
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:178
 msgctxt "@title:window"
 msgid "About %1"
 msgstr "Yaklaşık %1"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:209
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:210
 msgctxt "@label"
 msgid "Author:"
 msgstr "Yazar:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:231
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:232
 msgctxt "@label"
 msgid "Version:"
 msgstr "Sürüm:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:249
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:250
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
@@ -496,7 +495,7 @@ msgstr "İptal Et"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
-msgid "Ok"
+msgid "OK"
 msgstr "Tamam"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
@@ -641,6 +640,16 @@ msgctxt "@action:button"
 msgid "Next"
 msgstr "İleri"
 
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "description"
+msgid "Example extension to instruct people on how to create Uranium extensions."
+msgstr "Uranium uzantıları oluşturma konusunda bilgilendirme amaçlı örnek uzantı."
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "name"
+msgid "Example Extension"
+msgstr "Örnek Uzantı"
+
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
@@ -711,6 +720,26 @@ msgctxt "name"
 msgid "Console Logger"
 msgstr "Konsol Günlükçüsü"
 
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "description"
+msgid "Example tool to instruct people on how to create Uranium tools."
+msgstr "Uranium araçları oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek araç."
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "name"
+msgid "Example Tool"
+msgstr "Örnek Araç"
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "description"
+msgid "Example output device to instruct people on how to create Uranium output devices."
+msgstr "Uranium çıktı cihazları oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek çıktı cihazı."
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "name"
+msgid "Example Output Device"
+msgstr "Örnek Çıktı Cihazı"
+
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
@@ -721,6 +750,16 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr "Güncelleme Denetleyicisi"
 
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "description"
+msgid "Example file reader to instruct people on how to create Uranium file readers."
+msgstr "Uranium dosya okuyucular oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek dosya okuyucu."
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "name"
+msgid "Example File Reader"
+msgstr "Örnek Dosya Okuyucu"
+
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
@@ -730,6 +769,16 @@ msgstr "Yerel dosyalara kaydetmeyi sağlar."
 msgctxt "name"
 msgid "Local File Output Device"
 msgstr "Yerel Dosya Çıkış Cihazı"
+
+#: LocalContainerProvider/plugin.json
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "Uygulamanın kurulumuyla birlikte gelen yerleşik ayar kapsayıcılarını sunar."
+
+#: LocalContainerProvider/plugin.json
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "Yerel Kapsayıcı Sağlayıcısı"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
@@ -790,6 +839,22 @@ msgstr "Ayna aracı sağlar."
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "Ayna Aracı"
+
+#~ msgctxt "@info"
+#~ msgid "An exception occurred while checking for updates."
+#~ msgstr "Güncellemelerin kontrolü sırasında olağanüstü bir durum oluştu."
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "<filename>{0}</filename> yükleniyor"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "<filename>{0}</filename> dosya türü açılamıyor"
+
+#~ msgctxt "@action:button"
+#~ msgid "Ok"
+#~ msgstr "Tamam"
 
 #~ msgctxt "@label"
 #~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"

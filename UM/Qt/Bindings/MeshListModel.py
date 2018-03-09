@@ -247,11 +247,11 @@ class MeshListModel(ListModel):
                         else:
                             self._collapsed_nodes.remove(node)
 
-    @pyqtSlot("long",QUrl)
-    def saveMesh(self,key,file_url):
+    @pyqtSlot("long", QUrl)
+    def saveMesh(self, key, file_url):
         for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
             if id(node) == key:
-                Application.getInstance().getMeshFileHandler().write(file_url.toLocalFile(),Application.getInstance().getStorageDevice("LocalFileStorage"),node.getMeshDataTransformed())
+                Application.getInstance().getMeshFileHandler().write(file_url.toLocalFile(), Application.getInstance().getStorageDevice("LocalFileStorage"), node.getMeshDataTransformed())
 
 
     #Remove mesh by key (triggered by context menu)

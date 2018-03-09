@@ -1,17 +1,13 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Job import Job
-from UM.Application import Application
 from UM.Message import Message
 from UM.Math.Vector import Vector
 from UM.Preferences import Preferences
 from UM.Logger import Logger
-from UM.Mesh.MeshReader import MeshReader
 
 from UM.FileHandler.ReadFileJob import ReadFileJob
 
-import time
 import math
 
 from UM.i18n import i18nCatalog
@@ -23,6 +19,8 @@ i18n_catalog = i18nCatalog("uranium")
 class ReadMeshJob(ReadFileJob):
     def __init__(self, filename):
         super().__init__(filename)
+        from UM.Application import Application
+        self._application = Application.getInstance()
         self._handler = Application.getInstance().getMeshFileHandler()
 
     def run(self):
@@ -32,9 +30,9 @@ class ReadMeshJob(ReadFileJob):
             self._result = []
 
         # Scale down to maximum bounds size if that is available
-        if hasattr(Application.getInstance().getController().getScene(), "_maximum_bounds"):
+        if hasattr(self._application.getController().getScene(), "_maximum_bounds"):
             for node in self._result:
-                max_bounds = Application.getInstance().getController().getScene()._maximum_bounds
+                max_bounds = self._application.getController().getScene()._maximum_bounds
                 node._resetAABB()
                 build_bounds = node.getBoundingBox()
 

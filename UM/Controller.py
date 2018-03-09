@@ -1,6 +1,5 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
 from UM.Scene.Scene import Scene
 from UM.Event import Event, MouseEvent, ToolEvent, ViewEvent
 from UM.Signal import Signal, signalemitter
@@ -9,8 +8,15 @@ from UM.PluginRegistry import PluginRegistry
 
 # Type hinting imports
 from UM.View.View import View
+from UM.Stage import Stage
 from UM.InputDevice import InputDevice
 from typing import Optional, Dict
+from UM.Math.Vector import Vector
+
+MYPY = False
+if MYPY:
+    from UM.Application import Application
+    from UM.Tool import Tool
 
 ##      Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
@@ -20,24 +26,29 @@ from typing import Optional, Dict
 #       \sa Scene
 @signalemitter
 class Controller:
-    def __init__(self, application):
+    def __init__(self, application: "Application"):
         super().__init__()  # Call super to make multiple inheritance work.
-        self._active_tool = None
+
+        self._scene = Scene()
+        self._application = application
+        self._is_model_rendering_enabled = True
+
+        self._active_view = None  # type: Optional[View]
+        self._views = {}  # type: Dict[str, View]
+
+        self._active_tool = None  # type: Optional[Tool]
         self._tool_operation_active = False
-        self._tools = {}
+        self._tools = {}  # type: Dict[str, Tool]
+        self._camera_tool = None
+        self._selection_tool = None
+        self._tools_enabled = True
+
+        self._active_stage = None
+        self._stages = {}
 
         self._input_devices = {}
 
-        self._active_view = None
-        self._views = {}
-        self._scene = Scene()
-        self._application = application
-        self._camera_tool = None
-        self._selection_tool = None
-
-        self._tools_enabled = True
-        self._is_model_rendering_enabled = True
-
+        PluginRegistry.addType("stage", self.addStage)
         PluginRegistry.addType("view", self.addView)
         PluginRegistry.addType("tool", self.addTool)
         PluginRegistry.addType("input_device", self.addInputDevice)
@@ -96,7 +107,7 @@ class Controller:
         except KeyError:
             Logger.log("e", "No view named %s found", name)
         except Exception as e:
-            Logger.log("e", "An exception occurred while switching views: %s", str(e))
+            Logger.logException("e", "An exception occurred while switching views: %s", str(e))
 
     def enableModelRendering(self):
         self._is_model_rendering_enabled = True
@@ -112,6 +123,53 @@ class Controller:
 
     ##  Emitted when the active view changes.
     activeViewChanged = Signal()
+
+    ##  Add a stage by name if it's not already added.
+    #   \param name \type{string} Unique identifier of stage (usually the plugin name)
+    #   \param stage \type{Stage} The stage to be added
+    def addStage(self, stage: Stage):
+        name = stage.getPluginId()
+        if name not in self._stages:
+            self._stages[name] = stage
+            self.stagesChanged.emit()
+
+    ##  Request stage by name. Returns None if no stage is found.
+    #   \param name \type{string} Unique identifier of stage (usually the plugin name)
+    #   \return Stage \type{Stage} if name was found, none otherwise.
+    def getStage(self, name: str) -> Optional[Stage]:
+        try:
+            return self._stages[name]
+        except KeyError:  # No such view
+            Logger.log("e", "Unable to find %s in stage list", name)
+            return None
+
+    ##  Return all stages.
+    #   \return stages \type{dict}
+    def getAllStages(self) -> Dict[str, Stage]:
+        return self._stages
+
+    ##  Request active stage. Returns None if there is no active stage
+    #   \return stage \type{Stage} if an stage is active, None otherwise.
+    def getActiveStage(self) -> Optional[Stage]:
+        return self._active_stage
+
+    ##  Set the currently active stage.
+    #   \param name \type{string} The name of the stage to set as active
+    def setActiveStage(self, name: str):
+        Logger.log("d", "Setting active stage to %s", name)
+        try:
+            self._active_stage = self._stages[name]
+            self.activeStageChanged.emit()
+        except KeyError:
+            Logger.log("e", "No stage named %s found", name)
+        except Exception as e:
+            Logger.logException("e", "An exception occurred while switching stages: %s", str(e))
+
+    ##  Emitted when the list of stages changes.
+    stagesChanged = Signal()
+
+    ##  Emitted when the active stage changes.
+    activeStageChanged = Signal()
 
     ##  Add an input device (e.g. mouse, keyboard, etc) if it's not already added.
     #   \param device The input device to be added
@@ -315,3 +373,30 @@ class Controller:
 
     def setToolsEnabled(self, enabled):
         self._tools_enabled = enabled
+
+    # Rotate camera view according defined angle
+    def rotateView(self, coordinate = "x", angle = 0):
+        camera = self._scene.getActiveCamera()
+        self._camera_tool.setOrigin(Vector(0, 100, 0))
+        if coordinate == "home":
+            camera.setPosition(Vector(0, 0, 700))
+            camera.setPerspective(True)
+            camera.lookAt(Vector(0, 100, 100))
+            self._camera_tool.rotateCam(0, 0)
+        elif coordinate == "3d":
+            camera.setPosition(Vector(-750, 600, 700))
+            camera.setPerspective(True)
+            camera.lookAt(Vector(0, 100, 100))
+            self._camera_tool.rotateCam(0, 0)
+
+        else:
+            # for comparison is == used, because might not store them at the same location
+            # https://stackoverflow.com/questions/1504717/why-does-comparing-strings-in-python-using-either-or-is-sometimes-produce
+            camera.setPosition(Vector(0, 0, 700))
+            camera.setPerspective(True)
+            camera.lookAt(Vector(0, 100, 0))
+
+            if coordinate == "x":
+                self._camera_tool.rotateCam(angle, 0)
+            elif coordinate == "y":
+                self._camera_tool.rotateCam(0, angle)

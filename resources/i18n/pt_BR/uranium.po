@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.0\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-10-06 09:00-0300\n"
+"PO-Revision-Date: 2018-02-13 05:40-0300\n"
 "Last-Translator: Cláudio Sampaio <patola@makerlinux.com.b>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -43,59 +43,59 @@ msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
 msgstr "Arquivo STL (Binário)"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
 msgctxt "@info"
 msgid "Could not access update information."
 msgstr "Não foi possível acessar informação sobre atualizações."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Atualização de Versão"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "A versão atual não suporta a verificação de atualizações."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Aviso"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
 msgctxt "@info"
 msgid "A new version is available!"
 msgstr "Uma nova versão está disponível!"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:80
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:72
 msgctxt "@action:button"
 msgid "Download"
 msgstr "Baixar"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:92
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 msgctxt "@info"
-msgid "An exception occurred while checking for updates."
-msgstr "Uma exceção ocorreu enquanto se verificava por novas atualizações."
+msgid "An error occurred while checking for updates."
+msgstr "Um erro ocorreu ao verificar por atualizações."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:92
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Erro"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Nenhuma nova versão foi encontrada."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:23
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Verificar Novas Atualizações"
@@ -221,19 +221,19 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Espelhar Modelo"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:160
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:77
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:67
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:70
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Todos os Tipos Suportados ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:163
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:192
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:78
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:68
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Todos os Arquivos (*)"
@@ -277,17 +277,17 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuto"
 msgstr[1] "{0} minutos"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:111
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:114
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Carregando complementos..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:117
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:119
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Atualizando configuração..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:128
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:130
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Carregando preferências..."
@@ -334,18 +334,18 @@ msgstr ""
 "Erro ao instalar o complemento;\n"
 "<message>{0}</message>"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "A configuração da versão antiga de {0} foi importada."
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:46
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:50
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "Falha em inicializar OpenGL"
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:56
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:60
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte a Objetos de Framebuffer. Por favor verifique os drivers de sua placa de vídeo."
@@ -353,8 +353,8 @@ msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "Não foi possível abrir tipo <filename>{0}</filename>"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "Não é possível abrir arquivos do tipo <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
@@ -370,12 +370,6 @@ msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "Falha em carregar <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Loading <filename>{0}</filename>"
-msgstr "Carregando <filename>{0}</filename>"
-
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
 msgctxt "@info:title"
 msgid "Loading"
@@ -387,15 +381,20 @@ msgctxt "@action:button"
 msgid "Reset"
 msgstr "Resetar"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:84
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Alinhar Redimensionamento"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:101
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:104
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Redimensionamento Uniforme"
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "Travar Modelo"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
@@ -423,47 +422,47 @@ msgctxt "@label"
 msgid "You will need to restart the application before changes in plugins have effect."
 msgstr "Você precisará reiniciar a aplicação para que mudanças nos complementos tenham efeito."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:94
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
 msgstr "Este complemento é necessário para que a aplicação rode."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:110
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:111
 msgctxt "@label"
 msgid "Info..."
 msgstr "Informação..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:129
 msgctxt "@window:title"
 msgid "Install Plugin"
 msgstr "Instalar Complemento"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:137
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:138
 msgctxt "@title:window"
 msgid "Open file(s)"
 msgstr "Abrir arquivo(s)"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:172
 msgctxt "@label"
 msgid "No text available"
 msgstr "Nenhum texto disponível"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:177
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:178
 msgctxt "@title:window"
 msgid "About %1"
 msgstr "Sobre %1"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:209
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:210
 msgctxt "@label"
 msgid "Author:"
 msgstr "Autor:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:231
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:232
 msgctxt "@label"
 msgid "Version:"
 msgstr "Versão:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:249
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:250
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
@@ -502,8 +501,8 @@ msgstr "Cancelar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
-msgid "Ok"
-msgstr "Ok"
+msgid "OK"
+msgstr "OK"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
@@ -647,6 +646,16 @@ msgctxt "@action:button"
 msgid "Next"
 msgstr "Próximo"
 
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "description"
+msgid "Example extension to instruct people on how to create Uranium extensions."
+msgstr "Extensão de exemplo para instruir as pessoas em como criar extensões Uranium."
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "name"
+msgid "Example Extension"
+msgstr "Extensão de Exemplo"
+
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
@@ -717,6 +726,26 @@ msgctxt "name"
 msgid "Console Logger"
 msgstr "Registrador de Console"
 
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "description"
+msgid "Example tool to instruct people on how to create Uranium tools."
+msgstr "Ferramenta de exemplo para instruir as pessoas a criarem ferramentas Uranium."
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "name"
+msgid "Example Tool"
+msgstr "Ferramenta de Exemplo"
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "description"
+msgid "Example output device to instruct people on how to create Uranium output devices."
+msgstr "Dispositivo de saída exemplo para instruir as pessoas em como criar dispositivos de saída Uranium."
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "name"
+msgid "Example Output Device"
+msgstr "Dispositivo de Saída Exemplo"
+
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
@@ -727,6 +756,16 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr "Verificador de Atualizações"
 
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "description"
+msgid "Example file reader to instruct people on how to create Uranium file readers."
+msgstr "Leitor de arquivo exemplo para instur as pessoas em como criar leitores de arquivo Uranium."
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "name"
+msgid "Example File Reader"
+msgstr "Leitor de Arquivo Exemplo"
+
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
@@ -736,6 +775,16 @@ msgstr "Permite salvar em arquivos locais."
 msgctxt "name"
 msgid "Local File Output Device"
 msgstr "Dispositivo de Saída para Arquivo Local"
+
+#: LocalContainerProvider/plugin.json
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "Provê contêineres de ajustes integrados que vêm com a instalação da aplicação."
+
+#: LocalContainerProvider/plugin.json
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "Provedor de Contêiner Local"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
@@ -796,6 +845,22 @@ msgstr "Provê a ferramenta de Espelhamento."
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "Ferramenta de Espelhamento"
+
+#~ msgctxt "@info"
+#~ msgid "An exception occurred while checking for updates."
+#~ msgstr "Uma exceção ocorreu enquanto se verificava por novas atualizações."
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Carregando <filename>{0}</filename>"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "Não foi possível abrir tipo <filename>{0}</filename>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Ok"
+#~ msgstr "Ok"
 
 #~ msgctxt "@label"
 #~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"

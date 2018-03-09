@@ -1,7 +1,13 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import Optional
 
 from UM.SortedList import SortedListWithKey
+
+MYPY = False
+if MYPY:
+    from UM.View.RenderPass import RenderPass
+    from UM.Scene.SceneNode import SceneNode
 
 
 ##  Abstract base class for different rendering implementations.
@@ -11,8 +17,7 @@ from UM.SortedList import SortedListWithKey
 #   to perform different stages of rendering, with the application indicating which
 #   objects should be rendered but the actual rendering process happening after a
 #   sorting step.
-class Renderer():
-
+class Renderer:
     def __init__(self):
         super().__init__()
 
@@ -31,7 +36,7 @@ class Renderer():
     #                 Most of these are passed to the RenderBatch constructor directly. See RenderBatch for all available options.
     #                 In addition, the parameter "shader" is available, which determines the shader to render with. When not specified,
     #                 it defaults to a simple vertex color shader.
-    def queueNode(self, node, **kwargs):
+    def queueNode(self, node: "SceneNode", **kwargs):
         raise NotImplementedError()
 
     ##  Render everything that was set up to be rendered.
@@ -45,13 +50,13 @@ class Renderer():
     ##  Add a render pass that should be rendered.
     #
     #   \param render_pass The render pass to add.
-    def addRenderPass(self, render_pass):
+    def addRenderPass(self, render_pass: "RenderPass"):
         self._render_passes.add(render_pass)
 
     ##  Remove a render pass from the list of render passes to render.
     #
     #   \param render_pass The render pass to remove.
-    def removeRenderPass(self, render_pass):
+    def removeRenderPass(self, render_pass: "RenderPass"):
         if render_pass in self._render_passes:
             self._render_passes.remove(render_pass)
 
@@ -60,7 +65,7 @@ class Renderer():
     #   \param name The name of the render pass to get.
     #
     #   \return The named render pass or None if not found.
-    def getRenderPass(self, name):
+    def getRenderPass(self, name: str) -> Optional["RenderPass"]:
         for render_pass in self._render_passes:
             if render_pass.getName() == name:
                 return render_pass

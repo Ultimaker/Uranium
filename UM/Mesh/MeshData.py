@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Math.Vector import Vector
@@ -43,6 +43,8 @@ Reuse = object()
 class MeshData:
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
                  center_position=None, zero_position=None, type = MeshType.faces, attributes=None):
+        self._application = None  # Initialize this later otherwise unit tests break
+
         self._vertices = NumPyUtil.immutableNDArray(vertices)
         self._normals = NumPyUtil.immutableNDArray(normals)
         self._indices = NumPyUtil.immutableNDArray(indices)
@@ -51,7 +53,11 @@ class MeshData:
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = type
-        self._file_name = file_name  # type: str
+        self._file_name = file_name  # type: Optional[str]
+        if file_name:
+            from UM.Application import Application
+            self._application = Application.getInstance()
+            self._application.getController().getScene().addWatchedFile(file_name)
         # original center position
         self._center_position = center_position
         # original zero position, is changed after transformation
@@ -73,6 +79,14 @@ class MeshData:
                     else:
                         new_value[attribute_key] = attribute_value
                 self._attributes[key] = new_value
+
+    ##  Triggered when this file is deleted.
+    #
+    #   The file will then no longer be watched for changes.
+    def __del__(self):
+        if self._file_name:
+            if self._application:
+                self._application.getController().getScene().removeWatchedFile(self._file_name)
 
     ## Create a new MeshData with specified changes
     #   \return \type{MeshData}
@@ -196,7 +210,6 @@ class MeshData:
     def getVerticesAsByteArray(self) -> Optional[bytes]:
         if self._vertices is None:
             return None
-        # FIXME cache result
         return self._vertices.tostring()
 
     ##  Get all normals of this mesh as a bytearray
@@ -205,7 +218,6 @@ class MeshData:
     def getNormalsAsByteArray(self) -> Optional[bytes]:
         if self._normals is None:
             return None
-        # FIXME cache result
         return self._normals.tostring()
 
     ##  Get all indices as a bytearray
@@ -214,19 +226,16 @@ class MeshData:
     def getIndicesAsByteArray(self) -> Optional[bytes]:
         if self._indices is None:
             return None
-        # FIXME cache result
         return self._indices.tostring()
 
     def getColorsAsByteArray(self) -> Optional[bytes]:
         if self._colors is None:
             return None
-        # FIXME cache result
         return self._colors.tostring()
 
     def getUVCoordinatesAsByteArray(self) -> Optional[bytes]:
         if self._uvs is None:
             return None
-        # FIXME cache result
         return self._uvs.tostring()
 
     #######################################################################
@@ -259,7 +268,7 @@ class MeshData:
     ##  Gets transformed convex hull points
     #
     #   \return \type{numpy.ndarray} the vertices which describe the convex hull
-    def getConvexHullTransformedVertices(self, transformation: Matrix) -> numpy.ndarray:
+    def getConvexHullTransformedVertices(self, transformation: Matrix) -> Optional[numpy.ndarray]:
         vertices = self.getConvexHullVertices()
         if vertices is not None:
             return transformVertices(vertices, transformation)
@@ -360,10 +369,11 @@ def approximateConvexHull(vertex_data: numpy.ndarray, target_count: int) -> Opti
     start_time = time()
 
     input_max = target_count * 50   # Maximum number of vertices we want to feed to the convex hull algorithm.
-    unit_size = 0.125               # Initial rounding interval. i.e. round to 0.125.
+    unit_size = 0.0125             # Initial rounding interval. i.e. round to 0.125.
+    max_unit_size = 0.01
 
     # Round off vertices and extract the uniques until the number of vertices is below the input_max.
-    while len(vertex_data) > input_max:
+    while len(vertex_data) > input_max and unit_size <= max_unit_size:
         new_vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
         # Check if there is variance in Z value, we need it for the convex hull calculation
         if numpy.amin(new_vertex_data[:, 1]) != numpy.amax(new_vertex_data[:, 1]):
@@ -381,7 +391,7 @@ def approximateConvexHull(vertex_data: numpy.ndarray, target_count: int) -> Opti
     hull_result = scipy.spatial.ConvexHull(vertex_data)
     vertex_data = numpy.take(hull_result.points, hull_result.vertices, axis=0)
 
-    while len(vertex_data) > target_count:
+    while len(vertex_data) > target_count and unit_size <= max_unit_size:
         vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
         hull_result = scipy.spatial.ConvexHull(vertex_data)
         vertex_data = numpy.take(hull_result.points, hull_result.vertices, axis=0)

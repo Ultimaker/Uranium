@@ -36,8 +36,15 @@ ManagementPage {
             elide: Text.ElideRight
         }
 
-        Label { text: catalog.i18nc("@label", "Type"); width: (parent.width * 0.2) | 0; }
-        Label { text: base.currentItem && base.currentItem.typeName ? base.currentItem.typeName : ""; width: (parent.width * 0.7) | 0; }
+        Label {
+            text: catalog.i18nc("@label", "Type");
+            width: Math.round(parent.width * 0.2);
+        }
+
+        Label {
+            text: base.currentItem && base.currentItem.typeName ? base.currentItem.typeName : "";
+            width: Math.round(parent.width * 0.7);
+        }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
 

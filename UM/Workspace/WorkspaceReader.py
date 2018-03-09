@@ -7,7 +7,14 @@ from UM.FileHandler.FileReader import FileReader
 class WorkspaceReader(FileReader):
     def __init__(self):
         super().__init__()
+        self.workspace_name = None
 
     ##  Read an entire workspace
     def read(self, file_name):
         pass
+
+    def workspaceName(self):
+        return self.workspace_name
+
+    def setWorkspaceName(self, workspace_name):
+        self.workspace_name = workspace_name

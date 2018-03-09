@@ -1,272 +1,274 @@
 # Uranium
-# Copyright (C) 2017 Ultimaker
+# Copyright (C) 2018 Ultimaker
 # This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.0\n"
+"Project-Id-Version: Uranium 3.2\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: TEAM\n"
+"POT-Creation-Date: 2018-01-29 09:48+0000\n"
+"PO-Revision-Date: 2018-02-10 04:52+0900\n"
+"Last-Translator: Brule <jason@brule.co.jp>\n"
+"Language-Team: Japanese\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
 msgid "Simple"
-msgstr ""
+msgstr "シンプル"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
 msgctxt "@item:inlistbox"
 msgid "STL File"
-msgstr ""
+msgstr "STLファイル"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
-msgstr ""
+msgstr "ウェーブフロントOBJファイル"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
 msgid "STL File (ASCII)"
-msgstr ""
+msgstr "STLファイル（ASCII)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
-msgstr ""
+msgstr "STLファイル（バイナリー）"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
 msgctxt "@info"
 msgid "Could not access update information."
-msgstr ""
+msgstr "アップデートインフォメーションにアクセスできません。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 msgctxt "@info:title"
 msgid "Version Upgrade"
-msgstr ""
+msgstr "バージョンアップグレード"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr ""
+msgstr "ご使用のバージョンはアップデート更新通知をサポートしていません。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
 msgctxt "@info"
 msgid "A new version is available!"
-msgstr ""
+msgstr "新しいバージョンが利用可能です。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:80
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:72
 msgctxt "@action:button"
 msgid "Download"
-msgstr ""
+msgstr "ダウンロード"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:92
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 msgctxt "@info"
-msgid "An exception occurred while checking for updates."
-msgstr ""
+msgid "An error occurred while checking for updates."
+msgstr "アップデート確認中にエラーが起こりました。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:92
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
 msgctxt "@info:title"
 msgid "Error"
-msgstr ""
+msgstr "エラー"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
 msgctxt "@info"
 msgid "No new version was found."
-msgstr ""
+msgstr "新しいバージョンが見つかりました。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:23
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
-msgstr ""
+msgstr "アップデートがあるか確認する"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:33
 msgctxt "@item:inmenu"
 msgid "Local File"
-msgstr ""
+msgstr "ローカルファイル"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:34
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
-msgstr ""
+msgstr "ファイルに保存する"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:35
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr ""
+msgstr "ファイルに保存する"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:56
 msgctxt "@title:window"
 msgid "Save to File"
-msgstr ""
+msgstr "ファイルに保存する"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:86
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
-msgstr ""
+msgstr "書き出すために利用可能なファイルがありません！"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 msgctxt "@title:window"
 msgid "File Already Exists"
-msgstr ""
+msgstr "このファイルはもう存在します。"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr ""
+msgstr "ファイル  <filename>{0}</filename>  は既に存在します。上書きをしますか？ "
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:150
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
-msgstr ""
+msgstr "<filename>{0}</filename>に保存する"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:151
 msgctxt "@info:title"
 msgid "Saving"
-msgstr ""
+msgstr "保存中"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr ""
+msgstr " <filename>{0}</filename>保存中に却下されました。"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:162
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "<filename>{0}</filename>: <message>{1}</message>に保存することができませんでした。"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
-msgstr ""
+msgstr "<filename>{0}</filename>に保存しました。"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 msgctxt "@info:title"
 msgid "File Saved"
-msgstr ""
+msgstr "ファイルを保存する"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@action:button"
 msgid "Open Folder"
-msgstr ""
+msgstr "フォルダーを開く"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
-msgstr ""
+msgstr "ファイルが入ったフォルダーを開く"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
 msgid "Scale"
-msgstr ""
+msgstr "スケールする"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr ""
+msgstr "モデルをスケールする"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
 msgid "Move"
-msgstr ""
+msgstr "動かす"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr ""
+msgstr "モデルを動かす"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
 msgid "Rotate"
-msgstr ""
+msgstr "回転させる"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
-msgstr ""
+msgstr "モデルを回転させる"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror"
-msgstr ""
+msgstr "反転させる"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
-msgstr ""
+msgstr "モデルを反転させる"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:160
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:77
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:67
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:70
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
-msgstr ""
+msgstr "すべてのサポートのタイプ ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:163
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:192
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:78
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:68
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
-msgstr ""
+msgstr "全てのファイル"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:108
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr ""
+msgstr "{0:0>2}日 {1:0>2}時間 {2:0>2}分"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:110
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
-msgstr ""
+msgstr "{0:0>2}時間 {1:0>2}分"
 
+# can’t add japanese text
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0}日"
 
+# can’t add japanese texts
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0}時間"
 
+# can’t add japanese text
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
@@ -274,34 +276,33 @@ msgstr[1] ""
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0}分"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:111
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:114
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr ""
+msgstr "プラグインをロードする…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:117
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:119
 msgctxt "@info:progress"
 msgid "Updating configuration..."
-msgstr ""
+msgstr "コンフィグレーションをアップデートする…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:128
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:130
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr ""
+msgstr "プレファレンスをロード中"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr ""
+msgstr "自動的に造形物をオリジナルサイズの {0}%にスケールする。"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 msgctxt "@info:title"
 msgid "Scaling Object"
-msgstr ""
+msgstr "造形物をスケールする"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:96
 msgctxt "@info:status"
@@ -309,6 +310,8 @@ msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
 msgstr ""
+"プラグインがインストールされました。\n"
+"アプリケーションを再起動して、プラグインをアクティベートしてください。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -318,6 +321,8 @@ msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
 msgstr ""
+"プラグインのインストールに失敗しました。<filename>{0}</filename>:\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -327,466 +332,533 @@ msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
 msgstr ""
+"プラグインのインストールに失敗しました。\n"
+"<message>{0}</message>"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
-msgstr ""
+msgstr "前のバージョン {0} のコンフィグレーションが取り込まれました。"
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:46
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:50
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr ""
+msgstr "OpenGLの初期化に失敗しました。"
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:56
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:60
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr ""
+msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open file type <filename>{0}</filename>"
-msgstr ""
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "<filename>{0}</filename>のファイルタイプは開けません"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Invalid File"
-msgstr ""
+msgstr "無効なファイル"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Loading <filename>{0}</filename>"
-msgstr ""
+msgstr "<filename>{0}</filename>を読み込むのに失敗しました。"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
 msgctxt "@info:title"
 msgid "Loading"
-msgstr ""
+msgstr "読み込み中"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
-msgstr ""
+msgstr "リセットする"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:84
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr ""
+msgstr "スナップスケーリング"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:101
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:104
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr ""
+msgstr "ユニフォームスケーリング"
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "モデルのロック"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
 msgid "Lay flat"
-msgstr ""
+msgstr "平らに置く"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
-msgstr ""
+msgstr "スナップローテーション"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:20
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "Plugins"
-msgstr ""
+msgstr "プラグイン"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:28
 msgctxt "@action:button"
 msgid "Install new plugin"
-msgstr ""
+msgstr "新しいプラグインをインストールする"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:55
 msgctxt "@label"
 msgid "You will need to restart the application before changes in plugins have effect."
-msgstr ""
+msgstr "プラグインへの変更を有効にするためにアプリケーション再起動する必要があります。"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:94
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
-msgstr ""
+msgstr "アプリケーションを稼働させるためにプラグインが必要です。"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:110
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:111
 msgctxt "@label"
 msgid "Info..."
-msgstr ""
+msgstr "インフォメーション…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:129
 msgctxt "@window:title"
 msgid "Install Plugin"
-msgstr ""
+msgstr "プラグインをインストールする"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:137
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:138
 msgctxt "@title:window"
 msgid "Open file(s)"
-msgstr ""
+msgstr "ファイルを開く"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:172
 msgctxt "@label"
 msgid "No text available"
-msgstr ""
+msgstr "利用可能なテキストがありません。"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:177
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:178
 msgctxt "@title:window"
 msgid "About %1"
-msgstr ""
+msgstr "アバウト%1"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:209
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:210
 msgctxt "@label"
 msgid "Author:"
-msgstr ""
+msgstr "著者:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:231
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:232
 msgctxt "@label"
 msgid "Version:"
-msgstr ""
+msgstr "バージョン:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:249
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:250
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
-msgstr ""
+msgstr "閉める"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
-msgstr ""
+msgstr "プレファレンス"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:106
 msgctxt "@action:button"
 msgid "Defaults"
-msgstr ""
+msgstr "デフォルト"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
 msgctxt "@title:tab"
 msgid "General"
-msgstr ""
+msgstr "一般"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:147
 msgctxt "@title:tab"
 msgid "Settings"
-msgstr ""
+msgstr "設定"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
 msgctxt "@title:window"
 msgid "Rename"
-msgstr ""
+msgstr "名前を変える"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:56
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
-msgid "Ok"
-msgstr ""
+msgid "OK"
+msgstr "OK"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
-msgstr ""
+msgstr "この設定がアクティブなプリンターにより非表示になっています、見ることができません。"
 
+# can’t add Japanese texts
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "この設定は %1 の値で非表示になっています。その設定値を変更すると設定の非表示が解除されます。"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
 msgid "Setting Visibility"
-msgstr ""
+msgstr "視野設定"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
 msgctxt "@label:textbox"
 msgid "Check all"
-msgstr ""
+msgstr "全てを調べる"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:89
 msgctxt "@label:textbox"
 msgid "Filter..."
-msgstr ""
+msgstr "フィルター…"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 msgctxt "@title:tab"
 msgid "Printers"
-msgstr ""
+msgstr "プリンター…"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:39
 msgctxt "@label"
 msgid "Type"
-msgstr ""
+msgstr "タイプ"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr ""
+msgstr "モデル取出を確認"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr ""
+msgstr "%1を取り外しますか？この作業はやり直しが効きません。 "
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
 msgctxt "@title:tab"
 msgid "Profiles"
-msgstr ""
+msgstr "プロファイル"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:15
 msgctxt "@label"
 msgid "Duplicate"
-msgstr ""
+msgstr "複製"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:45
 msgctxt "@label %1 is printer name"
 msgid "Printer: %1"
-msgstr ""
+msgstr "プリンター:%1"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
 msgctxt "@action:button"
 msgid "Update \"%1\""
-msgstr ""
+msgstr "アップデート “%1”"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
 msgctxt "@action:button"
 msgid "Update profile"
-msgstr ""
+msgstr "プロファイルをアップデート"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
 msgctxt "@action:button"
 msgid "Discard current changes"
-msgstr ""
+msgstr "現在の変更を取りやめる"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
 msgctxt "@action:button"
 msgid "Reload profile"
-msgstr ""
+msgstr "プロファイルをリロードする"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Based on"
-msgstr ""
+msgstr "ベースにする"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Profile type"
-msgstr ""
+msgstr "プロファイルタイプ"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Protected profile"
-msgstr ""
+msgstr "保護されたプロファイル"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Custom profile"
-msgstr ""
+msgstr "カスタムプロファイル"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:139
 msgctxt "@action:button"
 msgid "Import"
-msgstr ""
+msgstr "取り込み"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:146
 msgctxt "@action:button"
 msgid "Export"
-msgstr ""
+msgstr "書き出す"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
 msgctxt "@window:title"
 msgid "Import Profile"
-msgstr ""
+msgstr "プロファイルを取り込む"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
 msgctxt "@title:window"
 msgid "Import Profile"
-msgstr ""
+msgstr "プロファイルを取り込む"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
 msgctxt "@title:window"
 msgid "Export Profile"
-msgstr ""
+msgstr "プロファイルを書き出す"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
-msgstr ""
+msgstr "戻る"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
-msgstr ""
+msgstr "終了する"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
-msgstr ""
+msgstr "次"
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "description"
+msgid "Example extension to instruct people on how to create Uranium extensions."
+msgstr "Uranium拡張子を作成する方法を伝える拡張子の例を示します。"
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "name"
+msgid "Example Extension"
+msgstr "拡張子の例"
 
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
-msgstr ""
+msgstr "シンプルソリッドメッシュビューを供給する"
 
 #: Views/SimpleView/plugin.json
 msgctxt "name"
 msgid "Simple View"
-msgstr ""
+msgstr "シンプルビュー"
 
 #: FileLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr ""
+msgstr "ログ情報を設定フォルダーのファイルにアウトプットする"
 
 #: FileLogger/plugin.json
 msgctxt "name"
 msgid "File Logger"
-msgstr ""
+msgstr "ファイルロガー"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
 msgid "Provides support for reading STL files."
-msgstr ""
+msgstr "STLファイルを読み込むためのサポートを供給する。"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "name"
 msgid "STL Reader"
-msgstr ""
+msgstr "STLリーダー"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
 msgid "Makes it possible to read Wavefront OBJ files."
-msgstr ""
+msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
-msgstr ""
+msgstr "ウェイブフロントOBJリーダー"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
-msgstr ""
+msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Writer"
-msgstr ""
+msgstr "ウェイブフロントOBJライター"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
 msgid "Provides support for writing STL files."
-msgstr ""
+msgstr "STLファイルを書き出すためのサポートを供給する。"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
 msgid "STL Writer"
-msgstr ""
+msgstr "STLライター"
 
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr ""
+msgstr "ログ情報をコンソールにアウトプットする"
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
-msgstr ""
+msgstr "コンソールロガー"
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "description"
+msgid "Example tool to instruct people on how to create Uranium tools."
+msgstr "Uraniumツールを作成する方法を伝えるツールの例を示します。"
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "name"
+msgid "Example Tool"
+msgstr "ツールの例"
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "description"
+msgid "Example output device to instruct people on how to create Uranium output devices."
+msgstr "Uranium出力デバイスを作成する方法を伝える出力デバイスの例を示します。"
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "name"
+msgid "Example Output Device"
+msgstr "出力デバイスの例"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
-msgstr ""
+msgstr "ソフトウェアのアップデートを確認中"
 
 #: UpdateChecker/plugin.json
 msgctxt "name"
 msgid "Update Checker"
-msgstr ""
+msgstr "アップデートチェッカー"
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "description"
+msgid "Example file reader to instruct people on how to create Uranium file readers."
+msgstr "Uraniumファイルリーダーを作成する方法を伝えるファイルリーダーの例を示します。"
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "name"
+msgid "Example File Reader"
+msgstr "ファイルリーダーの例"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
-msgstr ""
+msgstr "ローカルファイルに保存することができます。"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "name"
 msgid "Local File Output Device"
-msgstr ""
+msgstr "ローカルファイルアウトプットデバイス"
+
+#: LocalContainerProvider/plugin.json
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
+
+#: LocalContainerProvider/plugin.json
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "ローカルコンテナプロバイダー"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr ""
+msgstr "スケールツールを供給する"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "name"
 msgid "Scale Tool"
-msgstr ""
+msgstr "スケールツール"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr ""
+msgstr "セレクションツールを供給する"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "name"
 msgid "Selection Tool"
-msgstr ""
+msgstr "セレクションツール"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
-msgstr ""
+msgstr "ムーブツールを供給する"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Move Tool"
-msgstr ""
+msgstr "ムーブツール"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr ""
+msgstr "カメラを操作するためのツールを供給する"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
 msgid "Camera Tool"
-msgstr ""
+msgstr "カメラツール"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr ""
+msgstr "回転ツールを供給する"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
 msgid "Rotate Tool"
-msgstr ""
+msgstr "回転ツール"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr ""
+msgstr "ミラーツールを供給する"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"
 msgid "Mirror Tool"
-msgstr ""
+msgstr "ミラーツール"
+
+#~ msgctxt "@info"
+#~ msgid "An exception occurred while checking for updates."
+#~ msgstr "アップデート確認中にエラーが起こりました。"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "<filename>{0}</filename>読み込み中"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "ファイルタイプ <filename>{0}</filename>を開くことができません。"
+
+#~ msgctxt "@action:button"
+#~ msgid "Ok"
+#~ msgstr "Ok"

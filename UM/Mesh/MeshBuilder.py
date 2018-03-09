@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Mesh.MeshData import MeshData
@@ -12,7 +12,6 @@ from UM.Logger import Logger
 import numpy
 import math
 import numbers
-
 
 ##  Builds new meshes by adding primitives.
 #
@@ -87,12 +86,9 @@ class MeshBuilder:
     #   \param index Either a single index or a list of indices to be removed.
     def removeVertex(self, index):
         try:
-            #print("deleting ", index)
-            #print( self._vertices)
             self._vertices = numpy.delete(self._vertices, index,0)
             if self.hasNormals():
                self._normals = numpy.delete(self._normals,index,0)
-            #print( self._vertices)
             self._vertex_count = len(self._vertices)
         except IndexError:
             pass

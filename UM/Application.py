@@ -41,8 +41,8 @@ class Application:
     #
     #   \param name \type{string} The name of the application.
     #   \param version \type{string} Version, formatted as major.minor.rev
-    def __init__(self, name: str, version: str, build_type: str = "", **kwargs):
-        if Application._instance != None:
+    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode = False, parser = None, parsed_command_line = {}, **kwargs):
+        if Application._instance is not None:
             raise ValueError("Duplicate singleton creation")
 
         # If the constructor is called and there is no instance, set the instance to self.
@@ -52,6 +52,9 @@ class Application:
         self._application_name = name
         self._version = version
         self._build_type = build_type
+        if "debug" in parsed_command_line.keys():
+            if not parsed_command_line["debug"] and is_debug_mode:
+                parsed_command_line["debug"] = is_debug_mode
 
         os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
@@ -84,6 +87,8 @@ class Application:
         preferences = Preferences.getInstance()
         preferences.addPreference("general/language", "en_US")
         preferences.addPreference("general/visible_settings", "")
+        preferences.addPreference("general/visible_settings_preset", "")
+        preferences.addPreference("general/preset_setting_visibility_choice", "")
 
         try:
             preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
@@ -127,7 +132,8 @@ class Application:
         UM.Settings.InstanceContainer.setContainerRegistry(self.getContainerRegistry())
         UM.Settings.ContainerStack.setContainerRegistry(self.getContainerRegistry())
 
-        self._parsed_command_line = None
+        self._command_line_parser = parser
+        self._parsed_command_line = parsed_command_line
         self.parseCommandLine()
 
         self._visible_messages = []
@@ -148,6 +154,8 @@ class Application:
     hideMessageSignal = Signal()
 
     globalContainerStackChanged = Signal()
+
+    workspaceLoaded = Signal()
 
     def setGlobalContainerStack(self, stack: "ContainerStack"):
         self._global_container_stack = stack
@@ -178,6 +186,9 @@ class Application:
     #   \returns version \type{string}
     def getBuildType(self) -> str:
         return self._build_type
+
+    def getIsDebugMode(self) -> bool:
+        return self.getCommandLineOption("debug")
 
     visibleMessageAdded = Signal()
 
@@ -211,7 +222,7 @@ class Application:
         pass
 
     def getCommandLineOption(self, name, default = None):
-        if not self._parsed_command_line:
+        if name not in self._parsed_command_line.keys():
             self.parseCommandLine()
             Logger.log("d", "Command line options: %s", str(self._parsed_command_line))
 
@@ -222,6 +233,9 @@ class Application:
     def getApplicationName(self) -> str:
         return self._application_name
 
+    ##  Get the currently used IETF language tag.
+    #   The returned tag is during runtime used to translate strings.
+    #   \returns language_tag  \type{string}
     def getApplicationLanguage(self):
         override_lang = os.getenv("URANIUM_LANGUAGE")
         if override_lang:
@@ -282,6 +296,11 @@ class Application:
     def getOutputDeviceManager(self) -> OutputDeviceManager:
         return self._output_device_manager
 
+    ##  Includes eg. last checks before entering the main event loop.
+    #   \returns None \type{None}
+    def preRun(self):
+        return None
+
     ##  Run the main event loop.
     #   This method should be re-implemented by subclasses to start the main event loop.
     #   \exception NotImplementedError
@@ -315,29 +334,51 @@ class Application:
 
     ##  Return the singleton instance of the application object
     @classmethod
-    def getInstance(cls) -> "Application":
+    def getInstance(cls, **kwargs) -> "Application":
         # Note: Explicit use of class name to prevent issues with inheritance.
         if not Application._instance:
-            Application._instance = cls()
+            Application._instance = cls(**kwargs)
 
         return Application._instance
 
-    def parseCommandLine(self):
-        parser = argparse.ArgumentParser(prog = self.getApplicationName()) #pylint: disable=bad-whitespace
-        self.addCommandLineOptions(parser)
+    def getCommandlineParser(self, with_help = False):
+        if not self._command_line_parser:
+            self._command_line_parser = argparse.ArgumentParser(prog = self.getApplicationName(), add_help = with_help) #pylint: disable=bad-whitespace
+            self.addCommandLineOptions(self._command_line_parser, parsed_command_line = self._parsed_command_line)
+        return self._command_line_parser
 
-        self._parsed_command_line = vars(parser.parse_args())
+    def parseCommandLine(self):
+        parser = self.getCommandlineParser()
+        new_parsed_args = vars(parser.parse_known_args()[0])
+        new_parsed_args.update(self._parsed_command_line)
+        self._parsed_command_line = new_parsed_args
 
     ##  Can be overridden to add additional command line options to the parser.
     #
     #   \param parser \type{argparse.ArgumentParser} The parser that will parse the command line.
     @classmethod
-    def addCommandLineOptions(cls, parser):
-        parser.add_argument("--version", action="version", version="%(prog)s {0}".format(cls.getStaticVersion()))
+    def addCommandLineOptions(cls, parser, parsed_command_line = {}):
+
+        parser.add_argument("--version",
+                            action = "version",
+                            version = "%(prog)s {0}".format(cls.getStaticVersion()))
+
         parser.add_argument("--external-backend",
-                            dest="external-backend",
-                            action="store_true", default=False,
-                            help="Use an externally started backend instead of starting it automatically. This is a debug feature to make it possible to run the engine with debug options enabled.")
+                            dest = "external-backend",
+                            action = "store_true",
+                            default = False,
+                            help = "Use an externally started backend instead of starting it automatically. This is a debug feature to make it possible to run the engine with debug options enabled.")
+
+        parser.add_argument('--headless',
+                            action = 'store_true',
+                            default = False,
+                            help = "Hides all GUI elements.")
+
+        if "debug" not in parsed_command_line.keys():
+            parser.add_argument("--debug",
+                                action = "store_true",
+                                default = False,
+                                help = "Turn on the debug mode by setting this option.")
 
     def addExtension(self, extension: "Extension"):
         self._extensions.append(extension)
@@ -353,4 +394,3 @@ class Application:
             return os.path.abspath(os.path.join(os.path.dirname(sys.executable), ".."))
 
     _instance = None    # type: Application
-

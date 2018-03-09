@@ -82,7 +82,7 @@ PreferencesPage
                 left: parent.left;
             }
 
-            width: base.detailsVisible ? (parent.width * 0.4) | 0 : parent.width;
+            width: base.detailsVisible ? Math.round(parent.width * 0.4) | 0 : parent.width;
             frameVisible: true;
 
             Rectangle {
@@ -176,12 +176,23 @@ PreferencesPage
         {
             target: objectList.model
 
-            onDataChanged:
+            onItemsChanged:
             {
-                if(topLeft.row <= objectList.currentIndex || bottomRight.row <= objectList.currentIndex)
-                {
-                    base.currentItem = objectList.currentItem != null ? objectList.model.getItem(objectList.currentIndex) : null;
+                var itemIndex = -1;
+                if (base.currentItem === null) {
+                    return;
                 }
+                for (var i = 0; i < objectList.model.rowCount(); ++i)
+                {
+                    if (objectList.model.getItem(i).id == base.currentItem.id)
+                    {
+                        itemIndex = i;
+                        break;
+                    }
+                }
+
+                objectList.currentIndex = itemIndex;
+                base.currentItem = itemIndex >= 0 ? objectList.model.getItem(itemIndex) : null;
             }
         }
     }

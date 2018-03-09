@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
@@ -55,6 +55,9 @@ class SettingFunction:
             Logger.log("e", "Exception in function ({0}) for setting: {1}".format(str(e), self._code))
 
     ##  Call the actual function to calculate the value.
+    #
+    #   \param value_provider The container from which to get setting values in
+    #   the formula.
     def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Any:
         if not value_provider:
             return None

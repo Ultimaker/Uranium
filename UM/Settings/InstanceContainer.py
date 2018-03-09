@@ -4,7 +4,7 @@
 import configparser
 import io
 import copy
-from typing import List, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
@@ -48,10 +48,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def __init__(self, container_id: str, *args, **kwargs):
         super().__init__(parent = None, *args, **kwargs)
 
-        self._id = str(container_id)    # type: str
-        self._name = str(container_id)  # type: str
-        self._definition = None         # type: DefinitionContainerInterface
-        self._metadata = {}
+        self._metadata = {
+            "id": container_id,
+            "name": container_id,
+            "version": self.Version,
+            "container_type": InstanceContainer
+        }                               # type: Dict[str, Any]
         self._instances = {}            # type: Dict[str, SettingInstance]
         self._read_only = False
         self._dirty = False
@@ -67,9 +69,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return id(self)
 
     def __deepcopy__(self, memo):
-        new_container = self.__class__(self._id)
-        new_container._name = self._name
-        new_container._definition = self._definition
+        new_container = self.__class__(self.getId())
         new_container._metadata = copy.deepcopy(self._metadata, memo)
         new_container._instances = copy.deepcopy(self._instances, memo)
         for instance in new_container._instances.values(): #Set the back-links of the new instances correctly to the copied container.
@@ -87,7 +87,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         self._instantiateCachedValues()
         other._instantiateCachedValues()
-        if self._id != other.getId():
+        if self.getId() != other.getId():
             return False  # ID mismatch
 
         for entry in self._metadata:
@@ -114,7 +114,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     ##  For pickle support
     def __getnewargs__(self):
-        return (self._id,)
+        return (self.getId(),)
 
     ##  For pickle support
     def __getstate__(self):
@@ -128,7 +128,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getId(self) -> str:
-        return self._id
+        return self._metadata["id"]
 
     id = pyqtProperty(str, fget = getId, constant = True)
 
@@ -158,14 +158,15 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getName(self) -> str:
-        return self._name
+        return self._metadata["name"]
 
     def setName(self, name):
-        if name != self._name:
-            self._name = name
+        if name != self.getName():
+            self._metadata["name"] = name
             self._dirty = True
             self.nameChanged.emit()
             self.pyqtNameChanged.emit()
+            self.metaDataChanged.emit(self)
 
 
     # Because we want to expose the properties of InstanceContainer as Qt properties for
@@ -181,19 +182,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     nameChanged = Signal()
     name = pyqtProperty(str, fget = getName, fset = setName, notify = pyqtNameChanged)
 
-    ##  \copydoc ContainerInterface::isReadOnly
-    #
-    #   Reimplemented from ContainerInterface
-    def isReadOnly(self) -> bool:
-        return self._read_only
-
-    def setReadOnly(self, read_only):
-        if read_only != self._read_only:
-            self._read_only = read_only
-            self.readOnlyChanged.emit()
-
-    readOnlyChanged = pyqtSignal()
-    readOnly = pyqtProperty(bool, fget = isReadOnly, fset = setReadOnly, notify = readOnlyChanged)
+    def getReadOnly(self) -> bool:
+        return _containerRegistry.isReadOnly(self.getId())
+    readOnly = pyqtProperty(bool, fget = getReadOnly)
 
     ##  \copydoc ContainerInterface::getMetaData
     #
@@ -202,10 +193,20 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return self._metadata
 
     def setMetaData(self, metadata):
-        if metadata != self._metadata:
-            self._metadata = metadata
-            self._dirty = True
-            self.metaDataChanged.emit(self)
+        if metadata == self._metadata:
+            return #No need to do anything or even emit the signal.
+
+        #We'll fill a temporary dictionary with all the required metadata and overwrite it with the new metadata.
+        #This way it is ensured that at least the required metadata is still there.
+        self._metadata = {
+            "id": self.getId(),
+            "name": self.getName(),
+            "definition": self.getMetaData().get("definition"),
+            "version": self.getMetaData().get("version", 0)
+        }
+        self._metadata.update(metadata)
+        self._dirty = True
+        self.metaDataChanged.emit(self)
 
     metaDataChanged = pyqtSignal(QObject)
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
@@ -293,13 +294,13 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         for key, value in self._cached_values.items():
             if key not in self._instances:
-                if not self._definition:
-                    Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and the container has no definition", key, self._name)
+                if not self.getDefinition():
+                    Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and the container has no definition", key, self.getName())
                     return
 
-                setting_definition = self._definition.findDefinitions(key = key)
+                setting_definition = self.getDefinition().findDefinitions(key = key)
                 if not setting_definition:
-                    Logger.log("w", "Tried to set value of setting %s that has no instance in container %s or its definition %s", key, self._name, self._definition.getName())
+                    Logger.log("w", "Tried to set value of setting %s that has no instance in container %s or its definition %s", key, self.getName(), self.getDefinition().getName())
                     return
 
                 instance = SettingInstance(setting_definition[0], self)
@@ -327,13 +328,13 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                     property_name, property_value, key, self.id))
             return
         if key not in self._instances:
-            if not self._definition:
-                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and the container has no definition", key, self._name)
+            if not self.getDefinition():
+                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and the container has no definition", key, self.getName())
                 return
 
-            setting_definition = self._definition.findDefinitions(key = key)
+            setting_definition = self.getDefinition().findDefinitions(key = key)
             if not setting_definition:
-                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s or its definition %s", key, self._name, self._definition.getName())
+                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s or its definition %s", key, self.getName(), self.getDefinition().getName())
                 return
 
             instance = SettingInstance(setting_definition[0], self)
@@ -358,10 +359,11 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  Get all the keys of the instances of this container
     #   \returns list of keys
     def getAllKeys(self):
+        keys = set(key for key in self._instances)
         if self._cached_values:
             # If we only want the keys and the actual values are still cached, just get the keys from the cache.
-            return self._cached_values.keys()
-        return [key for key in self._instances]
+            keys.update(self._cached_values.keys())
+        return list(keys)
 
     ##  Create a new InstanceContainer with the same contents as this container
     #
@@ -372,11 +374,16 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def duplicate(self, new_id: str, new_name: str = None):
         self._instantiateCachedValues()
         new_container = self.__class__(new_id)
+        new_metadata = copy.deepcopy(self._metadata)
         if new_name:
             new_container.setName(new_name)
+        else:
+            new_container.setName(new_metadata.get("name", ""))
 
-        new_container.setMetaData(copy.deepcopy(self._metadata))
-        new_container.setDefinition(self._definition)
+        for key_to_remove in ["id", "name"]:
+            if key_to_remove in new_metadata:
+                del new_metadata[key_to_remove]
+        new_container.setMetaData(new_metadata)
 
         for instance_id in self._instances:
             instance = self._instances[instance_id]
@@ -393,21 +400,24 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, ignored_metadata_keys: Optional[List] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
         self._instantiateCachedValues()
         parser = configparser.ConfigParser(interpolation = None)
 
-        if not self._definition:
+        if not self.getDefinition():
             Logger.log("w", "Tried to serialize an instance container without definition, this is not supported")
             return ""
 
         parser["general"] = {}
         parser["general"]["version"] = str(self.Version)
-        parser["general"]["name"] = str(self._name)
-        parser["general"]["definition"] = str(self._definition.getId())
+        parser["general"]["name"] = str(self.getName())
+        parser["general"]["definition"] = str(self.getDefinition().getId())
 
         if ignored_metadata_keys is None:
-            ignored_metadata_keys = []
+            ignored_metadata_keys = set()
+        else:
+            ignored_metadata_keys = ignored_metadata_keys.copy() #Don't modify the input set.
+        ignored_metadata_keys |= {"id", "version", "name", "container_type", "definition"}
         parser["metadata"] = {}
         for key, value in self._metadata.items():
             if key not in ignored_metadata_keys:
@@ -424,8 +434,11 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         parser.write(stream)
         return stream.getvalue()
 
-    def _readAndValidateSerialized(self, serialized: str) -> configparser.ConfigParser:
-        parser = configparser.ConfigParser(interpolation=None)
+    @classmethod
+    def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
+        # Disable comments in the ini files, so text values can start with a ;
+        # without being removed as a comment
+        parser = configparser.ConfigParser(interpolation=None, comment_prefixes = ())
         parser.read_string(serialized)
 
         has_general = "general" in parser
@@ -443,17 +456,19 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             raise InvalidInstanceError(exception_string)
         return parser
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
-            parser = self._readAndValidateSerialized(serialized)
+            parser = cls._readAndValidateSerialized(serialized)
             configuration_type = parser["metadata"].get("type")
         except Exception as e:
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
 
-    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
-        configuration_type = self.getConfigurationTypeFromSerialized(serialized)
+    @classmethod
+    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
+        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
         # get version
         version = None
         try:
@@ -468,29 +483,30 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized: str) -> str:
+    def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         # update the serialized data first
-        serialized = super().deserialize(serialized)
+        serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
 
-        if int(parser["general"]["version"]) != self.Version:
-            raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(int(parser["general"]["version"]), self.Version))
+        try:
+            parser_version = int(parser["general"]["version"])
+        except ValueError: #Version number is not integer.
+            raise IncorrectInstanceVersionError("Reported version {0} is not an integer.".format(parser["general"]["version"]))
+        if parser_version != self.Version:
+            raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(str(parser_version), self.Version))
 
         # Reset old data
+        old_id = self.getId()
         self._metadata = {}
         self._instances = {}
 
-        self._name = parser["general"].get("name", self._id)
-
-        definition_id = parser["general"]["definition"]
-
-        definitions = _containerRegistry.findDefinitionContainers(id = definition_id)
-        if not definitions:
-            raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(definition_id, self._id))
-        self._definition = definitions[0]
-
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
+        self._metadata["id"] = old_id
+        self._metadata["name"] = parser["general"].get("name", self.getId())
+        self._metadata["container_type"] = InstanceContainer
+        self._metadata["version"] = parser_version
+        self._metadata["definition"] = parser["general"]["definition"]
         self.metaDataChanged.emit(self) #In case this instance was re-used.
 
         if "values" in parser:
@@ -498,13 +514,48 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         self._dirty = False
 
+        return serialized
+
+    ##  Gets the metadata of an instance container from a serialised format.
+    #
+    #   This parses the entire CFG document and only extracts the metadata from
+    #   it.
+    #
+    #   \param serialized A CFG document, serialised as a string.
+    #   \param container_id The ID of the container to get the metadata of, as
+    #   obtained from the file name.
+    #   \return A dictionary of metadata that was in the CFG document in a
+    #   singleton list. If anything went wrong, this returns an empty list
+    #   instead.
+    @classmethod
+    def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
+        serialized = cls._updateSerialized(serialized) #Update to most recent version.
+        parser = configparser.ConfigParser(interpolation = None)
+        parser.read_string(serialized)
+
+        metadata = {
+            "id": container_id,
+            "container_type": InstanceContainer
+        }
+        try:
+            metadata["name"] = parser["general"]["name"]
+            metadata["version"] = parser["general"]["version"]
+            metadata["definition"] = parser["general"]["definition"]
+        except KeyError: #One of the keys or the General section itself is missing.
+            return []
+
+        if "metadata" in parser:
+            metadata = {**metadata, **parser["metadata"]}
+
+        return [metadata]
+
     ##  Instance containers are lazy loaded. This function ensures that it happened.
     def _instantiateCachedValues(self):
         if not self._cached_values:
             return
 
         for key, value in self._cached_values.items():
-            self.setProperty(key, "value", value, self._definition, set_from_cache=True)
+            self.setProperty(key, "value", value, self.getDefinition(), set_from_cache=True)
 
         self._cached_values = None
 
@@ -525,7 +576,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     ##  Get an instance by key
     #
-    def getInstance(self, key: str) -> SettingInstance:
+    def getInstance(self, key: str) -> Optional[SettingInstance]:
         self._instantiateCachedValues()
         if key in self._instances:
             return self._instances[key]
@@ -587,14 +638,17 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self) -> DefinitionContainerInterface:
-        return self._definition
+        definitions = _containerRegistry.findDefinitionContainers(id = self._metadata["definition"])
+        if not definitions:
+            raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(self._metadata["definition"], self.getId()))
+        return definitions[0]
 
     ##  Set the DefinitionContainer to use for new instance creation.
     #
     #   Since SettingInstance needs a SettingDefinition to work properly, we need some
     #   way of figuring out what SettingDefinition to use when creating a new SettingInstance.
-    def setDefinition(self, definition: DefinitionContainerInterface):
-        self._definition = definition
+    def setDefinition(self, definition_id: str):
+        self._metadata["definition"] = definition_id
 
     def __lt__(self, other):
         own_weight = int(self.getMetaDataEntry("weight", 0))
@@ -603,7 +657,11 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         if own_weight and other_weight:
             return own_weight < other_weight
 
-        return self._name < other.name
+        return self.getName() < other.getName()
+
+    ##  Simple string representation for debugging.
+    def __str__(self):
+        return "<InstanceContainer '{container_id}' ('{name}')>".format(container_id = self.getId(), name = self.getName())
 
     ##  Send postponed emits
     #   These emits are collected from the option postpone_emit.

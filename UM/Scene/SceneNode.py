@@ -1,5 +1,8 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
+from copy import deepcopy
+import numpy
 from typing import List, Optional
 
 from UM.Math.Matrix import Matrix
@@ -13,10 +16,6 @@ from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
 
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
-
-from copy import deepcopy
-import numpy
-
 
 ##  A scene node object.
 #
@@ -125,6 +124,9 @@ class SceneNode:
 
     def getMirror(self) -> Vector:
         return self._mirror
+
+    def setMirror(self, vector) -> Vector:
+        self._mirror = vector
 
     ##  Get the MeshData of the bounding box
     #   \returns \type{MeshData} Bounding box mesh.
@@ -297,7 +299,7 @@ class SceneNode:
     #          If this node is a group, it will recursively concatenate all child nodes/objects.
     #   \returns MeshData
     def getMeshDataTransformed(self) -> Optional[MeshData]:
-        return MeshData(vertices = self.getMeshDataTransformedVertices())
+        return MeshData(vertices = self.getMeshDataTransformedVertices(), normals = self.getMeshDataTransformedNormals())
 
     ##  \brief Get the transformed vertices from this scene node/object, based on the transformation of scene nodes wrt root.
     #          If this node is a group, it will recursively concatenate all child nodes/objects.
@@ -315,6 +317,22 @@ class SceneNode:
             transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation()).getVertices()
         return transformed_vertices
 
+    ##  \brief Get the transformed normals from this scene node/object, based on the transformation of scene nodes wrt root.
+    #          If this node is a group, it will recursively concatenate all child nodes/objects.
+    #   \return numpy.ndarray
+    def getMeshDataTransformedNormals(self) -> numpy.ndarray:
+        transformed_normals = None
+        if self.callDecoration("isGroup"):
+            for child in self._children:
+                tv = child.getMeshDataTransformedNormals()
+                if transformed_normals is None:
+                    transformed_normals = tv
+                else:
+                    transformed_normals = numpy.concatenate((transformed_normals, tv), axis = 0)
+        else:
+            transformed_normals = self._mesh_data.getTransformed(self.getWorldTransformation()).getNormals()
+        return transformed_normals
+
     ##  \brief Set the mesh of this node/object
     #   \param mesh_data MeshData object
     def setMeshData(self, mesh_data: Optional[MeshData]):
@@ -331,19 +349,21 @@ class SceneNode:
     ##  \brief Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
     def addChild(self, scene_node: "SceneNode"):
-        if scene_node not in self._children:
-            scene_node.transformationChanged.connect(self.transformationChanged)
-            scene_node.childrenChanged.connect(self.childrenChanged)
-            scene_node.meshDataChanged.connect(self.meshDataChanged)
+        if scene_node in self._children:
+            return
 
-            self._children.append(scene_node)
-            self._resetAABB()
-            self.childrenChanged.emit(self)
+        scene_node.transformationChanged.connect(self.transformationChanged)
+        scene_node.childrenChanged.connect(self.childrenChanged)
+        scene_node.meshDataChanged.connect(self.meshDataChanged)
 
-            if not scene_node._parent is self:
-                scene_node._parent = self
-                scene_node._transformChanged()
-                scene_node.parentChanged.emit(self)
+        self._children.append(scene_node)
+        self._resetAABB()
+        self.childrenChanged.emit(self)
+
+        if not scene_node._parent is self:
+            scene_node._parent = self
+            scene_node._transformChanged()
+            scene_node.parentChanged.emit(self)
 
     ##  \brief remove a single child
     #   \param child Scene node that needs to be removed.
@@ -588,7 +608,10 @@ class SceneNode:
 
     ##  Get whether this SceneNode is enabled, that is, it can be modified in any way.
     def isEnabled(self) -> bool:
-        return self._enabled
+        if self._parent is not None and self._enabled:
+            return self._parent.isEnabled()
+        else:
+            return self._enabled
 
     ##  Set whether this SceneNode is enabled.
     #   \param enable True if this object should be enabled, False if not.
@@ -688,3 +711,8 @@ class SceneNode:
             else:
                 aabb = aabb + child.getBoundingBox()
         self._aabb = aabb
+
+    ##  String output for debugging.
+    def __str__(self):
+        name = self._name if self._name != "" else hex(id(self))
+        return "<" + self.__class__.__qualname__ + " object: '" + name + "'>"

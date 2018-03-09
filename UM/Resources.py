@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
@@ -42,6 +42,8 @@ class Resources:
     ContainerStacks = 10
     ## Location of cached data
     Cache = 11
+    ## Location of preset setting visibility groups
+    PresetSettingVisibilityGroups = 12
 
     ## Any custom resource types should be greater than this to prevent collisions with standard types.
     UserType = 128
@@ -94,7 +96,7 @@ class Resources:
                     continue
                 for entry in entries:
                     if not entry.startswith('.') and os.path.isfile(os.path.join(root, entry)):
-                        if not entry in files:
+                        if entry not in files:
                             files[entry] = []
                         files[entry].append(os.path.join(root, entry))
 
@@ -229,6 +231,15 @@ class Resources:
             cls.__initializeStoragePaths()
         return cls.__data_storage_path
 
+    ##  Gets the cache storage path.
+    #
+    #   This is where the application stores cache files.
+    @classmethod
+    def getCacheStoragePath(cls) -> str:
+        if not cls.__cache_storage_path:
+            cls.__initializeStoragePaths()
+        return cls.__cache_storage_path
+
     ##  Gets the search paths for resources.
     #
     #   \return A sequence of paths where resources might be.
@@ -257,7 +268,7 @@ class Resources:
     def __find(cls, resource_type: int, *args) -> List[str]:
         suffix = cls.__types.get(resource_type, None)
         if suffix is None:
-            return None
+            return []
 
         files = []
         for path in cls.__paths:
@@ -371,7 +382,7 @@ class Resources:
             if Platform.isWindows():
                 cls.__cache_storage_path = os.path.join(cls.__cache_storage_path, "cache")
         Logger.log("d", "Cache storage path is %s", cls.__cache_storage_path)
-        if not os.path.exists(cls.__config_storage_path):
+        if not os.path.exists(cls.__config_storage_path) or not os.path.exists(cls.__data_storage_path):
             cls._copyLatestDirsIfPresent()
 
         cls.__paths.insert(0, cls.__data_storage_path)
@@ -397,16 +408,25 @@ class Resources:
             # No earlier storage dirs found, do nothing
             return
 
+        # Copy config folder if needed
         if latest_config_path == this_version_config_path:
             # If the directory found matches the current version, do nothing
-            return
+            Logger.log("d", "Same config path [%s], do nothing.", latest_config_path)
+        else:
+            # Prevent circular import
+            import UM.VersionUpgradeManager
+            UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_config_path, this_version_config_path)
 
-        # Prevent circular import
-        import UM.VersionUpgradeManager
-        UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_config_path, this_version_config_path)
-        # If the data dir is the same as the config dir, don't copy again
-        if latest_data_path is not None and os.path.exists(latest_data_path) and latest_data_path != latest_config_path:
-            UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_data_path, this_version_data_path)
+        # Copy data folder if needed
+        if latest_data_path == this_version_data_path:
+            # If the directory found matches the current version, do nothing
+            Logger.log("d", "Same data path [%s], do nothing.", latest_config_path)
+        else:
+            # If the data dir is the same as the config dir, don't copy again
+            if latest_data_path is not None and os.path.exists(latest_data_path) and latest_data_path != latest_config_path:
+                # Prevent circular import
+                import UM.VersionUpgradeManager
+                UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_data_path, this_version_data_path)
 
         # Remove "cache" if we copied it together with config
         suspected_cache_path = os.path.join(this_version_config_path, "cache")
@@ -417,9 +437,10 @@ class Resources:
     def _findLatestDirInPaths(cls, search_path_list, dir_type="config"):
         # version dir name must match: <digit(s)>.<digit(s)><whatever>
         version_regex = re.compile(r'^[0-9]+\.[0-9]+.*$')
-        check_dir_type_func_dict = {"config": Resources._isNonVersionedConfigDir,
-                                    "data": Resources._isNonVersionedDataDir,
-                                    }
+        check_dir_type_func_dict = {
+            "data": Resources._isNonVersionedDataDir,
+            "config": Resources._isNonVersionedConfigDir
+        }
         check_dir_type_func = check_dir_type_func_dict[dir_type]
 
         latest_config_path = None
@@ -427,7 +448,7 @@ class Resources:
             if not os.path.exists(search_path):
                 continue
 
-            if check_dir_type_func(cls, search_path):
+            if check_dir_type_func(search_path):
                 latest_config_path = search_path
                 break
 
@@ -453,6 +474,7 @@ class Resources:
                 break
         return latest_config_path
 
+    @classmethod
     def _isNonVersionedDataDir(cls, check_path):
         # checks if the given path is (probably) a valid app directory for a version earlier than 2.6
         if not cls.__expected_dir_names_in_data:
@@ -462,6 +484,7 @@ class Resources:
         valid_dir_names = [dn for dn in dirs if dn in Resources.__expected_dir_names_in_data]
         return valid_dir_names
 
+    @classmethod
     def _isNonVersionedConfigDir(cls, check_path):
         dirs, files = next(os.walk(check_path))[1:]
         valid_file_names = [fn for fn in files if fn.endswith(".cfg")]
@@ -491,6 +514,7 @@ class Resources:
         DefinitionContainers: "definitions",
         InstanceContainers: "instances",
         ContainerStacks: "stacks",
+        PresetSettingVisibilityGroups: "preset_setting_visibility_groups",
     }
     __types_storage = {
         Resources: "",

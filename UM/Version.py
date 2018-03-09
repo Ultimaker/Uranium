@@ -6,15 +6,23 @@ import re #To replace parts of version strings with regex.
 class Version(object):
     def __init__(self, version):
         super().__init__()
+
+        if type(version) == bytes:
+            version = version.decode("utf-8")
+
         if isinstance(version, str):
             # Versions are in (MOD-)x.x.x(-x) format.
             version = version.replace("MOD-", "")
             version = version.replace("-", ".")
             version = version.replace("_", ".")
+            version = version.replace("\"", "")
             version = re.sub(r"[A-Z]+", "", version)
             version_list = version.split(".")
-        else:
+        elif isinstance(version, list):
             version_list = version
+        else:
+            version_list = []
+
         self._major = 0
         self._minor = 0
         self._revision = 0

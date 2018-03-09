@@ -1,21 +1,18 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
+from typing import Optional
 import uuid # For creating unique ID's for each container stack.
-import os
 
-from UM.PluginRegistry import PluginRegistry
 from UM.Settings.ContainerRegistry import ContainerRegistry
-from UM.Signal import Signal
-from UM.Resources import Resources
-
-from UM.Settings.Interfaces import ContainerInterface
-from UM.Settings.DefinitionContainer import DefinitionContainer
-from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.ContainerStack import IncorrectVersionError
 from UM.Settings.ContainerStack import InvalidContainerStackError
+from UM.Settings.DefinitionContainer import DefinitionContainer
+from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Settings.Interfaces import ContainerInterface
+from UM.Signal import Signal
 
 ##  A fake container class that implements ContainerInterface.
 #
@@ -25,15 +22,15 @@ from UM.Settings.ContainerStack import InvalidContainerStackError
 class MockContainer(ContainerInterface):
     ##  Creates a mock container with a new unique ID.
     def __init__(self, container_id: str = None):
-        self._id = str(uuid.uuid4() if container_id is None else container_id)
         self._metadata = {}
+        self._metadata["id"] = str(uuid.uuid4() if container_id is None else container_id)
         self.items = {}
 
     ##  Gets the unique ID of the container.
     #
     #   \return A unique identifier for this container.
     def getId(self):
-        return self._id
+        return self._metadata["id"]
 
     ##  Gives an arbitrary name.
     #
@@ -97,7 +94,7 @@ class MockContainer(ContainerInterface):
     #
     #   \return A static string representing a container.
     def serialize(self, ignored_metadata_keys = None):
-        return str(self._id)
+        return str(self._metadata["id"])
 
     ##  Deserialises a string to a container.
     #
@@ -106,13 +103,17 @@ class MockContainer(ContainerInterface):
     #   creates different instances (which is desired).
     #
     #   \param serialized A serialised mock container.
-    def deserialize(self, serialized):
-        self._id = int(serialized)
+    #   \param file_name The file name that the file originated from.
+    def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
+        self._metadata["id"] = int(serialized)
+        return serialized
 
-    def getConfigurationTypeFromSerialized(self, serialized):
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str):
         raise NotImplementedError()
 
-    def getVersionFromSerialized(self, serialized):
+    @classmethod
+    def getVersionFromSerialized(cls, serialized):
         raise NotImplementedError()
 
 
@@ -388,7 +389,7 @@ def test_findContainer(container_stack, data):
         assert answer is None
     else:
         assert answer is not None
-        assert data["result"] == answer.getMetaData()
+        assert data["result"].items() <= answer.getMetaData().items()
 
 ##  Tests getting a container by index.
 #
@@ -606,7 +607,7 @@ def test_serialize(container_stack):
 #
 #   \param container_stack A new container stack from a fixture.
 def test_serialize_with_ignored_metadata_keys(container_stack):
-    ignored_metadata_keys = ["secret"]
+    ignored_metadata_keys = {"secret"}
     registry = ContainerRegistry.getInstance()  # All containers need to be registered in order to be recovered again after deserialising.
 
     # Case with one subcontainer.
@@ -792,8 +793,7 @@ def test_idSpecialCharacters(container_stack, container_registry):
 #
 #   \param container_stack The container stack to serialise and deserialise.
 #   \param ignored_metadata_keys The list of keys that should be ignored when serializing the container stack.
-def _test_serialize_cycle(container_stack, ignored_metadata_keys = None):
-    name = container_stack.getName()
+def _test_serialize_cycle(container_stack, ignored_metadata_keys: Optional[set] = None):
     metadata = {key: value for key, value in container_stack.getMetaData().items()}
     containers = container_stack.getContainers()
 
@@ -808,6 +808,5 @@ def _test_serialize_cycle(container_stack, ignored_metadata_keys = None):
                 del metadata[key]
 
     #ID and nextStack are allowed to be different.
-    assert name == container_stack.getName()
-    assert metadata == container_stack.getMetaData()
+    assert metadata.items() <= container_stack.getMetaData().items()
     assert containers == container_stack.getContainers()
