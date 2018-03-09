@@ -631,9 +631,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         if self._next_stack:
             self._next_stack.propertyChanged.disconnect(self._collectPropertyChanges)
+            self.containersChanged.disconnect(self._next_stack.containersChanged)
         self._next_stack = stack
         if self._next_stack and connect_signals:
             self._next_stack.propertyChanged.connect(self._collectPropertyChanges)
+            self.containersChanged.connect(self._next_stack.containersChanged)
 
     ##  Send postponed emits
     #   These emits are collected from the option postpone_emit.
