@@ -106,6 +106,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if name != self.getName():
             self._metadata["name"] = name
             self.nameChanged.emit()
+            self.metaDataChanged.emit(self)
 
     ##  Emitted whenever the name of this stack changes.
     nameChanged = pyqtSignal()
