@@ -691,4 +691,4 @@ class _EmptyInstanceContainer(InstanceContainer):
         return ""  # FIXME: not sure if this is correct
 
     def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
-        return "[general]\n version = 2\n name = empty\n definition = fdmprinter\n"
+        return "[general]\n version = " + str(InstanceContainer.Version) + "\n name = empty\n definition = fdmprinter\n"
