@@ -80,6 +80,7 @@ class MockContainer(ContainerInterface):
         return None
 
     propertyChanged = Signal()
+    containersChanged = Signal()
 
     metaDataChanged = Signal()
 
