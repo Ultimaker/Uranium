@@ -171,6 +171,12 @@ class SettingPropertyProvider(QObject):
                     old_value = self.getPropertyValue(property_name, index)
 
                     key_state = str(self._stack.getContainer(self._store_index).getProperty(self._key, "state"))
+
+                    # The old_value might be a SettingFunction, like round(), sum(), etc.
+                    #  In this case retrieve the value to compare
+                    if isinstance(old_value, SettingFunction):
+                        old_value = old_value(self._stack)
+
                     # sometimes: old value is int, property_value is float
                     # (and the container is not removed, so the revert button appears)
                     if str(old_value) == str(property_value) and key_state != "InstanceState.Calculated":
