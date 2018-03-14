@@ -61,7 +61,7 @@ class ContainerQuery:
     #   the result can be retrieved with getResult().
     def execute(self, candidates = None):
         if candidates is None:
-            candidates = self._registry.metadata.values()
+            candidates = list(self._registry.metadata.values())
 
         #Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
