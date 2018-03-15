@@ -338,30 +338,45 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     @UM.FlameProfiler.profile
     def addContainer(self, container: ContainerInterface) -> None:
-        if container.getId() in self._containers:
-            Logger.log("w", "Container with ID %s was already added.", container.getId())
+        container_id = container.getId()
+        if container_id in self._containers:
+            Logger.log("w", "Container with ID %s was already added.", container_id)
             return
 
         if hasattr(container, "metaDataChanged"):
             container.metaDataChanged.connect(self._onContainerMetaDataChanged)
 
-        self.metadata[container.getId()] = container.getMetaData()
-        self._containers[container.getId()] = container
-        if container.getId() not in self.source_provider:
-            self.source_provider[container.getId()] = None #Added during runtime.
+        self.metadata[container_id] = container.getMetaData()
+        self._containers[container_id] = container
+        if container_id not in self.source_provider:
+            self.source_provider[container_id] = None #Added during runtime.
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
+        Logger.log("d", "Container [%s] added.", container_id)
 
     @UM.FlameProfiler.profile
     def removeContainer(self, container_id: str) -> None:
-        if container_id not in self._containers:
+        # Here we only need to check metadata because a container may not be loaded but its metadata must have been
+        # loaded first.
+        if container_id not in self.metadata:
             Logger.log("w", "Tried to delete container {container_id}, which doesn't exist or isn't loaded.".format(container_id = container_id))
-            return #Ignore.
+            return  # Ignore.
 
-        container = self._containers[container_id]
+        # TODO: This is not efficient. Now we can load metadata before any container is loaded, operations such as
+        # removing a container and its resulting signals should not depend on having a container first. It should be
+        # possible to remove a container that exists in the provider without loading it first.
+        # For now, we load the container if it is not there to prevent breaking dependencies.
+        container = self._containers.get(container_id)
+        if container is None:
+            metadata = self.metadata[container_id]
+            if issubclass(metadata["container_type"], InstanceContainer):
+                container = self.findInstanceContainers(id = container_id)[0]
+            elif issubclass(metadata["container_type"], ContainerStack):
+                container = self.findContainerStacks(id = container_id)[0]
 
         source_provider = self.source_provider[container_id]
-        del self._containers[container_id]
+        if container_id in self._containers:
+            del self._containers[container_id]
         del self.metadata[container_id]
         del self.source_provider[container_id]
         if source_provider is not None:
@@ -373,16 +388,23 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._clearQueryCacheByContainer(container)
         self.containerRemoved.emit(container)
 
-        Logger.log("d", "Removed container %s", container.getId())
+        Logger.log("d", "Removed container %s", container_id)
 
     @UM.FlameProfiler.profile
     def renameContainer(self, container_id, new_name, new_id = None):
         Logger.log("d", "Renaming container %s to %s", container_id, new_name)
-        if container_id not in self._containers:
+        # Same as removeContainer(), metadata is always loaded but containers may not, so always check metadata.
+        if container_id not in self.metadata:
             Logger.log("w", "Unable to rename container %s, because it does not exist", container_id)
             return
 
-        container = self._containers[container_id]
+        container = self._containers.get(container_id)
+        if container is None:
+            metadata = self.metadata[container_id]
+            if issubclass(metadata["container_type"], InstanceContainer):
+                container = self.findInstanceContainers(id = container_id)[0]
+            elif issubclass(metadata["container_type"], ContainerStack):
+                container = self.findContainerStacks(id = container_id)[0]
 
         if new_name == container.getName():
             Logger.log("w", "Unable to rename container %s, because the name (%s) didn't change", container_id, new_name)
@@ -589,6 +611,8 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   This function passes it on to the containerMetaDataChanged signal. Sadly
     #   that doesn't work automatically between pyqtSignal and UM.Signal.
     def _onContainerMetaDataChanged(self, *args, **kwargs):
+        container = args[0]
+        self.metadata[container.getId()] = container.getMetaData()  # refresh the metadata
         self.containerMetaDataChanged.emit(*args, **kwargs)
 
     ##  Get the lock filename including full path
@@ -667,4 +691,4 @@ class _EmptyInstanceContainer(InstanceContainer):
         return ""  # FIXME: not sure if this is correct
 
     def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
-        return "[general]\n version = 2\n name = empty\n definition = fdmprinter\n"
+        return "[general]\n version = " + str(InstanceContainer.Version) + "\n name = empty\n definition = fdmprinter\n"

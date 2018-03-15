@@ -55,8 +55,7 @@ class Logger:
                 message = new_message
 
             current_thread = threading.current_thread()
-            thread_info = "(%s)-%s" % (current_thread.ident, current_thread.name)
-            message = "[{thread}] {class_name}.{function} [{line}]: {message}".format(thread = thread_info,
+            message = "[{thread}] {class_name}.{function} [{line}]: {message}".format(thread = current_thread.name,
                                                                                       class_name = caller_frame.f_globals["__name__"],
                                                                                       function = frame_info.function,
                                                                                       line = frame_info.lineno,

@@ -51,10 +51,10 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  Constructor
     #
     #   \param container_id A unique, machine readable/writable ID for this container.
-    def __init__(self, container_id: str, i18n_catalog = None, *args, **kwargs):
+    def __init__(self, container_id: str, i18n_catalog = None, parent = None, *args, **kwargs):
         # Note that we explicitly pass None as QObject parent here. This is to be able
         # to support pickling.
-        super().__init__(parent = None, *args, **kwargs)
+        super().__init__(parent = parent, *args, **kwargs)
 
         self._metadata = {"id": container_id,
                           "name": container_id,

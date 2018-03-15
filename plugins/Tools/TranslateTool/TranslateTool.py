@@ -138,7 +138,7 @@ class TranslateTool(Tool):
         bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
-        if not Float.fuzzyCompare(parsed_z, float(bounding_box.center.y), DIMENSION_TOLERANCE):
+        if not Float.fuzzyCompare(parsed_z, float(bounding_box.bottom), DIMENSION_TOLERANCE):
             for selected_node in Selection.getAllSelectedObjects():
                 # Note: The switching of z & y is intentional. We display z as up for the user,
                 # But store the data in openGL space.

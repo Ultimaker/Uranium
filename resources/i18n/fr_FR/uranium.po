@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.2\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-01-29 09:48+0000\n"
-"PO-Revision-Date: 2018-02-05 13:25+0100\n"
+"PO-Revision-Date: 2018-02-08 10:54+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: French <info@bothof.nl>\n"
 "Language: fr_FR\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
@@ -308,7 +309,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Le plug-in a été installé.\nVeuillez redémarrer l'application pour activer le plug-in."
+msgstr ""
+"Le plug-in a été installé.\n"
+"Veuillez redémarrer l'application pour activer le plug-in."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -317,7 +320,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "Échec de l'installation du plug-in de <filename>{0}</filename> :\n<message>{1}</message>"
+msgstr ""
+"Échec de l'installation du plug-in de <filename>{0}</filename> :\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -326,7 +331,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Échec de l'installation du plug-in;\n<message>{0}</message>"
+msgstr ""
+"Échec de l'installation du plug-in;\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -568,7 +575,7 @@ msgstr "Mettre à jour « %1 »"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
 msgctxt "@action:button"
 msgid "Update profile"
-msgstr "Mettre à jour un profil"
+msgstr "Mettre à jour le profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
 msgctxt "@action:button"
@@ -713,12 +720,12 @@ msgstr "Générateur STL"
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr "Affiche les journaux d'évènements (log) dans la console."
+msgstr "Affiche les journaux d'événements (log) dans la console."
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
-msgstr "Journal d'évènements en console"
+msgstr "Journal d'événements en console"
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "description"

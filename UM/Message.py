@@ -1,7 +1,6 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Application import Application
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from PyQt5.QtCore import QTimer, pyqtSignal, QObject
@@ -30,6 +29,7 @@ class Message(QObject):
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
     def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None, title = None, parent = None): #pylint: disable=bad-whitespace
         super().__init__(parent)
+        from UM.Application import Application
         self._application = Application.getInstance()
         self._visible = False
         self._text = text

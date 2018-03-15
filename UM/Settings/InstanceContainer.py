@@ -40,13 +40,13 @@ MimeTypeDatabase.addMimeType(
 #
 @signalemitter
 class InstanceContainer(QObject, ContainerInterface, PluginObject):
-    Version = 2
+    Version = 3
 
     ##  Constructor
     #
     #   \param container_id A unique, machine readable/writable ID for this container.
-    def __init__(self, container_id: str, *args, **kwargs):
-        super().__init__(parent = None, *args, **kwargs)
+    def __init__(self, container_id: str, parent = None, *args, **kwargs):
+        super().__init__(parent = parent, *args, **kwargs)
 
         self._metadata = {
             "id": container_id,
@@ -359,10 +359,11 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  Get all the keys of the instances of this container
     #   \returns list of keys
     def getAllKeys(self):
+        keys = set(key for key in self._instances)
         if self._cached_values:
             # If we only want the keys and the actual values are still cached, just get the keys from the cache.
-            return self._cached_values.keys()
-        return [key for key in self._instances]
+            keys.update(self._cached_values.keys())
+        return list(keys)
 
     ##  Create a new InstanceContainer with the same contents as this container
     #

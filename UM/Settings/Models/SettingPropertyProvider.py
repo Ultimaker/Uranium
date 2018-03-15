@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+from PyQt5.QtCore import QObject, QTimer, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlPropertyMap
 from UM.FlameProfiler import pyqtSlot
 
@@ -40,7 +40,12 @@ class SettingPropertyProvider(QObject):
         self._remove_unused_value = True
         self._validator = None
 
-        self.storeIndexChanged.connect(self._update)
+        self._update_timer = QTimer()
+        self._update_timer.setInterval(100)
+        self._update_timer.setSingleShot(True)
+        self._update_timer.timeout.connect(self._update)
+
+        self.storeIndexChanged.connect(self._storeIndexChanged)
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
@@ -51,7 +56,7 @@ class SettingPropertyProvider(QObject):
 
         if self._stack:
             self._stack.propertiesChanged.disconnect(self._onPropertiesChanged)
-            self._stack.containersChanged.disconnect(self._update)
+            self._stack.containersChanged.disconnect(self._containersChanged)
 
         if self._stack_id:
             if self._stack_id == "global":
@@ -63,7 +68,7 @@ class SettingPropertyProvider(QObject):
 
             if self._stack:
                 self._stack.propertiesChanged.connect(self._onPropertiesChanged)
-                self._stack.containersChanged.connect(self._update)
+                self._stack.containersChanged.connect(self._containersChanged)
         else:
             self._stack = None
 
@@ -171,6 +176,12 @@ class SettingPropertyProvider(QObject):
                     old_value = self.getPropertyValue(property_name, index)
 
                     key_state = str(self._stack.getContainer(self._store_index).getProperty(self._key, "state"))
+
+                    # The old_value might be a SettingFunction, like round(), sum(), etc.
+                    #  In this case retrieve the value to compare
+                    if isinstance(old_value, SettingFunction):
+                        old_value = old_value(self._stack)
+
                     # sometimes: old value is int, property_value is float
                     # (and the container is not removed, so the revert button appears)
                     if str(old_value) == str(property_value) and key_state != "InstanceState.Calculated":
@@ -306,6 +317,15 @@ class SettingPropertyProvider(QObject):
         # Force update of value_used
         self._value_used = None
         self.isValueUsedChanged.emit()
+
+    def _updateDelayed(self, container = None):
+        self._update_timer.start()
+
+    def _containersChanged(self, container = None):
+        self._updateDelayed(container = container)
+
+    def _storeIndexChanged(self, container = None):
+        self._updateDelayed(container = container)
 
     ##  Updates the self._stack_levels field, which indicates at which levels in
     #   the stack the property is set.

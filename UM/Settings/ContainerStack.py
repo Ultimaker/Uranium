@@ -47,15 +47,15 @@ MimeTypeDatabase.addMimeType(
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
 class ContainerStack(QObject, ContainerInterface, PluginObject):
-    Version = 3 # type: int
+    Version = 4 # type: int
 
     ##  Constructor
     #
     #   \param stack_id \type{string} A unique, machine readable/writable ID.
-    def __init__(self, stack_id: str, *args, **kwargs):
+    def __init__(self, stack_id: str, parent = None, *args, **kwargs):
         # Note that we explicitly pass None as QObject parent here. This is to be able
         # to support pickling.
-        super().__init__(parent = None, *args, **kwargs)
+        super().__init__(parent = parent, *args, **kwargs)
 
         self._metadata = {
             "id": stack_id,
@@ -106,6 +106,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if name != self.getName():
             self._metadata["name"] = name
             self.nameChanged.emit()
+            self.metaDataChanged.emit(self)
 
     ##  Emitted whenever the name of this stack changes.
     nameChanged = pyqtSignal()
@@ -630,9 +631,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         if self._next_stack:
             self._next_stack.propertyChanged.disconnect(self._collectPropertyChanges)
+            self.containersChanged.disconnect(self._next_stack.containersChanged)
         self._next_stack = stack
         if self._next_stack and connect_signals:
             self._next_stack.propertyChanged.connect(self._collectPropertyChanges)
+            self.containersChanged.connect(self._next_stack.containersChanged)
 
     ##  Send postponed emits
     #   These emits are collected from the option postpone_emit.

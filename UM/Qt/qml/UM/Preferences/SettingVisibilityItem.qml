@@ -55,7 +55,7 @@ Item {
         UM.RecolorImage
         {
             anchors.centerIn: parent
-            width: Math.floor(check.height * 0.75)
+            width: Math.round(check.height * 0.75) | 0
             height: width
 
             source: UM.Theme.getIcon("notice")

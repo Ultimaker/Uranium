@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QUrl
+from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QUrl, QVariant
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
@@ -47,6 +47,15 @@ class ActiveToolProxy(QObject):
         action = getattr(self._active_tool, action)
         if action:
             action()
+
+    @pyqtSlot(str, QVariant)
+    def triggerActionWithData(self, action, data):
+        if not self._active_tool:
+            return
+
+        action = getattr(self._active_tool, action)
+        if action:
+            action(data)
 
     propertiesChanged = pyqtSignal()
     @pyqtProperty(QObject, notify = propertiesChanged)

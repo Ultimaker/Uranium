@@ -1,16 +1,16 @@
 # Uranium
-# Copyright (C) 2017 Ultimaker
+# Copyright (C) 2018 Ultimaker
 # This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.1\n"
+"Project-Id-Version: Uranium 3.2\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-11-23 19:37+0800\n"
+"POT-Creation-Date: 2018-01-29 14:05+0200\n"
+"PO-Revision-Date: 2018-01-30 19:09+0800\n"
 "Last-Translator: Zhang Heh Ji <dinowchang@gmail.com>\n"
-"Language-Team: TEAM\n"
+"Language-Team: Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +85,7 @@ msgstr "下載"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
-msgstr ""
+msgstr "檢查更新時發生錯誤。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
@@ -296,7 +296,7 @@ msgstr "正在載入偏好設定..."
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "自動將物件縮放到原始大小的 {0}% o"
+msgstr "自動將物件縮放到原始大小的 {0}%"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 msgctxt "@info:title"
@@ -394,7 +394,7 @@ msgstr "等比例縮放"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
 msgctxt "@option:check"
 msgid "Lock Model"
-msgstr ""
+msgstr "鎖定模型"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
@@ -778,12 +778,12 @@ msgstr "本機檔案輸出裝置"
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
 msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr ""
+msgstr "提供程式安裝附帶的內建設定容器。"
 
 #: LocalContainerProvider/plugin.json
 msgctxt "name"
 msgid "Local Container Provider"
-msgstr ""
+msgstr "本機容器供應者"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"

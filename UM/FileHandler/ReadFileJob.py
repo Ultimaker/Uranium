@@ -2,15 +2,11 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Job import Job
-from UM.Application import Application
 from UM.Message import Message
-from UM.Math.Vector import Vector
-from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshReader import MeshReader
 
 import time
-import math
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
