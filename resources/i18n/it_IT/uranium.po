@@ -378,12 +378,12 @@ msgstr "Reset"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr "Ridimensionamento aggancio (Snap)"
+msgstr "Ridimens. aggancio (Snap)"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:104
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr "Ridimensionamento uniforme"
+msgstr "Ridimens. uniforme"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
 msgctxt "@option:check"
