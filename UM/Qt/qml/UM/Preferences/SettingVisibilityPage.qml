@@ -64,11 +64,11 @@ PreferencesPage
                 {
                     if(parent.checkedState == Qt.Unchecked || parent.checkedState == Qt.PartiallyChecked)
                     {
-                        definitionsModel.setAllVisible(true)
+                        definitionsModel.setAllExpandedVisible(true)
                     }
                     else
                     {
-                        definitionsModel.setAllVisible(false)
+                        definitionsModel.setAllExpandedVisible(false)
                     }
                 }
             }

@@ -295,13 +295,26 @@ class SettingDefinitionsModel(QAbstractListModel):
         self.setVisible(key, False)
 
     @pyqtSlot(bool)
-    def setAllVisible(self, visible):
+    def setAllExpandedVisible(self, visible):
         new_visible = set()
 
         for index in self._row_index_list:
             definition = self._definition_list[index]
             if definition.type != "category":
                 new_visible.add(self._definition_list[index].key)
+
+        if visible:
+            self._visibility_handler.setVisible(new_visible | self._visible)
+        else:
+            self._visibility_handler.setVisible(self._visible - new_visible)
+
+    @pyqtSlot(bool)
+    def setAllVisible(self, visible):
+        new_visible = set()
+
+        for definition in self._definition_list:
+            if definition.type != "category":
+                new_visible.add(definition.key)
 
         if visible:
             self._visibility_handler.setVisible(new_visible | self._visible)
