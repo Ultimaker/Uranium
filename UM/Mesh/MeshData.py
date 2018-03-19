@@ -14,6 +14,7 @@ import threading
 import numpy
 import numpy.linalg
 import scipy.spatial
+import scipy.spatial.qhull
 import hashlib
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
@@ -388,18 +389,28 @@ def approximateConvexHull(vertex_data: numpy.ndarray, target_count: int) -> Opti
         return None
 
     # Take the convex hull and keep on rounding it off until the number of vertices is below the target_count.
-    hull_result = scipy.spatial.ConvexHull(vertex_data)
+    hull_result = createConvexHull(vertex_data)
     vertex_data = numpy.take(hull_result.points, hull_result.vertices, axis=0)
 
     while len(vertex_data) > target_count and unit_size <= max_unit_size:
         vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
-        hull_result = scipy.spatial.ConvexHull(vertex_data)
+        hull_result = createConvexHull(vertex_data)
         vertex_data = numpy.take(hull_result.points, hull_result.vertices, axis=0)
         unit_size *= 2
 
     end_time = time()
     Logger.log("d", "approximateConvexHull(target_count=%s) Calculating 3D convex hull took %s seconds. %s input vertices. %s output vertices.",
                target_count, end_time - start_time, len(vertex_data), len(hull_result.vertices))
+    return hull_result
+
+
+def createConvexHull(vertex_data: numpy.ndarray) -> Optional[scipy.spatial.ConvexHull]:
+    hull_result = None
+    try:
+        hull_result = scipy.spatial.ConvexHull(vertex_data)
+    except scipy.spatial.qhull.QhullError:
+        # Can get an error when the model is lower dimensional, use "QJ" is make it full dimensional
+        hull_result = scipy.spatial.ConvexHull(vertex_data, qhull_options="QJ")
     return hull_result
 
 
