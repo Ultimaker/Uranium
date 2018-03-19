@@ -1,10 +1,12 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
+from typing import List
 
 from UM.Application import Application
 from UM.i18n import i18nCatalog
+from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Selection import Selection
 from UM.Message import Message
 from UM.OutputDevice import OutputDeviceError
@@ -99,12 +101,12 @@ class OutputDeviceManagerProxy(QObject):
     #   output device.
     #
     #   \param nodes The scene nodes that must be written to the device.
-    #   \param device_id \type{string} The handle of the device to write to.
-    #   \param file_name \type{string} A suggestion for the file name to write
+    #   \param device_id The handle of the device to write to.
+    #   \param file_name A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
     #   \param limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
-    #   \param file_handler What file handler to get the writer from.
-    def _writeToDevice(self, nodes, device_id, file_name, limit_mimetypes, file_type = "mesh", **kwargs):
+    #   \param file_type What file handler to get the writer from.
+    def _writeToDevice(self, nodes: List[SceneNode], device_id: str, file_name: str, limit_mimetypes: bool, file_type: str = "mesh", **kwargs):
         device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return
