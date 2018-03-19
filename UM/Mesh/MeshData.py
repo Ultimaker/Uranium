@@ -410,6 +410,7 @@ def createConvexHull(vertex_data: numpy.ndarray) -> Optional[scipy.spatial.Conve
         hull_result = scipy.spatial.ConvexHull(vertex_data)
     except scipy.spatial.qhull.QhullError:
         # Can get an error when the model is lower dimensional, use "QJ" is make it full dimensional
+        Logger.log("w", "Loaded model is low-dimensional, apply QJ to make it full dimensional")
         hull_result = scipy.spatial.ConvexHull(vertex_data, qhull_options="QJ")
     return hull_result
 
