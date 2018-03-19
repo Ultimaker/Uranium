@@ -74,6 +74,12 @@ class Version(object):
         else:
             return False
 
+    def __ge__(self, other):
+        return self.__gt__(other) or self.__eq__(other)
+
+    def __le__(self, other):
+        return self.__lt__(other) or self.__eq__(other)
+
     def __str__(self):
         return "%s.%s.%s" %(self._major, self._minor, self._revision)
 
