@@ -1,10 +1,19 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import re #To replace parts of version strings with regex.
+from typing import Union
 
-class Version(object):
-    def __init__(self, version):
+##  Represents a version number, like "3.2.8" and allows comparison of those
+#   numbers.
+class Version:
+    ##  Constructs the version instance from a string representing the version.
+    #
+    #   The string representation may have dashes or underscores that separate
+    #   the major, minor and revision version numbers. All text is ignored.
+    #
+    #   \param version A string or bytes representing a version number.
+    def __init__(self, version: Union[str, bytes]):
         super().__init__()
 
         if type(version) == bytes:
@@ -35,16 +44,32 @@ class Version(object):
         except ValueError:
             pass
 
-    def getMajor(self):
+    ##  Gets the major version number.
+    #
+    #   The major version number is the first number of the version: "3" in the
+    #   version "3.2.8".
+    def getMajor(self) -> int:
         return self._major
 
-    def getMinor(self):
+    ##  Gets the minor version number.
+    #
+    #   The minor version number is the second number of the version: "2" in the
+    #   version "3.2.8".
+    def getMinor(self) -> int:
         return self._minor
 
-    def getRevision(self):
+    ##  Gets the revision or patch version number.
+    #
+    #   The revision version number is the third number of the version: "8" in
+    #   the version "3.2.8".
+    def getRevision(self) -> int:
         return self._revision
 
-    def __gt__(self, other):
+    ##  Indicates whether this version is later than the specified version.
+    #
+    #   Implements the > operator.
+    #   \param other Either another version object or a string representing one.
+    def __gt__(self, other: Union["Version", str]) -> bool:
         if isinstance(other, Version):
             return other.__lt__(self)
         elif isinstance(other, str):
@@ -52,7 +77,11 @@ class Version(object):
         else:
             return False
 
-    def __lt__(self, other):
+    ##  Indicates whether this version is earlier than the specified version.
+    #
+    #   Implements the < operator.
+    #   \param other Either another version object or a string representing one.
+    def __lt__(self, other: Union["Version", str]) -> bool:
         if isinstance(other, Version):
             if self._major < other.getMajor():
                 return True
@@ -66,7 +95,11 @@ class Version(object):
         else:
             return False
 
-    def __eq__(self, other):
+    ##  Indicates whether this version is equal to the specified version.
+    #
+    #   Implements the == operator.
+    #   \param other Either another version object or a string representing one.
+    def __eq__(self, other: Union["Version", str]) -> bool:
         if isinstance(other, Version):
             return self._major == other.getMajor() and self._minor == other.getMinor() and self._revision == other.getRevision()
         elif isinstance(other, str):
@@ -74,14 +107,29 @@ class Version(object):
         else:
             return False
 
-    def __ge__(self, other):
+    ##  Indicates whether this version is later or equal to the specified
+    #   version.
+    #
+    #   Implements the >= operator.
+    #   \param other Either another version object or a string representing one.
+    def __ge__(self, other: Union["Version", str]) -> bool:
         return self.__gt__(other) or self.__eq__(other)
 
-    def __le__(self, other):
+    ##  Indicates whether this version is earlier or equal to the specified
+    #   version.
+    #
+    #   Implements the <= operator.
+    #   \param other Either another version object or a string representing one.
+    def __le__(self, other: Union["Version", str]) -> bool:
         return self.__lt__(other) or self.__eq__(other)
 
-    def __str__(self):
+    ##  Returns a string representation containing the major, minor and revision
+    #   number.
+    #
+    #   Such as "3.2.8".
+    def __str__(self) -> str:
         return "%s.%s.%s" %(self._major, self._minor, self._revision)
 
-    def __hash__(self):
+    ##  Returns a number reasonably representing the identity of the version.
+    def __hash__(self) -> int:
         return hash(self.__str__())
