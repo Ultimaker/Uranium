@@ -256,7 +256,7 @@ class ScaleTool(Tool):
     def getScaleX(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).x), 4))
+            return abs(round(float(Selection.getSelectedObject(0).getScale().x), 4))
 
         return 1.0
 
@@ -266,7 +266,7 @@ class ScaleTool(Tool):
     def getScaleY(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).y), 4))
+            return abs(round(float(Selection.getSelectedObject(0).getScale().y), 4))
 
         return 1.0
 
@@ -276,7 +276,7 @@ class ScaleTool(Tool):
     def getScaleZ(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).z), 4))
+            return abs(round(float(Selection.getSelectedObject(0).getScale().z), 4))
 
         return 1.0
 
@@ -349,7 +349,7 @@ class ScaleTool(Tool):
     def setScaleX(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = self._getScaleInWorldCoordinates(obj)
+            obj_scale = obj.getScale()
             if round(float(obj_scale.x), 4) != scale:
                 scale_factor = abs(scale / obj_scale.x)
                 if self._non_uniform_scale:
@@ -369,7 +369,7 @@ class ScaleTool(Tool):
     def setScaleY(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = self._getScaleInWorldCoordinates(obj)
+            obj_scale = obj.getScale()
             if round(float(obj_scale.y), 4) != scale:
                 scale_factor = abs(scale / obj_scale.y)
                 if self._non_uniform_scale:
@@ -389,7 +389,7 @@ class ScaleTool(Tool):
     def setScaleZ(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = self._getScaleInWorldCoordinates(obj)
+            obj_scale = obj.getScale()
             if round(float(obj_scale.z), 4) != scale:
                 scale_factor = abs(scale / obj_scale.z)
                 if self._non_uniform_scale:
@@ -404,6 +404,7 @@ class ScaleTool(Tool):
                 op.push()
 
     ##  Convenience function that gives the scale of an object in the coordinate space of the world.
+    #   The function might return wrong value if the grouped models are rotated
     #
     #   \param node type(SceneNode)
     #   \return scale type(float) scale factor (1.0 = normal scale)
