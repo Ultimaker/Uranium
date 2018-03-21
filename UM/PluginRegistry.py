@@ -428,9 +428,9 @@ class PluginRegistry(QObject):
             self._plugins_installed.remove(plugin_id)
 
         except:
-            Logger.logException("d", "An exception occurred while uninstalling %s. Scheduling the plugin to be remove in the next startup.", plugin_path)
+            Logger.logException("d", "An exception occurred while uninstalling %s. Scheduling the plugin to be remove in the next startup.", plugin_id)
             self.lazyRemovePlugin(plugin_id)
-            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin. Plugin will be remove after a restart of Cura.");
+            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin. Plugin will be removed after the application restarts.")
             return result
 
         result["status"] = "ok"
