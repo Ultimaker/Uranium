@@ -110,6 +110,10 @@ class QtApplication(QApplication, Application):
         i18n_catalog = i18nCatalog("uranium")
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
+        # There are maybe some plugins that couln't be removed while the application was running
+        self._removePlugins()
+        # Force the configuration file to be written again since the list of plugins to remove maybe changed
+        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
         self._loadPlugins()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         self.pluginsLoaded.emit()

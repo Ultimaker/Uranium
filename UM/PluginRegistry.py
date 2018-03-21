@@ -46,10 +46,11 @@ class PluginRegistry(QObject):
         self._plugins_available = []  # type: List[str]
         self._plugins_installed = []  # type: List[str]
 
-        # NOTE: The disabled_plugins is explicitly set to None. When actually
-        # loading the preferences, it's set to a list. This way we can see the
+        # NOTE: The disabled_plugins and plugins_to_remove is explicitly set to None.
+        # When actually loading the preferences, it's set to a list. This way we can see the
         # difference between no list and an empty one.
         self._disabled_plugins = None # type: Optional[List[str]]
+        self._plugins_to_remove = None # type: Optional[List[str]]
 
         # Keep track of which plugins are 3rd-party
         self._plugins_external = []   # type: List[str]
@@ -65,6 +66,7 @@ class PluginRegistry(QObject):
         self._supported_file_types = {"umplugin": "Uranium Plugin"}
         preferences = Preferences.getInstance()
         preferences.addPreference("general/disabled_plugins", "")
+        preferences.addPreference("general/plugins_to_remove", "")
 # TODO:
 # - [ ] Improve how metadata is stored. It should not be in the 'plugin' prop
 #       of the dictionary item.
@@ -119,6 +121,14 @@ class PluginRegistry(QObject):
                 Logger.log("e", "Plugin %s is required, but not added or loaded", plugin_id)
                 return False
         return True
+
+    ##  This function is intended for remove plugins in the next startup.
+    #   Sometimes it's imposible to remove the plugin because some libraries can still be in use so we use this workaround
+    #   to remove the plugin in the next startup.
+    def lazyRemovePlugin(self, plugin_id: str):
+        if plugin_id not in self._plugins_to_remove:
+            self._plugins_to_remove.append(plugin_id)
+        Preferences.getInstance().setValue("general/plugins_to_remove", ",".join(self._plugins_to_remove))
 
     #   Remove plugin from the list of enabled plugins and save to preferences:
     def disablePlugin(self, plugin_id: str):
@@ -285,11 +295,38 @@ class PluginRegistry(QObject):
     def isDisabledPugin(self, plugin_id: str):
         if plugin_id in self._disabled_plugins:
             return True
-        return false
+        return False
 
     #   Check by ID if a plugin is installed:
     def isInstalledPlugin(self, plugin_id: str):
         return plugin_id in self._plugins_installed
+
+    ##  Remove all plugins that are in the list of plugins to remove in the configuration file.
+    #   \param meta_data \type{dict} The meta data that needs to be matched.
+    #   \sa loadPlugin
+    #   NOTE: This is the method which kicks everything off at app launch.
+    def removePlugins(self):
+        # If the list of plugins to remove doesn't exist yet, create it from
+        # saved preferences:
+        if not self._plugins_to_remove:
+            self._plugins_to_remove = Preferences.getInstance().getValue("general/plugins_to_remove").split(",")
+
+        failed_to_remove = []
+
+        for plugin_id in self._plugins_to_remove:
+            # If there is an empty string in the list, it is skipped
+            if plugin_id == "":
+                continue
+            try:
+                self.removePlugin(plugin_id)
+            except:
+                failed_to_remove.append(plugin_id)
+                Logger.log("e", "The plugin %s was scheduled for be removed and Cura could not delete it", plugin_id)
+
+        self._plugins_to_remove = []
+        Preferences.getInstance().setValue("general/plugins_to_remove", "")
+        for plugin_id in failed_to_remove:
+            self.lazyRemovePlugin(plugin_id)
 
     ##  Load all plugins matching a certain set of metadata
     #   \param meta_data \type{dict} The meta data that needs to be matched.
@@ -380,32 +417,35 @@ class PluginRegistry(QObject):
     #   Uninstall a plugin with a given ID:
     @pyqtSlot(str, result="QVariantMap")
     def uninstallPlugin(self, plugin_id: str):
-        Logger.log("d", "Uninstall plugin got ID: %s", plugin_id)
-        plugin_folder = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
-        plugin_path = os.path.join(plugin_folder, plugin_id)
-        Logger.log("i", "Attempting to uninstall %s", plugin_path)
         result = {"status": "error", "message": "", "id": plugin_id}
         success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease re-start the application to finish uninstall.")
 
         try:
-            # Remove the files from the plugins directory:
-            shutil.rmtree(plugin_path)
+            self.removePlugin(plugin_id)
 
             # Remove the plugin object from the Plugin Registry:
             self._plugins.pop(plugin_id, None)
             self._plugins_installed.remove(plugin_id)
-            # Remove the metadata from the Plugin Registry:
-            # self._metadata[plugin_id] = {}
 
         except:
-            Logger.logException("d", "An exception occurred while uninstalling %s", plugin_path)
-            self.disablePlugin(plugin_id)
-            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin. Plugin is disabled please uninstall after a restart of Cura.");
+            Logger.logException("d", "An exception occurred while uninstalling %s. Scheduling the plugin to be remove in the next startup.", plugin_path)
+            self.lazyRemovePlugin(plugin_id)
+            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin. Plugin will be remove after a restart of Cura.");
             return result
 
         result["status"] = "ok"
         result["message"] = success_message
         return result
+
+    #   Remove the folders of the current plugin
+    def removePlugin(self, plugin_id: str):
+        Logger.log("d", "Uninstall plugin got ID: %s", plugin_id)
+        plugin_folder = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
+        plugin_path = os.path.join(plugin_folder, plugin_id)
+        Logger.log("i", "Attempting to uninstall %s", plugin_path)
+
+        # Remove the files from the plugins directory:
+        shutil.rmtree(plugin_path)
 
 #===============================================================================
 # PRIVATE METHODS
