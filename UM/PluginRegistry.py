@@ -399,8 +399,8 @@ class PluginRegistry(QObject):
 
         except:
             Logger.logException("d", "An exception occurred while uninstalling %s", plugin_path)
-            self.disablePlugin(plugin_id)
-            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin. Plugin is disabled please uninstall after a restart of Cura.");
+
+            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin");
             return result
 
         result["status"] = "ok"
