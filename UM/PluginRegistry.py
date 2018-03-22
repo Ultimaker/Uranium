@@ -418,7 +418,7 @@ class PluginRegistry(QObject):
     @pyqtSlot(str, result="QVariantMap")
     def uninstallPlugin(self, plugin_id: str):
         result = {"status": "error", "message": "", "id": plugin_id}
-        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease re-start the application to finish uninstall.")
+        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart %s to finish uninstall.", self._application.getApplicationName())
 
         try:
             self.removePlugin(plugin_id)
@@ -430,7 +430,7 @@ class PluginRegistry(QObject):
         except:
             Logger.logException("d", "An exception occurred while uninstalling %s. Scheduling the plugin to be remove in the next startup.", plugin_id)
             self.lazyRemovePlugin(plugin_id)
-            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin. Plugin will be removed after the application restarts.")
+            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin. Plugin will be removed after %s restarts.", self._application.getApplicationName())
             return result
 
         result["status"] = "ok"
