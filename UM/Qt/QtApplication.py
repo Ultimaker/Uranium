@@ -189,6 +189,7 @@ class QtApplication(QApplication, Application):
     def hideMessage(self, message):
         with self._message_lock:
             if message in self._visible_messages:
+                message.hide(send_signal = False)  # we're in handling hideMessageSignal so we don't want to resend it
                 self._visible_messages.remove(message)
                 self.visibleMessageRemoved.emit(message)
 

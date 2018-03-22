@@ -187,8 +187,9 @@ class Message(QObject):
     #
     #   While the message object continues to exist in memory, it appears to the
     #   user that it is gone.
-    def hide(self):
+    def hide(self, send_signal = True):
         if self._visible:
             self._visible = False
             self.inactivityTimerStop.emit()
-            self._application.hideMessageSignal.emit(self)
+            if send_signal:
+                self._application.hideMessageSignal.emit(self)
