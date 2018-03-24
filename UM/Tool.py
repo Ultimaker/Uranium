@@ -31,6 +31,9 @@ class Tool(PluginObject):
         self._selection_pass = None
 
         self._controller.toolEnabledChanged.connect(self._onToolEnabledChanged)
+        Selection.selectionChanged.connect(self._onSelectionChanged)
+        self._selected_objects_without_selected_ancestors = None
+
         self._shortcut_key = None
 
     ##  Should be emitted whenever a longer running operation is started, like a drag to scale an object.
@@ -150,3 +153,24 @@ class Tool(PluginObject):
     def _onToolEnabledChanged(self, tool_id: str, enabled: bool):
         if tool_id == self._plugin_id:
             self._enabled = enabled
+
+    def _onSelectionChanged(self):
+        self._selected_objects_without_selected_ancestors = None
+
+    def _getSelectedObjectsWithoutSelectedAncestors(self):
+        if type(self._selected_objects_without_selected_ancestors) != list:
+            nodes = Selection.getAllSelectedObjects()
+            _selected_objects_without_selected_ancestors = []
+            for node in nodes:
+                hasSelectedAncestor = False
+                ancestor = node.getParent()
+                while ancestor:
+                    if Selection.isSelected(ancestor):
+                        hasSelectedAncestor = True
+                        break
+                    ancestor = ancestor.getParent()
+
+                if not hasSelectedAncestor:
+                    _selected_objects_without_selected_ancestors.append(node)
+
+        return result
