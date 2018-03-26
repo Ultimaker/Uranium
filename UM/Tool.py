@@ -162,15 +162,15 @@ class Tool(PluginObject):
             nodes = Selection.getAllSelectedObjects()
             self._selected_objects_without_selected_ancestors = []
             for node in nodes:
-                hasSelectedAncestor = False
+                has_selected_ancestor = False
                 ancestor = node.getParent()
                 while ancestor:
                     if Selection.isSelected(ancestor):
-                        hasSelectedAncestor = True
+                        has_selected_ancestor = True
                         break
                     ancestor = ancestor.getParent()
 
-                if not hasSelectedAncestor:
+                if not has_selected_ancestor:
                     self._selected_objects_without_selected_ancestors.append(node)
 
         return self._selected_objects_without_selected_ancestors
