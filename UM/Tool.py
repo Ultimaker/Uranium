@@ -160,7 +160,7 @@ class Tool(PluginObject):
     def _getSelectedObjectsWithoutSelectedAncestors(self):
         if type(self._selected_objects_without_selected_ancestors) != list:
             nodes = Selection.getAllSelectedObjects()
-            _selected_objects_without_selected_ancestors = []
+            self._selected_objects_without_selected_ancestors = []
             for node in nodes:
                 hasSelectedAncestor = False
                 ancestor = node.getParent()
@@ -171,6 +171,6 @@ class Tool(PluginObject):
                     ancestor = ancestor.getParent()
 
                 if not hasSelectedAncestor:
-                    _selected_objects_without_selected_ancestors.append(node)
+                    self._selected_objects_without_selected_ancestors.append(node)
 
-        return result
+        return self._selected_objects_without_selected_ancestors
