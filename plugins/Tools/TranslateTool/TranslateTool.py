@@ -220,14 +220,39 @@ class TranslateTool(Tool):
                 return False
 
             self._moved = False
+
+            scene_position = self._controller.getScene().getActiveCamera().getPosition().normalized()
+            correct_position = False
+
+            # if the move camera scene aligns to the move vector then we need correct drag plane
+            if(abs(scene_position.x) == 1):
+                correct_position = True
+
             if id == ToolHandle.XAxis:
-                self.setDragPlane(Plane(Vector(0, 0, 1), 0))
+
+                plane_vector = Vector(0, 0, 1)
+                if correct_position:
+                    plane_vector = Vector.Unit_Z
+
+                self.setDragPlane(Plane(plane_vector, 0))
             elif id == ToolHandle.YAxis:
-                self.setDragPlane(Plane(Vector(0, 0, 1), 0))
+
+                plane_vector = Vector(0, 0, 1)
+                if correct_position:
+                    plane_vector = Vector.Unit_X
+
+                self.setDragPlane(Plane(plane_vector, 0))
             elif id == ToolHandle.ZAxis:
-                self.setDragPlane(Plane(Vector(0, 1, 0), 0))
+
+                plane_vector = Vector(0, 1, 0)
+                if correct_position:
+                    plane_vector = Vector.Unit_X
+
+                self.setDragPlane(Plane(plane_vector, 0))
             else:
                 self.setDragPlane(Plane(Vector(0, 1, 0), 0))
+            #temp = self._controller.getScene().getActiveCamera().getPosition().normalized()
+            #self.setDragPlane(Plane(self._controller.getScene().getActiveCamera().getPosition().normalized(), 0))
 
         if event.type == Event.MouseMoveEvent:
             # Perform a translate operation
