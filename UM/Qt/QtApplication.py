@@ -112,22 +112,26 @@ class QtApplication(QApplication, Application):
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         # There are maybe some plugins that couln't be removed while the application was running
         self._removePlugins()
-        # Force the configuration file to be written again since the list of plugins to remove maybe changed
-        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
         self._loadPlugins()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         self.pluginsLoaded.emit()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
-        upgraded = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
-        if upgraded:
-            # Preferences might have changed. Load them again.
-            # Note that the language can't be updated, so that will always revert to English.
-            preferences = Preferences.getInstance()
-            try:
-                preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
-            except FileNotFoundError:
-                pass
+        UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
+
+        # Preferences might have changed. Load them again.
+        # Note that the language can't be updated, so that will always revert to English.
+        preferences = Preferences.getInstance()
+        try:
+            file_name = Resources.getPath(Resources.Preferences, self._application_name + ".cfg")
+            with open(file_name, "r", encoding = "utf-8") as f:
+                serialized = f.read()
+            preferences.deserialize(serialized)
+        except FileNotFoundError:
+            pass
+        # Force the configuration file to be written again since the list of plugins to remove maybe changed
+        Preferences.getInstance().setValue("general/plugins_to_remove", "")
+        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
