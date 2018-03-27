@@ -70,7 +70,7 @@ class MirrorTool(Tool):
                 else:
                     op = GroupedOperation()
 
-                    for node in Selection.getAllSelectedObjects():
+                    for node in self._getSelectedObjectsWithoutSelectedAncestors():
                         if self.getLockedAxis() == ToolHandle.XAxis:
                             mirror = Vector(-1, 1, 1)
                         elif self.getLockedAxis() == ToolHandle.YAxis:
