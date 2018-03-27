@@ -102,7 +102,7 @@ class TranslateTool(Tool):
 
         op = GroupedOperation()
         if not Float.fuzzyCompare(parsed_x, float(bounding_box.center.x), DIMENSION_TOLERANCE):
-            for selected_node in Selection.getAllSelectedObjects():
+            for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
                 world_position = selected_node.getWorldPosition()
                 new_position = world_position.set(x=parsed_x + (world_position.x - bounding_box.center.x))
                 node_op = TranslateOperation(selected_node, new_position, set_position = True)
@@ -119,7 +119,7 @@ class TranslateTool(Tool):
 
         op = GroupedOperation()
         if not Float.fuzzyCompare(parsed_y, float(bounding_box.center.z), DIMENSION_TOLERANCE):
-            for selected_node in Selection.getAllSelectedObjects():
+            for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
                 # Note; The switching of z & y is intentional. We display z as up for the user,
                 # But store the data in openGL space.
                 world_position = selected_node.getWorldPosition()
@@ -139,7 +139,7 @@ class TranslateTool(Tool):
 
         op = GroupedOperation()
         if not Float.fuzzyCompare(parsed_z, float(bounding_box.bottom), DIMENSION_TOLERANCE):
-            for selected_node in Selection.getAllSelectedObjects():
+            for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
                 # Note: The switching of z & y is intentional. We display z as up for the user,
                 # But store the data in openGL space.
                 world_position = selected_node.getWorldPosition()
@@ -161,7 +161,7 @@ class TranslateTool(Tool):
     #
     #   \param value type(bool) the setting state
     def setLockPosition(self, value):
-        for selected_node in Selection.getAllSelectedObjects():
+        for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
             selected_node.setSetting(TranslateToolSettings.LockPosition, value)
 
     def getLockPosition(self):
@@ -169,7 +169,7 @@ class TranslateTool(Tool):
         false_state_counter = 0
         true_state_counter = 0
         if Selection.hasSelection():
-            for selected_node in Selection.getAllSelectedObjects():
+            for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
 
                 if selected_node.getSetting(TranslateToolSettings.LockPosition, False):
                     true_state_counter += 1
@@ -194,11 +194,11 @@ class TranslateTool(Tool):
 
         # Make sure the displayed values are updated if the bounding box of the selected mesh(es) changes
         if event.type == Event.ToolActivateEvent:
-            for node in Selection.getAllSelectedObjects():
+            for node in self._getSelectedObjectsWithoutSelectedAncestors():
                 node.boundingBoxChanged.connect(self.propertyChanged)
 
         if event.type == Event.ToolDeactivateEvent:
-            for node in Selection.getAllSelectedObjects():
+            for node in self._getSelectedObjectsWithoutSelectedAncestors():
                 node.boundingBoxChanged.disconnect(self.propertyChanged)
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
@@ -282,8 +282,7 @@ class TranslateTool(Tool):
                     self.operationStarted.emit(self)
 
                 op = GroupedOperation()
-                for node in Selection.getAllSelectedObjects():
-
+                for node in self._getSelectedObjectsWithoutSelectedAncestors():
                     if not node.getSetting(TranslateToolSettings.LockPosition, False):
                         op.addOperation(TranslateOperation(node, drag))
 
