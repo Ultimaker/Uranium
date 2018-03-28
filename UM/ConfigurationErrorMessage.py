@@ -2,10 +2,11 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import itertools
-from typing import Iterable, Mapping, Union
+from typing import Iterable, Union
 
 from UM.i18n import i18nCatalog
 from UM.Message import Message
+from UM.Resources import Resources
 
 i18n_catalog = i18nCatalog("uranium")
 
@@ -28,6 +29,9 @@ class ConfigurationErrorMessage(Message):
 
         super().__init__(*args, **kwargs)
         self._faulty_containers = set()
+
+        self.addAction("reset", name = "Reset", icon = None, description = "Reset your configuration to factory defaults.")
+        self.actionTriggered.connect(self._actionTriggered)
 
     ##  Show more containers which we know are faulty.
     def addFaultyContainers(self, faulty_containers: Union[Iterable, str], *args):
@@ -53,3 +57,8 @@ class ConfigurationErrorMessage(Message):
                 title = i18n_catalog.i18nc("@info:title", "Configuration errors")
             )
         return cls._instance
+
+    def _actionTriggered(self, _, action_id):
+        if action_id == "reset":
+            Resources.factoryReset()
+            exit(1)
