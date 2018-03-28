@@ -272,16 +272,15 @@ class Resources:
         data_path = cls.getDataStoragePath()
         cache_path = cls.getCacheStoragePath()
 
-        folders_to_backup = []
-        folders_to_remove = []  # only cache folder needs to be removed
+        folders_to_backup = set()
+        folders_to_remove = set()  # only cache folder needs to be removed
 
-        folders_to_backup.append(config_path)
-        if data_path != config_path:
-            folders_to_backup.append(data_path)
+        folders_to_backup.add(config_path)
+        folders_to_backup.add(data_path)
 
         # Only remove the cache folder if it's not the same as data or config
-        if cache_path not in (config_path, data_path):
-            folders_to_remove.append(cache_path)
+        if cache_path not in folders_to_backup:
+            folders_to_remove.add(cache_path)
 
         for folder in folders_to_remove:
             shutil.rmtree(folder, ignore_errors = True)
