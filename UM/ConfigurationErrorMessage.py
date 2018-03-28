@@ -42,7 +42,7 @@ class ConfigurationErrorMessage(Message):
             self._faulty_containers.add(container)
 
         if initial_length != len(self._faulty_containers):
-            self.setText(i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles: {profiles}").format(profiles = "\n".join(self._faulty_containers)))
+            self.setText(i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\nWould you like to reset to factory defaults?").format(profiles = "\n- ".join(self._faulty_containers)))
             self.show()
 
     ##  Creates an instance of this class if one doesn't exist yet.
