@@ -1,6 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import datetime
 import os
 import os.path
 import re
@@ -288,7 +289,6 @@ class Resources:
             base_name = os.path.basename(folder)
             root_dir = os.path.dirname(folder)
 
-            import datetime
             date_now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             idx = 0
             file_name = base_name + "_" + date_now
