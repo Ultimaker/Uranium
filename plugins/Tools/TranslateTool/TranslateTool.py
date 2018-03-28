@@ -228,25 +228,15 @@ class TranslateTool(Tool):
 
             abs_x = abs(camera_direction.x)
             abs_y = abs(camera_direction.y)
-            abs_z = abs(camera_direction.z)
 
             # We have to define a plane vector that is suitable for the selected toolhandle axis
             # and at the same time the camera direction should not be exactly perpendicular to the plane vector
             if id == ToolHandle.XAxis:
-                if abs_y > abs_z:
-                    plane_vector = Vector(0, 1, 0)
-                else:
-                    plane_vector = Vector(0, 0, 1)
+                plane_vector = Vector(0, camera_direction.y, camera_direction.z).normalized()
             elif id == ToolHandle.YAxis:
-                if abs_x > abs_z:
-                    plane_vector = Vector(1, 0, 0)
-                else:
-                    plane_vector = Vector(0, 0, 1)
+                plane_vector = Vector(camera_direction.x, 0, camera_direction.z).normalized()
             elif id == ToolHandle.ZAxis:
-                if abs_x > abs_y:
-                    plane_vector = Vector(1, 0, 0)
-                else:
-                    plane_vector = Vector(0, 1, 0)
+                plane_vector = Vector(camera_direction.x, camera_direction.y, 0).normalized()
             else:
                 if abs_y > DIRECTION_TOLERANCE:
                     plane_vector = Vector(0, 1, 0)
