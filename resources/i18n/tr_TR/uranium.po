@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 3.2\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2018-01-29 09:48+0000\n"
+"POT-Creation-Date: 2018-03-29 08:36+0200\n"
 "PO-Revision-Date: 2018-02-05 13:25+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Turkish <info@bothof.nl>\n"
@@ -85,7 +85,8 @@ msgid "An error occurred while checking for updates."
 msgstr "Güncellemelerin kontrolü sırasında bir hata oluştu."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:128
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Hata"
@@ -181,6 +182,12 @@ msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Dosyayı içeren klasörü açın"
 
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr ""
+
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
 msgid "Scale"
@@ -221,9 +228,33 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Ayna Modeli"
 
+#: /home/ruben/Projects/Uranium/UM/__init__.py:15
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+"Would you like to reset to factory defaults?"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/__init__.py:16
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/__init__.py:17
+msgctxt "@info:title"
+msgid "Configuration errors"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/__init__.py:18
+msgctxt "@info:button"
+msgid "Reset your configuration to factory defaults."
+msgstr ""
+
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:77
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:655
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:70
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -232,7 +263,7 @@ msgstr "Tüm desteklenen türler ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:192
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:78
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:656
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -277,7 +308,7 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} dakika"
 msgstr[1] "{0} dakika"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:114
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:112
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Eklentiler yükleniyor..."
@@ -287,46 +318,66 @@ msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Yapılandırma güncelleniyor..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:130
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:136
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Tercihler yükleniyor..."
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:65
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Nesne özgün boyutun %{0}’sine kadar otomatik ölçeklendirildi"
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:65
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Nesne Ölçeklendiriliyor"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:96
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:220
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Eklenti kurulumu yapıldı.\n Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
+msgstr ""
+"Eklenti kurulumu yapıldı.\n"
+" Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "<filename>{0}</filename> üzerinden eklenti kurulumu başarısız oldu:\n<message>{1}</message>"
+msgstr ""
+"<filename>{0}</filename> üzerinden eklenti kurulumu başarısız oldu:\n"
+"<message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Eklenti kurulumu başarısız oldu;\n<message>{0}</message>"
+msgstr ""
+"Eklenti kurulumu başarısız oldu;\n"
+"<message>{0}</message>"
+
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -344,27 +395,48 @@ msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteği gerektirir. Lütfen ekran kartı sürücülerinizi kontrol edin."
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:153
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:154
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
+msgctxt "@action:button"
+msgid "Reload"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr " <filename>{0}</filename> türündeki dosyalar açılamaz"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:47
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:70
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "Geçersiz Dosya"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:45
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:70
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "<filename>{0}</filename> yüklemesi başarısız oldu"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:54
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "Yükleniyor"
@@ -400,7 +472,7 @@ msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Döndürmeyi Tuttur"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:20
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "Plugins"
@@ -411,52 +483,52 @@ msgctxt "@action:button"
 msgid "Install new plugin"
 msgstr "Yeni eklenti kur"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:55
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:51
 msgctxt "@label"
 msgid "You will need to restart the application before changes in plugins have effect."
 msgstr "Eklentilerde yapılan değişikliklerin geçerli olması için uygulamayı yeniden başlatmanız gerekecektir."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:94
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:87
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
 msgstr "Bu eklenti uygulamanın çalışması için gereklidir."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:111
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:104
 msgctxt "@label"
 msgid "Info..."
 msgstr "Bilgi..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:129
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:122
 msgctxt "@window:title"
 msgid "Install Plugin"
 msgstr "Eklenti Kur"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:138
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:131
 msgctxt "@title:window"
 msgid "Open file(s)"
 msgstr "Dosya aç"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:172
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:165
 msgctxt "@label"
 msgid "No text available"
 msgstr "Metin yok"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:178
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
 msgctxt "@title:window"
 msgid "About %1"
 msgstr "Yaklaşık %1"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:210
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:203
 msgctxt "@label"
 msgid "Author:"
 msgstr "Yazar:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:232
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:225
 msgctxt "@label"
 msgid "Version:"
 msgstr "Sürüm:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:250
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:243
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
@@ -498,12 +570,12 @@ msgctxt "@action:button"
 msgid "OK"
 msgstr "Tamam"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:34
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "Bu ayar etkin makine tarafından saklanmış ve görünür olmayacak."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:51
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
@@ -530,7 +602,7 @@ msgctxt "@title:tab"
 msgid "Printers"
 msgstr "Yazıcılar"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:39
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
 msgctxt "@label"
 msgid "Type"
 msgstr "Tür"
