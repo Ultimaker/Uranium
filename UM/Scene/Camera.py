@@ -23,7 +23,7 @@ if MYPY:
 #   The camera provides a projection matrix and its transformation matrix
 #   can be used as view matrix.
 class Camera(SceneNode.SceneNode):
-    def __init__(self, name: str, parent = None):
+    def __init__(self, name: str = "", parent = None):
         super().__init__(parent)
         self._name = name  # type: str
         self._projection_matrix = Matrix()  # type: Matrix
@@ -36,8 +36,18 @@ class Camera(SceneNode.SceneNode):
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
 
+    def __deepcopy__(self, memo):
+        print(self._mesh_data)
+        copy = super().__deepcopy__(memo)
+        copy._projection_matrix = self._projection_matrix
+        copy._window_height = self._window_height
+        copy._window_width = self._window_width
+        copy._viewport_height = self._viewport_height
+        copy._viewport_width = self._viewport_width
+        return copy
+
     def setMeshData(self, mesh_data: Optional["MeshData"]):
-        assert mesh_data is not None, "Camera's can't have mesh data"
+        assert mesh_data is None, "Camera's can't have mesh data"
 
     def getAutoAdjustViewPort(self):
         return self._auto_adjust_view_port_size
@@ -122,8 +132,12 @@ class Camera(SceneNode.SceneNode):
     def project(self, position: Vector):
         projection = self._projection_matrix
         view = self.getWorldTransformation().getInverse()
+        print(view)
 
+        # TODO: To Future me; Check what happens if you always select the same vertex index for the projection
+        # So check this for vertex selection and for the dual cloud align situation.
         position = position.preMultiply(view)
+        print(position)
         position = position.preMultiply(projection)
-
+        print(position)
         return position.x / position.z / 2.0, position.y / position.z / 2.0
