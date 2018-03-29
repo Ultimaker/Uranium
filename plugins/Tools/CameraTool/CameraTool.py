@@ -258,17 +258,11 @@ class CameraTool(Tool):
 
         move_vector = -delta * move_vector
         if delta != 0:
-            if r > self._min_zoom:
+            if r > self._min_zoom and r < self._max_zoom:
                 camera.translate(move_vector)
                 if self._zoom_to_mouse:
                     # Set the origin of the camera to the new distance, right in front of the new camera position.
                     self._origin = (r * Vector(0.0, 0.0, -1.0)).preMultiply(camera.getWorldTransformation())
-            if r < self._max_zoom:
-                camera.translate(move_vector)
-                if self._zoom_to_mouse:
-                    # Set the origin of the camera to the new distance, right in front of the new camera position.
-                    self._origin = (r * Vector(0.0, 0.0, -1.0)).preMultiply(camera.getWorldTransformation())
-
         self._scene.releaseLock()
 
     ##  Rotate the camera in response to a mouse event.
