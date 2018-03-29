@@ -20,9 +20,9 @@ i18n_catalog = i18nCatalog("uranium")
 #
 #   The main purpose of this class is to provide the root SceneNode.
 @signalemitter
-class Scene():
+class Scene:
     def __init__(self):
-        super().__init__() # Call super to make multiple inheritance work.
+        super().__init__()  # Call super to make multiple inheritance work.
 
         from UM.Scene.SceneNode import SceneNode
         self._root = SceneNode(name= "Root")
@@ -109,6 +109,8 @@ class Scene():
         camera = self.findCamera(name)
         if camera:
             self._active_camera = camera
+        else:
+            Logger.log("w", "Couldn't find camera with name [%s] to activate!" % name)
 
     ##  Signal. Emitted whenever something in the scene changes.
     #   \param object The object that triggered the change.
