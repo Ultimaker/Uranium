@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os  # For getting the IDs from a filename.
@@ -8,6 +8,7 @@ from typing import Any, Dict, Iterable, Optional
 import urllib.parse  # For interpreting escape characters using unquote_plus.
 
 from UM.Application import Application  # To get the current version for finding the cache directory.
+from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.Settings.ContainerRegistry import ContainerRegistry  # To get the resource types for containers.
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType  # To get the type of container we're loading.
@@ -120,10 +121,12 @@ class LocalContainerProvider(ContainerProvider):
                 result_metadatas = clazz.deserializeMetadata(f.read(), container_id) #pylint: disable=no-member
         except IOError as e:
             Logger.log("e", "Unable to load metadata from file {filename}: {error_msg}".format(filename = filename, error_msg = str(e)))
-            raise RuntimeError("Unable to load metadata from file {filename}: {error_msg}".format(filename = filename, error_msg = str(e)))
+            ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id)
+            return None
         except Exception as e:
             Logger.logException("e", "Unable to deserialize metadata for container {filename}: {container_id}: {error_msg}".format(filename = filename, container_id = container_id, error_msg = str(e)))
-            raise RuntimeError("Unable to deserialize metadata for container {filename}: {container_id}: {error_msg}".format(filename = filename, container_id = container_id, error_msg = str(e)))
+            ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id)
+            return None
 
         for metadata in result_metadatas:
             if "id" not in metadata:
