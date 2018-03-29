@@ -20,6 +20,10 @@ class ContainerProxy(QObject):
     def getValue(self, value):
         return self._container.get(value, None)
 
+    @pyqtSlot(str, result="QVariantList")
+    def getValueList(self, value):
+        return self._container.get(value, None)
+
     @pyqtSlot(str, "QVariant")
     def setValue(self, key, value):
         self._container[key] = value

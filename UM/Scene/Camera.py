@@ -132,12 +132,7 @@ class Camera(SceneNode.SceneNode):
     def project(self, position: Vector):
         projection = self._projection_matrix
         view = self.getWorldTransformation().getInverse()
-        print(view)
 
-        # TODO: To Future me; Check what happens if you always select the same vertex index for the projection
-        # So check this for vertex selection and for the dual cloud align situation.
         position = position.preMultiply(view)
-        print(position)
         position = position.preMultiply(projection)
-        print(position)
         return position.x / position.z / 2.0, position.y / position.z / 2.0
