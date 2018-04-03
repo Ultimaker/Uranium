@@ -92,7 +92,7 @@ class SceneNode:
             parent.addChild(self)
 
     def __deepcopy__(self, memo):
-        copy = SceneNode()
+        copy = self.__class__()
         copy.setTransformation(self.getLocalTransformation())
         copy.setMeshData(self._mesh_data)
         copy.setVisible(deepcopy(self._visible, memo))
