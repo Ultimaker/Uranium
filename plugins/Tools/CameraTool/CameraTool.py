@@ -214,14 +214,14 @@ class CameraTool(Tool):
         if not camera or not camera.isEnabled():
             return
 
-        self._scene.acquireLock()
+        self._scene.getSceneLock().acquire()
 
         camera_position = camera.getWorldPosition()
         camera.translate(Vector(-event.deltaX * 100, event.deltaY * 100, 0))
         translation = camera.getWorldPosition() - camera_position
         self._origin += translation
 
-        self._scene.releaseLock()
+        self._scene.getSceneLock().release()
 
     ##  "Zoom" the camera in response to a mouse event.
     #
@@ -232,7 +232,7 @@ class CameraTool(Tool):
         if not camera or not camera.isEnabled():
             return
 
-        self._scene.acquireLock()
+        self._scene.getSceneLock().acquire()
 
         r = (camera.getWorldPosition() - self._origin).length()
         delta = r * (zoom_range / 128 / 10.0)
@@ -263,7 +263,7 @@ class CameraTool(Tool):
                 if self._zoom_to_mouse:
                     # Set the origin of the camera to the new distance, right in front of the new camera position.
                     self._origin = (r * Vector(0.0, 0.0, -1.0)).preMultiply(camera.getWorldTransformation())
-        self._scene.releaseLock()
+        self._scene.getSceneLock().release()
 
     ##  Rotate the camera in response to a mouse event.
     #
@@ -274,7 +274,7 @@ class CameraTool(Tool):
         if not camera or not camera.isEnabled():
             return
 
-        self._scene.acquireLock()
+        self._scene.getSceneLock().acquire()
 
         dx = math.radians(x * 180.0)
         dy = math.radians(y * 180.0)
@@ -301,4 +301,4 @@ class CameraTool(Tool):
         camera.setPosition(n)
         camera.lookAt(self._origin)
 
-        self._scene.releaseLock()
+        self._scene.getSceneLock().release()
