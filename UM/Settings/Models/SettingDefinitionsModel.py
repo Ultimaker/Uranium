@@ -249,7 +249,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Show the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
-    def expandAll(self, key):
+    def expandRecursive(self, key):
         if not self._container:
             return
 
@@ -260,7 +260,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         for child in definitions[0].children:
             if child.children:
-                self.expandAll(child.key)
+                self.expandRecursive(child.key)
 
     ##  Hide the children of a specified SettingDefinition.
     @pyqtSlot(str)
