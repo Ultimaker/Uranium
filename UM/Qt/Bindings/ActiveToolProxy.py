@@ -5,6 +5,7 @@ from typing import Any
 from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QUrl, QVariant
 
 from UM.Application import Application
+from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
 from . import ContainerProxy
@@ -44,6 +45,9 @@ class ActiveToolProxy(QObject):
     def triggerAction(self, action):
         if not self._active_tool:
             return
+        if not hasattr(self._active_tool, action):
+            Logger.log("w", "Trying to call non-existing action {action} of tool {tool}.".format(action = action, tool = self._active_tool.getPluginId()))
+            return
 
         action = getattr(self._active_tool, action)
         if action:
@@ -59,6 +63,9 @@ class ActiveToolProxy(QObject):
     @pyqtSlot(str, QVariant)
     def triggerActionWithData(self, action: str, data: Any):
         if not self._active_tool:
+            return
+        if not hasattr(self._active_tool, action):
+            Logger.log("w", "Trying to call non-existing action {action} of tool {tool}.".format(action = action, tool = self._active_tool.getPluginId()))
             return
 
         action = getattr(self._active_tool, action)
