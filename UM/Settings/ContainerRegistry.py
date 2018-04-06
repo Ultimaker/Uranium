@@ -378,7 +378,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_id in self.metadata:
             del self.metadata[container_id]
         if container_id in self.source_provider:
-            self.source_provider[container_id].removeContainer(container_id)
+            if self.source_provider[container_id] is not None:
+                self.source_provider[container_id].removeContainer(container_id)
             del self.source_provider[container_id]
 
         if container is not None:
