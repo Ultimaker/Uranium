@@ -8,6 +8,7 @@ from typing import Iterable, Union
 from UM.i18n import i18nCatalog
 from UM.Message import Message
 from UM.Resources import Resources
+import UM.Settings.ContainerRegistry
 
 i18n_catalog = i18nCatalog("uranium")
 
@@ -41,6 +42,7 @@ class ConfigurationErrorMessage(Message):
             faulty_containers = [faulty_containers]
         for container in itertools.chain(faulty_containers, args):
             self._faulty_containers.add(container)
+            UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().removeContainer(container)
 
         if initial_length != len(self._faulty_containers):
             self.setText(i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\nWould you like to reset to factory defaults?").format(profiles = "\n- ".join(self._faulty_containers)))
