@@ -354,7 +354,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         parser = self._readAndValidateSerialized(serialized)
 
         if parser["general"].getint("version") != self.Version:
-            raise IncorrectVersionError
+            raise IncorrectVersionError()
 
         # Clear all data before starting.
         for container in self._containers:
