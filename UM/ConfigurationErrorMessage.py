@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import itertools
+import sys #For the exit() function.
 from typing import Iterable, Union
 
 from UM.i18n import i18nCatalog
@@ -61,4 +62,4 @@ class ConfigurationErrorMessage(Message):
     def _actionTriggered(self, _, action_id):
         if action_id == "reset":
             Resources.factoryReset()
-            exit(1)
+            sys.exit(1)
