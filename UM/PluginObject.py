@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 
@@ -11,9 +11,16 @@
 class PluginObject:
     def __init__(self):
         self._plugin_id = None
+        self._version = None
 
     def getPluginId(self):
         return self._plugin_id
 
     def setPluginId(self, plugin_id):
         self._plugin_id = plugin_id
+
+    def setVersion(self, version: str):
+        self._version = version
+
+    def getVersion(self) -> str:
+        return self._version
