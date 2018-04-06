@@ -9,6 +9,7 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
+from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -377,12 +378,12 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                     self._containers.append(containers[0])
                 else:
                     ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id, self.getId())
-                    raise Exception("When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
+                    raise ContainerFormatError("When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
 
         elif parser.has_option("general", "containers"):
             # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
             container_string = parser["general"].get("containers", "")
-            Logger.log("d", "While deserializeing, we got the following container string: %s", container_string)
+            Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
             container_id_list = container_string.split(",")
             for container_id in container_id_list:
                 if container_id != "":
