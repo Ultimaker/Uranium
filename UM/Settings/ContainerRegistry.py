@@ -1,11 +1,8 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
-import queue #For priority sorting of container providers.
 import re #For finding containers with asterisks in the constraints and for detecting backup files.
-import urllib #For ensuring container file names are proper file names
-import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
 from typing import Any, cast, Dict, Iterable, List, Optional
 import collections
@@ -16,6 +13,7 @@ from UM.PluginRegistry import PluginRegistry #To register the container type plu
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeTypeDatabase
 from UM.Logger import Logger
+from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.LockFile import LockFile
@@ -328,7 +326,10 @@ class ContainerRegistry(ContainerRegistryInterface):
                         #Update UI while loading.
                         UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
 
-                        self._containers[container_id] = provider.loadContainer(container_id)
+                        try:
+                            self._containers[container_id] = provider.loadContainer(container_id)
+                        except ContainerFormatError:
+                            continue
                         self.metadata[container_id] = self._containers[container_id].getMetaData()
                         self.source_provider[container_id] = provider
                         self.containerLoadComplete.emit(container_id)
