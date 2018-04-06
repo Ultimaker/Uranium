@@ -378,6 +378,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                     self._containers.append(containers[0])
                 else:
                     ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id, self.getId())
+                    Logger.log("e", "When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
                     raise ContainerFormatError("When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
 
         elif parser.has_option("general", "containers"):
@@ -392,7 +393,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                         containers[0].propertyChanged.connect(self._collectPropertyChanges)
                         self._containers.append(containers[0])
                     else:
-                        raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self.getId(), container_id))
+                        ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id, self.getId())
+                        Logger.log("e", "When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
+                        raise ContainerFormatError("When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
 
         ## TODO; Deserialize the containers.
 
