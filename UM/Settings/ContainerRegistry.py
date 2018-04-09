@@ -334,8 +334,9 @@ class ContainerRegistry(ContainerRegistryInterface):
 
                         try:
                             self._containers[container_id] = provider.loadContainer(container_id)
-                        except ContainerFormatError:
-                            continue
+                        except:
+                            Logger.logException("e", "Failed to load container %s", container_id)
+                            raise
                         self.metadata[container_id] = self._containers[container_id].getMetaData()
                         self.source_provider[container_id] = provider
                         self.containerLoadComplete.emit(container_id)
