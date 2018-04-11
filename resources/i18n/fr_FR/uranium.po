@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.2\n"
+"Project-Id-Version: Uranium 3.3\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-03-29 08:36+0200\n"
-"PO-Revision-Date: 2018-02-08 10:54+0100\n"
+"PO-Revision-Date: 2018-04-11 15:55+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: French <info@bothof.nl>\n"
 "Language: fr_FR\n"
@@ -187,7 +187,7 @@ msgstr "Ouvrir le dossier contenant le fichier"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Une erreur est survenue lors de l'enregistrement sur <filename>{0}</filename> : <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
@@ -236,22 +236,22 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
+msgstr "Votre configuration semble corrompue. Il semble y avoir un problème avec les profils suivants :\n- {profiles}\nSouhaitez-vous rétablir les paramètres d'usine ?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
-msgstr ""
+msgstr "Votre configuration semble corrompue."
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
 msgctxt "@info:title"
 msgid "Configuration errors"
-msgstr ""
+msgstr "Erreurs de configuration"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:18
 msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
-msgstr ""
+msgstr "Réinitialiser votre configuration sur les valeurs d'usine."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
@@ -340,9 +340,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Le plug-in a été installé.\n"
-"Veuillez redémarrer l'application pour activer le plug-in."
+msgstr "Le plug-in a été installé.\nVeuillez redémarrer l'application pour activer le plug-in."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -351,9 +349,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"Échec de l'installation du plug-in de <filename>{0}</filename> :\n"
-"<message>{1}</message>"
+msgstr "Échec de l'installation du plug-in de <filename>{0}</filename> :\n<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -362,9 +358,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
-"Échec de l'installation du plug-in;\n"
-"<message>{0}</message>"
+msgstr "Échec de l'installation du plug-in;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -372,13 +366,13 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
+msgstr "Le plug-in a été supprimé.\nVeuillez redémarrer {0} pour terminer la désinstallation."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-msgstr ""
+msgstr "Échec de la désinstallation du plug-in. Le plug-in sera supprimé après le redémarrage de {0}."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -400,22 +394,22 @@ msgstr "Des extensions OpenGL critiques sont absentes. Ce programme nécessite l
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
-msgstr ""
+msgstr "Voulez-vous recharger {filename} ?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:154
 msgctxt "@info:title"
 msgid "File has been modified"
-msgstr ""
+msgstr "Le fichier a été modifié"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:button"
 msgid "Reload"
-msgstr ""
+msgstr "Recharger"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
-msgstr ""
+msgstr "Cela déclenchera le rechargement des fichiers modifiés à partir du disque."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
 #, python-brace-format
@@ -641,7 +635,7 @@ msgstr "Mettre à jour « %1 »"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
 msgctxt "@action:button"
 msgid "Update profile"
-msgstr "Mettre à jour le profil"
+msgstr "Mettre à jour un profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
 msgctxt "@action:button"
@@ -786,12 +780,12 @@ msgstr "Générateur STL"
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr "Affiche les journaux d'événements (log) dans la console."
+msgstr "Affiche les journaux d'évènements (log) dans la console."
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
-msgstr "Journal d'événements en console"
+msgstr "Journal d'évènements en console"
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "description"

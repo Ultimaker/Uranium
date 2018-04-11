@@ -5,12 +5,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.2\n"
+"Project-Id-Version: Uranium 3.3\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-03-29 08:36+0200\n"
-"PO-Revision-Date: 2018-02-13 14:55+0100\n"
-"Last-Translator: Crea-3D <carmine.iacoviello@crea-3d.com>\n"
-"Language-Team: Italian <info@bothof.nl>\n"
+"PO-Revision-Date: 2018-04-11 15:55+0100\n"
+"Last-Translator: Bothof <info@bothof.nl>\n"
+"Language-Team: Crea-3D <carmine.iacoviello@crea-3d.com>, Italian <info@bothof.nl>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +67,7 @@ msgstr "La versione che stai utilizzando non supporta la verifica della disponib
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "Warning"
-msgstr "Attenzione"
+msgstr "Avvertenza"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
 msgctxt "@info"
@@ -114,7 +114,7 @@ msgstr "Salva su File"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:35
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr "Salva su File"
+msgstr "Salvare su File"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:56
 msgctxt "@title:window"
@@ -186,7 +186,7 @@ msgstr "Apri la cartella contenente il file"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Qualcosa non ha funzionato durante il salvataggio su <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
@@ -196,7 +196,7 @@ msgstr "Scala"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr "Scala Modello"
+msgstr "Modello Scala"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -206,7 +206,7 @@ msgstr "Spostamento"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr "Sposta Modello"
+msgstr "Modello Spostamento"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
@@ -216,7 +216,7 @@ msgstr "Rotazione"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
-msgstr "Ruota Modello"
+msgstr "Modello Rotazione"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -226,7 +226,7 @@ msgstr "Immagine speculare"
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
-msgstr "Specchia Modello"
+msgstr "Modello Immagine speculare"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:15
 #, python-brace-format
@@ -235,22 +235,22 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
+msgstr "La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n- {profiles}\nRipristinare i valori predefiniti in fabbrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
-msgstr ""
+msgstr "La configurazione sembra essere danneggiata."
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
 msgctxt "@info:title"
 msgid "Configuration errors"
-msgstr ""
+msgstr "Errori di configurazione"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:18
 msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
-msgstr ""
+msgstr "Ripristinare la configurazione ai valori predefiniti in fabbrica."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
@@ -339,9 +339,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Il plugin è stato installato.\n"
-"Riavviare l'applicazione per attivare il plugin."
+msgstr "Il plugin è stato installato.\nRiavviare l'applicazione per attivare il plugin."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -350,9 +348,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"Installazione plugin da <filename>{0}</filename>:\n"
-"<message>{1} non riuscita</message>"
+msgstr "Installazione plugin da <filename>{0}</filename>:\n<message>{1} non riuscita</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -361,9 +357,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
-"Installazione del plugin non riuscita;\n"
-"<message>{0}</message>"
+msgstr "Installazione del plugin non riuscita;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -371,13 +365,13 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
+msgstr "Il plugin è stato rimosso.\nSi prega di riavviare {0} per completare la disinstallazione."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-msgstr ""
+msgstr "Disinstallazione plugin non riuscita. Il plugin verrà rimosso dopo il riavvio di {0}."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -399,22 +393,22 @@ msgstr "Estensioni OpenGL fondamentali assenti. Questo programma richiede suppor
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
-msgstr ""
+msgstr "Si desidera ricaricare {filename}?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:154
 msgctxt "@info:title"
 msgid "File has been modified"
-msgstr ""
+msgstr "Il file è stato modificato"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:button"
 msgid "Reload"
-msgstr ""
+msgstr "Ricarica"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
-msgstr ""
+msgstr "Attiva i file modificati per la ricarica dal disco."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
 #, python-brace-format
@@ -450,12 +444,12 @@ msgstr "Reset"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr "Ridimens. aggancio (Snap)"
+msgstr "Ridimensionamento aggancio (Snap)"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:104
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr "Ridimens. uniforme"
+msgstr "Ridimensionamento uniforme"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
 msgctxt "@option:check"
@@ -790,7 +784,7 @@ msgstr "Invia informazioni registro alla console."
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
-msgstr "Logger console"
+msgstr "Logger di console"
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "description"
@@ -885,12 +879,12 @@ msgstr "Strumento Spostamento"
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr "Fornisce lo strumento per manipolare la camera."
+msgstr "Fornisce lo strumento per manipolare la fotocamera."
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
 msgid "Camera Tool"
-msgstr "Strumento camera"
+msgstr "Strumento fotocamera"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
