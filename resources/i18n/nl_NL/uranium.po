@@ -186,7 +186,7 @@ msgstr "De map met het bestand openen"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Er is een fout opgetreden tijdens het opslaan naar <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
@@ -235,22 +235,22 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
+msgstr "Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n- {profiles}\nWilt u de standaardinstellingen herstellen?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
-msgstr ""
+msgstr "Uw configuratie is mogelijk beschadigd."
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
 msgctxt "@info:title"
 msgid "Configuration errors"
-msgstr ""
+msgstr "Configuratiefouten"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:18
 msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
-msgstr ""
+msgstr "Herstel uw configuratie naar de standaardinstellingen."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
@@ -339,9 +339,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"De invoegtoepassing is geïnstalleerd.\n"
-"Start de toepassing opnieuw om de invoegtoepassing te activeren."
+msgstr "De invoegtoepassing is geïnstalleerd.\nStart de toepassing opnieuw om de invoegtoepassing te activeren."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -350,9 +348,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"Kan de invoegtoepassing van <filename>{0}</filename> niet installeren:\n"
-"<message>{1}</message>"
+msgstr "Kan de invoegtoepassing van <filename>{0}</filename> niet installeren:\n<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -361,9 +357,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
-"Kan de invoegtoepassing niet installeren;\n"
-"<message>{0}</message>"
+msgstr "Kan de invoegtoepassing niet installeren;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -371,13 +365,13 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
+msgstr "De invoegtoepassing is verwijderd.\nStart {0} opnieuw om het verwijderen te voltooien."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-msgstr ""
+msgstr "Kan de invoegtoepassing niet verwijderen. De invoegtoepassing wordt na {0} keer opnieuw opstarten verwijderd."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -399,22 +393,22 @@ msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is onderst
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
-msgstr ""
+msgstr "Wilt u {filename} opnieuw laden?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:154
 msgctxt "@info:title"
 msgid "File has been modified"
-msgstr ""
+msgstr "Het bestand is gewijzigd"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:button"
 msgid "Reload"
-msgstr ""
+msgstr "Opnieuw laden"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
-msgstr ""
+msgstr "Hiermee wordt het opnieuw laden van de bestanden vanaf de schijf geactiveerd."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
 #, python-brace-format
