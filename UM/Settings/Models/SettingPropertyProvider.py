@@ -172,7 +172,7 @@ class SettingPropertyProvider(QObject):
         # In some cases we clean some stuff and the result is as when nothing as been changed manually.
         if property_name == "value" and self._remove_unused_value:
             for index in self._stack_levels:
-                if index >= self._store_index:
+                if index > self._store_index:
                     old_value = self.getPropertyValue(property_name, index)
 
                     key_state = str(self._stack.getContainer(self._store_index).getProperty(self._key, "state"))
@@ -365,10 +365,9 @@ class SettingPropertyProvider(QObject):
             else:
                 property_value = ""
         elif property_name == "validationState":
-            # Setting is not validated. This can happen if there is only a
-            # setting definition. We do need to validate it, because a setting
-            # definitions value can be set by a function, which could be an
-            # invalid setting.
+            # Setting is not validated. This can happen if there is only a setting definition.
+            # We do need to validate it, because a setting defintions value can be set by a function, which could
+            # be an invalid setting.
             if property_value is None:
                 if not self._validator:
                     definition = self._stack.getSettingDefinition(self._key)

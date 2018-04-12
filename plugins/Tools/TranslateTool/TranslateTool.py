@@ -1,6 +1,9 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import time
+import math
+
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent, KeyEvent
 
@@ -18,9 +21,9 @@ from PyQt5.QtCore import Qt
 
 from . import TranslateToolHandle
 
-import time
 
 DIMENSION_TOLERANCE = 0.0001  # Tolerance value used for comparing dimensions from the UI.
+DIRECTION_TOLERANCE = 0.0001  # Used to check if you're perpendicular on some axis
 
 ##  Provides the tool to move meshes and groups
 #
@@ -220,14 +223,31 @@ class TranslateTool(Tool):
                 return False
 
             self._moved = False
+
+            camera_direction = self._controller.getScene().getActiveCamera().getPosition().normalized()
+
+            abs_x = abs(camera_direction.x)
+            abs_y = abs(camera_direction.y)
+
+            # We have to define a plane vector that is suitable for the selected toolhandle axis
+            # and at the same time the camera direction should not be exactly perpendicular to the plane vector
             if id == ToolHandle.XAxis:
-                self.setDragPlane(Plane(Vector(0, 0, 1), 0))
+                plane_vector = Vector(0, camera_direction.y, camera_direction.z).normalized()
             elif id == ToolHandle.YAxis:
-                self.setDragPlane(Plane(Vector(0, 0, 1), 0))
+                plane_vector = Vector(camera_direction.x, 0, camera_direction.z).normalized()
             elif id == ToolHandle.ZAxis:
-                self.setDragPlane(Plane(Vector(0, 1, 0), 0))
+                plane_vector = Vector(camera_direction.x, camera_direction.y, 0).normalized()
             else:
-                self.setDragPlane(Plane(Vector(0, 1, 0), 0))
+                if abs_y > DIRECTION_TOLERANCE:
+                    plane_vector = Vector(0, 1, 0)
+                elif abs_x > DIRECTION_TOLERANCE:
+                    plane_vector = Vector(1, 0, 0)
+                    self.setLockedAxis(ToolHandle.ZAxis)  # Do not move y / vertical
+                else:
+                    plane_vector = Vector(0, 0, 1)
+                    self.setLockedAxis(ToolHandle.XAxis)  # Do not move y / vertical
+
+            self.setDragPlane(Plane(plane_vector, 0))
 
         if event.type == Event.MouseMoveEvent:
             # Perform a translate operation

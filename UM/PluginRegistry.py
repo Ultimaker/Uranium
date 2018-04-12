@@ -356,7 +356,6 @@ class PluginRegistry(QObject):
 
     #   Load a single plugin by ID:
     def loadPlugin(self, plugin_id: str):
-
         # If plugin has already been loaded, do not load it again:
         if plugin_id in self._plugins:
             Logger.log("w", "Plugin %s was already loaded", plugin_id)
@@ -396,8 +395,10 @@ class PluginRegistry(QObject):
             for plugin_type, plugin_object in to_register.items():
                 if type(plugin_object) == list:
                     for nested_plugin_object in plugin_object:
+                        nested_plugin_object.setVersion(self._metadata[plugin_id].get("plugin", {}).get("version"))
                         self._addPluginObject(nested_plugin_object, plugin_id, plugin_type)
                 else:
+                    plugin_object.setVersion(self._metadata[plugin_id].get("plugin", {}).get("version"))
                     self._addPluginObject(plugin_object, plugin_id, plugin_type)
 
             self._plugins[plugin_id] = plugin

@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.2\n"
+"Project-Id-Version: Uranium 3.3\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2018-01-29 09:48+0000\n"
-"PO-Revision-Date: 2018-02-05 13:25+0100\n"
+"POT-Creation-Date: 2018-03-29 08:36+0200\n"
+"PO-Revision-Date: 2018-04-11 15:55+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Ruslan Popov <ruslan.popov@gmail.com>, Russian <info@bothof.nl>\n"
 "Language: ru_RU\n"
@@ -47,7 +47,7 @@ msgstr "Файл STL (бинарный)"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
 msgctxt "@info"
 msgid "Could not access update information."
-msgstr "Невозможно получить информацию об обновлениях."
+msgstr "Не могу получить информацию об обновлениях."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
@@ -86,7 +86,8 @@ msgid "An error occurred while checking for updates."
 msgstr "Во время проверки наличия обновлений возникла ошибка."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:128
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Ошибка"
@@ -182,6 +183,12 @@ msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Открыть каталог, содержащий данный файл"
 
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Ошибка сохранения в <filename>{0}</filename>: <message>{1}</message>"
+
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
 msgid "Scale"
@@ -222,9 +229,33 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Отзеркалить модель"
 
+#: /home/ruben/Projects/Uranium/UM/__init__.py:15
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+"Would you like to reset to factory defaults?"
+msgstr "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n- {profiles}\nВыполнить сброс до заводских настроек по умолчанию?"
+
+#: /home/ruben/Projects/Uranium/UM/__init__.py:16
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr "Вероятно, данные вашей конфигурации повреждены."
+
+#: /home/ruben/Projects/Uranium/UM/__init__.py:17
+msgctxt "@info:title"
+msgid "Configuration errors"
+msgstr "Ошибки конфигурации"
+
+#: /home/ruben/Projects/Uranium/UM/__init__.py:18
+msgctxt "@info:button"
+msgid "Reset your configuration to factory defaults."
+msgstr "Сбросьте конфигурацию до заводских настроек по умолчанию."
+
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:77
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:655
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:70
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -233,7 +264,7 @@ msgstr "Все поддерживаемые типы ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:192
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:78
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:656
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -258,7 +289,7 @@ msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0} день"
 msgstr[1] "{0} дня"
-msgstr[2] "{0} дней"
+msgstr[2] "{0} дня"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
@@ -268,7 +299,7 @@ msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0} час"
 msgstr[1] "{0} часа"
-msgstr[2] "{0} часов"
+msgstr[2] "{0} часа"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
@@ -278,10 +309,10 @@ msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0} минута"
-msgstr[1] "{0} минуты"
+msgstr[1] "{0} минут"
 msgstr[2] "{0} минут"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:114
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:112
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Загрузка плагинов..."
@@ -291,31 +322,31 @@ msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Обновление конфигурации..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:130
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:136
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Загрузка настроек…"
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:65
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Автоматическое масштабирование объекта к {0}% от оригинального размера"
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:65
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Масштабирование объекта"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:96
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:220
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
 msgstr "Плагин был установлен\nПожалуйста, перезапустите приложение для активации плагина."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -323,14 +354,28 @@ msgid ""
 "<message>{1}</message>"
 msgstr "Не удалось установить плагин из <filename>{0}</filename>:\n<message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
 msgstr "Не удалось установить плагин;\n<message>{0}</message>"
+
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr "Плагин удален.\nПерезапустите {0} для завершения удаления."
+
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
+msgstr "Не удалось удалить плагин. Плагин будет удален через {0} перезапуска (-ов)."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -348,27 +393,48 @@ msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Важные дополнения OpenGL отсутствуют. Данная программа требует поддержки для объектов фреймбуфера. Пожалуйста, проверьте драйвер своей видеокарты."
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:153
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "Перезагрузить {filename}?"
+
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:154
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr "Файл был изменен"
+
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "Перезагрузить"
+
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "Это запустит перезагрузку измененных файлов с диска."
+
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "Не удалось открыть файлы типа <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:47
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:70
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "Неправильный файл"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:45
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:70
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "Невозможно открыть <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:54
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "Загрузка"
@@ -404,7 +470,7 @@ msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Быстрое вращение"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:20
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "Plugins"
@@ -415,52 +481,52 @@ msgctxt "@action:button"
 msgid "Install new plugin"
 msgstr "Установить новый плагин"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:55
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:51
 msgctxt "@label"
 msgid "You will need to restart the application before changes in plugins have effect."
 msgstr "Вам потребуется перезапустить приложение для активации возможностей плагина."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:94
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:87
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
 msgstr "Данный плагин необходим для запуска приложения."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:111
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:104
 msgctxt "@label"
 msgid "Info..."
 msgstr "Инфо..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:129
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:122
 msgctxt "@window:title"
 msgid "Install Plugin"
 msgstr "Установка плагина"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:138
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:131
 msgctxt "@title:window"
 msgid "Open file(s)"
 msgstr "Открыть файл(ы)"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:172
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:165
 msgctxt "@label"
 msgid "No text available"
 msgstr "Текста нет"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:178
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
 msgctxt "@title:window"
 msgid "About %1"
 msgstr "О %1"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:210
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:203
 msgctxt "@label"
 msgid "Author:"
 msgstr "Автор:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:232
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:225
 msgctxt "@label"
 msgid "Version:"
 msgstr "Версия:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:250
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:243
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
@@ -479,7 +545,7 @@ msgstr "Стандартные"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
 msgctxt "@title:tab"
 msgid "General"
-msgstr "Общие"
+msgstr "Общее"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:147
 msgctxt "@title:tab"
@@ -500,14 +566,14 @@ msgstr "Отмена"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
 msgid "OK"
-msgstr "ОК"
+msgstr "OK"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:34
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "Данный параметр был скрыт текущим принтером и не будет отображаться."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:51
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
@@ -518,7 +584,7 @@ msgstr[2] "Эти параметры были скрыты значением %1
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
 msgid "Setting Visibility"
-msgstr "Настройка видимости"
+msgstr "Видимость настроек"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
 msgctxt "@label:textbox"
@@ -535,7 +601,7 @@ msgctxt "@title:tab"
 msgid "Printers"
 msgstr "Принтеры"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:39
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
 msgctxt "@label"
 msgid "Type"
 msgstr "Тип"
@@ -578,7 +644,7 @@ msgstr "Обновить профиль"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
 msgctxt "@action:button"
 msgid "Discard current changes"
-msgstr "Сбросить текущие изменения"
+msgstr "Сбросить текущие параметры"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
 msgctxt "@action:button"
