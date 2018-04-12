@@ -73,6 +73,8 @@ class QtApplication(QApplication, Application):
 
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
+        self._tray_icon_name = tray_icon_name
+
         super().__init__(sys.argv, **kwargs)
 
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
@@ -107,6 +109,7 @@ class QtApplication(QApplication, Application):
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
         # these checks need to be done in your <framework>Application.py class __init__().
 
+    def initialize(self):
         i18n_catalog = i18nCatalog("uranium")
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
@@ -157,8 +160,8 @@ class QtApplication(QApplication, Application):
         # Initialize System tray icon and make it invisible because it is used only to show pop up messages
         self._tray_icon = None
         self._tray_icon_widget = None
-        if tray_icon_name:
-            self._tray_icon = QIcon(Resources.getPath(Resources.Images, tray_icon_name))
+        if self._tray_icon_name:
+            self._tray_icon = QIcon(Resources.getPath(Resources.Images, self._tray_icon_name))
             self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
             self._tray_icon_widget.setVisible(False)
 
