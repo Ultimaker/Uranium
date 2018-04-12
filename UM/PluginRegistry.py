@@ -620,6 +620,8 @@ class PluginRegistry(QObject):
     def getPluginObject(self, plugin_id: str) -> PluginObject:
         if plugin_id not in self._plugins:
             self.loadPlugin(plugin_id)
+        if plugin_id not in self._plugin_objects:
+            raise PluginNotFoundError(plugin_id)
         return self._plugin_objects[plugin_id]
 
     # Plugin object stuff is definitely considered depreciated.
