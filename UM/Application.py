@@ -87,8 +87,6 @@ class Application:
         preferences = Preferences.getInstance()
         preferences.addPreference("general/language", "en_US")
         preferences.addPreference("general/visible_settings", "")
-        preferences.addPreference("general/visible_settings_preset", "")
-        preferences.addPreference("general/preset_setting_visibility_choice", "")
 
         try:
             preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
