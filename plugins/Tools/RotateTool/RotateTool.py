@@ -83,7 +83,7 @@ class RotateTool(Tool):
 
             # Save the current positions of the node, as we want to rotate around their current centres
             self._saved_node_positions = []
-            for node in Selection.getAllSelectedObjects():
+            for node in self._getSelectedObjectsWithoutSelectedAncestors():
                 self._saved_node_positions.append((node, node.getPosition()))
 
             if id == ToolHandle.XAxis:
@@ -210,7 +210,7 @@ class RotateTool(Tool):
     ##  Reset the orientation of the mesh(es) to their original orientation(s)
     def resetRotation(self):
 
-        for node in Selection.getAllSelectedObjects():
+        for node in self._getSelectedObjectsWithoutSelectedAncestors():
             node.setMirror(Vector(1,1,1))
 
         Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)
@@ -225,7 +225,7 @@ class RotateTool(Tool):
 
         self._iterations = 0
         self._total_iterations = 0
-        for selected_object in Selection.getAllSelectedObjects():
+        for selected_object in self._getSelectedObjectsWithoutSelectedAncestors():
             self._layObjectFlat(selected_object)
 
         self._progress_message.show()

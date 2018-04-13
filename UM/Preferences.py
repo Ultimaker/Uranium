@@ -216,8 +216,8 @@ class Preferences:
                     serialized = result.files_data[0]
             return serialized
 
-        except Exception as e:
-            Logger.log("d", "Could not get version from serialized: %s", e)
+        except Exception:
+            Logger.logException("d", "An exception occured while trying to update the preferences")
             pass
 
 class _Preference:

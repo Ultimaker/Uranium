@@ -66,11 +66,11 @@ class ScaleTool(Tool):
         super().event(event)
 
         if event.type == Event.ToolActivateEvent:
-            for node in Selection.getAllSelectedObjects():
+            for node in self._getSelectedObjectsWithoutSelectedAncestors():
                 node.boundingBoxChanged.connect(self.propertyChanged)
 
         if event.type == Event.ToolDeactivateEvent:
-            for node in Selection.getAllSelectedObjects():
+            for node in self._getSelectedObjectsWithoutSelectedAncestors():
                 node.boundingBoxChanged.disconnect(self.propertyChanged)
 
         # Handle modifier keys: Shift toggles snap, Control toggles uniform scaling
@@ -105,7 +105,7 @@ class ScaleTool(Tool):
 
             # Save the current positions of the node, as we want to scale arround their current centres
             self._saved_node_positions = []
-            for node in Selection.getAllSelectedObjects():
+            for node in self._getSelectedObjectsWithoutSelectedAncestors():
                 self._saved_node_positions.append((node, node.getPosition()))
 
             self._scale_sum = 0.0
@@ -296,7 +296,7 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
 
                 op = GroupedOperation()
-                for node in Selection.getAllSelectedObjects():
+                for node in self._getSelectedObjectsWithoutSelectedAncestors():
                     op.addOperation(
                         ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
                 op.push()
@@ -317,7 +317,7 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
 
                 op = GroupedOperation()
-                for node in Selection.getAllSelectedObjects():
+                for node in self._getSelectedObjectsWithoutSelectedAncestors():
                     op.addOperation(
                         ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
                 op.push()
@@ -338,7 +338,7 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
 
                 op = GroupedOperation()
-                for node in Selection.getAllSelectedObjects():
+                for node in self._getSelectedObjectsWithoutSelectedAncestors():
                     op.addOperation(
                         ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
                 op.push()
@@ -358,7 +358,7 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
 
                 op = GroupedOperation()
-                for node in Selection.getAllSelectedObjects():
+                for node in self._getSelectedObjectsWithoutSelectedAncestors():
                     op.addOperation(
                         ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
                 op.push()
@@ -378,7 +378,7 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
 
                 op = GroupedOperation()
-                for node in Selection.getAllSelectedObjects():
+                for node in self._getSelectedObjectsWithoutSelectedAncestors():
                     op.addOperation(
                         ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
                 op.push()
@@ -398,7 +398,7 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
 
                 op = GroupedOperation()
-                for node in Selection.getAllSelectedObjects():
+                for node in self._getSelectedObjectsWithoutSelectedAncestors():
                     op.addOperation(
                         ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
                 op.push()

@@ -1,6 +1,7 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import datetime
 import os
 import os.path
 import re
@@ -260,6 +261,57 @@ class Resources:
 
         if resource_type in cls.__types_storage:
             del cls.__types_storage[resource_type]
+
+    ##  Performs a factory reset, compressing the current state of configuration
+    #   into an archive and emptying the resource folders.
+    #
+    #   When calling this function, be sure to quit the application immediately
+    #   afterwards, lest the save function write the configuration anew.
+    @classmethod
+    def factoryReset(cls):
+        config_path = cls.getConfigStoragePath()
+        data_path = cls.getDataStoragePath()
+        cache_path = cls.getCacheStoragePath()
+
+        folders_to_backup = set()
+        folders_to_remove = set()  # only cache folder needs to be removed
+
+        folders_to_backup.add(config_path)
+        folders_to_backup.add(data_path)
+
+        # Only remove the cache folder if it's not the same as data or config
+        if cache_path not in folders_to_backup:
+            folders_to_remove.add(cache_path)
+
+        for folder in folders_to_remove:
+            shutil.rmtree(folder, ignore_errors = True)
+        for folder in folders_to_backup:
+            base_name = os.path.basename(folder)
+            root_dir = os.path.dirname(folder)
+
+            date_now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            idx = 0
+            file_name = base_name + "_" + date_now
+            zip_file_path = os.path.join(root_dir, file_name + ".zip")
+            while os.path.exists(zip_file_path):
+                idx += 1
+                file_name = base_name + "_" + date_now + "_" + idx
+                zip_file_path = os.path.join(root_dir, file_name + ".zip")
+            try:
+                # only create the zip backup when the folder exists
+                if os.path.exists(folder):
+                    # remove the .zip extension because make_archive() adds it
+                    zip_file_path = zip_file_path[:-4]
+                    shutil.make_archive(zip_file_path, "zip", root_dir = root_dir, base_dir = base_name)
+
+                    # remove the folder only when the backup is successful
+                    shutil.rmtree(folder, ignore_errors = True)
+
+                # create an empty folder so Resources will not try to copy the old ones
+                os.makedirs(folder, 0o0755, exist_ok=True)
+
+            except:
+                Logger.logException("e", "Failed to backup [%s] to file [%s]", folder, zip_file_path)
 
     ## private:
 

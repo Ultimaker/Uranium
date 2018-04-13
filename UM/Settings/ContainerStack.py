@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
@@ -8,6 +8,7 @@ from typing import Any, cast, Dict, List, Optional, Set
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 import UM.FlameProfiler
 
+from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -375,7 +376,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                     containers[0].propertyChanged.connect(self._collectPropertyChanges)
                     self._containers.append(containers[0])
                 else:
-                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self.getId(), container_id))
+                    ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id, self.getId())
+                    raise Exception("When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
 
         elif parser.has_option("general", "containers"):
             # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
