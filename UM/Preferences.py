@@ -42,6 +42,16 @@ class Preferences:
 
         self._preferences[group][key] = _Preference(key, default_value)
 
+    def removePreference(self, key: str) -> None:
+        preference = self._findPreference(key)
+        if preference is None:
+            Logger.log("i", "Preferences '%s' doesn't exist, nothing to remove.", key)
+            return
+
+        group, key = self._splitKey(key)
+        del self._preferences[group][key]
+        Logger.log("i", "Preferences '%s' removed.", key)
+
     ##  Changes the default value of a preference.
     #
     #   If the preference is currently set to the old default, the value of the

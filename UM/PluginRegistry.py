@@ -40,7 +40,7 @@ class PluginRegistry(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self._all_plugins = []        # type: Dict[str, PluginObject]
+        self._all_plugins = []        # type: List[str]
         self._metadata = {}           # type: Dict[str, Dict[str, any]]
 
         self._plugins_available = []  # type: List[str]
@@ -49,12 +49,12 @@ class PluginRegistry(QObject):
         # NOTE: The disabled_plugins and plugins_to_remove is explicitly set to None.
         # When actually loading the preferences, it's set to a list. This way we can see the
         # difference between no list and an empty one.
-        self._disabled_plugins = None # type: Optional[List[str]]
-        self._plugins_to_remove = None # type: Optional[List[str]]
+        self._disabled_plugins = []  # type: List[str]
+        self._plugins_to_install = dict()  # type: Dict[str, dict]
+        self._plugins_to_remove = []  # type: List[str]
 
         # Keep track of which plugins are 3rd-party
         self._plugins_external = []   # type: List[str]
-
 
         self._plugins = {}            # type: Dict[str, types.ModuleType]
         self._plugin_objects = {}     # type: Dict[str, PluginObject]
@@ -64,9 +64,69 @@ class PluginRegistry(QObject):
 
         self._application = None
         self._supported_file_types = {"umplugin": "Uranium Plugin"}
+
+        # File to store plugin info, such as which ones to install/remove and which ones are disabled.
+        # Cannot load this here because we don't know the actual Application name yet, so it will result in incorrect
+        # directory name if we try to get it from Resources now.
+        self._plugin_config_filename = None
+
+    def initializeBeforePluginsAreLoaded(self):
+        config_path = Resources.getConfigStoragePath()
+        self._plugin_config_filename = os.path.join(os.path.abspath(config_path), "plugins.json")
+
+        # Load the plugin info if exists
+        if os.path.exists(self._plugin_config_filename):
+            Logger.log("i", "Loading plugin configuration file '%s'", self._plugin_config_filename)
+            with open(self._plugin_config_filename, "r", encoding = "utf-8") as f:
+                data = json.load(f)
+                self._disabled_plugins = data["disabled"]
+                self._plugins_to_install = data["to_install"]
+                self._plugins_to_remove = data["to_remove"]
+
+        # Also load data from preferences, where the plugin info used to be saved
         preferences = Preferences.getInstance()
-        preferences.addPreference("general/disabled_plugins", "")
-        preferences.addPreference("general/plugins_to_remove", "")
+        disabled_plugins = preferences.getValue("general/disabled_plugins")
+        disabled_plugins = disabled_plugins.split(",") if disabled_plugins else []
+        for plugin_id in disabled_plugins:
+            if plugin_id not in self._disabled_plugins:
+                self._disabled_plugins.append(plugin_id)
+
+        plugins_to_remove = preferences.getValue("general/plugins_to_remove")
+        plugins_to_remove = plugins_to_remove.split(",") if plugins_to_remove else []
+        for plugin_id in plugins_to_remove:
+            if plugin_id not in self._plugins_to_remove:
+                self._plugins_to_remove.append(plugin_id)
+
+        # Remove plugins that need to be removed
+        for plugin_id in self._plugins_to_remove:
+            self._removePlugin(plugin_id)
+        self._plugins_to_remove = []
+        if plugins_to_remove is not None:
+            preferences.setValue("general/plugins_to_remove", "")
+        self._savePluginData()
+
+        # Install the plugins that need to be installed (overwrite existing)
+        for plugin_id, plugin_info in self._plugins_to_install.items():
+            self._installPlugin(plugin_id, plugin_info["filename"])
+        self._plugins_to_install = dict()
+        self._savePluginData()
+
+    def initializeAfterPlguinsAreLoaded(self):
+        preferences = Preferences.getInstance()
+
+        # Remove the old preferences settings from preferences
+        preferences.removePreference("general/disabled_plugins")
+        preferences.removePreference("general/plugins_to_remove")
+
+    def _savePluginData(self):
+        Logger.log("d", "Saving plugin data to file '%s'", self._plugin_config_filename)
+        with open(self._plugin_config_filename, "w", encoding = "utf-8") as f:
+            data = json.dumps({"disabled": self._disabled_plugins,
+                               "to_install": self._plugins_to_install,
+                               "to_remove": self._plugins_to_remove,
+                               })
+            f.write(data)
+
 # TODO:
 # - [ ] Improve how metadata is stored. It should not be in the 'plugin' prop
 #       of the dictionary item.
@@ -87,7 +147,6 @@ class PluginRegistry(QObject):
     #   If used, this can add available plugins (from a remote server) to the
     #   registry. Cura uses this method to add 3rd-party plugins.
     def addExternalPlugins(self, plugin_list):
-
         for plugin in plugin_list:
             # Add the plugin id to the the all plugins list if not already there:
             if plugin["id"] not in self._all_plugins:
@@ -122,25 +181,17 @@ class PluginRegistry(QObject):
                 return False
         return True
 
-    ##  This function is intended for remove plugins in the next startup.
-    #   Sometimes it's imposible to remove the plugin because some libraries can still be in use so we use this workaround
-    #   to remove the plugin in the next startup.
-    def lazyRemovePlugin(self, plugin_id: str):
-        if plugin_id not in self._plugins_to_remove:
-            self._plugins_to_remove.append(plugin_id)
-        Preferences.getInstance().setValue("general/plugins_to_remove", ",".join(self._plugins_to_remove))
-
     #   Remove plugin from the list of enabled plugins and save to preferences:
     def disablePlugin(self, plugin_id: str):
         if plugin_id not in self._disabled_plugins:
             self._disabled_plugins.append(plugin_id)
-        Preferences.getInstance().setValue("general/disabled_plugins", ",".join(self._disabled_plugins))
+        self._savePluginData()
 
     #   Add plugin to the list of enabled plugins and save to preferences:
     def enablePlugin(self, plugin_id: str):
         if plugin_id in self._disabled_plugins:
             self._disabled_plugins.remove(plugin_id)
-        Preferences.getInstance().setValue("general/disabled_plugins", ",".join(self._disabled_plugins))
+        self._savePluginData()
 
     #   Get a list of enabled plugins:
     def getActivePlugins(self):
@@ -182,8 +233,15 @@ class PluginRegistry(QObject):
     #   Get a list of installed plugins:
     #   NOTE: These are plugins which have already been registered. This list is
     #         actually populated by the private _findInstalledPlugins() method.
-    def getInstalledPlugins(self):
-        return self._plugins_installed
+    def getInstalledPlugins(self) -> List[str]:
+        plugins = self._plugins_installed.copy()
+        for plugin_id in self._plugins_to_remove:
+            if plugin_id in plugins:
+                plugins.remove(plugin_id)
+        for plugin_id in self._plugins_to_install:
+            if plugin_id not in plugins:
+                plugins.append(plugin_id)
+        return plugins
 
     #   Get the singleton instance of this class:
     @classmethod
@@ -211,74 +269,35 @@ class PluginRegistry(QObject):
 
     @pyqtSlot(str, result="QVariantMap")
     def installPlugin(self, plugin_path: str):
-        Logger.log("d", "Install plugin got path: %s", plugin_path)
         plugin_path = QUrl(plugin_path).toLocalFile()
-        Logger.log("i", "Attempting to install a new plugin %s", plugin_path)
-        local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
-        plugin_folder = ""
-        result = {"status": "error", "message": "", "id": ""}
-        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been installed.\nPlease re-start the application to activate the plugin.")
 
-        try:
-            with zipfile.ZipFile(plugin_path, "r") as zip_ref:
-                plugin_id = None
-                for file in zip_ref.infolist():
-                    if file.filename.endswith("/"):
-                        plugin_id = file.filename.strip("/")
-                        break
+        plugin_id = self._getPluginIdFromFile(plugin_path)
 
-                if plugin_id is None:
-                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_path, "Invalid plugin archive.")
-                    return result
-                result["id"] = plugin_id
-                plugin_folder = os.path.join(local_plugin_path, plugin_id)
+        # Remove it from the to-be-removed list if it's there
+        if plugin_id in self._plugins_to_remove:
+            self._plugins_to_remove.remove(plugin_id)
+            self._savePluginData()
 
-                if os.path.isdir(plugin_folder):  # Plugin is already installed by user (so not a bundled plugin)
-                    with zip_ref.open(plugin_id + "/plugin.json") as metadata_file:
-                        metadata = json.loads(metadata_file.read().decode("utf-8"))
+        # Copy the plugin file to the cache directory so it can later be used for installation
+        cache_dir = os.path.join(Resources.getCacheStoragePath(), "plugins")
+        if not os.path.exists(cache_dir):
+            os.makedirs(cache_dir, exist_ok = True)
+        cache_plugin_filename = os.path.join(cache_dir, plugin_id + ".plugin")
+        if os.path.exists(cache_plugin_filename):
+            os.remove(cache_plugin_filename)
+        shutil.copy2(plugin_path, cache_plugin_filename)
 
-                    if "version" in metadata:
-                        new_version = Version(metadata["version"])
-                        old_version = Version(self.getMetaData(plugin_id)["plugin"]["version"])
-                        if new_version > old_version:
-                            for info in zip_ref.infolist():
-                                extracted_path = zip_ref.extract(info.filename, path = plugin_folder)
-                                permissions = os.stat(extracted_path).st_mode
-                                os.chmod(extracted_path, permissions | stat.S_IEXEC) #Make these files executable.
-                            result["status"] = "ok"
-                            result["message"] = success_message
-                            return result
+        # Add new install data
+        install_info = {"plugin_id": plugin_id,
+                        "filename": cache_plugin_filename}
+        self._plugins_to_install[plugin_id] = install_info
+        self._savePluginData()
+        Logger.log("i", "Plugin '%s' has been scheduled for installation.", plugin_id)
 
-                    Logger.log("w", "The plugin was already installed. Unable to install it again!")
-                    result["status"] = "duplicate"
-                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin;\n<message>{0}</message>", "Plugin was already installed")
-                    return result
-                elif plugin_id in self._plugins:
-                    # Plugin is already installed, but not by the user (eg; this is a bundled plugin)
-                    # TODO: Right now we don't support upgrading bundled plugins at all, but we might do so in the future.
-                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin;\n<message>{0}</message>", "Unable to upgrade or install bundled plugins.")
-                    return result
-
-                for info in zip_ref.infolist():
-                    extracted_path = zip_ref.extract(info.filename, path = plugin_folder)
-                    permissions = os.stat(extracted_path).st_mode
-                    os.chmod(extracted_path, permissions | stat.S_IEXEC) #Make these files executable.
-
-        except: # Installing a new plugin should never crash the application.
-            Logger.logException("d", "An exception occurred while installing plugin {path}".format(path = plugin_path))
-
-            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Invalid plugin file")
-            return result
-
-        # Installed plugins are kept on the list, so don't remove from available
-        # self._plugins_available.remove(plugin_id);
-        self._plugins_installed.append(plugin_id)
-
-        if plugin_id in self._disabled_plugins:
-            self._disabled_plugins.remove(plugin_id)
-
-        result["status"] = "ok"
-        result["message"] = success_message
+        result = {"status": "ok",
+                  "id": "",
+                  "message": i18n_catalog.i18nc("@info:status", "The plugin has been installed.\nPlease re-start the application to activate the plugin."),
+                  }
         return result
 
     #   Check by ID if a plugin is active (enabled):
@@ -287,57 +306,22 @@ class PluginRegistry(QObject):
             return True
         return False
 
-    #   Check by ID if a plugin is availbable:
+    #   Check by ID if a plugin is available:
     def isAvailablePlugin(self, plugin_id: str):
         return plugin_id in self._plugins_available
-
-    #   Check by ID if a plugin is disabled:
-    def isDisabledPugin(self, plugin_id: str):
-        if plugin_id in self._disabled_plugins:
-            return True
-        return False
 
     #   Check by ID if a plugin is installed:
     def isInstalledPlugin(self, plugin_id: str):
         return plugin_id in self._plugins_installed
-
-    ##  Remove all plugins that are in the list of plugins to remove in the configuration file.
-    #   \param meta_data \type{dict} The meta data that needs to be matched.
-    #   \sa loadPlugin
-    #   NOTE: This is the method which kicks everything off at app launch.
-    def removePlugins(self):
-        # If the list of plugins to remove doesn't exist yet, create it from
-        # saved preferences:
-        if not self._plugins_to_remove:
-            self._plugins_to_remove = Preferences.getInstance().getValue("general/plugins_to_remove").split(",")
-
-        failed_to_remove = []
-
-        for plugin_id in self._plugins_to_remove:
-            # If there is an empty string in the list, it is skipped
-            if plugin_id == "":
-                continue
-            try:
-                self.removePlugin(plugin_id)
-            except:
-                failed_to_remove.append(plugin_id)
-                Logger.log("e", "The plugin %s was scheduled for be removed and Cura could not delete it", plugin_id)
-
-        self._plugins_to_remove = []
-        Preferences.getInstance().setValue("general/plugins_to_remove", "")
-        for plugin_id in failed_to_remove:
-            self.lazyRemovePlugin(plugin_id)
 
     ##  Load all plugins matching a certain set of metadata
     #   \param meta_data \type{dict} The meta data that needs to be matched.
     #   \sa loadPlugin
     #   NOTE: This is the method which kicks everything off at app launch.
     def loadPlugins(self, metadata: Optional[dict] = None):
-
         # Get a list of all installed plugins:
         plugin_ids = self._findInstalledPlugins()
         for plugin_id in plugin_ids:
-
             # Get the plugin metadata:
             plugin_metadata = self.getMetaData(plugin_id)
 
@@ -360,11 +344,6 @@ class PluginRegistry(QObject):
         if plugin_id in self._plugins:
             Logger.log("w", "Plugin %s was already loaded", plugin_id)
             return
-
-        # If the list of disabled plugins doesn't exist yet, create it from
-        # saved preferences:
-        if not self._disabled_plugins:
-            self._disabled_plugins = Preferences.getInstance().getValue("general/disabled_plugins").split(",")
 
         # If the plugin is in the list of disabled plugins, alert and return:
         if plugin_id in self._disabled_plugins:
@@ -421,36 +400,67 @@ class PluginRegistry(QObject):
         result = {"status": "error", "message": "", "id": plugin_id}
         success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart {0} to finish uninstall.", self._application.getApplicationName())
 
-        try:
-            self.removePlugin(plugin_id)
+        if plugin_id in self._plugins_to_install:
+            del self._plugins_to_install[plugin_id]
+        if plugin_id not in self._plugins_to_remove:
+            self._plugins_to_remove.append(plugin_id)
+        self._savePluginData()
+        Logger.log("i", "Plugin '%s' has been scheduled for later removal.", plugin_id)
 
-            # Remove the plugin object from the Plugin Registry:
-            self._plugins.pop(plugin_id, None)
-            self._plugins_installed.remove(plugin_id)
-
-        except:
-            Logger.logException("d", "An exception occurred while uninstalling %s. Scheduling the plugin to be remove in the next startup.", plugin_id)
-            self.lazyRemovePlugin(plugin_id)
-            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin. Plugin will be removed after {0} restarts.", self._application.getApplicationName())
-            return result
+        # Remove the plugin object from the Plugin Registry:
+        self._plugins.pop(plugin_id, None)
+        self._plugins_installed.remove(plugin_id)
 
         result["status"] = "ok"
         result["message"] = success_message
         return result
 
-    #   Remove the folders of the current plugin
-    def removePlugin(self, plugin_id: str):
-        Logger.log("d", "Uninstall plugin got ID: %s", plugin_id)
+    # Installs the given plugin file. It will overwrite the existing plugin if present.
+    def _installPlugin(self, plugin_id: str, plugin_path: str) -> None:
+        Logger.log("i", "Attempting to install a new plugin %s from file '%s'", plugin_id, plugin_path)
+
+        local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
+
+        try:
+            with zipfile.ZipFile(plugin_path, "r") as zip_ref:
+                plugin_folder = os.path.join(local_plugin_path, plugin_id)
+
+                # Overwrite the existing plugin if already installed
+                if os.path.isdir(plugin_folder):
+                    shutil.rmtree(plugin_folder, ignore_errors = True)
+                os.makedirs(plugin_folder, exist_ok = True)
+
+                # Extract all files
+                for info in zip_ref.infolist():
+                    extracted_path = zip_ref.extract(info.filename, path = plugin_folder)
+                    permissions = os.stat(extracted_path).st_mode
+                    os.chmod(extracted_path, permissions | stat.S_IEXEC) # Make these files executable.
+        except: # Installing a new plugin should never crash the application.
+            Logger.logException("e", "An exception occurred while installing plugin {path}".format(path = plugin_path))
+
+        if plugin_id in self._disabled_plugins:
+            self._disabled_plugins.remove(plugin_id)
+
+    # Removes the given plugin.
+    def _removePlugin(self, plugin_id: str) -> None:
         plugin_folder = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
         plugin_path = os.path.join(plugin_folder, plugin_id)
-        Logger.log("i", "Attempting to uninstall %s", plugin_path)
 
-        # Remove the files from the plugins directory:
+        Logger.log("i", "Attempting to remove plugin '%s' from directory '%s'", plugin_id, plugin_path)
         shutil.rmtree(plugin_path)
 
 #===============================================================================
 # PRIVATE METHODS
 #===============================================================================
+
+    def _getPluginIdFromFile(self, filename: str) -> Optional[str]:
+        plugin_id = None
+        with zipfile.ZipFile(filename, "r") as zip_ref:
+            for file_info in zip_ref.infolist():
+                if file_info.is_dir():
+                    plugin_id = file_info.filename.strip("/")
+                    break
+        return plugin_id
 
     #   Returns a list of all possible plugin ids in the plugin locations:
     def _findInstalledPlugins(self, paths = None):
