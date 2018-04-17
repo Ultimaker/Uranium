@@ -113,9 +113,10 @@ class QtApplication(QApplication, Application):
         i18n_catalog = i18nCatalog("uranium")
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
-        # There are maybe some plugins that couln't be removed while the application was running
-        self._removePlugins()
+        # Remove and install the plugins that have been scheduled
+        self._plugin_registry.initializeBeforePluginsAreLoaded()
         self._loadPlugins()
+        self._plugin_registry.initializeAfterPlguinsAreLoaded()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         self.pluginsLoaded.emit()
 
