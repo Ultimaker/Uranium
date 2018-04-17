@@ -80,7 +80,7 @@ class PluginsModel(ListModel):
                 "status": "installed" if metadata["id"] in installed_plugins else "available",
                 "enabled": True if view == "available" else metadata["id"] in active_plugins,
                 "required": metadata["id"] in self._required_plugins,
-                "can_uninstall": True if self._registry._locatePlugin(plugin_id, plugin_folder) else False,
+                "can_uninstall": True if not self._registry.isBundledPlugin(plugin_id, plugin_folder) else False,
                 "can_upgrade": False, # Default, potentially overwritten by plugin browser
                 "update_url": None # Default, potentially overwritten by plugin browser
             })
