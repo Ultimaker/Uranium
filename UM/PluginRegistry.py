@@ -314,6 +314,13 @@ class PluginRegistry(QObject):
     def isInstalledPlugin(self, plugin_id: str):
         return plugin_id in self._plugins_installed
 
+    def isBundledPlugin(self, plugin_id: str, plugin_dir: str) -> bool:
+        install_prefix = self._application.getInstallPrefix()
+        install_prefix = os.path.abspath(install_prefix)
+        plugin_dir = os.path.abspath(plugin_dir)
+
+        return os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
+
     ##  Load all plugins matching a certain set of metadata
     #   \param meta_data \type{dict} The meta data that needs to be matched.
     #   \sa loadPlugin
@@ -400,16 +407,20 @@ class PluginRegistry(QObject):
         result = {"status": "error", "message": "", "id": plugin_id}
         success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart {0} to finish uninstall.", self._application.getApplicationName())
 
-        if plugin_id in self._plugins_to_install:
+        in_to_install = plugin_id in self._plugins_to_install
+        if in_to_install:
             del self._plugins_to_install[plugin_id]
-        if plugin_id not in self._plugins_to_remove:
-            self._plugins_to_remove.append(plugin_id)
-        self._savePluginData()
-        Logger.log("i", "Plugin '%s' has been scheduled for later removal.", plugin_id)
+            self._savePluginData()
+            Logger.log("i", "Plugin '%s' removed from to-be-installed list.", plugin_id)
+        else:
+            if plugin_id not in self._plugins_to_remove:
+                self._plugins_to_remove.append(plugin_id)
+            self._savePluginData()
+            Logger.log("i", "Plugin '%s' has been scheduled for later removal.", plugin_id)
 
-        # Remove the plugin object from the Plugin Registry:
-        self._plugins.pop(plugin_id, None)
-        self._plugins_installed.remove(plugin_id)
+            # Remove the plugin object from the Plugin Registry:
+            self._plugins.pop(plugin_id, None)
+            self._plugins_installed.remove(plugin_id)
 
         result["status"] = "ok"
         result["message"] = success_message
