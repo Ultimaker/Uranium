@@ -215,10 +215,6 @@ class Application:
         with self._message_lock:
             return self._visible_messages
 
-    ##  Function that needs to be overridden by child classes with a list of plugins to remove.
-    def _removePlugins(self):
-        pass
-
     ##  Function that needs to be overridden by child classes with a list of plugins it needs.
     def _loadPlugins(self):
         pass
