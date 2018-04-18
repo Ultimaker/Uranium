@@ -468,7 +468,7 @@ class PluginRegistry(QObject):
         plugin_id = None
         with zipfile.ZipFile(filename, "r") as zip_ref:
             for file_info in zip_ref.infolist():
-                if file_info.is_dir():
+                if file_info.filename.endswith("/"):
                     plugin_id = file_info.filename.strip("/")
                     break
         return plugin_id
