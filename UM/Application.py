@@ -87,6 +87,8 @@ class Application:
         preferences = Preferences.getInstance()
         preferences.addPreference("general/language", "en_US")
         preferences.addPreference("general/visible_settings", "")
+        preferences.addPreference("general/plugins_to_remove", "")
+        preferences.addPreference("general/disabled_plugins", "")
 
         try:
             preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))

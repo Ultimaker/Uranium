@@ -115,8 +115,8 @@ class PluginRegistry(QObject):
         preferences = Preferences.getInstance()
 
         # Remove the old preferences settings from preferences
-        preferences.removePreference("general/disabled_plugins")
-        preferences.removePreference("general/plugins_to_remove")
+        preferences.resetPreference("general/disabled_plugins")
+        preferences.resetPreference("general/plugins_to_remove")
 
     def _savePluginData(self):
         Logger.log("d", "Saving plugin data to file '%s'", self._plugin_config_filename)
