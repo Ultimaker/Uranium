@@ -306,6 +306,8 @@ class VersionUpgradeManager:
 
     ##  Gets the version of the given file data
     def getFileVersion(self, configuration_type: str, file_data: str) -> Optional[int]:
+        if configuration_type not in self._get_version_functions:
+            return None
         try:
             return self._get_version_functions[configuration_type](file_data)
         except:
