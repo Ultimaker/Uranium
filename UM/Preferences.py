@@ -193,7 +193,7 @@ class Preferences:
     _instance = None  # type: Preferences
 
     ##  Extract data from string and store it in the Configuration parser.
-    def deserialize(self, serialized: str) -> str:
+    def deserialize(self, serialized: str):
         updated_preferences = self.__updateSerialized(serialized)
         self._parser = configparser.ConfigParser(interpolation=None)
         self._parser.read_string(updated_preferences)
