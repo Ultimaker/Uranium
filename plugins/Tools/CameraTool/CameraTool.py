@@ -64,7 +64,7 @@ class CameraTool(Tool):
     ##  Set the point around which the camera rotates
     #
     #   \param origin type(Vector) origin point
-    def setOrigin(self, origin):
+    def setOrigin(self, origin: Vector) -> None:
         translation = origin - self._origin
         self._origin = origin
         self._scene.getActiveCamera().translate(translation)
@@ -73,7 +73,7 @@ class CameraTool(Tool):
     ##  Get the point around which the camera rotates
     #
     #   \return type(Vector) origin point
-    def getOrigin(self):
+    def getOrigin(self) -> Vector:
         return self._origin
 
     ##  Prepare modifier-key variables on each event
@@ -95,7 +95,7 @@ class CameraTool(Tool):
     #
     #   \param event type(Event) event passed from event handler
     #   \return type(boolean)
-    def moveEvent(self, event):
+    def moveEvent(self, event) -> bool:
         if MouseEvent.MiddleButton in event.buttons:  # mousewheel
             return True
         elif MouseEvent.LeftButton in event.buttons and self._shift_is_active is True:  # shift -> leftbutton
@@ -107,7 +107,7 @@ class CameraTool(Tool):
     #
     #   \param event type(Event) event passed from event handler
     #   \return type(boolean)
-    def rotateEvent(self, event):
+    def rotateEvent(self, event) -> bool:
         if MouseEvent.RightButton in event.buttons:  # rightbutton
             return True
         elif MouseEvent.LeftButton in event.buttons and self._space_is_active is True:  # shift -> leftbutton
@@ -117,7 +117,7 @@ class CameraTool(Tool):
     #
     #   \param event type(Event) event passed from event handler
     #   \return type(boolean)
-    def initiateZoom(self, event):
+    def initiateZoom(self, event) -> bool:
         if event.type is event.MousePressEvent:
             return False
         elif event.type is Event.MouseMoveEvent and self._space_is_active is False: #space -> mousemove
@@ -152,7 +152,7 @@ class CameraTool(Tool):
     ##  Handle mouse and keyboard events
     #
     #   \param event type(Event)
-    def event(self, event):
+    def event(self, event) -> bool:
         self.checkModifierKeys(event)
         # Handle mouse- and keyboard-initiated zoom-events
         self.initiateZoom(event)
@@ -209,7 +209,7 @@ class CameraTool(Tool):
     ##  Move the camera in response to a mouse event.
     #
     #   \param event type(Event) event passed from event handler
-    def _moveCamera(self, event):
+    def _moveCamera(self, event) -> None:
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
             return
@@ -227,7 +227,7 @@ class CameraTool(Tool):
     #
     #   Note that the camera field of view is left unaffected, but instead the camera moves closer to the origin
     #   \param zoom_range type(int) factor by which the distance to the origin is multiplied, multiplied by 1280
-    def _zoomCamera(self, zoom_range, event = None):
+    def _zoomCamera(self, zoom_range, event = None) -> None:
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
             return
@@ -267,9 +267,9 @@ class CameraTool(Tool):
 
     ##  Rotate the camera in response to a mouse event.
     #
-    #   \param x type(int) amount by which the camera should be rotated horizontally, expressed in pixelunits
-    #   \param y type(int) amount by which the camera should be rotated vertically, expressed in pixelunits
-    def _rotateCamera(self, x, y):
+    #   \param x Amount by which the camera should be rotated horizontally, expressed in pixelunits
+    #   \param y Amount by which the camera should be rotated vertically, expressed in pixelunits
+    def _rotateCamera(self, x: float, y: float) -> None:
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
             return
