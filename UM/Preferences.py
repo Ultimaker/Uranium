@@ -213,7 +213,6 @@ class Preferences:
     def __updateSerialized(self, serialized: str) -> str:
         configuration_type = "preferences"
 
-        version = None
         try:
             import UM.VersionUpgradeManager
             version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
