@@ -66,7 +66,7 @@ class ContainerQuery:
         #Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
             if isinstance(value, str):
-                if "*" in value:
+                if ("*" or "|") in value:
                     key_filter = lambda candidate, key = key, value = value: self._matchRegExp(candidate, key, value)
                 else:
                     key_filter = lambda candidate, key = key, value = value: self._matchString(candidate, key, value)
@@ -94,7 +94,7 @@ class ContainerQuery:
         if property_name not in metadata:
             return False
         value = re.escape(value) #Escape for regex patterns.
-        value = "^" + value.replace("\\*", ".*") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
+        value = "^" + value.replace("\\*", ".*").replace("\\(", "(").replace("\\)", ")").replace("\\|", "|") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
         if self._ignore_case:
             value_pattern = re.compile(value, re.IGNORECASE)
         else:
