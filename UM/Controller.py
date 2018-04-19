@@ -56,7 +56,7 @@ class Controller:
 
     ##  Get the application.
     #   \returns Application \type {Application}
-    def getApplication(self) -> Application:
+    def getApplication(self) -> "Application":
         return self._application
 
     ##  Add a view by name if it"s not already added.
@@ -203,7 +203,7 @@ class Controller:
     ##  Request tool by name. Returns None if no view is found.
     #   \param name \type{string} Unique identifier of tool (usually the plugin name)
     #   \return tool \type{Tool} if name was found, None otherwise.
-    def getTool(self, name: str) -> Optional[Tool]:
+    def getTool(self, name: str) -> Optional["Tool"]:
         try:
             return self._tools[name]
         except KeyError:  # No such tool
@@ -212,12 +212,12 @@ class Controller:
 
     ##  Get all tools
     #   \return tools \type{dict}
-    def getAllTools(self) -> Dict[str, Tool]:
+    def getAllTools(self) -> Dict[str, "Tool"]:
         return self._tools
 
     ##  Add a Tool (transform object, translate object) if its not already added.
     #   \param tool \type{Tool} Tool to be added
-    def addTool(self, tool: Tool) -> None:
+    def addTool(self, tool: "Tool") -> None:
         name = tool.getPluginId()
         if name not in self._tools:
             self._tools[name] = tool
@@ -227,12 +227,12 @@ class Controller:
         else:
             Logger.log("w", "%s was already added to tool list. Unable to add it again.", name)
 
-    def _onToolOperationStarted(self, tool: Tool) -> None:
+    def _onToolOperationStarted(self, tool: "Tool") -> None:
         if not self._tool_operation_active:
             self._tool_operation_active = True
             self.toolOperationStarted.emit(tool)
 
-    def _onToolOperationStopped(self, tool: Tool) -> None:
+    def _onToolOperationStopped(self, tool: "Tool") -> None:
         if self._tool_operation_active:
             self._tool_operation_active = False
             self.toolOperationStopped.emit(tool)
@@ -244,13 +244,13 @@ class Controller:
 
     ##  Request active tool. Returns None if there is no active tool
     #   \return Tool \type{Tool} if an tool is active, None otherwise.
-    def getActiveTool(self) -> Optional[Tool]:
+    def getActiveTool(self) -> Optional["Tool"]:
         return self._active_tool
 
     ##  Set the current active tool.
     #   The tool can be set by name of the tool or directly passing the tool object.
     #   \param tool \type{Tool} or \type{string}
-    def setActiveTool(self, tool: Optional[Union[Tool, str]]):
+    def setActiveTool(self, tool: Optional[Union["Tool", str]]):
         from UM.Tool import Tool
         if self._active_tool:
             self._active_tool.event(ToolEvent(ToolEvent.ToolDeactivateEvent))
@@ -344,7 +344,7 @@ class Controller:
     #   \param tool \type{Tool} or \type{string}
     #   \sa setSelectionTool
     #   \sa setActiveTool
-    def setCameraTool(self, tool: Union[Tool, str]):
+    def setCameraTool(self, tool: Union["Tool", str]):
         from UM.Tool import Tool
         if isinstance(tool, Tool) or tool is None:
             self._camera_tool = tool
@@ -353,7 +353,7 @@ class Controller:
 
     ##  Get the camera tool (if any)
     #   \returns camera tool (or none)
-    def getCameraTool(self) -> Optional[Tool]:
+    def getCameraTool(self) -> Optional["Tool"]:
         return self._camera_tool
 
     ##  Set the tool used for performing selections.
@@ -362,7 +362,7 @@ class Controller:
     #   \param tool \type{Tool} or \type{string}
     #   \sa setCameraTool
     #   \sa setActiveTool
-    def setSelectionTool(self, tool: Union[str, Tool]):
+    def setSelectionTool(self, tool: Union[str, "Tool"]):
         from UM.Tool import Tool
         if isinstance(tool, Tool) or tool is None:
             self._selection_tool = tool
