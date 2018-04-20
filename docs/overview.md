@@ -48,7 +48,7 @@ the scene.
 [Logger]:         \ref Cura#Logger#Logger
 [StorageDevice]:  \ref Cura#StorageDevice#StorageDevice
 [Tool]:           \ref Cura#Tool#Tool
-[plugins]:        docs/plugins.md
+[plugins]:        plugins.md
 
 Backend
 -------

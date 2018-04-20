@@ -10,13 +10,14 @@ from UM.PluginRegistry import PluginRegistry
 from UM.View.View import View
 from UM.Stage import Stage
 from UM.InputDevice import InputDevice
-from typing import Optional, Dict
+from typing import Optional, Dict, Union
 from UM.Math.Vector import Vector
 
 MYPY = False
 if MYPY:
     from UM.Application import Application
     from UM.Tool import Tool
+
 
 ##      Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
@@ -55,13 +56,13 @@ class Controller:
 
     ##  Get the application.
     #   \returns Application \type {Application}
-    def getApplication(self):
+    def getApplication(self) -> "Application":
         return self._application
 
     ##  Add a view by name if it"s not already added.
     #   \param name \type{string} Unique identifier of view (usually the plugin name)
     #   \param view \type{View} The view to be added
-    def addView(self, view: View):
+    def addView(self, view: View) -> None:
         name = view.getPluginId()
         if name not in self._views:
             self._views[name] = view
@@ -92,7 +93,7 @@ class Controller:
 
     ##  Set the currently active view.
     #   \param name \type{string} The name of the view to set as active
-    def setActiveView(self, name: str):
+    def setActiveView(self, name: str) -> None:
         Logger.log("d", "Setting active view to %s", name)
         try:
             if self._active_view:
@@ -109,13 +110,13 @@ class Controller:
         except Exception as e:
             Logger.logException("e", "An exception occurred while switching views: %s", str(e))
 
-    def enableModelRendering(self):
+    def enableModelRendering(self) -> None:
         self._is_model_rendering_enabled = True
 
-    def disableModelRendering(self):
+    def disableModelRendering(self) -> None:
         self._is_model_rendering_enabled = False
 
-    def isModelRenderingEnabled(self):
+    def isModelRenderingEnabled(self) -> bool:
         return self._is_model_rendering_enabled
 
     ##  Emitted when the list of views changes.
@@ -127,7 +128,7 @@ class Controller:
     ##  Add a stage by name if it's not already added.
     #   \param name \type{string} Unique identifier of stage (usually the plugin name)
     #   \param stage \type{Stage} The stage to be added
-    def addStage(self, stage: Stage):
+    def addStage(self, stage: Stage) -> None:
         name = stage.getPluginId()
         if name not in self._stages:
             self._stages[name] = stage
@@ -155,7 +156,7 @@ class Controller:
 
     ##  Set the currently active stage.
     #   \param name \type{string} The name of the stage to set as active
-    def setActiveStage(self, name: str):
+    def setActiveStage(self, name: str) -> None:
         Logger.log("d", "Setting active stage to %s", name)
         try:
             self._active_stage = self._stages[name]
@@ -173,7 +174,7 @@ class Controller:
 
     ##  Add an input device (e.g. mouse, keyboard, etc) if it's not already added.
     #   \param device The input device to be added
-    def addInputDevice(self, device: InputDevice):
+    def addInputDevice(self, device: InputDevice) -> None:
         name = device.getPluginId()
         if name not in self._input_devices:
             self._input_devices[name] = device
@@ -194,15 +195,15 @@ class Controller:
     ##  Remove an input device from the list of input devices.
     #   Does nothing if the input device is not in the list.
     #   \param name \type{string} The name of the device to remove.
-    def removeInputDevice(self, name: str):
+    def removeInputDevice(self, name: str) -> None:
         if name in self._input_devices:
             self._input_devices[name].event.disconnect(self.event)
             del self._input_devices[name]
 
     ##  Request tool by name. Returns None if no view is found.
     #   \param name \type{string} Unique identifier of tool (usually the plugin name)
-    #   \return tool \type{Tool} if name was found, none otherwise.
-    def getTool(self, name: str):
+    #   \return tool \type{Tool} if name was found, None otherwise.
+    def getTool(self, name: str) -> Optional["Tool"]:
         try:
             return self._tools[name]
         except KeyError:  # No such tool
@@ -211,12 +212,12 @@ class Controller:
 
     ##  Get all tools
     #   \return tools \type{dict}
-    def getAllTools(self):
+    def getAllTools(self) -> Dict[str, "Tool"]:
         return self._tools
 
     ##  Add a Tool (transform object, translate object) if its not already added.
     #   \param tool \type{Tool} Tool to be added
-    def addTool(self, tool):
+    def addTool(self, tool: "Tool") -> None:
         name = tool.getPluginId()
         if name not in self._tools:
             self._tools[name] = tool
@@ -226,12 +227,12 @@ class Controller:
         else:
             Logger.log("w", "%s was already added to tool list. Unable to add it again.", name)
 
-    def _onToolOperationStarted(self, tool):
+    def _onToolOperationStarted(self, tool: "Tool") -> None:
         if not self._tool_operation_active:
             self._tool_operation_active = True
             self.toolOperationStarted.emit(tool)
 
-    def _onToolOperationStopped(self, tool):
+    def _onToolOperationStopped(self, tool: "Tool") -> None:
         if self._tool_operation_active:
             self._tool_operation_active = False
             self.toolOperationStopped.emit(tool)
@@ -243,13 +244,13 @@ class Controller:
 
     ##  Request active tool. Returns None if there is no active tool
     #   \return Tool \type{Tool} if an tool is active, None otherwise.
-    def getActiveTool(self):
+    def getActiveTool(self) -> Optional["Tool"]:
         return self._active_tool
 
     ##  Set the current active tool.
     #   The tool can be set by name of the tool or directly passing the tool object.
     #   \param tool \type{Tool} or \type{string}
-    def setActiveTool(self, tool):
+    def setActiveTool(self, tool: Optional[Union["Tool", str]]):
         from UM.Tool import Tool
         if self._active_tool:
             self._active_tool.event(ToolEvent(ToolEvent.ToolDeactivateEvent))
@@ -343,7 +344,7 @@ class Controller:
     #   \param tool \type{Tool} or \type{string}
     #   \sa setSelectionTool
     #   \sa setActiveTool
-    def setCameraTool(self, tool):
+    def setCameraTool(self, tool: Union["Tool", str]):
         from UM.Tool import Tool
         if isinstance(tool, Tool) or tool is None:
             self._camera_tool = tool
@@ -352,7 +353,7 @@ class Controller:
 
     ##  Get the camera tool (if any)
     #   \returns camera tool (or none)
-    def getCameraTool(self):
+    def getCameraTool(self) -> Optional["Tool"]:
         return self._camera_tool
 
     ##  Set the tool used for performing selections.
@@ -361,21 +362,21 @@ class Controller:
     #   \param tool \type{Tool} or \type{string}
     #   \sa setCameraTool
     #   \sa setActiveTool
-    def setSelectionTool(self, tool):
+    def setSelectionTool(self, tool: Union[str, "Tool"]):
         from UM.Tool import Tool
         if isinstance(tool, Tool) or tool is None:
             self._selection_tool = tool
         else:
             self._selection_tool = self.getTool(tool)
 
-    def getToolsEnabled(self):
+    def getToolsEnabled(self) -> bool:
         return self._tools_enabled
 
-    def setToolsEnabled(self, enabled):
+    def setToolsEnabled(self, enabled: bool) -> None:
         self._tools_enabled = enabled
 
     # Rotate camera view according defined angle
-    def rotateView(self, coordinate = "x", angle = 0):
+    def rotateView(self, coordinate: str = "x", angle: int  = 0) -> None:
         camera = self._scene.getActiveCamera()
         self._camera_tool.setOrigin(Vector(0, 100, 0))
         if coordinate == "home":

@@ -1,11 +1,8 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
-import queue #For priority sorting of container providers.
 import re #For finding containers with asterisks in the constraints and for detecting backup files.
-import urllib #For ensuring container file names are proper file names
-import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
 from typing import Any, cast, Dict, Iterable, List, Optional
 import collections
@@ -16,6 +13,7 @@ from UM.PluginRegistry import PluginRegistry #To register the container type plu
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeTypeDatabase
 from UM.Logger import Logger
+from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.LockFile import LockFile
@@ -176,8 +174,14 @@ class ContainerRegistry(ContainerRegistryInterface):
                     Logger.log("w", "The metadata of container {container_id} was added during runtime, but no accompanying container was added.".format(container_id = metadata["id"]))
                 try:
                     new_container = provider.loadContainer(metadata["id"])
+                except ContainerFormatError as e:
+                    Logger.logException("e", "Error in the format of container {container_id}".format(container_id = metadata["id"]), str(e))
+                    #Apparently this container is corrupt. Don't say that we can find it then.
+                    self.removeContainer(metadata["id"])
+                    continue
                 except Exception as e:
-                    Logger.logException("e", "Error when loading container {container_id}".format(container_id = metadata["id"]), e)
+                    Logger.logException("e", "Error when loading container {container_id}".format(container_id = metadata["id"]), str(e))
+                    self.removeContainer(metadata["id"])
                     continue
                 self.addContainer(new_container)
                 self.containerLoadComplete.emit(new_container.getId())
@@ -328,7 +332,11 @@ class ContainerRegistry(ContainerRegistryInterface):
                         #Update UI while loading.
                         UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
 
-                        self._containers[container_id] = provider.loadContainer(container_id)
+                        try:
+                            self._containers[container_id] = provider.loadContainer(container_id)
+                        except:
+                            Logger.logException("e", "Failed to load container %s", container_id)
+                            raise
                         self.metadata[container_id] = self._containers[container_id].getMetaData()
                         self.source_provider[container_id] = provider
                         self.containerLoadComplete.emit(container_id)
@@ -362,31 +370,22 @@ class ContainerRegistry(ContainerRegistryInterface):
             Logger.log("w", "Tried to delete container {container_id}, which doesn't exist or isn't loaded.".format(container_id = container_id))
             return  # Ignore.
 
-        # TODO: This is not efficient. Now we can load metadata before any container is loaded, operations such as
-        # removing a container and its resulting signals should not depend on having a container first. It should be
-        # possible to remove a container that exists in the provider without loading it first.
-        # For now, we load the container if it is not there to prevent breaking dependencies.
-        container = self._containers.get(container_id)
-        if container is None:
-            metadata = self.metadata[container_id]
-            if issubclass(metadata["container_type"], InstanceContainer):
-                container = self.findInstanceContainers(id = container_id)[0]
-            elif issubclass(metadata["container_type"], ContainerStack):
-                container = self.findContainerStacks(id = container_id)[0]
-
-        source_provider = self.source_provider[container_id]
+        container = None
         if container_id in self._containers:
+            container = self._containers[container_id]
+            if hasattr(container, "metaDataChanged"):
+                container.metaDataChanged.disconnect(self._onContainerMetaDataChanged)
             del self._containers[container_id]
-        del self.metadata[container_id]
-        del self.source_provider[container_id]
-        if source_provider is not None:
-            source_provider.removeContainer(container_id)
+        if container_id in self.metadata:
+            del self.metadata[container_id]
+        if container_id in self.source_provider:
+            if self.source_provider[container_id] is not None:
+                self.source_provider[container_id].removeContainer(container_id)
+            del self.source_provider[container_id]
 
-        if hasattr(container, "metaDataChanged"):
-            container.metaDataChanged.disconnect(self._onContainerMetaDataChanged)
-
-        self._clearQueryCacheByContainer(container)
-        self.containerRemoved.emit(container)
+        if container is not None:
+            self._clearQueryCacheByContainer(container)
+            self.containerRemoved.emit(container)
 
         Logger.log("d", "Removed container %s", container_id)
 

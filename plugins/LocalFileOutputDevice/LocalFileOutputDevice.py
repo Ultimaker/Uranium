@@ -1,13 +1,12 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
-import os.path
 import sys
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QLineEdit
 
 from UM.Application import Application
 from UM.Preferences import Preferences
@@ -15,7 +14,6 @@ from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.FileHandler.WriteFileJob import WriteFileJob
 from UM.Message import Message
-from UM.MimeTypeDatabase import MimeType
 
 from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice import OutputDeviceError
@@ -23,6 +21,63 @@ from UM.Platform import Platform
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
+
+
+#
+# HACK: This class tries to fix double file extensions problems on Mac OS X with the FileDialog.
+#
+class NonNativeFileDialog(QFileDialog):
+
+    def __init__(self, *args):
+        super().__init__(*args)
+
+        # Only do this on OS X
+        if Platform.isOSX():
+            self.filterSelected.connect(self._onFilterChanged)
+
+    def _onFilterChanged(self, filter: str):
+        if not self.selectedFiles():
+            return
+
+        filename = self.selectedFiles()[0]
+        if not filename:
+            return
+        if os.path.isdir(filename):
+            return
+
+        # Get the selected extension
+        extension = filter.rsplit(" ", 1)[-1]
+        extension = extension.strip("()")
+        extension = extension[2:]  # Remove the "*."
+        extension_parts = extension.split(".")
+
+        # Get the file name editor
+        line_editor = self.findChild(QLineEdit)
+
+        base_filename = os.path.basename(filename)
+        filename_parts = base_filename.split(".")
+        if len(filename_parts) == 1:
+            # No extension, add the selected extension to the end
+            new_base_filename = base_filename + "." + extension
+            new_filepath = filename[:len(filename) - len(base_filename)] + new_base_filename
+            self.selectFile(new_filepath)
+            line_editor.setText(new_base_filename)
+            self.update()
+            return
+
+        current_extension_parts = filename_parts[1:]
+        if current_extension_parts != extension_parts:
+            remove_count = 0
+            for part in reversed(current_extension_parts):
+                if part not in extension_parts:
+                    break
+                remove_count += 1
+            new_parts = filename_parts[:1] + current_extension_parts[:len(current_extension_parts) - remove_count]
+            new_base_filename = ".".join(new_parts + extension_parts)
+            new_filepath = filename[:len(filename) - len(base_filename)] + new_base_filename
+            self.selectFile(new_filepath)
+            line_editor.setText(new_base_filename)
+            self.update()
 
 
 ##  Implements an OutputDevice that supports saving to arbitrary local files.
@@ -51,7 +106,7 @@ class LocalFileOutputDevice(OutputDevice):
             raise OutputDeviceError.DeviceBusyError()
 
         # Set up and display file dialog
-        dialog = QFileDialog()
+        dialog = NonNativeFileDialog()
 
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
@@ -60,6 +115,9 @@ class LocalFileOutputDevice(OutputDevice):
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
         dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
+        # Native File dialog on OS X has issues with double/multiple extension files.
+        if Platform.isOSX():
+            dialog.setOption(QFileDialog.DontUseNativeDialog)
         if sys.platform == "linux" and "KDE_FULL_SESSION" in os.environ:
             dialog.setOption(QFileDialog.DontUseNativeDialog)
 

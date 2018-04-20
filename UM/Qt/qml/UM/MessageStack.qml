@@ -77,6 +77,9 @@ ListView {
             }
 
             text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? "" : model.text
+            onLinkActivated: {
+                Qt.openUrlExternally(link);
+            }
             color: UM.Theme.getColor("message_text")
             font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap;

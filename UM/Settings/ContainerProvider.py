@@ -1,10 +1,12 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Any, Dict, Iterable, Optional
 
+from UM.Logger import Logger
 from UM.PluginObject import PluginObject #We're implementing this.
 from UM.PluginRegistry import PluginRegistry #To get the priority metadata to sort by.
+from UM.Settings.ContainerFormatError import ContainerFormatError
 
 MYPY = False
 if MYPY:
@@ -31,7 +33,11 @@ class ContainerProvider(PluginObject):
     #   \return The specified container.
     def __getitem__(self, container_id: str):
         if container_id not in self._containers:
-            self._containers[container_id] = self.loadContainer(container_id)
+            try:
+                self._containers[container_id] = self.loadContainer(container_id)
+            except:
+                Logger.logException("e", "Failed to load container %s", container_id)
+                raise
         return self._containers[container_id]
 
     ##  Compares container providers by their priority so that they are easy to
@@ -79,6 +85,7 @@ class ContainerProvider(PluginObject):
         if container_id not in self._metadata:
             metadata = self.loadMetadata(container_id)
             if metadata is None:
+                Logger.log("e", "Failed to load metadata of container %s", container_id)
                 return None
         return self._metadata[container_id]
 

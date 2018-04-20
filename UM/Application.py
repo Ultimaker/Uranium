@@ -87,8 +87,8 @@ class Application:
         preferences = Preferences.getInstance()
         preferences.addPreference("general/language", "en_US")
         preferences.addPreference("general/visible_settings", "")
-        preferences.addPreference("general/visible_settings_preset", "")
-        preferences.addPreference("general/preset_setting_visibility_choice", "")
+        preferences.addPreference("general/plugins_to_remove", "")
+        preferences.addPreference("general/disabled_plugins", "")
 
         try:
             preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
@@ -216,10 +216,6 @@ class Application:
     def getVisibleMessages(self):
         with self._message_lock:
             return self._visible_messages
-
-    ##  Function that needs to be overridden by child classes with a list of plugins to remove.
-    def _removePlugins(self):
-        pass
 
     ##  Function that needs to be overridden by child classes with a list of plugins it needs.
     def _loadPlugins(self):

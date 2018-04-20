@@ -11,8 +11,6 @@ import UM 1.2 as UM
 Item {
     // Use the depth of the model to move the item, but also leave space for the visibility / enabled exclamation mark.
 
-    property var visibilityChangeCallback
-
     x: definition ? (definition.depth + 1)* UM.Theme.getSize("default_margin").width : UM.Theme.getSize("default_margin").width
     UM.TooltipArea
     {
@@ -83,16 +81,11 @@ Item {
             checked: definition ? definition.visible: false
             enabled: definition ? !definition.prohibited: false
 
-            MouseArea {
-                anchors.fill: parent;
+            MouseArea
+            {
+                anchors.fill: parent
 
-                onClicked:
-                {
-                    definitionsModel.setVisible(definition.key, !check.checked);
-
-                if (visibilityChangeCallback != null)
-                    visibilityChangeCallback()
-                }
+                onClicked: definitionsModel.setVisible(definition.key, !check.checked)
             }
         }
     }
