@@ -1,14 +1,14 @@
 # Uranium
-# Copyright (C) 2017 Ultimaker
+# Copyright (C) 2018 Ultimaker
 # This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.0\n"
+"Project-Id-Version: Uranium 3.3\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-03-29 08:36+0200\n"
-"PO-Revision-Date: 2018-01-29 17:58+0100\n"
+"PO-Revision-Date: 2018-03-30 20:39+0200\n"
 "Last-Translator: 'Jaguś' Paweł Jagusiak and Andrzej 'anraf1001' Rafalski\n"
 "Language-Team: reprapy.pl\n"
 "Language: pl_PL\n"
@@ -188,7 +188,7 @@ msgstr "Otwórz folder zawierający plik"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Coś poszło nie tak podczas zapisu do <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
@@ -238,21 +238,24 @@ msgid ""
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
 msgstr ""
+"Twoja konfiguracja wygląda na uszkodzoną. Coś jest nie tak z następującymi profilami:\n"
+"- {profiles}\n"
+"Czy chcesz przywrócić ustawienia fabryczne?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
-msgstr ""
+msgstr "Twoja konfiguracja wygląda na uszkodzoną."
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
 msgctxt "@info:title"
 msgid "Configuration errors"
-msgstr ""
+msgstr "Błędy konfiguracji"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:18
 msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
-msgstr ""
+msgstr "Zresetuj twoją konfigurację do ustawień fabrycznych."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
@@ -374,12 +377,14 @@ msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
 msgstr ""
+"Wtyczka została usunięta.\n"
+"Proszę zrestartuj {0}, aby zakończyć odinstalowywanie."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-msgstr ""
+msgstr "Nie udało się odinstalować wtyczki. Wtyczka zostanie usunięta po {0} ponownych uruchomieniach."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -401,22 +406,22 @@ msgstr "Nie znaleziono ważnych rozszerzeń OpenGL. Ten program wymaga wsparcia 
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
-msgstr ""
+msgstr "Czy chciałbyś przeładować {filename}?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:154
 msgctxt "@info:title"
 msgid "File has been modified"
-msgstr ""
+msgstr "Plik został zmodyfikowany"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:button"
 msgid "Reload"
-msgstr ""
+msgstr "Przeładuj"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
-msgstr ""
+msgstr "Spowoduje to przeładowanie zmodyfikowanego pliku z dysku."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
 #, python-brace-format
