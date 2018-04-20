@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import sys
@@ -24,6 +24,7 @@ from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
 from UM.JobQueue import JobQueue
 from UM.View.GL.OpenGLContext import OpenGLContext
+from UM.Settings.ContainerRegistry import ContainerRegistry
 import UM.Settings.InstanceContainer  # For version upgrade to know the version number.
 import UM.Settings.ContainerStack  # For version upgrade to know the version number.
 import UM.Preferences  # For version upgrade to know the version number.
@@ -118,7 +119,8 @@ class QtApplication(QApplication, Application):
         self.pluginsLoaded.emit()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
-        UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
+        with ContainerRegistry.getInstance().lockFile():
+            UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
 
         # Preferences might have changed. Load them again.
         # Note that the language can't be updated, so that will always revert to English.
