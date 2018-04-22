@@ -366,7 +366,7 @@ class PluginRegistry(QObject):
 
         #If API version is incompatible, don't load it.
         if self._metadata[plugin_id].get("plugin", {}).get("api", 0) != self.APIVersion:
-            Logger.log("i", "Plugin %s uses an incompatible API version, ignoring", plugin_id)
+            Logger.log("w", "Plugin %s uses an incompatible API version, ignoring", plugin_id)
             return
 
         # If found, but isn't in the metadata dictionary, add it:
