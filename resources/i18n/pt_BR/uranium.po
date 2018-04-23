@@ -1,15 +1,15 @@
 # Uranium
-# Copyright (C) 2017 Ultimaker
+# Copyright (C) 2018 Ultimaker
 # This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.0\n"
+"Project-Id-Version: Uranium 3.3\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-03-29 08:36+0200\n"
-"PO-Revision-Date: 2018-02-13 05:40-0300\n"
-"Last-Translator: Cláudio Sampaio <patola@makerlinux.com.b>\n"
+"PO-Revision-Date: 2018-04-21 09:40-0300\n"
+"Last-Translator: Cláudio Sampaio <patola@makerlinux.com.br>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -186,7 +186,7 @@ msgstr "Abre a pasta contendo o arquivo"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Algo deu errado ao salvar <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
@@ -236,21 +236,24 @@ msgid ""
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
 msgstr ""
+"Sua configuração parece estar corrompida. Algo parece estar errado com os seguintes perfis:\n"
+"- {profiles}\n"
+"Você gostaria de restaurar o padrão de fábrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
-msgstr ""
+msgstr "Sua configuração parece estar corrompida."
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
 msgctxt "@info:title"
 msgid "Configuration errors"
-msgstr ""
+msgstr "Erros de configuração"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:18
 msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
-msgstr ""
+msgstr "Restaurar sua configuração para o padrão de fábrica."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
@@ -351,7 +354,7 @@ msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
 msgstr ""
-"Erro ao instalar complemento de <filename>{0}</filename>:\n"
+"Falha em instalar complemento de <filename>{0}</filename>:\n"
 "<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
@@ -362,7 +365,7 @@ msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
 msgstr ""
-"Erro ao instalar o complemento;\n"
+"Falha em instalar o complemento;\n"
 "<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
@@ -372,12 +375,14 @@ msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
 msgstr ""
+"O plugin foi removido.\n"
+"Por favor reinicie {0} para finalizar a desinstalação."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-msgstr ""
+msgstr "Falha em desinstalar plugin. O plugin será removido após {0} reiniciar."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -399,22 +404,22 @@ msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
-msgstr ""
+msgstr "Gostaria de recarregar {filename}?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:154
 msgctxt "@info:title"
 msgid "File has been modified"
-msgstr ""
+msgstr "Arquivo foi modificado"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:button"
 msgid "Reload"
-msgstr ""
+msgstr "Recarregar"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
-msgstr ""
+msgstr "Isto irá fazer com que arquivos modificados sejam recarregados do disco."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
 #, python-brace-format
@@ -445,7 +450,7 @@ msgstr "Carregando"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
-msgstr "Resetar"
+msgstr "Restabelecer"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
@@ -1098,7 +1103,7 @@ msgstr "Ferramenta de Espelhamento"
 #~ " Please re-start the application to active the plugin."
 #~ msgstr ""
 #~ "O complemento foi instalado.\n"
-#~ " Por favor reinicie a aplicação para ativar o plugin."
+#~ " Por favor reinicie a aplicação para ativar o complemento."
 
 #~ msgctxt "@label"
 #~ msgid "Wireframe View"
