@@ -30,6 +30,10 @@ class NonNativeFileDialog(QFileDialog):
             return
 
         # Get the selected extension
+        # The filter string we get here is a MINE extension string which looks like below:
+        #         - "Text File (*.txt)"
+        #         - "JPG Files (*.jpg, *.jpeg)"
+        # We extract the extension part to for processing double/multi-extension file names.
         extension = selected_filter.rsplit(" ", 1)[-1]
         extension = extension.strip("()")
         extension = extension[2:]  # Remove the "*."
