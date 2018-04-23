@@ -47,7 +47,7 @@ class NonNativeFileDialog(QFileDialog):
         if len(filename_parts) == 1:
             # No extension, add the selected extension to the end
             new_base_filename = base_filename + "." + extension
-            new_filepath = filename[:len(filename) - len(base_filename)] + new_base_filename
+            new_filepath = filename[:-len(base_filename)] + new_base_filename
             self.selectFile(new_filepath)
             line_editor.setText(new_base_filename)
             self.update()
