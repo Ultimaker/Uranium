@@ -21,7 +21,7 @@ MimeTypeDatabase.addMimeType(
 #       Typical preferences would be window size, standard machine, etc.
 @signalemitter
 class Preferences:
-    Version = 5
+    Version = 6
 
     def __init__(self):
         super().__init__()
