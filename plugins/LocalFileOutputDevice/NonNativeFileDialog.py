@@ -19,7 +19,7 @@ class NonNativeFileDialog(QFileDialog):
         if Platform.isOSX():
             self.filterSelected.connect(self._onFilterChanged)
 
-    def _onFilterChanged(self, filter: str):
+    def _onFilterChanged(self, selected_filter: str):
         if not self.selectedFiles():
             return
 
@@ -30,7 +30,7 @@ class NonNativeFileDialog(QFileDialog):
             return
 
         # Get the selected extension
-        extension = filter.rsplit(" ", 1)[-1]
+        extension = selected_filter.rsplit(" ", 1)[-1]
         extension = extension.strip("()")
         extension = extension[2:]  # Remove the "*."
         extension_parts = extension.split(".")
