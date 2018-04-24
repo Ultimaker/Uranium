@@ -27,7 +27,7 @@ class Message(QObject):
     #   \param dismissible Can the user dismiss the message?
     #   \param title Phrase that will be shown above the message
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
-    def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None, title = None, parent = None): #pylint: disable=bad-whitespace
+    def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None, title = None, parent = None, use_inactivity_timer = True): #pylint: disable=bad-whitespace
         super().__init__(parent)
         from UM.Application import Application
         self._application = Application.getInstance()
@@ -38,6 +38,7 @@ class Message(QObject):
         self._lifetime = lifetime
         self._lifetime_timer = None
 
+        self._use_inactivity_timer = use_inactivity_timer
         self._inactivity_timer = None
 
         self._dismissable = dismissable  # Can the message be closed by user?
@@ -98,6 +99,8 @@ class Message(QObject):
     ##  Set the inactivity timer of the message.
     #   This function is required as the QTimer needs to be created on a QThread.
     def setInactivityTimer(self, inactivity_timer):
+        if not self._use_inactivity_timer:
+            return
         self._inactivity_timer = inactivity_timer
         self._inactivity_timer.setInterval(30 * 1000)
         self._inactivity_timer.setSingleShot(True)
