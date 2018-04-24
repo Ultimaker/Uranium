@@ -319,7 +319,11 @@ class PluginRegistry(QObject):
         install_prefix = os.path.abspath(install_prefix)
         plugin_dir = os.path.abspath(plugin_dir)
 
-        return os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
+        # The commonpath function can throught an error when the installation is in a different drive the temporary storage.
+        try:
+            return os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
+        except ValueError:
+            return False
 
     ##  Load all plugins matching a certain set of metadata
     #   \param meta_data \type{dict} The meta data that needs to be matched.
