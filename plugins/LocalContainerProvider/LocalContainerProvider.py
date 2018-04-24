@@ -154,7 +154,7 @@ class LocalContainerProvider(ContainerProvider):
             try:
                 result = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
             except ValueError:
-                result = False
+                result = True
         else:
             result = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
         return result
