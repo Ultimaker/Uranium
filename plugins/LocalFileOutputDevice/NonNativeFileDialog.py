@@ -15,6 +15,7 @@ class NonNativeFileDialog(QFileDialog):
     def __init__(self, *args):
         super().__init__(*args)
 
+        self._previous_extension = ""
         # Only do this on OS X
         if Platform.isOSX():
             self.filterSelected.connect(self._onFilterChanged)
@@ -39,6 +40,13 @@ class NonNativeFileDialog(QFileDialog):
         extension = extension[2:]  # Remove the "*."
         extension_parts = extension.split(".")
 
+        # Save the previous extension so we know what to remove if the user change between file types
+        previous_extension = self._previous_extension.rsplit(" ", 1)[-1]
+        previous_extension = previous_extension.strip("()")
+        previous_extension = previous_extension[2:]  # Remove the "*."
+        previous_extension_parts = previous_extension.split(".")
+        self._previous_extension = selected_filter
+
         # Get the file name editor
         line_editor = self.findChild(QLineEdit)
 
@@ -54,15 +62,21 @@ class NonNativeFileDialog(QFileDialog):
             return
 
         current_extension_parts = filename_parts[1:]
+        new_filepath = filename
+        new_base_filename = base_filename
         if current_extension_parts != extension_parts:
             remove_count = 0
             for part in reversed(current_extension_parts):
-                if part not in extension_parts:
+                if part not in extension_parts and part not in previous_extension_parts:
                     break
                 remove_count += 1
             new_parts = filename_parts[:1] + current_extension_parts[:len(current_extension_parts) - remove_count]
             new_base_filename = ".".join(new_parts + extension_parts)
             new_filepath = filename[:len(filename) - len(base_filename)] + new_base_filename
-            self.selectFile(new_filepath)
-            line_editor.setText(new_base_filename)
-            self.update()
+        self.selectFile(new_filepath)
+        line_editor.setText(new_base_filename)
+        self.update()
+
+    def selectNameFilter(self, p_str):
+        super().selectNameFilter(p_str)
+        self._previous_extension = p_str

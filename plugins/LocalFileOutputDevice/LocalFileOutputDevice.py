@@ -99,12 +99,13 @@ class LocalFileOutputDevice(OutputDevice):
                 if file_name:
                     file_name += "." + item["extension"]
 
+        # Add the file name before adding the extension to the dialog
+        if file_name is not None:
+            dialog.selectFile(file_name)
+
         dialog.setNameFilters(filters)
         if selected_filter is not None:
             dialog.selectNameFilter(selected_filter)
-
-        if file_name is not None:
-            dialog.selectFile(file_name)
 
         stored_directory = Preferences.getInstance().getValue("local_file/dialog_save_path")
         dialog.setDirectory(stored_directory)
