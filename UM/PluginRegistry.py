@@ -319,7 +319,7 @@ class PluginRegistry(QObject):
         install_prefix = os.path.abspath(install_prefix)
         plugin_dir = os.path.abspath(plugin_dir)
 
-        # The commonpath function can throught an error when the installation is in a different drive the temporary storage.
+        # The commonpath function can throw an error when the installation is in a different drive than the temporary storage.
         try:
             return os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
         except ValueError:
