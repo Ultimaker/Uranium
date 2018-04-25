@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import imp
@@ -377,6 +377,14 @@ class PluginRegistry(QObject):
         if self._metadata[plugin_id].get("plugin", {}).get("api", 0) != self.APIVersion:
             Logger.log("i", "Plugin %s uses an incompatible API version, ignoring", plugin_id)
             return
+
+        #HACK: For OctoPrint plug-in version 3.2.2, it broke the start-up sequence when auto-connecting.
+        #Remove this hack once we've increased the API version number to something higher than 4.
+        version = self._metadata[plugin_id].get("plugin", {}).get("version", "0.0.0")
+        if plugin_id == "OctoPrintPlugin" and Version(version) < Version("3.3.0"):
+            Logger.log("e", "Plugin OctoPrintPlugin version {version} was disabled because it was using an old API for network connection.".format(version = version))
+            return
+
         try:
             to_register = plugin.register(self._application)
             if not to_register:
