@@ -154,7 +154,7 @@ class Scene:
 
     ##  Triggered whenever a file is changed that we currently have loaded.
     def _onFileChanged(self, file_path: str) -> None:
-        if not os.path.isfile(self.file_path): #File doesn't exist any more.
+        if not os.path.isfile(file_path): #File doesn't exist any more.
             return
 
         #Multiple nodes may be loaded from the same file at different stages. Reload them all.
