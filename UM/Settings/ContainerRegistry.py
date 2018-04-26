@@ -175,12 +175,12 @@ class ContainerRegistry(ContainerRegistryInterface):
                 try:
                     new_container = provider.loadContainer(metadata["id"])
                 except ContainerFormatError as e:
-                    Logger.logException("e", "Error in the format of container {container_id}".format(container_id = metadata["id"]), str(e))
+                    Logger.logException("e", "Error in the format of container {container_id}: {error_msg}".format(container_id = metadata["id"], error_msg = str(e)))
                     #Apparently this container is corrupt. Don't say that we can find it then.
                     self.removeContainer(metadata["id"])
                     continue
                 except Exception as e:
-                    Logger.logException("e", "Error when loading container {container_id}".format(container_id = metadata["id"]), str(e))
+                    Logger.logException("e", "Error when loading container {container_id}: {error_msg}".format(container_id = metadata["id"], error_msg = str(e)))
                     self.removeContainer(metadata["id"])
                     continue
                 self.addContainer(new_container)
@@ -215,7 +215,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 try:
                     metadata = provider.loadMetadata(kwargs["id"])
                 except Exception as e:
-                    Logger.logException("e", "Error when loading metadata of container {container_id}".format(container_id = kwargs["id"]), e)
+                    Logger.logException("e", "Error when loading metadata of container {container_id}: {error_msg}".format(container_id = kwargs["id"], error_msg = str(e)))
                     return []
                 self.metadata[metadata["id"]] = metadata
                 self.source_provider[metadata["id"]] = provider

@@ -462,6 +462,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         try:
             parser = cls._readAndValidateSerialized(serialized)
             configuration_type = parser["metadata"].get("type")
+        except InvalidInstanceError as iie:
+            raise iie
         except Exception as e:
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
@@ -541,8 +543,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             metadata["name"] = parser["general"]["name"]
             metadata["version"] = parser["general"]["version"]
             metadata["definition"] = parser["general"]["definition"]
-        except KeyError: #One of the keys or the General section itself is missing.
-            return []
+        except KeyError as e: #One of the keys or the General section itself is missing.
+            raise InvalidInstanceError(str(e))
 
         if "metadata" in parser:
             metadata = {**metadata, **parser["metadata"]}
