@@ -272,6 +272,8 @@ class PluginRegistry(QObject):
         plugin_path = QUrl(plugin_path).toLocalFile()
 
         plugin_id = self._getPluginIdFromFile(plugin_path)
+        if plugin_id is None: #Failed to load.
+            return
 
         # Remove it from the to-be-removed list if it's there
         if plugin_id in self._plugins_to_remove:
@@ -481,11 +483,15 @@ class PluginRegistry(QObject):
 
     def _getPluginIdFromFile(self, filename: str) -> Optional[str]:
         plugin_id = None
-        with zipfile.ZipFile(filename, "r") as zip_ref:
-            for file_info in zip_ref.infolist():
-                if file_info.filename.endswith("/"):
-                    plugin_id = file_info.filename.strip("/")
-                    break
+        try:
+            with zipfile.ZipFile(filename, "r") as zip_ref:
+                for file_info in zip_ref.infolist():
+                    if file_info.filename.endswith("/"):
+                        plugin_id = file_info.filename.strip("/")
+                        break
+        except zipfile.BadZipFile:
+            Logger.logException("e", "Failed to load plug-in file. The zip archive seems to be corrupt.")
+            return None #Signals that loading this failed.
         return plugin_id
 
     #   Returns a list of all possible plugin ids in the plugin locations:
