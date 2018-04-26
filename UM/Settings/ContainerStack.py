@@ -326,6 +326,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         try:
             parser = cls._readAndValidateSerialized(serialized)
             configuration_type = parser["metadata"]["type"]
+        except InvalidContainerStackError as icse:
+            raise icse
         except Exception as e:
             Logger.log("e", "Could not get configuration type: %s", e)
         return configuration_type
@@ -427,8 +429,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         try:
             metadata["name"] = parser["general"]["name"]
             metadata["version"] = parser["general"]["version"]
-        except KeyError: #One of the keys or the General section itself is missing.
-            return []
+        except KeyError as e: #One of the keys or the General section itself is missing.
+            raise InvalidContainerStackError("Missing required fields: {error_msg}".format(error_msg = str(e)))
 
         if "metadata" in parser:
             metadata.update(parser["metadata"])

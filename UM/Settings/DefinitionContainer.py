@@ -229,6 +229,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         try:
             parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
             configuration_type = parsed["metadata"].get("type", "machine") #TODO: Not all definitions have a type. They get this via inheritance but that requires an instance.
+        except InvalidDefinitionError as ide:
+            raise ide
         except Exception as e:
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
@@ -336,8 +338,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         try: #Move required fields to metadata.
             metadata["name"] = parsed["name"]
             metadata["version"] = parsed["version"]
-        except KeyError: #Required fields not present!
-            return []
+        except KeyError as e: #Required fields not present!
+            raise InvalidDefinitionError("Missing required fields: {error_msg}".format(error_msg = str(e)))
         if "metadata" in parsed:
             metadata.update(parsed["metadata"])
         return [metadata]

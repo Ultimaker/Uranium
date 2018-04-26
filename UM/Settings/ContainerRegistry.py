@@ -212,10 +212,8 @@ class ContainerRegistry(ContainerRegistryInterface):
                     else:
                         return []
                 provider = self.source_provider[kwargs["id"]]
-                try:
-                    metadata = provider.loadMetadata(kwargs["id"])
-                except Exception as e:
-                    Logger.logException("e", "Error when loading metadata of container {container_id}: {error_msg}".format(container_id = kwargs["id"], error_msg = str(e)))
+                metadata = provider.loadMetadata(kwargs["id"])
+                if metadata is None:
                     return []
                 self.metadata[metadata["id"]] = metadata
                 self.source_provider[metadata["id"]] = provider
@@ -310,7 +308,10 @@ class ContainerRegistry(ContainerRegistryInterface):
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
                     UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
-                    self.metadata[container_id] = provider.loadMetadata(container_id)
+                    metadata = provider.loadMetadata(container_id)
+                    if metadata is None:
+                        continue
+                    self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
         ContainerRegistry.allMetadataLoaded.emit()
 

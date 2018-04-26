@@ -544,7 +544,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             metadata["version"] = parser["general"]["version"]
             metadata["definition"] = parser["general"]["definition"]
         except KeyError as e: #One of the keys or the General section itself is missing.
-            raise InvalidInstanceError(str(e))
+            raise InvalidInstanceError("Missing required fields: {error_msg}".format(error_msg = str(e)))
 
         if "metadata" in parser:
             metadata = {**metadata, **parser["metadata"]}
