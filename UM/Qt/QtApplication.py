@@ -7,12 +7,13 @@ import signal
 from typing import Dict, Optional
 
 
-from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
-from PyQt5.QtGui import QGuiApplication, QIcon, QPixmap, QFontMetrics
+from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics
 from PyQt5.QtCore import QTimer
 
+from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.FileHandler.ReadFileJob import ReadFileJob
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
@@ -23,12 +24,11 @@ from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
 from UM.JobQueue import JobQueue
+from UM.VersionUpgradeManager import VersionUpgradeManager
 from UM.View.GL.OpenGLContext import OpenGLContext
-from UM.Settings.ContainerRegistry import ContainerRegistry
 import UM.Settings.InstanceContainer  # For version upgrade to know the version number.
 import UM.Settings.ContainerStack  # For version upgrade to know the version number.
 import UM.Preferences  # For version upgrade to know the version number.
-import UM.VersionUpgradeManager
 from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
@@ -42,6 +42,7 @@ if MYPY:
 class UnsupportedVersionError(Exception):
     pass
 
+
 # Check PyQt version, we only support 5.4 or higher.
 major, minor = PYQT_VERSION_STR.split(".")[0:2]
 if int(major) < 5 or int(minor) < 4:
@@ -54,12 +55,12 @@ class QtApplication(QApplication, Application):
     pluginsLoaded = Signal()
     applicationRunning = Signal()
     
-    def __init__(self, tray_icon_name = None, **kwargs):
+    def __init__(self, tray_icon_name: Optional[str] = None, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
                 plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
-                Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
+                Logger.log("i", "Adding QT5 plugin path: %s", plugin_path)
                 QCoreApplication.addLibraryPath(plugin_path)
             else:
                 import site
@@ -69,14 +70,42 @@ class QtApplication(QApplication, Application):
             plugin_path = os.path.join(Application.getInstallPrefix(), "Resources", "plugins")
 
         if plugin_path:
-            Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
+            Logger.log("i", "Adding QT5 plugin path: %s", plugin_path)
             QCoreApplication.addLibraryPath(plugin_path)
 
+        # use Qt Quick Scene Graph "basic" render loop
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
         self._tray_icon_name = tray_icon_name
 
         super().__init__(sys.argv, **kwargs)
+
+        self._qml_import_paths = []
+        self._main_qml = "main.qml"
+        self._qml_engine = None
+        self._main_window = None
+        self._tray_icon_name = tray_icon_name
+        self._tray_icon = None
+        self._tray_icon_widget = None
+        self._theme = None
+
+        self._job_queue = None
+        self._version_upgrade_manager = None
+
+        self._is_shutting_down = False
+
+        self._recent_files = []
+
+        self._configuration_error_message = None
+
+    def addCommandLineOptions(self):
+        super().addCommandLineOptions()
+        # This flag is used by QApplication. We don't process it.
+        self._cli_parser.add_argument("-qmljsdebugger",
+                                      help = "For Qt's QML debugger compatibility")
+
+    def initialize(self) -> None:
+        super().initialize()
 
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
@@ -84,35 +113,46 @@ class QtApplication(QApplication, Application):
         if major_version is None and minor_version is None and profile is None:
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
             QMessageBox.critical(None, "Failed to probe OpenGL",
-                                "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
+                                 "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
         else:
-            Logger.log("d", "Detected most suitable OpenGL context version: %s" % (
-                OpenGLContext.versionAsText(major_version, minor_version, profile)))
+            opengl_version_str = OpenGLContext.versionAsText(major_version, minor_version, profile)
+            Logger.log("d", "Detected most suitable OpenGL context version: %s", opengl_version_str)
         OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
 
-        self._plugins_loaded = False  # Used to determine when it's safe to use the plug-ins.
-        self._main_qml = "main.qml"
-        self._engine = None
-        self._renderer = None
-        self._main_window = None
-        self._theme = None
-
-        self._shutting_down = False
-        self._qml_import_paths = []
         self._qml_import_paths.append(os.path.join(os.path.dirname(sys.executable), "qml"))
-        self._qml_import_paths.append(os.path.join(Application.getInstallPrefix(), "Resources", "qml"))
+        self._qml_import_paths.append(os.path.join(self.getInstallPrefix(), "Resources", "qml"))
 
-        self.parseCommandLine()
-        Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
+        Logger.log("i", "Initializing job queue ...")
+        self._job_queue = JobQueue()
+        self._job_queue.jobFinished.connect(self._onJobFinished)
+
+        Logger.log("i", "Initializing version upgrade manager ...")
+        self._version_upgrade_manager = VersionUpgradeManager(self)
+
+    def startSlashWindowPhase(self) -> None:
+        super().startSlashWindowPhase()
+
+        # Read preferences here (upgrade won't work) to get the language in use, so the splash window can be shown in
+        # the correct language.
+        try:
+            preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
+            self._preferences.readFromFile(preferences_filename)
+        except FileNotFoundError:
+            Logger.log("i", "Preferences file not found, ignore and use default language '%s'", self._default_language)
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
         # these checks need to be done in your <framework>Application.py class __init__().
 
-    def initialize(self):
         i18n_catalog = i18nCatalog("uranium")
 
+        self._configuration_error_message = ConfigurationErrorMessage(self,
+              i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt."),
+              lifetime = 0,
+              title = i18n_catalog.i18nc("@info:title", "Configuration errors")
+              )
+        # Remove, install, and then loading plugins
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         # Remove and install the plugins that have been scheduled
         self._plugin_registry.initializeBeforePluginsAreLoaded()
@@ -122,43 +162,38 @@ class QtApplication(QApplication, Application):
         self.pluginsLoaded.emit()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
-        with ContainerRegistry.getInstance().lockFile():
+        with self._container_registry.lockFile():
             UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
 
-        # Preferences might have changed. Load them again.
-        # Note that the language can't be updated, so that will always revert to English.
-        preferences = Preferences.getInstance()
+        # Load preferences again because before we have loaded the plugins, we don't have the upgrade routine for
+        # the preferences file. Now that we have, load the preferences file again so it can be upgraded and loaded.
         try:
-            file_name = Resources.getPath(Resources.Preferences, self._application_name + ".cfg")
-            with open(file_name, "r", encoding = "utf-8") as f:
+            preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
+            with open(preferences_filename, "r", encoding = "utf-8") as f:
                 serialized = f.read()
-            preferences.deserialize(serialized)
+            # This performs the upgrade for Preferences
+            self._preferences.deserialize(serialized)
+            self._preferences.setValue("general/plugins_to_remove", "")
+            self._preferences.writeToFile(preferences_filename)
         except FileNotFoundError:
-            pass
-        # Force the configuration file to be written again since the list of plugins to remove maybe changed
-        Preferences.getInstance().setValue("general/plugins_to_remove", "")
-        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
+            Logger.log("i", "The preferences file cannot be found, will use default values")
 
+        # Force the configuration file to be written again since the list of plugins to remove maybe changed
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
-            file_name = Resources.getPath(Resources.Preferences, self.getApplicationName() + ".cfg")
-            Preferences.getInstance().readFromFile(file_name)
+            self._preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
+            self._preferences.readFromFile(self._preferences_filename)
         except FileNotFoundError:
-            pass
+            Logger.log("i", "The preferences file '%s' cannot be found, will use default values",
+                       self._preferences_filename)
 
-        self.getApplicationName()
-
-        Preferences.getInstance().addPreference("%s/recent_files" % self.getApplicationName(), "")
-
-        self._recent_files = []
-        file_names = Preferences.getInstance().getValue("%s/recent_files" % self.getApplicationName()).split(";")
+        # Preferences: recent files
+        self._preferences.addPreference("%s/recent_files" % self._app_name, "")
+        file_names = self._preferences.getValue("%s/recent_files" % self._app_name).split(";")
         for file_name in file_names:
             if not os.path.isfile(file_name):
                 continue
-
             self._recent_files.append(QUrl.fromLocalFile(file_name))
-
-        JobQueue.getInstance().jobFinished.connect(self._onJobFinished)
 
         # Initialize System tray icon and make it invisible because it is used only to show pop up messages
         self._tray_icon = None
@@ -167,6 +202,27 @@ class QtApplication(QApplication, Application):
             self._tray_icon = QIcon(Resources.getPath(Resources.Images, self._tray_icon_name))
             self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
             self._tray_icon_widget.setVisible(False)
+
+    def initializeEngine(self):
+        # TODO: Document native/qml import trickery
+        self._qml_engine = QQmlApplicationEngine(self)
+        self._qml_engine.setOutputWarningsToStandardError(False)
+        self._qml_engine.warnings.connect(self.__onQmlWarning)
+
+        for path in self._qml_import_paths:
+            self._qml_engine.addImportPath(path)
+
+        if not hasattr(sys, "frozen"):
+            self._qml_engine.addImportPath(os.path.join(os.path.dirname(__file__), "qml"))
+
+        self._qml_engine.rootContext().setContextProperty("QT_VERSION_STR", QT_VERSION_STR)
+        self._qml_engine.rootContext().setContextProperty("screenScaleFactor", self._screenScaleFactor())
+
+        self.registerObjects(self._qml_engine)
+
+        Bindings.register()
+        self._qml_engine.load(self._main_qml)
+        self.engineCreatedSignal.emit()
 
     recentFilesChanged = pyqtSignal()
 
@@ -212,7 +268,7 @@ class QtApplication(QApplication, Application):
                 self.visibleMessageAdded.emit(message)
 
         # also show toast message when the main window is minimized
-        self.showToastMessage(self._application_name, message.getText())
+        self.showToastMessage(self._app_name, message.getText())
 
     def _onMainWindowStateChanged(self, window_state):
         if self._tray_icon:
@@ -229,28 +285,6 @@ class QtApplication(QApplication, Application):
     def setMainQml(self, path):
         self._main_qml = path
 
-    def initializeEngine(self):
-        # TODO: Document native/qml import trickery
-        Bindings.register()
-
-        self._engine = QQmlApplicationEngine()
-        self._engine.setOutputWarningsToStandardError(False)
-        self._engine.warnings.connect(self.__onQmlWarning)
-
-        for path in self._qml_import_paths:
-            self._engine.addImportPath(path)
-
-        if not hasattr(sys, "frozen"):
-            self._engine.addImportPath(os.path.join(os.path.dirname(__file__), "qml"))
-
-        self._engine.rootContext().setContextProperty("QT_VERSION_STR", QT_VERSION_STR)
-        self._engine.rootContext().setContextProperty("screenScaleFactor", self._screenScaleFactor())
-
-        self.registerObjects(self._engine)
-
-        self._engine.load(self._main_qml)
-        self.engineCreatedSignal.emit()
-    
     def exec_(self, *args, **kwargs):
         self.applicationRunning.emit()
         super().exec_(*args, **kwargs)
@@ -260,20 +294,20 @@ class QtApplication(QApplication, Application):
         # only reload when it is a release build
         if not self.getIsDebugMode():
             return
-        self._engine.clearComponentCache()
+        self._qml_engine.clearComponentCache()
         self._theme.reload()
-        self._engine.load(self._main_qml)
+        self._qml_engine.load(self._main_qml)
         # Hide the window. For some reason we can't close it yet. This needs to be done in the onComponentCompleted.
-        for obj in self._engine.rootObjects():
-            if obj != self._engine.rootObjects()[-1]:
+        for obj in self._qml_engine.rootObjects():
+            if obj != self._qml_engine.rootObjects()[-1]:
                 obj.hide()
 
     @pyqtSlot()
     def purgeWindows(self):
         # Close all root objects except the last one.
         # Should only be called by onComponentCompleted of the mainWindow.
-        for obj in self._engine.rootObjects():
-            if obj != self._engine.rootObjects()[-1]:
+        for obj in self._qml_engine.rootObjects():
+            if obj != self._qml_engine.rootObjects()[-1]:
                 obj.close()
 
     @pyqtSlot("QList<QQmlError>")
@@ -284,7 +318,7 @@ class QtApplication(QApplication, Application):
     engineCreatedSignal = Signal()
 
     def isShuttingDown(self):
-        return self._shutting_down
+        return self._is_shutting_down
 
     def registerObjects(self, engine):
         engine.rootContext().setContextProperty("PluginRegistry", PluginRegistry.getInstance())
@@ -294,17 +328,6 @@ class QtApplication(QApplication, Application):
             self._renderer = QtRenderer()
 
         return self._renderer
-
-    @classmethod
-    def addCommandLineOptions(self, parser, parsed_command_line = {}):
-        super().addCommandLineOptions(parser, parsed_command_line = parsed_command_line)
-        parser.add_argument("--disable-textures",
-                            dest="disable-textures",
-                            action="store_true",
-                            default=False,
-                            help="Disable Qt texture loading as a workaround for certain crashes.")
-        parser.add_argument("-qmljsdebugger",
-                            help="For Qt's QML debugger compatibility")
 
     mainWindowChanged = Signal()
 
@@ -323,9 +346,6 @@ class QtApplication(QApplication, Application):
             self.mainWindowChanged.emit()
 
     def setVisible(self, visible):
-        if self._engine is None:
-            self.initializeEngine()
-        
         if self._main_window is not None:
             self._main_window.visible = visible
 
@@ -336,11 +356,11 @@ class QtApplication(QApplication, Application):
 
     def getTheme(self):
         if self._theme is None:
-            if self._engine is None:
+            if self._qml_engine is None:
                 Logger.log("e", "The theme cannot be accessed before the engine is initialised")
                 return None
 
-            self._theme = UM.Qt.Bindings.Theme.Theme.getInstance(self._engine)
+            self._theme = UM.Qt.Bindings.Theme.Theme.getInstance(self._qml_engine)
         return self._theme
 
     #   Handle a function that should be called later.
@@ -358,7 +378,7 @@ class QtApplication(QApplication, Application):
 
     def windowClosed(self):
         Logger.log("d", "Shutting down %s", self.getApplicationName())
-        self._shutting_down = True
+        self._is_shutting_down = True
 
         try:
             Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
@@ -447,7 +467,7 @@ class QtApplication(QApplication, Application):
     splash = None
 
     def createSplash(self):
-        if not self.getCommandLineOption("headless"):
+        if not self._is_headless:
             try:
                 QtApplication.splash = self._createSplashScreen()
             except FileNotFoundError:
@@ -465,7 +485,7 @@ class QtApplication(QApplication, Application):
         if QtApplication.splash:
             QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
-        elif self.getCommandLineOption("headless"):
+        elif self._is_headless:
             Logger.log("d", message)
 
     ##  Close the splash screen after the application has started.
@@ -482,8 +502,8 @@ class QtApplication(QApplication, Application):
     #  \note If the creation fails, this function will ensure any errors are logged to the logging service.
     def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"]=None) -> Optional["QObject"]:
         path = QUrl.fromLocalFile(qml_file_path)
-        component = QQmlComponent(self._engine, path)
-        result_context = QQmlContext(self._engine.rootContext())
+        component = QQmlComponent(self._qml_engine, path)
+        result_context = QQmlContext(self._qml_engine.rootContext())
         if context_properties is not None:
             for name, value in context_properties.items():
                 result_context.setContextProperty(name, value)

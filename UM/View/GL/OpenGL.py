@@ -1,14 +1,13 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import sys
 import ctypes   # type: ignore
 
-from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer, QSurfaceFormat
+from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer
 from PyQt5.QtWidgets import QMessageBox
 
 from UM.Logger import Logger
-
 from UM.View.GL import FrameBufferObject
 from UM.View.GL import ShaderProgram
 from UM.View.GL.ShaderProgram import InvalidShaderProgramError
@@ -20,6 +19,7 @@ i18n_catalog = i18nCatalog("uranium")
 MYPY = False
 if MYPY:
     from UM.Mesh.MeshData import MeshData
+
 
 ##  Convenience methods for dealing with OpenGL.
 #
@@ -40,6 +40,12 @@ class OpenGL:
         Other = 4
 
     def __init__(self):
+        if OpenGL.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        OpenGL.__instance = self
+
+        super().__init__()
+
         profile = QOpenGLVersionProfile()
         profile.setVersion(OpenGLContext.major_version, OpenGLContext.minor_version)
         profile.setProfile(OpenGLContext.profile)
@@ -277,21 +283,8 @@ class OpenGL:
         setattr(mesh, OpenGL.IndexBufferProperty, buffer)
         return buffer
 
+    __instance = None
 
-    ##  Get the singleton instance.
-    #
-    #   \return The singleton instance.
     @classmethod
-    def getInstance(cls) -> "OpenGL":
-        return cls._instance
-
-    ##  Set the singleton instance.
-    #
-    #   This is mostly meant to simplify the singleton logic and should be called
-    #   by the OpenGL implementation as soon as possible.
-    @classmethod
-    def setInstance(cls, instance):
-        cls._instance = instance
-
-    ## private:
-    _instance = None    # type: OpenGL
+    def getInstance(cls, *args, **kwargs) -> "OpenGL":
+        return cls.__instance

@@ -1,20 +1,21 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
-from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase, QFontInfo
-from PyQt5.QtQml import QQmlComponent, QQmlContext
-from UM.FlameProfiler import pyqtSlot
 import json
 import os
-import os.path
 import sys
 
-from UM.Logger import Logger
-from UM.Resources import Resources
-from UM.Preferences import Preferences
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
+from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase
+from PyQt5.QtQml import QQmlComponent, QQmlContext
+
 from UM.Application import Application
 from UM.Decorators import deprecated
+from UM.FlameProfiler import pyqtSlot
+from UM.Logger import Logger
+from UM.Preferences import Preferences
+from UM.Resources import Resources
+
 
 class Theme(QObject):
     def __init__(self, engine, parent = None):
@@ -57,7 +58,6 @@ class Theme(QObject):
             Preferences.getInstance().setValue("general/theme", Application.getInstance().default_theme)
             theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
             self.load(theme_path)
-
 
     @pyqtSlot(result = "QVariantList")
     def getThemes(self):

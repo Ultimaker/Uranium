@@ -56,21 +56,19 @@ FilesDataUpdateResult = collections.namedtuple("FilesDataUpdateResult",
 #   to the current (upgraded) versions, where they are never loaded again unless
 #   the user manually retrieves the files.
 class VersionUpgradeManager:
-    ##  The singleton instance of this class.
-    __instance = None   # type: VersionUpgradeManager
-
-    ##  Gets the instance of the VersionUpgradeManager, or creates one.
-    @classmethod
-    def getInstance(cls) -> "VersionUpgradeManager":
-        if not cls.__instance:
-            cls.__instance = VersionUpgradeManager()
-        return cls.__instance
 
     ##  Initialises the version upgrade manager.
     #
     #   This initialises the cache for shortest upgrade routes, and registers
     #   the version upgrade plug-ins.
-    def __init__(self):
+    def __init__(self, application):
+        if VersionUpgradeManager.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        VersionUpgradeManager.__instance = self
+
+        super().__init__()
+
+        self._application = application
         self._version_upgrades = {} #For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
 
         # For each config type, gives a function with which to get the version number from those files.
@@ -433,3 +431,9 @@ class VersionUpgradeManager:
                 return file_name[: -len(suffix) - 1]  # last -1 is for the dot separating name and extension.
 
         return file_name
+
+    __instance = None
+
+    @classmethod
+    def getInstance(cls, *args, **kwargs) -> "VersionUpgradeManager":
+        return cls.__instance

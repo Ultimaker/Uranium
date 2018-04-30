@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Logger import Logger
@@ -8,20 +8,20 @@ from UM.FileHandler.FileHandler import FileHandler
 ##  Central class for reading and writing workspaces.
 #   This class is created by Application and handles reading and writing workspace files.
 class WorkspaceFileHandler(FileHandler):
-    def __init__(self):
-        super().__init__("workspace_writer", "workspace_reader")
+    def __init__(self, application, parent = None):
+        super().__init__(application, "workspace_writer", "workspace_reader", parent = parent)
         self.workspace_reader = None
 
     def readerRead(self, reader, file_name, **kwargs):
         self.workspace_reader = reader
+        results = None
         try:
             results = reader.read(file_name)
-            return results
         except:
-            Logger.logException("e", "An exception occured while loading workspace.")
+            Logger.logException("e", "An exception occurred while loading workspace.")
+            Logger.log("w", "Unable to load workspace %s", file_name)
 
-        Logger.log("w", "Unable to load workspace %s", file_name)
-        return None
+        return results
 
     def _readLocalFile(self, file):
         from UM.FileHandler.ReadFileJob import ReadFileJob

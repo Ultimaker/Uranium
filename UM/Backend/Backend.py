@@ -2,6 +2,11 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from enum import IntEnum
+import struct
+import subprocess
+import sys
+import threading
+from time import sleep
 
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Preferences import Preferences
@@ -13,11 +18,6 @@ from UM.Platform import Platform
 
 import Arcus
 
-import struct
-import subprocess
-import threading
-import sys
-from time import sleep
 
 ##  The current processing state of the backend.
 class BackendState(IntEnum):
@@ -161,7 +161,7 @@ class Backend(PluginObject):
     def _onSocketStateChanged(self, state):
         self._logSocketState(state)
         if state == Arcus.SocketState.Listening:
-            if not Application.getInstance().getCommandLineOption("external-backend", False):
+            if not Application.getInstance().getUseExternalBackend():
                 self.startEngine()
         elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
@@ -234,8 +234,7 @@ class Backend(PluginObject):
         if not self._socket.registerAllMessageTypes(protocol_file):
             Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
 
-        if Application.getInstance().getCommandLineOption("external-backend", False):
+        if Application.getInstance().getUseExternalBackend():
             Logger.log("i", "Listening for backend connections on %s", self._port)
 
         self._socket.listen("127.0.0.1", self._port)
-

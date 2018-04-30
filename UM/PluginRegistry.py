@@ -2,25 +2,23 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import imp
+import json
 import os
 import shutil  # For deleting plugin directories;
 import stat    # For setting file permissions correctly;
 import zipfile
-
-from UM.Preferences import Preferences
-from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
-from UM.Logger import Logger
 from typing import Callable, Any, Optional, types, Dict, List
 
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
-from UM.Resources import Resources
-from UM.PluginObject import PluginObject  # For type hinting
+from UM.i18n import i18nCatalog
+from UM.Logger import Logger
 from UM.Platform import Platform
+from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
+from UM.PluginObject import PluginObject  # For type hinting
+from UM.Resources import Resources
 from UM.Version import Version
 
-from UM.i18n import i18nCatalog
-import json
 i18n_catalog = i18nCatalog("uranium")
 
 
@@ -37,8 +35,13 @@ i18n_catalog = i18nCatalog("uranium")
 class PluginRegistry(QObject):
     APIVersion = 4
 
-    def __init__(self, parent = None):
-        super().__init__(parent)
+    def __init__(self, application, parent = None):
+        if PluginRegistry.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        PluginRegistry.__instance = self
+
+        super().__init__(parent = parent)
+        self._application = application
 
         self._all_plugins = []        # type: List[str]
         self._metadata = {}           # type: Dict[str, Dict[str, any]]
@@ -62,7 +65,6 @@ class PluginRegistry(QObject):
         self._plugin_locations = []  # type: List[str]
         self._folder_cache = {}      # type: Dict[str, str]
 
-        self._application = None
         self._supported_file_types = {"umplugin": "Uranium Plugin"}
 
         # File to store plugin info, such as which ones to install/remove and which ones are disabled.
@@ -91,7 +93,7 @@ class PluginRegistry(QObject):
             Logger.logException("e", "Failed to load plugin configuration file '%s'", self._plugin_config_filename)
 
         # Also load data from preferences, where the plugin info used to be saved
-        preferences = Preferences.getInstance()
+        preferences = self._application.getPreferences()
         disabled_plugins = preferences.getValue("general/disabled_plugins")
         disabled_plugins = disabled_plugins.split(",") if disabled_plugins else []
         for plugin_id in disabled_plugins:
@@ -119,7 +121,7 @@ class PluginRegistry(QObject):
         self._savePluginData()
 
     def initializeAfterPlguinsAreLoaded(self):
-        preferences = Preferences.getInstance()
+        preferences = self._application.getPreferences()
 
         # Remove the old preferences settings from preferences
         preferences.resetPreference("general/disabled_plugins")
@@ -252,13 +254,6 @@ class PluginRegistry(QObject):
             if plugin_id not in plugins:
                 plugins.append(plugin_id)
         return plugins
-
-    #   Get the singleton instance of this class:
-    @classmethod
-    def getInstance(cls) -> "PluginRegistry":
-        if not cls._instance:
-            cls._instance = PluginRegistry()
-        return cls._instance
 
     #   Get the metadata for a certain plugin:
     #   NOTE: InvalidMetaDataError is raised when no metadata can be found or
@@ -432,10 +427,6 @@ class PluginRegistry(QObject):
             Logger.log("e", "Unknown plugin type: %s", str(e))
         except Exception as e:
             Logger.logException("e", "Error loading plugin %s:", plugin_id)
-
-    #   Set the central application object:
-    def setApplication(self, app):
-        self._application = app
 
     #   Uninstall a plugin with a given ID:
     @pyqtSlot(str, result="QVariantMap")
@@ -772,7 +763,10 @@ class PluginRegistry(QObject):
         if plugin_type in cls._type_register_map:
             del cls._type_register_map[plugin_type]
 
-
-
     _type_register_map = {}  # type: Dict[str, Callable[[Any], None]]
-    _instance = None    # type: PluginRegistry
+
+    __instance = None
+
+    @classmethod
+    def getInstance(cls, *args, **kwargs) -> "PluginRegistry":
+        return cls.__instance

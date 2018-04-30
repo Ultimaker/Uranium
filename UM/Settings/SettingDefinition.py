@@ -472,7 +472,8 @@ class SettingDefinition:
     #   \param to_string A function that converts a value of this type to a string.
     #
     @classmethod
-    def addSettingType(cls, type_name: str, from_string: Callable[[str], Any], to_string: Callable[[Any],str], validator: Validator = None) -> None:
+    def addSettingType(cls, type_name: str, from_string: Optional[Callable[[str], Any]],
+                       to_string: Callable[[Any], str], validator: Optional[Validator] = None) -> None:
         cls.__type_definitions[type_name] = { "from": from_string, "to": to_string, "validator": validator }
 
     ##  Convert a string to a value according to a setting type.

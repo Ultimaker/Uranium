@@ -1,32 +1,36 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.PluginRegistry import PluginRegistry
-from UM.Logger import Logger
-from .FileWriter import FileWriter
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, QUrl
 
+from UM.Logger import Logger
 from UM.Platform import Platform
+from UM.PluginRegistry import PluginRegistry
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
+from typing import Optional, Dict
 MYPY = False
 if MYPY:
-    from UM.Application import Application
     from UM.Mesh.MeshReader import MeshReader
     from UM.Mesh.MeshWriter import MeshWriter
-from typing import Optional, Dict
+
+from .FileWriter import FileWriter
+
 
 ##  Central class for reading and writing meshes.
 #   This class is created by Application and handles reading and writing mesh files.
 class FileHandler(QObject):
-    _instance = None    # type: FileHandler
-    _application = None # type: Application
 
-    def __init__(self, writer_type: str, reader_type: str, parent = None):
+    def __init__(self, application, writer_type: str, reader_type: str, parent = None):
+        if self.__class__.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        self.__class__.__instance = self
+
         super().__init__(parent)
 
+        self._application = application
         self._readers = {} # type: Dict[str, MeshReader]
         self._writers = {} # type: Dict[str, MeshWriter]
 
@@ -35,22 +39,6 @@ class FileHandler(QObject):
 
         PluginRegistry.addType(self._writer_type, self.addWriter)
         PluginRegistry.addType(self._reader_type, self.addReader)
-
-    @classmethod
-    def setApplication(cls, application):
-        cls._application = application
-
-    @classmethod
-    def getApplication(cls):
-        return cls._application
-
-    ##  Return the singleton instance of the filehandler.
-    @classmethod
-    def getInstance(cls, *args, **kwargs) -> "FileHandler":
-        if not cls._instance:
-            cls._instance = cls()
-
-        return cls._instance
 
     @pyqtProperty("QStringList", constant=True)
     def supportedReadFileTypes(self):
@@ -173,3 +161,9 @@ class FileHandler(QObject):
                 Logger.log("e", str(e))
 
         return None
+
+    __instance = None
+
+    @classmethod
+    def getInstance(cls, *args, **kwargs) -> "FileHandler":
+        return cls.__instance

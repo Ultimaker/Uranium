@@ -6,14 +6,15 @@ import io
 from typing import Any, cast, Dict, List, Optional, Set
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
+from UM.Logger import Logger
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
-from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
@@ -708,7 +709,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._property_changes[key].add(property_name)
 
         if not self._emit_property_changed_queued:
-            _containerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
+            from UM.Application import Application
+            Application.getInstance().callLater(self._emitCollectedPropertyChanges)
             self._emit_property_changed_queued = True
 
     # Perform the emission of the change signals that were collected in a previous step.

@@ -39,7 +39,8 @@ from UM.PluginRegistry import PluginRegistry
 #   device.
 #
 @signalemitter
-class OutputDeviceManager():
+class OutputDeviceManager:
+
     def __init__(self):
         super().__init__()
 

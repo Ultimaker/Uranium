@@ -3,10 +3,10 @@
 
 import configparser
 
-from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To register the MIME type of the preference file.
 from UM.SaveFile import SaveFile
+from UM.Signal import Signal, signalemitter
 
 MimeTypeDatabase.addMimeType(
     MimeType(
@@ -17,6 +17,7 @@ MimeTypeDatabase.addMimeType(
     )
 )
 
+
 ##      Preferences are application based settings that are saved for future use.
 #       Typical preferences would be window size, standard machine, etc.
 @signalemitter
@@ -24,6 +25,10 @@ class Preferences:
     Version = 6
 
     def __init__(self):
+        if Preferences.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        Preferences.__instance = self
+
         super().__init__()
 
         self._file = None
@@ -142,13 +147,6 @@ class Preferences:
 
     preferenceChanged = Signal()
 
-    @classmethod
-    def getInstance(cls) -> "Preferences":
-        if not cls._instance:
-            cls._instance = Preferences()
-
-        return cls._instance
-
     def _splitKey(self, key):
         group = "general"
         key = key
@@ -184,13 +182,11 @@ class Preferences:
                 self._parser = None
                 return
         except Exception:
-            Logger.logException("e", "An exception occured while trying to read preferences file")
+            Logger.logException("e", "An exception occurred while trying to read preferences file")
             self._parser = None
             return
 
         del self._parser["general"]["version"]
-
-    _instance = None  # type: Preferences
 
     ##  Extract data from string and store it in the Configuration parser.
     def deserialize(self, serialized: str):
@@ -228,6 +224,13 @@ class Preferences:
         except Exception:
             Logger.logException("d", "An exception occured while trying to update the preferences")
             pass
+
+    __instance = None
+
+    @classmethod
+    def getInstance(cls, *args, **kwargs) -> "Preferences":
+        return cls.__instance
+
 
 class _Preference:
     def __init__(self, name, default = None, value = None): #pylint: disable=bad-whitespace

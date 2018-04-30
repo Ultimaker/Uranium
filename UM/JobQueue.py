@@ -1,13 +1,13 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import multiprocessing
 import threading
 
-from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
+from UM.Signal import Signal, signalemitter
 
-from typing import TYPE_CHECKING, List, Callable, Any
+from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
     from UM.Job import Job
 
@@ -17,16 +17,15 @@ if TYPE_CHECKING:
 #   can take things from this queue to process them.
 #   \sa Job
 @signalemitter
-class JobQueue():
+class JobQueue:
     ##  Initialize.
     #
     #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
     #                       When 'auto', the number of threads is based on the number of processors and cores on the machine.
     def __init__(self, thread_count: (str, int) = "auto"): #pylint: disable=bad-whitespace
-        if JobQueue._instance is None:
-            JobQueue._instance = self
-        else:
-            raise RuntimeError("Attempted to create multiple instances of JobQueue")
+        if JobQueue.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        JobQueue.__instance = self
 
         super().__init__()
 
@@ -91,15 +90,11 @@ class JobQueue():
                 return None
             return self._jobs.pop(0)
 
-    ##  Get the singleton instance of the JobQueue.
+    __instance = None
+
     @classmethod
-    def getInstance(cls) -> "JobQueue":
-        if not cls._instance:
-            cls._instance = JobQueue()
-
-        return cls._instance
-
-    _instance = None    # type: JobQueue
+    def getInstance(cls, *args, **kwargs) -> "JobQueue":
+        return cls.__instance
 
 
 ##  Internal

@@ -1,12 +1,13 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import os
-import re #For finding containers with asterisks in the constraints and for detecting backup files.
-import pickle #For serializing/deserializing Python classes to binary files
-from typing import Any, cast, Dict, Set, List, Optional
 import collections
+import gc
+import os
+import pickle #For serializing/deserializing Python classes to binary files
+import re #For finding containers with asterisks in the constraints and for detecting backup files.
 import time
+from typing import Any, cast, Dict, Set, List, Optional
 
 import UM.FlameProfiler
 from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
@@ -19,11 +20,10 @@ from UM.Signal import Signal, signalemitter
 from UM.LockFile import LockFile
 
 import UM.Dictionary
-import gc
 
 MYPY = False
 if MYPY:
-    from UM.Application import Application
+    pass
 
 from UM.Settings.ContainerProvider import ContainerProvider
 from UM.Settings.DefinitionContainer import DefinitionContainer
@@ -32,13 +32,13 @@ from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerRegistryInterface
 from UM.Settings.Interfaces import DefinitionContainerInterface
 
-import UM.Qt.QtApplication
 from . import ContainerQuery
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
 
 # The maximum amount of query results we should cache
 MaxQueryCacheSize = 1000
+
 
 ##  Central class to manage all setting providers.
 #
@@ -48,8 +48,15 @@ MaxQueryCacheSize = 1000
 #   appropriate providers.
 @signalemitter
 class ContainerRegistry(ContainerRegistryInterface):
-    def __init__(self, *args, **kwargs):
+
+    def __init__(self, application, *args, **kwargs):
+        if ContainerRegistry.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        ContainerRegistry.__instance = self
+
         super().__init__(*args, **kwargs)
+
+        self._application = application
 
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
@@ -312,7 +319,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         for provider in self._providers: #Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
-                    UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
+                    self._application.processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
                     metadata = provider.loadMetadata(container_id)
                     if metadata is None:
                         continue
@@ -336,7 +343,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                     if container_id not in self._containers:
                         #Update UI while loading.
-                        UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
+                        self._application.processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
 
                         try:
                             self._containers[container_id] = provider.loadContainer(container_id)
@@ -542,7 +549,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     # Load a binary cached version of a DefinitionContainer
     def _loadCachedDefinition(self, definition_id, path):
         try:
-            cache_path = Resources.getPath(Resources.Cache, "definitions", self.getApplication().getVersion(), definition_id)
+            cache_path = Resources.getPath(Resources.Cache, "definitions", self._application.getVersion(), definition_id)
 
             cache_mtime = os.path.getmtime(cache_path)
             definition_mtime = os.path.getmtime(path)
@@ -570,7 +577,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     # Store a cached version of a DefinitionContainer
     def _saveCachedDefinition(self, definition):
-        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self.getApplication().getVersion(), definition.id)
+        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self._application.getVersion(), definition.id)
 
         # Ensure the cache path exists
         os.makedirs(os.path.dirname(cache_path), exist_ok=True)
@@ -646,25 +653,6 @@ class ContainerRegistry(ContainerRegistryInterface):
             wait_msg = "Waiting for lock file in cache directory to disappear."
         )
 
-    ##  Get the singleton instance for this class.
-    @classmethod
-    def getInstance(cls) -> "ContainerRegistry":
-        # Note: Explicit use of class name to prevent issues with inheritance.
-        if not ContainerRegistry.__instance:
-            ContainerRegistry.__instance = cls()
-        return ContainerRegistry.__instance
-
-    @classmethod
-    def setApplication(cls, application):
-        cls.__application = application
-
-    @classmethod
-    def getApplication(cls):
-        return cls.__application
-
-    __application = None    # type: Application
-    __instance = None  # type: ContainerRegistry
-
     __container_types = {
         "definition": DefinitionContainer,
         "instance": InstanceContainer,
@@ -677,6 +665,13 @@ class ContainerRegistry(ContainerRegistryInterface):
         "application/x-uranium-containerstack": ContainerStack,
         "application/x-uranium-extruderstack": ContainerStack
     }
+
+    __instance = None
+
+    @classmethod
+    def getInstance(cls, *args, **kwargs) -> "ContainerRegistry":
+        return cls.__instance
+
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
 
