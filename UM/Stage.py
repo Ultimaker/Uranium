@@ -18,6 +18,14 @@ class Stage(QObject, PluginObject):
         self._components = {}
         self._icon_source = QUrl()
 
+    ##  Something to do when this Stage is selected
+    def start(self):
+        pass
+
+    ##  Something to do when this Stage is deselected
+    def finish(self):
+        pass
+
     ##  Add a QML component to the stage
     def addDisplayComponent(self, name: str, source: Union[str, QUrl]):
         if type(source) == str:

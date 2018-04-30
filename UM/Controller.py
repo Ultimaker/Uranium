@@ -157,10 +157,18 @@ class Controller:
     ##  Set the currently active stage.
     #   \param name \type{string} The name of the stage to set as active
     def setActiveStage(self, name: str) -> None:
-        Logger.log("d", "Setting active stage to %s", name)
         try:
-            self._active_stage = self._stages[name]
-            self.activeStageChanged.emit()
+            # Don't actually change the stage if it is the current selected one.
+            if self._active_stage != self._stages[name]:
+                previous_stage = self._active_stage
+                Logger.log("d", "Setting active stage to %s", name)
+                self._active_stage = self._stages[name]
+
+                # If there is no error switching stages, then finish first the previous stage (if it exists) and start the new stage
+                if previous_stage is not None:
+                    previous_stage.finish()
+                self._active_stage.start()
+                self.activeStageChanged.emit()
         except KeyError:
             Logger.log("e", "No stage named %s found", name)
         except Exception as e:
