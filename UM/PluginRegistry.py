@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import imp
@@ -115,8 +115,8 @@ class PluginRegistry(QObject):
         preferences = Preferences.getInstance()
 
         # Remove the old preferences settings from preferences
-        preferences.removePreference("general/disabled_plugins")
-        preferences.removePreference("general/plugins_to_remove")
+        preferences.resetPreference("general/disabled_plugins")
+        preferences.resetPreference("general/plugins_to_remove")
 
     def _savePluginData(self):
         Logger.log("d", "Saving plugin data to file '%s'", self._plugin_config_filename)
@@ -272,6 +272,8 @@ class PluginRegistry(QObject):
         plugin_path = QUrl(plugin_path).toLocalFile()
 
         plugin_id = self._getPluginIdFromFile(plugin_path)
+        if plugin_id is None: #Failed to load.
+            return
 
         # Remove it from the to-be-removed list if it's there
         if plugin_id in self._plugins_to_remove:
@@ -383,9 +385,20 @@ class PluginRegistry(QObject):
                 self._populateMetaData(plugin_id)
             except InvalidMetaDataError:
                 return
+
+        #If API version is incompatible, don't load it.
         if self._metadata[plugin_id].get("plugin", {}).get("api", 0) != self.APIVersion:
-            Logger.log("i", "Plugin %s uses an incompatible API version, ignoring", plugin_id)
+            Logger.log("w", "Plugin %s uses an incompatible API version, ignoring", plugin_id)
+            del self._metadata[plugin_id]
             return
+
+        #HACK: For OctoPrint plug-in version 3.2.2, it broke the start-up sequence when auto-connecting.
+        #Remove this hack once we've increased the API version number to something higher than 4.
+        version = self._metadata[plugin_id].get("plugin", {}).get("version", "0.0.0")
+        if plugin_id == "OctoPrintPlugin" and Version(version) < Version("3.3.0"):
+            Logger.log("e", "Plugin OctoPrintPlugin version {version} was disabled because it was using an old API for network connection.".format(version = version))
+            return
+
         try:
             to_register = plugin.register(self._application)
             if not to_register:
@@ -479,11 +492,15 @@ class PluginRegistry(QObject):
 
     def _getPluginIdFromFile(self, filename: str) -> Optional[str]:
         plugin_id = None
-        with zipfile.ZipFile(filename, "r") as zip_ref:
-            for file_info in zip_ref.infolist():
-                if file_info.is_dir():
-                    plugin_id = file_info.filename.strip("/")
-                    break
+        try:
+            with zipfile.ZipFile(filename, "r") as zip_ref:
+                for file_info in zip_ref.infolist():
+                    if file_info.filename.endswith("/"):
+                        plugin_id = file_info.filename.strip("/")
+                        break
+        except zipfile.BadZipFile:
+            Logger.logException("e", "Failed to load plug-in file. The zip archive seems to be corrupt.")
+            return None #Signals that loading this failed.
         return plugin_id
 
     #   Returns a list of all possible plugin ids in the plugin locations:

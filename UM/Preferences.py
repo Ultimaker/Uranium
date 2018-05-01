@@ -21,7 +21,7 @@ MimeTypeDatabase.addMimeType(
 #       Typical preferences would be window size, standard machine, etc.
 @signalemitter
 class Preferences:
-    Version = 5
+    Version = 6
 
     def __init__(self):
         super().__init__()
@@ -193,11 +193,11 @@ class Preferences:
     _instance = None  # type: Preferences
 
     ##  Extract data from string and store it in the Configuration parser.
-    def deserialize(self, serialized: str) -> str:
+    def deserialize(self, serialized: str):
         updated_preferences = self.__updateSerialized(serialized)
         self._parser = configparser.ConfigParser(interpolation=None)
         self._parser.read_string(updated_preferences)
-        has_version = "version" in self._parser["general"]
+        has_version = "general" in self._parser and "version" in self._parser["general"]
 
         if has_version:
             if self._parser["general"]["version"] != str(Preferences.Version):
@@ -213,7 +213,6 @@ class Preferences:
     def __updateSerialized(self, serialized: str) -> str:
         configuration_type = "preferences"
 
-        version = None
         try:
             import UM.VersionUpgradeManager
             version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,

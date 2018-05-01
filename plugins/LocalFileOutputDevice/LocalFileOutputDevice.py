@@ -1,13 +1,12 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
-import os.path
 import sys
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QLineEdit
 
 from UM.Application import Application
 from UM.Preferences import Preferences
@@ -15,13 +14,16 @@ from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.FileHandler.WriteFileJob import WriteFileJob
 from UM.Message import Message
-from UM.MimeTypeDatabase import MimeType
 
 from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice import OutputDeviceError
 from UM.Platform import Platform
 
 from UM.i18n import i18nCatalog
+
+# HACK: This class tries to fix double file extensions problems on Mac OS X with the FileDialog.
+from .NonNativeFileDialog import NonNativeFileDialog
+
 catalog = i18nCatalog("uranium")
 
 
@@ -51,7 +53,7 @@ class LocalFileOutputDevice(OutputDevice):
             raise OutputDeviceError.DeviceBusyError()
 
         # Set up and display file dialog
-        dialog = QFileDialog()
+        dialog = NonNativeFileDialog()
 
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
@@ -60,6 +62,9 @@ class LocalFileOutputDevice(OutputDevice):
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
         dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
+        # Native File dialog on OS X has issues with double/multiple extension files.
+        if Platform.isOSX():
+            dialog.setOption(QFileDialog.DontUseNativeDialog)
         if sys.platform == "linux" and "KDE_FULL_SESSION" in os.environ:
             dialog.setOption(QFileDialog.DontUseNativeDialog)
 
@@ -94,12 +99,13 @@ class LocalFileOutputDevice(OutputDevice):
                 if file_name:
                     file_name += "." + item["extension"]
 
+        # Add the file name before adding the extension to the dialog
+        if file_name is not None:
+            dialog.selectFile(file_name)
+
         dialog.setNameFilters(filters)
         if selected_filter is not None:
             dialog.selectNameFilter(selected_filter)
-
-        if file_name is not None:
-            dialog.selectFile(file_name)
 
         stored_directory = Preferences.getInstance().getValue("local_file/dialog_save_path")
         dialog.setDirectory(stored_directory)

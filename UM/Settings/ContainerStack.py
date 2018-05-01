@@ -9,6 +9,7 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
+from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -325,6 +326,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         try:
             parser = cls._readAndValidateSerialized(serialized)
             configuration_type = parser["metadata"]["type"]
+        except InvalidContainerStackError as icse:
+            raise icse
         except Exception as e:
             Logger.log("e", "Could not get configuration type: %s", e)
         return configuration_type
@@ -353,7 +356,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         parser = self._readAndValidateSerialized(serialized)
 
         if parser["general"].getint("version") != self.Version:
-            raise IncorrectVersionError
+            raise IncorrectVersionError()
 
         # Clear all data before starting.
         for container in self._containers:
@@ -376,13 +379,15 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                     containers[0].propertyChanged.connect(self._collectPropertyChanges)
                     self._containers.append(containers[0])
                 else:
+                    self._containers.append(_containerRegistry.getEmptyInstanceContainer())
                     ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id, self.getId())
-                    raise Exception("When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
+                    Logger.log("e", "When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
+                    raise ContainerFormatError("When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
 
         elif parser.has_option("general", "containers"):
             # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
             container_string = parser["general"].get("containers", "")
-            Logger.log("d", "While deserializeing, we got the following container string: %s", container_string)
+            Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
             container_id_list = container_string.split(",")
             for container_id in container_id_list:
                 if container_id != "":
@@ -391,7 +396,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                         containers[0].propertyChanged.connect(self._collectPropertyChanges)
                         self._containers.append(containers[0])
                     else:
-                        raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self.getId(), container_id))
+                        self._containers.append(_containerRegistry.getEmptyInstanceContainer())
+                        ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id, self.getId())
+                        Logger.log("e", "When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
+                        raise ContainerFormatError("When trying to deserialize %s, we received an unknown container ID (%s)" % (self.getId(), container_id))
 
         ## TODO; Deserialize the containers.
 
@@ -421,8 +429,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         try:
             metadata["name"] = parser["general"]["name"]
             metadata["version"] = parser["general"]["version"]
-        except KeyError: #One of the keys or the General section itself is missing.
-            return []
+        except KeyError as e: #One of the keys or the General section itself is missing.
+            raise InvalidContainerStackError("Missing required fields: {error_msg}".format(error_msg = str(e)))
 
         if "metadata" in parser:
             metadata.update(parser["metadata"])

@@ -15,9 +15,3 @@ Dependencies
 - PyQt5
 - Numpy
 - Arcus
-
-Documentation
------------
-
-API documentation is available at http://ultimaker.github.io/Uranium/ .
-This documentation is updated daily.
