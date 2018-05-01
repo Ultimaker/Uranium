@@ -52,11 +52,10 @@ class PluginsModel(ListModel):
         # Get all active plugins from registry (list of strings):
         active_plugins = self._registry.getActivePlugins()
         installed_plugins = self._registry.getInstalledPlugins()
-        plugin_folder = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
+        plugin_folder = os.path.abspath(Resources.getStoragePath(Resources.Plugins))
 
         # Metadata is used as the official list of "all plugins":
         for plugin_id in self._plugins:
-
             metadata = self._registry.getMetaData(plugin_id)
 
             if "plugin" not in metadata:

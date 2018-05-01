@@ -319,7 +319,11 @@ class PluginRegistry(QObject):
         install_prefix = os.path.abspath(install_prefix)
         plugin_dir = os.path.abspath(plugin_dir)
 
-        return os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
+        try:
+            result = os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
+        except ValueError:
+            result = False
+        return result
 
     ##  Load all plugins matching a certain set of metadata
     #   \param meta_data \type{dict} The meta data that needs to be matched.
