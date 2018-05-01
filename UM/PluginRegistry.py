@@ -314,16 +314,25 @@ class PluginRegistry(QObject):
     def isInstalledPlugin(self, plugin_id: str):
         return plugin_id in self._plugins_installed
 
-    def isBundledPlugin(self, plugin_id: str, plugin_dir: str) -> bool:
-        install_prefix = self._application.getInstallPrefix()
-        install_prefix = os.path.abspath(install_prefix)
-        plugin_dir = os.path.abspath(plugin_dir)
+    def isBundledPlugin(self, plugin_id: str) -> bool:
+        install_prefix = os.path.abspath(self._application.getInstallPrefix())
 
-        try:
-            result = os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
-        except ValueError:
-            result = False
-        return result
+        # Go through all plugin locations and check if the given plugin is located in the installation path.
+        is_bundled = False
+        for plugin_dir in self._plugin_locations:
+            try:
+                is_in_installation_path = os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
+            except ValueError:
+                is_in_installation_path = False
+            if not is_in_installation_path:
+                continue
+
+            result = self._locatePlugin(plugin_id, plugin_dir)
+            if result:
+                is_bundled = True
+                break
+
+        return is_bundled
 
     ##  Load all plugins matching a certain set of metadata
     #   \param meta_data \type{dict} The meta data that needs to be matched.

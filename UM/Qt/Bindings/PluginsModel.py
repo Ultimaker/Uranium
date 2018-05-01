@@ -3,20 +3,21 @@
 
 import os
 
-from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
+from PyQt5.QtCore import Qt
 
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
 from UM.Logger import Logger
-from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources
+
 
 class PluginsModel(ListModel):
     def __init__(self, parent = None, view = "installed"):
         super().__init__(parent)
 
-        self._registry = Application.getInstance().getPluginRegistry()
-        self._required_plugins = Application.getInstance().getRequiredPlugins()
+        self._application = Application.getInstance()
+        self._registry = self._application.getPluginRegistry()
+        self._required_plugins = self._application.getRequiredPlugins()
 
         # Static props:
         # These should be defined in plugin.json and are read-only.
@@ -38,7 +39,6 @@ class PluginsModel(ListModel):
         self.addRoleName(Qt.UserRole + 13, "can_upgrade")
         self.addRoleName(Qt.UserRole + 14, "update_url")
 
-
         if view == "installed":
             self._plugins = self._registry.getInstalledPlugins()
             self._update(view)
@@ -52,7 +52,6 @@ class PluginsModel(ListModel):
         # Get all active plugins from registry (list of strings):
         active_plugins = self._registry.getActivePlugins()
         installed_plugins = self._registry.getInstalledPlugins()
-        plugin_folder = os.path.abspath(Resources.getStoragePath(Resources.Plugins))
 
         # Metadata is used as the official list of "all plugins":
         for plugin_id in self._plugins:
@@ -79,7 +78,7 @@ class PluginsModel(ListModel):
                 "status": "installed" if metadata["id"] in installed_plugins else "available",
                 "enabled": True if view == "available" else metadata["id"] in active_plugins,
                 "required": metadata["id"] in self._required_plugins,
-                "can_uninstall": True if not self._registry.isBundledPlugin(plugin_id, plugin_folder) else False,
+                "can_uninstall": self._registry.isBundledPlugin(plugin_id),
                 "can_upgrade": False, # Default, potentially overwritten by plugin browser
                 "update_url": None # Default, potentially overwritten by plugin browser
             })
