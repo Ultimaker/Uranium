@@ -19,11 +19,11 @@ class Stage(QObject, PluginObject):
         self._icon_source = QUrl()
 
     ##  Something to do when this Stage is selected
-    def start(self):
+    def onStageSelected(self):
         pass
 
     ##  Something to do when this Stage is deselected
-    def finish(self):
+    def onStageDeselected(self):
         pass
 
     ##  Add a QML component to the stage

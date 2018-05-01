@@ -166,8 +166,8 @@ class Controller:
 
                 # If there is no error switching stages, then finish first the previous stage (if it exists) and start the new stage
                 if previous_stage is not None:
-                    previous_stage.finish()
-                self._active_stage.start()
+                    previous_stage.onStageDeselected()
+                self._active_stage.onStageSelected()
                 self.activeStageChanged.emit()
         except KeyError:
             Logger.log("e", "No stage named %s found", name)
