@@ -40,7 +40,7 @@ MimeTypeDatabase.addMimeType(
 #
 @signalemitter
 class InstanceContainer(QObject, ContainerInterface, PluginObject):
-    Version = 3
+    Version = 4
 
     ##  Constructor
     #
