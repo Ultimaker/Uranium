@@ -74,14 +74,21 @@ class PluginRegistry(QObject):
         config_path = Resources.getConfigStoragePath()
         self._plugin_config_filename = os.path.join(os.path.abspath(config_path), "plugins.json")
 
-        # Load the plugin info if exists
-        if os.path.exists(self._plugin_config_filename):
-            Logger.log("i", "Loading plugin configuration file '%s'", self._plugin_config_filename)
-            with open(self._plugin_config_filename, "r", encoding = "utf-8") as f:
-                data = json.load(f)
-                self._disabled_plugins = data["disabled"]
-                self._plugins_to_install = data["to_install"]
-                self._plugins_to_remove = data["to_remove"]
+        from UM.Settings.ContainerRegistry import ContainerRegistry
+        container_registry = ContainerRegistry.getInstance()
+
+        try:
+            with container_registry.lockFile():
+                # Load the plugin info if exists
+                if os.path.exists(self._plugin_config_filename):
+                    Logger.log("i", "Loading plugin configuration file '%s'", self._plugin_config_filename)
+                    with open(self._plugin_config_filename, "r", encoding = "utf-8") as f:
+                        data = json.load(f)
+                        self._disabled_plugins = data["disabled"]
+                        self._plugins_to_install = data["to_install"]
+                        self._plugins_to_remove = data["to_remove"]
+        except:
+            Logger.logException("e", "Failed to load plugin configuration file '%s'", self._plugin_config_filename)
 
         # Also load data from preferences, where the plugin info used to be saved
         preferences = Preferences.getInstance()
@@ -120,12 +127,15 @@ class PluginRegistry(QObject):
 
     def _savePluginData(self):
         Logger.log("d", "Saving plugin data to file '%s'", self._plugin_config_filename)
-        with open(self._plugin_config_filename, "w", encoding = "utf-8") as f:
-            data = json.dumps({"disabled": self._disabled_plugins,
-                               "to_install": self._plugins_to_install,
-                               "to_remove": self._plugins_to_remove,
-                               })
-            f.write(data)
+        from UM.Settings.ContainerRegistry import ContainerRegistry
+        container_registry = ContainerRegistry.getInstance()
+        with container_registry.lockFile():
+            with open(self._plugin_config_filename, "w", encoding = "utf-8") as f:
+                data = json.dumps({"disabled": self._disabled_plugins,
+                                   "to_install": self._plugins_to_install,
+                                   "to_remove": self._plugins_to_remove,
+                                   })
+                f.write(data)
 
 # TODO:
 # - [ ] Improve how metadata is stored. It should not be in the 'plugin' prop
