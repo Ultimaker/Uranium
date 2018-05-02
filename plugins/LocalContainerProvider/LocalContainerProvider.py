@@ -45,21 +45,21 @@ class LocalContainerProvider(ContainerProvider):
         return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
-        #First get the actual (base) ID of the path we're going to read.
-        file_path = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files.
+        # First get the actual (base) ID of the path we're going to read.
+        file_path = self._id_to_path[container_id]  # Raises KeyError if container ID does not exist in the (cache of the) files.
         base_id = self._pathToId(file_path)
         if not base_id:
             raise Exception("The file where container {container_id} supposedly comes from is not a container file.".format(container_id = container_id))
 
         Logger.log("d", "Loading container {container_id}".format(container_id = base_id))
         container_class = ContainerRegistry.mime_type_map[self._id_to_mime[base_id].name]
-        if issubclass(container_class, DefinitionContainer): #We may need to load these from the definition cache.
+        if issubclass(container_class, DefinitionContainer):  # We may need to load these from the definition cache.
             container = self._loadCachedDefinition(container_id)
-            if container: #Yes, it was cached!
+            if container:   # Yes, it was cached!
                 return container
 
-        #Not cached, so load by deserialising.
-        container = container_class(base_id, parent = self._application) #Construct the container!
+        # Not cached, so load by deserialising.
+        container = container_class(base_id, parent = self._application)    # Construct the container!
         with open(file_path, "r", encoding = "utf-8") as f:
             container.deserialize(f.read())
         container.setPath(file_path)
@@ -69,7 +69,7 @@ class LocalContainerProvider(ContainerProvider):
 
         if base_id == container_id:
             return container
-        #If we're not requesting the base ID, the sub-container must have been side loaded.
+        # If we're not requesting the base ID, the sub-container must have been side loaded.
         return ContainerRegistry.getInstance().findContainers(id = container_id)[0]
 
     ##  Find out where to save a container and save it there
@@ -178,6 +178,7 @@ class LocalContainerProvider(ContainerProvider):
         # path.
         try:
             if os.path.isfile(path_to_delete):
+                Logger.log("i", "Deleting file {filepath}.".format(filepath = path_to_delete))
                 os.remove(path_to_delete)
         except Exception:
             Logger.log("w", "Tried to delete file [%s], but it failed", path_to_delete)
