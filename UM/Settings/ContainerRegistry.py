@@ -4,7 +4,7 @@
 import os
 import re #For finding containers with asterisks in the constraints and for detecting backup files.
 import pickle #For serializing/deserializing Python classes to binary files
-from typing import Any, cast, Dict, Iterable, List, Optional
+from typing import Any, cast, Dict, Set, List, Optional
 import collections
 import time
 
@@ -59,7 +59,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self.metadata = {} # type: Dict[str, Dict[str, Any]]
         self._containers = {} # type: Dict[str, ContainerInterface]
-        self.wrong_container_ids = [] # type: List[str]  # List of already known wrong containers that must be skipped
+        self._wrong_container_ids = set() # type: Set[str]  # Set of already known wrong containers that must be skipped
         self.source_provider = {} # type: Dict[str, Optional[ContainerProvider]] #Where each container comes from.
         # Ensure that the empty container is added to the ID cache.
         self.metadata["empty"] = self._emptyInstanceContainer.getMetaData()
@@ -88,6 +88,10 @@ class ContainerRegistry(ContainerRegistryInterface):
         if len(self._providers) == 1:
             return self._providers[0]
         raise NotImplementedError("Not implemented default save provider for multiple providers")
+
+    ##   This method adds the current id to the list of wrong containers that are skipped when looking for a container
+    def addWrongContainerId(self, wrong_container_id):
+        self._wrong_container_ids.add(wrong_container_id)
 
     ##  Adds a container provider to search through containers in.
     def addProvider(self, provider: "PluginObject"):
@@ -170,7 +174,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             if metadata["id"] in self._containers: #Already loaded, so just return that.
                 result.append(self._containers[metadata["id"]])
             else: # Metadata is loaded, but not the actual data.
-                if metadata["id"] in self.wrong_container_ids:
+                if metadata["id"] in self._wrong_container_ids:
                     Logger.logException("e", "Error when loading container {container_id}: This is a weird container, probably some file is missing".format(container_id = metadata["id"]))
                     continue
                 provider = self.source_provider[metadata["id"]]
@@ -214,7 +218,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         return []
                 provider = self.source_provider[kwargs["id"]]
                 metadata = provider.loadMetadata(kwargs["id"])
-                if metadata is None or metadata["id"] in self.wrong_container_ids:
+                if metadata is None or metadata["id"] in self._wrong_container_ids:
                     return []
                 self.metadata[metadata["id"]] = metadata
                 self.source_provider[metadata["id"]] = provider
