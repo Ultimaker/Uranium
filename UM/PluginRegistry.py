@@ -118,7 +118,7 @@ class PluginRegistry(QObject):
         self._plugins_to_install = dict()
         self._savePluginData()
 
-    def initializeAfterPlguinsAreLoaded(self):
+    def initializeAfterPluginsAreLoaded(self):
         preferences = Preferences.getInstance()
 
         # Remove the old preferences settings from preferences
