@@ -25,12 +25,10 @@ def main():
 
     result = subprocess.run([sys.executable, mypyModule, "-p", "UM"])
     if result.returncode != 0:
-        print("Type checking failed.")
+        print("\n\nType checking failed.")
+        return 1
     else:
-        print("""
+        print("\n\nDone checking. All is good.")
+        return 0
 
-    Done checking. All is good.
-    """)
-
-    return 0
 sys.exit(main())
