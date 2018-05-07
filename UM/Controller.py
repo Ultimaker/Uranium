@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from UM.Scene.Scene import Scene
-from UM.Event import Event, MouseEvent, ToolEvent, ViewEvent
+from UM.Event import Event, KeyEvent, MouseEvent, ToolEvent, ViewEvent
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
@@ -16,7 +16,6 @@ from UM.Math.Vector import Vector
 MYPY = False
 if MYPY:
     from UM.Application import Application
-    from UM.Event import KeyEvent
     from UM.Tool import Tool
 
 
