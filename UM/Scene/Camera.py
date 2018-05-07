@@ -90,7 +90,7 @@ class Camera(SceneNode.SceneNode):
     def isPerspective(self):
         return self._perspective
 
-    def setPerspective(self, perspective: Matrix):
+    def setPerspective(self, perspective: bool):
         self._perspective = perspective
 
     ##  Get a ray from the camera into the world.
