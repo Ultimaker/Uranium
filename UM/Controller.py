@@ -10,24 +10,25 @@ from UM.PluginRegistry import PluginRegistry
 from UM.View.View import View
 from UM.Stage import Stage
 from UM.InputDevice import InputDevice
-from typing import Optional, Dict, Union
+from typing import cast, Optional, Dict, Union
 from UM.Math.Vector import Vector
 
 MYPY = False
 if MYPY:
     from UM.Application import Application
+    from UM.Event import KeyEvent
     from UM.Tool import Tool
 
 
-##      Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
+##  Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
-#       The different types of views / tools / inputs are defined by plugins.
-#       \sa View
-#       \sa Tool
-#       \sa Scene
+#   The different types of views / tools / inputs are defined by plugins.
+#   \sa View
+#   \sa Tool
+#   \sa Scene
 @signalemitter
 class Controller:
-    def __init__(self, application: "Application"):
+    def __init__(self, application: "Application") -> None:
         super().__init__()  # Call super to make multiple inheritance work.
 
         self._scene = Scene()
@@ -40,14 +41,14 @@ class Controller:
         self._active_tool = None  # type: Optional[Tool]
         self._tool_operation_active = False
         self._tools = {}  # type: Dict[str, Tool]
-        self._camera_tool = None
-        self._selection_tool = None
-        self._tools_enabled = True
+        self._camera_tool = None #type: Tool
+        self._selection_tool = None #type: Tool
+        self._tools_enabled = True #type: bool
 
-        self._active_stage = None
-        self._stages = {}
+        self._active_stage = None #type: Stage
+        self._stages = {} #type: Dict[str, Stage]
 
-        self._input_devices = {}
+        self._input_devices = {} #type: Dict[str, InputDevice]
 
         PluginRegistry.addType("stage", self.addStage)
         PluginRegistry.addType("view", self.addView)
@@ -325,6 +326,7 @@ class Controller:
             return
 
         if self._tools and event.type == Event.KeyPressEvent:
+            event = cast(KeyEvent, event)
             from UM.Scene.Selection import Selection  # Imported here to prevent a circular dependency.
             if Selection.hasSelection():
                 for key, tool in self._tools.items():
@@ -341,8 +343,10 @@ class Controller:
         if self._active_view:
             self._active_view.event(event)
 
-        if event.type == Event.MouseReleaseEvent and MouseEvent.RightButton in event.buttons:
-            self.contextMenuRequested.emit(event.x, event.y)
+        if event.type == Event.MouseReleaseEvent:
+            event = cast(MouseEvent, event)
+            if MouseEvent.RightButton in event.buttons:
+                self.contextMenuRequested.emit(event.x, event.y)
 
     contextMenuRequested = Signal()
 
@@ -384,7 +388,7 @@ class Controller:
         self._tools_enabled = enabled
 
     # Rotate camera view according defined angle
-    def rotateView(self, coordinate: str = "x", angle: int  = 0) -> None:
+    def rotateView(self, coordinate: str = "x", angle: int = 0) -> None:
         camera = self._scene.getActiveCamera()
         self._camera_tool.setOrigin(Vector(0, 100, 0))
         if coordinate == "home":
