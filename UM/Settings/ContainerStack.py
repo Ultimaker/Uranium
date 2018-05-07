@@ -633,7 +633,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   \param stack \type{ContainerStack} The next stack to set. Can be None.
     #   Raises Exception when trying to set itself as next stack (to prevent infinite loops)
     #   \sa getNextStack
-    def setNextStack(self, stack: "ContainerStack", connect_signals: bool = True):
+    def setNextStack(self, stack: "ContainerStack", connect_signals: bool = True) -> None:
         if self is stack:
             raise Exception("Next stack can not be itself")
         if self._next_stack == stack:
