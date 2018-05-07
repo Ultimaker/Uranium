@@ -30,7 +30,7 @@ if MYPY:
     from UM.Scene.Camera import Camera
     from UM.Scene.SceneNode import SceneNode
     from UM.View.RenderPass import RenderPass
-    from UM.View.GL import ShaderProgram
+    from UM.View.GL.ShaderProgram import ShaderProgram
 
 
 vertexBufferProperty = "__qtgl2_vertex_buffer"

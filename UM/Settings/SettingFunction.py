@@ -11,7 +11,7 @@ from UM.Logger import Logger
 
 MYPY = False
 if MYPY:
-    from UM.Settings.SettingInstance import SettingInstance
+    from typing import FrozenSet
 
 class IllegalMethodError(Exception):
     pass
@@ -32,11 +32,11 @@ class SettingFunction:
         self._code = code
 
         #  Keys of all settings that are referenced to in this function.
-        self._used_keys = frozenset()  # type: frozenset[str]
-        self._used_values = frozenset()
+        self._used_keys = frozenset()  # type: FrozenSet[str]
+        self._used_values = frozenset() # type: FrozenSet[str]
 
         self._compiled = None
-        self._valid = False  # type: str
+        self._valid = False  # type: bool
 
         try:
             tree = ast.parse(self._code, "eval")
@@ -158,7 +158,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         super().visit(node)
         return _VisitResult(values = self.values, keys = self.keys)
 
-    def visit_Name(self, node: ast.AST) -> None: # [CodeStyle: ast.NodeVisitor requires this function name]
+    def visit_Name(self, node: ast.Name) -> None: # [CodeStyle: ast.NodeVisitor requires this function name]
         if node.id in self._blacklist:
             raise IllegalMethodError(node.id)
 

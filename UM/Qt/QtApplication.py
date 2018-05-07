@@ -157,7 +157,7 @@ class QtApplication(QApplication, Application):
         # Remove and install the plugins that have been scheduled
         self._plugin_registry.initializeBeforePluginsAreLoaded()
         self._loadPlugins()
-        self._plugin_registry.initializeAfterPlguinsAreLoaded()
+        self._plugin_registry.initializeAfterPluginsAreLoaded()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         self.pluginsLoaded.emit()
 

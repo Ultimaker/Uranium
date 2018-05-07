@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
+
 enable_testing()
 include(CMakeParseArguments)
 
@@ -43,3 +46,9 @@ foreach(_plugin ${_plugins})
         uranium_add_test(NAME pytest-${_plugin_name} DIRECTORY ${_plugin_directory} PYTHONPATH "${CMAKE_SOURCE_DIR}|${_plugin_directory}")
     endif()
 endforeach()
+
+#Add code style test.
+add_test(
+    NAME "code-style"
+    COMMAND ${PYTHON_EXECUTABLE} run_mypy.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)

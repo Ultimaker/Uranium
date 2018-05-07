@@ -23,14 +23,12 @@ def main():
     mypyExe = where("mypy.bat" if sys.platform == "win32" else "mypy")
     mypyModule = os.path.join(os.path.dirname(mypyExe), "mypy")
 
-    result = subprocess.run([sys.executable, mypyModule, "-p", "UM"])
+    result = subprocess.run([sys.executable, mypyModule, "-p", "UM", "--ignore-missing-imports"])
     if result.returncode != 0:
-        print("Type checking failed.")
+        print("\n\nType checking failed.")
+        return 1
     else:
-        print("""
+        print("\n\nDone checking. All is good.")
+        return 0
 
-    Done checking. All is good.
-    """)
-
-    return 0
 sys.exit(main())

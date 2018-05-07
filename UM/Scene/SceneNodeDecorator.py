@@ -1,6 +1,10 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+MYPY = False
+if MYPY:
+    from UM.Scene.SceneNode import SceneNode
+
 ##      The point of a SceneNodeDecorator is that it can be added to a SceneNode, where it then provides decorations
 #       Decorations are functions of a SceneNodeDecorator that can be called (except for functions already defined
 #       in SceneNodeDecorator).
