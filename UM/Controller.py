@@ -265,7 +265,7 @@ class Controller:
             self._active_tool.event(ToolEvent(ToolEvent.ToolDeactivateEvent))
 
         if isinstance(tool, Tool) or tool is None:
-            new_tool = tool
+            new_tool = cast(Optional[Tool], tool)
         else:
             new_tool = self.getTool(tool)
 
@@ -359,7 +359,7 @@ class Controller:
     def setCameraTool(self, tool: Union["Tool", str]):
         from UM.Tool import Tool
         if isinstance(tool, Tool) or tool is None:
-            self._camera_tool = tool
+            self._camera_tool = cast(Optional[Tool], tool)
         else:
             self._camera_tool = self.getTool(tool)
 
@@ -377,7 +377,7 @@ class Controller:
     def setSelectionTool(self, tool: Union[str, "Tool"]):
         from UM.Tool import Tool
         if isinstance(tool, Tool) or tool is None:
-            self._selection_tool = tool
+            self._selection_tool = cast(Optional[Tool], tool)
         else:
             self._selection_tool = self.getTool(tool)
 
