@@ -389,17 +389,17 @@ class Controller:
     # Rotate camera view according defined angle
     def rotateView(self, coordinate: str = "x", angle: int = 0) -> None:
         camera = self._scene.getActiveCamera()
-        self._camera_tool.setOrigin(Vector(0, 100, 0))
+        self._camera_tool.setOrigin(Vector(0, 100, 0)) #type: ignore
         if coordinate == "home":
             camera.setPosition(Vector(0, 0, 700))
             camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
-            self._camera_tool.rotateCam(0, 0)
+            self._camera_tool.rotateCam(0, 0) #type: ignore
         elif coordinate == "3d":
             camera.setPosition(Vector(-750, 600, 700))
             camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
-            self._camera_tool.rotateCam(0, 0)
+            self._camera_tool.rotateCam(0, 0) #type: ignore
 
         else:
             # for comparison is == used, because might not store them at the same location
@@ -409,6 +409,6 @@ class Controller:
             camera.lookAt(Vector(0, 100, 0))
 
             if coordinate == "x":
-                self._camera_tool.rotateCam(angle, 0)
+                self._camera_tool.rotateCam(angle, 0) #type: ignore
             elif coordinate == "y":
-                self._camera_tool.rotateCam(0, angle)
+                self._camera_tool.rotateCam(0, angle) #type: ignore
