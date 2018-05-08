@@ -106,7 +106,7 @@ class STLReader(MeshReader):
             mesh_builder.addVertices(vertices)
 
     # Private
-    ## Load the STL data from file by consdering the data as ascii.
+    ## Load the STL data from file by considering the data as ascii.
     # \param mesh The MeshData object where the data is written to.
     # \param f The file handle
     def _loadAscii(self, mesh_builder, f):
