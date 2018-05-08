@@ -9,8 +9,9 @@ msgstr ""
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-03-29 08:36+0200\n"
 "PO-Revision-Date: 2018-04-13 18:10+0900\n"
-"Last-Translator: Jinbuhm Kim <Jinbuhm.Kim@gmail.com>\n"
-"Language-Team: Jinbuhm Kim, <Jinbuhm.Kim@gmail.com>, Korean <info@bothof.nl>\n"
+
+"Last-Translator: Jinbuhm Kim <JInbuhm.Kim@gmail.com>\n"
+"Language-Team: Jinbuhm Kim, Korean <jinbuhm.kim@gmail.com>\n"
 "Language: ko_KR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,8 +53,7 @@ msgstr "업데이트 정보에 액세스 할 수 없습니다."
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89 /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "버전 업그레이드"
@@ -346,7 +346,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "<filename>{0}</filename>에서 플러그인을 설치하지 못했습니다:\n<message>{1}</message>"
+msgstr ""
+"<filename>{0}</filename>에서 플러그인을 설치하지 못했습니다:\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254 /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
 #, python-brace-format
