@@ -7,7 +7,8 @@ import os
 import shutil  # For deleting plugin directories;
 import stat    # For setting file permissions correctly;
 import zipfile
-from typing import Callable, Any, Optional, types, Dict, List
+import types
+from typing import Callable, Any, Optional, Dict, List
 
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 

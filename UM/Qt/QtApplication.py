@@ -67,7 +67,7 @@ class QtApplication(QApplication, Application):
                 for sitepackage_dir in site.getsitepackages():
                     QCoreApplication.addLibraryPath(os.path.join(sitepackage_dir, "PyQt5", "plugins"))
         elif sys.platform == "darwin":
-            plugin_path = os.path.join(Application.getInstallPrefix(), "Resources", "plugins")
+            plugin_path = os.path.join(self.getInstallPrefix(), "Resources", "plugins")
 
         if plugin_path:
             Logger.log("i", "Adding QT5 plugin path: %s", plugin_path)
@@ -75,8 +75,6 @@ class QtApplication(QApplication, Application):
 
         # use Qt Quick Scene Graph "basic" render loop
         os.environ["QSG_RENDER_LOOP"] = "basic"
-
-        self._tray_icon_name = tray_icon_name
 
         super().__init__(sys.argv, **kwargs)
 
@@ -163,7 +161,7 @@ class QtApplication(QApplication, Application):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
         with self._container_registry.lockFile():
-            UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
+            VersionUpgradeManager.getInstance().upgrade()
 
         # Load preferences again because before we have loaded the plugins, we don't have the upgrade routine for
         # the preferences file. Now that we have, load the preferences file again so it can be upgraded and loaded.
@@ -467,7 +465,7 @@ class QtApplication(QApplication, Application):
     splash = None
 
     def createSplash(self):
-        if not self._is_headless:
+        if not self.getIsHeadLess():
             try:
                 QtApplication.splash = self._createSplashScreen()
             except FileNotFoundError:
@@ -485,7 +483,7 @@ class QtApplication(QApplication, Application):
         if QtApplication.splash:
             QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
-        elif self._is_headless:
+        elif self.getIsHeadLess():
             Logger.log("d", message)
 
     ##  Close the splash screen after the application has started.

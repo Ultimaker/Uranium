@@ -339,9 +339,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         # get version
         version = None
         try:
-            import UM.VersionUpgradeManager
-            version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
-                                                                                                  serialized)
+            from UM.VersionUpgradeManager import VersionUpgradeManager
+            version = VersionUpgradeManager.getInstance().getFileVersion(configuration_type, serialized)
         except Exception as e:
             Logger.log("d", "Could not get version from serialized: %s", e)
         return version
