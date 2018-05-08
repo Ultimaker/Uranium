@@ -182,10 +182,10 @@ class Application:
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
-    def startSlashWindowPhase(self) -> None:
+    def startSplashWindowPhase(self) -> None:
         pass
 
-    def startPostSlashWindowPhase(self) -> None:
+    def startPostSplashWindowPhase(self) -> None:
         pass
 
     ##  Run the main event loop.

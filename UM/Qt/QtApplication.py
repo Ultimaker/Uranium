@@ -130,8 +130,8 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Initializing version upgrade manager ...")
         self._version_upgrade_manager = VersionUpgradeManager(self)
 
-    def startSlashWindowPhase(self) -> None:
-        super().startSlashWindowPhase()
+    def startSplashWindowPhase(self) -> None:
+        super().startSplashWindowPhase()
 
         # Read preferences here (upgrade won't work) to get the language in use, so the splash window can be shown in
         # the correct language.
