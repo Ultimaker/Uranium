@@ -126,7 +126,6 @@ class PluginRegistry(QObject):
         preferences.resetPreference("general/plugins_to_remove")
 
     def _savePluginData(self):
-        Logger.log("d", "Saving plugin data to file '%s'", self._plugin_config_filename)
         from UM.Settings.ContainerRegistry import ContainerRegistry
         container_registry = ContainerRegistry.getInstance()
         with container_registry.lockFile():
