@@ -7,6 +7,7 @@ import os
 import sys
 
 from UM.Controller import Controller
+from UM.Message import Message #For typing.
 from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Resources import Resources
@@ -18,6 +19,7 @@ import UM.Settings.InstanceContainer
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.Preferences import Preferences
+from UM.View.Renderer import Renderer #For typing.
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
@@ -149,7 +151,7 @@ class Application:
 
         self._global_container_stack = None
 
-    def getContainerRegistry(self):
+    def getContainerRegistry(self) -> ContainerRegistry:
         return ContainerRegistry.getInstance()
 
     ##  Emitted when the application window was closed and we need to shut down the application
@@ -163,20 +165,20 @@ class Application:
 
     workspaceLoaded = Signal()
 
-    def setGlobalContainerStack(self, stack: "ContainerStack"):
+    def setGlobalContainerStack(self, stack: "ContainerStack") -> None:
         self._global_container_stack = stack
         self.globalContainerStackChanged.emit()
 
     def getGlobalContainerStack(self) -> Optional["ContainerStack"]:
         return self._global_container_stack
 
-    def hideMessage(self, message):
+    def hideMessage(self, message: Message) -> None:
         raise NotImplementedError
 
-    def showMessage(self, message):
+    def showMessage(self, message: Message) -> None:
         raise NotImplementedError
 
-    def showToastMessage(self, title: str, message: str):
+    def showToastMessage(self, title: str, message: str) -> None:
         raise NotImplementedError
 
     ##  Get the version of the application
@@ -185,7 +187,7 @@ class Application:
         return self._version
 
     @classmethod
-    def getStaticVersion(cls):
+    def getStaticVersion(cls) -> str:
         return "unknown"
 
     ##  Get the buildtype of the application
@@ -199,8 +201,7 @@ class Application:
     visibleMessageAdded = Signal()
 
     ##  Hide message by ID (as provided by built-in id function)
-    #   \param message_id \type{long}
-    def hideMessageById(self, message_id):
+    def hideMessageById(self, message_id: int):
         # If a user and the application tries to close same message dialog simultaneously, message_id could become an empty
         # string, and then the application will raise an error when trying to do "int(message_id)".
         # So we check the message_id here.
@@ -218,16 +219,15 @@ class Application:
     visibleMessageRemoved = Signal()
 
     ##  Get list of all visible messages
-    #   \returns visible_messages \type{list}
-    def getVisibleMessages(self):
+    def getVisibleMessages(self) -> List[Message]:
         with self._message_lock:
             return self._visible_messages
 
     ##  Function that needs to be overridden by child classes with a list of plugins it needs.
-    def _loadPlugins(self):
+    def _loadPlugins(self) -> None:
         pass
 
-    def getCommandLineOption(self, name, default = None):
+    def getCommandLineOption(self, name: str, default: str = None) -> Any:
         if name not in self._parsed_command_line.keys():
             self.parseCommandLine()
             Logger.log("d", "Command line options: %s", str(self._parsed_command_line))
@@ -241,8 +241,8 @@ class Application:
 
     ##  Get the currently used IETF language tag.
     #   The returned tag is during runtime used to translate strings.
-    #   \returns language_tag  \type{string}
-    def getApplicationLanguage(self):
+    #   \returns Language tag.
+    def getApplicationLanguage(self) -> str:
         override_lang = os.getenv("URANIUM_LANGUAGE")
         if override_lang:
             return override_lang
@@ -259,18 +259,16 @@ class Application:
 
     ##  Application has a list of plugins that it *must* have. If it does not have these, it cannot function.
     #   These plugins can not be disabled in any way.
-    #   \returns required_plugins \type{list}
-    def getRequiredPlugins(self):
+    def getRequiredPlugins(self) -> List[str]:
         return self._required_plugins
 
     ##  Set the plugins that the application *must* have in order to function.
     #   \param plugin_names \type{list} List of strings with the names of the required plugins
-    def setRequiredPlugins(self, plugin_names: List[str]):
+    def setRequiredPlugins(self, plugin_names: List[str]) -> None:
         self._required_plugins = plugin_names
 
     ##  Set the backend of the application (the program that does the heavy lifting).
-    #   \param backend \type{Backend}
-    def setBackend(self, backend: "Backend"):
+    def setBackend(self, backend: "Backend") -> None:
         self._backend = backend
 
     ##  Get the backend of the application (the program that does the heavy lifting).
@@ -303,39 +301,39 @@ class Application:
         return self._output_device_manager
 
     ##  Includes eg. last checks before entering the main event loop.
-    #   \returns None \type{None}
-    def preRun(self):
+    def preRun(self) -> None:
         return None
 
     ##  Run the main event loop.
     #   This method should be re-implemented by subclasses to start the main event loop.
     #   \exception NotImplementedError
-    def run(self):
+    def run(self) -> None:
         raise NotImplementedError("Run must be implemented by application")
 
     ##  Return an application-specific Renderer object.
     #   \exception NotImplementedError
-    def getRenderer(self):
+    def getRenderer(self) -> Renderer:
         raise NotImplementedError("getRenderer must be implemented by subclasses.")
 
     ##  Post a function event onto the event loop.
     #
     #   This takes a CallFunctionEvent object and puts it into the actual event loop.
     #   \exception NotImplementedError
-    def functionEvent(self, event):
+    def functionEvent(self, event: CallFunctionEvent) -> None:
         raise NotImplementedError("functionEvent must be implemented by subclasses.")
 
     ##  Call a function the next time the event loop runs.
     #
+    #   You can't get the result of this function directly. It won't block.
     #   \param function The function to call.
     #   \param args The positional arguments to pass to the function.
     #   \param kwargs The keyword arguments to pass to the function.
-    def callLater(self, func: Callable[[Any], Any], *args, **kwargs):
+    def callLater(self, func: Callable[[Any], Any], *args, **kwargs) -> None:
         event = CallFunctionEvent(func, args, kwargs)
         self.functionEvent(event)
 
-    ##  Get the application"s main thread.
-    def getMainThread(self):
+    ##  Get the application's main thread.
+    def getMainThread(self) -> threading.Thread:
         return self._main_thread
 
     ##  Return the singleton instance of the application object
@@ -347,13 +345,13 @@ class Application:
 
         return Application._instance
 
-    def getCommandlineParser(self, with_help = False):
+    def getCommandlineParser(self, with_help: bool = False) -> argparse.ArgumentParser:
         if not self._command_line_parser:
             self._command_line_parser = argparse.ArgumentParser(prog = self.getApplicationName(), add_help = with_help) #pylint: disable=bad-whitespace
             self.addCommandLineOptions(self._command_line_parser, parsed_command_line = self._parsed_command_line)
         return self._command_line_parser
 
-    def parseCommandLine(self):
+    def parseCommandLine(self) -> None:
         parser = self.getCommandlineParser()
         new_parsed_args = vars(parser.parse_known_args()[0])
         new_parsed_args.update(self._parsed_command_line)
@@ -361,9 +359,11 @@ class Application:
 
     ##  Can be overridden to add additional command line options to the parser.
     #
-    #   \param parser \type{argparse.ArgumentParser} The parser that will parse the command line.
+    #   \param parser The parser that will parse the command line.
     @classmethod
-    def addCommandLineOptions(cls, parser, parsed_command_line = {}):
+    def addCommandLineOptions(cls, parser: argparse.ArgumentParser, parsed_command_line: Dict[str, str] = None) -> None:
+        if parsed_command_line is None:
+            parsed_command_line = {}
 
         parser.add_argument("--version",
                             action = "version",
@@ -386,14 +386,14 @@ class Application:
                                 default = False,
                                 help = "Turn on the debug mode by setting this option.")
 
-    def addExtension(self, extension: "Extension"):
+    def addExtension(self, extension: "Extension") -> None:
         self._extensions.append(extension)
 
     def getExtensions(self) -> List["Extension"]:
         return self._extensions
 
     @staticmethod
-    def getInstallPrefix():
+    def getInstallPrefix() -> str:
         if "python" in os.path.basename(sys.executable):
             return os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
         else:
