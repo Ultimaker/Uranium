@@ -45,9 +45,11 @@ class Application:
     #   such as "master".
     #   \param is_debug_mode Whether to run in debug mode.
     #   \param parser The command line parser to use.
-    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode: bool = False, parser: argparse.ArgumentParser = None, parsed_command_line: Dict[str, Any] = {}, **kwargs) -> None:
+    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode: bool = False, parser: argparse.ArgumentParser = None, parsed_command_line: Dict[str, Any] = None, **kwargs) -> None:
         if Application._instance is not None:
             raise ValueError("Duplicate singleton creation")
+        if parsed_command_line is None:
+            parsed_command_line = {}
 
         # If the constructor is called and there is no instance, set the instance to self.
         # This is done because we can't make constructor private
