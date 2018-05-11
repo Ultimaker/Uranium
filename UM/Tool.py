@@ -1,38 +1,41 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from UM.Math.Plane import Plane #Typing for drag plane.
+from UM.Math.Vector import Vector #Typing for drag coordinates.
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Event import Event
 from UM.Scene.Selection import Selection
 import UM.Application  # Circular dependency blah
-
 from UM.Controller import Controller
 from UM.Scene.ToolHandle import ToolHandle
 
-from typing import Optional
-
+from typing import TYPE_CHECKING, List, Optional
+if TYPE_CHECKING:
+    from UM.View.RenderPass import RenderPass
+    from UM.Scene.SceneNode import SceneNode
 
 ##  Abstract base class for tools that manipulate (or otherwise interact with) the scene.
 #
 @signalemitter
 class Tool(PluginObject):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._controller = UM.Application.Application.getInstance().getController()  # Circular dependency blah
         self._enabled = True
 
         self._handle = None  # type: Optional[ToolHandle]
         self._locked_axis = ToolHandle.NoAxis #type: int
-        self._drag_plane = None
-        self._drag_start = None
-        self._exposed_properties = []
+        self._drag_plane = None #type: Optional[Plane]
+        self._drag_start = None #type: Optional[Vector]
+        self._exposed_properties = [] #type: List[str]
 
-        self._selection_pass = None
+        self._selection_pass = None #type: Optional[RenderPass]
 
         self._controller.toolEnabledChanged.connect(self._onToolEnabledChanged)
         Selection.selectionChanged.connect(self._onSelectionChanged)
-        self._selected_objects_without_selected_ancestors = None
+        self._selected_objects_without_selected_ancestors = None #type: Optional[List[SceneNode]]
 
         self._shortcut_key = None
 
@@ -48,10 +51,10 @@ class Tool(PluginObject):
 
     propertyChanged = Signal()
 
-    def getExposedProperties(self):
+    def getExposedProperties(self) -> List[str]:
         return self._exposed_properties
 
-    def setExposedProperties(self, *args):
+    def setExposedProperties(self, *args: List[str]):
         self._exposed_properties = args
 
     def getShortcutKey(self):
@@ -62,7 +65,7 @@ class Tool(PluginObject):
     #   \return \type{bool} true if this event has been handled and requires
     #           no further processing.
     #   \sa Event
-    def event(self, event: Event) -> Optional[bool]:
+    def event(self, event: Event) -> bool:
         if not self._selection_pass:
             self._selection_pass = UM.Application.Application.getInstance().getRenderer().getRenderPass("selection")
 
@@ -117,19 +120,19 @@ class Tool(PluginObject):
         if self._handle:
             self._handle.setActiveAxis(axis)
 
-    def getDragPlane(self):
+    def getDragPlane(self) -> Optional[Plane]:
         return self._drag_plane
 
-    def setDragPlane(self, plane):
+    def setDragPlane(self, plane: Optional[Plane]) -> None:
         self._drag_plane = plane
 
-    def getDragStart(self):
+    def getDragStart(self) -> Optional[Vector]:
         return self._drag_start
 
-    def setDragStart(self, x, y):
+    def setDragStart(self, x: float, y: float) -> None:
         self._drag_start = self.getDragPosition(x, y)
 
-    def getDragPosition(self, x, y):
+    def getDragPosition(self, x: float, y: float) -> Optional[Vector]:
         if not self._drag_plane:
             return None
 
@@ -141,7 +144,7 @@ class Tool(PluginObject):
 
         return None
 
-    def getDragVector(self, x, y):
+    def getDragVector(self, x: float, y: float) -> Optional[Vector]:
         if not self._drag_plane:
             return None
 
@@ -154,14 +157,14 @@ class Tool(PluginObject):
 
         return None
 
-    def _onToolEnabledChanged(self, tool_id: str, enabled: bool):
+    def _onToolEnabledChanged(self, tool_id: str, enabled: bool) -> None:
         if tool_id == self._plugin_id:
             self._enabled = enabled
 
-    def _onSelectionChanged(self):
+    def _onSelectionChanged(self) -> None:
         self._selected_objects_without_selected_ancestors = None
 
-    def _getSelectedObjectsWithoutSelectedAncestors(self):
+    def _getSelectedObjectsWithoutSelectedAncestors(self) -> List[SceneNode]:
         if type(self._selected_objects_without_selected_ancestors) != list:
             nodes = Selection.getAllSelectedObjects()
             self._selected_objects_without_selected_ancestors = []
