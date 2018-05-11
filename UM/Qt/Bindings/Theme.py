@@ -13,7 +13,6 @@ from UM.Application import Application
 from UM.Decorators import deprecated
 from UM.FlameProfiler import pyqtSlot
 from UM.Logger import Logger
-from UM.Preferences import Preferences
 from UM.Resources import Resources
 
 
@@ -47,16 +46,16 @@ class Theme(QObject):
         self._path = ""
         self._icons = {}
         self._images = {}
-        Preferences.getInstance().addPreference("general/theme", Application.getInstance().default_theme)
+        Application.getInstance().getPreferences().addPreference("general/theme", Application.getInstance().default_theme)
         try:
-            theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
+            theme_path = Resources.getPath(Resources.Themes, Application.getInstance().getPreferences().getValue("general/theme"))
             self.load(theme_path)
         except FileNotFoundError:
             Logger.log("e", "Could not find theme file, resetting to the default theme.")
 
             # cannot the current theme, so go back to the default
-            Preferences.getInstance().setValue("general/theme", Application.getInstance().default_theme)
-            theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
+            Application.getInstance().getPreferences().setValue("general/theme", Application.getInstance().default_theme)
+            theme_path = Resources.getPath(Resources.Themes, Application.getInstance().getPreferences().getValue("general/theme"))
             self.load(theme_path)
 
     @pyqtSlot(result = "QVariantList")

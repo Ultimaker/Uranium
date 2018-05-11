@@ -9,7 +9,6 @@ import threading
 from time import sleep
 
 from UM.Backend.SignalSocket import SignalSocket
-from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
 from UM.Application import Application
@@ -124,7 +123,7 @@ class Backend(PluginObject):
     
     ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
-        return [Preferences.getInstance().getValue("backend/location"), "--port", str(self._socket.getPort())]
+        return [Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
 
     ##  Start the (external) backend process.
     def _runEngineProcess(self, command_list):

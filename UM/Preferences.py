@@ -1,8 +1,9 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
 
+from UM.Decorators import deprecated
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To register the MIME type of the preference file.
 from UM.SaveFile import SaveFile
@@ -20,15 +21,12 @@ MimeTypeDatabase.addMimeType(
 
 ##      Preferences are application based settings that are saved for future use.
 #       Typical preferences would be window size, standard machine, etc.
+#       The application preferences can be gotten from the getPreferences() function in Application
 @signalemitter
 class Preferences:
     Version = 6
 
     def __init__(self):
-        if Preferences.__instance is not None:
-            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        Preferences.__instance = self
-
         super().__init__()
 
         self._file = None
@@ -210,13 +208,10 @@ class Preferences:
         configuration_type = "preferences"
 
         try:
-            import UM.VersionUpgradeManager
-            version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
-                                                                                                  serialized)
+            from UM.VersionUpgradeManager import VersionUpgradeManager
+            version = VersionUpgradeManager.getInstance().getFileVersion(configuration_type, serialized)
             if version is not None:
-                from UM.VersionUpgradeManager import VersionUpgradeManager
-                result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version,
-                                                                             [serialized], [""])
+                result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version, [serialized], [""])
                 if result is not None:
                     serialized = result.files_data[0]
             return serialized
@@ -225,11 +220,12 @@ class Preferences:
             Logger.logException("d", "An exception occured while trying to update the preferences")
             pass
 
-    __instance = None
-
+    ##  This method is still used by some external plugins and it needs to be kept as deprecated
     @classmethod
-    def getInstance(cls, *args, **kwargs) -> "Preferences":
-        return cls.__instance
+    @deprecated("Please use the getPreferences function in Application", "3.3")
+    def getInstance(cls) -> "Preferences":
+        from UM.Application import Application
+        return Application.getInstance().getPreferences()
 
 
 class _Preference:

@@ -21,7 +21,6 @@ from UM.Qt.Bindings.Bindings import Bindings
 from UM.Signal import Signal, signalemitter
 from UM.Resources import Resources
 from UM.Logger import Logger
-from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
 from UM.JobQueue import JobQueue
 from UM.VersionUpgradeManager import VersionUpgradeManager
@@ -244,7 +243,7 @@ class QtApplication(QApplication, Application):
         for path in self._recent_files:
             pref += path.toLocalFile() + ";"
 
-        Preferences.getInstance().setValue("%s/recent_files" % self.getApplicationName(), pref)
+        self.getPreferences().setValue("%s/recent_files" % self.getApplicationName(), pref)
         self.recentFilesChanged.emit()
 
     def run(self):
@@ -379,7 +378,7 @@ class QtApplication(QApplication, Application):
         self._is_shutting_down = True
 
         try:
-            Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
+            self.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
         except Exception as e:
             Logger.log("e", "Exception while saving preferences: %s", repr(e))
 
@@ -541,7 +540,7 @@ class QtApplication(QApplication, Application):
                 pass
 
         # Else, try and get the current language from preferences
-        lang = Preferences.getInstance().getValue("general/language")
+        lang = self.getPreferences().getValue("general/language")
         if lang:
             try:
                 return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
