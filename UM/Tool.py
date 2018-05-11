@@ -3,7 +3,7 @@
 
 import UM.Application  # Circular dependency blah
 from UM.Controller import Controller
-from UM.Event import Event
+from UM.Event import Event, MouseEvent
 from UM.Math.Plane import Plane #Typing for drag plane.
 from UM.Math.Vector import Vector #Typing for drag coordinates.
 from UM.PluginObject import PluginObject
@@ -11,10 +11,9 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Signal import Signal, signalemitter
+from UM.View.SelectionPass import SelectionPass
 
-from typing import TYPE_CHECKING, List, Optional
-if TYPE_CHECKING:
-    from UM.View.RenderPass import RenderPass
+from typing import cast, List, Optional
 
 ##  Abstract base class for tools that manipulate (or otherwise interact with) the scene.
 #
@@ -31,7 +30,7 @@ class Tool(PluginObject):
         self._drag_start = None #type: Optional[Vector]
         self._exposed_properties = [] #type: List[str]
 
-        self._selection_pass = None #type: Optional[RenderPass]
+        self._selection_pass = None #type: Optional[SelectionPass]
 
         self._controller.toolEnabledChanged.connect(self._onToolEnabledChanged)
         Selection.selectionChanged.connect(self._onSelectionChanged)
@@ -54,8 +53,8 @@ class Tool(PluginObject):
     def getExposedProperties(self) -> List[str]:
         return self._exposed_properties
 
-    def setExposedProperties(self, *args: List[str]):
-        self._exposed_properties = args
+    def setExposedProperties(self, *args: str):
+        self._exposed_properties = list(args)
 
     def getShortcutKey(self):
         return self._shortcut_key
@@ -67,7 +66,7 @@ class Tool(PluginObject):
     #   \sa Event
     def event(self, event: Event) -> bool:
         if not self._selection_pass:
-            self._selection_pass = UM.Application.Application.getInstance().getRenderer().getRenderPass("selection")
+            self._selection_pass = cast(SelectionPass, UM.Application.Application.getInstance().getRenderer().getRenderPass("selection"))
             if not self._selection_pass:
                 return False
 
@@ -76,6 +75,7 @@ class Tool(PluginObject):
                 self._handle.setParent(self.getController().getScene().getRoot())
 
         if event.type == Event.MouseMoveEvent and self._handle:
+            event = cast(MouseEvent, event)
             if self._locked_axis != ToolHandle.NoAxis:
                 return False
 
