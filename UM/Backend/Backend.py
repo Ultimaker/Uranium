@@ -87,7 +87,11 @@ class Backend(PluginObject):
             self._socket.close()
 
     def _backendLog(self, line):
-        Logger.log('d', "[Backend] " + str(line, encoding="utf-8").strip())
+        try:
+            line_str = line.decode("utf-8")
+        except UnicodeDecodeError:
+            line_str = line.decode("latin1") #Latin-1 as a fallback since it can never give decoding errors. All characters are 1 byte.
+        Logger.log("d", "[Backend] " + line_str.strip())
         self._backend_log.append(line)
 
     ##  Get the logging messages of the backend connection.
