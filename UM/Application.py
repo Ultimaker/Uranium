@@ -28,8 +28,8 @@ import UM.Settings
 
 from typing import TYPE_CHECKING, Dict, List, Callable, Any, Optional
 if TYPE_CHECKING:
-    from UM.Settings.ContainerStack import ContainerStack
     from UM.Backend import Backend
+    from UM.Settings.ContainerStack import ContainerStack
     from UM.Extension import Extension
 
 ##  Central object responsible for running the main event loop and creating other central objects.
@@ -57,9 +57,9 @@ class Application:
         # This is done because we can't make constructor private
         Application._instance = self
 
-        self._application_name = name
-        self._version = version
-        self._build_type = build_type
+        self._application_name = name #type: str
+        self._version = version #type: str
+        self._build_type = build_type #type: str
         if "debug" in parsed_command_line.keys():
             if not parsed_command_line["debug"] and is_debug_mode:
                 parsed_command_line["debug"] = is_debug_mode
@@ -79,18 +79,18 @@ class Application:
         if not hasattr(sys, "frozen"):
             Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
 
-        self._main_thread = threading.current_thread()
+        self._main_thread = threading.current_thread() #type: threading.Thread
 
         super().__init__()  # Call super to make multiple inheritance work.
         i18nCatalog.setApplication(self)
 
-        self._renderer = None
+        self._renderer = None #type: Renderer
 
         PluginRegistry.addType("backend", self.setBackend)
         PluginRegistry.addType("logger", Logger.addLogger)
         PluginRegistry.addType("extension", self.addExtension)
 
-        self.default_theme = self.getApplicationName()
+        self.default_theme = self.getApplicationName() #type: str
 
         preferences = Preferences.getInstance()
         preferences.addPreference("general/language", "en_US")
@@ -103,18 +103,18 @@ class Application:
         except FileNotFoundError:
             pass
 
-        self._controller = Controller(self)
-        self._mesh_file_handler = MeshFileHandler.getInstance()
+        self._controller = Controller(self) #type: Controller
+        self._mesh_file_handler = MeshFileHandler.getInstance() #type: MeshFileHandler
         self._mesh_file_handler.setApplication(self)
-        self._workspace_file_handler = WorkspaceFileHandler.getInstance()
+        self._workspace_file_handler = WorkspaceFileHandler.getInstance() #type: WorkspaceFileHandler
         self._workspace_file_handler.setApplication(self)
-        self._extensions = []
-        self._backend = None
-        self._output_device_manager = OutputDeviceManager()
+        self._extensions = [] #type: List[Extension]
+        self._backend = None #type: Backend
+        self._output_device_manager = OutputDeviceManager() #type: OutputDeviceManager
 
-        self._required_plugins = []
+        self._required_plugins = [] #type: List[str]
 
-        self._operation_stack = OperationStack(self.getController())
+        self._operation_stack = OperationStack(self.getController()) #type: OperationStack
 
         self._plugin_registry = PluginRegistry.getInstance()
 
@@ -140,16 +140,16 @@ class Application:
         UM.Settings.InstanceContainer.setContainerRegistry(self.getContainerRegistry())
         UM.Settings.ContainerStack.setContainerRegistry(self.getContainerRegistry())
 
-        self._command_line_parser = parser
-        self._parsed_command_line = parsed_command_line
+        self._command_line_parser = parser #type: argparse.ArgumentParser
+        self._parsed_command_line = parsed_command_line #type: Dict[str, Any]
         self.parseCommandLine()
 
-        self._visible_messages = []
-        self._message_lock = threading.Lock()
+        self._visible_messages = [] #type: List[Message]
+        self._message_lock = threading.Lock() #type: threading.Lock
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
-        self._global_container_stack = None
+        self._global_container_stack = None #type: ContainerStack
 
     def getContainerRegistry(self) -> ContainerRegistry:
         return ContainerRegistry.getInstance()

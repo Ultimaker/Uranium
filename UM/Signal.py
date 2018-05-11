@@ -292,7 +292,7 @@ class Signal:
     #   set by the Application instance.
     _app = None  # type: Application
 
-    _signalQueue = None  # type: SignalQueue
+    _signalQueue = None  # type: Application
 
     # Private implementation of the actual emit.
     # This is done to make it possible to freely push function events without needing to maintain state.
