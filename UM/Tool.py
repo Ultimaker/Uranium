@@ -1,20 +1,20 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Math.Plane import Plane #Typing for drag plane.
-from UM.Math.Vector import Vector #Typing for drag coordinates.
-from UM.Signal import Signal, signalemitter
-from UM.PluginObject import PluginObject
-from UM.Event import Event
-from UM.Scene.Selection import Selection
 import UM.Application  # Circular dependency blah
 from UM.Controller import Controller
+from UM.Event import Event
+from UM.Math.Plane import Plane #Typing for drag plane.
+from UM.Math.Vector import Vector #Typing for drag coordinates.
+from UM.PluginObject import PluginObject
+from UM.Scene.SceneNode import SceneNode
+from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
+from UM.Signal import Signal, signalemitter
 
 from typing import TYPE_CHECKING, List, Optional
 if TYPE_CHECKING:
     from UM.View.RenderPass import RenderPass
-    from UM.Scene.SceneNode import SceneNode
 
 ##  Abstract base class for tools that manipulate (or otherwise interact with) the scene.
 #
