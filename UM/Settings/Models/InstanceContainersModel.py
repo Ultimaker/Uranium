@@ -1,13 +1,13 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-import os
-from typing import Any, Dict, List, Tuple
 
+import os
+from typing import Any, cast, Dict, Generator, List, Tuple
 from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl, QTimer
 
 from UM.Qt.ListModel import ListModel
-
 from UM.PluginRegistry import PluginRegistry  # For getting the possible profile readers and writers.
+from UM.Settings.Interfaces import ContainerInterface #For typing.
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.i18n import i18nCatalog
@@ -23,7 +23,7 @@ class InstanceContainersModel(ListModel):
     ReadOnlyRole = Qt.UserRole + 4
     SectionRole = Qt.UserRole + 5
 
-    def __init__(self, parent = None):
+    def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.IdRole, "id")
@@ -49,17 +49,17 @@ class InstanceContainersModel(ListModel):
         self._container_change_timer.timeout.connect(self._update)
 
         # List of filters for queries. The result is the union of the each list of results.
-        self._filter_dicts = []  # type: List[Dict[str,str]]
+        self._filter_dicts = []  # type: List[Dict[str, str]]
         self._container_change_timer.start()
 
     ##  Handler for container added / removed events from registry
-    def _onContainerChanged(self, container):
+    def _onContainerChanged(self, container: ContainerInterface) -> None:
         # We only need to update when the changed container is a instanceContainer
         if isinstance(container, InstanceContainer):
             self._container_change_timer.start()
 
     ##  Private convenience function to reset & repopulate the model.
-    def _update(self):
+    def _update(self) -> None:
         #You can only connect on the instance containers, not on the metadata.
         #However the metadata can't be edited, so it's not needed.
         for container in self._instance_containers.values():
@@ -78,7 +78,7 @@ class InstanceContainersModel(ListModel):
     #
     #   This does not set the items in the list itself. It is intended to be
     #   overwritten by subclasses that add their own roles to the model.
-    def _recomputeItems(self):
+    def _recomputeItems(self) -> Generator[Dict[str, Any], None, None]:
         registry = ContainerRegistry.getInstance()
         result = []
         for container in self._instance_containers.values():
@@ -117,12 +117,12 @@ class InstanceContainersModel(ListModel):
             for metadata in this_filter:
                 if metadata["id"] not in containers and metadata["id"] not in metadatas: #No duplicates please.
                     if registry.isLoaded(metadata["id"]): #Only add it to the full containers if it's already fully loaded.
-                        containers[metadata["id"]] = registry.findContainers(id = metadata["id"])[0]
+                        containers[metadata["id"]] = cast(InstanceContainer, registry.findContainers(id = metadata["id"])[0])
                     else:
                         metadatas[metadata["id"]] = metadata
         return containers, metadatas
 
-    def setSectionProperty(self, property_name):
+    def setSectionProperty(self, property_name: str) -> None:
         if self._section_property != property_name:
             self._section_property = property_name
             self.sectionPropertyChanged.emit()
@@ -130,7 +130,7 @@ class InstanceContainersModel(ListModel):
 
     sectionPropertyChanged = pyqtSignal()
     @pyqtProperty(str, fset = setSectionProperty, notify = sectionPropertyChanged)
-    def sectionProperty(self):
+    def sectionProperty(self) -> str:
         return self._section_property
 
     ##  Set the filter of this model based on a string.
@@ -145,16 +145,16 @@ class InstanceContainersModel(ListModel):
 
     ##  Set a list of filters to use when fetching containers.
     #
-    #   \param filter_list \type{List[Dict]} List of filter dicts to fetch multiple
-    #               sets of containers. The final result is the union of these sets.
-    def setFilterList(self, filter_list):
+    #   \param filter_list List of filter dicts to fetch multiple sets of
+    #   containers. The final result is the union of these sets.
+    def setFilterList(self, filter_list: List[Dict]) -> None:
         if filter_list != self._filter_dicts:
             self._filter_dicts = filter_list
             self.filterChanged.emit()
             self._container_change_timer.start()
 
     @pyqtProperty("QVariantList", fset=setFilterList, notify=filterChanged)
-    def filterList(self):
+    def filterList(self) -> List[Dict[str, str]]:
         return self._filter_dicts
 
     @pyqtSlot(str, str)
@@ -172,11 +172,11 @@ class InstanceContainersModel(ListModel):
     #   "All Supported Types" and "All Files" are added when listing
     #   readers, but not when listing writers.
     #
-    #   \param io_type \type{str} name of the needed IO type
+    #   \param io_type Name of the needed IO type
     #   \return A list of strings indicating file name filters for a file
     #   dialog.
     @pyqtSlot(str, result="QVariantList")
-    def getFileNameFilters(self, io_type):
+    def getFileNameFilters(self, io_type: str) -> List[str]:
         #TODO: This function should be in UM.Resources!
         filters = []
         all_types = []
@@ -195,12 +195,12 @@ class InstanceContainersModel(ListModel):
         return filters
 
     @pyqtSlot(result=QUrl)
-    def getDefaultPath(self):
+    def getDefaultPath(self) -> QUrl:
         return QUrl.fromLocalFile(os.path.expanduser("~/"))
 
     ##  Gets a list of profile reader or writer plugins
     #   \return List of tuples of (plugin_id, meta_data).
-    def _getIOPlugins(self, io_type):
+    def _getIOPlugins(self, io_type: str) -> List[Tuple[str, Dict[str, Any]]]:
         pr = PluginRegistry.getInstance()
         active_plugin_ids = pr.getActivePlugins()
 
@@ -208,11 +208,11 @@ class InstanceContainersModel(ListModel):
         for plugin_id in active_plugin_ids:
             meta_data = pr.getMetaData(plugin_id)
             if io_type in meta_data:
-                result.append( (plugin_id, meta_data) )
+                result.append((plugin_id, meta_data))
         return result
 
     @pyqtSlot("QVariantList", QUrl, str)
-    def exportProfile(self, instance_id, file_url, file_type):
+    def exportProfile(self, instance_id: str, file_url: QUrl, file_type: str) -> None:
         if not file_url.isValid():
             return
         path = file_url.toLocalFile()
@@ -221,15 +221,15 @@ class InstanceContainersModel(ListModel):
         ContainerRegistry.getInstance().exportProfile(instance_id, path, file_type)
 
     @pyqtSlot(QUrl, result="QVariantMap")
-    def importProfile(self, file_url):
+    def importProfile(self, file_url: QUrl) -> Dict[str, str]:
         if not file_url.isValid():
-            return {"status": "error", "message": i18nCatalog.i18nc("@info:status", "Invalid URL: {url}").format(url = str(file_url))}
+            return {"status": "error", "message": catalog.i18nc("@info:status", "Invalid URL: {url}").format(url = str(file_url))}
         path = file_url.toLocalFile()
         if not path:
-            return {"status": "error", "message": i18nCatalog.i18nc("@info:status", "Not a local file: {url}").format(url = str(file_url))}
+            return {"status": "error", "message": catalog.i18nc("@info:status", "Not a local file: {url}").format(url = str(file_url))}
         return ContainerRegistry.getInstance().importProfile(path)
 
-    def _sortKey(self, item):
+    def _sortKey(self, item: Dict[str, Any]) -> List[Any]:
         result = []
         if self._section_property:
             result.append(item.get(self._section_property, ""))
@@ -240,7 +240,7 @@ class InstanceContainersModel(ListModel):
 
         return result
 
-    def _updateMetaData(self, container):
+    def _updateMetaData(self, container: InstanceContainer) -> None:
         index = self.find("id", container.id)
 
         if self._section_property:
@@ -252,7 +252,7 @@ class InstanceContainersModel(ListModel):
 
     ##  If a container has loaded fully (rather than just metadata) we need to
     #   move it from the dict of metadata to the dict of full containers.
-    def _onContainerLoadComplete(self, container_id):
+    def _onContainerLoadComplete(self, container_id: str) -> None:
         if container_id in self._instance_containers_metadata:
             del self._instance_containers_metadata[container_id]
             self._instance_containers[container_id] = ContainerRegistry.getInstance().findContainers(id = container_id)[0]
