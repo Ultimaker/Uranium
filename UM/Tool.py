@@ -68,6 +68,8 @@ class Tool(PluginObject):
     def event(self, event: Event) -> bool:
         if not self._selection_pass:
             self._selection_pass = UM.Application.Application.getInstance().getRenderer().getRenderPass("selection")
+            if not self._selection_pass:
+                return False
 
         if event.type == Event.ToolActivateEvent:
             if Selection.hasSelection() and self._handle:
