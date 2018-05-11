@@ -15,7 +15,7 @@ from UM.Event import CallFunctionEvent
 from UM.Settings.ContainerRegistry import ContainerRegistry
 import UM.Settings.ContainerStack
 import UM.Settings.InstanceContainer
-from UM.Signal import Signal, signalemitter, SignalQueue
+from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager

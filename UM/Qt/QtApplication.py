@@ -4,7 +4,7 @@
 import sys
 import os
 import signal
-from typing import Dict, Optional
+from typing import cast, Dict, Optional
 
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
@@ -494,11 +494,19 @@ class QtApplication(QApplication, Application):
             Logger.log("e", str(err.toString()))
         if result is None:
             return None
-        
+
         # We need to store the context with the qml object, else the context gets garbage collected and the qml objects
         # no longer function correctly/application crashes.
         result.attached_context = result_context
         return result
+
+    ##  Gets the instance of this application.
+    #
+    #   This is just to further specify the type of Application.getInstance().
+    #   \return The instance of this application.
+    @classmethod
+    def getInstance(cls, **kwargs) -> "QtApplication":
+        return cast(QtApplication, super().getInstance(**kwargs))
 
     def _createSplashScreen(self):
         return QSplashScreen(QPixmap(Resources.getPath(Resources.Images, self.getApplicationName() + ".png")))
