@@ -181,7 +181,7 @@ class ScaleTool(Tool):
             # Finish a scale operation
             if self.getDragPlane():
                 self.setDragPlane(None)
-                self.setLockedAxis(None)
+                self.setLockedAxis(ToolHandle.NoAxis)
                 self._drag_length = 0
                 self.operationStopped.emit(self)
                 return True

@@ -306,7 +306,7 @@ class TranslateTool(Tool):
                 self.operationStopped.emit(self)
                 self._distance = None
                 self.propertyChanged.emit()
-                self.setLockedAxis(None)
+                self.setLockedAxis(ToolHandle.NoAxis)
                 self.setDragPlane(None)
                 self.setDragStart(None, None)
                 return True

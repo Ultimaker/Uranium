@@ -166,7 +166,7 @@ class RotateTool(Tool):
             # Finish a rotate operation
             if self.getDragPlane():
                 self.setDragPlane(None)
-                self.setLockedAxis(None)
+                self.setLockedAxis(ToolHandle.NoAxis)
                 self._angle = None
                 self.propertyChanged.emit()
                 if self._rotating:

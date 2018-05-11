@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Signal import Signal, signalemitter
@@ -23,7 +23,7 @@ class Tool(PluginObject):
         self._enabled = True
 
         self._handle = None  # type: Optional[ToolHandle]
-        self._locked_axis = None
+        self._locked_axis = ToolHandle.NoAxis #type: int
         self._drag_plane = None
         self._drag_start = None
         self._exposed_properties = []
@@ -71,8 +71,8 @@ class Tool(PluginObject):
                 self._handle.setParent(self.getController().getScene().getRoot())
 
         if event.type == Event.MouseMoveEvent and self._handle:
-            if self._locked_axis:
-                return
+            if self._locked_axis != ToolHandle.NoAxis:
+                return False
 
             tool_id = self._selection_pass.getIdAtPosition(event.x, event.y)
 
@@ -104,10 +104,14 @@ class Tool(PluginObject):
     def setHandle(self, handle: ToolHandle):
         self._handle = handle
 
-    def getLockedAxis(self):
+    ##  Get which axis is locked, if any.
+    #
+    #   \return The ID of the axis or axes that are locked. See the `ToolHandle`
+    #   class for the associations of IDs to each axis.
+    def getLockedAxis(self) -> int:
         return self._locked_axis
 
-    def setLockedAxis(self, axis):
+    def setLockedAxis(self, axis: int) -> None:
         self._locked_axis = axis
 
         if self._handle:

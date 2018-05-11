@@ -54,7 +54,7 @@ class MirrorTool(Tool):
                 self.operationStopped.emit(self)
 
             # Perform a mirror operation
-            if self.getLockedAxis():
+            if self.getLockedAxis() != ToolHandle.NoAxis:
                 op = None
                 if Selection.getCount() == 1:
                     node = Selection.getSelectedObject(0)
@@ -84,7 +84,7 @@ class MirrorTool(Tool):
 
                 op.push()
 
-                self.setLockedAxis(None)
+                self.setLockedAxis(ToolHandle.NoAxis)
                 return True
 
         return False
