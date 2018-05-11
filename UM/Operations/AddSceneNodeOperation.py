@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Operations.Operation import Operation
@@ -20,7 +20,7 @@ class AddSceneNodeOperation(Operation):
     #
     #   \param node The node to add to the scene.
     #   \param parent The parent of the new node.
-    def __init__(self, node: SceneNode, parent: Optional[SceneNode]):
+    def __init__(self, node: SceneNode, parent: Optional[SceneNode]) -> None:
         super().__init__()
         self._node = node
         self._parent = parent
@@ -29,14 +29,14 @@ class AddSceneNodeOperation(Operation):
     ##  Reverses the operation of adding a scene node.
     #
     #   This removes the scene node again.
-    def undo(self):
+    def undo(self) -> None:
         self._node.setParent(None)
         self._selected = Selection.isSelected(self._node)
         if self._selected:
             Selection.remove(self._node)  # Also remove the node from the selection.
 
     ##  Re-applies this operation after it has been undone.
-    def redo(self):
+    def redo(self) -> None:
         self._node.setParent(self._parent)
         if self._selected:  # It was selected while the operation was undone. We should restore that selection.
             Selection.add(self._node)
