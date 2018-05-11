@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import threading
@@ -24,7 +24,7 @@ from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 
 import UM.Settings
 
-from typing import TYPE_CHECKING, List, Callable, Any, Optional
+from typing import TYPE_CHECKING, Dict, List, Callable, Any, Optional
 if TYPE_CHECKING:
     from UM.Settings.ContainerStack import ContainerStack
     from UM.Backend import Backend
@@ -39,9 +39,13 @@ if TYPE_CHECKING:
 class Application:
     ##  Init method
     #
-    #   \param name \type{string} The name of the application.
-    #   \param version \type{string} Version, formatted as major.minor.rev
-    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode = False, parser = None, parsed_command_line = {}, **kwargs):
+    #   \param name The name of the application.
+    #   \param version Version, formatted as major.minor.rev
+    #   \param build_type Additional version info on the type of build this is,
+    #   such as "master".
+    #   \param is_debug_mode Whether to run in debug mode.
+    #   \param parser The command line parser to use.
+    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode: bool = False, parser: argparse.ArgumentParser = None, parsed_command_line: Dict[str, Any] = {}, **kwargs) -> None:
         if Application._instance is not None:
             raise ValueError("Duplicate singleton creation")
 
