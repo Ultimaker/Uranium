@@ -158,12 +158,14 @@ class InstanceContainersModel(ListModel):
         return self._filter_dicts
 
     @pyqtSlot(str, str)
-    def rename(self, instance_id, new_name):
-        if new_name != self.getName():
-            containers = ContainerRegistry.getInstance().findInstanceContainers(id = instance_id)
-            if containers:
-                containers[0].setName(new_name)
-                self._container_change_timer.start()
+    def rename(self, instance_id: str, new_name: str):
+        if new_name == self.getName():
+            return #Don't need to do anything.
+
+        containers = ContainerRegistry.getInstance().findInstanceContainers(id = instance_id)
+        if containers:
+            containers[0].setName(new_name)
+            self._container_change_timer.start()
 
     ##  Gets a list of the possible file filters that the plugins have
     #   registered they can read or write. The convenience meta-filters
