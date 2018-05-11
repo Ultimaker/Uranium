@@ -165,7 +165,7 @@ class Tool(PluginObject):
         self._selected_objects_without_selected_ancestors = None
 
     def _getSelectedObjectsWithoutSelectedAncestors(self) -> List[SceneNode]:
-        if type(self._selected_objects_without_selected_ancestors) != list:
+        if not isinstance(self._selected_objects_without_selected_ancestors, list):
             nodes = Selection.getAllSelectedObjects()
             self._selected_objects_without_selected_ancestors = []
             for node in nodes:
