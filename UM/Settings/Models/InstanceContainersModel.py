@@ -223,10 +223,10 @@ class InstanceContainersModel(ListModel):
     @pyqtSlot(QUrl, result="QVariantMap")
     def importProfile(self, file_url):
         if not file_url.isValid():
-            return
+            return {"status": "error", "message": i18nCatalog.i18nc("@info:status", "Invalid URL: {url}").format(url = str(file_url))}
         path = file_url.toLocalFile()
         if not path:
-            return
+            return {"status": "error", "message": i18nCatalog.i18nc("@info:status", "Not a local file: {url}").format(url = str(file_url))}
         return ContainerRegistry.getInstance().importProfile(path)
 
     def _sortKey(self, item):
