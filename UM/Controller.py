@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from UM.Scene.Scene import Scene
 from UM.Event import Event, KeyEvent, MouseEvent, ToolEvent, ViewEvent
@@ -40,11 +40,11 @@ class Controller:
         self._active_tool = None  # type: Optional[Tool]
         self._tool_operation_active = False
         self._tools = {}  # type: Dict[str, Tool]
-        self._camera_tool = None #type: Tool
-        self._selection_tool = None #type: Tool
+        self._camera_tool = None #type: Optional[Tool]
+        self._selection_tool = None #type: Optional[Tool]
         self._tools_enabled = True #type: bool
 
-        self._active_stage = None #type: Stage
+        self._active_stage = None #type: Optional[Stage]
         self._stages = {} #type: Dict[str, Stage]
 
         self._input_devices = {} #type: Dict[str, InputDevice]
@@ -389,6 +389,8 @@ class Controller:
     # Rotate camera view according defined angle
     def rotateView(self, coordinate: str = "x", angle: int = 0) -> None:
         camera = self._scene.getActiveCamera()
+        if not camera:
+            return
         self._camera_tool.setOrigin(Vector(0, 100, 0)) #type: ignore
         if coordinate == "home":
             camera.setPosition(Vector(0, 0, 700))
