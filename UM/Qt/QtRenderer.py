@@ -5,7 +5,8 @@ import numpy
 from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage, QOpenGLVertexArrayObject
 from typing import List, Optional, Tuple
 
-from UM.Qt.QtApplication import QtApplication
+from UM.Application import Application
+import UM.Qt.QtApplication
 from UM.View.Renderer import Renderer
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
@@ -44,7 +45,7 @@ class QtRenderer(Renderer):
     def __init__(self) -> None:
         super().__init__()
 
-        self._controller = QtApplication.getInstance().getController() #type: Controller
+        self._controller = Application.getInstance().getController() #type: Controller
         self._scene = self._controller.getScene() #type: Scene
 
         self._initialized = False #type: bool
@@ -68,7 +69,7 @@ class QtRenderer(Renderer):
     def getPixelMultiplier(self) -> int:
         # Standard assumption for screen pixel density is 96 DPI. We use that as baseline to get
         # a multiplication factor we can use for screens > 96 DPI.
-        return round(QtApplication.getInstance().primaryScreen().physicalDotsPerInch() / 96.0)
+        return round(UM.Qt.QtApplication.QtApplication.getInstance().primaryScreen().physicalDotsPerInch() / 96.0)
 
     ##  Get the list of render batches.
     def getBatches(self) -> List[RenderBatch]:
