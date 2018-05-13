@@ -28,7 +28,7 @@ import UM.Settings
 
 from typing import TYPE_CHECKING, Dict, List, Callable, Any, Optional
 if TYPE_CHECKING:
-    from UM.Backend import Backend
+    from UM.Backend.Backend import Backend
     from UM.Settings.ContainerStack import ContainerStack
     from UM.Extension import Extension
 
