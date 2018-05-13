@@ -6,7 +6,7 @@ import os  # To get the configuration file names and to rename files.
 import shutil
 import tempfile
 import traceback
-from typing import Dict, Callable, Iterator, List, Optional, Set, Tuple
+from typing import Any, Dict, Callable, Iterator, List, Optional, Set, Tuple
 
 import UM.Message  # To show the "upgrade succeeded" message.
 import UM.MimeTypeDatabase  # To know how to save the resulting files.
@@ -107,7 +107,7 @@ class VersionUpgradeManager:
     def setCurrentVersions(self, current_versions) -> None:
         self._current_versions = current_versions
 
-    def registerCurrentVersion(self, version_info: str, type_info: any) -> None:
+    def registerCurrentVersion(self, version_info: str, type_info: Any) -> None:
         if version_info in self._current_versions:
             Logger.log("d", "Overwriting current version info: %s", repr(version_info))
         self._current_versions[version_info] = type_info
