@@ -14,6 +14,7 @@ import UM.FlameProfiler
 from UM.LockFile import LockFile
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
+from UM.PluginObject import PluginObject #For typing.
 from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
 import UM.Qt.QtApplication
 from UM.Resources import Resources
@@ -404,11 +405,8 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         container = self._containers.get(container_id)
         if container is None:
-            metadata = self.metadata[container_id]
-            if issubclass(metadata["container_type"], InstanceContainer):
-                container = self.findInstanceContainers(id = container_id)[0]
-            elif issubclass(metadata["container_type"], ContainerStack):
-                container = self.findContainerStacks(id = container_id)[0]
+            container = self.findContainers(id = container_id)[0]
+        container = cast(ContainerInterface, container)
 
         if new_name == container.getName():
             Logger.log("w", "Unable to rename container %s, because the name (%s) didn't change", container_id, new_name)
@@ -416,7 +414,10 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self.containerRemoved.emit(container)
 
-        container.setName(new_name)
+        try:
+            container.setName(new_name) #type: ignore
+        except TypeError: #Some containers don't allow setting the name.
+            return
         if new_id is not None:
             source_provider = self.source_provider[container.getId()]
             del self._containers[container.getId()]
@@ -465,7 +466,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   \param container An instance of the container type to add.
     @classmethod
-    def addContainerType(cls, container: ContainerInterface) -> None:
+    def addContainerType(cls, container: PluginObject) -> None:
         plugin_id = container.getPluginId()
         metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
         if "settings_container" not in metadata or "mimetype" not in metadata["settings_container"]:
@@ -487,7 +488,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   \return A MimeType object that matches the mime type of the container or None if not found.
     @classmethod
-    def getMimeTypeForContainer(cls, container_type: type) -> MimeType:
+    def getMimeTypeForContainer(cls, container_type: type) -> Optional[MimeType]:
         try:
             mime_type_name = UM.Dictionary.findKey(cls.mime_type_map, container_type)
             if mime_type_name:
@@ -596,7 +597,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def _clearQueryCacheByContainer(self, container: ContainerInterface) -> None:
         # Use the base classes to clear the
         if isinstance(container, DefinitionContainer):
-            container_type = DefinitionContainer
+            container_type = DefinitionContainer #type: type
         elif isinstance(container, InstanceContainer):
             container_type = InstanceContainer
         elif isinstance(container, ContainerStack):
