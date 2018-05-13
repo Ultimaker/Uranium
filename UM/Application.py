@@ -116,7 +116,7 @@ class Application:
 
         self._operation_stack = OperationStack(self.getController()) #type: OperationStack
 
-        self._plugin_registry = PluginRegistry.getInstance()
+        self._plugin_registry = PluginRegistry.getInstance() #type: PluginRegistry
 
         self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "lib", "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
