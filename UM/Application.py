@@ -328,7 +328,7 @@ class Application:
     #   \param function The function to call.
     #   \param args The positional arguments to pass to the function.
     #   \param kwargs The keyword arguments to pass to the function.
-    def callLater(self, func: Callable[[Any], Any], *args, **kwargs) -> None:
+    def callLater(self, func: Callable[..., Any], *args, **kwargs) -> None:
         event = CallFunctionEvent(func, args, kwargs)
         self.functionEvent(event)
 
