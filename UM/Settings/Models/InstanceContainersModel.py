@@ -211,24 +211,6 @@ class InstanceContainersModel(ListModel):
                 result.append((plugin_id, meta_data))
         return result
 
-    @pyqtSlot("QVariantList", QUrl, str)
-    def exportProfile(self, instance_id: str, file_url: QUrl, file_type: str) -> None:
-        if not file_url.isValid():
-            return
-        path = file_url.toLocalFile()
-        if not path:
-            return
-        ContainerRegistry.getInstance().exportProfile(instance_id, path, file_type)
-
-    @pyqtSlot(QUrl, result="QVariantMap")
-    def importProfile(self, file_url: QUrl) -> Dict[str, str]:
-        if not file_url.isValid():
-            return {"status": "error", "message": catalog.i18nc("@info:status", "Invalid URL: {url}").format(url = str(file_url))}
-        path = file_url.toLocalFile()
-        if not path:
-            return {"status": "error", "message": catalog.i18nc("@info:status", "Not a local file: {url}").format(url = str(file_url))}
-        return ContainerRegistry.getInstance().importProfile(path)
-
     def _sortKey(self, item: Dict[str, Any]) -> List[Any]:
         result = []
         if self._section_property:
