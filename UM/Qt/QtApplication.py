@@ -356,11 +356,11 @@ class QtApplication(QApplication, Application):
 
         return super().event(event)
 
-    def windowClosed(self, safe_data: bool = True):
+    def windowClosed(self, save_data: bool = True) -> None:
         Logger.log("d", "Shutting down %s", self.getApplicationName())
         self._shutting_down = True
 
-        if safe_data:
+        if save_data:
             try:
                 Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences,
                                                                                self.getApplicationName() + ".cfg"))
@@ -368,7 +368,7 @@ class QtApplication(QApplication, Application):
                 Logger.log("e", "Exception while saving preferences: %s", repr(e))
 
         try:
-            self.applicationShuttingDown.emit(safe_data)
+            self.applicationShuttingDown.emit(save_data)
         except Exception as e:
             Logger.log("e", "Exception while emitting shutdown signal: %s", repr(e))
 
