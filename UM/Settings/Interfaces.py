@@ -23,7 +23,7 @@ class ContainerInterface:
     #   intended to be used for example when referencing the container in
     #   configuration files or when writing a file to disk.
     #
-    #   \return \type{string} The unique ID of this container.
+    #   \return The unique ID of this container.
     def getId(self) -> str:
         pass
 
