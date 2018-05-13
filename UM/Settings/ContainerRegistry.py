@@ -1,39 +1,33 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import os
-import re #For finding containers with asterisks in the constraints and for detecting backup files.
-import pickle #For serializing/deserializing Python classes to binary files
-from typing import Any, cast, Dict, Set, List, Optional
 import collections
+import gc
+import os
+import pickle #For serializing/deserializing Python classes to binary files
+import re #For finding containers with asterisks in the constraints and for detecting backup files.
 import time
-
-import UM.FlameProfiler
-from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
-from UM.Resources import Resources
-from UM.MimeTypeDatabase import MimeTypeDatabase
-from UM.Logger import Logger
-from UM.Settings.ContainerFormatError import ContainerFormatError
-from UM.Settings.Interfaces import ContainerInterface
-from UM.Signal import Signal, signalemitter
-from UM.LockFile import LockFile
+from typing import Any, cast, Dict, List, Optional, Set, TYPE_CHECKING
 
 import UM.Dictionary
-import gc
-
-MYPY = False
-if MYPY:
-    from UM.Application import Application
-
-from UM.Settings.ContainerProvider import ContainerProvider
-from UM.Settings.DefinitionContainer import DefinitionContainer
-from UM.Settings.ContainerStack import ContainerStack
-from UM.Settings.InstanceContainer import InstanceContainer
-from UM.Settings.Interfaces import ContainerRegistryInterface
-from UM.Settings.Interfaces import DefinitionContainerInterface
-
+import UM.FlameProfiler
+from UM.LockFile import LockFile
+from UM.Logger import Logger
+from UM.MimeTypeDatabase import MimeTypeDatabase
+from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
 import UM.Qt.QtApplication
+from UM.Resources import Resources
+from UM.Settings.ContainerFormatError import ContainerFormatError
+from UM.Settings.ContainerProvider import ContainerProvider
 from . import ContainerQuery
+from UM.Settings.ContainerStack import ContainerStack
+from UM.Settings.DefinitionContainer import DefinitionContainer
+from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface, DefinitionContainerInterface
+from UM.Signal import Signal, signalemitter
+
+if TYPE_CHECKING:
+    from UM.Application import Application
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
 
@@ -94,7 +88,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._wrong_container_ids.add(wrong_container_id)
 
     ##  Adds a container provider to search through containers in.
-    def addProvider(self, provider: "PluginObject"):
+    def addProvider(self, provider: ContainerProvider):
         self._providers.append(provider)
         #Re-sort every time. It's quadratic, but there shouldn't be that many providers anyway...
         self._providers.sort(key = lambda provider: PluginRegistry.getInstance().getMetaData(provider.getPluginId())["container_provider"].get("priority", 0))
@@ -180,6 +174,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 provider = self.source_provider[metadata["id"]]
                 if not provider:
                     Logger.log("w", "The metadata of container {container_id} was added during runtime, but no accompanying container was added.".format(container_id = metadata["id"]))
+                    continue
                 try:
                     new_container = provider.loadContainer(metadata["id"])
                 except ContainerFormatError as e:
@@ -210,13 +205,16 @@ class ContainerRegistry(ContainerRegistryInterface):
         if "id" in kwargs and kwargs["id"] is not None and "*" not in kwargs["id"] and not ignore_case:
             if kwargs["id"] not in self.metadata: #If we're looking for an unknown ID, try to lazy-load that one.
                 if kwargs["id"] not in self.source_provider:
-                    for provider in self._providers:
-                        if kwargs["id"] in provider.getAllIds():
-                            self.source_provider[kwargs["id"]] = provider
+                    for candidate in self._providers:
+                        if kwargs["id"] in candidate.getAllIds():
+                            self.source_provider[kwargs["id"]] = candidate
                             break
                     else:
                         return []
                 provider = self.source_provider[kwargs["id"]]
+                if not provider:
+                    Logger.log("w", "Metadata of container {container_id} is missing even though the container is added during run-time.")
+                    return []
                 metadata = provider.loadMetadata(kwargs["id"])
                 if metadata is None or metadata["id"] in self._wrong_container_ids:
                     return []
@@ -278,7 +276,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             if metadata["id"] not in self._containers: #Not yet loaded, so it can't be dirty.
                 continue
             candidate = self._containers[metadata["id"]]
-            if hasattr(candidate, "isDirty") and candidate.isDirty(): #Check for hasattr because only InstanceContainers and Stacks have this method.
+            if hasattr(candidate, "isDirty") and candidate.isDirty(): #type: ignore #Check for hasattr because only InstanceContainers and Stacks have this method.
                 result.append(self._containers[metadata["id"]])
         return result
 
@@ -386,7 +384,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             del self.metadata[container_id]
         if container_id in self.source_provider:
             if self.source_provider[container_id] is not None:
-                self.source_provider[container_id].removeContainer(container_id)
+                cast(ContainerProvider, self.source_provider[container_id]).removeContainer(container_id)
             del self.source_provider[container_id]
 
         if container is not None:
@@ -516,12 +514,12 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     ##  Save single dirty container
     def saveContainer(self, container: "ContainerInterface", provider: Optional["ContainerProvider"] = None) -> None:
-        if provider is None:
+        if not hasattr(provider, "saveContainer"):
             provider = self.getDefaultSaveProvider()
-        if not container.isDirty():
+        if not hasattr(container, "isDirty") or not container.isDirty(): #type: ignore
             return
 
-        provider.saveContainer(container)
+        provider.saveContainer(container) #type: ignore
         self.source_provider[container.getId()] = provider
 
     ##  Save all the dirty containers by calling the appropriate container providers
