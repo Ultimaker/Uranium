@@ -95,6 +95,8 @@ class RenderPass:
     #   This makes sure the contents of this render pass are properly
     #   updated at the end of rendering.
     def release(self) -> None:
+        if self._fbo is None:
+            return #Already released. Nothing more to do.
         self._fbo.release()
 
         # Workaround for a driver bug with recent Intel chips on OSX.
@@ -113,6 +115,9 @@ class RenderPass:
     #
     #   \return The OpenGL texture ID used by this pass.
     def getTextureId(self) -> int:
+        if self._fbo is None:
+            Logger.log("w", "FrameBufferObject has been released. Can't get any frame buffer texture ID.")
+            return -1
         return self._fbo.getTextureId()
 
     ##  Get the pixel data produced by this render pass.
@@ -122,6 +127,9 @@ class RenderPass:
     #   \note The current object type returned is currently dependant on the specific
     #   implementation of the UM.View.GL.FrameBufferObject class.
     def getOutput(self) -> QImage:
+        if self._fbo is None:
+            Logger.log("w", "FrameBufferObject has been released. Can't get frame output.")
+            return QImage()
         return self._fbo.getContents()
 
     ## private:
