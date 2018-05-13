@@ -1,7 +1,9 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import numpy
 from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage, QOpenGLVertexArrayObject
+from typing import List, Optional, Tuple
 
 from UM.Qt.QtApplication import QtApplication
 from UM.View.Renderer import Renderer
@@ -20,10 +22,7 @@ from UM.Signal import Signal, signalemitter
 
 from UM.Logger import Logger
 
-import numpy
 
-
-from typing import Optional, List
 
 MYPY = False
 if MYPY:
@@ -59,7 +58,7 @@ class QtRenderer(Renderer):
 
         self._batches = []  # type: List[RenderBatch]
 
-        self._quad_buffer = None  # type: Optional[QOpenGLBuffer]
+        self._quad_buffer = None  # type: QOpenGLBuffer
 
         self._camera = None  # type: Optional[Camera]
 
@@ -111,7 +110,7 @@ class QtRenderer(Renderer):
     ##  Get the window size.
     #
     #   \return A tuple of (window_width, window_height)
-    def getWindowSize(self)-> (int, int):
+    def getWindowSize(self) -> Tuple[int, int]:
         return self._window_width, self._window_height
 
     ##  Overrides Renderer::beginRendering()
@@ -185,7 +184,7 @@ class QtRenderer(Renderer):
         OpenGL.setInstance(OpenGL())
         self._gl = OpenGL.getInstance().getBindingsObject()
 
-        self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
+        self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader")) #type: ShaderProgram
 
         self._render_passes.add(DefaultPass(self._viewport_width, self._viewport_height))
         self._render_passes.add(SelectionPass(self._viewport_width, self._viewport_height))
