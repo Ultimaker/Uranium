@@ -48,9 +48,6 @@ class QtRenderer(Renderer):
         self._controller = Application.getInstance().getController() #type: Controller
         self._scene = self._controller.getScene() #type: Scene
 
-        self._vertex_buffer_cache = {}
-        self._index_buffer_cache = {}
-
         self._initialized = False #type: bool
 
         self._light_position = Vector(0, 0, 0) #type: Vector
