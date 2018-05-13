@@ -138,7 +138,10 @@ class Tool(PluginObject):
         if not self._drag_plane:
             return None
 
-        ray = self._controller.getScene().getActiveCamera().getRay(x, y)
+        camera = self._controller.getScene().getActiveCamera()
+        if not camera:
+            return None
+        ray = camera.getRay(x, y)
 
         target = self._drag_plane.intersectsRay(ray)
         if target:
