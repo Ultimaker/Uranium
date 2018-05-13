@@ -31,8 +31,6 @@ class LocalContainerProvider(ContainerProvider):
     def __init__(self):
         super().__init__()
 
-        self._application = Application.getInstance()
-
         self._id_to_path = {}  # type: Dict[str, str] #Translates container IDs to the path to where the file is located
         self._id_to_mime = {}  # type: Dict[str, MimeType] #Translates container IDs to their MIME type.
 
@@ -58,8 +56,8 @@ class LocalContainerProvider(ContainerProvider):
             if container:   # Yes, it was cached!
                 return container
 
-        # Not cached, so load by deserialising.
-        container = container_class(base_id, parent = self._application)    # Construct the container!
+        #Not cached, so load by deserialising.
+        container = container_class(base_id) #Construct the container!
         with open(file_path, "r", encoding = "utf-8") as f:
             container.deserialize(f.read())
         container.setPath(file_path)
@@ -194,7 +192,7 @@ class LocalContainerProvider(ContainerProvider):
     def _loadCachedDefinition(self, definition_id) -> Optional[DefinitionContainer]:
         definition_path = self._id_to_path[definition_id]
         try:
-            cache_path = Resources.getPath(Resources.Cache, "definitions", self._application.getVersion(), definition_id)
+            cache_path = Resources.getPath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition_id)
             cache_mtime = os.path.getmtime(cache_path)
             definition_mtime = os.path.getmtime(definition_path)
         except FileNotFoundError: #Cache doesn't exist yet.
@@ -230,7 +228,7 @@ class LocalContainerProvider(ContainerProvider):
     #
     #   \param definition The definition container to store.
     def _saveCachedDefinition(self, definition: DefinitionContainer) -> None:
-        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self._application.getVersion(), definition.id)
+        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition.id)
 
         # Ensure the cache path exists.
         try:
