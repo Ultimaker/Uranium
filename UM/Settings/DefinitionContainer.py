@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -20,7 +20,7 @@ from UM.Settings.SettingRelation import SettingRelation
 from UM.Settings.SettingRelation import RelationType
 from UM.Settings.SettingFunction import SettingFunction
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Set
 
 class InvalidDefinitionError(Exception):
     pass
@@ -153,7 +153,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  Gets all keys of settings in this container.
     #
     #   \return A set of all keys of settings in this container.
-    def getAllKeys(self) -> List[str]:
+    def getAllKeys(self) -> Set[str]:
         keys = set()
         for definition in self.definitions:
             keys |= definition.getAllKeys()

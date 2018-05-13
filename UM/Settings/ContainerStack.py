@@ -9,15 +9,16 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
-from UM.Settings.ContainerFormatError import ContainerFormatError
-from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
+from UM.Settings.ContainerFormatError import ContainerFormatError
+import UM.Settings.ContainerRegistry
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
+from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Settings.SettingFunction import SettingFunction
 from UM.Settings.Validator import ValidatorState
 
@@ -54,29 +55,27 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     ##  Constructor
     #
     #   \param stack_id A unique, machine readable/writable ID.
-    def __init__(self, stack_id: str, parent: QObject = None, *args: Any, **kwargs: Any) -> None:
-        # Note that we explicitly pass None as QObject parent here. This is to be able
-        # to support pickling.
-        super().__init__(parent = parent, *args, **kwargs)
+    def __init__(self, stack_id: str, parent: QObject = None) -> None:
+        super().__init__()
 
         self._metadata = {
             "id": stack_id,
             "name": stack_id,
             "version": self.Version,
             "container_type": ContainerStack
-        }
+        } #type: Dict[str, Any]
         self._containers = []  # type: List[ContainerInterface]
         self._next_stack = None  # type: Optional[ContainerStack]
         self._read_only = False  # type: bool
         self._dirty = True  # type: bool
         self._path = ""  # type: str
-        self._postponed_emits = [] #type: List[Tuple[Signal, List[Any]]] # gets filled with 2-tuples: signal, signal_argument(s)
+        self._postponed_emits = [] #type: List[Tuple[Signal, ContainerInterface]] # gets filled with 2-tuples: signal, signal_argument(s)
 
         self._property_changes = {} #type: Dict[str, Set[str]]
         self._emit_property_changed_queued = False  # type: bool
 
     ##  For pickle support
-    def __getnewargs__(self) -> Tuple[...]:
+    def __getnewargs__(self) -> Tuple[str]:
         return (self.getId(),)
 
     ##  For pickle support
@@ -91,7 +90,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getId(self) -> str:
-        return self._metadata["id"]
+        return cast(str, self._metadata["id"])
 
     id = pyqtProperty(str, fget = getId, constant = True)
 
@@ -136,8 +135,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     ##  Set the complete set of metadata
     def setMetaData(self, meta_data: Dict[str, Any]) -> None:
-        if meta_data != self._meta_data:
-            self._meta_data = meta_data
+        if meta_data != self.getMetaData():
+            self._metadata = meta_data
             self.metaDataChanged.emit(self)
 
     metaDataChanged = pyqtSignal(QObject)
@@ -335,6 +334,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     @classmethod
     def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
         configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
+        if not configuration_type:
+            Logger.log("d", "Could not get type from serialized.")
+            return None
+
         # get version
         version = None
         try:
@@ -666,7 +669,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                 # Setting is not validated. This can happen if there is only a setting definition.
                 # We do need to validate it, because a setting defintions value can be set by a function, which could
                 # be an invalid setting.
-                definition = self.getSettingDefinition(key)
+                definition = cast(SettingDefinition, self.getSettingDefinition(key))
                 validator_type = SettingDefinition.getValidatorForType(definition.type)
                 if validator_type:
                     validator = validator_type(key)
@@ -685,7 +688,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                 # Setting is not validated. This can happen if there is only a setting definition.
                 # We do need to validate it, because a setting defintions value can be set by a function, which could
                 # be an invalid setting.
-                definition = self.getSettingDefinition(key)
+                definition = cast(SettingDefinition, self.getSettingDefinition(key))
                 validator_type = SettingDefinition.getValidatorForType(definition.type)
                 if validator_type:
                     validator = validator_type(key)
@@ -721,7 +724,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._property_changes = {}
         self._emit_property_changed_queued = False
 
-_containerRegistry = None   # type:  ContainerRegistryInterface
+_containerRegistry = ContainerRegistryInterface() # type: ContainerRegistryInterface
 
 def setContainerRegistry(registry: ContainerRegistryInterface) -> None:
     global _containerRegistry

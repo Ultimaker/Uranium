@@ -16,7 +16,6 @@ from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.PluginObject import PluginObject #For typing.
 from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
-import UM.Qt.QtApplication
 from UM.Resources import Resources
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
@@ -162,7 +161,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
     @UM.FlameProfiler.profile
-    def findContainers(self, *, ignore_case = False, **kwargs: Any) -> List[ContainerInterface]:
+    def findContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
         #Find the metadata of the containers and grab the actual containers from there.
         results_metadata = self.findContainersMetadata(ignore_case = ignore_case, **kwargs)
         result = []
@@ -312,6 +311,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         for provider in self._providers: #Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
+                    from UM.Qt.QtApplication import QtApplication
                     UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
                     metadata = provider.loadMetadata(container_id)
                     if metadata is None:
@@ -655,11 +655,11 @@ class ContainerRegistry(ContainerRegistryInterface):
         return ContainerRegistry.__instance
 
     @classmethod
-    def setApplication(cls, application: Application) -> None:
+    def setApplication(cls, application: "Application") -> None:
         cls.__application = application
 
     @classmethod
-    def getApplication(cls) -> Application:
+    def getApplication(cls) -> "Application":
         return cls.__application
 
     __application = None    # type: Application
