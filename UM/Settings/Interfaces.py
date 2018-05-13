@@ -11,6 +11,7 @@ from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 if TYPE_CHECKING:
     from UM.Application import Application
     from UM.Settings.InstanceContainer import InstanceContainer
+    from UM.Settings.SettingDefinition import SettingDefinition #For typing.
 
 ##  Shared interface between setting container types
 #
@@ -148,7 +149,8 @@ class ContainerInterface:
 
 
 class DefinitionContainerInterface(ContainerInterface):
-    pass
+    def findDefinitions(self, **kwargs: Any) -> "SettingDefinition":
+        raise NotImplementedError()
 
 
 ##  Shared interface between setting container types
@@ -166,4 +168,7 @@ class ContainerRegistryInterface:
         raise NotImplementedError()
 
     def getEmptyInstanceContainer(self) -> "InstanceContainer":
+        raise NotImplementedError()
+
+    def isReadOnly(self, container_id: str) -> bool:
         raise NotImplementedError()

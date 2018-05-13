@@ -346,8 +346,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     ##  Find definitions matching certain criteria.
     #
-    #   \param kwargs \type{dict} A dictionary of keyword arguments containing key-value pairs which should match properties of the definition.
-    def findDefinitions(self, **kwargs) -> List[SettingDefinition]:
+    #   \param kwargs A dictionary of keyword arguments containing key-value pairs which should match properties of the definition.
+    def findDefinitions(self, **kwargs: Any) -> List[SettingDefinition]:
         if len(kwargs) == 1 and "key" in kwargs:
             # If we are searching for a single definition by exact key, we can speed up things by retrieving from the cache.
             key = kwargs.get("key")
