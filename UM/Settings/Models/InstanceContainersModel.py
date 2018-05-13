@@ -110,8 +110,8 @@ class InstanceContainersModel(ListModel):
     #   containers of which only the metadata is known.
     def _fetchInstanceContainers(self) -> Tuple[Dict[str, InstanceContainer], Dict[str, Dict[str, Any]]]:
         registry = ContainerRegistry.getInstance() #Cache this for speed.
-        containers = {} #Mapping from container ID to container.
-        metadatas = {} #Mapping from container ID to metadata.
+        containers = {} #type: Dict[str, InstanceContainer] #Mapping from container ID to container.
+        metadatas = {} #type: Dict[str, Dict[str, Any]] #Mapping from container ID to metadata.
         for filter_dict in self._filter_dicts:
             this_filter = registry.findInstanceContainersMetadata(**filter_dict)
             for metadata in this_filter:
@@ -141,7 +141,7 @@ class InstanceContainersModel(ListModel):
     filterChanged = pyqtSignal()
     @pyqtProperty("QVariantMap", fset = setFilter, notify = filterChanged)
     def filter(self) -> Dict[str, str]:
-        return self._filter_dicts[0] if len(self._filter_dicts) != 0 else None
+        return self._filter_dicts[0] if len(self._filter_dicts) != 0 else {}
 
     ##  Set a list of filters to use when fetching containers.
     #
