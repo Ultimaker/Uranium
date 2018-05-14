@@ -14,6 +14,8 @@ from PyQt5.QtGui import QGuiApplication, QIcon, QPixmap, QFontMetrics
 from PyQt5.QtCore import QTimer
 
 from UM.FileHandler.ReadFileJob import ReadFileJob
+from UM.Mesh.MeshFileHandler import MeshFileHandler
+from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
@@ -114,6 +116,11 @@ class QtApplication(QApplication, Application):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
         # these checks need to be done in your <framework>Application.py class __init__().
+
+        self._mesh_file_handler = MeshFileHandler.getInstance() #type: MeshFileHandler
+        self._mesh_file_handler.setApplication(self)
+        self._workspace_file_handler = WorkspaceFileHandler.getInstance() #type: WorkspaceFileHandler
+        self._workspace_file_handler.setApplication(self)
 
     def initialize(self):
         i18n_catalog = i18nCatalog("uranium")
@@ -514,7 +521,7 @@ class QtApplication(QApplication, Application):
             return
 
         nodes = []
-        for node in DepthFirstIterator(self.getController().getScene().getRoot()):
+        for node in DepthFirstIterator(self.getController().getScene().getRoot()): #type: ignore #Ignore type error because iter() should get called automatically by Python syntax.
             if not isinstance(node, SceneNode):
                 continue
             if (not node.getMeshData() and not node.callDecoration("getLayerData")) and not node.callDecoration("isGroup"):
@@ -537,6 +544,13 @@ class QtApplication(QApplication, Application):
 
             op.push()
             Selection.clear()
+
+    ##  Get the MeshFileHandler of this application.
+    def getMeshFileHandler(self) -> MeshFileHandler:
+        return self._mesh_file_handler
+
+    def getWorkspaceFileHandler(self) -> WorkspaceFileHandler:
+        return self._workspace_file_handler
 
     ##  Gets the instance of this application.
     #

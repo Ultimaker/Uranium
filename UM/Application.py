@@ -104,10 +104,6 @@ class Application:
             pass
 
         self._controller = Controller(self) #type: Controller
-        self._mesh_file_handler = MeshFileHandler.getInstance() #type: MeshFileHandler
-        self._mesh_file_handler.setApplication(self)
-        self._workspace_file_handler = WorkspaceFileHandler.getInstance() #type: WorkspaceFileHandler
-        self._workspace_file_handler.setApplication(self)
         self._extensions = [] #type: List[Extension]
         self._backend = None #type: Backend
         self._output_device_manager = OutputDeviceManager() #type: OutputDeviceManager
@@ -285,14 +281,6 @@ class Application:
     #   \returns Controller \type{Controller}
     def getController(self) -> Controller:
         return self._controller
-
-    ##  Get the MeshFileHandler of this application.
-    #   \returns MeshFileHandler \type{MeshFileHandler}
-    def getMeshFileHandler(self) -> MeshFileHandler:
-        return self._mesh_file_handler
-
-    def getWorkspaceFileHandler(self) -> WorkspaceFileHandler:
-        return self._workspace_file_handler
 
     def getOperationStack(self) -> OperationStack:
         return self._operation_stack

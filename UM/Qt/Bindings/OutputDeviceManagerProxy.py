@@ -7,11 +7,12 @@ from typing import List, Mapping, Optional, TYPE_CHECKING
 
 from UM.Application import Application
 from UM.i18n import i18nCatalog
-from UM.Scene.SceneNode import SceneNode
-from UM.Scene.Selection import Selection
+from UM.Logger import Logger
 from UM.Message import Message
 from UM.OutputDevice import OutputDeviceError
-from UM.Logger import Logger
+import UM.Qt.QtApplication
+from UM.Scene.SceneNode import SceneNode
+from UM.Scene.Selection import Selection
 
 if TYPE_CHECKING:
     from UM.FileHandler.FileHandler import FileHandler
@@ -117,9 +118,9 @@ class OutputDeviceManagerProxy(QObject):
             return
         file_handler = None #type: Optional[FileHandler]
         if file_type == "mesh":
-            file_handler = Application.getInstance().getMeshFileHandler()
+            file_handler = UM.Qt.QtApplication.QtApplication.getInstance().getMeshFileHandler()
         elif file_type == "workspace":
-            file_handler = Application.getInstance().getWorkspaceFileHandler()
+            file_handler = UM.Qt.QtApplication.QtApplication.getInstance().getWorkspaceFileHandler()
 
         try:
             device.requestWrite(nodes, file_name, limit_mimetypes, file_handler, **kwargs)
