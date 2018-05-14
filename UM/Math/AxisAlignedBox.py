@@ -1,12 +1,13 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Math.Vector import Vector
 from UM.Math.Float import Float
+from UM.Math.Ray import Ray #For typing.
+from UM.Math.Vector import Vector
 
 import numpy
 
-from typing import Optional
+from typing import Optional, Tuple, Union
 
 
 ## Axis aligned bounding box.
@@ -16,7 +17,7 @@ class AxisAlignedBox:
         PartialIntersection = 2
         FullIntersection = 3
 
-    def __init__(self, minimum: Vector = Vector.Null, maximum: Vector = Vector.Null):
+    def __init__(self, minimum: Vector = Vector.Null, maximum: Vector = Vector.Null) -> None:
         if minimum.x > maximum.x or minimum.y > maximum.y or minimum.z > maximum.z:
             swapped_minimum = Vector(min(minimum.x, maximum.x), min(minimum.y, maximum.y), min(minimum.z, maximum.z))
             swapped_maximum = Vector(max(minimum.x, maximum.x), max(minimum.y, maximum.y), max(minimum.z, maximum.z))
@@ -24,8 +25,8 @@ class AxisAlignedBox:
             maximum = swapped_maximum
         minimum.setRoundDigits(3)
         maximum.setRoundDigits(3)
-        self._min = minimum
-        self._max = maximum
+        self._min = minimum #type: Vector
+        self._max = maximum #type: Vector
 
     def set(self, minimum: Optional[Vector] = None, maximum: Optional[Vector] = None, left: Optional[float] = None,
             right: Optional[float] = None, top: Optional[float] = None, bottom: Optional[float] = None,
@@ -50,8 +51,8 @@ class AxisAlignedBox:
 
         return AxisAlignedBox(minimum, maximum)
 
-    def __add__(self, other):
-        if other is None or not other.isValid():
+    def __add__(self, other: object) -> "AxisAlignedBox":
+        if other is None or not isinstance(other, AxisAlignedBox) or not other.isValid():
             return self
 
         new_min = Vector(min(self._min.x, other.left), min(self._min.y, other.bottom),
@@ -60,55 +61,55 @@ class AxisAlignedBox:
                          max(self._max.z, other.front))
         return AxisAlignedBox(minimum=new_min, maximum=new_max)
 
-    def __iadd__(self, other):
+    def __iadd__(self, other: object) -> "AxisAlignedBox":
         raise NotImplementedError()
 
     @property
-    def width(self):
+    def width(self) -> float:
         return self._max.x - self._min.x
 
     @property
-    def height(self):
+    def height(self) -> float:
         return self._max.y - self._min.y
 
     @property
-    def depth(self):
+    def depth(self) -> float:
         return self._max.z - self._min.z
 
     @property
-    def center(self):
+    def center(self) -> float:
         return self._min + ((self._max - self._min) / 2.0)
 
     @property
-    def left(self):
+    def left(self) -> float:
         return self._min.x
 
     @property
-    def right(self):
+    def right(self) -> float:
         return self._max.x
 
     @property
-    def bottom(self):
+    def bottom(self) -> float:
         return self._min.y
 
     @property
-    def top(self):
+    def top(self) -> float:
         return self._max.y
 
     @property
-    def back(self):
+    def back(self) -> float:
         return self._min.z
 
     @property
-    def front(self):
+    def front(self) -> float:
         return self._max.z
 
     @property
-    def minimum(self):
+    def minimum(self) -> Vector:
         return self._min
 
     @property
-    def maximum(self):
+    def maximum(self) -> Vector:
         return self._max
 
     ##  Check if the bounding box is valid.
@@ -119,10 +120,9 @@ class AxisAlignedBox:
                    Float.fuzzyCompare(self._min.y, self._max.y) or
                    Float.fuzzyCompare(self._min.z, self._max.z))
 
-    ##  Intersect the bounding box with a ray 
-    #   \param ray \type{Ray}
+    ##  Intersect the bounding box with a ray
     #   \sa Ray
-    def intersectsRay(self, ray):
+    def intersectsRay(self, ray: Ray) -> Union[Tuple[float, float], bool]:
         inv = ray.inverseDirection
 
         t = numpy.empty((2,3), dtype=numpy.float32)
@@ -146,7 +146,7 @@ class AxisAlignedBox:
 
     ##  Check to see if this box intersects another box.
     #
-    #   \param box \type{AxisAlignedBox} The box to check for intersection.
+    #   \param box The box to check for intersection.
     #   \return \type{IntersectionResult} NoIntersection when no intersection occurs, PartialIntersection when partially intersected, FullIntersection when box is fully contained inside this box.
     def intersectsBox(self, box: "AxisAlignedBox") -> int:
         if self._min.x > box._max.x or box._min.x > self._max.x:
@@ -164,7 +164,7 @@ class AxisAlignedBox:
         return self.IntersectionResult.PartialIntersection
 
     ##  private:
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "AxisAlignedBox(min = {0}, max = {1})".format(self._min, self._max)
 
     # This field is filled in below. This is needed to help static analysis tools (read: PyCharm)

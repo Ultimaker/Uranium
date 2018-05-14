@@ -4,7 +4,7 @@
 import sys
 import os
 import signal
-from typing import cast, Dict, Optional
+from typing import cast, Dict, Optional, TYPE_CHECKING
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext
@@ -40,8 +40,7 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
-MYPY = False
-if MYPY:
+if TYPE_CHECKING:
     from PyQt5.QtCore import QObject
 
 
@@ -393,7 +392,7 @@ class QtApplication(QApplication, Application):
                 Logger.log("e", "Exception while saving preferences: %s", repr(e))
 
         try:
-            self.applicationShuttingDown.emit(save_data)
+            self.applicationShuttingDown.emit()
         except Exception as e:
             Logger.log("e", "Exception while emitting shutdown signal: %s", repr(e))
 

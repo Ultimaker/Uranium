@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 #   The camera provides a projection matrix and its transformation matrix
 #   can be used as view matrix.
 class Camera(SceneNode.SceneNode):
-    def __init__(self, name: str = "", parent: SceneNode = None) -> None:
+    def __init__(self, name: str = "", parent: SceneNode.SceneNode = None) -> None:
         super().__init__(parent)
         self._name = name  # type: str
         self._projection_matrix = Matrix()  # type: Matrix

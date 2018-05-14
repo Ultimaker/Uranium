@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Optional
@@ -14,7 +14,7 @@ class LineSegment:
     #
     #   \param endpoint_a An endpoint of the line segment.
     #   \param endpoint_b An endpoint of the line segment.
-    def __init__(self, endpoint_a: Vector2, endpoint_b: Vector2):
+    def __init__(self, endpoint_a: Vector2, endpoint_b: Vector2) -> None:
         self._endpoint_a = endpoint_a # type: Vector2
         self._endpoint_b = endpoint_b # type: Vector2
 

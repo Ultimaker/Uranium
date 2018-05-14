@@ -6,18 +6,19 @@ import ctypes   # type: ignore
 
 from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer
 from PyQt5.QtWidgets import QMessageBox
+from typing import Any, TYPE_CHECKING
 
 from UM.Logger import Logger
-from UM.View.GL import FrameBufferObject
-from UM.View.GL import ShaderProgram
+
+from UM.View.GL.FrameBufferObject import FrameBufferObject
+from UM.View.GL.ShaderProgram import ShaderProgram
 from UM.View.GL.ShaderProgram import InvalidShaderProgramError
-from UM.View.GL import Texture
+from UM.View.GL.Texture import Texture
 from UM.View.GL.OpenGLContext import OpenGLContext
 from UM.i18n import i18nCatalog  # To make dialogs translatable.
 i18n_catalog = i18nCatalog("uranium")
 
-MYPY = False
-if MYPY:
+if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
 
 
@@ -39,7 +40,7 @@ class OpenGL:
         Intel = 3
         Other = 4
 
-    def __init__(self):
+    def __init__(self) -> None:
         if OpenGL.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         OpenGL.__instance = self
@@ -50,7 +51,7 @@ class OpenGL:
         profile.setVersion(OpenGLContext.major_version, OpenGLContext.minor_version)
         profile.setProfile(OpenGLContext.profile)
 
-        self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
+        self._gl = QOpenGLContext.currentContext().versionFunctions(profile) #Don't add a type here! It's actually a protected class in PyQt that depends on the implementation of your graphics card.
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
             QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
@@ -68,7 +69,7 @@ class OpenGL:
 
         self._gl.initializeOpenGLFunctions()
 
-        self._gpu_vendor = OpenGL.Vendor.Other
+        self._gpu_vendor = OpenGL.Vendor.Other #type: int
         vendor_string = self._gl.glGetString(self._gl.GL_VENDOR)
         if vendor_string is None:
             vendor_string = "Unknown"
@@ -85,12 +86,12 @@ class OpenGL:
         # Some Intel GPU chipsets return a string, which is not undecodable via PyQt5.
         # This workaround makes the code fall back to a "Unknown" renderer in these cases.
         try:
-            self._gpu_type = self._gl.glGetString(self._gl.GL_RENDERER)
+            self._gpu_type = self._gl.glGetString(self._gl.GL_RENDERER) #type: str
         except UnicodeDecodeError:
             Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
-            self._gpu_type = "Unknown"
+            self._gpu_type = "Unknown" #type: str
 
-        self._opengl_version = self._gl.glGetString(self._gl.GL_VERSION)
+        self._opengl_version = self._gl.glGetString(self._gl.GL_VERSION) #type: str
 
         if not self.hasFrameBufferObjects():
             Logger.log("w", "No frame buffer support, falling back to texture copies.")
@@ -109,25 +110,25 @@ class OpenGL:
     ##  Get the current OpenGL version.
     #
     #   \return Version of OpenGL
-    def getOpenGLVersion(self):
+    def getOpenGLVersion(self) -> str:
         return self._opengl_version
 
     ##  Get the current GPU vendor name.
     #
     #   \return Name of the vendor of current GPU
-    def getGPUVendorName(self):
+    def getGPUVendorName(self) -> str:
         return self._gl.glGetString(self._gl.GL_VENDOR)
 
     ##  Get the current GPU vendor.
     #
     #   \return One of the items of OpenGL.Vendor.
-    def getGPUVendor(self):
+    def getGPUVendor(self) -> int:
         return self._gpu_vendor
 
     ##  Get a string describing the current GPU type.
     #
     #   This effectively should return the OpenGL renderer string.
-    def getGPUType(self):
+    def getGPUType(self) -> str:
         return self._gpu_type
 
     ##  Get the OpenGL bindings object.
@@ -142,20 +143,20 @@ class OpenGL:
     ##  Create a FrameBuffer Object.
     #
     #   This should return an implementation-specifc FrameBufferObject subclass.
-    def createFrameBufferObject(self, width, height):
-        return FrameBufferObject.FrameBufferObject(width, height)
+    def createFrameBufferObject(self, width: int, height: int) -> FrameBufferObject:
+        return FrameBufferObject(width, height)
 
     ##  Create a Texture Object.
     #
-    #   This should return an implementation-specifc Texture subclass.
-    def createTexture(self):
-        return Texture.Texture(self._gl)
+    #   This should return an implementation-specific Texture subclass.
+    def createTexture(self) -> Texture:
+        return Texture(self._gl)
 
     ##  Create a ShaderProgram Object.
     #
     #   This should return an implementation-specifc ShaderProgram subclass.
     def createShaderProgram(self, file_name: str) -> ShaderProgram:
-        shader = ShaderProgram.ShaderProgram()
+        shader = ShaderProgram()
         # The version_string must match the keys in shader files.
         if OpenGLContext.isLegacyOpenGL():
             version_string = ""  # Nothing is added to "fragment" and "vertex"
@@ -163,7 +164,7 @@ class OpenGL:
             version_string = "41core"
 
         try:
-            shader.load(file_name, version=version_string)
+            shader.load(file_name, version = version_string)
         except InvalidShaderProgramError:
             # If the loading failed, it could be that there is no specific shader for this version.
             # Try again without a version nr to get the generic one.
@@ -184,7 +185,7 @@ class OpenGL:
     #   \param kwargs Keyword arguments.
     #                 Possible values:
     #                 - force_recreate: Ignore the cached value if set and always create a new buffer.
-    def createVertexBuffer(self, mesh: "MeshData", **kwargs) -> QOpenGLBuffer:
+    def createVertexBuffer(self, mesh: "MeshData", **kwargs: Any) -> QOpenGLBuffer:
         if not kwargs.get("force_recreate", False) and hasattr(mesh, OpenGL.VertexBufferProperty):
             return getattr(mesh, OpenGL.VertexBufferProperty)
 
@@ -262,7 +263,7 @@ class OpenGL:
     #   \param kwargs Keyword arguments.
     #                 Possible values:
     #                 - force_recreate: Ignore the cached value if set and always create a new buffer.
-    def createIndexBuffer(self, mesh, **kwargs):
+    def createIndexBuffer(self, mesh: "MeshData", **kwargs: Any):
         if not mesh.hasIndices():
             return None
 
@@ -283,7 +284,7 @@ class OpenGL:
         setattr(mesh, OpenGL.IndexBufferProperty, buffer)
         return buffer
 
-    __instance = None
+    __instance = None    # type: OpenGL
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "OpenGL":
