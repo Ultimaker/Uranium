@@ -6,7 +6,7 @@ from UM.Scene.SceneNode import SceneNode
 
 
 class BreadthFirstIterator(Iterator.Iterator):
-    def __init__(self, scene_node: SceneNode):
+    def __init__(self, scene_node: SceneNode) -> None:
         super().__init__(scene_node)
 
     def _fillStack(self) -> None:
