@@ -1,10 +1,13 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject #For typing.
+from PyQt5.QtCore import QObject, QUrl #For typing.
+from typing import Optional
 
 from UM.Logger import Logger
 from UM.FileHandler.FileHandler import FileHandler
+from UM.FileHandler.FileReader import FileReader #For typing.
+from UM.FileHandler.ReadFileJob import ReadFileJob #For typing.
 
 
 ##  Central class for reading and writing workspaces.
@@ -12,9 +15,9 @@ from UM.FileHandler.FileHandler import FileHandler
 class WorkspaceFileHandler(FileHandler):
     def __init__(self, writer_type: str = "workspace_writer", reader_type: str = "workspace_reader", parent: QObject = None) -> None:
         super().__init__(writer_type, reader_type, parent)
-        self.workspace_reader = None
+        self.workspace_reader = None #type: Optional[FileReader]
 
-    def readerRead(self, reader, file_name, **kwargs):
+    def readerRead(self, reader: FileReader, file_name: str, **kwargs) -> Optional[str]:
         self.workspace_reader = reader
         try:
             results = reader.read(file_name)
@@ -25,13 +28,13 @@ class WorkspaceFileHandler(FileHandler):
         Logger.log("w", "Unable to load workspace %s", file_name)
         return None
 
-    def _readLocalFile(self, file):
+    def _readLocalFile(self, file: QUrl) -> None:
         from UM.FileHandler.ReadFileJob import ReadFileJob
         job = ReadFileJob(file.toLocalFile(), handler = self)
         job.finished.connect(self._readWorkspaceFinished)
         job.start()
 
-    def _readWorkspaceFinished(self, job):
+    def _readWorkspaceFinished(self, job: ReadFileJob) -> None:
         # Add the loaded nodes to the scene.
         nodes = job.getResult()
         if nodes is not None:  # Job was not a failure.

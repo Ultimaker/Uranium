@@ -15,7 +15,7 @@ from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
 if TYPE_CHECKING:
-    from UM.Application import Application
+    from UM.Qt.QtApplication import QtApplication
     from UM.Mesh.MeshReader import MeshReader
     from UM.Mesh.MeshWriter import MeshWriter
 
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 #   This class is created by Application and handles reading and writing mesh files.
 class FileHandler(QObject):
     _instance = None    # type: FileHandler
-    _application = None # type: Application
+    _application = None # type: QtApplication
 
     def __init__(self, writer_type: str = "unknown_file_writer", reader_type: str = "unknown_file_reader", parent: QObject = None) -> None:
         super().__init__(parent)
@@ -38,11 +38,11 @@ class FileHandler(QObject):
         PluginRegistry.addType(self._reader_type, self.addReader)
 
     @classmethod
-    def setApplication(cls, application: "Application") -> None:
+    def setApplication(cls, application: "QtApplication") -> None:
         cls._application = application
 
     @classmethod
-    def getApplication(cls) -> "Application":
+    def getApplication(cls) -> "QtApplication":
         return cls._application
 
     ##  Return the singleton instance of the file handler.
