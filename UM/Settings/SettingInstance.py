@@ -1,18 +1,18 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import copy #To implement deepcopy.
 import enum
 import os
-from typing import Any, List, Set, Dict, Optional, Iterable
+from typing import Any, cast, Dict, Iterable, List, Optional, Set, TYPE_CHECKING
 
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.Decorators import call_if_enabled
+from UM.Settings.Validator import Validator #For typing.
 
-MYPY = False
-if MYPY:
+if TYPE_CHECKING:
     from UM.Settings.SettingRelation import SettingRelation
 from UM.Settings.SettingRelation import RelationType
 from . import SettingFunction
@@ -99,17 +99,18 @@ class SettingInstance:
     #   not deep-copied but just taken over from the original, since they are
     #   seen as back-links. Please set them correctly after deep-copying this
     #   instance.
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: Dict[int, Dict[str, Any]]) -> "SettingInstance":
         result = SettingInstance(self._definition, self._container)
         result._visible = self._visible
-        result._validator = copy.deepcopy(self._validator, memo)
+        result._validator = copy.deepcopy(self._validator, memo) #type: ignore #I give up trying to get the type of deepcopy argument 1 right.
         result._state = self._state
         result.__property_values = copy.deepcopy(self.__property_values, memo)
         return result
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if type(self) != type(other):
             return False  # Type mismatch
+        other = cast(SettingInstance, other)
 
         for property_name in self.__property_values:
             try:
@@ -119,7 +120,7 @@ class SettingInstance:
                 return False  # Other does not have the property
         return True
 
-    def __ne__(self, other: Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not (self == other)
 
     def __getattr__(self, name: str) -> Any:
@@ -141,7 +142,7 @@ class SettingInstance:
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
     @call_if_enabled(_traceSetProperty, _isTraceEnabled())
-    def setProperty(self, name: str, value: Any, container: ContainerInterface = None):
+    def setProperty(self, name: str, value: Any, container: ContainerInterface = None) -> None:
         if SettingDefinition.hasProperty(name):
             if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
@@ -211,11 +212,8 @@ class SettingInstance:
 
     ##  Get the state of validation of this instance.
     @property
-    def validationState(self):
-        if self._validator:
-            return self._validator
-
-        return None
+    def validationState(self) -> Optional[Validator]:
+        return self._validator
 
     @property
     def state(self) -> InstanceState:
