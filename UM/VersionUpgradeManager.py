@@ -366,9 +366,9 @@ class VersionUpgradeManager:
             self._storeOldFile(storage_path_absolute, configuration_file, old_version)
 
             # Finding out where to store these files.
-            resource_type, mime_type = self._current_versions[(configuration_type, version)]
+            resource_type, mime_type_name = self._current_versions[(configuration_type, version)]
             storage_path = Resources.getStoragePathForType(resource_type)
-            mime_type = UM.MimeTypeDatabase.MimeTypeDatabase.getMimeType(mime_type)  # Get the actual MIME type object, from the name.
+            mime_type = UM.MimeTypeDatabase.MimeTypeDatabase.getMimeType(mime_type_name)  # Get the actual MIME type object, from the name.
             if mime_type.preferredSuffix:
                 extension = "." + mime_type.preferredSuffix
             elif mime_type.suffixes:
