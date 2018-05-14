@@ -1,8 +1,8 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import gettext
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from UM.Resources import Resources
 
