@@ -153,7 +153,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #
     #   \return A set of all keys of settings in this container.
     def getAllKeys(self) -> Set[str]:
-        keys = set()
+        keys = set() #type: Set[str]
         for definition in self.definitions:
             keys |= definition.getAllKeys()
         return keys
@@ -203,7 +203,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
-        data = { } # The data to write to a JSON file.
+        data = { } #type: Dict[str, Any] #The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
         data["metadata"] = self.getMetaData().copy()
@@ -320,7 +320,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         except json.JSONDecodeError as e:
             Logger.log("d", "Could not parse definition: %s", e)
             return []
-        metadata = {}
+        metadata = {} #type: Dict[str, Any]
         if "inherits" in parsed:
             import UM.Settings.ContainerRegistry #To find the definitions we're inheriting from.
             parent_metadata = UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().findDefinitionContainersMetadata(id = parsed["inherits"])
@@ -328,8 +328,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 Logger.log("e", "Could not load parent definition container {parent} of child {child}".format(parent = parsed["inherits"], child = container_id))
                 #Ignore the parent then.
             else:
-                parent_metadata = parent_metadata[0]
-                metadata.update(parent_metadata)
+                metadata.update(parent_metadata[0])
                 metadata["inherits"] = parsed["inherits"]
 
         metadata["container_type"] = DefinitionContainer

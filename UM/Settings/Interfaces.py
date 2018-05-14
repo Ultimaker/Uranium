@@ -149,7 +149,7 @@ class ContainerInterface:
 
 
 class DefinitionContainerInterface(ContainerInterface):
-    def findDefinitions(self, **kwargs: Any) -> "SettingDefinition":
+    def findDefinitions(self, **kwargs: Any) -> List["SettingDefinition"]:
         raise NotImplementedError()
 
 
