@@ -1,5 +1,7 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
+from PyQt5.QtCore import QObject #For typing.
 
 from UM.Logger import Logger
 from UM.FileHandler.FileHandler import FileHandler
@@ -8,8 +10,8 @@ from UM.FileHandler.FileHandler import FileHandler
 ##  Central class for reading and writing workspaces.
 #   This class is created by Application and handles reading and writing workspace files.
 class WorkspaceFileHandler(FileHandler):
-    def __init__(self):
-        super().__init__("workspace_writer", "workspace_reader")
+    def __init__(self, writer_type: str = "workspace_writer", reader_type: str = "workspace_reader", parent: QObject = None) -> None:
+        super().__init__(writer_type, reader_type, parent)
         self.workspace_reader = None
 
     def readerRead(self, reader, file_name, **kwargs):
