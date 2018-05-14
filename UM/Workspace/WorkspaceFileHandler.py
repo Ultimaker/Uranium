@@ -8,7 +8,9 @@ from UM.Logger import Logger
 from UM.FileHandler.FileHandler import FileHandler
 from UM.FileHandler.FileReader import FileReader #For typing.
 from UM.FileHandler.ReadFileJob import ReadFileJob #For typing.
-from UM.Qt.QtApplication import QtApplication #For typing
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from UM.Qt.QtApplication import QtApplication
 
 
 ##  Central class for reading and writing workspaces.

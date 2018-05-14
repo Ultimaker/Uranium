@@ -8,7 +8,9 @@ from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.FileHandler.FileHandler import FileHandler
-from UM.Qt.QtApplication import QtApplication
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from UM.Qt.QtApplication import QtApplication
 
 
 ##  Central class for reading and writing meshes.
