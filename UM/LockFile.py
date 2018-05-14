@@ -1,8 +1,9 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
 import time  # For timing lock file
+from typing import Any
 
 from UM.Logger import Logger
 
@@ -24,7 +25,7 @@ class LockFile:
     #   \param wait_msg A message to log when the thread is blocked by the lock.
     #   It is intended that you modify this to better indicate what lock file is
     #   blocking the thread.
-    def __init__(self, filename: str, timeout: int = 10, wait_msg: str = "Waiting for lock file to disappear..."):
+    def __init__(self, filename: str, timeout: int = 10, wait_msg: str = "Waiting for lock file to disappear...") -> None:
         self._filename = filename
         self._wait_msg = wait_msg
         self._timeout = timeout
@@ -32,7 +33,7 @@ class LockFile:
     ##  Block the thread until the lock file no longer exists.
     #
     #   This is implemented using a spin loop.
-    def _waitLockFileDisappear(self):
+    def _waitLockFileDisappear(self) -> None:
         now = time.time()
         while os.path.exists(self._filename) and now < os.path.getmtime(self._filename) + self._timeout and now > os.path.getmtime(self._filename):
             Logger.log("d", self._wait_msg)
@@ -43,7 +44,7 @@ class LockFile:
     #
     #   The lock file is filled with the current process ID. Python's own GIL
     #   will ensure that this is thread-safe then.
-    def _createLockFile(self):
+    def _createLockFile(self) -> None:
         try:
             with open(self._filename, "w") as lock_file:
                 lock_file.write("%s" % os.getpid())
@@ -51,7 +52,7 @@ class LockFile:
             Logger.log("e", "Could not create lock file [%s]" % self._filename)
 
     ##  Deletes the lock file from the file system.
-    def _deleteLockFile(self):
+    def _deleteLockFile(self) -> None:
         try:
             os.remove(self._filename)
         except FileNotFoundError:
@@ -69,7 +70,7 @@ class LockFile:
             Logger.log("e", "Could not delete lock file [%s]" % self._filename)
 
     ##  Attempt to grab the lock file for personal use.
-    def __enter__(self):
+    def __enter__(self) -> None:
         self._waitLockFileDisappear()
         self._createLockFile()
 
@@ -81,5 +82,5 @@ class LockFile:
     #   ``with`` block, if any. Use ``None`` if no exception was raised.
     #   \param exc_tb The traceback frames at the time the exception occurred,
     #   if any. Use ``None`` if no exception was raised.
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: type, exc_val: Exception, exc_tb: Any) -> None: #exc_tb is actually a traceback object which is not exposed in Python.
         self._deleteLockFile()
