@@ -6,6 +6,7 @@ import io
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+from PyQt5.QtQml import QQmlEngine
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
@@ -57,6 +58,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   \param stack_id A unique, machine readable/writable ID.
     def __init__(self, stack_id: str, parent: QObject = None) -> None:
         super().__init__()
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
         self._metadata = {
             "id": stack_id,

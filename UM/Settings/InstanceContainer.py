@@ -7,6 +7,7 @@ import copy
 from typing import Any, cast, Dict, List, Optional, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+from PyQt5.QtQml import QQmlEngine #To take ownership of this class ourselves.
 
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For typing.
@@ -48,6 +49,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #   \param container_id A unique, machine readable/writable ID for this container.
     def __init__(self, container_id: str, parent: QObject = None, *args: Any, **kwargs: Any) -> None:
         super().__init__()
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
         self._metadata = {
             "id": container_id,

@@ -6,6 +6,7 @@ import collections
 import copy
 
 from PyQt5.QtCore import QObject, pyqtProperty
+from PyQt5.QtQml import QQmlEngine
 
 from UM.i18n import i18nCatalog #For typing.
 from UM.Logger import Logger
@@ -54,6 +55,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   \param container_id A unique, machine readable/writable ID for this container.
     def __init__(self, container_id: str, i18n_catalog: i18nCatalog = None, parent: QObject = None, *args, **kwargs) -> None:
         super().__init__()
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
         self._metadata = {"id": container_id,
                           "name": container_id,
