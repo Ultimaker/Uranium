@@ -256,7 +256,7 @@ class OpenGL:
     #   \param kwargs Keyword arguments.
     #                 Possible values:
     #                 - force_recreate: Ignore the cached value if set and always create a new buffer.
-    def createIndexBuffer(self, mesh: MeshData, **kwargs: Any):
+    def createIndexBuffer(self, mesh: "MeshData", **kwargs: Any):
         if not mesh.hasIndices():
             return None
 
