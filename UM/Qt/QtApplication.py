@@ -4,7 +4,7 @@
 import sys
 import os
 import signal
-from typing import cast, Dict, Optional
+from typing import cast, Dict, Optional, TYPE_CHECKING
 
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
@@ -40,8 +40,7 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
-MYPY = False
-if MYPY:
+if TYPE_CHECKING:
     from PyQt5.QtCore import QObject
 
 
