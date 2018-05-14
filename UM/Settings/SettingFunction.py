@@ -26,16 +26,16 @@ class SettingFunction:
     ##  Constructor.
     #
     #   \param code The Python code this function should evaluate.
-    def __init__(self, code: str) -> None:
+    def __init__(self, expression: str) -> None:
         super().__init__()
 
-        self._code = code
+        self._code = expression
 
         #  Keys of all settings that are referenced to in this function.
         self._used_keys = frozenset()  # type: FrozenSet[str]
         self._used_values = frozenset() # type: FrozenSet[str]
 
-        self._compiled = None #type: code
+        self._compiled = None #type: ignore #Actually an Optional['code'] object, but Python doesn't properly expose this 'code' object via any library.
         self._valid = False  # type: bool
 
         try:
