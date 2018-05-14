@@ -6,7 +6,7 @@ import os
 import os.path
 import re
 import shutil
-from typing import List
+from typing import Dict, Generator, List
 
 from UM.Logger import Logger
 from UM.Platform import Platform
@@ -84,7 +84,7 @@ class Resources:
     #   \return A list of absolute paths to resources of the specified type.
     @classmethod
     def getAllResourcesOfType(cls, resource_type: int) -> List[str]:
-        files = {}
+        files = {} #type: Dict[str, List[str]]
         search_dirs = cls.getAllPathsForType(resource_type)
 
         for directory in search_dirs:
@@ -144,8 +144,8 @@ class Resources:
 
     ##  Return a path where a certain resource type can be stored.
     #
-    #   \param type \type{int} The type of resource to store.
-    #   \return \type{string} An absolute path where the given resource type can be stored.
+    #   \param type The type of resource to store.
+    #   \return An absolute path where the given resource type can be stored.
     #
     #   \exception UnsupportedStorageTypeError Raised when writing type is not supported.
     @classmethod
@@ -177,13 +177,13 @@ class Resources:
     #
     #   \param path The path to add.
     @classmethod
-    def addSearchPath(cls, path: str):
+    def addSearchPath(cls, path: str) -> None:
         if os.path.isdir(path) and path not in cls.__paths:
             cls.__paths.append(path)
 
     ##  Remove a resource search path.
     @classmethod
-    def removeSearchPath(cls, path: str):
+    def removeSearchPath(cls, path: str) -> None:
         if path in cls.__paths:
             del cls.__paths[cls.__paths.index(path)]
 
@@ -192,7 +192,7 @@ class Resources:
     #   \param type \type{int} An integer that can be used to identify the type. Should be greater than UserType.
     #   \param path \type{string} The path relative to the search paths where resources of this type can be found./
     @classmethod
-    def addType(cls, resource_type: int, path: str):
+    def addType(cls, resource_type: int, path: str) -> None:
         if resource_type in cls.__types:
             raise ResourceTypeError("Type {0} already exists".format(resource_type))
 
@@ -206,7 +206,7 @@ class Resources:
     #   \param type The type to add a storage path for.
     #   \param path The path to add as storage path. Should be relative to the resources storage path.
     @classmethod
-    def addStorageType(cls, resource_type: int, path: str):
+    def addStorageType(cls, resource_type: int, path: str) -> None:
         if resource_type in cls.__types:
             raise ResourceTypeError("Type {0} already exists".format(resource_type))
 
@@ -262,12 +262,12 @@ class Resources:
     #
     #   \return A sequence of paths where resources might be.
     @classmethod
-    def getSearchPaths(cls):
+    def getSearchPaths(cls) -> Generator[str]:
         yield from cls.__paths
 
     ##  Remove a custom resource type.
     @classmethod
-    def removeType(cls, resource_type: int):
+    def removeType(cls, resource_type: int) -> None:
         if resource_type not in cls.__types:
             return
 
@@ -285,7 +285,7 @@ class Resources:
     #   When calling this function, be sure to quit the application immediately
     #   afterwards, lest the save function write the configuration anew.
     @classmethod
-    def factoryReset(cls):
+    def factoryReset(cls) -> None:
         config_path = cls.getConfigStoragePath()
         data_path = cls.getDataStoragePath()
         cache_path = cls.getCacheStoragePath()
@@ -312,7 +312,7 @@ class Resources:
             zip_file_path = os.path.join(root_dir, file_name + ".zip")
             while os.path.exists(zip_file_path):
                 idx += 1
-                file_name = base_name + "_" + date_now + "_" + idx
+                file_name = base_name + "_" + date_now + "_" + str(idx)
                 zip_file_path = os.path.join(root_dir, file_name + ".zip")
             try:
                 # only create the zip backup when the folder exists
@@ -334,7 +334,7 @@ class Resources:
 
     # Returns a list of paths where args was found.
     @classmethod
-    def __find(cls, resource_type: int, *args) -> List[str]:
+    def __find(cls, resource_type: int, *args: str) -> List[str]:
         suffix = cls.__types.get(resource_type, None)
         if suffix is None:
             return []
@@ -347,7 +347,7 @@ class Resources:
         return files
 
     @classmethod
-    def _getConfigStorageRootPath(cls):
+    def _getConfigStorageRootPath(cls) -> str:
         # Returns the path where we store different versions of app configurations
         config_path = None
         if Platform.isWindows():
@@ -365,7 +365,7 @@ class Resources:
         return config_path
 
     @classmethod
-    def _getPossibleConfigStorageRootPathList(cls):
+    def _getPossibleConfigStorageRootPathList(cls) -> List[str]:
         # Returns all possible root paths for storing app configurations (in old and new versions)
         config_root_list = [Resources._getConfigStorageRootPath()]
         if Platform.isWindows():
@@ -391,7 +391,7 @@ class Resources:
         return data_root_list
 
     @classmethod
-    def _getDataStorageRootPath(cls):
+    def _getDataStorageRootPath(cls) -> str:
         # Returns the path where we store different versions of app data
         data_path = None
         if Platform.isLinux():
@@ -402,7 +402,7 @@ class Resources:
         return data_path
 
     @classmethod
-    def _getCacheStorageRootPath(cls):
+    def _getCacheStorageRootPath(cls) -> str:
         # Returns the path where we store different versions of app configurations
         cache_path = None
         if Platform.isWindows():
@@ -418,7 +418,7 @@ class Resources:
         return cache_path
 
     @classmethod
-    def __initializeStoragePaths(cls):
+    def __initializeStoragePaths(cls) -> None:
         Logger.log("d", "Initializing storage paths")
         # use nested structure: <app-name>/<version>/...
         if cls.ApplicationVersion == "master" or cls.ApplicationVersion == "unknown":
@@ -459,7 +459,7 @@ class Resources:
     ##  Copies the directories of the latest version on this machine if present, so the upgrade will use the copies
     #   as the base for upgrade. See CURA-3529 for more details.
     @classmethod
-    def _copyLatestDirsIfPresent(cls):
+    def _copyLatestDirsIfPresent(cls) -> None:
         # Paths for the version we are running right now
         this_version_config_path = Resources.getConfigStoragePath()
         this_version_data_path = Resources.getDataStoragePath()
@@ -503,7 +503,7 @@ class Resources:
             shutil.rmtree(suspected_cache_path)
 
     @classmethod
-    def _findLatestDirInPaths(cls, search_path_list, dir_type="config"):
+    def _findLatestDirInPaths(cls, search_path_list: List[str], dir_type: str = "config") -> str:
         # version dir name must match: <digit(s)>.<digit(s)><whatever>
         version_regex = re.compile(r'^[0-9]+\.[0-9]+.*$')
         check_dir_type_func_dict = {
@@ -544,24 +544,24 @@ class Resources:
         return latest_config_path
 
     @classmethod
-    def _isNonVersionedDataDir(cls, check_path):
+    def _isNonVersionedDataDir(cls, check_path: str) -> bool:
         # checks if the given path is (probably) a valid app directory for a version earlier than 2.6
         if not cls.__expected_dir_names_in_data:
             return True
 
         dirs, files = next(os.walk(check_path))[1:]
         valid_dir_names = [dn for dn in dirs if dn in Resources.__expected_dir_names_in_data]
-        return valid_dir_names
+        return len(valid_dir_names) > 0
 
     @classmethod
-    def _isNonVersionedConfigDir(cls, check_path):
+    def _isNonVersionedConfigDir(cls, check_path: str) -> bool:
         dirs, files = next(os.walk(check_path))[1:]
         valid_file_names = [fn for fn in files if fn.endswith(".cfg")]
 
-        return bool(valid_file_names)
+        return len(valid_file_names) > 0
 
     @classmethod
-    def addExpectedDirNameInData(cls, dir_name):
+    def addExpectedDirNameInData(cls, dir_name: str) -> None:
         cls.__expected_dir_names_in_data.append(dir_name)
 
     __expected_dir_names_in_data = []  # type: List[str]
@@ -584,7 +584,7 @@ class Resources:
         InstanceContainers: "instances",
         ContainerStacks: "stacks",
         Plugins: "plugins",
-    }
+    } #type: Dict[int, str]
     __types_storage = {
         Resources: "",
         Preferences: "",
@@ -594,4 +594,4 @@ class Resources:
         ContainerStacks: "stacks",
         Themes: "themes",
         Plugins: "plugins",
-    }
+    } #type: Dict[int, str]
