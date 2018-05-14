@@ -1,6 +1,9 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from typing import Optional
+
+from UM.FileHandler.FileHandler import FileHandler #For typing.
 from UM.Signal import Signal, signalemitter
 
 
@@ -121,13 +124,13 @@ class OutputDevice():
     #
     #   \param nodes A collection of scene nodes that should be written to the
     #   device.
-    #   \param file_name \type{string} A suggestion for the file name to write
+    #   \param file_name A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
     #   \param limit_mimetype Limit output to these mime types.
     #   \param file_handler The filehandler to use to write the file with.
     #   \param kwargs Keyword arguments.
     #   \exception OutputDeviceError.WriteRequestFailedError
-    def requestWrite(self, nodes, file_name = None, limit_mimetypes = False, file_handler = None, **kwargs):
+    def requestWrite(self, nodes, file_name: Optional[str] = None, limit_mimetypes: bool = False, file_handler: Optional[FileHandler] = None, **kwargs: str):
         raise NotImplementedError("requestWrite needs to be implemented")
 
     writeStarted = Signal()

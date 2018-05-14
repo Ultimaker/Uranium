@@ -1,11 +1,13 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Application import Application
+from typing import Optional, Tuple
+from PyQt5.QtGui import QImage #For typing.
 
+import UM.Qt.QtApplication
 from UM.Logger import Logger
-
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.GL.FrameBufferObject import FrameBufferObject
 
 
 ##  Base class for a rendering pass.
@@ -23,23 +25,23 @@ class RenderPass:
     #   less than this.
     MaximumPriority = 999
 
-    def __init__(self, name: str, width: int, height: int, priority:int = 0):
-        self._name = name
-        self._width = width
-        self._height = height
-        self._priority = priority
+    def __init__(self, name: str, width: int, height: int, priority: int = 0) -> None:
+        self._name = name #type: str
+        self._width = width #type: int
+        self._height = height #type: int
+        self._priority = priority #type: int
 
         self._gl = OpenGL.getInstance().getBindingsObject()
 
-        self._fbo = None
+        self._fbo = None #type: Optional[FrameBufferObject]
 
     ##  Get the name of this RenderPass.
     #
-    #   \return \type{string} The name of the render pass.
-    def getName(self):
+    #   \return The name of the render pass.
+    def getName(self) -> str:
         return self._name
 
-    def getSize(self):
+    def getSize(self) -> Tuple[int, int]:
         return self._width, self._height
 
     ##  Get the priority of this RenderPass.
@@ -48,19 +50,19 @@ class RenderPass:
     #   are rendered earlier and are available for later render passes to use as texture
     #   sources.
     #
-    #   \return \type{int} The priority of this render pass.
-    def getPriority(self):
+    #   \return The priority of this render pass.
+    def getPriority(self) -> int:
         return self._priority
 
     ##  Set the size of this render pass.
     #
-    #   \param width \type{int} The new width of the render pass.
-    #   \param height \type{int} The new height of the render pass.
+    #   \param width The new width of the render pass.
+    #   \param height The new height of the render pass.
     #
     #   \note This will recreate the storage object used by the render
     #   pass. Due to that, the contents will be invalid after resizing
     #   until the render pass is rendered again.
-    def setSize(self, width: int, height: int):
+    def setSize(self, width: int, height: int) -> None:
         if self._width != width or self._height != height:
             self._width = width
             self._height = height
@@ -74,7 +76,7 @@ class RenderPass:
     #
     #   \note It is very important to call release() after a call to
     #   bind(), once done with rendering.
-    def bind(self):
+    def bind(self) -> None:
         if self._fbo is None:
             # Ensure that the fbo is created. This is done on (first) bind, as this needs to be done on the main thread.
             self._updateRenderStorage()
@@ -92,7 +94,9 @@ class RenderPass:
     #
     #   This makes sure the contents of this render pass are properly
     #   updated at the end of rendering.
-    def release(self):
+    def release(self) -> None:
+        if self._fbo is None:
+            return #Already released. Nothing more to do.
         self._fbo.release()
 
         # Workaround for a driver bug with recent Intel chips on OSX.
@@ -104,13 +108,16 @@ class RenderPass:
     #
     #   This method should be reimplemented by subclasses to perform the
     #   actual rendering of the render pass.
-    def render(self):
+    def render(self) -> None:
         raise NotImplementedError("Should be implemented by subclasses")
 
     ##  Get the texture ID of this render pass so it can be reused by other passes.
     #
-    #   \return \type{int} The OpenGL texture ID used by this pass.
-    def getTextureId(self):
+    #   \return The OpenGL texture ID used by this pass.
+    def getTextureId(self) -> int:
+        if self._fbo is None:
+            Logger.log("w", "FrameBufferObject has been released. Can't get any frame buffer texture ID.")
+            return -1
         return self._fbo.getTextureId()
 
     ##  Get the pixel data produced by this render pass.
@@ -119,15 +126,18 @@ class RenderPass:
     #
     #   \note The current object type returned is currently dependant on the specific
     #   implementation of the UM.View.GL.FrameBufferObject class.
-    def getOutput(self):
+    def getOutput(self) -> QImage:
+        if self._fbo is None:
+            Logger.log("w", "FrameBufferObject has been released. Can't get frame output.")
+            return QImage()
         return self._fbo.getContents()
 
     ## private:
 
-    def _updateRenderStorage(self):
+    def _updateRenderStorage(self) -> None:
         # On Mac OS X, this function may get called by a main window resize signal during closing.
         # This will cause a crash, so don't do anything when it is shutting down.
-        if Application.getInstance().isShuttingDown():
+        if UM.Qt.QtApplication.QtApplication.getInstance().isShuttingDown():
             return
         if self._width <= 0 or self._height <= 0:
             Logger.log("w", "Tried to create render pass with size <= 0")

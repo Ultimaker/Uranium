@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -6,21 +6,23 @@ import collections
 import copy
 
 from PyQt5.QtCore import QObject, pyqtProperty
+from PyQt5.QtQml import QQmlEngine
 
-from UM.Resources import Resources
-from UM.PluginObject import PluginObject
+from UM.i18n import i18nCatalog #For typing.
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
-from UM.Signal import Signal
-
+from UM.PluginObject import PluginObject
+from UM.Resources import Resources
 from UM.Settings.Interfaces import DefinitionContainerInterface
+from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Settings.SettingDefinition import DefinitionPropertyType
 from UM.Settings.SettingRelation import SettingRelation
 from UM.Settings.SettingRelation import RelationType
 from UM.Settings.SettingFunction import SettingFunction
+from UM.Signal import Signal
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Set, Tuple
 
 class InvalidDefinitionError(Exception):
     pass
@@ -51,10 +53,9 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  Constructor
     #
     #   \param container_id A unique, machine readable/writable ID for this container.
-    def __init__(self, container_id: str, i18n_catalog = None, parent = None, *args, **kwargs):
-        # Note that we explicitly pass None as QObject parent here. This is to be able
-        # to support pickling.
-        super().__init__(parent = parent, *args, **kwargs)
+    def __init__(self, container_id: str, i18n_catalog: i18nCatalog = None, parent: QObject = None, *args, **kwargs) -> None:
+        super().__init__()
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
         self._metadata = {"id": container_id,
                           "name": container_id,
@@ -68,20 +69,20 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         self._path = ""
 
     ##  Reimplement __setattr__ so we can make sure the definition remains unchanged after creation.
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Any) -> None:
         super().__setattr__(name, value)
         #raise NotImplementedError()
 
     ##  For pickle support
-    def __getnewargs__(self):
+    def __getnewargs__(self) -> Tuple[str, i18nCatalog]:
         return (self.getId(), self._i18n_catalog)
 
     ##  For pickle support
-    def __getstate__(self):
+    def __getstate__(self) -> Dict[str, Any]:
         return self.__dict__
 
     ##  For pickle support
-    def __setstate__(self, state):
+    def __setstate__(self, state: Dict[str, Any]) -> None:
         # We need to call QObject.__init__() in order to initialize the underlying C++ object.
         # pickle doesn't do that so we have to do this here.
         QObject.__init__(self, parent = None)
@@ -117,25 +118,25 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getPath.
     #
     #   Reimplemented from ContainerInterface
-    def getPath(self):
+    def getPath(self) -> str:
         return self._path
 
     ##  \copydoc ContainerInterface::setPath
     #
     #   Reimplemented from ContainerInterface
-    def setPath(self, path):
+    def setPath(self, path: str) -> None:
         self._path = path
 
     ##  \copydoc ContainerInterface::getMetaData
     #
     #   Reimplemented from ContainerInterface
-    def getMetaData(self):
+    def getMetaData(self) -> Dict[str, Any]:
         return self._metadata
 
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, constant = True)
 
     @property
-    def definitions(self):
+    def definitions(self) -> List[SettingDefinition]:
         return self._definitions
 
     ##  Gets all ancestors of this definition container.
@@ -147,14 +148,14 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   container.
     #
     #   \return A list of ancestors, in order from near ancestor to the root.
-    def getInheritedFiles(self):
+    def getInheritedFiles(self) -> List[str]:
         return self._inherited_files
 
     ##  Gets all keys of settings in this container.
     #
     #   \return A set of all keys of settings in this container.
-    def getAllKeys(self) -> List[str]:
-        keys = set()
+    def getAllKeys(self) -> Set[str]:
+        keys = set() #type: Set[str]
         for definition in self.definitions:
             keys |= definition.getAllKeys()
         return keys
@@ -162,13 +163,13 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
     #   Reimplemented from ContainerInterface
-    def getMetaDataEntry(self, entry, default = None):
+    def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
         return self._metadata.get(entry, default)
 
     ##  \copydoc ContainerInterface::getProperty
     #
     #   Reimplemented from ContainerInterface.
-    def getProperty(self, key, property_name, context = None):
+    def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
         definition = self._getDefinition(key)
         if not definition:
             return None
@@ -184,7 +185,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::hasProperty
     #
     #   Reimplemented from ContainerInterface
-    def hasProperty(self, key, property_name, ignore_inherited: bool = False):
+    def hasProperty(self, key: str, property_name: str, ignore_inherited: bool = False) -> Any:
         definition = self._getDefinition(key)
         if not definition:
             return False
@@ -203,8 +204,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   data about inheritance and overrides was lost when deserialising.
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, ignored_metadata_keys: Optional[set] = None):
-        data = { } # The data to write to a JSON file.
+    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
+        data = { } #type: Dict[str, Any] #The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
         data["metadata"] = self.getMetaData().copy()
@@ -235,7 +236,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
 
-    def _readAndValidateSerialized(self, serialized: str) -> dict:
+    def _readAndValidateSerialized(self, serialized: str) -> Dict[str, Any]:
         parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
 
         if "inherits" in parsed:
@@ -257,7 +258,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not get version from serialized: %s", e)
         return version
 
-    def _preprocessParsedJson(self, parsed):
+    def _preprocessParsedJson(self, parsed: Dict[str, Any]) -> Dict[str, Any]:
         # Pre-process the JSON data to include the overrides.
         if "overrides" in parsed:
             for key, value in parsed["overrides"].items():
@@ -272,7 +273,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  Add a setting definition instance if it doesn't exist yet.
     #
     #   Warning: this might not work when there are relationships higher up in the stack.
-    def addDefinition(self, definition: SettingDefinition):
+    def addDefinition(self, definition: SettingDefinition) -> None:
         if definition.key not in [d.key for d in self._definitions]:
             self._definitions.append(definition)
             self._updateRelations(definition)
@@ -280,7 +281,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized, file_name: Optional[str] = None) -> str:
+    def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         # update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parsed = self._readAndValidateSerialized(serialized)
@@ -321,7 +322,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         except json.JSONDecodeError as e:
             Logger.log("d", "Could not parse definition: %s", e)
             return []
-        metadata = {}
+        metadata = {} #type: Dict[str, Any]
         if "inherits" in parsed:
             import UM.Settings.ContainerRegistry #To find the definitions we're inheriting from.
             parent_metadata = UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().findDefinitionContainersMetadata(id = parsed["inherits"])
@@ -329,8 +330,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 Logger.log("e", "Could not load parent definition container {parent} of child {child}".format(parent = parsed["inherits"], child = container_id))
                 #Ignore the parent then.
             else:
-                parent_metadata = parent_metadata[0]
-                metadata.update(parent_metadata)
+                metadata.update(parent_metadata[0])
                 metadata["inherits"] = parsed["inherits"]
 
         metadata["container_type"] = DefinitionContainer
@@ -346,8 +346,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     ##  Find definitions matching certain criteria.
     #
-    #   \param kwargs \type{dict} A dictionary of keyword arguments containing key-value pairs which should match properties of the definition.
-    def findDefinitions(self, **kwargs) -> List[SettingDefinition]:
+    #   \param kwargs A dictionary of keyword arguments containing key-value pairs which should match properties of the definition.
+    def findDefinitions(self, **kwargs: Any) -> List[SettingDefinition]:
         if len(kwargs) == 1 and "key" in kwargs:
             # If we are searching for a single definition by exact key, we can speed up things by retrieving from the cache.
             key = kwargs.get("key")
@@ -367,7 +367,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     # protected:
 
     # Load a file from disk, used to handle inheritance and includes
-    def _loadFile(self, file_name: str) -> dict:
+    def _loadFile(self, file_name: str) -> Dict[str, Any]:
         path = Resources.getPath(Resources.DefinitionContainers, file_name + ".def.json")
         with open(path, encoding = "utf-8") as f:
             contents = json.load(f, object_pairs_hook=collections.OrderedDict)
@@ -376,7 +376,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         return contents
 
     # Recursively resolve loading inherited files
-    def _resolveInheritance(self, file_name: str) -> dict:
+    def _resolveInheritance(self, file_name: str) -> Dict[str, Any]:
         json_dict = self._loadFile(file_name)
 
         if "inherits" in json_dict:
@@ -398,7 +398,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], cls.Version))
 
     # Recursively find a key in a dictionary
-    def _findInDict(self, dictionary: dict, key: str):
+    def _findInDict(self, dictionary: Dict[str, Any], key: str):
         if key in dictionary: return dictionary[key]
         for k, v in dictionary.items():
             if isinstance(v, dict):
@@ -407,7 +407,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                     return item
 
     # Recursively merge two dictionaries, returning a new dictionary
-    def _mergeDicts(self, first: dict, second: dict):
+    def _mergeDicts(self, first: Dict[Any, Any], second: Dict[Any, Any]) -> Dict[Any, Any]:
         result = copy.deepcopy(first)
         for key, value in second.items():
             if key in result:
@@ -421,7 +421,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         return result
 
     # Recursively update relations of settings
-    def _updateRelations(self, definition: SettingDefinition):
+    def _updateRelations(self, definition: SettingDefinition) -> None:
         for property in SettingDefinition.getPropertyNames(DefinitionPropertyType.Function):
             self._processFunction(definition, property)
 
@@ -429,7 +429,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             self._updateRelations(child)
 
     # Create relation objects for all settings used by a certain function
-    def _processFunction(self, definition: SettingDefinition, property: str):
+    def _processFunction(self, definition: SettingDefinition, property: str) -> None:
         try:
             function = getattr(definition, property)
         except AttributeError:
@@ -469,5 +469,5 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         return definition
 
     ##  Simple short string representation for debugging purposes.
-    def __str__(self):
+    def __str__(self) -> str:
         return "<DefinitionContainer '{definition_id}' ('{name}')>".format(definition_id = self.getId(), name = self.getName())

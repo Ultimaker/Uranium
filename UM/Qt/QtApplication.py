@@ -4,8 +4,7 @@
 import sys
 import os
 import signal
-from typing import Dict, Optional
-
+from typing import cast, Dict, Optional
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext
@@ -15,6 +14,8 @@ from PyQt5.QtCore import QTimer
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.FileHandler.ReadFileJob import ReadFileJob
+from UM.Mesh.MeshFileHandler import MeshFileHandler
+from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
@@ -25,6 +26,13 @@ from UM.i18n import i18nCatalog
 from UM.JobQueue import JobQueue
 from UM.VersionUpgradeManager import VersionUpgradeManager
 from UM.View.GL.OpenGLContext import OpenGLContext
+
+from UM.Operations.GroupedOperation import GroupedOperation #To clear the scene.
+from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation #To clear the scene.
+from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator #To clear the scene.
+from UM.Scene.SceneNode import SceneNode #To clear the scene.
+from UM.Scene.Selection import Selection #To clear the selection after clearing the scene.
+
 import UM.Settings.InstanceContainer  # For version upgrade to know the version number.
 import UM.Settings.ContainerStack  # For version upgrade to know the version number.
 import UM.Preferences  # For version upgrade to know the version number.
@@ -373,17 +381,19 @@ class QtApplication(QApplication, Application):
 
         return super().event(event)
 
-    def windowClosed(self):
+    def windowClosed(self, save_data: bool = True) -> None:
         Logger.log("d", "Shutting down %s", self.getApplicationName())
         self._is_shutting_down = True
 
-        try:
-            self.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
-        except Exception as e:
-            Logger.log("e", "Exception while saving preferences: %s", repr(e))
+        if save_data:
+            try:
+                self.getPreferences.writeToFile(Resources.getStoragePath(Resources.Preferences,
+                                                                               self.getApplicationName() + ".cfg"))
+            except Exception as e:
+                Logger.log("e", "Exception while saving preferences: %s", repr(e))
 
         try:
-            self.applicationShuttingDown.emit()
+            self.applicationShuttingDown.emit(save_data)
         except Exception as e:
             Logger.log("e", "Exception while emitting shutdown signal: %s", repr(e))
 
@@ -509,11 +519,59 @@ class QtApplication(QApplication, Application):
             Logger.log("e", str(err.toString()))
         if result is None:
             return None
-        
+
         # We need to store the context with the qml object, else the context gets garbage collected and the qml objects
         # no longer function correctly/application crashes.
         result.attached_context = result_context
         return result
+
+    ##  Delete all nodes containing mesh data in the scene.
+    #   \param only_selectable. Set this to False to delete objects from all build plates
+    @pyqtSlot()
+    def deleteAll(self, only_selectable = True) -> None:
+        Logger.log("i", "Clearing scene")
+        if not self.getController().getToolsEnabled():
+            return
+
+        nodes = []
+        for node in DepthFirstIterator(self.getController().getScene().getRoot()): #type: ignore #Ignore type error because iter() should get called automatically by Python syntax.
+            if not isinstance(node, SceneNode):
+                continue
+            if (not node.getMeshData() and not node.callDecoration("getLayerData")) and not node.callDecoration("isGroup"):
+                continue  # Node that doesnt have a mesh and is not a group.
+            if only_selectable and not node.isSelectable():
+                continue
+            if not node.callDecoration("isSliceable") and not node.callDecoration("getLayerData") and not node.callDecoration("isGroup"):
+                continue  # Only remove nodes that are selectable.
+            if node.getParent() and node.getParent().callDecoration("isGroup"):
+                continue  # Grouped nodes don't need resetting as their parent (the group) is resetted)
+            nodes.append(node)
+        if nodes:
+            op = GroupedOperation()
+
+            for node in nodes:
+                op.addOperation(RemoveSceneNodeOperation(node))
+
+                # Reset the print information
+                self.getController().getScene().sceneChanged.emit(node)
+
+            op.push()
+            Selection.clear()
+
+    ##  Get the MeshFileHandler of this application.
+    def getMeshFileHandler(self) -> MeshFileHandler:
+        return self._mesh_file_handler
+
+    def getWorkspaceFileHandler(self) -> WorkspaceFileHandler:
+        return self._workspace_file_handler
+
+    ##  Gets the instance of this application.
+    #
+    #   This is just to further specify the type of Application.getInstance().
+    #   \return The instance of this application.
+    @classmethod
+    def getInstance(cls, **kwargs) -> "QtApplication":
+        return cast(QtApplication, super().getInstance(**kwargs))
 
     def _createSplashScreen(self):
         return QSplashScreen(QPixmap(Resources.getPath(Resources.Images, self.getApplicationName() + ".png")))

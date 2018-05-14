@@ -3,7 +3,7 @@
 
 from copy import deepcopy
 import numpy
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
@@ -29,9 +29,9 @@ from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 @signalemitter
 class SceneNode:
     class TransformSpace:
-        Local = 1
-        Parent = 2
-        World = 3
+        Local = 1 #type: int
+        Parent = 2 #type: int
+        World = 3 #type: int
 
     ##  Construct a scene node.
     #   \param parent The parent of this node (if any). Only a root node should have None as a parent.
@@ -39,7 +39,7 @@ class SceneNode:
     #                 Possible keywords:
     #                 - visible \type{bool} Is the SceneNode (and thus, all it's children) visible? Defaults to True
     #                 - name \type{string} Name of the SceneNode. Defaults to empty string.
-    def __init__(self, parent: Optional["SceneNode"] = None, **kwargs):
+    def __init__(self, parent: Optional["SceneNode"] = None, **kwargs) -> None:
         super().__init__()  # Call super to make multiple inheritance work.
 
         self._children = []     # type: List[SceneNode]
@@ -82,7 +82,7 @@ class SceneNode:
         self._decorators = []  # type: List[SceneNodeDecorator]
 
         # Store custom settings to be compatible with Savitar SceneNode
-        self._settings = {}
+        self._settings = {} #type: Dict[str, Any]
 
         ## Signals
         self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
@@ -91,7 +91,7 @@ class SceneNode:
         if parent:
             parent.addChild(self)
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: Dict[int, object]) -> "SceneNode":
         copy = self.__class__()
         copy.setTransformation(self.getLocalTransformation())
         copy.setMeshData(self._mesh_data)
@@ -109,7 +109,7 @@ class SceneNode:
     ##  Set the center position of this node.
     #   This is used to modify it's mesh data (and it's children) in such a way that they are centered.
     #   In most cases this means that we use the center of mass as center (which most objects don't use)
-    def setCenterPosition(self, center: Vector):
+    def setCenterPosition(self, center: Vector) -> None:
         if self._mesh_data:
             m = Matrix()
             m.setByTranslation(-center)
@@ -125,7 +125,7 @@ class SceneNode:
     def getMirror(self) -> Vector:
         return self._mirror
 
-    def setMirror(self, vector) -> Vector:
+    def setMirror(self, vector) -> None:
         self._mirror = vector
 
     ##  Get the MeshData of the bounding box
@@ -134,7 +134,7 @@ class SceneNode:
         return self._bounding_box_mesh
 
     ##  (re)Calculate the bounding box mesh.
-    def calculateBoundingBoxMesh(self):
+    def calculateBoundingBoxMesh(self) -> None:
         aabb = self.getBoundingBox()
         if aabb:
             bounding_box_mesh = MeshBuilder()
@@ -181,7 +181,7 @@ class SceneNode:
 
     ##  Handler for the ParentChanged signal
     #   \param node Node from which this event was triggered.
-    def _onParentChanged(self, node: Optional["SceneNode"]):
+    def _onParentChanged(self, node: Optional["SceneNode"]) -> None:
         for child in self.getChildren():
             child.parentChanged.emit(self)
 
@@ -190,7 +190,7 @@ class SceneNode:
 
     ##  Add a SceneNodeDecorator to this SceneNode.
     #   \param \type{SceneNodeDecorator} decorator The decorator to add.
-    def addDecorator(self, decorator: SceneNodeDecorator):
+    def addDecorator(self, decorator: SceneNodeDecorator) -> None:
         if type(decorator) in [type(dec) for dec in self._decorators]:
             Logger.log("w", "Unable to add the same decorator type (%s) to a SceneNode twice.", type(decorator))
             return
@@ -209,10 +209,11 @@ class SceneNode:
 
     ##  Get SceneNodeDecorators by type.
     #   \param dec_type type of decorator to return.
-    def getDecorator(self, dec_type) -> Optional[SceneNodeDecorator]:
+    def getDecorator(self, dec_type: SceneNodeDecorator) -> Optional[SceneNodeDecorator]:
         for decorator in self._decorators:
             if type(decorator) == dec_type:
                 return decorator
+        return None
 
     ##  Remove all decorators
     def removeDecorators(self):
@@ -223,7 +224,7 @@ class SceneNode:
 
     ##  Remove decorator by type.
     #   \param dec_type type of the decorator to remove.
-    def removeDecorator(self, dec_type: SceneNodeDecorator):
+    def removeDecorator(self, dec_type: SceneNodeDecorator) -> None:
         for decorator in self._decorators:
             if type(decorator) == dec_type:
                 decorator.clear()
@@ -233,10 +234,10 @@ class SceneNode:
 
     ##  Call a decoration of this SceneNode.
     #   SceneNodeDecorators add Decorations, which are callable functions.
-    #   \param \type{string} function The function to be called.
+    #   \param function The function to be called.
     #   \param *args
     #   \param **kwargs
-    def callDecoration(self, function: str, *args, **kwargs):
+    def callDecoration(self, function: str, *args, **kwargs) -> Any:
         for decorator in self._decorators:
             if hasattr(decorator, function):
                 try:
@@ -256,7 +257,7 @@ class SceneNode:
     def getName(self) -> str:
         return self._name
 
-    def setName(self, name: str):
+    def setName(self, name: str) -> None:
         self._name = name
 
     ##  How many nodes is this node removed from the root?
@@ -268,7 +269,7 @@ class SceneNode:
 
     ##  \brief Set the parent of this object
     #   \param scene_node SceneNode that is the parent of this object.
-    def setParent(self, scene_node: Optional["SceneNode"]):
+    def setParent(self, scene_node: Optional["SceneNode"]) -> None:
         if self._parent:
             self._parent.removeChild(self)
 
@@ -287,7 +288,7 @@ class SceneNode:
             return self._visible
 
     ##  Set the visibility of this SceneNode.
-    def setVisible(self, visible: bool):
+    def setVisible(self, visible: bool) -> None:
         self._visible = visible
 
     ##  \brief Get the (original) mesh data from the scene node/object.
@@ -335,7 +336,7 @@ class SceneNode:
 
     ##  \brief Set the mesh of this node/object
     #   \param mesh_data MeshData object
-    def setMeshData(self, mesh_data: Optional[MeshData]):
+    def setMeshData(self, mesh_data: Optional[MeshData]) -> None:
         self._mesh_data = mesh_data
         self._resetAABB()
         self.meshDataChanged.emit(self)
@@ -343,12 +344,12 @@ class SceneNode:
     ##  Emitted whenever the attached mesh data object changes.
     meshDataChanged = Signal()
 
-    def _onMeshDataChanged(self):
+    def _onMeshDataChanged(self) -> None:
         self.meshDataChanged.emit(self)
 
     ##  \brief Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
-    def addChild(self, scene_node: "SceneNode"):
+    def addChild(self, scene_node: "SceneNode") -> None:
         if scene_node in self._children:
             return
 
@@ -367,7 +368,7 @@ class SceneNode:
 
     ##  \brief remove a single child
     #   \param child Scene node that needs to be removed.
-    def removeChild(self, child: "SceneNode"):
+    def removeChild(self, child: "SceneNode") -> None:
         if child not in self._children:
             return
 
@@ -384,7 +385,7 @@ class SceneNode:
         self.childrenChanged.emit(self)
 
     ##  \brief Removes all children and its children's children.
-    def removeAllChildren(self):
+    def removeAllChildren(self) -> None:
         for child in self._children:
             child.removeAllChildren()
             self.removeChild(child)
@@ -443,7 +444,7 @@ class SceneNode:
     #
     #   \param rotation \type{Quaternion} A quaternion indicating the amount of rotation.
     #   \param transform_space The space relative to which to rotate. Can be any one of the constants in SceneNode::TransformSpace.
-    def rotate(self, rotation: Quaternion, transform_space: int = TransformSpace.Local):
+    def rotate(self, rotation: Quaternion, transform_space: int = TransformSpace.Local) -> None:
         if not self._enabled:
             return
 
@@ -463,7 +464,7 @@ class SceneNode:
     #
     #   \param orientation \type{Quaternion} The new orientation of this scene node.
     #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
-    def setOrientation(self, orientation: Quaternion, transform_space: int = TransformSpace.Local):
+    def setOrientation(self, orientation: Quaternion, transform_space: int = TransformSpace.Local) -> None:
         if not self._enabled or orientation == self._orientation:
             return
 
@@ -493,7 +494,7 @@ class SceneNode:
     #
     #   \param scale \type{Vector} A Vector with three scale values
     #   \param transform_space The space relative to which to scale. Can be any one of the constants in SceneNode::TransformSpace.
-    def scale(self, scale: Vector, transform_space: int = TransformSpace.Local):
+    def scale(self, scale: Vector, transform_space: int = TransformSpace.Local) -> None:
         if not self._enabled:
             return
 
@@ -514,7 +515,7 @@ class SceneNode:
     #
     #   \param scale \type{Vector} The new scale value of the scene node.
     #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
-    def setScale(self, scale: Vector, transform_space: int = TransformSpace.Local):
+    def setScale(self, scale: Vector, transform_space: int = TransformSpace.Local) -> None:
         if not self._enabled or scale == self._scale:
             return
         if transform_space == SceneNode.TransformSpace.Local:
@@ -538,7 +539,7 @@ class SceneNode:
     #
     #   \param translation \type{Vector} The amount to translate by.
     #   \param transform_space The space relative to which to translate. Can be any one of the constants in SceneNode::TransformSpace.
-    def translate(self, translation: Vector, transform_space: int = TransformSpace.Local):
+    def translate(self, translation: Vector, transform_space: int = TransformSpace.Local) -> None:
         if not self._enabled:
             return
         translation_matrix = Matrix()
@@ -558,7 +559,7 @@ class SceneNode:
     #
     #   \param position The new position value of the SceneNode.
     #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
-    def setPosition(self, position: Vector, transform_space: int = TransformSpace.Local):
+    def setPosition(self, position: Vector, transform_space: int = TransformSpace.Local) -> None:
         if not self._enabled or position == self._position:
             return
         if transform_space == SceneNode.TransformSpace.Local:
@@ -576,7 +577,7 @@ class SceneNode:
     #
     #   \param target \type{Vector} The target to look at.
     #   \param up \type{Vector} The vector to consider up. Defaults to Vector.Unit_Y, i.e. (0, 1, 0).
-    def lookAt(self, target: Vector, up: Vector = Vector.Unit_Y):
+    def lookAt(self, target: Vector, up: Vector = Vector.Unit_Y) -> None:
         if not self._enabled:
             return
 
@@ -616,7 +617,7 @@ class SceneNode:
     ##  Set whether this SceneNode is enabled.
     #   \param enable True if this object should be enabled, False if not.
     #   \sa isEnabled
-    def setEnabled(self, enable: bool):
+    def setEnabled(self, enable: bool) -> None:
         self._enabled = enable
 
     ##  Get whether this SceneNode can be selected.
@@ -628,7 +629,7 @@ class SceneNode:
     ##  Set whether this SceneNode can be selected.
     #
     #   \param select True if this SceneNode should be selectable, False if not.
-    def setSelectable(self, select: bool):
+    def setSelectable(self, select: bool) -> None:
         self._selectable = select
 
     ##  Get the bounding box of this node and its children.
@@ -642,7 +643,7 @@ class SceneNode:
     ##  Set whether or not to calculate the bounding box for this node.
     #
     #   \param calculate True if the bounding box should be calculated, False if not.
-    def setCalculateBoundingBox(self, calculate: bool):
+    def setCalculateBoundingBox(self, calculate: bool) -> None:
         self._calculate_aabb = calculate
 
     boundingBoxChanged = Signal()
@@ -653,11 +654,11 @@ class SceneNode:
     def getSetting(self, key: str, default_value: str = "") -> str:
         return self._settings.get(key, default_value)
 
-    def setSetting(self, key: str, value: str):
+    def setSetting(self, key: str, value: str) -> None:
         self._settings[key] = value
 
     ##  private:
-    def _transformChanged(self):
+    def _transformChanged(self) -> None:
         self._updateTransformation()
         self._resetAABB()
         self.transformationChanged.emit(self)
@@ -665,7 +666,7 @@ class SceneNode:
         for child in self._children:
             child._transformChanged()
 
-    def _updateTransformation(self):
+    def _updateTransformation(self) -> None:
         scale, shear, euler_angles, translation, mirror = self._transformation.decompose()
         self._position = translation
         self._scale = scale
@@ -689,7 +690,7 @@ class SceneNode:
         world_euler_angle_matrix.setByEuler(world_euler_angles.x, world_euler_angles.y, world_euler_angles.z)
         self._derived_orientation.setByMatrix(world_euler_angle_matrix)
 
-    def _resetAABB(self):
+    def _resetAABB(self) -> None:
         if not self._calculate_aabb:
             return
         self._aabb = None
@@ -697,8 +698,7 @@ class SceneNode:
             self.getParent()._resetAABB()
         self.boundingBoxChanged.emit()
 
-    def _calculateAABB(self):
-        aabb = None
+    def _calculateAABB(self) -> None:
         if self._mesh_data:
             aabb = self._mesh_data.getExtents(self.getWorldTransformation())
         else:  # If there is no mesh_data, use a boundingbox that encompasses the local (0,0,0)
@@ -713,6 +713,6 @@ class SceneNode:
         self._aabb = aabb
 
     ##  String output for debugging.
-    def __str__(self):
+    def __str__(self) -> str:
         name = self._name if self._name != "" else hex(id(self))
         return "<" + self.__class__.__qualname__ + " object: '" + name + "'>"

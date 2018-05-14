@@ -7,6 +7,7 @@ import sys
 import threading
 
 from UM.Controller import Controller
+from UM.Message import Message #For typing.
 from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Resources import Resources
@@ -19,14 +20,15 @@ from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.Preferences import Preferences
+from UM.View.Renderer import Renderer #For typing.
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 
-from typing import TYPE_CHECKING, List, Callable, Any, Optional
+from typing import TYPE_CHECKING, Dict, List, Callable, Any, Optional
 if TYPE_CHECKING:
+    from UM.Backend.Backend import Backend
     from UM.Settings.ContainerStack import ContainerStack
-    from UM.Backend import Backend
     from UM.Extension import Extension
 
 
@@ -41,57 +43,57 @@ class Application:
     #
     #   \param name \type{string} The name of the application.
     #   \param version \type{string} Version, formatted as major.minor.rev
-    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode: bool = False,
-                 **kwargs):
+    #   \param build_type Additional version info on the type of build this is, such as "master".
+    #   \param is_debug_mode Whether to run in debug mode.
+    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode: bool = False, **kwargs):
         if Application.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         Application.__instance = self
 
         super().__init__()  # Call super to make multiple inheritance work.
 
-        self._app_name = name
-        self._version = version
-        self._build_type = build_type
-        self._is_debug_mode = is_debug_mode
-        self._is_headless = False
-        self._use_external_backend = False
+        self._app_name = name #type: str
+        self._version = version #type: str
+        self._build_type = build_type #type: str
+        self._is_debug_mode = is_debug_mode #type: bool
+        self._is_headless = False #type: bool
+        self._use_external_backend = False #type: bool
 
         self._cli_args = None
-        self._cli_parser = argparse.ArgumentParser(prog = self._app_name,
-                                                   add_help = False)
+        self._cli_parser = argparse.ArgumentParser(prog = self._app_name, add_help = False) #type: argparse.ArgumentParser
 
-        self._main_thread = threading.current_thread()
+        self._main_thread = threading.current_thread() #type: threading.Thread
 
-        self.default_theme = self._app_name  # Default theme is the application name
-        self._default_language = "en_US"
+        self.default_theme = self._app_name  #type: str # Default theme is the application name
+        self._default_language = "en_US" #type: str
 
-        self._preferences_filename = None
-        self._preferences = None
+        self._preferences_filename = None #type: str
+        self._preferences = None #type: Preferences
 
-        self._extensions = []
-        self._required_plugins = []
+        self._extensions = [] #type: List[Extension]
+        self._required_plugins = [] #type: List[str]
 
-        self._plugin_registry = None
+        self._plugin_registry = None #type: PluginRegistry
         self._container_registry_class = ContainerRegistry
-        self._container_registry = None
-        self._global_container_stack = None
+        self._container_registry = None #type: ContainerRegistry
+        self._global_container_stack = None #type: ContainerStack
 
-        self._renderer = None
-        self._controller = None
-        self._mesh_file_handler = None
-        self._workspace_file_handler = None
-        self._backend = None
-        self._output_device_manager = None
-        self._operation_stack = None
+        self._renderer = None #type: Renderer
+        self._controller = None #type: Controller
+        self._mesh_file_handler = None #type: MeshFileHandler
+        self._workspace_file_handler = None #type: WorkspaceFileHandler
+        self._backend = None #type: Backend
+        self._output_device_manager = None #type: OutputDeviceManager
+        self._operation_stack = None #type: OperationStack
 
-        self._visible_messages = []
-        self._message_lock = threading.Lock()
+        self._visible_messages = [] #type: List[Message]
+        self._message_lock = threading.Lock() #type: threading.Lock
 
-        self._app_install_dir = self.getInstallPrefix()
+        self._app_install_dir = self.getInstallPrefix() #type: str
 
     # Adds the command line options that can be parsed by the command line parser.
     # Can be overridden to add additional command line options to the parser.
-    def addCommandLineOptions(self):
+    def addCommandLineOptions(self) -> None:
         self._cli_parser.add_argument("--version",
                                       action = "version",
                                       version = "%(prog)s version: {0}".format(self._version))
@@ -108,7 +110,7 @@ class Application:
                                       default = False,
                                       help = "Turn on the debug mode by setting this option.")
 
-    def parseCliOptions(self):
+    def parseCliOptions(self) -> None:
         self._cli_args = self._cli_parser.parse_args()
 
         self._is_headless = self._cli_args.headless
@@ -208,20 +210,20 @@ class Application:
 
     workspaceLoaded = Signal()
 
-    def setGlobalContainerStack(self, stack: "ContainerStack"):
+    def setGlobalContainerStack(self, stack: "ContainerStack") -> None:
         self._global_container_stack = stack
         self.globalContainerStackChanged.emit()
 
     def getGlobalContainerStack(self) -> Optional["ContainerStack"]:
         return self._global_container_stack
 
-    def hideMessage(self, message):
+    def hideMessage(self, message: Message) -> None:
         raise NotImplementedError
 
-    def showMessage(self, message):
+    def showMessage(self, message: Message) -> None:
         raise NotImplementedError
 
-    def showToastMessage(self, title: str, message: str):
+    def showToastMessage(self, title: str, message: str) -> None:
         raise NotImplementedError
 
     ##  Get the version of the application
@@ -244,8 +246,7 @@ class Application:
     visibleMessageAdded = Signal()
 
     ##  Hide message by ID (as provided by built-in id function)
-    #   \param message_id \type{long}
-    def hideMessageById(self, message_id):
+    def hideMessageById(self, message_id: int):
         # If a user and the application tries to close same message dialog simultaneously, message_id could become an empty
         # string, and then the application will raise an error when trying to do "int(message_id)".
         # So we check the message_id here.
@@ -263,13 +264,12 @@ class Application:
     visibleMessageRemoved = Signal()
 
     ##  Get list of all visible messages
-    #   \returns visible_messages \type{list}
-    def getVisibleMessages(self):
+    def getVisibleMessages(self) -> List[Message]:
         with self._message_lock:
             return self._visible_messages
 
     ##  Function that needs to be overridden by child classes with a list of plugins it needs.
-    def _loadPlugins(self):
+    def _loadPlugins(self) -> None:
         pass
 
     ##  Get name of the application.
@@ -282,8 +282,8 @@ class Application:
 
     ##  Get the currently used IETF language tag.
     #   The returned tag is during runtime used to translate strings.
-    #   \returns language_tag  \type{string}
-    def getApplicationLanguage(self):
+    #   \returns Language tag.
+    def getApplicationLanguage(self) -> str:
         language = os.getenv("URANIUM_LANGUAGE")
         if not language:
             language = self._preferences.getValue("general/language")
@@ -296,18 +296,16 @@ class Application:
 
     ##  Application has a list of plugins that it *must* have. If it does not have these, it cannot function.
     #   These plugins can not be disabled in any way.
-    #   \returns required_plugins \type{list}
-    def getRequiredPlugins(self):
+    def getRequiredPlugins(self) -> List[str]:
         return self._required_plugins
 
     ##  Set the plugins that the application *must* have in order to function.
     #   \param plugin_names \type{list} List of strings with the names of the required plugins
-    def setRequiredPlugins(self, plugin_names: List[str]):
+    def setRequiredPlugins(self, plugin_names: List[str]) -> None:
         self._required_plugins = plugin_names
 
     ##  Set the backend of the application (the program that does the heavy lifting).
-    #   \param backend \type{Backend}
-    def setBackend(self, backend: "Backend"):
+    def setBackend(self, backend: "Backend") -> None:
         self._backend = backend
 
     ##  Get the backend of the application (the program that does the heavy lifting).
@@ -325,14 +323,6 @@ class Application:
     def getController(self) -> Controller:
         return self._controller
 
-    ##  Get the MeshFileHandler of this application.
-    #   \returns MeshFileHandler \type{MeshFileHandler}
-    def getMeshFileHandler(self) -> MeshFileHandler:
-        return self._mesh_file_handler
-
-    def getWorkspaceFileHandler(self) -> WorkspaceFileHandler:
-        return self._workspace_file_handler
-
     def getOperationStack(self) -> OperationStack:
         return self._operation_stack
 
@@ -341,37 +331,38 @@ class Application:
 
     ##  Return an application-specific Renderer object.
     #   \exception NotImplementedError
-    def getRenderer(self):
+    def getRenderer(self) -> Renderer:
         raise NotImplementedError("getRenderer must be implemented by subclasses.")
 
     ##  Post a function event onto the event loop.
     #
     #   This takes a CallFunctionEvent object and puts it into the actual event loop.
     #   \exception NotImplementedError
-    def functionEvent(self, event):
+    def functionEvent(self, event: CallFunctionEvent) -> None:
         raise NotImplementedError("functionEvent must be implemented by subclasses.")
 
     ##  Call a function the next time the event loop runs.
     #
+    #   You can't get the result of this function directly. It won't block.
     #   \param function The function to call.
     #   \param args The positional arguments to pass to the function.
     #   \param kwargs The keyword arguments to pass to the function.
-    def callLater(self, func: Callable[[Any], Any], *args, **kwargs):
+    def callLater(self, func: Callable[..., Any], *args, **kwargs) -> None:
         event = CallFunctionEvent(func, args, kwargs)
         self.functionEvent(event)
 
-    ##  Get the application"s main thread.
-    def getMainThread(self):
+    ##  Get the application's main thread.
+    def getMainThread(self) -> threading.Thread:
         return self._main_thread
 
-    def addExtension(self, extension: "Extension"):
+    def addExtension(self, extension: "Extension") -> None:
         self._extensions.append(extension)
 
     def getExtensions(self) -> List["Extension"]:
         return self._extensions
 
     @staticmethod
-    def getInstallPrefix():
+    def getInstallPrefix() -> str:
         if "python" in os.path.basename(sys.executable):
             return os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
         else:

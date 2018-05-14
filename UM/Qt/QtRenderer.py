@@ -1,9 +1,12 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import numpy
 from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage, QOpenGLVertexArrayObject
+from typing import List, Optional, Tuple
 
 from UM.Application import Application
+import UM.Qt.QtApplication
 from UM.View.Renderer import Renderer
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
@@ -20,13 +23,12 @@ from UM.Signal import Signal, signalemitter
 
 from UM.Logger import Logger
 
-import numpy
 
-
-from typing import Optional, List
 
 MYPY = False
 if MYPY:
+    from UM.Controller import Controller
+    from UM.Scene.Scene import Scene
     from UM.Scene.Camera import Camera
     from UM.Scene.SceneNode import SceneNode
     from UM.View.RenderPass import RenderPass
@@ -40,19 +42,16 @@ indexBufferProperty = "__qtgl2_index_buffer"
 ##  A Renderer implementation using PyQt's OpenGL implementation to render.
 @signalemitter
 class QtRenderer(Renderer):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-        self._controller = Application.getInstance().getController()
-        self._scene = self._controller.getScene()
+        self._controller = Application.getInstance().getController() #type: Controller
+        self._scene = self._controller.getScene() #type: Scene
 
-        self._vertex_buffer_cache = {}
-        self._index_buffer_cache = {}
+        self._initialized = False #type: bool
 
-        self._initialized = False
-
-        self._light_position = Vector(0, 0, 0)
-        self._background_color = QColor(128, 128, 128)
+        self._light_position = Vector(0, 0, 0) #type: Vector
+        self._background_color = QColor(128, 128, 128) #type: QColor
         self._viewport_width = 0  # type: int
         self._viewport_height = 0  # type: int
         self._window_width = 0  # type: int
@@ -60,17 +59,17 @@ class QtRenderer(Renderer):
 
         self._batches = []  # type: List[RenderBatch]
 
-        self._quad_buffer = None  # type: Optional[QOpenGLBuffer]
+        self._quad_buffer = None  # type: QOpenGLBuffer
 
         self._camera = None  # type: Optional[Camera]
 
     initialized = Signal()
 
     ##  Get an integer multiplier that can be used to correct for screen DPI.
-    def getPixelMultiplier(self):
+    def getPixelMultiplier(self) -> int:
         # Standard assumption for screen pixel density is 96 DPI. We use that as baseline to get
         # a multiplication factor we can use for screens > 96 DPI.
-        return round(Application.getInstance().primaryScreen().physicalDotsPerInch() / 96.0)
+        return round(UM.Qt.QtApplication.QtApplication.getInstance().primaryScreen().physicalDotsPerInch() / 96.0)
 
     ##  Get the list of render batches.
     def getBatches(self) -> List[RenderBatch]:
@@ -105,18 +104,18 @@ class QtRenderer(Renderer):
             render_pass.setSize(width, height)
 
     ##  Set the window size.
-    def setWindowSize(self, width: int, height: int):
+    def setWindowSize(self, width: int, height: int) -> None:
         self._window_width = width
         self._window_height = height
 
     ##  Get the window size.
     #
     #   \return A tuple of (window_width, window_height)
-    def getWindowSize(self)-> (int, int):
+    def getWindowSize(self) -> Tuple[int, int]:
         return self._window_width, self._window_height
 
     ##  Overrides Renderer::beginRendering()
-    def beginRendering(self):
+    def beginRendering(self) -> None:
         if not self._initialized:
             self._initialize()
 
@@ -179,14 +178,14 @@ class QtRenderer(Renderer):
         shader.disableAttribute("a_uvs")
         self._quad_buffer.release()
 
-    def _initialize(self):
+    def _initialize(self) -> None:
         supports_vao = OpenGLContext.supportsVertexArrayObjects()  # fill the OpenGLContext.properties
         Logger.log("d", "Support for Vertex Array Objects: %s", supports_vao)
 
         OpenGL()
         self._gl = OpenGL.getInstance().getBindingsObject()
 
-        self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
+        self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader")) #type: ShaderProgram
 
         self._render_passes.add(DefaultPass(self._viewport_width, self._viewport_height))
         self._render_passes.add(SelectionPass(self._viewport_width, self._viewport_height))

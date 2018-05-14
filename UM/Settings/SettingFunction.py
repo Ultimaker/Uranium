@@ -2,15 +2,15 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
+import builtins #To check against functions that are built-in in Python.
 import math # Imported here so it can be used easily by the setting functions.
-from typing import Any, Dict, Callable, Set, FrozenSet, NamedTuple, Optional
+from typing import Any, Callable, Dict, FrozenSet, NamedTuple, Optional, Set, TYPE_CHECKING
 
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Logger import Logger
 
-MYPY = False
-if MYPY:
+if TYPE_CHECKING:
     from typing import FrozenSet
 
 class IllegalMethodError(Exception):
@@ -35,7 +35,7 @@ class SettingFunction:
         self._used_keys = frozenset()  # type: FrozenSet[str]
         self._used_values = frozenset() # type: FrozenSet[str]
 
-        self._compiled = None
+        self._compiled = None #type: code
         self._valid = False  # type: bool
 
         try:
@@ -89,7 +89,7 @@ class SettingFunction:
             Logger.logException("d", "An exception occurred in inherit function %s", self)
             return 0  # Settings may be used in calculations and they need a value
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, SettingFunction):
             return False
 
@@ -149,10 +149,10 @@ _VisitResult = NamedTuple("_VisitResult", [("values", Set[str]), ("keys", Set[st
 # setting keys (strings) that are used by the expression, whereas "used values" are
 # actual variable references that are needed for the function to be executed.
 class _SettingExpressionVisitor(ast.NodeVisitor):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.values = set()
-        self.keys = set()
+        self.values = set() #type: Set[str]
+        self.keys = set() #type: Set[str]
 
     def visit(self, node: ast.AST) -> _VisitResult:
         super().visit(node)
@@ -162,13 +162,13 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         if node.id in self._blacklist:
             raise IllegalMethodError(node.id)
 
-        if node.id not in self._knownNames and node.id not in __builtins__:
+        if node.id not in self._knownNames and node.id not in dir(builtins):
             self.values.add(node.id)
             self.keys.add(node.id)
 
     def visit_Str(self, node: ast.AST) -> None:
-        if node.s not in self._knownNames and node.s not in __builtins__:
-            self.keys.add(node.s)
+        if node.s not in self._knownNames and node.s not in dir(builtins): #type: ignore #AST uses getattr stuff, so ignore type of node.s.
+            self.keys.add(node.s) #type: ignore
 
     _knownNames = {
         "math",
@@ -177,7 +177,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "debug",
         "sum",
         "len"
-    }
+    } #type: Set[str]
 
     _blacklist = {
         "sys",
@@ -187,4 +187,4 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "eval",
         "exec",
         "subprocess",
-    }
+    } #type: Set[str]

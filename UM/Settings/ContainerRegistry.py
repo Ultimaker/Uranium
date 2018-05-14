@@ -7,32 +7,28 @@ import os
 import pickle #For serializing/deserializing Python classes to binary files
 import re #For finding containers with asterisks in the constraints and for detecting backup files.
 import time
-from typing import Any, cast, Dict, Set, List, Optional
-
-import UM.FlameProfiler
-from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
-from UM.Resources import Resources
-from UM.MimeTypeDatabase import MimeTypeDatabase
-from UM.Logger import Logger
-from UM.Settings.ContainerFormatError import ContainerFormatError
-from UM.Settings.Interfaces import ContainerInterface
-from UM.Signal import Signal, signalemitter
-from UM.LockFile import LockFile
+from typing import Any, cast, Dict, List, Optional, Set, TYPE_CHECKING
 
 import UM.Dictionary
-
-MYPY = False
-if MYPY:
-    pass
-
+import UM.FlameProfiler
+from UM.LockFile import LockFile
+from UM.Logger import Logger
+from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
+from UM.PluginObject import PluginObject #For typing.
+from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
+from UM.Resources import Resources
+from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
-from UM.Settings.DefinitionContainer import DefinitionContainer
-from UM.Settings.ContainerStack import ContainerStack
-from UM.Settings.InstanceContainer import InstanceContainer
-from UM.Settings.Interfaces import ContainerRegistryInterface
-from UM.Settings.Interfaces import DefinitionContainerInterface
-
 from . import ContainerQuery
+from UM.Settings.ContainerStack import ContainerStack
+from UM.Settings.DefinitionContainer import DefinitionContainer
+from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface, DefinitionContainerInterface
+from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For typing.
+from UM.Signal import Signal, signalemitter
+
+if TYPE_CHECKING:
+    from UM.Application import Application
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
 
@@ -49,14 +45,14 @@ MaxQueryCacheSize = 1000
 @signalemitter
 class ContainerRegistry(ContainerRegistryInterface):
 
-    def __init__(self, application, *args, **kwargs):
+    def __init__(self, application: "Application", *args, **kwargs):
         if ContainerRegistry.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         ContainerRegistry.__instance = self
 
         super().__init__(*args, **kwargs)
 
-        self._application = application
+        self._application = application # type: Application
 
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
@@ -73,7 +69,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._containers["empty"] = self._emptyInstanceContainer
         self.source_provider["empty"] = None
         self._resource_types = {"definition": Resources.DefinitionContainers}  # type: Dict[str, int]
-        self._query_cache = collections.OrderedDict() # This should really be an ordered set but that does not exist...
+        self._query_cache = collections.OrderedDict() #type: collections.OrderedDict # This should really be an ordered set but that does not exist...
 
         #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
@@ -97,11 +93,11 @@ class ContainerRegistry(ContainerRegistryInterface):
         raise NotImplementedError("Not implemented default save provider for multiple providers")
 
     ##   This method adds the current id to the list of wrong containers that are skipped when looking for a container
-    def addWrongContainerId(self, wrong_container_id):
+    def addWrongContainerId(self, wrong_container_id: str) -> None:
         self._wrong_container_ids.add(wrong_container_id)
 
     ##  Adds a container provider to search through containers in.
-    def addProvider(self, provider: "PluginObject"):
+    def addProvider(self, provider: ContainerProvider) -> None:
         self._providers.append(provider)
         #Re-sort every time. It's quadratic, but there shouldn't be that many providers anyway...
         self._providers.sort(key = lambda provider: PluginRegistry.getInstance().getMetaData(provider.getPluginId())["container_provider"].get("priority", 0))
@@ -112,7 +108,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   keys and values that need to match the metadata of the
     #   DefinitionContainer. An asterisk in the values can be used to denote a
     #   wildcard.
-    def findDefinitionContainers(self, **kwargs) -> List[DefinitionContainerInterface]:
+    def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]:
         return cast(List[DefinitionContainerInterface], self.findContainers(container_type = DefinitionContainer, **kwargs))
 
     ##  Get the metadata of all definition containers matching certain criteria.
@@ -122,7 +118,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   used to denote a wildcard.
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
-    def findDefinitionContainersMetadata(self, **kwargs) -> List[Dict[str, Any]]:
+    def findDefinitionContainersMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
         return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = DefinitionContainer, **kwargs))
 
     ##  Find all InstanceContainer objects matching certain criteria.
@@ -131,7 +127,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   keys and values that need to match the metadata of the
     #   InstanceContainer. An asterisk in the values can be used to denote a
     #   wildcard.
-    def findInstanceContainers(self, **kwargs) -> List[InstanceContainer]:
+    def findInstanceContainers(self, **kwargs: Any) -> List[InstanceContainer]:
         return cast(List[InstanceContainer], self.findContainers(container_type = InstanceContainer, **kwargs))
 
     ##  Find the metadata of all instance containers matching certain criteria.
@@ -141,7 +137,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   used to denote a wildcard.
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
-    def findInstanceContainersMetadata(self, **kwargs) -> List[Dict[str, Any]]:
+    def findInstanceContainersMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
         return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = InstanceContainer, **kwargs))
 
     ##  Find all ContainerStack objects matching certain criteria.
@@ -149,7 +145,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \param kwargs \type{dict} A dictionary of keyword arguments containing
     #   keys and values that need to match the metadata of the ContainerStack.
     #   An asterisk in the values can be used to denote a wildcard.
-    def findContainerStacks(self, **kwargs) -> List[ContainerStack]:
+    def findContainerStacks(self, **kwargs: Any) -> List[ContainerStack]:
         return cast(List[ContainerStack], self.findContainers(container_type = ContainerStack, **kwargs))
 
     ##  Find the metadata of all container stacks matching certain criteria.
@@ -159,7 +155,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   used to denote a wildcard.
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
-    def findContainerStacksMetadata(self, **kwargs) -> List[Dict[str, Any]]:
+    def findContainerStacksMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
         return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = ContainerStack, **kwargs))
 
     ##  Find all container objects matching certain criteria.
@@ -173,7 +169,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
     @UM.FlameProfiler.profile
-    def findContainers(self, *, ignore_case = False, **kwargs) -> List[ContainerInterface]:
+    def findContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
         #Find the metadata of the containers and grab the actual containers from there.
         results_metadata = self.findContainersMetadata(ignore_case = ignore_case, **kwargs)
         result = []
@@ -187,6 +183,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 provider = self.source_provider[metadata["id"]]
                 if not provider:
                     Logger.log("w", "The metadata of container {container_id} was added during runtime, but no accompanying container was added.".format(container_id = metadata["id"]))
+                    continue
                 try:
                     new_container = provider.loadContainer(metadata["id"])
                 except ContainerFormatError as e:
@@ -209,7 +206,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   denote a wildcard.
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
-    def findContainersMetadata(self, *, ignore_case = False, **kwargs) -> List[Dict[str, Any]]:
+    def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[Dict[str, Any]]:
         #Create the query object.
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         candidates = None
@@ -217,13 +214,16 @@ class ContainerRegistry(ContainerRegistryInterface):
         if "id" in kwargs and kwargs["id"] is not None and "*" not in kwargs["id"] and not ignore_case:
             if kwargs["id"] not in self.metadata: #If we're looking for an unknown ID, try to lazy-load that one.
                 if kwargs["id"] not in self.source_provider:
-                    for provider in self._providers:
-                        if kwargs["id"] in provider.getAllIds():
-                            self.source_provider[kwargs["id"]] = provider
+                    for candidate in self._providers:
+                        if kwargs["id"] in candidate.getAllIds():
+                            self.source_provider[kwargs["id"]] = candidate
                             break
                     else:
                         return []
                 provider = self.source_provider[kwargs["id"]]
+                if not provider:
+                    Logger.log("w", "Metadata of container {container_id} is missing even though the container is added during run-time.")
+                    return []
                 metadata = provider.loadMetadata(kwargs["id"])
                 if metadata is None or metadata["id"] in self._wrong_container_ids:
                     return []
@@ -271,7 +271,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   values of metadata.
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
-    def findDirtyContainers(self, *, ignore_case = False, **kwargs) -> List[ContainerInterface]:
+    def findDirtyContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
         #Find the metadata of the containers and grab the actual containers from there.
         #
         #We could apply the "is in self._containers" filter and the "isDirty" filter
@@ -285,7 +285,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             if metadata["id"] not in self._containers: #Not yet loaded, so it can't be dirty.
                 continue
             candidate = self._containers[metadata["id"]]
-            if hasattr(candidate, "isDirty") and candidate.isDirty(): #Check for hasattr because only InstanceContainers and Stacks have this method.
+            if hasattr(candidate, "isDirty") and candidate.isDirty(): #type: ignore #Check for hasattr because only InstanceContainers and Stacks have this method.
                 result.append(self._containers[metadata["id"]])
         return result
 
@@ -315,7 +315,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     ##  Load the metadata of all available definition containers, instance
     #   containers and container stacks.
-    def loadAllMetadata(self):
+    def loadAllMetadata(self) -> None:
         for provider in self._providers: #Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
@@ -393,7 +393,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             del self.metadata[container_id]
         if container_id in self.source_provider:
             if self.source_provider[container_id] is not None:
-                self.source_provider[container_id].removeContainer(container_id)
+                cast(ContainerProvider, self.source_provider[container_id]).removeContainer(container_id)
             del self.source_provider[container_id]
 
         if container is not None:
@@ -403,7 +403,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         Logger.log("d", "Removed container %s", container_id)
 
     @UM.FlameProfiler.profile
-    def renameContainer(self, container_id, new_name, new_id = None):
+    def renameContainer(self, container_id: str, new_name: str, new_id: Optional[str] = None) -> None:
         Logger.log("d", "Renaming container %s to %s", container_id, new_name)
         # Same as removeContainer(), metadata is always loaded but containers may not, so always check metadata.
         if container_id not in self.metadata:
@@ -412,11 +412,8 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         container = self._containers.get(container_id)
         if container is None:
-            metadata = self.metadata[container_id]
-            if issubclass(metadata["container_type"], InstanceContainer):
-                container = self.findInstanceContainers(id = container_id)[0]
-            elif issubclass(metadata["container_type"], ContainerStack):
-                container = self.findContainerStacks(id = container_id)[0]
+            container = self.findContainers(id = container_id)[0]
+        container = cast(ContainerInterface, container)
 
         if new_name == container.getName():
             Logger.log("w", "Unable to rename container %s, because the name (%s) didn't change", container_id, new_name)
@@ -424,8 +421,11 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self.containerRemoved.emit(container)
 
-        container.setName(new_name)
-        if new_id:
+        try:
+            container.setName(new_name) #type: ignore
+        except TypeError: #Some containers don't allow setting the name.
+            return
+        if new_id is not None:
             source_provider = self.source_provider[container.getId()]
             del self._containers[container.getId()]
             del self.metadata[container.getId()]
@@ -473,7 +473,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   \param container An instance of the container type to add.
     @classmethod
-    def addContainerType(cls, container):
+    def addContainerType(cls, container: PluginObject) -> None:
         plugin_id = container.getPluginId()
         metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
         if "settings_container" not in metadata or "mimetype" not in metadata["settings_container"]:
@@ -485,7 +485,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \param type_name
     #   \param mime_type
     @classmethod
-    def addContainerTypeByName(cls, container_type, type_name, mime_type):
+    def addContainerTypeByName(cls, container_type: type, type_name: str, mime_type: str) -> None:
         cls.__container_types[type_name] = container_type
         cls.mime_type_map[mime_type] = container_type
 
@@ -495,7 +495,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   \return A MimeType object that matches the mime type of the container or None if not found.
     @classmethod
-    def getMimeTypeForContainer(cls, container_type):
+    def getMimeTypeForContainer(cls, container_type: type) -> Optional[MimeType]:
         try:
             mime_type_name = UM.Dictionary.findKey(cls.mime_type_map, container_type)
             if mime_type_name:
@@ -523,16 +523,16 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     ##  Save single dirty container
     def saveContainer(self, container: "ContainerInterface", provider: Optional["ContainerProvider"] = None) -> None:
-        if provider is None:
+        if not hasattr(provider, "saveContainer"):
             provider = self.getDefaultSaveProvider()
-        if not container.isDirty():
+        if not hasattr(container, "isDirty") or not container.isDirty(): #type: ignore
             return
 
-        provider.saveContainer(container)
+        provider.saveContainer(container) #type: ignore
         self.source_provider[container.getId()] = provider
 
     ##  Save all the dirty containers by calling the appropriate container providers
-    def saveDirtyContainers(self):
+    def saveDirtyContainers(self) -> None:
         # Lock file for "more" atomically loading and saving to/from config dir.
         with self.lockFile():
             # Save base files first
@@ -547,7 +547,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 self.saveContainer(stack)
 
     # Load a binary cached version of a DefinitionContainer
-    def _loadCachedDefinition(self, definition_id, path):
+    def _loadCachedDefinition(self, definition_id: str, path: str) -> None:
         try:
             cache_path = Resources.getPath(Resources.Cache, "definitions", self._application.getVersion(), definition_id)
 
@@ -576,7 +576,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             return None
 
     # Store a cached version of a DefinitionContainer
-    def _saveCachedDefinition(self, definition):
+    def _saveCachedDefinition(self, definition: DefinitionContainer):
         cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self._application.getVersion(), definition.id)
 
         # Ensure the cache path exists
@@ -595,16 +595,16 @@ class ContainerRegistry(ContainerRegistryInterface):
                 os.remove(cache_path) #The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
 
     # Clear the internal query cache
-    def _clearQueryCache(self, *args, **kwargs):
+    def _clearQueryCache(self, *args: Any, **kwargs: Any) -> None:
         self._query_cache.clear()
 
     ##  Clear the query cache by using container type.
     #   This is a slightly smarter way of clearing the cache. Only queries that are of the same type (or without one)
     #   are cleared.
-    def _clearQueryCacheByContainer(self, container):
+    def _clearQueryCacheByContainer(self, container: ContainerInterface) -> None:
         # Use the base classes to clear the
         if isinstance(container, DefinitionContainer):
-            container_type = DefinitionContainer
+            container_type = DefinitionContainer #type: type
         elif isinstance(container, InstanceContainer):
             container_type = InstanceContainer
         elif isinstance(container, ContainerStack):
@@ -622,22 +622,22 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   This function passes it on to the containerMetaDataChanged signal. Sadly
     #   that doesn't work automatically between pyqtSignal and UM.Signal.
-    def _onContainerMetaDataChanged(self, *args, **kwargs):
+    def _onContainerMetaDataChanged(self, *args: ContainerInterface, **kwargs: Any) -> None:
         container = args[0]
         self.metadata[container.getId()] = container.getMetaData()  # refresh the metadata
         self.containerMetaDataChanged.emit(*args, **kwargs)
 
     ##  Get the lock filename including full path
     #   Dependent on when you call this function, Resources.getConfigStoragePath may return different paths
-    def getLockFilename(self):
+    def getLockFilename(self) -> str:
         return Resources.getStoragePath(Resources.Resources, CONFIG_LOCK_FILENAME)
 
     ##  Get the cache lock filename including full path.
-    def getCacheLockFilename(self):
+    def getCacheLockFilename(self) -> str:
         return Resources.getStoragePath(Resources.Cache, CONFIG_LOCK_FILENAME)
 
     ##  Contextmanager to create a lock file and remove it afterwards.
-    def lockFile(self):
+    def lockFile(self) -> LockFile:
         return LockFile(
             self.getLockFilename(),
             timeout = 10,
@@ -646,7 +646,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     ##  Context manager to create a lock file for the cache directory and remove
     #   it afterwards.
-    def lockCache(self):
+    def lockCache(self) -> LockFile:
         return LockFile(
             self.getCacheLockFilename(),
             timeout = 10,
@@ -666,7 +666,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         "application/x-uranium-extruderstack": ContainerStack
     }
 
-    __instance = None
+    __instance = None  # type: ContainerRegistry
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "ContainerRegistry":
@@ -680,10 +680,10 @@ class _EmptyInstanceContainer(InstanceContainer):
     def isDirty(self) -> bool:
         return False
 
-    def getProperty(self, key, property_name, context = None):
+    def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
         return None
 
-    def setProperty(self, key, property_name, property_value, container = None, set_from_cache = False):
+    def setProperty(self, key: str, property_name: str, property_value: Any, container: ContainerInterface = None, set_from_cache: bool = False) -> None:
         Logger.log("e", "Setting property %s of container %s which should remain empty", key, self.getName())
         return
 

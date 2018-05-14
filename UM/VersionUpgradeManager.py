@@ -1,12 +1,12 @@
 # Copyright (c) 2018 Ultimaker B.V.
-# Cura is released under the terms of the LGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections  # For deque, for breadth-first search and to track tasks, and namedtuple.
 import os  # To get the configuration file names and to rename files.
 import shutil
 import tempfile
 import traceback
-from typing import Dict, Callable, Optional, Iterator, List
+from typing import Any, Dict, Callable, Iterator, List, Optional, Set, Tuple
 
 import UM.Message  # To show the "upgrade succeeded" message.
 import UM.MimeTypeDatabase  # To know how to save the resulting files.
@@ -75,13 +75,13 @@ class VersionUpgradeManager:
         self._get_version_functions = {}  # type: Dict[str, Callable[[str], int]]
 
         # For each config type, a set of storage paths to search for old config files.
-        self._storage_paths = {}  # type: Dict[str, List[str]]
+        self._storage_paths = {}  # type: Dict[str, Set[str]]
 
         # To know which preference versions and types to upgrade to.
         self._current_versions = {}
 
         self._upgrade_tasks = collections.deque()  # The files that we still have to upgrade.
-        self._upgrade_routes = {}  # How to upgrade from one version to another. Needs to be pre-computed after all version upgrade plug-ins are registered.
+        self._upgrade_routes = {}  #type: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, List[str]], Optional[Tuple[List[str], List[str]]]]]] #How to upgrade from one version to another. Needs to be pre-computed after all version upgrade plug-ins are registered.
 
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
@@ -94,7 +94,7 @@ class VersionUpgradeManager:
     #
     #   \param configuration_type The type of configuration to be stored.
     #   \return A set of storage paths for the specified configuration type.
-    def getStoragePaths(self, configuration_type: str) -> List[str]:
+    def getStoragePaths(self, configuration_type: str) -> Set[str]:
         return self._storage_paths[configuration_type]
 
     ##  Changes the target versions to upgrade to.
@@ -105,7 +105,7 @@ class VersionUpgradeManager:
     def setCurrentVersions(self, current_versions) -> None:
         self._current_versions = current_versions
 
-    def registerCurrentVersion(self, version_info: str, type_info: any) -> None:
+    def registerCurrentVersion(self, version_info: str, type_info: Any) -> None:
         if version_info in self._current_versions:
             Logger.log("d", "Overwriting current version info: %s", repr(version_info))
         self._current_versions[version_info] = type_info
@@ -194,14 +194,15 @@ class VersionUpgradeManager:
     #   \return A dictionary of type/version pairs that map to functions that
     #   upgrade said data format one step towards the most recent version, such
     #   that the fewest number of steps is required.
-    def _findShortestUpgradeRoutes(self) -> Dict[str, int]:
-        result = {}  # For each (type, version) tuple, which upgrade function to use to upgrade it towards the newest versions.
+    def _findShortestUpgradeRoutes(self) -> Dict[Tuple[str, int], Tuple[str, int, Callable[[str, List[str]], Optional[Tuple[List[str], List[str]]]]]]:
+        #For each (type, version) tuple, which upgrade function to use to upgrade it towards the newest versions.
+        result = {} #type: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, List[str]], Optional[Tuple[List[str], List[str]]]]]]
 
         # Perform a many-to-many shortest path search with Dijkstra's algorithm.
-        front = collections.deque()  # Use as a queue for breadth-first iteration: Append right, pop left.
+        front = collections.deque() #type: collections.deque #Use as a queue for breadth-first iteration: Append right, pop left.
         for configuration_type, version in self._current_versions:
             front.append((configuration_type, version))
-        explored_versions = set()
+        explored_versions = set() #type: Set[Tuple[str, int]]
         while len(front) > 0:
             destination_type, destination_version = front.popleft()  # To make it a queue, pop on the opposite side of where you append!
             if (destination_type, destination_version) in self._version_upgrades:  # We can upgrade to this version.
@@ -395,8 +396,8 @@ class VersionUpgradeManager:
                 # No version upgrade plug-in claims to be able to upgrade this file.
                 return None
             new_type, new_version, upgrade_step = self._upgrade_routes[(configuration_type, version)]
-            new_file_names_without_extension = []
-            new_files_data = []
+            new_file_names_without_extension = [] #type: List[str]
+            new_files_data = [] #type: List[str]
             for file_idx, file_data in enumerate(files_data):
                 try:
                     upgrade_step_result = upgrade_step(file_data, file_names_without_extension[file_idx])

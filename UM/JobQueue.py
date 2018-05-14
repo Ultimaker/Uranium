@@ -7,7 +7,7 @@ import threading
 from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
 
-from typing import TYPE_CHECKING, List
+from typing import List, Optional, Tuple, TYPE_CHECKING
 if TYPE_CHECKING:
     from UM.Job import Job
 
@@ -22,7 +22,7 @@ class JobQueue:
     #
     #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
     #                       When 'auto', the number of threads is based on the number of processors and cores on the machine.
-    def __init__(self, thread_count: (str, int) = "auto"): #pylint: disable=bad-whitespace
+    def __init__(self, thread_count: Tuple[str, int] = "auto") -> None: #pylint: disable=bad-whitespace
         if JobQueue.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         JobQueue.__instance = self
@@ -50,19 +50,19 @@ class JobQueue:
 
     ##  Add a Job to the queue.
     #
-    #   \param job \type{Job} The Job to add.
-    def add(self, job: "Job"):
+    #   \param job The Job to add.
+    def add(self, job: "Job") -> None:
         with self._jobs_lock:
             self._jobs.append(job)
             self._semaphore.release()
 
     ##  Remove a waiting Job from the queue.
     #
-    #   \param job \type{Job} The Job to remove.
+    #   \param job The Job to remove.
     #
     #   \note If a job has already begun processing it is already removed from the queue
     #   and thus can no longer be cancelled.
-    def remove(self, job: "Job"):
+    def remove(self, job: "Job") -> None:
         with self._jobs_lock:
             if job in self._jobs:
                 self._jobs.remove(job)
@@ -81,7 +81,7 @@ class JobQueue:
 
     #   Get the next job off the queue.
     #   Note that this will block until a job is available.
-    def _nextJob(self):
+    def _nextJob(self) -> Optional["Job"]:
         self._semaphore.acquire()
         with self._jobs_lock:
             # Semaphore release() can apparently cause all waiting threads to continue.
@@ -101,11 +101,11 @@ class JobQueue:
 #
 #   A worker thread that can process jobs from the JobQueue.
 class _Worker(threading.Thread):
-    def __init__(self, queue):
+    def __init__(self, queue: JobQueue) -> None:
         super().__init__()
         self._queue = queue
 
-    def run(self):
+    def run(self) -> None:
         while True:
             # Get the next job from the queue. Note that this blocks until a new job is available.
             job = self._queue._nextJob()

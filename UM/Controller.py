@@ -1,7 +1,7 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from UM.Scene.Scene import Scene
-from UM.Event import Event, MouseEvent, ToolEvent, ViewEvent
+from UM.Event import Event, KeyEvent, MouseEvent, ToolEvent, ViewEvent
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
@@ -10,7 +10,7 @@ from UM.PluginRegistry import PluginRegistry
 from UM.View.View import View
 from UM.Stage import Stage
 from UM.InputDevice import InputDevice
-from typing import Optional, Dict, Union
+from typing import cast, Optional, Dict, Union
 from UM.Math.Vector import Vector
 
 MYPY = False
@@ -19,15 +19,15 @@ if MYPY:
     from UM.Tool import Tool
 
 
-##      Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
+##  Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
-#       The different types of views / tools / inputs are defined by plugins.
-#       \sa View
-#       \sa Tool
-#       \sa Scene
+#   The different types of views / tools / inputs are defined by plugins.
+#   \sa View
+#   \sa Tool
+#   \sa Scene
 @signalemitter
 class Controller:
-    def __init__(self, application: "Application"):
+    def __init__(self, application: "Application") -> None:
         super().__init__()  # Call super to make multiple inheritance work.
 
         self._scene = Scene()
@@ -40,14 +40,14 @@ class Controller:
         self._active_tool = None  # type: Optional[Tool]
         self._tool_operation_active = False
         self._tools = {}  # type: Dict[str, Tool]
-        self._camera_tool = None
-        self._selection_tool = None
-        self._tools_enabled = True
+        self._camera_tool = None #type: Optional[Tool]
+        self._selection_tool = None #type: Optional[Tool]
+        self._tools_enabled = True #type: bool
 
-        self._active_stage = None
-        self._stages = {}
+        self._active_stage = None #type: Optional[Stage]
+        self._stages = {} #type: Dict[str, Stage]
 
-        self._input_devices = {}
+        self._input_devices = {} #type: Dict[str, InputDevice]
 
         PluginRegistry.addType("stage", self.addStage)
         PluginRegistry.addType("view", self.addView)
@@ -259,7 +259,7 @@ class Controller:
             self._active_tool.event(ToolEvent(ToolEvent.ToolDeactivateEvent))
 
         if isinstance(tool, Tool) or tool is None:
-            new_tool = tool
+            new_tool = cast(Optional[Tool], tool)
         else:
             new_tool = self.getTool(tool)
 
@@ -320,6 +320,7 @@ class Controller:
             return
 
         if self._tools and event.type == Event.KeyPressEvent:
+            event = cast(KeyEvent, event)
             from UM.Scene.Selection import Selection  # Imported here to prevent a circular dependency.
             if Selection.hasSelection():
                 for key, tool in self._tools.items():
@@ -336,8 +337,10 @@ class Controller:
         if self._active_view:
             self._active_view.event(event)
 
-        if event.type == Event.MouseReleaseEvent and MouseEvent.RightButton in event.buttons:
-            self.contextMenuRequested.emit(event.x, event.y)
+        if event.type == Event.MouseReleaseEvent:
+            event = cast(MouseEvent, event)
+            if MouseEvent.RightButton in event.buttons:
+                self.contextMenuRequested.emit(event.x, event.y)
 
     contextMenuRequested = Signal()
 
@@ -350,7 +353,7 @@ class Controller:
     def setCameraTool(self, tool: Union["Tool", str]):
         from UM.Tool import Tool
         if isinstance(tool, Tool) or tool is None:
-            self._camera_tool = tool
+            self._camera_tool = cast(Optional[Tool], tool)
         else:
             self._camera_tool = self.getTool(tool)
 
@@ -368,7 +371,7 @@ class Controller:
     def setSelectionTool(self, tool: Union[str, "Tool"]):
         from UM.Tool import Tool
         if isinstance(tool, Tool) or tool is None:
-            self._selection_tool = tool
+            self._selection_tool = cast(Optional[Tool], tool)
         else:
             self._selection_tool = self.getTool(tool)
 
@@ -379,19 +382,21 @@ class Controller:
         self._tools_enabled = enabled
 
     # Rotate camera view according defined angle
-    def rotateView(self, coordinate: str = "x", angle: int  = 0) -> None:
+    def rotateView(self, coordinate: str = "x", angle: int = 0) -> None:
         camera = self._scene.getActiveCamera()
-        self._camera_tool.setOrigin(Vector(0, 100, 0))
+        if not camera:
+            return
+        self._camera_tool.setOrigin(Vector(0, 100, 0)) #type: ignore
         if coordinate == "home":
             camera.setPosition(Vector(0, 0, 700))
             camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
-            self._camera_tool.rotateCam(0, 0)
+            self._camera_tool.rotateCam(0, 0) #type: ignore
         elif coordinate == "3d":
             camera.setPosition(Vector(-750, 600, 700))
             camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
-            self._camera_tool.rotateCam(0, 0)
+            self._camera_tool.rotateCam(0, 0) #type: ignore
 
         else:
             # for comparison is == used, because might not store them at the same location
@@ -401,6 +406,6 @@ class Controller:
             camera.lookAt(Vector(0, 100, 0))
 
             if coordinate == "x":
-                self._camera_tool.rotateCam(angle, 0)
+                self._camera_tool.rotateCam(angle, 0) #type: ignore
             elif coordinate == "y":
-                self._camera_tool.rotateCam(0, angle)
+                self._camera_tool.rotateCam(0, angle) #type: ignore

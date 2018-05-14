@@ -1,24 +1,14 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal, QUrl
-from PyQt5.QtGui import QDesktopServices
-
-from UM.Application import Application
-from UM.Logger import Logger
-from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-from UM.Scene.SceneNode import SceneNode
-from UM.Scene.PointCloudNode import PointCloudNode
-from UM.Mesh.MeshData import MeshType
-from UM.Mesh.ReadMeshJob import ReadMeshJob
-from UM.Mesh.WriteMeshJob import WriteMeshJob
-from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
-from UM.Message import Message
-
-from UM.Decorators import deprecated
-
+from PyQt5.QtCore import QObject, pyqtSlot, pyqtProperty, QUrl
 import os.path
 import platform
+
+from UM.Application import Application
+from UM.Decorators import deprecated
+from UM.Mesh.ReadMeshJob import ReadMeshJob
+from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")

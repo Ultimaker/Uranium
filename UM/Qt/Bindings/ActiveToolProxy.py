@@ -68,9 +68,8 @@ class ActiveToolProxy(QObject):
             Logger.log("w", "Trying to call non-existing action {action} of tool {tool}.".format(action = action, tool = self._active_tool.getPluginId()))
             return
 
-        action = getattr(self._active_tool, action)
-        if action:
-            action(data)
+        if hasattr(self._active_tool, action):
+            getattr(self._active_tool, action)(data)
 
     propertiesChanged = pyqtSignal()
     @pyqtProperty(QObject, notify = propertiesChanged)

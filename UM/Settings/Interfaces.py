@@ -1,16 +1,17 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import os #To get the IDs from file names.
-from typing import List, Dict, Any, Optional
-import urllib.parse #To get the IDs from file names.
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 import UM.Decorators
 from UM.Logger import Logger
-from UM.MimeTypeDatabase import MimeTypeDatabase
 from UM.Signal import Signal
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 
+if TYPE_CHECKING:
+    from UM.Application import Application
+    from UM.Settings.InstanceContainer import InstanceContainer
+    from UM.Settings.SettingDefinition import SettingDefinition #For typing.
 
 ##  Shared interface between setting container types
 #
@@ -22,7 +23,7 @@ class ContainerInterface:
     #   intended to be used for example when referencing the container in
     #   configuration files or when writing a file to disk.
     #
-    #   \return \type{string} The unique ID of this container.
+    #   \return The unique ID of this container.
     def getId(self) -> str:
         pass
 
@@ -148,11 +149,26 @@ class ContainerInterface:
 
 
 class DefinitionContainerInterface(ContainerInterface):
-    pass
+    def findDefinitions(self, **kwargs: Any) -> List["SettingDefinition"]:
+        raise NotImplementedError()
 
 
 ##  Shared interface between setting container types
 #
 @UM.Decorators.interface
 class ContainerRegistryInterface:
-    def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]: pass
+    def findContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
+        raise NotImplementedError()
+
+    def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]:
+        raise NotImplementedError()
+
+    @classmethod
+    def getApplication(cls) -> "Application":
+        raise NotImplementedError()
+
+    def getEmptyInstanceContainer(self) -> "InstanceContainer":
+        raise NotImplementedError()
+
+    def isReadOnly(self, container_id: str) -> bool:
+        raise NotImplementedError()

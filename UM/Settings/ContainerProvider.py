@@ -1,16 +1,12 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, cast, Dict, Iterable, Optional
 
 from UM.Logger import Logger
 from UM.PluginObject import PluginObject #We're implementing this.
 from UM.PluginRegistry import PluginRegistry #To get the priority metadata to sort by.
-from UM.Settings.ContainerFormatError import ContainerFormatError
-
-MYPY = False
-if MYPY:
-    from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface
 
 ##  This class serves as a database for containers.
 #
@@ -18,12 +14,12 @@ if MYPY:
 #   ``getAllIds``, ``loadMetadata`` and ``loadContainer`` methods.
 class ContainerProvider(PluginObject):
     ##  Initialises the provider, which creates a few empty fields.
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         #The container data, dictionaries indexed by ID.
-        self._metadata = {} #The metadata of all containers this provider can provide.
-        self._containers = {} #The complete containers that have been loaded so far. This is filled lazily upon requesting profiles.
+        self._metadata = {} #type: Dict[str, Dict[str, Any]] #The metadata of all containers this provider can provide.
+        self._containers = {} #type: Dict[str, ContainerInterface] #The complete containers that have been loaded so far. This is filled lazily upon requesting profiles.
 
     ##  Gets a container with a specified ID.
     #
@@ -31,7 +27,7 @@ class ContainerProvider(PluginObject):
     #
     #   \param container_id The ID of a container to get.
     #   \return The specified container.
-    def __getitem__(self, container_id: str):
+    def __getitem__(self, container_id: str) -> ContainerInterface:
         if container_id not in self._containers:
             try:
                 self._containers[container_id] = self.loadContainer(container_id)
@@ -47,13 +43,21 @@ class ContainerProvider(PluginObject):
     #   \return A positive number if this provider has lower priority than the
     #   other, or a negative number if this provider has higher priority than
     #   the other.
-    def __lt__(self, other: "ContainerProvider"):
+    def __lt__(self, other: object) -> bool:
+        if type(other) is not type(self):
+            return False
+        other = cast(ContainerProvider, other)
+
         plugin_registry = PluginRegistry.getInstance()
         my_metadata = plugin_registry.getMetaData(self.getPluginId())
         other_metadata = plugin_registry.getMetaData(other.getPluginId())
         return my_metadata["container_provider"]["priority"] < other_metadata["container_provider"]["priority"]
 
-    def __eq__(self, other: "ContainerProvider"):
+    def __eq__(self, other: object) -> bool:
+        if type(other) is not type(self):
+            return False
+        other = cast(ContainerProvider, other)
+
         plugin_registry = PluginRegistry.getInstance()
         my_metadata = plugin_registry.getMetaData(self.getPluginId())
         other_metadata = plugin_registry.getMetaData(other.getPluginId())
@@ -63,7 +67,7 @@ class ContainerProvider(PluginObject):
     #
     #   This is intended to be called from the implementation of
     #   ``loadMetadata``.
-    def addMetadata(self, metadata: Dict[str, Any]):
+    def addMetadata(self, metadata: Dict[str, Any]) -> None:
         if "id" not in metadata:
             raise ValueError("The specified metadata has no ID.")
         if metadata["id"] in self._metadata:
@@ -131,5 +135,5 @@ class ContainerProvider(PluginObject):
     #   This deletes the container from the source. If it's read only, this
     #   should give an exception.
     #   \param container_id The ID of the container to remove.
-    def removeContainer(self, container_id):
+    def removeContainer(self, container_id: str) -> None:
         raise NotImplementedError("The container provider {class_name} doesn't properly implement removeContainer.".format(class_name = self.__class__.__name__))

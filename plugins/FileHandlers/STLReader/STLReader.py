@@ -7,10 +7,20 @@ from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
 from UM.Scene.SceneNode import SceneNode
 from UM.Job import Job
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 
 import os
 import struct
 import numpy
+
+
+MimeTypeDatabase.addMimeType(
+    MimeType(
+        name = "application/x-uranium-stl-file",
+        comment = "Uranium STL File",
+        suffixes = ["stl"]
+    )
+)
 
 use_numpystl = False
 
@@ -96,7 +106,7 @@ class STLReader(MeshReader):
             mesh_builder.addVertices(vertices)
 
     # Private
-    ## Load the STL data from file by consdering the data as ascii.
+    ## Load the STL data from file by considering the data as ascii.
     # \param mesh The MeshData object where the data is written to.
     # \param f The file handle
     def _loadAscii(self, mesh_builder, f):

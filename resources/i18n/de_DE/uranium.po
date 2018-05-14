@@ -273,13 +273,13 @@ msgstr "Alle Dateien (*)"
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}Tag {1:0>2}Stunde {2:0>2}Minute"
+msgstr "{0:0>2}T. {1:0>2}St. {2:0>2}M."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:110
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}Stunde {1:0>2}Minute"
+msgstr "{0:0>2}St. {1:0>2}Mi."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #, python-brace-format

@@ -1,18 +1,25 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from PyQt5.QtCore import QObject, QUrl #For typing.
+from typing import Optional
+
 from UM.Logger import Logger
 from UM.FileHandler.FileHandler import FileHandler
+from UM.FileHandler.FileReader import FileReader #For typing.
+from UM.FileHandler.ReadFileJob import ReadFileJob #For typing.
+from UM.Qt.QtApplication import QtApplication #For typing
 
 
 ##  Central class for reading and writing workspaces.
 #   This class is created by Application and handles reading and writing workspace files.
 class WorkspaceFileHandler(FileHandler):
-    def __init__(self, application, parent = None):
-        super().__init__(application, "workspace_writer", "workspace_reader", parent = parent)
-        self.workspace_reader = None
 
-    def readerRead(self, reader, file_name, **kwargs):
+    def __init__(self, application: "QtApplication", writer_type: str = "workspace_writer", reader_type: str = "workspace_reader", parent: QObject = None) -> None:
+        super().__init__(application, writer_type, reader_type, parent)
+        self.workspace_reader = None #type: Optional[FileReader]
+
+    def readerRead(self, reader: FileReader, file_name: str, **kwargs) -> Optional[str]:
         self.workspace_reader = reader
         results = None
         try:
@@ -23,20 +30,20 @@ class WorkspaceFileHandler(FileHandler):
 
         return results
 
-    def _readLocalFile(self, file):
+    def _readLocalFile(self, file: QUrl) -> None:
         from UM.FileHandler.ReadFileJob import ReadFileJob
         job = ReadFileJob(file.toLocalFile(), handler = self)
         job.finished.connect(self._readWorkspaceFinished)
         job.start()
 
-    def _readWorkspaceFinished(self, job):
+    def _readWorkspaceFinished(self, job: ReadFileJob) -> None:
         # Add the loaded nodes to the scene.
         nodes = job.getResult()
         if nodes is not None:  # Job was not a failure.
             # Delete all old nodes.
             self._application.deleteAll()
             # The name of the project is set after deleting all
-            self._application.workspaceLoaded.emit(self.workspace_reader.workspaceName())
+            self._application.workspaceLoaded.emit(job._filename)
 
             # Add the loaded nodes to the scene.
             nodes = job.getResult()
