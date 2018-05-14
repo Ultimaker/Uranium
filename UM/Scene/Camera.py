@@ -35,7 +35,6 @@ class Camera(SceneNode.SceneNode):
         self.setCalculateBoundingBox(False)
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "Camera":
-        print(self._mesh_data)
         copy = super().__deepcopy__(memo)
         copy._projection_matrix = self._projection_matrix
         copy._window_height = self._window_height
