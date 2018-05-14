@@ -380,7 +380,7 @@ class QtApplication(QApplication, Application):
                 Logger.log("e", "Exception while saving preferences: %s", repr(e))
 
         try:
-            self.applicationShuttingDown.emit(save_data)
+            self.applicationShuttingDown.emit()
         except Exception as e:
             Logger.log("e", "Exception while emitting shutdown signal: %s", repr(e))
 
