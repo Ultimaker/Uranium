@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import math
@@ -8,13 +8,12 @@ import numpy
 
 from UM.Math.Vector import Vector
 
-from typing import Union, Optional
+from typing import cast, Dict, List, Optional, Tuple, TYPE_CHECKING, Union
 
 numpy.seterr(divide="ignore")
 
 
-MYPY = False
-if MYPY:
+if TYPE_CHECKING:
     from UM.Math.Quaternion import Quaternion
 
 
@@ -47,33 +46,34 @@ class Matrix:
         "rxzx": (0, 1, 1, 1), "rxzy": (1, 0, 0, 1), "ryzy": (1, 0, 1, 1),
         "rzxy": (1, 1, 0, 1), "ryxy": (1, 1, 1, 1), "ryxz": (2, 0, 0, 1),
         "rzxz": (2, 0, 1, 1), "rxyz": (2, 1, 0, 1), "rzyz": (2, 1, 1, 1)
-    }
+    } #type: Dict[str, Tuple[int, int, int, int]]
 
     # axis sequences for Euler angles
     _NEXT_AXIS = [1, 2, 0, 1]
 
-    def __init__(self, data = None):
+    def __init__(self, data: Optional[List[List[float]]] = None) -> None:
         if data is None:
             self._data = numpy.identity(4, dtype = numpy.float64)
         else:
             self._data = numpy.array(data, copy=True, dtype = numpy.float64)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if self is other:
             return True
         if type(other) is not Matrix:
             return False
+        other = cast(Matrix, other)
 
         if self._data is None and other._data is None:
             return True
         return numpy.array_equal(self._data, other._data)
 
-    def at(self, x: int, y: int):
+    def at(self, x: int, y: int) -> float:
         if x >= 4 or y >= 4 or x < 0 or y < 0:
             raise IndexError
         return self._data[x,y]
 
-    def setRow(self, index: int, value):
+    def setRow(self, index: int, value: List[float]) -> None:
         if index < 0 or index > 3:
             raise IndexError()
 
@@ -86,7 +86,7 @@ class Matrix:
         else:
             self._data[3, index] = 0
 
-    def setColumn(self, index: int, value):
+    def setColumn(self, index: int, value: List[float]) -> None:
         if index < 0 or index > 3:
             raise IndexError()
 
@@ -99,7 +99,7 @@ class Matrix:
         else:
             self._data[index, 3] = 0
 
-    def multiply(self, other: Union[Vector, "Matrix"], copy: bool = False):
+    def multiply(self, other: Union[Vector, "Matrix"], copy: bool = False) -> "Matrix":
         if not copy:
             self._data = numpy.dot(self._data, other.getData())
             return self
@@ -108,7 +108,7 @@ class Matrix:
             new_matrix.multiply(other)
             return new_matrix
 
-    def preMultiply(self, other: Union[Vector, "Matrix"], copy: bool = False):
+    def preMultiply(self, other: Union[Vector, "Matrix"], copy: bool = False) -> "Matrix":
         if not copy:
             self._data = numpy.dot(other.getData(), self._data)
             return self
@@ -119,15 +119,15 @@ class Matrix:
 
     ##  Get raw data.
     #   \returns 4x4 numpy array
-    def getData(self):
+    def getData(self) -> numpy.ndarray:
         return self._data.astype(numpy.float32)
 
     ##  Create a 4x4 identity matrix. This overwrites any existing data.
-    def setToIdentity(self):
+    def setToIdentity(self) -> None:
         self._data = numpy.identity(4, dtype = numpy.float64)
 
     ##  Invert the matrix
-    def invert(self):
+    def invert(self) -> None:
         self._data = numpy.linalg.inv(self._data)
 
     ##  Return a inverted copy of the matrix.
@@ -147,19 +147,19 @@ class Matrix:
 
     ##  Translate the matrix based on Vector.
     #   \param direction The vector by which the matrix needs to be translated.
-    def translate(self, direction: Vector):
+    def translate(self, direction: Vector) -> None:
         translation_matrix = Matrix()
         translation_matrix.setByTranslation(direction)
         self.multiply(translation_matrix)
 
     ##  Set the matrix by translation vector. This overwrites any existing data.
     #   \param direction The vector by which the (unit) matrix needs to be translated.
-    def setByTranslation(self, direction: Vector):
+    def setByTranslation(self, direction: Vector) -> None:
         M = numpy.identity(4, dtype = numpy.float64)
         M[:3, 3] = direction.getData()[:3]
         self._data = M
 
-    def setTranslation(self, translation):
+    def setTranslation(self, translation: Vector) -> None:
         self._data[:3, 3] = translation.getData()
 
     def getTranslation(self) -> Vector:
@@ -169,7 +169,7 @@ class Matrix:
     #   \param angle The angle by which matrix needs to be rotated.
     #   \param direction Axis by which the matrix needs to be rotated about.
     #   \param point Point where from where the rotation happens. If None, origin is used.
-    def rotateByAxis(self, angle, direction: Vector, point: Optional[Vector] = None):
+    def rotateByAxis(self, angle: float, direction: Vector, point: Optional[List[float]] = None) -> None:
         rotation_matrix = Matrix()
         rotation_matrix.setByRotationAxis(angle, direction, point)
         self.multiply(rotation_matrix)
@@ -178,7 +178,7 @@ class Matrix:
     #   \param angle The angle by which matrix needs to be rotated in radians.
     #   \param direction Axis by which the matrix needs to be rotated about.
     #   \param point Point where from where the rotation happens. If None, origin is used.
-    def setByRotationAxis(self, angle, direction: Vector, point: Optional[Vector] = None):
+    def setByRotationAxis(self, angle: float, direction: Vector, point: Optional[List[float]] = None) -> None:
         sina = math.sin(angle)
         cosa = math.cos(angle)
         direction_data = self._unitVector(direction.getData())
@@ -205,7 +205,7 @@ class Matrix:
     #   @param translate : translation vector along x, y, z axes
     #   @param perspective : perspective partition of matrix
     #   @param mirror: vector with mirror factors (1 if that axis is not mirrored, -1 if it is)
-    def compose(self, scale: Vector = None, shear: Vector = None, angles: Vector = None, translate: Vector = None, perspective = None, mirror: Vector = None):
+    def compose(self, scale: Vector = None, shear: Vector = None, angles: Vector = None, translate: Vector = None, perspective: Vector = None, mirror: Vector = None) -> None:
         M = numpy.identity(4)
         if perspective is not None:
             P = numpy.identity(4)
@@ -243,12 +243,8 @@ class Matrix:
     ## Return Euler angles from rotation matrix for specified axis sequence.
     #  axes : One of 24 axis sequences as string or encoded tuple
     #  Note that many Euler angle triplets can describe one matrix.
-    def getEuler(self, axes = "sxyz"):
-        try:
-            firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes.lower()]
-        except (AttributeError, KeyError):
-            self._TUPLE2AXES[axes]  # validation
-            firstaxis, parity, repetition, frame = axes
+    def getEuler(self, axes: str = "sxyz") -> Vector:
+        firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes.lower()]
 
         i = firstaxis
         j = self._NEXT_AXIS[i + parity]
@@ -287,12 +283,8 @@ class Matrix:
     #  @param aj Eulers pitch
     #  @param ak Eulers yaw
     #  @param axes One of 24 axis sequences as string or encoded tuple
-    def setByEuler(self, ai, aj, ak, axes = "sxyz"):
-        try:
-            firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes]
-        except (AttributeError, KeyError):
-            self._TUPLE2AXES[axes]  # validation
-            firstaxis, parity, repetition, frame = axes
+    def setByEuler(self, ai: float, aj: float, ak: float, axes: str = "sxyz") -> None:
+        firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes.lower()]
         i = firstaxis
         j = self._NEXT_AXIS[i + parity]
         k = self._NEXT_AXIS[i - parity + 1]
@@ -334,7 +326,7 @@ class Matrix:
     #   \param factor The factor by which to scale
     #   \param origin From where does the scaling need to be done
     #   \param direction In what direction is the scaling (if None, it's uniform)
-    def scaleByFactor(self, factor, origin: Optional[Vector] = None, direction: Optional[Vector] = None):
+    def scaleByFactor(self, factor: float, origin: Optional[List[float]] = None, direction: Optional[Vector] = None) -> None:
         scale_matrix = Matrix()
         scale_matrix.setByScaleFactor(factor, origin, direction)
         self.multiply(scale_matrix)
@@ -343,7 +335,7 @@ class Matrix:
     #   \param factor The factor by which to scale
     #   \param origin From where does the scaling need to be done
     #   \param direction In what direction is the scaling (if None, it's uniform)
-    def setByScaleFactor(self, factor, origin: Optional[Vector] = None, direction: Optional[Vector] = None):
+    def setByScaleFactor(self, factor: float, origin: Optional[List[float]] = None, direction: Optional[Vector] = None) -> None:
         if direction is None:
             # uniform scaling
             M = numpy.diag([factor, factor, factor, 1.0])
@@ -354,13 +346,13 @@ class Matrix:
             # nonuniform scaling
             direction_data = direction.getData()
             factor = 1.0 - factor
-            M = numpy.identity(4,dtype = numpy.float64)
+            M = numpy.identity(4, dtype = numpy.float64)
             M[:3, :3] -= factor * numpy.outer(direction_data, direction_data)
             if origin is not None:
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
         self._data = M
 
-    def setByScaleVector(self, scale: Vector):
+    def setByScaleVector(self, scale: Vector) -> None:
         self._data = numpy.diag([scale.x, scale.y, scale.z, 1.0])
 
     def getScale(self) -> Vector:
@@ -377,7 +369,7 @@ class Matrix:
     #   \param bottom The bottom edge of the projection
     #   \param near The near plane of the projection
     #   \param far The far plane of the projection
-    def setOrtho(self, left, right, bottom, top, near, far):
+    def setOrtho(self, left: float, right: float, bottom: float, top: float, near: float, far: float) -> None:
         self.setToIdentity()
         self._data[0, 0] = 2 / (right - left)
         self._data[1, 1] = 2 / (top - bottom)
@@ -391,7 +383,7 @@ class Matrix:
     #   \param aspect The aspect ratio
     #   \param near Distance to the near plane
     #   \param far Distance to the far plane
-    def setPerspective(self, fovy, aspect, near, far):
+    def setPerspective(self, fovy: float, aspect: float, near: float, far: float) -> None:
         self.setToIdentity()
 
         f = 2. / math.tan(math.radians(fovy) / 2.)
@@ -403,9 +395,9 @@ class Matrix:
         self._data[3, 2] = (2. * far * near) / (near - far)
 
     ##  Return sequence of transformations from transformation matrix.
-    #   @return Tuple containing scale (vector), shear (vector), angles (vector) and translation (vector)
+    #   @return Tuple containing scale (vector), shear (vector), angles (vector), translation (vector) and mirror (vector)
     #   It will raise a ValueError if matrix is of wrong type or degenerative.
-    def decompose(self):
+    def decompose(self) -> Tuple[Vector, Vector, Vector, Vector, Vector]:
         M = numpy.array(self._data, dtype = numpy.float64, copy = True).T
         if abs(M[3, 3]) < self._EPS:
             raise ValueError("M[3, 3] is zero")
@@ -461,7 +453,7 @@ class Matrix:
 
         return Vector(data = scale), Vector(data = shear), Vector(data = angles), Vector(data = translate), Vector(data = mirror)
 
-    def _unitVector(self, data, axis=None, out=None):
+    def _unitVector(self, data: numpy.array, axis: Optional[int] = None, out: Optional[numpy.array] = None) -> numpy.array:
         """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
 
         >>> v0 = numpy.random.random(3)
@@ -504,7 +496,7 @@ class Matrix:
         if out is None:
             return data
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "Matrix( {0} )".format(self._data)
 
     @staticmethod
