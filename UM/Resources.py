@@ -6,7 +6,7 @@ import os
 import os.path
 import re
 import shutil
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Optional
 
 from UM.Logger import Logger
 from UM.Platform import Platform
@@ -51,6 +51,8 @@ class Resources:
 
     ApplicationIdentifier = "UM"
     ApplicationVersion = "unknown"
+
+    __bundled_resources_path = None #type: Optional[str]
 
     ##  Get the path to a certain resource file
     #
