@@ -14,6 +14,7 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob  # To reload a mesh when its file wa
 from UM.Message import Message  # To display a message for reloading files that were changed.
 from UM.Scene.Camera import Camera
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
+from UM.Scene.SceneNode import SceneNode
 from UM.Signal import Signal, signalemitter
 from UM.i18n import i18nCatalog
 
@@ -163,7 +164,7 @@ class Scene:
         modified_nodes = (node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path) #type: ignore
 
         if modified_nodes:
-            message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.basename(self.file_path)),
+            message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.basename(file_path)),
                               title = i18n_catalog.i18nc("@info:title", "File has been modified"))
             message.addAction("reload", i18n_catalog.i18nc("@action:button", "Reload"), icon = None, description = i18n_catalog.i18nc("@action:description", "This will trigger the modified files to reload from disk."))
             message.actionTriggered.connect(functools.partialmethod(self._reloadNodes, modified_nodes))
@@ -180,17 +181,16 @@ class Scene:
             if not os.path.isfile(node.getMeshData().getFileName()): #File doesn't exist any more.
                 continue
             job = ReadMeshJob(node.getMeshData().getFileName())
-            job._node = node
-            job.finished.connect(self._reloadJobFinished)
+            job.finished.connect(functools.partialmethod(self._reloadJobFinished, node))
             job.start()
 
     ##  Triggered when reloading has finished.
     #
     #   This then puts the resulting mesh data in the node.
-    def _reloadJobFinished(self, job: ReadMeshJob) -> None:
+    def _reloadJobFinished(self, replaced_node: SceneNode, job: ReadMeshJob) -> None:
         for node in job.getResult():
             mesh_data = node.getMeshData()
             if mesh_data:
-                job._node.setMeshData(mesh_data)
+                replaced_node.setMeshData(mesh_data)
             else:
                 Logger.log("w", "Could not find a mesh in reloaded node.")
