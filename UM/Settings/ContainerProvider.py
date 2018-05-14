@@ -1,14 +1,12 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, cast, Dict, Iterable, Optional, TYPE_CHECKING
+from typing import Any, cast, Dict, Iterable, Optional
 
 from UM.Logger import Logger
 from UM.PluginObject import PluginObject #We're implementing this.
 from UM.PluginRegistry import PluginRegistry #To get the priority metadata to sort by.
-
-if TYPE_CHECKING:
-    from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface
 
 ##  This class serves as a database for containers.
 #
