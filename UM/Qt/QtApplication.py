@@ -24,6 +24,11 @@ from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
 from UM.JobQueue import JobQueue
 from UM.View.GL.OpenGLContext import OpenGLContext
+from UM.Operations.GroupedOperation import GroupedOperation #To clear the scene.
+from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation #To clear the scene.
+from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator #To clear the scene.
+from UM.Scene.SceneNode import SceneNode #To clear the scene.
+from UM.Scene.Selection import Selection #To clear the selection after clearing the scene.
 from UM.Settings.ContainerRegistry import ContainerRegistry
 import UM.Settings.InstanceContainer  # For version upgrade to know the version number.
 import UM.Settings.ContainerStack  # For version upgrade to know the version number.
@@ -499,6 +504,39 @@ class QtApplication(QApplication, Application):
         # no longer function correctly/application crashes.
         result.attached_context = result_context
         return result
+
+    ##  Delete all nodes containing mesh data in the scene.
+    #   \param only_selectable. Set this to False to delete objects from all build plates
+    @pyqtSlot()
+    def deleteAll(self, only_selectable = True) -> None:
+        Logger.log("i", "Clearing scene")
+        if not self.getController().getToolsEnabled():
+            return
+
+        nodes = []
+        for node in DepthFirstIterator(self.getController().getScene().getRoot()):
+            if not isinstance(node, SceneNode):
+                continue
+            if (not node.getMeshData() and not node.callDecoration("getLayerData")) and not node.callDecoration("isGroup"):
+                continue  # Node that doesnt have a mesh and is not a group.
+            if only_selectable and not node.isSelectable():
+                continue
+            if not node.callDecoration("isSliceable") and not node.callDecoration("getLayerData") and not node.callDecoration("isGroup"):
+                continue  # Only remove nodes that are selectable.
+            if node.getParent() and node.getParent().callDecoration("isGroup"):
+                continue  # Grouped nodes don't need resetting as their parent (the group) is resetted)
+            nodes.append(node)
+        if nodes:
+            op = GroupedOperation()
+
+            for node in nodes:
+                op.addOperation(RemoveSceneNodeOperation(node))
+
+                # Reset the print information
+                self.getController().getScene().sceneChanged.emit(node)
+
+            op.push()
+            Selection.clear()
 
     ##  Gets the instance of this application.
     #
