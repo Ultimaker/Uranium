@@ -262,7 +262,7 @@ class Resources:
     #
     #   \return A sequence of paths where resources might be.
     @classmethod
-    def getSearchPaths(cls) -> Generator[str]:
+    def getSearchPaths(cls) -> Generator[str, None, None]:
         yield from cls.__paths
 
     ##  Remove a custom resource type.

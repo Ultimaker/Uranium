@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
-from typing import Any, IO, Optional, Tuple, Union
+from typing import Any, Dict, IO, Optional, Tuple, Union
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
