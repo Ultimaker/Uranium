@@ -6,8 +6,8 @@ from typing import List, Iterable
 
 ##    Abstract iterator class.
 class Iterator:
-    def __init__(self, scene_node: SceneNode):
-        super().__init__() # Call super to make multiple inheritence work.
+    def __init__(self, scene_node: SceneNode) -> None:
+        super().__init__() # Call super to make multiple inheritance work.
         self._scene_node = scene_node
         self._node_stack = []  # type: List[SceneNode]
         self._fillStack()
