@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import SceneNode
@@ -7,14 +7,12 @@ from UM.Math.Matrix import Matrix
 from UM.Math.Ray import Ray
 from UM.Math.Vector import Vector
 
-from typing import Optional
-
+import copy
 import numpy
 import numpy.linalg
-import copy
+from typing import Dict, Optional, Tuple, TYPE_CHECKING
 
-MYPY = False
-if MYPY:
+if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
 
 
@@ -23,7 +21,7 @@ if MYPY:
 #   The camera provides a projection matrix and its transformation matrix
 #   can be used as view matrix.
 class Camera(SceneNode.SceneNode):
-    def __init__(self, name: str = "", parent = None):
+    def __init__(self, name: str = "", parent: SceneNode = None) -> None:
         super().__init__(parent)
         self._name = name  # type: str
         self._projection_matrix = Matrix()  # type: Matrix
@@ -36,7 +34,7 @@ class Camera(SceneNode.SceneNode):
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: Dict[int, object]) -> "Camera":
         print(self._mesh_data)
         copy = super().__deepcopy__(memo)
         copy._projection_matrix = self._projection_matrix
@@ -46,51 +44,51 @@ class Camera(SceneNode.SceneNode):
         copy._viewport_width = self._viewport_width
         return copy
 
-    def setMeshData(self, mesh_data: Optional["MeshData"]):
+    def setMeshData(self, mesh_data: Optional["MeshData"]) -> None:
         assert mesh_data is None, "Camera's can't have mesh data"
 
-    def getAutoAdjustViewPort(self):
+    def getAutoAdjustViewPort(self) -> bool:
         return self._auto_adjust_view_port_size
 
-    def setAutoAdjustViewPort(self, auto_adjust):
+    def setAutoAdjustViewPort(self, auto_adjust: bool) -> None:
         self._auto_adjust_view_port_size = auto_adjust
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self) -> Matrix:
         return copy.deepcopy(self._projection_matrix)
     
-    def getViewportWidth(self):
+    def getViewportWidth(self) -> int:
         return self._viewport_width
     
-    def setViewportWidth(self, width: int):
+    def setViewportWidth(self, width: int) -> None:
         self._viewport_width = width
     
-    def setViewPortHeight(self, height: int):
+    def setViewPortHeight(self, height: int) -> None:
         self._viewport_height = height
         
-    def setViewportSize(self, width: int, height: int):
+    def setViewportSize(self, width: int, height: int) -> None:
         self._viewport_width = width
         self._viewport_height = height
     
-    def getViewportHeight(self):
+    def getViewportHeight(self) -> int:
         return self._viewport_height
 
-    def setWindowSize(self, width, height):
+    def setWindowSize(self, width: int, height: int) -> None:
         self._window_width = width
         self._window_height = height
 
-    def getWindowSize(self):
+    def getWindowSize(self) -> Tuple[int, int]:
         return self._window_width, self._window_height
     
     ##  Set the projection matrix of this camera.
     #   \param matrix The projection matrix to use for this camera.
-    def setProjectionMatrix(self, matrix: Matrix):
+    def setProjectionMatrix(self, matrix: Matrix) -> None:
         self._projection_matrix = matrix
 
-    def isPerspective(self):
+    def isPerspective(self) -> bool:
         return self._perspective
 
-    def setPerspective(self, perspective: bool):
+    def setPerspective(self, perspective: bool) -> None:
         self._perspective = perspective
 
     ##  Get a ray from the camera into the world.
@@ -104,7 +102,7 @@ class Camera(SceneNode.SceneNode):
     #   \return A Ray object representing a ray from the camera origin through X, Y.
     #
     #   \note The near-plane coordinates should be in normalized form, that is within (-1, 1).
-    def getRay(self, x, y) -> Ray:
+    def getRay(self, x: float, y: float) -> Ray:
         window_x = ((x + 1) / 2) * self._window_width
         window_y = ((y + 1) / 2) * self._window_height
         view_x = (window_x / self._viewport_width) * 2 - 1
@@ -123,13 +121,13 @@ class Camera(SceneNode.SceneNode):
         far = numpy.dot(transformation, far)
         far = far[0:3] / far[3]
 
-        dir = far - near
-        dir /= numpy.linalg.norm(dir)
+        direction = far - near
+        direction /= numpy.linalg.norm(direction)
 
-        return Ray(self.getWorldPosition(), Vector(-dir[0], -dir[1], -dir[2]))
+        return Ray(self.getWorldPosition(), Vector(-direction[0], -direction[1], -direction[2]))
 
     ##  Project a 3D position onto the 2D view plane.
-    def project(self, position: Vector):
+    def project(self, position: Vector) -> Tuple[float, float]:
         projection = self._projection_matrix
         view = self.getWorldTransformation().getInverse()
 
