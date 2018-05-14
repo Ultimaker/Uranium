@@ -1,7 +1,8 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
+from typing import Any, IO, Optional, Tuple, Union
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
@@ -23,14 +24,13 @@ MimeTypeDatabase.addMimeType(
 class Preferences:
     Version = 6
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-        self._file = None
-        self._parser = None
-        self._preferences = {}
+        self._parser = None #type: Optional[configparser.ConfigParser]
+        self._preferences = {} #type: Dict[str, Any]
 
-    def addPreference(self, key, default_value):
+    def addPreference(self, key: str, default_value: Any) -> None:
         preference = self._findPreference(key)
         if preference:
             preference.setDefault(default_value)
@@ -59,7 +59,7 @@ class Preferences:
     #
     #   \param key The key of the preference to set the default of.
     #   \param default_value The new default value of the preference.
-    def setDefault(self, key, default_value):
+    def setDefault(self, key: str, default_value: Any) -> None:
         preference = self._findPreference(key)
         if not preference: #Key not found.
             Logger.log("w", "Tried to set the default value of non-existing setting %s.", key)
@@ -68,7 +68,7 @@ class Preferences:
             self.setValue(key, default_value)
         preference.setDefault(default_value)
 
-    def setValue(self, key, value):
+    def setValue(self, key: str, value: Any) -> None:
         preference = self._findPreference(key)
 
         if preference:
@@ -77,7 +77,7 @@ class Preferences:
         else:
             Logger.log("w", "Tried to set the value of non-existing setting %s.", key)
 
-    def getValue(self, key):
+    def getValue(self, key: str) -> Any:
         preference = self._findPreference(key)
 
         if preference:
@@ -91,22 +91,23 @@ class Preferences:
         Logger.log("w", "Tried to get the value of non-existing setting %s.", key)
         return None
 
-    def resetPreference(self, key):
+    def resetPreference(self, key: str) -> None:
         preference = self._findPreference(key)
 
         if preference:
             preference.setValue(preference.getDefault())
             self.preferenceChanged.emit(key)
 
-    def readFromFile(self, file):
+    def readFromFile(self, file: Union[str, IO[str]]) -> None:
         self._loadFile(file)
-
-        if not self._parser:
-            return
 
         self.__initializeSettings()
 
-    def __initializeSettings(self):
+    def __initializeSettings(self) -> None:
+        if self._parser is None:
+            Logger.log("w", "Read the preferences file before initializing settings!")
+            return
+
         for group, group_entries in self._parser.items():
             if group == "DEFAULT":
                 continue
@@ -121,7 +122,7 @@ class Preferences:
                 self._preferences[group][key].setValue(value)
                 self.preferenceChanged.emit("{0}/{1}".format(group, key))
 
-    def writeToFile(self, file):
+    def writeToFile(self, file: Union[str, IO[str]]) -> None:
         parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
         for group, group_entries in self._preferences.items():
             parser[group] = {}
@@ -133,7 +134,7 @@ class Preferences:
 
         try:
             if hasattr(file, "read"):  # If it already is a stream like object, write right away
-                parser.write(file)
+                parser.write(file) #type: ignore #Can't convince MyPy that it really is an IO object now.
             else:
                 with SaveFile(file, "wt") as save_file:
                     parser.write(save_file)
@@ -149,7 +150,7 @@ class Preferences:
 
         return cls._instance
 
-    def _splitKey(self, key):
+    def _splitKey(self, key: str) -> Tuple[str, str]:
         group = "general"
         key = key
 
@@ -160,7 +161,7 @@ class Preferences:
 
         return (group, key)
 
-    def _findPreference(self, key):
+    def _findPreference(self, key: str) -> Optional[Any]:
         group, key = self._splitKey(key)
 
         if group in self._preferences:
@@ -169,9 +170,7 @@ class Preferences:
 
         return None
 
-    def _loadFile(self, file):
-        if self._file and self._file == file:
-            return self._parser
+    def _loadFile(self, file: Union[str, IO[str]]) -> None:
         try:
             self._parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
             if hasattr(file, "read"):
@@ -193,7 +192,7 @@ class Preferences:
     _instance = None  # type: Preferences
 
     ##  Extract data from string and store it in the Configuration parser.
-    def deserialize(self, serialized: str):
+    def deserialize(self, serialized: str) -> None:
         updated_preferences = self.__updateSerialized(serialized)
         self._parser = configparser.ConfigParser(interpolation=None)
         self._parser.read_string(updated_preferences)
@@ -223,29 +222,27 @@ class Preferences:
                                                                              [serialized], [""])
                 if result is not None:
                     serialized = result.files_data[0]
-            return serialized
-
         except Exception:
             Logger.logException("d", "An exception occured while trying to update the preferences")
-            pass
+        return serialized
 
 class _Preference:
-    def __init__(self, name, default = None, value = None): #pylint: disable=bad-whitespace
+    def __init__(self, name: str, default: Any = None, value: Any = None) -> None: #pylint: disable=bad-whitespace
         self._name = name
         self._default = default
         self._value = default if value is None else value
 
-    def getName(self):
+    def getName(self) -> str:
         return self._name
 
-    def getValue(self):
+    def getValue(self) -> Any:
         return self._value
 
-    def getDefault(self):
+    def getDefault(self) -> Any:
         return self._default
 
-    def setDefault(self, default):
+    def setDefault(self, default: Any) -> None:
         self._default = default
 
-    def setValue(self, value):
+    def setValue(self, value: Any) -> None:
         self._value = value
