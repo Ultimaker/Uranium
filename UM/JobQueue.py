@@ -7,7 +7,7 @@ import threading
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 
-from typing import List, Optional, Tuple, TYPE_CHECKING
+from typing import cast, List, Optional, TYPE_CHECKING, Union
 if TYPE_CHECKING:
     from UM.Job import Job
 
@@ -22,7 +22,7 @@ class JobQueue():
     #
     #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
     #                       When 'auto', the number of threads is based on the number of processors and cores on the machine.
-    def __init__(self, thread_count: Tuple[str, int] = "auto") -> None: #pylint: disable=bad-whitespace
+    def __init__(self, thread_count: Union[str, int] = "auto") -> None: #pylint: disable=bad-whitespace
         if JobQueue._instance is None:
             JobQueue._instance = self
         else:
@@ -35,6 +35,7 @@ class JobQueue():
                 thread_count = multiprocessing.cpu_count()
             except NotImplementedError:
                 thread_count = 0
+        thread_count = cast(int, thread_count) #Now it's always an integer.
 
         if thread_count <= 0:
             thread_count = 2  # Assume we can run at least two threads in parallel.
