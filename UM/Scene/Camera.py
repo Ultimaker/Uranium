@@ -10,7 +10,7 @@ from UM.Math.Vector import Vector
 import copy
 import numpy
 import numpy.linalg
-from typing import Dict, Optional, Tuple, TYPE_CHECKING
+from typing import cast, Dict, Optional, Tuple, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
@@ -35,7 +35,7 @@ class Camera(SceneNode.SceneNode):
         self.setCalculateBoundingBox(False)
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "Camera":
-        copy = super().__deepcopy__(memo)
+        copy = cast(Camera, super().__deepcopy__(memo))
         copy._projection_matrix = self._projection_matrix
         copy._window_height = self._window_height
         copy._window_width = self._window_width
