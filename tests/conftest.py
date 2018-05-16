@@ -8,10 +8,10 @@ from UM.Application import Application
 from UM.Signal import Signal
 from UM.PluginRegistry import PluginRegistry
 
-class FixtureApplication(Application):
+class FixtureApplication(QtApplication):
     def __init__(self):
         Application._instance = None
-        super().__init__("test", "1.0")
+        super().__init__(name = "test", version = "1.0")
         Signal._signalQueue = self
 
     def functionEvent(self, event):
