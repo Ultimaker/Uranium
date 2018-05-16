@@ -6,18 +6,21 @@ import pytest
 from typing import Optional
 
 import UM.PluginObject
+from UM.Resources import Resources
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Signal import Signal
+from UM.Settings.Interfaces import ContainerInterface
+
+Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
+
 
 ##  Fake container class to add to the container registry.
 #
 #   This allows us to test the container registry without testing the container
 #   class. If something is wrong in the container class it won't influence this
 #   test.
-from UM.Settings.Interfaces import ContainerInterface
-
 class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     ##  Initialise a new definition container.
     #

@@ -28,7 +28,7 @@ from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For
 from UM.Signal import Signal, signalemitter
 
 if TYPE_CHECKING:
-    from UM.Application import Application
+    from UM.Qt.QtApplication import QtApplication
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
 
@@ -45,14 +45,14 @@ MaxQueryCacheSize = 1000
 @signalemitter
 class ContainerRegistry(ContainerRegistryInterface):
 
-    def __init__(self, application: "Application", *args, **kwargs):
+    def __init__(self, application: "QtApplication", *args, **kwargs):
         if ContainerRegistry.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         ContainerRegistry.__instance = self
 
         super().__init__(*args, **kwargs)
 
-        self._application = application # type: Application
+        self._application = application # type: QtApplication
 
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
@@ -344,7 +344,6 @@ class ContainerRegistry(ContainerRegistryInterface):
                     if container_id not in self._containers:
                         #Update UI while loading.
                         self._application.processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
-
                         try:
                             self._containers[container_id] = provider.loadContainer(container_id)
                         except:

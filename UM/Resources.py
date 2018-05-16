@@ -215,23 +215,6 @@ class Resources:
         cls.__types[resource_type] = path
         cls.__types_storage[resource_type] = path
 
-    ##  Gets the bundled resources path.
-    #
-    #   This is where the application stores bundled resources.
-    @classmethod
-    def getBundledResourcesPath(cls) -> str:
-        if not cls.__bundled_resources_path:
-            Logger.log("e", "Bundled resources path has not been set!")
-        return cls.__bundled_resources_path
-
-    ##  Sets the bundled resources path.
-    #
-    #   This is where the application stores bundled resources.
-    @classmethod
-    def setBundledResourcesPath(cls, path) -> str:
-        cls.__bundled_resources_path = path
-        return cls.__bundled_resources_path
-
     ##  Gets the configuration storage path.
     #
     #   This is where the application stores user configuration, such as
