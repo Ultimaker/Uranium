@@ -24,3 +24,8 @@ class TestResources(TestCase):
         v1 = Version("This is a strange version number")
         v2 = Version("2.3.4.5-beta.2.3")
         v1 > v2  # Just don't crash
+
+    def test_other_comparisons(self):
+        self.assertFalse(Version("1.1.0-beta.2") == Version("1.1.0-alpha.2"))
+        self.assertFalse(Version("1.1.0-beta.2") > Version("1.1.0-alpha.2"))
+        self.assertFalse(Version("1.1.0-beta.2") < Version("1.1.0-alpha.2"))
