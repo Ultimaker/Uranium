@@ -8,6 +8,9 @@ import os.path
 import pytest
 import unittest.mock #For mocking the container provider priority.
 
+from UM.Application import Application
+from UM.Signal import Signal
+from UM.VersionUpgradeManager import VersionUpgradeManager
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Settings.ContainerProvider import ContainerProvider #To provide the fixtures for container providers.
@@ -48,10 +51,8 @@ def container_registry(application, test_containers_provider):
         )
     )
 
-    ContainerRegistry.setApplication(application)
-
     ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    registry = ContainerRegistry.getInstance()
+    registry = ContainerRegistry(application)
 
     #We need to mock the "priority" plug-in metadata field, but preferably without mocking an entire plug-in.
     with unittest.mock.patch("UM.PluginRegistry.PluginRegistry.getMetaData", unittest.mock.MagicMock(return_value = {"container_provider": {}})):

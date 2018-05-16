@@ -3,7 +3,6 @@
 
 from UM.Application import Application # To use the plug-in manager.
 from UM.PluginObject import PluginObject # To create artificial plug-ins.
-from UM.VersionUpgrade import VersionUpgrade
 from UM.VersionUpgradeManager import VersionUpgradeManager
 
 import pytest

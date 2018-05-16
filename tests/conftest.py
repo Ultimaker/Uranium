@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
@@ -10,7 +10,7 @@ from UM.PluginRegistry import PluginRegistry
 
 class FixtureApplication(QtApplication):
     def __init__(self):
-        Application._instance = None
+        Application._Application__instance = None
         super().__init__(name = "test", version = "1.0")
         Signal._signalQueue = self
 
@@ -27,8 +27,7 @@ def application():
 @pytest.fixture()
 def plugin_registry(application):
     PluginRegistry._PluginRegistry__instance = None
-    plugin_registry = PluginRegistry.getInstance()
+    plugin_registry = PluginRegistry(application)
     plugin_registry._plugin_locations = [] # Clear pre-defined plugin locations
-    plugin_registry.setApplication(application)
     return plugin_registry
 
