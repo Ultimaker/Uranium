@@ -11,9 +11,11 @@ class TestResources(TestCase):
         self.assertTrue(Version("2.1.0") > Version("1.5.0"))
         self.assertTrue(Version("2.1.0") > Version("1.1.0"))
         self.assertTrue(Version("1.1.2") > Version("1.1.1"))
+        self.assertTrue(Version("1.1.2") == Version("1.1.2"))
 
     def test_version2(self):
         self.assertTrue(Version("1.1.0-alpha.2") > Version("1.1.0-alpha.1"))
+        self.assertTrue(Version("1.1.0-alpha.2") == Version("1.1.0-alpha.2"))
         self.assertFalse(Version("1.1.0-alpha.2") > Version("1.1.1-alpha.1"))
         self.assertTrue(Version("2.1.0-beta") > Version("1.5.0"))
         self.assertFalse(Version("1.1.2-beta.2") > Version("1.1.2.alpha.1"))
