@@ -312,7 +312,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
                     from UM.Qt.QtApplication import QtApplication
-                    UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
+                    QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
                     metadata = provider.loadMetadata(container_id)
                     if metadata is None:
                         continue
@@ -336,8 +336,8 @@ class ContainerRegistry(ContainerRegistryInterface):
                 for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                     if container_id not in self._containers:
                         #Update UI while loading.
-                        UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
-
+                        from UM.Qt.QtApplication import QtApplication
+                        QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
                         try:
                             self._containers[container_id] = provider.loadContainer(container_id)
                         except:
