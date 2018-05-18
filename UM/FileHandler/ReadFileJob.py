@@ -7,6 +7,7 @@ from UM.Logger import Logger
 from UM.Mesh.MeshReader import MeshReader
 
 import time
+import os
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
@@ -24,10 +25,17 @@ class ReadFileJob(Job):
         return self._filename
 
     def run(self):
+        # HACK: Packages shouldn't be checked for a reader. Maybe someday we build a reader. Maybe not. But for now,
+        # this hack is the only solution.
+        filename, file_extension = os.path.splitext(self._filename)
+        if file_extension == ".curapackage":
+            return
+
         if self._handler is None:
             Logger.log("e", "FileHandler was not set.")
             return None
         reader = self._handler.getReaderForFile(self._filename)
+
         if not reader:
             result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Cannot open files of the type of <filename>{0}</filename>", self._filename), lifetime=0, title = i18n_catalog.i18nc("@info:title", "Invalid File"))
             result_message.show()
