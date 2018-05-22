@@ -68,8 +68,17 @@ class UpdateCheckerJob(Job):
                             newest_version = Version([int(value["major"]), int(value["minor"]), int(value["revision"])])
                             if local_version < newest_version:
                                 Logger.log("i", "Found a new version of the software. Spawning message")
-                                message = Message(i18n_catalog.i18nc("@info", "A new version is available!"), title = i18n_catalog.i18nc("@info:title", "Version Upgrade"))
+
+                                title_message = i18n_catalog.i18nc("@info:status","Cura {0} is available!", newest_version)
+                                content_message = i18n_catalog.i18nc("@info:status","Cura {0} provides better and reliable printing experience.", newest_version)
+
+                                footer_text = i18n_catalog.i18nc("@action:info", "View release notes")
+                                footer_link = "?url=https://ultimaker.com/en/products/ultimaker-cura-software/release-notes"
+
+                                footer_message = footer_text + " " + footer_link
+                                message = Message(text = content_message, title = title_message, footer = footer_message)
                                 message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
+
                                 if self._set_download_url_callback:
                                     self._set_download_url_callback(value["url"])
                                 message.actionTriggered.connect(self._callback)

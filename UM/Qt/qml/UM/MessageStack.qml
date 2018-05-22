@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2018 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
@@ -31,7 +31,7 @@ ListView {
         property variant actions: model.actions
         property variant model_id: model.id
 
-        property int totalMessageHeight: Math.max(message.labelHeight, message.actionButtonsHeight + message.closeButtonHeight) + message.labelTopBottomMargin
+        property int totalMessageHeight: Math.max(message.labelHeight, message.actionButtonsHeight + message.closeButtonHeight) + message.labelTopBottomMargin + actionButtons.height
         property int totalProgressBarHeight : Math.round(message.labelHeight + message.progressBarHeight + message.actionButtonsHeight + UM.Theme.getSize("default_margin").height / 2)
 
         width: UM.Theme.getSize("message").width
@@ -42,14 +42,45 @@ ListView {
         border.width: UM.Theme.getSize("default_lining").width
         border.color: UM.Theme.getColor("message_border")
 
+        Button {
+            id: closeButton;
+            width: UM.Theme.getSize("message_close").width;
+            height: UM.Theme.getSize("message_close").height;
+
+            anchors {
+                right: parent.right;
+                rightMargin: UM.Theme.getSize("default_margin").width;
+                top: parent.top;
+                topMargin: UM.Theme.getSize("default_margin").width;
+            }
+
+            UM.RecolorImage {
+                anchors.fill: parent;
+                sourceSize.width: width
+                sourceSize.height: width
+                color: UM.Theme.getColor("message_text")
+                source: UM.Theme.getIcon("cross1")
+            }
+
+            onClicked: base.model.hideMessage(model.id)
+            visible: model.dismissable
+            enabled: model.dismissable
+
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: UM.Theme.getColor("message_background")
+                }
+            }
+        }
+
         Label {
             id: messageTitle
 
             anchors {
                 left: parent.left;
                 leftMargin: UM.Theme.getSize("message_inner_margin").width
-                top: parent.top;
-                topMargin: model.title != undefined ? Math.round(UM.Theme.getSize("default_margin").height / 2) : 0;
+                top: closeButton.top;
+                topMargin: model.title != undefined ? -Math.round(UM.Theme.getSize("default_margin").height / 4) : 0;
             }
 
             text: model.title == undefined ? "" : model.title
@@ -64,9 +95,7 @@ ListView {
             anchors {
                 left: parent.left;
                 leftMargin: UM.Theme.getSize("message_inner_margin").width
-                right: actionButtons.left;
-                rightMargin: UM.Theme.getSize("message_inner_margin").width + closeButton.width
-
+                right: closeButton.left;
                 top: model.progress != null ? messageTitle.bottom : messageTitle.bottom;
                 topMargin: message.labelTopBottomMargin;
             }
@@ -111,35 +140,46 @@ ListView {
             anchors.rightMargin: UM.Theme.getSize("message_inner_margin").width
         }
 
-        Button {
-            id: closeButton;
-            width: UM.Theme.getSize("message_close").width;
-            height: UM.Theme.getSize("message_close").height;
+        Label
+        {
+            id: footerLink
 
             anchors {
-                right: parent.right;
-                rightMargin: UM.Theme.getSize("default_margin").width;
-                top: parent.top;
-                topMargin: UM.Theme.getSize("default_margin").width;
+                top: messageLabel.bottom
+                right: actionButtons.left
+                left: messageLabel.left
+                topMargin: Math.round(UM.Theme.getSize("default_margin").width / 2)
             }
 
-            UM.RecolorImage {
-                anchors.fill: parent;
-                sourceSize.width: width
-                sourceSize.height: width
-                color: UM.Theme.getColor("message_text")
-                source: UM.Theme.getIcon("cross1")
-            }
+            text:
+            {
+                var msg = model.footer
 
-            onClicked: base.model.hideMessage(model.id)
-            visible: model.dismissable
-            enabled: model.dismissable
-
-            style: ButtonStyle {
-                background: Rectangle {
-                    color: UM.Theme.getColor("message_background")
+                if(msg == undefined)
+                {
+                    return ""
                 }
+                else
+                {
+                    // Find link in the footer, the link starts from '?url='
+                    var linkIndex = msg.indexOf("?url=")
+                    if(linkIndex != -1)
+                    {
+                        var link = msg.substring(linkIndex + "?url=".length, msg.length)
+                        var msgText = msg.substring(0, linkIndex)
+                        var linkTag = "<a href='%1'>" + msgText + "</a>"
+                        var fullLink = linkTag.arg(link)
+                        return fullLink;
+                    }
+                }
+                return msg
             }
+
+            onLinkActivated: Qt.openUrlExternally(link)
+            elide: Text.ElideRight
+
+            linkColor: UM.Theme.getColor("text_link")
+            width: messageLabel.width
         }
 
         ColumnLayout
@@ -147,10 +187,9 @@ ListView {
             id: actionButtons;
 
             anchors {
-                right: parent.right
-                rightMargin: UM.Theme.getSize("message_inner_margin").width
-                top: closeButton.bottom
-                topMargin: UM.Theme.getSize("default_margin").height
+                right: closeButton.right
+                top: messageLabel.bottom;
+                topMargin: Math.round(UM.Theme.getSize("default_margin").width / 3)
             }
 
             Repeater
