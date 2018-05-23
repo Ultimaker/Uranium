@@ -55,10 +55,6 @@ class MeshData:
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = type
         self._file_name = file_name  # type: Optional[str]
-        if file_name:
-            from UM.Application import Application
-            self._application = Application.getInstance()
-            self._application.getController().getScene().addWatchedFile(file_name)
         # original center position
         self._center_position = center_position
         # original zero position, is changed after transformation
