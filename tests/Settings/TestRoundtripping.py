@@ -65,7 +65,7 @@ def test_roundtrip_basic(tmpdir, process_count):
     for result in results:
         assert result == data
 
-def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
+def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry, container_registry):
     instance_container = InstanceContainer("test_container")
     instance_container.setName("Test Instance Container")
     instance_container.setDefinition("inherits")

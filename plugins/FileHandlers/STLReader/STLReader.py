@@ -36,8 +36,8 @@ except ImportError:
     # We have our own fallback code.
 
 class STLReader(MeshReader):
-    def __init__(self):
-        super(STLReader, self).__init__()
+    def __init__(self, application):
+        super(STLReader, self).__init__(application)
         self._supported_extensions = [".stl"]
 
     def load_file(self, file_name, mesh_builder, _use_numpystl = False):
@@ -59,7 +59,7 @@ class STLReader(MeshReader):
         mesh_builder.setFileName(file_name)
 
     ## Decide if we need to use ascii or binary in order to read file
-    def read(self, file_name):
+    def _read(self, file_name):
         mesh_builder = MeshBuilder()
         scene_node = SceneNode()
 
