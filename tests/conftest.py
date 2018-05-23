@@ -9,6 +9,8 @@ from UM.Signal import Signal
 from UM.PluginRegistry import PluginRegistry
 from UM.VersionUpgradeManager import VersionUpgradeManager
 
+# This mock application must extend from Application and not QtApplication otherwise some QObjects are created and
+# a segfault is raised.
 class FixtureApplication(Application):
     def __init__(self):
         Application._Application__instance = None
