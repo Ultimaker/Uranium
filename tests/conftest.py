@@ -13,7 +13,6 @@ from UM.VersionUpgradeManager import VersionUpgradeManager
 # a segfault is raised.
 class FixtureApplication(Application):
     def __init__(self):
-        Application._Application__instance = None
         super().__init__(name = "test", version = "1.0")
         super().initialize()
         Signal._signalQueue = self
@@ -29,7 +28,11 @@ class FixtureApplication(Application):
 
 @pytest.fixture()
 def application():
-    return FixtureApplication()
+    # Since we need to use it more that once, we create the application the first time and use its instance the second
+    application = FixtureApplication.getInstance()
+    if application is None:
+        application = FixtureApplication()
+    return application
 
 @pytest.fixture()
 def plugin_registry(application):
