@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 # The purpose of this class is to create fixtures or methods that can be shared
@@ -9,6 +9,7 @@ import pytest
 import unittest.mock #For mocking the container provider priority.
 
 from UM.Application import Application
+from UM.PluginRegistry import PluginRegistry
 from UM.Signal import Signal
 from UM.VersionUpgradeManager import VersionUpgradeManager
 from UM.Resources import Resources
@@ -26,7 +27,7 @@ import UM.Settings.InstanceContainer
 #
 #   \return A brand new container registry.
 @pytest.fixture
-def container_registry(application, test_containers_provider):
+def container_registry(application, test_containers_provider, plugin_registry: PluginRegistry):
     MimeTypeDatabase.addMimeType(
         MimeType(
             name = "application/x-uranium-definitioncontainer",
@@ -77,7 +78,7 @@ def container_provider():
 ##  Container provider which provides the containers that are in the setting
 #   test directory.
 @pytest.fixture
-def test_containers_provider(container_provider: ContainerProvider) -> ContainerProvider:
+def test_containers_provider(container_provider: ContainerProvider, upgrade_manager: VersionUpgradeManager) -> ContainerProvider:
     my_folder = os.path.dirname(os.path.abspath(__file__))
 
     definition_ids = {"basic_definition", "children", "functions", "inherits", "metadata_definition", "multiple_settings", "single_setting"}
