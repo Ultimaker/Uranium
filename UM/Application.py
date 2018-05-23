@@ -9,7 +9,6 @@ import threading
 from UM.Controller import Controller
 from UM.Message import Message #For typing.
 from UM.PluginRegistry import PluginRegistry
-from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
@@ -23,7 +22,6 @@ from UM.Preferences import Preferences
 from UM.View.Renderer import Renderer #For typing.
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
-from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 
 from typing import TYPE_CHECKING, Dict, List, Callable, Any, Optional
 if TYPE_CHECKING:
@@ -80,8 +78,6 @@ class Application:
 
         self._renderer = None #type: Renderer
         self._controller = None #type: Controller
-        self._mesh_file_handler = None #type: MeshFileHandler
-        self._workspace_file_handler = None #type: WorkspaceFileHandler
         self._backend = None #type: Backend
         self._output_device_manager = None #type: OutputDeviceManager
         self._operation_stack = None #type: OperationStack
@@ -152,8 +148,6 @@ class Application:
         self._preferences.addPreference("general/disabled_plugins", "")
 
         self._controller = Controller(self)
-        self._mesh_file_handler = MeshFileHandler(self)
-        self._workspace_file_handler = WorkspaceFileHandler(self)
         self._output_device_manager = OutputDeviceManager()
 
         self._operation_stack = OperationStack(self._controller)

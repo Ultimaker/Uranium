@@ -84,6 +84,9 @@ class QtApplication(QApplication, Application):
 
         super().__init__(sys.argv, **kwargs)
 
+        self._mesh_file_handler = None #type: MeshFileHandler
+        self._workspace_file_handler = None #type: WorkspaceFileHandler
+
         self._qml_import_paths = []
         self._main_qml = "main.qml"
         self._qml_engine = None
@@ -110,6 +113,9 @@ class QtApplication(QApplication, Application):
 
     def initialize(self) -> None:
         super().initialize()
+
+        self._mesh_file_handler = MeshFileHandler(self)
+        self._workspace_file_handler = WorkspaceFileHandler(self)
 
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
