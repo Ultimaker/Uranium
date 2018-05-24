@@ -20,8 +20,7 @@ def main():
         os.putenv("MYPYPATH", r".:./stubs")
 
     # Mypy really needs to be run via its Python script otherwise it can't find its data files.
-    mypyExe = where("mypy.bat" if sys.platform == "win32" else "mypy")
-    mypyModule = os.path.join(os.path.dirname(mypyExe), "mypy")
+    mypyModule = where("mypy.exe" if sys.platform == "win32" else "mypy")
 
     result = subprocess.run([sys.executable, mypyModule, "-p", "UM", "--ignore-missing-imports"])
     if result.returncode != 0:

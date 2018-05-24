@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Dict, TYPE_CHECKING
+from typing import Dict, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from UM.Scene.SceneNode import SceneNode
@@ -18,7 +18,7 @@ class SceneNodeDecorator:
     def setNode(self, node: "SceneNode") -> None:
         self._node = node
 
-    def getNode(self) -> "SceneNode":
+    def getNode(self) -> Optional["SceneNode"]:
         return self._node
 
     ##  Clear all data associated with this decorator. This will be called before the decorator is removed
