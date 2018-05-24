@@ -186,7 +186,7 @@ class PackageManager(QObject):
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
 
-    # This is called by drag-and-dropping curapackage files.
+    # This is called by drag-and-dropping package files.
     @pyqtSlot(QUrl)
     def installPackageViaDragAndDrop(self, file_url: str) -> None:
         filename = QUrl(file_url).toLocalFile()
@@ -221,11 +221,11 @@ class PackageManager(QObject):
                     Logger.log("i", "Package [%s] version [%s] is scheduled to be installed.",
                                package_id, package_info["package_version"])
                     # Copy the file to cache dir so we don't need to rely on the original file to be present
-                    package_cache_dir = os.path.join(os.path.abspath(Resources.getCacheStoragePath()), "cura_packages")
+                    package_cache_dir = os.path.join(os.path.abspath(Resources.getCacheStoragePath()), "packages")
                     if not os.path.exists(package_cache_dir):
                         os.makedirs(package_cache_dir, exist_ok=True)
 
-                    target_file_path = os.path.join(package_cache_dir, package_id + ".curapackage")
+                    target_file_path = os.path.join(package_cache_dir, package_id + ".package")
                     shutil.copy2(filename, target_file_path)
 
                     self._to_install_package_dict[package_id] = {"package_info": package_info,
