@@ -136,6 +136,11 @@ class Application:
         UM.Settings.InstanceContainer.setContainerRegistry(self.getContainerRegistry())
         UM.Settings.ContainerStack.setContainerRegistry(self.getContainerRegistry())
 
+        # Initialize the package manager to remove and install scheduled packages.
+        from UM.PackageManager import PackageManager
+        self._package_manager = PackageManager(self)
+        self._package_manager.initialize()
+
         self._command_line_parser = parser #type: argparse.ArgumentParser
         self._parsed_command_line = parsed_command_line #type: Dict[str, Any]
         self.parseCommandLine()

@@ -40,8 +40,7 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
-if TYPE_CHECKING:
-    from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject
 
 
 # Raised when we try to use an unsupported version of a dependency.
@@ -550,6 +549,10 @@ class QtApplication(QApplication, Application):
 
     def getWorkspaceFileHandler(self) -> WorkspaceFileHandler:
         return self._workspace_file_handler
+
+    @pyqtSlot(result = QObject)
+    def getPackageManager(self, *args):
+        return self._package_manager
 
     ##  Gets the instance of this application.
     #
