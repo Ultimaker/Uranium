@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import gettext
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 from UM.Resources import Resources
 
@@ -64,7 +64,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
         translated = text  # Default to hard-coded text if no translation catalogue is loaded.
         if self.hasTranslationLoaded():
-            translated = self.__translation.gettext(text)
+            translated = cast(gettext.NullTranslations, self.__translation).gettext(text)
 
         if args:
             translated = translated.format(*args)  # Positional arguments are replaced in the (translated) text.
@@ -86,7 +86,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         translated = text  # Default to hard-coded text if no translation catalogue is loaded.
         if self.hasTranslationLoaded():
             message_with_context = "{0}\x04{1}".format(context, text)  # \x04 is "end of transmission" byte, indicating to gettext that they are two different texts.
-            message = self.__translation.gettext(message_with_context)
+            message = cast(gettext.NullTranslations, self.__translation).gettext(message_with_context)
             if message != message_with_context:
                 translated = message
 
@@ -116,7 +116,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
         translated = multiple if counter != 1 else single  # Default to hard-coded texts if no translation catalogue is loaded.
         if self.hasTranslationLoaded():
-            translated = self.__translation.ngettext(single, multiple, counter)
+            translated = cast(gettext.NullTranslations, self.__translation).ngettext(single, multiple, counter)
 
         translated = translated.format(counter, args)  # Positional arguments are replaced in the (translated) text, but this time the counter is treated as the first argument.
         return self._replaceTags(translated)  # Also replace the global keys.
@@ -146,7 +146,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         translated = multiple if counter != 1 else single  # Default to hard-coded texts if no translation catalogue is loaded.
         if self.hasTranslationLoaded():
             message_with_context = "{0}\x04{1}".format(context, single)  # \x04 is "end of transmission" byte, indicating to gettext that they are two different texts.
-            message = self.__translation.ngettext(message_with_context, multiple, counter)
+            message = cast(gettext.NullTranslations, self.__translation).ngettext(message_with_context, multiple, counter)
 
             if message != message_with_context:
                 translated = message
@@ -192,8 +192,8 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
         # Ask gettext for all the translations in the .mo files.
         for path in Resources.getAllPathsForType(Resources.i18n):
-            if gettext.find(self.__name, path, languages = [self.__language]):
-                self.__translation = gettext.translation(self.__name, path, languages = [self.__language])
+            if gettext.find(cast(str, self.__name), path, languages = [self.__language]):
+                self.__translation = gettext.translation(cast(str, self.__name), path, languages = [self.__language])
 
         self.__require_update = False
 
@@ -207,7 +207,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \param replacements A dictionary of strings to strings, indicating which
     #   words between tags should get replaced.
     @classmethod
-    def setTagReplacements(cls, replacements: Dict[str, str]) -> None:
+    def setTagReplacements(cls, replacements: Dict[str, Optional[str]]) -> None:
         cls.__tag_replacements = replacements
 
     ##  Set the ``Application`` instance to request the language and application
@@ -233,5 +233,5 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     __tag_replacements = {
         "filename": None,
         "message": None
-    }   # type: Dict[str, str]
+    }   # type: Dict[str, Optional[str]]
     __application = None
