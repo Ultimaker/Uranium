@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List, Set
 import json
 import os
 import shutil
@@ -26,7 +26,7 @@ class PackageManager(QObject):
         self._container_registry = self._application.getContainerRegistry()
         self._plugin_registry = self._application.getPluginRegistry()
 
-        #JSON files that keep track of all installed packages.
+        # JSON files that keep track of all installed packages.
         self._user_package_management_file_path = None
         self._bundled_package_management_file_path = None
         for search_path in Resources.getSearchPaths():
@@ -37,16 +37,21 @@ class PackageManager(QObject):
             candidate_user_path = os.path.join(search_path, "packages.json")
             if os.path.exists(candidate_user_path):
                 self._user_package_management_file_path = candidate_user_path
-        if self._user_package_management_file_path is None: #Doesn't exist yet.
+        if self._user_package_management_file_path is None:  # Doesn't exist yet.
             self._user_package_management_file_path = os.path.join(Resources.getDataStoragePath(), "packages.json")
 
-        self._installation_dirs_dict = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))} #type: Dict[str, str]
-        self._bundled_package_dict = {}     # A dict of all bundled packages
-        self._installed_package_dict = {}   # A dict of all installed packages
-        self._to_remove_package_set = set() # A set of packages that need to be removed at the next start
-        self._to_install_package_dict = {}  # A dict of packages that need to be installed at the next start
+        self._installation_dirs_dict = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}  # type: Dict[str, str]
 
-    installedPackagesChanged = pyqtSignal() # Emitted whenever the installed packages collection have been changed.
+        # A dict of all bundled packages
+        self._bundled_package_dict = {}  # type: Dict[str, Dict[str, Any]]
+        # A dict of all installed packages
+        self._installed_package_dict = {}  # type: Dict[str, Dict[str, Any]]
+        # A set of packages that need to be removed at the next start
+        self._to_remove_package_set = set()  # type: Set[str]
+        # A dict of packages that need to be installed at the next start
+        self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]
+
+    installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
 
     def initialize(self):
         self._loadManagementData()
@@ -61,7 +66,7 @@ class PackageManager(QObject):
             return
         # Load the bundled packages:
         with open(self._bundled_package_management_file_path, "r", encoding = "utf-8") as f:
-            self._bundled_package_dict = json.load(f, encoding = "utf-8")
+            self._bundled_package_dict = json.load(f, encoding = "utf-8")  # type: Dict[str, Dict[str, Any]]
             Logger.log("i", "Loaded bundled packages data from %s", self._bundled_package_management_file_path)
 
         # Load the user package management file
@@ -104,7 +109,6 @@ class PackageManager(QObject):
 
     # (for initialize) Installs all packages that have been scheduled to be installed.
     def _installAllScheduledPackages(self) -> None:
-
         while self._to_install_package_dict:
             package_id, package_info = list(self._to_install_package_dict.items())[0]
             self._installPackage(package_info)
@@ -113,7 +117,7 @@ class PackageManager(QObject):
             self._saveManagementData()
 
     # Checks the given package is installed. If so, return a dictionary that contains the package's information.
-    def getInstalledPackageInfo(self, package_id: str) -> Optional[dict]:
+    def getInstalledPackageInfo(self, package_id: str) -> Optional[Dict[str, Any]]:
         if package_id in self._to_remove_package_set:
             return None
 
@@ -131,7 +135,7 @@ class PackageManager(QObject):
 
         return None
 
-    def getAllInstalledPackagesInfo(self) -> dict:
+    def getAllInstalledPackagesInfo(self) -> Dict[str, List[Dict[str, Any]]]:
         # Add bundled, installed, and to-install packages to the set of installed package IDs
         all_installed_ids = set()
 
@@ -144,8 +148,7 @@ class PackageManager(QObject):
         if self._to_install_package_dict.keys():
             all_installed_ids = all_installed_ids.union(set(self._to_install_package_dict.keys()))
 
-        # map of <package_type> -> <package_id> -> <package_info>
-        installed_packages_dict = {}
+        installed_packages_dict = {}  # type: Dict[str, List[Dict[str, Any]]]
         for package_id in all_installed_ids:
             # Skip required plugins as they should not be tampered with
             if package_id in Application.getInstance().getRequiredPlugins():
@@ -265,7 +268,7 @@ class PackageManager(QObject):
         self.installedPackagesChanged.emit()
 
     ##  Is the package an user installed package?
-    def isUserInstalledPackage(self, package_id: str):
+    def isUserInstalledPackage(self, package_id: str) -> bool:
         return package_id in self._installed_package_dict
 
     # Removes everything associated with the given package ID.
@@ -283,7 +286,7 @@ class PackageManager(QObject):
             break
 
     # Installs all files associated with the given package.
-    def _installPackage(self, installation_package_data: dict):
+    def _installPackage(self, installation_package_data: Dict[str, Any]) -> None:
         package_info = installation_package_data["package_info"]
         filename = installation_package_data["filename"]
 
@@ -301,10 +304,8 @@ class PackageManager(QObject):
 
         # Install the package
         with zipfile.ZipFile(filename, "r") as archive:
-
             temp_dir = tempfile.TemporaryDirectory()
             archive.extractall(temp_dir.name)
-
 
             for sub_dir_name, installation_root_dir in self._installation_dirs_dict.items():
                 src_dir_path = os.path.join(temp_dir.name, "files", sub_dir_name)
