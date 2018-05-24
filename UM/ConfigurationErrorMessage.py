@@ -19,9 +19,9 @@ i18n_catalog = i18nCatalog("uranium")
 class ConfigurationErrorMessage(Message):
 
     def __init__(self, application, *args, **kwargs):
-        if self.__instance is not None:
+        if ConfigurationErrorMessage.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        self.__instance = self
+        ConfigurationErrorMessage.__instance = self
 
         super().__init__(*args, **kwargs)
         self._application = application
@@ -47,8 +47,8 @@ class ConfigurationErrorMessage(Message):
             Resources.factoryReset()
             sys.exit(1)
 
-    __instance = None
+    __instance = None   # type: ConfigurationErrorMessage
 
     @classmethod
-    def getInstance(cls, *args, **kwargs) -> Optional["ConfigurationErrorMessage"]:
+    def getInstance(cls, *args, **kwargs) -> "ConfigurationErrorMessage":
         return cls.__instance
