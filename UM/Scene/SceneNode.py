@@ -315,7 +315,8 @@ class SceneNode:
                 else:
                     transformed_vertices = numpy.concatenate((transformed_vertices, tv), axis = 0)
         else:
-            transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation()).getVertices()
+            if self._mesh_data:
+                transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation()).getVertices()
         return transformed_vertices
 
     ##  \brief Get the transformed normals from this scene node/object, based on the transformation of scene nodes wrt root.
@@ -331,7 +332,8 @@ class SceneNode:
                 else:
                     transformed_normals = numpy.concatenate((transformed_normals, tv), axis = 0)
         else:
-            transformed_normals = self._mesh_data.getTransformed(self.getWorldTransformation()).getNormals()
+            if self._mesh_data:
+                transformed_normals = self._mesh_data.getTransformed(self.getWorldTransformation()).getNormals()
         return transformed_normals
 
     ##  \brief Set the mesh of this node/object
@@ -694,8 +696,8 @@ class SceneNode:
         if not self._calculate_aabb:
             return
         self._aabb = None
-        if self.getParent():
-            self.getParent()._resetAABB()
+        if self._parent:
+            self._parent._resetAABB()
         self.boundingBoxChanged.emit()
 
     def _calculateAABB(self) -> None:
