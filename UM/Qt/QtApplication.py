@@ -4,6 +4,7 @@
 import sys
 import os
 import signal
+from typing import List
 from typing import cast, Dict, Optional, TYPE_CHECKING
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QT_VERSION_STR, PYQT_VERSION_STR
@@ -15,6 +16,7 @@ from PyQt5.QtCore import QTimer
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.FileHandler.ReadFileJob import ReadFileJob
 from UM.Mesh.MeshFileHandler import MeshFileHandler
+from UM.Qt.Bindings.Theme import Theme
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
@@ -61,7 +63,7 @@ class QtApplication(QApplication, Application):
     pluginsLoaded = Signal()
     applicationRunning = Signal()
     
-    def __init__(self, tray_icon_name: Optional[str] = None, **kwargs):
+    def __init__(self, tray_icon_name: Optional[str] = None, **kwargs) -> None:
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
@@ -82,28 +84,25 @@ class QtApplication(QApplication, Application):
         # use Qt Quick Scene Graph "basic" render loop
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
-        super().__init__(sys.argv, **kwargs)
+        super().__init__(argv = sys.argv, **kwargs)
 
-        self._mesh_file_handler = None #type: MeshFileHandler
-        self._workspace_file_handler = None #type: WorkspaceFileHandler
-
-        self._qml_import_paths = []
+        self._qml_import_paths = [] #type: List[str]
         self._main_qml = "main.qml"
         self._qml_engine = None
         self._main_window = None
         self._tray_icon_name = tray_icon_name
         self._tray_icon = None
-        self._tray_icon_widget = None
+        self._tray_icon_widget = None #type: Optional[QSystemTrayIcon]
         self._theme = None
 
-        self._job_queue = None
-        self._version_upgrade_manager = None
+        self._job_queue = None #type: Optional[JobQueue]
+        self._version_upgrade_manager = None #type: Optional[VersionUpgradeManager]
 
         self._is_shutting_down = False
 
-        self._recent_files = []
+        self._recent_files = [] #type: List[str]
 
-        self._configuration_error_message = None
+        self._configuration_error_message = None #type: Optional[ConfigurationErrorMessage]
 
     def addCommandLineOptions(self):
         super().addCommandLineOptions()
@@ -114,8 +113,8 @@ class QtApplication(QApplication, Application):
     def initialize(self) -> None:
         super().initialize()
 
-        self._mesh_file_handler = MeshFileHandler(self)
-        self._workspace_file_handler = WorkspaceFileHandler(self)
+        self._mesh_file_handler = MeshFileHandler(self) #type: MeshFileHandler
+        self._workspace_file_handler = WorkspaceFileHandler(self) #type: WorkspaceFileHandler
 
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
@@ -207,7 +206,6 @@ class QtApplication(QApplication, Application):
 
         # Initialize System tray icon and make it invisible because it is used only to show pop up messages
         self._tray_icon = None
-        self._tray_icon_widget = None
         if self._tray_icon_name:
             self._tray_icon = QIcon(Resources.getPath(Resources.Images, self._tray_icon_name))
             self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
@@ -360,11 +358,12 @@ class QtApplication(QApplication, Application):
             self._main_window.visible = visible
 
     @property
-    def isVisible(self):
+    def isVisible(self) -> bool:
         if self._main_window is not None:
             return self._main_window.visible
+        return False
 
-    def getTheme(self):
+    def getTheme(self) -> Optional[Theme]:
         if self._theme is None:
             if self._qml_engine is None:
                 Logger.log("e", "The theme cannot be accessed before the engine is initialised")
@@ -392,7 +391,7 @@ class QtApplication(QApplication, Application):
 
         if save_data:
             try:
-                self.getPreferences.writeToFile(Resources.getStoragePath(Resources.Preferences,
+                self.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences,
                                                                                self.getApplicationName() + ".cfg"))
             except Exception as e:
                 Logger.log("e", "Exception while saving preferences: %s", repr(e))
@@ -513,6 +512,8 @@ class QtApplication(QApplication, Application):
     #  \return None in case the creation failed (qml error), else it returns the qml instance.
     #  \note If the creation fails, this function will ensure any errors are logged to the logging service.
     def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"]=None) -> Optional["QObject"]:
+        if self._qml_engine is None: # Protect in case the engine was not initialized yet
+            return None
         path = QUrl.fromLocalFile(qml_file_path)
         component = QQmlComponent(self._qml_engine, path)
         result_context = QQmlContext(self._qml_engine.rootContext())
@@ -548,7 +549,7 @@ class QtApplication(QApplication, Application):
                 continue
             if not node.callDecoration("isSliceable") and not node.callDecoration("getLayerData") and not node.callDecoration("isGroup"):
                 continue  # Only remove nodes that are selectable.
-            if node.getParent() and node.getParent().callDecoration("isGroup"):
+            if node.getParent() and cast(SceneNode, node.getParent()).callDecoration("isGroup"):
                 continue  # Grouped nodes don't need resetting as their parent (the group) is resetted)
             nodes.append(node)
         if nodes:
@@ -575,7 +576,7 @@ class QtApplication(QApplication, Application):
     #   This is just to further specify the type of Application.getInstance().
     #   \return The instance of this application.
     @classmethod
-    def getInstance(cls, **kwargs) -> "QtApplication":
+    def getInstance(cls, *args, **kwargs) -> "QtApplication":
         return cast(QtApplication, super().getInstance(**kwargs))
 
     def _createSplashScreen(self):
