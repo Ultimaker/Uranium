@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING, cast
 
 from .FileReader import FileReader
 from .FileWriter import FileWriter
@@ -24,9 +24,9 @@ if TYPE_CHECKING:
 class FileHandler(QObject):
 
     def __init__(self, application: "QtApplication", writer_type: str = "unknown_file_writer", reader_type: str = "unknown_file_reader", parent: QObject = None) -> None:
-        if self.__class__.__instance is not None:
+        if cast(FileHandler, self.__class__).__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        self.__class__.__instance = self
+        cast(FileHandler, self.__class__).__instance = self
 
         super().__init__(parent)
 
