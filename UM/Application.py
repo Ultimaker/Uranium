@@ -43,7 +43,7 @@ class Application:
     #   \param version \type{string} Version, formatted as major.minor.rev
     #   \param build_type Additional version info on the type of build this is, such as "master".
     #   \param is_debug_mode Whether to run in debug mode.
-    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode: bool = False, **kwargs):
+    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
         if Application.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         Application.__instance = self
@@ -57,7 +57,7 @@ class Application:
         self._is_headless = False #type: bool
         self._use_external_backend = False #type: bool
 
-        self._cli_args = None
+        self._cli_args = None #type: argparse.Namespace
         self._cli_parser = argparse.ArgumentParser(prog = self._app_name, add_help = False) #type: argparse.ArgumentParser
 
         self._main_thread = threading.current_thread() #type: threading.Thread
@@ -72,7 +72,7 @@ class Application:
         self._required_plugins = [] #type: List[str]
 
         self._plugin_registry = None #type: PluginRegistry
-        self._container_registry_class = ContainerRegistry
+        self._container_registry_class = ContainerRegistry #type: type
         self._container_registry = None #type: ContainerRegistry
         self._global_container_stack = None #type: ContainerStack
 
@@ -362,7 +362,7 @@ class Application:
         else:
             return os.path.abspath(os.path.join(os.path.dirname(sys.executable), ".."))
 
-    __instance = None
+    __instance = None   # type: Application
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "Application":
