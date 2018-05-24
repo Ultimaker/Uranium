@@ -1,5 +1,5 @@
 # Copyright (c) 2018 Ultimaker B.V.
-# Cura is released under the terms of the LGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Optional, Dict, Any
 import json
@@ -16,7 +16,7 @@ from UM.Resources import Resources
 from UM.Version import Version
 
 
-class CuraPackageManager(QObject):
+class PackageManager(QObject):
     Version = 1
 
     def __init__(self, parent = None):
@@ -85,7 +85,7 @@ class CuraPackageManager(QObject):
         container_registry = self._application.getContainerRegistry()
         with container_registry.lockFile():
             with open(self._user_package_management_file_path, "w", encoding = "utf-8") as f:
-                data_dict = {"version": CuraPackageManager.Version,
+                data_dict = {"version": PackageManager.Version,
                              "installed": self._installed_package_dict,
                              "to_remove": list(self._to_remove_package_set),
                              "to_install": self._to_install_package_dict}
@@ -304,10 +304,10 @@ class CuraPackageManager(QObject):
             temp_dir = tempfile.TemporaryDirectory()
             archive.extractall(temp_dir.name)
 
-            from cura.CuraApplication import CuraApplication
+            from UM.Application import Application
             installation_dirs_dict = {
-                "materials": Resources.getStoragePath(CuraApplication.ResourceTypes.MaterialInstanceContainer),
-                "qualities": Resources.getStoragePath(CuraApplication.ResourceTypes.QualityInstanceContainer),
+                "materials": Resources.getStoragePath(Application.ResourceTypes.MaterialInstanceContainer),
+                "qualities": Resources.getStoragePath(Application.ResourceTypes.QualityInstanceContainer),
                 "plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins)),
             }
 
