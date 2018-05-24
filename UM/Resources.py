@@ -6,7 +6,7 @@ import os
 import os.path
 import re
 import shutil
-from typing import Dict, Generator, List, Optional
+from typing import Dict, Generator, List, Optional, cast
 
 from UM.Logger import Logger
 from UM.Platform import Platform
@@ -334,9 +334,10 @@ class Resources:
     @classmethod
     def _getConfigStorageRootPath(cls) -> str:
         # Returns the path where we store different versions of app configurations
-        config_path = None
         if Platform.isWindows():
             config_path = os.getenv("APPDATA")
+            if not config_path: # Protect if the getenv function returns None (it should never happen)
+                config_path = "."
         elif Platform.isOSX():
             config_path = os.path.expanduser("~/Library/Application Support")
         elif Platform.isLinux():
@@ -355,7 +356,9 @@ class Resources:
         config_root_list = [Resources._getConfigStorageRootPath()]
         if Platform.isWindows():
             # it used to be in LOCALAPPDATA on Windows
-            config_root_list.append(os.getenv("LOCALAPPDATA"))
+            config_path = os.getenv("LOCALAPPDATA")
+            if config_path: # Protect if the getenv function returns None (it should never happen)
+                config_root_list.append(config_path)
         elif Platform.isOSX():
             config_root_list.append(os.path.expanduser("~"))
 
@@ -368,7 +371,8 @@ class Resources:
 
         # Returns all possible root paths for storing app configurations (in old and new versions)
         if Platform.isLinux():
-            data_root_list.append(os.path.join(Resources._getDataStorageRootPath(), cls.ApplicationIdentifier))
+            # We can cast here to str since the _getDataStorageRootPath always returns a string if platform is Linux
+            data_root_list.append(os.path.join(cast(str, Resources._getDataStorageRootPath()), cls.ApplicationIdentifier))
         else:
             # on Windows and Mac, data and config are saved in the same place
             data_root_list = Resources._getPossibleConfigStorageRootPathList()
@@ -376,7 +380,7 @@ class Resources:
         return data_root_list
 
     @classmethod
-    def _getDataStorageRootPath(cls) -> str:
+    def _getDataStorageRootPath(cls) -> Optional[str]:
         # Returns the path where we store different versions of app data
         data_path = None
         if Platform.isLinux():
@@ -387,7 +391,7 @@ class Resources:
         return data_path
 
     @classmethod
-    def _getCacheStorageRootPath(cls) -> str:
+    def _getCacheStorageRootPath(cls) -> Optional[str]:
         # Returns the path where we store different versions of app configurations
         cache_path = None
         if Platform.isWindows():
@@ -488,7 +492,7 @@ class Resources:
             shutil.rmtree(suspected_cache_path)
 
     @classmethod
-    def _findLatestDirInPaths(cls, search_path_list: List[str], dir_type: str = "config") -> str:
+    def _findLatestDirInPaths(cls, search_path_list: List[str], dir_type: str = "config") -> Optional[str]:
         # version dir name must match: <digit(s)>.<digit(s)><whatever>
         version_regex = re.compile(r'^[0-9]+\.[0-9]+.*$')
         check_dir_type_func_dict = {
