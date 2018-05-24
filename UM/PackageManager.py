@@ -304,7 +304,6 @@ class PackageManager(QObject):
             temp_dir = tempfile.TemporaryDirectory()
             archive.extractall(temp_dir.name)
 
-            from UM.Application import Application
             installation_dirs_dict = {
                 "materials": Resources.getStoragePath(Application.ResourceTypes.MaterialInstanceContainer),
                 "qualities": Resources.getStoragePath(Application.ResourceTypes.QualityInstanceContainer),
