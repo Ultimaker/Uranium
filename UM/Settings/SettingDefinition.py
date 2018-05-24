@@ -84,7 +84,7 @@ class SettingDefinition:
         self._container = container # type: Optional[DefinitionContainerInterface]
         self._parent = parent   # type:  Optional["SettingDefinition"]
 
-        self._i18n_catalog = i18n_catalog  # type: i18nCatalog
+        self._i18n_catalog = i18n_catalog  # type: Optional[i18nCatalog]
 
         self._children = []     # type: List[SettingDefinition]
         self._relations = []    # type: List[SettingRelation]
@@ -460,7 +460,7 @@ class SettingDefinition:
     #
     #   \return \type{string} The property it depends on or None if it does not depend on another property.
     @classmethod
-    def dependsOnProperty(cls, name: str) -> str:
+    def dependsOnProperty(cls, name: str) -> Optional[str]:
         if name in cls.__property_definitions:
             return cls.__property_definitions[name]["depends_on"]
         return None
