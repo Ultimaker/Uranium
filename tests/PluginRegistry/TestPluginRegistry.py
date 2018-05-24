@@ -68,7 +68,7 @@ class TestPluginRegistry():
 
     def test_emptyPlugin(self, registry):
         registry.loadPlugin("EmptyPlugin")
-        with pytest.raises(KeyError):
+        with pytest.raises(PluginNotFoundError):
             registry.getPluginObject("EmptyPlugin")
 
     def test_invalidVersionNumber(self, registry):
