@@ -41,9 +41,9 @@ class JobQueue:
 
         self._threads = [_Worker(self) for t in range(thread_count)]
 
-        self._semaphore = threading.Semaphore(0)
-        self._jobs = []  # type: List[Job]
-        self._jobs_lock = threading.Lock()
+        self._semaphore = threading.Semaphore(0)    # type: threading.Semaphore
+        self._jobs = []                             # type: List[Job]
+        self._jobs_lock = threading.Lock()          # type: threading.Lock
 
         for thread in self._threads:
             thread.daemon = True
@@ -91,7 +91,7 @@ class JobQueue:
                 return None
             return self._jobs.pop(0)
 
-    __instance = None
+    __instance = None   # type: JobQueue
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "JobQueue":
