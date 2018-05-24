@@ -40,6 +40,7 @@ class PackageManager(QObject):
         if self._user_package_management_file_path is None: #Doesn't exist yet.
             self._user_package_management_file_path = os.path.join(Resources.getDataStoragePath(), "packages.json")
 
+        self._installation_dirs_dict = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))} #type: Dict[str, str]
         self._bundled_package_dict = {}     # A dict of all bundled packages
         self._installed_package_dict = {}   # A dict of all installed packages
         self._to_remove_package_set = set() # A set of packages that need to be removed at the next start
@@ -304,13 +305,8 @@ class PackageManager(QObject):
             temp_dir = tempfile.TemporaryDirectory()
             archive.extractall(temp_dir.name)
 
-            installation_dirs_dict = {
-                "materials": Resources.getStoragePath(Application.ResourceTypes.MaterialInstanceContainer),
-                "qualities": Resources.getStoragePath(Application.ResourceTypes.QualityInstanceContainer),
-                "plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins)),
-            }
 
-            for sub_dir_name, installation_root_dir in installation_dirs_dict.items():
+            for sub_dir_name, installation_root_dir in self._installation_dirs_dict.items():
                 src_dir_path = os.path.join(temp_dir.name, "files", sub_dir_name)
                 dst_dir_path = os.path.join(installation_root_dir, package_id)
 
