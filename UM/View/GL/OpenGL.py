@@ -6,7 +6,7 @@ import ctypes   # type: ignore
 
 from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer
 from PyQt5.QtWidgets import QMessageBox
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, cast
 
 from UM.Logger import Logger
 
@@ -51,7 +51,7 @@ class OpenGL:
         profile.setVersion(OpenGLContext.major_version, OpenGLContext.minor_version)
         profile.setProfile(OpenGLContext.profile)
 
-        self._gl = QOpenGLContext.currentContext().versionFunctions(profile) #Don't add a type here! It's actually a protected class in PyQt that depends on the implementation of your graphics card.
+        self._gl = QOpenGLContext.currentContext().versionFunctions(profile) # type: Any #It's actually a protected class in PyQt that depends on the implementation of your graphics card.
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
             QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
@@ -225,17 +225,17 @@ class OpenGL:
             offset += len(vertices)
 
         if mesh.hasNormals():
-            normals = mesh.getNormalsAsByteArray()
+            normals = cast(bytes, mesh.getNormalsAsByteArray())
             buffer.write(offset, normals, len(normals))
             offset += len(normals)
 
         if mesh.hasColors():
-            colors = mesh.getColorsAsByteArray()
+            colors = cast(bytes, mesh.getColorsAsByteArray())
             buffer.write(offset, colors, len(colors))
             offset += len(colors)
 
         if mesh.hasUVCoordinates():
-            uvs = mesh.getUVCoordinatesAsByteArray()
+            uvs = cast(bytes, mesh.getUVCoordinatesAsByteArray())
             buffer.write(offset, uvs, len(uvs))
             offset += len(uvs)
 
@@ -274,7 +274,7 @@ class OpenGL:
         buffer.create()
         buffer.bind()
 
-        data = mesh.getIndicesAsByteArray()
+        data = cast(bytes, mesh.getIndicesAsByteArray()) # We check for None at the beginning of the method
         if 'index_start' in kwargs and 'index_stop' in kwargs:
             buffer.allocate(data[4 * kwargs['index_start']:4 * kwargs['index_stop']], 4*(kwargs['index_stop'] - kwargs['index_start']))
         else:
