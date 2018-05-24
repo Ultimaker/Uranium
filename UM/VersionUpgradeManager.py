@@ -433,7 +433,7 @@ class VersionUpgradeManager:
 
         return file_name
 
-    __instance = None
+    __instance = None   # type: VersionUpgradeManager
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "VersionUpgradeManager":
