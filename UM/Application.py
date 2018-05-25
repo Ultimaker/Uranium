@@ -267,12 +267,20 @@ class Application:
         pass
 
     ##  Get name of the application.
-    #   \returns application_name \type{string}
+    #   \returns app_name \type{string}
     def getApplicationName(self) -> str:
         return self._app_name
 
+    ##  Get the preferences.
+    #   \return preferences \type{Preferences}
     def getPreferences(self) -> Preferences:
         return self._preferences
+
+    def savePreferences(self) -> None:
+        if self._preferences_filename:
+            self._preferences.writeToFile(self._preferences_filename)
+        else:
+            Logger.log("i", "Preferences filename not set. Unable to save file.")
 
     ##  Get the currently used IETF language tag.
     #   The returned tag is during runtime used to translate strings.

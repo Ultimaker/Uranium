@@ -84,7 +84,7 @@ class QtApplication(QApplication, Application):
         # use Qt Quick Scene Graph "basic" render loop
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
-        super().__init__(argv = sys.argv, **kwargs)
+        super().__init__(sys.argv, **kwargs)
 
         self._qml_import_paths = [] #type: List[str]
         self._main_qml = "main.qml"
@@ -391,8 +391,7 @@ class QtApplication(QApplication, Application):
 
         if save_data:
             try:
-                self.getPreferences().writeToFile(Resources.getStoragePath(Resources.Preferences,
-                                                                               self.getApplicationName() + ".cfg"))
+                self.savePreferences()
             except Exception as e:
                 Logger.log("e", "Exception while saving preferences: %s", repr(e))
 
