@@ -84,7 +84,7 @@ class QtApplication(QApplication, Application):
         # use Qt Quick Scene Graph "basic" render loop
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
-        super().__init__(sys.argv, **kwargs)
+        super().__init__(sys.argv, **kwargs) # type: ignore
 
         self._qml_import_paths = [] #type: List[str]
         self._main_qml = "main.qml"
