@@ -26,13 +26,14 @@ ListView {
         property int labelTopBottomMargin: Math.round(UM.Theme.getSize("default_margin").height / 2)
         property int labelHeight: messageLabel.height + (UM.Theme.getSize("message_inner_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
-        property int actionButtonsHeight: (actionButtons.height > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0) + UM.Theme.getSize("default_margin").height * 2
+        property int actionButtonsHeight: (message.actions.rowCount() > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0) + UM.Theme.getSize("default_margin").height * 2
         property int closeButtonHeight: UM.Theme.getSize("message_close").height
         property variant actions: model.actions
         property variant model_id: model.id
 
-        property int totalMessageHeight: Math.max(message.labelHeight, message.actionButtonsHeight + message.closeButtonHeight) + message.labelTopBottomMargin + actionButtons.height
-        property int totalProgressBarHeight : Math.round(message.labelHeight + message.progressBarHeight + message.actionButtonsHeight + UM.Theme.getSize("default_margin").height / 2)
+        property int totalMessageHeight: Math.max(message.labelHeight, message.actionButtonsHeight + message.closeButtonHeight) + messageTitle.height + message.labelTopBottomMargin + UM.Theme.getSize("default_margin").height
+
+        property int totalProgressBarHeight : Math.round(message.labelHeight + message.progressBarHeight + UM.Theme.getSize("default_margin").height / 2) + actionButtons.height
 
         width: UM.Theme.getSize("message").width
         height: (model.progress == null) ? totalMessageHeight : totalProgressBarHeight
@@ -79,6 +80,8 @@ ListView {
             anchors {
                 left: parent.left;
                 leftMargin: UM.Theme.getSize("message_inner_margin").width
+                right: closeButton.left
+                rightMargin: UM.Theme.getSize("message_inner_margin").width
                 top: closeButton.top;
                 topMargin: model.title != undefined ? -Math.round(UM.Theme.getSize("default_margin").height / 4) : 0;
             }
@@ -136,8 +139,7 @@ ListView {
             anchors.topMargin: Math.round(UM.Theme.getSize("message_inner_margin").height / 2)
             anchors.left: parent.left
             anchors.leftMargin: UM.Theme.getSize("message_inner_margin").width
-            anchors.right: parent.right
-            anchors.rightMargin: UM.Theme.getSize("message_inner_margin").width
+            anchors.right: closeButton.right
         }
 
         Label
@@ -188,7 +190,17 @@ ListView {
 
             anchors {
                 right: closeButton.right
-                top: messageLabel.bottom;
+                top:
+                {
+                    if(model.progress != undefined)
+                    {
+                        return totalProgressBar.bottom
+                    }
+                    else
+                    {
+                        return messageLabel.bottom
+                    }
+                }
                 topMargin: Math.round(UM.Theme.getSize("default_margin").width / 3)
             }
 
