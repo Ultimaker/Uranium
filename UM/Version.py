@@ -84,6 +84,10 @@ class Version:
     def getPostfixVersion(self) -> int:
         return self._postfix_version
 
+    ##  Check if a version has a postfix.
+    def hasPostFix(self) -> bool:
+        return self._postfix_version and self._postfix_type != ""
+
     ##  Indicates whether this version is later than the specified version.
     #
     #   Implements the > operator.
@@ -101,6 +105,7 @@ class Version:
     #   Implements the < operator.
     #   \param other Either another version object or a string representing one.
     def __lt__(self, other: Union["Version", str]) -> bool:
+        print("test=====", self, other)
         if isinstance(other, Version):
             if self._major < other.getMajor():
                 # The major version is lower.
@@ -114,13 +119,22 @@ class Version:
                     and self._minor == other.getMinor():
                 # The revision version is lower.
                 return True
-            if self._postfix_version < other.getPostfixVersion() \
+            if self.hasPostFix() and other.hasPostFix() \
+                    and self._postfix_version < other.getPostfixVersion() \
                     and self._postfix_type == other.getPostfixType() \
                     and self._revision == other.getRevision() \
                     and self._major == other.getMajor() \
                     and self._minor == other.getMinor():
                 # The postfix version is lower. This is only allowed if the postfix type is the same!
                 return True
+            if self.hasPostFix() and not other.hasPostFix():
+                # If the root version is the same but the other has no postfix, we consider the other larger.
+                # E.g. Version("1.0.0") > Version("1.0.0-alpha.7")
+                return Version("{}.{}.{}".format(
+                    self.getMajor(),
+                    self.getMinor(),
+                    self.getRevision()
+                )) == other
             return False
         elif isinstance(other, str):
             return self < Version(other)
