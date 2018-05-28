@@ -26,12 +26,17 @@ ListView {
         property int labelTopBottomMargin: Math.round(UM.Theme.getSize("default_margin").height / 2)
         property int labelHeight: messageLabel.height + (UM.Theme.getSize("message_inner_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
-        property int actionButtonsHeight: (message.actions.rowCount() > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0) + UM.Theme.getSize("default_margin").height * 2
         property int closeButtonHeight: UM.Theme.getSize("message_close").height
         property variant actions: model.actions
         property variant model_id: model.id
 
-        property int totalMessageHeight: Math.max(message.labelHeight, message.actionButtonsHeight + message.closeButtonHeight) + messageTitle.height + message.labelTopBottomMargin + UM.Theme.getSize("default_margin").height
+        property int totalMessageHeight: {
+            if(message.actions.rowCount() == 0)
+            {
+                return message.labelHeight
+            }
+            return messageLabel.height + actionButtons.height + messageTitle.height + Math.round(UM.Theme.getSize("message_inner_margin").height * 1.5)
+        }
 
         property int totalProgressBarHeight : Math.round(message.labelHeight + message.progressBarHeight + UM.Theme.getSize("default_margin").height / 2) + actionButtons.height
 
@@ -201,7 +206,7 @@ ListView {
                         return messageLabel.bottom
                     }
                 }
-                topMargin: Math.round(UM.Theme.getSize("default_margin").width / 3)
+                topMargin: Math.round(UM.Theme.getSize("default_margin").width / 2)
             }
 
             Repeater
