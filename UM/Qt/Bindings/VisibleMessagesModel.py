@@ -30,7 +30,6 @@ class VisibleMessagesModel(ListModel):
         self.addRoleName(self.ActionsRole, "actions")
         self.addRoleName(self.DismissableRole, "dismissable")
         self.addRoleName(self.TileRole, "title")
-        self.addRoleName(self.FooterRole, "footer")
         self._populateMessageList()
 
     def _populateMessageList(self):
@@ -45,8 +44,7 @@ class VisibleMessagesModel(ListModel):
             "id": str(id(message)),
             "actions": self.createActionsModel(message.getActions()),
             "dismissable": message.isDismissable(),
-            "title": message.getTitle(),
-            "footer": message.getFooter()
+            "title": message.getTitle()
         })
         message.progressChanged.connect(self._onMessageProgress)
 
