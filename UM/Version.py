@@ -105,7 +105,6 @@ class Version:
     #   Implements the < operator.
     #   \param other Either another version object or a string representing one.
     def __lt__(self, other: Union["Version", str]) -> bool:
-        print("test=====", self, other)
         if isinstance(other, Version):
             if self._major < other.getMajor():
                 # The major version is lower.
