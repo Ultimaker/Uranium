@@ -31,7 +31,7 @@ ListView {
         property variant model_id: model.id
 
         property int totalMessageHeight: {
-            if(message.actions.rowCount() == 0)
+            if (message.actions == null || message.actions.rowCount() == 0)
             {
                 return message.labelHeight
             }
@@ -173,7 +173,7 @@ ListView {
                 model:
                 {
                     var filteredModel = new Array()
-                    var sizeOfActions = message.actions.rowCount()
+                    var sizeOfActions = message.actions == null ? 0 : message.actions.rowCount()
                     if(sizeOfActions == 0 ){
                         return 0;
                     }
@@ -301,7 +301,7 @@ ListView {
                 model:
                 {
                     var filteredModel = new Array()
-                    var sizeOfActions = message.actions.rowCount()
+                    var sizeOfActions = message.actions == null ? 0 : message.actions.rowCount()
                     if(sizeOfActions == 0 ){
                         return 0;
                     }
