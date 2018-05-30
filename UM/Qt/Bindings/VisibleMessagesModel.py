@@ -17,7 +17,6 @@ class VisibleMessagesModel(ListModel):
     DismissableRole = Qt.UserRole + 8
     TileRole = Qt.UserRole + 9
     StyleRole = Qt.UserRole + 10
-    FooterRole = Qt.UserRole + 11
 
     def __init__(self, parent=None):
         super().__init__(parent)

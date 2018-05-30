@@ -28,7 +28,6 @@ class Message(QObject):
     #                   if lifetime is 0, it will never automatically be destroyed.
     #   \param dismissible Can the user dismiss the message?
     #   \param title Phrase that will be shown above the message
-    #   \param footer Phrase that will be shown below the message
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
     def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None, title = None, parent = None, use_inactivity_timer = True): #pylint: disable=bad-whitespace
         super().__init__(parent)
