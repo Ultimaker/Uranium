@@ -195,6 +195,7 @@ class QtApplication(QApplication, Application):
         except FileNotFoundError:
             Logger.log("i", "The preferences file '%s' cannot be found, will use default values",
                        self._preferences_filename)
+            self._preferences_filename = Resources.getStoragePath(Resources.Preferences, self._app_name + ".cfg")
 
         # Preferences: recent files
         self._preferences.addPreference("%s/recent_files" % self._app_name, "")
