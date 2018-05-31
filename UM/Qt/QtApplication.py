@@ -120,7 +120,6 @@ class QtApplication(QApplication, Application):
         self._workspace_file_handler = WorkspaceFileHandler.getInstance() #type: WorkspaceFileHandler
         self._workspace_file_handler.setApplication(self)
 
-    def initialize(self):
         i18n_catalog = i18nCatalog("uranium")
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
