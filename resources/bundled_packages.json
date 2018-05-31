@@ -241,7 +241,7 @@
         "package_info": {
             "package_id": "UpdateChecker",
             "package_type": "plugin",
-            "display_name": "STL Writer",
+            "display_name": "Update Checker",
             "description": "Checks for updates of the software.",
             "package_version": "1.0.0",
             "sdk_version": 4,
