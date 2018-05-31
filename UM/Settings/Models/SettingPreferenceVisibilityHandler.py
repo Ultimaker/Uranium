@@ -1,4 +1,4 @@
-from UM.Preferences import Preferences
+from UM.Application import Application
 
 from . import SettingVisibilityHandler
 
@@ -6,7 +6,7 @@ class SettingPreferenceVisibilityHandler(SettingVisibilityHandler.SettingVisibil
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)
 
-        Preferences.getInstance().preferenceChanged.connect(self._onPreferencesChanged)
+        Application.getInstance().getPreferences().preferenceChanged.connect(self._onPreferencesChanged)
         self._onPreferencesChanged("general/visible_settings")
 
         self.visibilityChanged.connect(self._onVisibilityChanged)
@@ -16,7 +16,7 @@ class SettingPreferenceVisibilityHandler(SettingVisibilityHandler.SettingVisibil
             return
 
         new_visible = set()
-        visibility_string = Preferences.getInstance().getValue("general/visible_settings")
+        visibility_string = Application.getInstance().getPreferences().getValue("general/visible_settings")
         if visibility_string is None:
             return
         for key in visibility_string.split(";"):
@@ -26,4 +26,4 @@ class SettingPreferenceVisibilityHandler(SettingVisibilityHandler.SettingVisibil
 
     def _onVisibilityChanged(self):
         preference = ";".join(self.getVisible())
-        Preferences.getInstance().setValue("general/visible_settings", preference)
+        Application.getInstance().getPreferences().setValue("general/visible_settings", preference)

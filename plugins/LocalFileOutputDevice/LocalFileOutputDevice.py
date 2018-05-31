@@ -6,10 +6,9 @@ import sys
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QFileDialog, QMessageBox, QLineEdit
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 from UM.Application import Application
-from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.FileHandler.WriteFileJob import WriteFileJob
@@ -75,7 +74,7 @@ class LocalFileOutputDevice(OutputDevice):
         if "preferred_mimetype" in kwargs and kwargs["preferred_mimetype"] is not None:
             preferred_mimetype = kwargs["preferred_mimetype"]
         else:
-            preferred_mimetype = Preferences.getInstance().getValue("local_file/last_used_type")
+            preferred_mimetype = Application.getInstance().getPreferences().getValue("local_file/last_used_type")
 
         if not file_handler:
             file_handler = Application.getInstance().getMeshFileHandler()
@@ -107,17 +106,17 @@ class LocalFileOutputDevice(OutputDevice):
         if selected_filter is not None:
             dialog.selectNameFilter(selected_filter)
 
-        stored_directory = Preferences.getInstance().getValue("local_file/dialog_save_path")
+        stored_directory = Application.getInstance().getPreferences().getValue("local_file/dialog_save_path")
         dialog.setDirectory(stored_directory)
 
         if not dialog.exec_():
             raise OutputDeviceError.UserCanceledError()
 
         save_path = dialog.directory().absolutePath()
-        Preferences.getInstance().setValue("local_file/dialog_save_path", save_path)
+        Application.getInstance().getPreferences().setValue("local_file/dialog_save_path", save_path)
 
         selected_type = file_types[filters.index(dialog.selectedNameFilter())]
-        Preferences.getInstance().setValue("local_file/last_used_type", selected_type["mime_type"])
+        Application.getInstance().getPreferences().setValue("local_file/last_used_type", selected_type["mime_type"])
 
         # Get file name from file dialog
         file_name = dialog.selectedFiles()[0]

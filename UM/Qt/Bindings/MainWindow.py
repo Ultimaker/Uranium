@@ -9,14 +9,13 @@ from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
-from UM.Preferences import Preferences
 from UM.Signal import Signal, signalemitter
 
 from typing import Optional
 
 MYPY = False
 if MYPY:
-    from PyQt5.QtQuick import QQuickItem
+    pass
 
 ##  QQuickWindow subclass that provides the main window.
 @signalemitter
@@ -44,7 +43,7 @@ class MainWindow(QQuickWindow):
         self._app.getController().addInputDevice(self._mouse_device)
         self._app.getController().addInputDevice(self._key_device)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
-        self._preferences = Preferences.getInstance()
+        self._preferences = Application.getInstance().getPreferences()
 
         self._preferences.addPreference("general/window_width", 1280)
         self._preferences.addPreference("general/window_height", 720)

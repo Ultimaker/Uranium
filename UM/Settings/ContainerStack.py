@@ -6,16 +6,16 @@ import io
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+
+from UM.Logger import Logger
 from PyQt5.QtQml import QQmlEngine
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
-from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.ContainerFormatError import ContainerFormatError
-import UM.Settings.ContainerRegistry
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
@@ -343,9 +343,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         # get version
         version = None
         try:
-            import UM.VersionUpgradeManager
-            version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
-                                                                                                  serialized)
+            from UM.VersionUpgradeManager import VersionUpgradeManager
+            version = VersionUpgradeManager.getInstance().getFileVersion(configuration_type, serialized)
         except Exception as e:
             Logger.log("d", "Could not get version from serialized: %s", e)
         return version
@@ -712,7 +711,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._property_changes[key].add(property_name)
 
         if not self._emit_property_changed_queued:
-            _containerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
+            from UM.Application import Application
+            Application.getInstance().callLater(self._emitCollectedPropertyChanges)
             self._emit_property_changed_queued = True
 
     # Perform the emission of the change signals that were collected in a previous step.

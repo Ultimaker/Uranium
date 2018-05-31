@@ -150,7 +150,7 @@ class MimeTypeDatabase:
         # Properly normalize the file name to only be the base name of a path if we pass a path.
         file_name = os.path.basename(os.path.realpath(file_name))
 
-        matches = []
+        matches = [] # type: List[MimeType]
         for mime_type in cls.__custom_mimetypes:
             # Check if the file name ends with the suffixes, starting at the first . encountered.
             # This means that "suffix" will not match, ".suffix" will and "suffix.something.suffix" will also match
@@ -158,14 +158,14 @@ class MimeTypeDatabase:
                 matches.append(mime_type)
 
         if len(matches) > 1:
-            longest_suffix = None
+            longest_suffix = ""
             longest_mime = None
             for match in matches:
                 max_suffix = max(match.suffixes)
-                if not longest_suffix or len(max_suffix) > len(longest_suffix):
+                if len(max_suffix) > len(longest_suffix):
                     longest_suffix = max_suffix
                     longest_mime = match
-            return longest_mime
+            return cast(MimeType, longest_mime)
         elif matches:
             return matches[0]
 

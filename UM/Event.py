@@ -7,7 +7,7 @@
 
 ##  Base event class.
 #   Defines the most basic interface for events and several constants to identify event types.
-from typing import List, Any, Callable
+from typing import List, Any, Callable, Optional
 
 
 class Event:
@@ -72,12 +72,12 @@ class MouseEvent(Event):
 
     ##  The X coordinate of the previous event.
     @property
-    def lastX(self) -> int:
+    def lastX(self) -> Optional[int]:
         return self._last_x
 
     ##  The Y coordinate of the previous event.
     @property
-    def lastY(self) -> int:
+    def lastY(self) -> Optional[int]:
         return self._last_y
 
     ##  The change in X position between this event and the previous event.

@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
@@ -12,11 +12,11 @@ from UM.Scene.SceneNode import SceneNode
 
 
 class OBJReader(MeshReader):
-    def __init__(self):
-        super(OBJReader, self).__init__()
+    def __init__(self, application):
+        super(OBJReader, self).__init__(application)
         self._supported_extensions = [".obj"]
 
-    def read(self, file_name):
+    def _read(self, file_name):
         scene_node = None
 
         extension = os.path.splitext(file_name)[1]

@@ -28,7 +28,7 @@ class Extension(PluginObject):
 
     ##  Get the name of the menu where all menu items are placed in
     #   \param menu name \type{string}
-    def getMenuName(self) -> str:
+    def getMenuName(self) -> Optional[str]:
         return self._menu_name
 
     ##  Call function associated with option

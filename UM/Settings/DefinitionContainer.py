@@ -63,7 +63,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                           "version": self.Version} # type: Dict[str, Any]
         self._definitions = []                     # type: List[SettingDefinition]
         self._inherited_files = []                 # type: List[str]
-        self._i18n_catalog = i18n_catalog
+        self._i18n_catalog = i18n_catalog          # type: Optional[i18nCatalog]
 
         self._definition_cache = {}                # type: Dict[str, SettingDefinition]
         self._path = ""
@@ -74,7 +74,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         #raise NotImplementedError()
 
     ##  For pickle support
-    def __getnewargs__(self) -> Tuple[str, i18nCatalog]:
+    def __getnewargs__(self) -> Tuple[str, Optional[i18nCatalog]]:
         return (self.getId(), self._i18n_catalog)
 
     ##  For pickle support
@@ -456,7 +456,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             relation = SettingRelation(other, definition, RelationType.RequiredByTarget, property)
             other.relations.append(relation)
 
-    def _getDefinition(self, key: str) -> SettingDefinition:
+    def _getDefinition(self, key: str) -> Optional[SettingDefinition]:
         definition = None
         if key in self._definition_cache:
             definition = self._definition_cache[key]

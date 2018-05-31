@@ -21,18 +21,18 @@ class LongTestJob(Job):
 
 @pytest.fixture
 def job_queue():
-    JobQueue._instance = None
+    JobQueue._JobQueue__instance = None
     return JobQueue()
 
 class TestJobQueue():
     def test_create(self):
-        JobQueue._instance = None
+        JobQueue._JobQueue__instance = None
         jq = JobQueue()
 
         assert len(jq._threads) > 0
         assert jq == JobQueue.getInstance()
 
-        JobQueue._instance = None
+        JobQueue._JobQueue__instance = None
 
         jq = JobQueue(4)
         assert len(jq._threads) == 4

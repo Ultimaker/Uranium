@@ -8,8 +8,9 @@ import uuid
 import UM.Settings.SettingFunction
 import UM.Settings.DefinitionContainer
 from UM.Settings.DefinitionContainer import IncorrectDefinitionVersionError, InvalidDefinitionError
-from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
+from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Resources import Resources
+from UM.VersionUpgradeManager import VersionUpgradeManager
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
@@ -49,7 +50,7 @@ test_deserialize_data = [
     }})
 ]
 @pytest.mark.parametrize("file,expected", test_deserialize_data)
-def test_deserialize(file, expected, definition_container):
+def test_deserialize(file, expected, definition_container, upgrade_manager: VersionUpgradeManager):
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)) as data:
         json = data.read()
 

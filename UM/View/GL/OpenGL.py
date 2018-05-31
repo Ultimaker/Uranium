@@ -6,7 +6,7 @@ import ctypes   # type: ignore
 
 from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer
 from PyQt5.QtWidgets import QMessageBox
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, cast
 
 from UM.Logger import Logger
 
@@ -20,6 +20,7 @@ i18n_catalog = i18nCatalog("uranium")
 
 if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
+
 
 ##  Convenience methods for dealing with OpenGL.
 #
@@ -40,11 +41,17 @@ class OpenGL:
         Other = 4
 
     def __init__(self) -> None:
+        if OpenGL.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        OpenGL.__instance = self
+
+        super().__init__()
+
         profile = QOpenGLVersionProfile()
         profile.setVersion(OpenGLContext.major_version, OpenGLContext.minor_version)
         profile.setProfile(OpenGLContext.profile)
 
-        self._gl = QOpenGLContext.currentContext().versionFunctions(profile) #Don't add a type here! It's actually a protected class in PyQt that depends on the implementation of your graphics card.
+        self._gl = QOpenGLContext.currentContext().versionFunctions(profile) # type: Any #It's actually a protected class in PyQt that depends on the implementation of your graphics card.
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
             QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
@@ -218,17 +225,17 @@ class OpenGL:
             offset += len(vertices)
 
         if mesh.hasNormals():
-            normals = mesh.getNormalsAsByteArray()
+            normals = cast(bytes, mesh.getNormalsAsByteArray())
             buffer.write(offset, normals, len(normals))
             offset += len(normals)
 
         if mesh.hasColors():
-            colors = mesh.getColorsAsByteArray()
+            colors = cast(bytes, mesh.getColorsAsByteArray())
             buffer.write(offset, colors, len(colors))
             offset += len(colors)
 
         if mesh.hasUVCoordinates():
-            uvs = mesh.getUVCoordinatesAsByteArray()
+            uvs = cast(bytes, mesh.getUVCoordinatesAsByteArray())
             buffer.write(offset, uvs, len(uvs))
             offset += len(uvs)
 
@@ -267,7 +274,7 @@ class OpenGL:
         buffer.create()
         buffer.bind()
 
-        data = mesh.getIndicesAsByteArray()
+        data = cast(bytes, mesh.getIndicesAsByteArray()) # We check for None at the beginning of the method
         if 'index_start' in kwargs and 'index_stop' in kwargs:
             buffer.allocate(data[4 * kwargs['index_start']:4 * kwargs['index_stop']], 4*(kwargs['index_stop'] - kwargs['index_start']))
         else:
@@ -277,21 +284,8 @@ class OpenGL:
         setattr(mesh, OpenGL.IndexBufferProperty, buffer)
         return buffer
 
+    __instance = None    # type: OpenGL
 
-    ##  Get the singleton instance.
-    #
-    #   \return The singleton instance.
     @classmethod
-    def getInstance(cls) -> "OpenGL":
-        return cls._instance
-
-    ##  Set the singleton instance.
-    #
-    #   This is mostly meant to simplify the singleton logic and should be called
-    #   by the OpenGL implementation as soon as possible.
-    @classmethod
-    def setInstance(cls, instance: "OpenGL") -> None:
-        cls._instance = instance
-
-    ## private:
-    _instance = None    # type: OpenGL
+    def getInstance(cls, *args, **kwargs) -> "OpenGL":
+        return cls.__instance

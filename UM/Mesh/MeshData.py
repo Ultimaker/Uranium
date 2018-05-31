@@ -55,10 +55,6 @@ class MeshData:
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = type
         self._file_name = file_name  # type: Optional[str]
-        if file_name:
-            from UM.Application import Application
-            self._application = Application.getInstance()
-            self._application.getController().getScene().addWatchedFile(file_name)
         # original center position
         self._center_position = center_position
         # original zero position, is changed after transformation
@@ -164,7 +160,7 @@ class MeshData:
     def hasUVCoordinates(self) -> bool:
         return self._uvs is not None
 
-    def getFileName(self) -> str:
+    def getFileName(self) -> Optional[str]:
         return self._file_name
 
     ##  Transform the meshdata, center and zero position by given Matrix
@@ -260,9 +256,11 @@ class MeshData:
     ##  Gets the convex hull points
     #
     #   \return \type{numpy.ndarray} the vertices which describe the convex hull
-    def getConvexHullVertices(self) -> numpy.ndarray:
+    def getConvexHullVertices(self) -> Optional[numpy.ndarray]:
         if self._convex_hull_vertices is None:
             convex_hull = self.getConvexHull()
+            if convex_hull is None:
+                return None
             self._convex_hull_vertices = numpy.take(convex_hull.points, convex_hull.vertices, axis=0)
         return self._convex_hull_vertices
 
@@ -404,8 +402,7 @@ def approximateConvexHull(vertex_data: numpy.ndarray, target_count: int) -> Opti
     return hull_result
 
 
-def createConvexHull(vertex_data: numpy.ndarray) -> Optional[scipy.spatial.ConvexHull]:
-    hull_result = None
+def createConvexHull(vertex_data: numpy.ndarray) -> scipy.spatial.ConvexHull:
     try:
         hull_result = scipy.spatial.ConvexHull(vertex_data)
     except scipy.spatial.qhull.QhullError:
