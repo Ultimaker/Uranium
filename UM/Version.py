@@ -86,7 +86,7 @@ class Version:
 
     ##  Check if a version has a postfix.
     def hasPostFix(self) -> bool:
-        return self._postfix_version and self._postfix_type != ""
+        return self.getPostfixVersion() > 0 and self._postfix_type != ""
 
     ##  Indicates whether this version is later than the specified version.
     #
