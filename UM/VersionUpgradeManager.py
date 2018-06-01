@@ -3,8 +3,6 @@
 
 import collections  # For deque, for breadth-first search and to track tasks, and namedtuple.
 import os  # To get the configuration file names and to rename files.
-import shutil
-import tempfile
 import traceback
 from typing import Any, Dict, Callable, Iterator, List, Optional, Set, Tuple
 
@@ -243,16 +241,6 @@ class VersionUpgradeManager:
                     path = os.path.join(prefix, storage_path)
                     for configuration_file in self._getFilesInDirectory(path):
                         yield UpgradeTask(storage_path = path, file_name = configuration_file, configuration_type = old_configuration_type)
-
-    def copyVersionFolder(self, src_path: str, dest_path: str) -> None:
-        Logger.log("i", "Copying directory from '%s' to '%s'", src_path, dest_path)
-        # we first copy everything to a temporary folder, and then move it to the new folder
-        base_dir_name = os.path.basename(src_path)
-        temp_root_dir_path = tempfile.mkdtemp("cura-copy")
-        temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
-        # src -> temp -> dest
-        shutil.copytree(src_path, temp_dir_path)
-        shutil.move(temp_dir_path, dest_path)
 
     ##  Stores an old version of a configuration file away.
     #

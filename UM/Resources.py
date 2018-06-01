@@ -6,6 +6,7 @@ import os
 import os.path
 import re
 import shutil
+import tempfile
 from typing import Dict, Generator, List, Optional, cast
 
 from UM.Logger import Logger
@@ -471,9 +472,7 @@ class Resources:
             # If the directory found matches the current version, do nothing
             Logger.log("d", "Same config path [%s], do nothing.", latest_config_path)
         else:
-            # Prevent circular import
-            import UM.VersionUpgradeManager
-            UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_config_path, this_version_config_path)
+            cls.copyVersionFolder(latest_config_path, this_version_config_path)
 
         # Copy data folder if needed
         if latest_data_path == this_version_data_path:
@@ -482,14 +481,23 @@ class Resources:
         else:
             # If the data dir is the same as the config dir, don't copy again
             if latest_data_path is not None and os.path.exists(latest_data_path) and latest_data_path != latest_config_path:
-                # Prevent circular import
-                import UM.VersionUpgradeManager
-                UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_data_path, this_version_data_path)
+                cls.copyVersionFolder(latest_data_path, this_version_data_path)
 
         # Remove "cache" if we copied it together with config
         suspected_cache_path = os.path.join(this_version_config_path, "cache")
         if os.path.exists(suspected_cache_path):
             shutil.rmtree(suspected_cache_path)
+
+    @classmethod
+    def copyVersionFolder(cls, src_path: str, dest_path: str) -> None:
+        Logger.log("i", "Copying directory from '%s' to '%s'", src_path, dest_path)
+        # we first copy everything to a temporary folder, and then move it to the new folder
+        base_dir_name = os.path.basename(src_path)
+        temp_root_dir_path = tempfile.mkdtemp("cura-copy")
+        temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
+        # src -> temp -> dest
+        shutil.copytree(src_path, temp_dir_path)
+        shutil.move(temp_dir_path, dest_path)
 
     @classmethod
     def _findLatestDirInPaths(cls, search_path_list: List[str], dir_type: str = "config") -> Optional[str]:
