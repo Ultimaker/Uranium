@@ -151,7 +151,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def getInheritedFiles(self) -> List[str]:
         return self._inherited_files
 
-    ##  Gets all keys of settings in this container.
+    ##  \copydoc DefinitionContainerInterface::getAllKeys
     #
     #   \return A set of all keys of settings in this container.
     def getAllKeys(self) -> Set[str]:

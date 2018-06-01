@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Set, TYPE_CHECKING
 
 import UM.Decorators
 from UM.Logger import Logger
@@ -165,6 +165,12 @@ class DefinitionContainerInterface(ContainerInterface):
 
     def setProperty(self, key: str, property_name: str, property_value: Any, container: "ContainerInterface" = None, set_from_cache: bool = False) -> None:
         raise TypeError("Can't change properties in definition containers.")
+
+    ##  Gets all keys of settings in this container.
+    #
+    #   \return A set of all keys of settings in this container.
+    def getAllKeys(self) -> Set[str]:
+        pass
 
 
 ##  Shared interface between setting container types
