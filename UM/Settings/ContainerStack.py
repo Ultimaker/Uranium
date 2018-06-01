@@ -56,7 +56,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     ##  Constructor
     #
     #   \param stack_id A unique, machine readable/writable ID.
-    def __init__(self, stack_id: str, parent: QObject = None) -> None:
+    def __init__(self, stack_id: str) -> None:
         super().__init__()
         QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
