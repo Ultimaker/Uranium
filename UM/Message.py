@@ -12,6 +12,8 @@ class Message(QObject):
     class ActionButtonStyle:
         DEFAULT = 0
         LINK = 1
+        BUTTON_ALIGN_LEFT = 2
+        BUTTON_ALIGN_RIGHT = 3
 
 
     ##  Class for displaying messages to the user.
@@ -26,9 +28,8 @@ class Message(QObject):
     #                   if lifetime is 0, it will never automatically be destroyed.
     #   \param dismissible Can the user dismiss the message?
     #   \param title Phrase that will be shown above the message
-    #   \param footer Phrase that will be shown below the message
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
-    def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None, title = None, parent = None, use_inactivity_timer = True, footer = None): #pylint: disable=bad-whitespace
+    def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None, title = None, parent = None, use_inactivity_timer = True): #pylint: disable=bad-whitespace
         super().__init__(parent)
         from UM.Application import Application
         self._application = Application.getInstance()
@@ -51,7 +52,6 @@ class Message(QObject):
 
         self._actions = []
         self._title = title
-        self._footer = footer
 
     # We use these signals as QTimers need to be triggered from a qThread. By using signals to pass it,
     # the events are forced to be on the event loop (which is a qThread)
@@ -115,9 +115,10 @@ class Message(QObject):
     #   \param action_id
     #   \param name The displayed name of the action
     #   \param icon Source of the icon to be used
-    #   \param description Description of the item (used for mouse over, etc)
-    def addAction(self, action_id, name, icon, description, button_style = ActionButtonStyle.DEFAULT):
-        self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description, "button_style": button_style})
+    #   \param button_style Description the button style (used for Button and Link)
+    #   \param button_align Define horizontal position of the action item
+    def addAction(self, action_id, name, icon, description, button_style = ActionButtonStyle.DEFAULT, button_align = ActionButtonStyle.BUTTON_ALIGN_RIGHT):
+        self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description, "button_style": button_style, "button_align": button_align})
 
     ##  Get the list of actions to display buttons for on the message.
     #
@@ -187,20 +188,6 @@ class Message(QObject):
     #   \return The message title.
     def getTitle(self) -> str:
         return self._title
-
-
-    ##  Changes the message footer.
-    #
-    #   \param text The new footer for the message. Please ensure that this text
-    #   is internationalised.
-    def setFooter(self, footer: str):
-        self._footer = footer
-
-    ##  Returns the message footer.
-    #
-    #   \return The message footer.
-    def getFooter(self) -> str:
-        return self._footer
 
     ##  Hides this message.
     #

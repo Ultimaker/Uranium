@@ -53,3 +53,5 @@ class UpdateChecker(Extension):
         if action == "download":
             if self._download_url is not None:
                 QDesktopServices.openUrl(QUrl(self._download_url))
+        elif action == "new_features":
+            QDesktopServices.openUrl(QUrl("https://ultimaker.com/ultimaker-cura-latest-features"))
