@@ -542,12 +542,9 @@ class Resources:
 
     @classmethod
     def _isNonVersionedDataDir(cls, check_path: str) -> bool:
-        # checks if the given path is (probably) a valid app directory for a version earlier than 2.6
-        if not cls.__expected_dir_names_in_data:
-            return True
-
         dirs, files = next(os.walk(check_path))[1:]
         valid_dir_names = [dn for dn in dirs if dn in Resources.__expected_dir_names_in_data]
+
         return len(valid_dir_names) > 0
 
     @classmethod
