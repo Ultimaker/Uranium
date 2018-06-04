@@ -272,7 +272,7 @@ class VersionUpgradeManager:
                                                    configuration_file, current_version, src_version, old_configuration_type)
                                         continue
                             except:
-                                Logger.logException("e", "Failed to get file version: %s, skip it", configuration_file)
+                                Logger.log("w", "Failed to get file version: %s, skip it", configuration_file)
                                 continue
 
                             yield UpgradeTask(storage_path = path, file_name = configuration_file,
