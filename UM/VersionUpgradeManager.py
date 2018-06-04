@@ -77,7 +77,7 @@ class VersionUpgradeManager:
         self._get_version_functions = {}  # type: Dict[str, Callable[[str], int]]
 
         # For each config type, a set of storage paths to search for old config files.
-        self._storage_paths = {}  # type: Dict[str, Set[str]]
+        self._storage_paths = {}  # type: Dict[str, Dict[int, Set[str]]]
 
         # To know which preference versions and types to upgrade to.
         self._current_versions = {}
@@ -96,7 +96,7 @@ class VersionUpgradeManager:
     #
     #   \param configuration_type The type of configuration to be stored.
     #   \return A set of storage paths for the specified configuration type.
-    def getStoragePaths(self, configuration_type: str) -> Set[str]:
+    def getStoragePaths(self, configuration_type: str) -> Dict[int, Set[str]]:
         return self._storage_paths[configuration_type]
 
     ##  Changes the target versions to upgrade to.
@@ -170,15 +170,26 @@ class VersionUpgradeManager:
             Logger.log("w", "Version upgrade plug-in %s doesn't define any configuration types it can upgrade.", version_upgrade_plugin.getPluginId())
             return  # Don't need to add.
 
+        # Take a note of the source version of each configuration type. The source directories defined in each version
+        # upgrade should only be limited to that version.
+        src_version_dict = {}
+        for item in meta_data.get("version_upgrade", {}):
+            configuration_type, src_version = item
+            src_version_dict[configuration_type] = src_version
+
         # Additional metadata about the source types: How to recognise the version and where to find them.
         if "sources" in meta_data:
             for configuration_type, source in meta_data["sources"].items():
                 if "get_version" in source:
                     self._get_version_functions[configuration_type] = source["get_version"] #May overwrite from other plug-ins that can also load the same configuration type.
                 if "location" in source:
-                    if configuration_type not in self._storage_paths:
-                        self._storage_paths[configuration_type] = set()
-                    self._storage_paths[configuration_type] |= source["location"]
+                    if configuration_type in src_version_dict:
+                        src_version = src_version_dict[configuration_type]
+                        if configuration_type not in self._storage_paths:
+                            self._storage_paths[configuration_type] = {}
+                        if src_version not in self._storage_paths[configuration_type]:
+                            self._storage_paths[configuration_type][src_version] = set()
+                        self._storage_paths[configuration_type][src_version] |= source["location"]
 
         upgrades = self._registry.getMetaData(version_upgrade_plugin.getPluginId())["version_upgrade"]
         for source, destination in upgrades.items():  # Each conversion that this plug-in can perform.
@@ -243,14 +254,29 @@ class VersionUpgradeManager:
         # Make sure the types and paths are ordered so we always get the same results.
         self._storage_paths = collections.OrderedDict(sorted(self._storage_paths.items()))
         for key in self._storage_paths:
-            self._storage_paths[key] = sorted(self._storage_paths[key])
+            self._storage_paths[key] = collections.OrderedDict(sorted(self._storage_paths[key].items()))
 
-        for old_configuration_type, storage_paths in self._storage_paths.items():
-            for prefix in storage_path_prefixes:
-                for storage_path in storage_paths:
-                    path = os.path.join(prefix, storage_path)
-                    for configuration_file in self._getFilesInDirectory(path):
-                        yield UpgradeTask(storage_path = path, file_name = configuration_file, configuration_type = old_configuration_type)
+        for old_configuration_type, version_storage_paths_dict in self._storage_paths.items():
+            for src_version, storage_paths in version_storage_paths_dict.items():
+                for prefix in storage_path_prefixes:
+                    for storage_path in storage_paths:
+                        path = os.path.join(prefix, storage_path)
+                        for configuration_file in self._getFilesInDirectory(path):
+                            # Get file version. Only add this upgrade task if the current file version matches with
+                            # the defined version that scans through this folder.
+                            try:
+                                with open(os.path.join(path, configuration_file), "r", encoding = "utf-8") as f:
+                                    current_version = self._get_version_functions[old_configuration_type](f.read())
+                                    if current_version != src_version:
+                                        Logger.log("i", "Config file [%s] is of version [%s], which is different from the defined version [%s], no upgrade task for it from type [%s].",
+                                                   configuration_file, current_version, src_version, old_configuration_type)
+                                        continue
+                            except:
+                                Logger.logException("e", "Failed to get file version: %s, skip it", configuration_file)
+                                continue
+
+                            yield UpgradeTask(storage_path = path, file_name = configuration_file,
+                                              configuration_type = old_configuration_type)
 
     def copyVersionFolder(self, src_path: str, dest_path: str) -> None:
         Logger.log("i", "Copying directory from '%s' to '%s'", src_path, dest_path)
@@ -351,6 +377,7 @@ class VersionUpgradeManager:
             old_version = self._get_version_functions[old_configuration_type](files_data[0])
         except:  # Version getter gives an exception. Not a valid file. Can't upgrade it then.
             return False
+
         version = old_version
         configuration_type = old_configuration_type
 
