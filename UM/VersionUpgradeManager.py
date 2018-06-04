@@ -239,6 +239,12 @@ class VersionUpgradeManager:
         storage_path_prefixes = set()
         storage_path_prefixes.add(Resources.getConfigStoragePath())
         storage_path_prefixes.add(Resources.getDataStoragePath())
+
+        # Make sure the types and paths are ordered so we always get the same results.
+        self._storage_paths = collections.OrderedDict(sorted(self._storage_paths.items()))
+        for key in self._storage_paths:
+            self._storage_paths[key] = sorted(self._storage_paths[key])
+
         for old_configuration_type, storage_paths in self._storage_paths.items():
             for prefix in storage_path_prefixes:
                 for storage_path in storage_paths:
