@@ -8,7 +8,8 @@ from UM.Application import Application
 from UM.Signal import Signal
 from UM.PluginRegistry import PluginRegistry
 
-class FixtureApplication(QtApplication):
+
+class FixtureApplication(Application):
     def __init__(self):
         Application._instance = None
         super().__init__(name = "test", version = "1.0")
