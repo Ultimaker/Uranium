@@ -26,9 +26,9 @@ class PackageManager(QObject):
         self._container_registry = self._application.getContainerRegistry()
         self._plugin_registry = self._application.getPluginRegistry()
 
-        # JSON files that keep track of all installed packages.
-        self._user_package_management_file_path = None
-        self._bundled_package_management_file_path = None
+        #JSON files that keep track of all installed packages.
+        self._user_package_management_file_path = None #type: str
+        self._bundled_package_management_file_path = None #type: str
         for search_path in Resources.getSearchPaths():
             candidate_bundled_path = os.path.join(search_path, "bundled_packages.json")
             if os.path.exists(candidate_bundled_path):
@@ -37,21 +37,17 @@ class PackageManager(QObject):
             candidate_user_path = os.path.join(search_path, "packages.json")
             if os.path.exists(candidate_user_path):
                 self._user_package_management_file_path = candidate_user_path
-        if self._user_package_management_file_path is None:  # Doesn't exist yet.
+        if self._user_package_management_file_path is None: #Doesn't exist yet.
             self._user_package_management_file_path = os.path.join(Resources.getDataStoragePath(), "packages.json")
 
         self._installation_dirs_dict = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}  # type: Dict[str, str]
 
-        # A dict of all bundled packages
-        self._bundled_package_dict = {}  # type: Dict[str, Dict[str, Any]]
-        # A dict of all installed packages
-        self._installed_package_dict = {}  # type: Dict[str, Dict[str, Any]]
-        # A set of packages that need to be removed at the next start
-        self._to_remove_package_set = set()  # type: Set[str]
-        # A dict of packages that need to be installed at the next start
-        self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]
+        self._bundled_package_dict = {}     # A dict of all bundled packages
+        self._installed_package_dict = {}   # A dict of all installed packages
+        self._to_remove_package_set = set() # A set of packages that need to be removed at the next start
+        self._to_install_package_dict = {}  # A dict of packages that need to be installed at the next start
 
-    installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
+    installedPackagesChanged = pyqtSignal() # Emitted whenever the installed packages collection have been changed.
 
     def initialize(self):
         self._loadManagementData()
@@ -66,7 +62,7 @@ class PackageManager(QObject):
             return
         # Load the bundled packages:
         with open(self._bundled_package_management_file_path, "r", encoding = "utf-8") as f:
-            self._bundled_package_dict = json.load(f, encoding = "utf-8")  # type: Dict[str, Dict[str, Any]]
+            self._bundled_package_dict = json.load(f, encoding = "utf-8")
             Logger.log("i", "Loaded bundled packages data from %s", self._bundled_package_management_file_path)
 
         # Load the user package management file
@@ -95,7 +91,6 @@ class PackageManager(QObject):
                              "installed": self._installed_package_dict,
                              "to_remove": list(self._to_remove_package_set),
                              "to_install": self._to_install_package_dict}
-                data_dict["to_remove"] = list(data_dict["to_remove"])
                 json.dump(data_dict, f, sort_keys = True, indent = 4)
                 Logger.log("i", "Package management file %s was saved", self._user_package_management_file_path)
 
@@ -112,12 +107,17 @@ class PackageManager(QObject):
         while self._to_install_package_dict:
             package_id, package_info = list(self._to_install_package_dict.items())[0]
             self._installPackage(package_info)
-            self._installed_package_dict[package_id] = self._to_install_package_dict[package_id]
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
 
+    def getBundledPackageInfo(self, package_id: str) -> Optional[dict]:
+        package_info = None
+        if package_id in self._bundled_package_dict:
+            package_info = self._bundled_package_dict[package_id]["package_info"]
+        return package_info
+
     # Checks the given package is installed. If so, return a dictionary that contains the package's information.
-    def getInstalledPackageInfo(self, package_id: str) -> Optional[Dict[str, Any]]:
+    def getInstalledPackageInfo(self, package_id: str) -> Optional[dict]:
         if package_id in self._to_remove_package_set:
             return None
 
@@ -135,7 +135,7 @@ class PackageManager(QObject):
 
         return None
 
-    def getAllInstalledPackagesInfo(self) -> Dict[str, List[Dict[str, Any]]]:
+    def getAllInstalledPackageIDs(self) -> set:
         # Add bundled, installed, and to-install packages to the set of installed package IDs
         all_installed_ids = set()
 
@@ -148,7 +148,14 @@ class PackageManager(QObject):
         if self._to_install_package_dict.keys():
             all_installed_ids = all_installed_ids.union(set(self._to_install_package_dict.keys()))
 
-        installed_packages_dict = {}  # type: Dict[str, List[Dict[str, Any]]]
+        return all_installed_ids
+
+    def getAllInstalledPackagesInfo(self) -> dict:
+
+        all_installed_ids = self.getAllInstalledPackageIDs()
+
+        # map of <package_type> -> <package_id> -> <package_info>
+        installed_packages_dict = {}
         for package_id in all_installed_ids:
             # Skip required plugins as they should not be tampered with
             if package_id in Application.getInstance().getRequiredPlugins():
@@ -158,14 +165,17 @@ class PackageManager(QObject):
             # Add bundled plugins
             if package_id in self._bundled_package_dict:
                 package_info = self._bundled_package_dict[package_id]["package_info"]
+                package_info["is_installed"] = True
 
             # Add installed plugins
             if package_id in self._installed_package_dict:
                 package_info = self._installed_package_dict[package_id]["package_info"]
+                package_info["is_installed"] = True
 
             # Add to install plugins
             if package_id in self._to_install_package_dict:
                 package_info = self._to_install_package_dict[package_id]["package_info"]
+                package_info["is_installed"] = False
 
             if package_info is None:
                 continue
@@ -189,7 +199,7 @@ class PackageManager(QObject):
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
 
-    # This is called by drag-and-dropping package files.
+    # This is called by drag-and-dropping curapackage files.
     @pyqtSlot(QUrl)
     def installPackageViaDragAndDrop(self, file_url: str) -> None:
         filename = QUrl(file_url).toLocalFile()
@@ -224,11 +234,11 @@ class PackageManager(QObject):
                     Logger.log("i", "Package [%s] version [%s] is scheduled to be installed.",
                                package_id, package_info["package_version"])
                     # Copy the file to cache dir so we don't need to rely on the original file to be present
-                    package_cache_dir = os.path.join(os.path.abspath(Resources.getCacheStoragePath()), "packages")
+                    package_cache_dir = os.path.join(os.path.abspath(Resources.getCacheStoragePath()), "cura_packages")
                     if not os.path.exists(package_cache_dir):
                         os.makedirs(package_cache_dir, exist_ok=True)
 
-                    target_file_path = os.path.join(package_cache_dir, package_id + ".package")
+                    target_file_path = os.path.join(package_cache_dir, package_id + ".curapackage")
                     shutil.copy2(filename, target_file_path)
 
                     self._to_install_package_dict[package_id] = {"package_info": package_info,
@@ -268,7 +278,7 @@ class PackageManager(QObject):
         self.installedPackagesChanged.emit()
 
     ##  Is the package an user installed package?
-    def isUserInstalledPackage(self, package_id: str) -> bool:
+    def isUserInstalledPackage(self, package_id: str):
         return package_id in self._installed_package_dict
 
     # Removes everything associated with the given package ID.
@@ -286,7 +296,7 @@ class PackageManager(QObject):
             break
 
     # Installs all files associated with the given package.
-    def _installPackage(self, installation_package_data: Dict[str, Any]) -> None:
+    def _installPackage(self, installation_package_data: dict):
         package_info = installation_package_data["package_info"]
         filename = installation_package_data["filename"]
 
@@ -298,12 +308,12 @@ class PackageManager(QObject):
 
         Logger.log("i", "Installing package [%s] from file [%s]", package_id, filename)
 
-        # If it's installed, remove it first and then install
-        if package_id in self._installed_package_dict:
-            self._purgePackage(package_id)
+        # remove it first and then install
+        self._purgePackage(package_id)
 
         # Install the package
         with zipfile.ZipFile(filename, "r") as archive:
+
             temp_dir = tempfile.TemporaryDirectory()
             archive.extractall(temp_dir.name)
 
@@ -317,6 +327,8 @@ class PackageManager(QObject):
 
         # Remove the file
         os.remove(filename)
+        # Move the info to the installed list of packages only when it succeeds
+        self._installed_package_dict[package_id] = self._to_install_package_dict[package_id]
 
     def __installPackageFiles(self, package_id: str, src_dir: str, dst_dir: str) -> None:
         Logger.log("i", "Moving package {package_id} from {src_dir} to {dst_dir}".format(package_id=package_id, src_dir=src_dir, dst_dir=dst_dir))

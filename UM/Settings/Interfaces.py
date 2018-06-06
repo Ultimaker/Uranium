@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Set, TYPE_CHECKING
 
 import UM.Decorators
 from UM.Logger import Logger
@@ -32,7 +32,7 @@ class ContainerInterface:
     #   This should return a human-readable name for the container, that can be
     #   used in the interface.
     #
-    #   \return \type{string} The name of this container.
+    #   \return The name of this container.
     def getName(self) -> str:
         pass
 
@@ -41,13 +41,13 @@ class ContainerInterface:
     #   This returns a dictionary containing all the metadata for this container.
     #   How this metadata is used depends on the application.
     #
-    #   \return \type{dict} The metadata for this container.
+    #   \return The metadata for this container.
     def getMetaData(self) -> Dict[str, Any]:
         pass
 
     ##  Get the value of a single metadata entry.
     #
-    #   \param entry \type{string} The key of the metadata to retrieve.
+    #   \param entry The key of the metadata to retrieve.
     #   \param default The default value to return if the entry cannot be found.
     #
     #   \return The value of the metadata corresponding to `name`, or `default`
@@ -56,10 +56,8 @@ class ContainerInterface:
         pass
 
     ##  Get the value of a property of the container item.
-    #
-    #   \param key \type{string} The key of the item to retrieve a property from.
-    #   \param name \type{string} The name of the property to retrieve.
-    #
+    #   \param key The key of the item to retrieve a property from.
+    #   \param property_name The name of the property to retrieve.
     #   \return The specified property value of the container item corresponding to key, or None if not found.
     def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
         pass
@@ -82,8 +80,21 @@ class ContainerInterface:
     #   \param ignored_metadata_keys A set of keys that should be ignored when
     #   it serializes the metadata.
     #
-    #   \return \type{string} A string representation of this container.
+    #   \return A string representation of this container.
     def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
+        pass
+
+    ##  Change a property of a container item.
+    #   \param key The key of the item to change the property of.
+    #   \param property_name The name of the property to change.
+    #   \param property_value The new value of the property.
+    #   \param container The container to use for retrieving values when
+    #   changing the property triggers property updates. Defaults to None, which
+    #   means use the current container.
+    #   \param set_from_cache Flag to indicate that the property was set from
+    #   cache. This triggers the behavior that the read_only and setDirty are
+    #   ignored.
+    def setProperty(self, key: str, property_name: str, property_value: Any, container: "ContainerInterface" = None, set_from_cache: bool = False) -> None:
         pass
 
     ##  Deserialize the container from a string representation.
@@ -151,6 +162,15 @@ class ContainerInterface:
 class DefinitionContainerInterface(ContainerInterface):
     def findDefinitions(self, **kwargs: Any) -> List["SettingDefinition"]:
         raise NotImplementedError()
+
+    def setProperty(self, key: str, property_name: str, property_value: Any, container: "ContainerInterface" = None, set_from_cache: bool = False) -> None:
+        raise TypeError("Can't change properties in definition containers.")
+
+    ##  Gets all keys of settings in this container.
+    #
+    #   \return A set of all keys of settings in this container.
+    def getAllKeys(self) -> Set[str]:
+        pass
 
 
 ##  Shared interface between setting container types

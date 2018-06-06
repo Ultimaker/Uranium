@@ -11,6 +11,11 @@ from UM.PluginRegistry import PluginRegistry
 from UM.PluginError import PluginNotFoundError
 
 class FixtureRegistry(PluginRegistry):
+
+    def __init__(self, application: "Application"):
+        PluginRegistry._PluginRegistry__instance = None
+        super().__init__(application)
+
     def registerTestPlugin(self, plugin):
         self._test_plugin = plugin
 
@@ -22,10 +27,9 @@ class FixtureRegistry(PluginRegistry):
 
 @pytest.fixture
 def registry(application):
-    registry = FixtureRegistry()
+    registry = FixtureRegistry(application)
     registry.addPluginLocation(os.path.dirname(os.path.abspath(__file__)))
     registry.addType("test", registry.registerTestPlugin)
-    registry.setApplication(application)
     return registry
 
 class TestPluginRegistry():

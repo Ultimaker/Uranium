@@ -18,4 +18,4 @@ def getMetaData():
     }
 
 def register(app):
-    return { "mesh_reader": OBJReader.OBJReader() }
+    return { "mesh_reader": OBJReader.OBJReader(app) }

@@ -16,7 +16,7 @@ find_package(PythonInterp 3.5.0 REQUIRED)
 # Note that we use exit 0 here to not mark the build as a failure on check failure
 # In addition, the specified pylint configuration uses the spellchecker plugin. This required python-enchant to be installed.
 add_custom_target(check)
-add_custom_command(TARGET check POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pylint --rcfile=${CMAKE_SOURCE_DIR}/pylint.cfg UM --msg-template=\"{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}\" > ${CMAKE_BINARY_DIR}/pylint.log || exit 0 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+add_custom_command(TARGET check POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pylint --rcfile=${CMAKE_SOURCE_DIR}/pylint.cfg UM --msg-template=\"{path}:{line}: [{msg_id}({symbol}) , {obj}] {msg}\" > ${CMAKE_BINARY_DIR}/pylint.log || exit 0 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # # Check using Mypy
 add_custom_target(typecheck)
@@ -44,6 +44,8 @@ add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages 
 
 # Build Translations
 CREATE_TRANSLATION_TARGETS()
+
+configure_file(${CMAKE_SOURCE_DIR}/LibraryDir.py.in ${CMAKE_SOURCE_DIR}/UM/LibraryDir.py @ONLY)
 
 if(EXISTS /etc/debian_version)
     install(DIRECTORY UM DESTINATION lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}/dist-packages)

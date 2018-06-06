@@ -35,11 +35,9 @@ class SceneNode:
 
     ##  Construct a scene node.
     #   \param parent The parent of this node (if any). Only a root node should have None as a parent.
-    #   \param kwargs Keyword arguments.
-    #                 Possible keywords:
-    #                 - visible \type{bool} Is the SceneNode (and thus, all it's children) visible? Defaults to True
-    #                 - name \type{string} Name of the SceneNode. Defaults to empty string.
-    def __init__(self, parent: Optional["SceneNode"] = None, **kwargs) -> None:
+    #   \param visible Is the SceneNode (and thus, all its children) visible?
+    #   \param name Name of the SceneNode.
+    def __init__(self, parent: Optional["SceneNode"] = None, visible: bool = True, name: str = "") -> None:
         super().__init__()  # Call super to make multiple inheritance work.
 
         self._children = []     # type: List[SceneNode]
@@ -77,8 +75,8 @@ class SceneNode:
         self._aabb = None  # type: Optional[AxisAlignedBox]
         self._bounding_box_mesh = None  # type: Optional[MeshData]
 
-        self._visible = kwargs.get("visible", True)  # type: bool
-        self._name = kwargs.get("name", "")  # type: str
+        self._visible = visible  # type: bool
+        self._name = name  # type: str
         self._decorators = []  # type: List[SceneNodeDecorator]
 
         # Store custom settings to be compatible with Savitar SceneNode
@@ -315,7 +313,8 @@ class SceneNode:
                 else:
                     transformed_vertices = numpy.concatenate((transformed_vertices, tv), axis = 0)
         else:
-            transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation()).getVertices()
+            if self._mesh_data:
+                transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation()).getVertices()
         return transformed_vertices
 
     ##  \brief Get the transformed normals from this scene node/object, based on the transformation of scene nodes wrt root.
@@ -331,7 +330,8 @@ class SceneNode:
                 else:
                     transformed_normals = numpy.concatenate((transformed_normals, tv), axis = 0)
         else:
-            transformed_normals = self._mesh_data.getTransformed(self.getWorldTransformation()).getNormals()
+            if self._mesh_data:
+                transformed_normals = self._mesh_data.getTransformed(self.getWorldTransformation()).getNormals()
         return transformed_normals
 
     ##  \brief Set the mesh of this node/object
@@ -694,8 +694,8 @@ class SceneNode:
         if not self._calculate_aabb:
             return
         self._aabb = None
-        if self.getParent():
-            self.getParent()._resetAABB()
+        if self._parent:
+            self._parent._resetAABB()
         self.boundingBoxChanged.emit()
 
     def _calculateAABB(self) -> None:

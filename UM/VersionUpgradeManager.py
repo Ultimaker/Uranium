@@ -3,8 +3,6 @@
 
 import collections  # For deque, for breadth-first search and to track tasks, and namedtuple.
 import os  # To get the configuration file names and to rename files.
-import shutil
-import tempfile
 import traceback
 from typing import Any, Dict, Callable, Iterator, List, Optional, Set, Tuple
 
@@ -56,21 +54,19 @@ FilesDataUpdateResult = collections.namedtuple("FilesDataUpdateResult",
 #   to the current (upgraded) versions, where they are never loaded again unless
 #   the user manually retrieves the files.
 class VersionUpgradeManager:
-    ##  The singleton instance of this class.
-    __instance = None   # type: VersionUpgradeManager
-
-    ##  Gets the instance of the VersionUpgradeManager, or creates one.
-    @classmethod
-    def getInstance(cls) -> "VersionUpgradeManager":
-        if not cls.__instance:
-            cls.__instance = VersionUpgradeManager()
-        return cls.__instance
 
     ##  Initialises the version upgrade manager.
     #
     #   This initialises the cache for shortest upgrade routes, and registers
     #   the version upgrade plug-ins.
-    def __init__(self):
+    def __init__(self, application):
+        if VersionUpgradeManager.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        VersionUpgradeManager.__instance = self
+
+        super().__init__()
+
+        self._application = application
         self._version_upgrades = {} #For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
 
         # For each config type, gives a function with which to get the version number from those files.
@@ -245,16 +241,6 @@ class VersionUpgradeManager:
                     path = os.path.join(prefix, storage_path)
                     for configuration_file in self._getFilesInDirectory(path):
                         yield UpgradeTask(storage_path = path, file_name = configuration_file, configuration_type = old_configuration_type)
-
-    def copyVersionFolder(self, src_path: str, dest_path: str) -> None:
-        Logger.log("i", "Copying directory from '%s' to '%s'", src_path, dest_path)
-        # we first copy everything to a temporary folder, and then move it to the new folder
-        base_dir_name = os.path.basename(src_path)
-        temp_root_dir_path = tempfile.mkdtemp("cura-copy")
-        temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
-        # src -> temp -> dest
-        shutil.copytree(src_path, temp_dir_path)
-        shutil.move(temp_dir_path, dest_path)
 
     ##  Stores an old version of a configuration file away.
     #
@@ -434,3 +420,9 @@ class VersionUpgradeManager:
                 return file_name[: -len(suffix) - 1]  # last -1 is for the dot separating name and extension.
 
         return file_name
+
+    __instance = None   # type: VersionUpgradeManager
+
+    @classmethod
+    def getInstance(cls, *args, **kwargs) -> "VersionUpgradeManager":
+        return cls.__instance

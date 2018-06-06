@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Tool import Tool
-from UM.Preferences import Preferences
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
@@ -41,17 +40,17 @@ class CameraTool(Tool):
 
         self._drag_distance = 0.05
 
-        Preferences.getInstance().addPreference("view/invert_zoom", False)
-        Preferences.getInstance().addPreference("view/zoom_to_mouse", False)
-        self._invert_zoom = Preferences.getInstance().getValue("view/invert_zoom")
-        self._zoom_to_mouse = Preferences.getInstance().getValue("view/zoom_to_mouse")
-        Preferences.getInstance().preferenceChanged.connect(self._onPreferencesChanged)
+        Application.getInstance().getPreferences().addPreference("view/invert_zoom", False)
+        Application.getInstance().getPreferences().addPreference("view/zoom_to_mouse", False)
+        self._invert_zoom = Application.getInstance().getPreferences().getValue("view/invert_zoom")
+        self._zoom_to_mouse = Application.getInstance().getPreferences().getValue("view/zoom_to_mouse")
+        Application.getInstance().getPreferences().preferenceChanged.connect(self._onPreferencesChanged)
 
     def _onPreferencesChanged(self, name):
         if name != "view/invert_zoom" and name != "view/zoom_to_mouse":
             return
-        self._invert_zoom = Preferences.getInstance().getValue("view/invert_zoom")
-        self._zoom_to_mouse = Preferences.getInstance().getValue("view/zoom_to_mouse")
+        self._invert_zoom = Application.getInstance().getPreferences().getValue("view/invert_zoom")
+        self._zoom_to_mouse = Application.getInstance().getPreferences().getValue("view/zoom_to_mouse")
 
     ##  Set the minimum and maximum distance from the origin used for "zooming" the camera
     #

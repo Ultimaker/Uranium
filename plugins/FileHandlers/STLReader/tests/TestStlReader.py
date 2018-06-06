@@ -1,12 +1,15 @@
 import os.path
 
+import sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
 import STLReader
 from UM.Mesh.MeshBuilder import MeshBuilder
 
 test_path = os.path.join(os.path.dirname(STLReader.__file__), "tests")
 
-def test_readASCII():
-    reader = STLReader.STLReader()
+def test_readASCII(application):
+    reader = STLReader.STLReader(application)
     ascii_path = os.path.join(test_path, "simpleTestCubeASCII.stl")
     result = reader.read(ascii_path)
     assert result
@@ -20,8 +23,8 @@ def test_readASCII():
 
         assert mesh_builder.getVertexCount() != 0
 
-def test_readBinary():
-    reader = STLReader.STLReader()
+def test_readBinary(application):
+    reader = STLReader.STLReader(application)
     binary_path = os.path.join(test_path, "simpleTestCubeBinary.stl")
     result = reader.read(binary_path)
 

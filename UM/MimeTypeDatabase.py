@@ -86,8 +86,9 @@ class MimeType:
     #   not match.
     def stripExtension(self, file_name: str) -> str:
         for suffix in self.__suffixes:
-            if file_name.endswith(suffix, file_name.find(".")):
-                index = file_name.rfind("." + suffix)
+            suffix = suffix.lower()
+            if file_name.lower().endswith(suffix, file_name.find(".")):
+                index = file_name.lower().rfind("." + suffix)
                 return file_name[0:index]
 
         return file_name
@@ -150,22 +151,22 @@ class MimeTypeDatabase:
         # Properly normalize the file name to only be the base name of a path if we pass a path.
         file_name = os.path.basename(os.path.realpath(file_name))
 
-        matches = []
+        matches = [] # type: List[MimeType]
         for mime_type in cls.__custom_mimetypes:
             # Check if the file name ends with the suffixes, starting at the first . encountered.
             # This means that "suffix" will not match, ".suffix" will and "suffix.something.suffix" will also match
-            if file_name.endswith(tuple(mime_type.suffixes), file_name.find(".")):
+            if file_name.lower().endswith(tuple(mime_type.suffixes), file_name.find(".")):
                 matches.append(mime_type)
 
         if len(matches) > 1:
-            longest_suffix = None
+            longest_suffix = ""
             longest_mime = None
             for match in matches:
                 max_suffix = max(match.suffixes)
-                if not longest_suffix or len(max_suffix) > len(longest_suffix):
+                if len(max_suffix) > len(longest_suffix):
                     longest_suffix = max_suffix
                     longest_mime = match
-            return longest_mime
+            return cast(MimeType, longest_mime)
         elif matches:
             return matches[0]
 

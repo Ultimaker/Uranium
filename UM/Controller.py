@@ -54,11 +54,6 @@ class Controller:
         PluginRegistry.addType("tool", self.addTool)
         PluginRegistry.addType("input_device", self.addInputDevice)
 
-    ##  Get the application.
-    #   \returns Application \type {Application}
-    def getApplication(self) -> "Application":
-        return self._application
-
     ##  Add a view by name if it"s not already added.
     #   \param name \type{string} Unique identifier of view (usually the plugin name)
     #   \param view \type{View} The view to be added

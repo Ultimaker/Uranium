@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import imp
+import json
 import os
 import shutil  # For deleting plugin directories;
 import stat    # For setting file permissions correctly;
@@ -15,13 +16,14 @@ import types
 
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
-from UM.Resources import Resources
-from UM.PluginObject import PluginObject  # For type hinting
+from UM.i18n import i18nCatalog
+from UM.Logger import Logger
 from UM.Platform import Platform
+from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
+from UM.PluginObject import PluginObject  # For type hinting
+from UM.Resources import Resources
 from UM.Version import Version
 
-from UM.i18n import i18nCatalog
-import json
 i18n_catalog = i18nCatalog("uranium")
 
 if TYPE_CHECKING:
@@ -41,8 +43,13 @@ if TYPE_CHECKING:
 class PluginRegistry(QObject):
     APIVersion = 4
 
-    def __init__(self, parent: QObject = None) -> None:
+    def __init__(self, application: "Application", parent: QObject = None) -> None:
+        if PluginRegistry.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        PluginRegistry.__instance = self
+
         super().__init__(parent)
+        self._application = application #type: Application
 
         self._all_plugins = []        # type: List[str]
         self._metadata = {}           # type: Dict[str, Dict[str, Any]]
@@ -66,17 +73,14 @@ class PluginRegistry(QObject):
         self._plugin_locations = []  # type: List[str]
         self._folder_cache = {}      # type: Dict[str, List[Tuple[str, str]]]
 
-        self._application = None #type: Application
-        self._supported_file_types = {"umplugin": "Uranium Plugin"}
-
-        # File to store plugin info, such as which ones to install/remove and which ones are disabled.
-        # Cannot load this here because we don't know the actual Application name yet, so it will result in incorrect
-        # directory name if we try to get it from Resources now.
-        self._plugin_config_filename = None #type: Optional[str]
+        self._supported_file_types = {"umplugin": "Uranium Plugin"} # type: Dict[str, str]
 
     def initializeBeforePluginsAreLoaded(self) -> None:
         config_path = Resources.getConfigStoragePath()
-        self._plugin_config_filename = os.path.join(os.path.abspath(config_path), "plugins.json")
+
+        # File to store plugin info, such as which ones to install/remove and which ones are disabled.
+        # At this point we can load this here because we already know the actual Application name, so the directory name
+        self._plugin_config_filename = os.path.join(os.path.abspath(config_path), "plugins.json") # type: str
 
         from UM.Settings.ContainerRegistry import ContainerRegistry
         container_registry = ContainerRegistry.getInstance()
@@ -95,7 +99,7 @@ class PluginRegistry(QObject):
             Logger.logException("e", "Failed to load plugin configuration file '%s'", self._plugin_config_filename)
 
         # Also load data from preferences, where the plugin info used to be saved
-        preferences = Preferences.getInstance()
+        preferences = self._application.getPreferences()
         disabled_plugins = preferences.getValue("general/disabled_plugins")
         disabled_plugins = disabled_plugins.split(",") if disabled_plugins else []
         for plugin_id in disabled_plugins:
@@ -123,7 +127,7 @@ class PluginRegistry(QObject):
         self._savePluginData()
 
     def initializeAfterPluginsAreLoaded(self) -> None:
-        preferences = Preferences.getInstance()
+        preferences = self._application.getPreferences()
 
         # Remove the old preferences settings from preferences
         preferences.resetPreference("general/disabled_plugins")
@@ -133,12 +137,13 @@ class PluginRegistry(QObject):
         from UM.Settings.ContainerRegistry import ContainerRegistry
         container_registry = ContainerRegistry.getInstance()
         with container_registry.lockFile():
-            with open(self._plugin_config_filename, "w", encoding = "utf-8") as f:
-                data = json.dumps({"disabled": self._disabled_plugins,
-                                   "to_install": self._plugins_to_install,
-                                   "to_remove": self._plugins_to_remove,
-                                   })
-                f.write(data)
+            if os.path.exists(self._plugin_config_filename):
+                with open(self._plugin_config_filename, "w", encoding = "utf-8") as f:
+                    data = json.dumps({"disabled": self._disabled_plugins,
+                                       "to_install": self._plugins_to_install,
+                                       "to_remove": self._plugins_to_remove,
+                                       })
+                    f.write(data)
 
     # TODO:
     # - [ ] Improve how metadata is stored. It should not be in the 'plugin' prop
@@ -255,13 +260,6 @@ class PluginRegistry(QObject):
             if plugin_id not in plugins:
                 plugins.append(plugin_id)
         return plugins
-
-    #   Get the singleton instance of this class:
-    @classmethod
-    def getInstance(cls) -> "PluginRegistry":
-        if not cls._instance:
-            cls._instance = PluginRegistry()
-        return cls._instance
 
     #   Get the metadata for a certain plugin:
     #   NOTE: InvalidMetaDataError is raised when no metadata can be found or
@@ -436,10 +434,6 @@ class PluginRegistry(QObject):
         except Exception as e:
             Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
-    #   Set the central application object:
-    def setApplication(self, app: "Application") -> None:
-        self._application = app
-
     #   Uninstall a plugin with a given ID:
     @pyqtSlot(str, result="QVariantMap")
     def uninstallPlugin(self, plugin_id: str) -> Dict[str, str]:
@@ -540,7 +534,7 @@ class PluginRegistry(QObject):
     ##  Try to find a module implementing a plugin
     #   \param plugin_id The name of the plugin to find
     #   \returns module if it was found None otherwise
-    def _findPlugin(self, plugin_id: str) -> types.ModuleType:
+    def _findPlugin(self, plugin_id: str) -> Optional[types.ModuleType]:
         location = None
         for folder in self._plugin_locations:
             location = self._locatePlugin(plugin_id, folder)
@@ -584,9 +578,9 @@ class PluginRegistry(QObject):
             if file == plugin_id and os.path.exists(os.path.join(file_path, "__init__.py")):
                 return folder
             else:
-                file_path = self._locatePlugin(plugin_id, file_path)
-                if file_path:
-                    return file_path
+                plugin_path = self._locatePlugin(plugin_id, file_path)
+                if plugin_path:
+                    return plugin_path
 
         return None
 
@@ -734,7 +728,7 @@ class PluginRegistry(QObject):
     #   \return \type{string} The absolute path to the plugin or an empty string if the plugin could not be found.
     def getPluginPath(self, plugin_id: str) -> Optional[str]:
         if plugin_id in self._plugins:
-            plugin = self._plugins[plugin_id]
+            plugin = self._plugins.get(plugin_id)
         else:
             plugin = self._findPlugin(plugin_id)
 
@@ -773,6 +767,9 @@ class PluginRegistry(QObject):
         if plugin_type in cls._type_register_map:
             del cls._type_register_map[plugin_type]
 
-
     _type_register_map = {}  # type: Dict[str, Callable[[Any], None]]
-    _instance = None    # type: PluginRegistry
+    __instance = None    # type: PluginRegistry
+
+    @classmethod
+    def getInstance(cls, *args, **kwargs) -> "PluginRegistry":
+        return cls.__instance

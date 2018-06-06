@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Application import Application
@@ -72,12 +72,12 @@ class UpdateCheckerJob(Job):
                                 title_message = i18n_catalog.i18nc("@info:status","Cura {0} is available!", newest_version)
                                 content_message = i18n_catalog.i18nc("@info:status","Cura {0} provides better and reliable printing experience.", newest_version)
 
-                                footer_text = i18n_catalog.i18nc("@action:info", "View release notes")
-                                footer_link = "?url=https://ultimaker.com/en/products/ultimaker-cura-software/release-notes"
-
-                                footer_message = footer_text + " " + footer_link
-                                message = Message(text = content_message, title = title_message, footer = footer_message)
+                                message = Message(text = content_message, title = title_message)
                                 message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
+
+                                message.addAction("new_features", i18n_catalog.i18nc("@action:button", "Learn more about new features"),"[no_icon]", "[no_description]",
+                                                  button_style = Message.ActionButtonStyle.LINK,
+                                                  button_align = Message.ActionButtonStyle.BUTTON_ALIGN_LEFT)
 
                                 if self._set_download_url_callback:
                                     self._set_download_url_callback(value["url"])

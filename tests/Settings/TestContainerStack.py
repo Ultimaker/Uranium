@@ -1,8 +1,9 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
 from typing import Optional
+import os.path
 import uuid # For creating unique ID's for each container stack.
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
@@ -13,6 +14,9 @@ from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal
+from UM.Resources import Resources
+
+Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
 ##  A fake container class that implements ContainerInterface.
 #

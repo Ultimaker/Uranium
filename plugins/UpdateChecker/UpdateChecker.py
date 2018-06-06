@@ -5,7 +5,7 @@
 from UM.Extension import Extension
 from UM.i18n import i18nCatalog
 
-from UM.Preferences import Preferences
+from UM.Application import Application
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
@@ -25,8 +25,8 @@ class UpdateChecker(Extension):
         super().__init__()
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
 
-        Preferences.getInstance().addPreference("info/automatic_update_check", True)
-        if Preferences.getInstance().getValue("info/automatic_update_check"):
+        Application.getInstance().getPreferences().addPreference("info/automatic_update_check", True)
+        if Application.getInstance().getPreferences().getValue("info/automatic_update_check"):
             self.checkNewVersion(True)
 
         self._download_url = None
@@ -53,3 +53,5 @@ class UpdateChecker(Extension):
         if action == "download":
             if self._download_url is not None:
                 QDesktopServices.openUrl(QUrl(self._download_url))
+        elif action == "new_features":
+            QDesktopServices.openUrl(QUrl("https://ultimaker.com/ultimaker-cura-latest-features"))

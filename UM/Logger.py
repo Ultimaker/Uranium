@@ -43,7 +43,10 @@ class Logger:
     #   \param **kwargs \type{dict} List of placeholder replacements that will be passed to str.format().
     @classmethod
     def log(cls, log_type: str, message: str, *args, **kwargs):
-        caller_frame = inspect.currentframe().f_back
+        current_frame = inspect.currentframe()
+        if current_frame is None:   # Avoid crash if the inspect module returns None (it should never happen)
+            return
+        caller_frame = current_frame.f_back
         frame_info = inspect.getframeinfo(caller_frame)
         try:
             if args or kwargs: # Only format the message if there are args

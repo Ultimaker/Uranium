@@ -178,11 +178,14 @@ class Scene:
         if action != "reload":
             return
         for node in nodes:
-            if not os.path.isfile(node.getMeshData().getFileName()): #File doesn't exist any more.
-                continue
-            job = ReadMeshJob(node.getMeshData().getFileName())
-            job.finished.connect(functools.partialmethod(self._reloadJobFinished, node))
-            job.start()
+            meshdata = node.getMeshData()
+            if meshdata:
+                filename = meshdata.getFileName()
+                if not filename or not os.path.isfile(filename): #File doesn't exist any more.
+                    continue
+                job = ReadMeshJob(filename)
+                job.finished.connect(functools.partialmethod(self._reloadJobFinished, node))
+                job.start()
 
     ##  Triggered when reloading has finished.
     #
