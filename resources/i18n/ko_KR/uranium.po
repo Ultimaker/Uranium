@@ -257,7 +257,8 @@ msgid "Reset your configuration to factory defaults."
 msgstr "설정을 기본값으로 재설정합니다."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48 /home/ruben/Projects/Uranium/UM/PluginRegistry.py:655
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:655
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:70
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -265,7 +266,8 @@ msgid "All Supported Types ({0})"
 msgstr "지원되는 모든 유형 ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:192
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49 /home/ruben/Projects/Uranium/UM/PluginRegistry.py:656
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:656
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -290,14 +292,16 @@ msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0} 일"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113 /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0} 시간"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113 /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
@@ -340,15 +344,19 @@ msgstr ""
 "플러그인이 설치되었습니다.\n"
 "플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231 /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "<filename>{0}</filename>에서 플러그인을 설치하지 못했습니다:\n<message>{1}</message>"
+msgstr ""
+"<filename>{0}</filename>에서 플러그인을 설치하지 못했습니다:\n"
+"<message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254 /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -417,13 +425,15 @@ msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "<filename>{0}</filename> 형식의 파일을 열 수 없습니다"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32 /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:47
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:47
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:70
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "유효하지 않은 파일"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:45 /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:70
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:45
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:70
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
@@ -552,7 +562,8 @@ msgctxt "@title:window"
 msgid "Rename"
 msgstr "이름 바꾸기"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:56 /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:56
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
 msgstr "취소"

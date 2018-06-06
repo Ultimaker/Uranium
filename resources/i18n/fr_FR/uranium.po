@@ -236,7 +236,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "Votre configuration semble corrompue. Il semble y avoir un problème avec les profils suivants :\n- {profiles}\nSouhaitez-vous rétablir les paramètres d'usine ?"
+msgstr ""
+"Votre configuration semble corrompue. Il semble y avoir un problème avec les profils suivants :\n"
+"- {profiles}\n"
+"Souhaitez-vous rétablir les paramètres d'usine ?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
@@ -340,7 +343,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Le plug-in a été installé.\nVeuillez redémarrer l'application pour activer le plug-in."
+msgstr ""
+"Le plug-in a été installé.\n"
+"Veuillez redémarrer l'application pour activer le plug-in."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -349,7 +354,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "Échec de l'installation du plug-in de <filename>{0}</filename> :\n<message>{1}</message>"
+msgstr ""
+"Échec de l'installation du plug-in de <filename>{0}</filename> :\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -358,7 +365,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Échec de l'installation du plug-in;\n<message>{0}</message>"
+msgstr ""
+"Échec de l'installation du plug-in;\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -366,7 +375,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "Le plug-in a été supprimé.\nVeuillez redémarrer {0} pour terminer la désinstallation."
+msgstr ""
+"Le plug-in a été supprimé.\n"
+"Veuillez redémarrer {0} pour terminer la désinstallation."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format

@@ -235,7 +235,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n- {profiles}\nRipristinare i valori predefiniti in fabbrica?"
+msgstr ""
+"La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n"
+"- {profiles}\n"
+"Ripristinare i valori predefiniti in fabbrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
@@ -339,7 +342,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Il plugin è stato installato.\nRiavviare l'applicazione per attivare il plugin."
+msgstr ""
+"Il plugin è stato installato.\n"
+"Riavviare l'applicazione per attivare il plugin."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -348,7 +353,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "Installazione plugin da <filename>{0}</filename>:\n<message>{1} non riuscita</message>"
+msgstr ""
+"Installazione plugin da <filename>{0}</filename>:\n"
+"<message>{1} non riuscita</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -357,7 +364,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Installazione del plugin non riuscita;\n<message>{0}</message>"
+msgstr ""
+"Installazione del plugin non riuscita;\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -365,7 +374,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "Il plugin è stato rimosso.\nSi prega di riavviare {0} per completare la disinstallazione."
+msgstr ""
+"Il plugin è stato rimosso.\n"
+"Si prega di riavviare {0} per completare la disinstallazione."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format

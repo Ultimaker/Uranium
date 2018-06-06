@@ -237,7 +237,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "配置似乎已损坏。以下配置文件似乎出现问题：\n- {profiles}\n是否要恢复出厂默认设置？"
+msgstr ""
+"配置似乎已损坏。以下配置文件似乎出现问题：\n"
+"- {profiles}\n"
+"是否要恢复出厂默认设置？"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
@@ -338,7 +341,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "插件已安装。\n请重新启动应用程序以激活插件。"
+msgstr ""
+"插件已安装。\n"
+"请重新启动应用程序以激活插件。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -347,7 +352,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "无法从 <filename>{0}</filename> 中安装插件：\n<message>{1}</message>"
+msgstr ""
+"无法从 <filename>{0}</filename> 中安装插件：\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -356,7 +363,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "无法安装插件；\n<message>{0}</message>"
+msgstr ""
+"无法安装插件；\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -364,7 +373,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "插件已移除。\n请重启 {0} 完成卸载。"
+msgstr ""
+"插件已移除。\n"
+"请重启 {0} 完成卸载。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format

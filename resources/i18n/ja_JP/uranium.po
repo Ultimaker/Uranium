@@ -236,7 +236,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n- {profiles}\n工場出荷状態にリセットしますか？"
+msgstr ""
+"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
+"- {profiles}\n"
+"工場出荷状態にリセットしますか？"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
@@ -340,7 +343,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "プラグインがインストールされました。\nアプリケーションを再起動して、プラグインをアクティベートしてください。"
+msgstr ""
+"プラグインがインストールされました。\n"
+"アプリケーションを再起動して、プラグインをアクティベートしてください。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -349,7 +354,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "プラグインのインストールに失敗しました。<filename>{0}</filename>:\n<message>{1}</message>"
+msgstr ""
+"プラグインのインストールに失敗しました。<filename>{0}</filename>:\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -358,7 +365,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "プラグインのインストールに失敗しました。\n<message>{0}</message>"
+msgstr ""
+"プラグインのインストールに失敗しました。\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -366,7 +375,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "プラグインが外されました。\n{0} を再起動してアンインストールを終了してください。"
+msgstr ""
+"プラグインが外されました。\n"
+"{0} を再起動してアンインストールを終了してください。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format

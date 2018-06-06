@@ -236,7 +236,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n- {profiles}\n¿Desea restablecer los valores predeterminados de fábrica?"
+msgstr ""
+"Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n"
+"- {profiles}\n"
+"¿Desea restablecer los valores predeterminados de fábrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
@@ -340,7 +343,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "El complemento se ha instalado.\nReinicie la aplicación para activarlo."
+msgstr ""
+"El complemento se ha instalado.\n"
+"Reinicie la aplicación para activarlo."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -349,7 +354,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "No se ha podido instalar el complemento desde <filename>{0}</filename>:\n<message>{1}</message>"
+msgstr ""
+"No se ha podido instalar el complemento desde <filename>{0}</filename>:\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -358,7 +365,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Se ha producido un error al instalar el complemento;\n<message>{0}</message>"
+msgstr ""
+"Se ha producido un error al instalar el complemento;\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -366,7 +375,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "El complemento se ha eliminado.\nPulse «Reiniciar» {0} para finalizar el proceso de desinstalación."
+msgstr ""
+"El complemento se ha eliminado.\n"
+"Pulse «Reiniciar» {0} para finalizar el proceso de desinstalación."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format

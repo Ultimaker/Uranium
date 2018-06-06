@@ -235,7 +235,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:\n- {profiles}\nMöchten Sie auf die Werkseinstellungen zurücksetzen?"
+msgstr ""
+"Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:\n"
+"- {profiles}\n"
+"Möchten Sie auf die Werkseinstellungen zurücksetzen?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
@@ -339,7 +342,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Das Plugin wurde installiert. \nStarten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
+msgstr ""
+"Das Plugin wurde installiert. \n"
+"Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -348,7 +353,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "Plugin von <filename>{0}</filename>:\n<message>{1}</message> konnte nicht installiert werden."
+msgstr ""
+"Plugin von <filename>{0}</filename>:\n"
+"<message>{1}</message> konnte nicht installiert werden."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -357,7 +364,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Die Installation des Plugin war nicht erfolgreich;\n<message>{0}</message>"
+msgstr ""
+"Die Installation des Plugin war nicht erfolgreich;\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -365,7 +374,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "Das Plugin wurde entfernt.\nBitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
+msgstr ""
+"Das Plugin wurde entfernt.\n"
+"Bitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format

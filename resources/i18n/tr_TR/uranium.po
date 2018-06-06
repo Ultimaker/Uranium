@@ -235,7 +235,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "Yapılandırmanız bozuk görünüyor. Aşağıdaki profillerde bir sorun var gibi görünüyor:\n- {profiles}\nFabrika varsayılanlarına sıfırlamak ister misiniz?"
+msgstr ""
+"Yapılandırmanız bozuk görünüyor. Aşağıdaki profillerde bir sorun var gibi görünüyor:\n"
+"- {profiles}\n"
+"Fabrika varsayılanlarına sıfırlamak ister misiniz?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
@@ -339,7 +342,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Eklenti kurulumu yapıldı.\n Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
+msgstr ""
+"Eklenti kurulumu yapıldı.\n"
+" Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
@@ -348,7 +353,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "<filename>{0}</filename> üzerinden eklenti kurulumu başarısız oldu:\n<message>{1}</message>"
+msgstr ""
+"<filename>{0}</filename> üzerinden eklenti kurulumu başarısız oldu:\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
@@ -357,7 +364,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Eklenti kurulumu başarısız oldu;\n<message>{0}</message>"
+msgstr ""
+"Eklenti kurulumu başarısız oldu;\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
 #, python-brace-format
@@ -365,7 +374,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "Eklenti kaldırıldı.\nKaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
+msgstr ""
+"Eklenti kaldırıldı.\n"
+"Kaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
 #, python-brace-format
