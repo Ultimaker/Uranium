@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.3\n"
+"Project-Id-Version: Uranium 3.4\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2018-03-29 08:36+0200\n"
+"POT-Creation-Date: 2018-06-06 16:04+0200\n"
 "PO-Revision-Date: 2018-04-11 15:55+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Ultimaker <info@ultimaker.com>, Dutch <info@bothof.nl>\n"
@@ -50,9 +50,8 @@ msgstr "Geen toegang tot update-informatie."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:98
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Versie-upgrade"
@@ -64,34 +63,46 @@ msgid "The version you are using does not support checking for updates."
 msgstr "Het controleren op updates wordt in de door u gebruikte versie niet ondersteund."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-msgctxt "@info"
-msgid "A new version is available!"
-msgstr "Er is een nieuwe versie beschikbaar."
-
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:72
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Cura {0} is available!"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Cura {0} provides better and reliable printing experience."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
 msgid "Download"
 msgstr "Downloaden"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
+msgctxt "@action:button"
+msgid "Learn more about new features"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
 msgstr "Er is een fout opgetreden tijdens het controleren op updates."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:128
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:132
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Fout"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:98
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Er is geen nieuwe versie gevonden."
@@ -101,88 +112,88 @@ msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Controleren op Updates"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:33
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:35
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Lokaal Bestand"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:34
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
 msgstr "Opslaan als bestand"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:35
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:37
 msgctxt "@info:tooltip"
 msgid "Save to File"
 msgstr "Opslaan als Bestand"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:56
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to File"
 msgstr "Opslaan als Bestand"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:86
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "Er zijn geen bestandstypen beschikbaar om te schrijven!"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:127
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Het Bestand Bestaat Al"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:127
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Het bestand <filename>{0}</filename> bestaat al. Weet u zeker dat u dit bestand wilt overschrijven?"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:150
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:156
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Opslaan als <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:151
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:157
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "Opslaan"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:165
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Toegang geweigerd tijdens opslaan als <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:162
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Kan niet opslaan als <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Opgeslagen als <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "Bestand opgeslagen"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Map Openen"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "De map met het bestand openen"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
@@ -229,20 +240,26 @@ msgid "Mirror Model"
 msgstr "Model Spiegelen"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:15
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:47
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n- {profiles}\nWilt u de standaardinstellingen herstellen?"
+msgstr ""
+"Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
+"- {profiles}\n"
+"Wilt u de standaardinstellingen herstellen?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "Uw configuratie is mogelijk beschadigd."
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:59
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr "Configuratiefouten"
@@ -252,19 +269,19 @@ msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
 msgstr "Herstel uw configuratie naar de standaardinstellingen."
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:655
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:70
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:38
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:720
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Alle Ondersteunde Typen ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:192
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:656
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:721
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:72
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Alle Bestanden (*)"
@@ -308,17 +325,17 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuut"
 msgstr[1] "{0} minuten"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:112
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:127
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Invoegtoepassingen laden..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:119
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:135
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Configuratie bijwerken..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:136
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:153
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Voorkeuren laden..."
@@ -334,46 +351,26 @@ msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Object schalen"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:220
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:314
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "De invoegtoepassing is geïnstalleerd.\nStart de toepassing opnieuw om de invoegtoepassing te activeren."
+msgstr ""
+"De invoegtoepassing is geïnstalleerd.\n"
+"Start de toepassing opnieuw om de invoegtoepassing te activeren."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Failed to install plugin from <filename>{0}</filename>:\n"
-"<message>{1}</message>"
-msgstr "Kan de invoegtoepassing van <filename>{0}</filename> niet installeren:\n<message>{1}</message>"
-
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Failed to install the plugin;\n"
-"<message>{0}</message>"
-msgstr "Kan de invoegtoepassing niet installeren;\n<message>{0}</message>"
-
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "De invoegtoepassing is verwijderd.\nStart {0} opnieuw om het verwijderen te voltooien."
+msgstr ""
+"De invoegtoepassing is verwijderd.\n"
+"Start {0} opnieuw om het verwijderen te voltooien."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-msgstr "Kan de invoegtoepassing niet verwijderen. De invoegtoepassing wordt na {0} keer opnieuw opstarten verwijderd."
-
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
@@ -389,23 +386,30 @@ msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is ondersteuning voor Framebuffer-objecten vereist. Controleer het stuurprogramma voor uw videokaart."
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:153
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:35
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
+msgctxt "@action:button"
+msgid "Reset"
+msgstr "Herstellen"
+
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:167
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Wilt u {filename} opnieuw laden?"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:154
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:168
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Het bestand is gewijzigd"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:169
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Opnieuw laden"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:169
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Hiermee wordt het opnieuw laden van de bestanden vanaf de schijf geactiveerd."
@@ -434,12 +438,6 @@ msgstr "Kan <filename>{0}</filename> niet laden"
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "Laden"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Herstellen"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
@@ -564,32 +562,17 @@ msgctxt "@action:button"
 msgid "OK"
 msgstr "OK"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:34
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "Deze instelling is door de actieve machine verborgen en wordt niet zichtbaar."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:51
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
 msgstr[0] "Deze instelling is verborgen vanwege de waarde van %1. Wijzig de waarde van die instelling om deze instelling zichtbaar te maken."
 msgstr[1] "Deze instelling is verborgen vanwege de waarden van %1. Wijzig de waarden van die instellingen om deze instelling zichtbaar te maken."
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
-msgctxt "@title:tab"
-msgid "Setting Visibility"
-msgstr "Zichtbaarheid Instellen"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
-msgctxt "@label:textbox"
-msgid "Check all"
-msgstr "Alles aanvinken"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:89
-msgctxt "@label:textbox"
-msgid "Filter..."
-msgstr "Filteren..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 msgctxt "@title:tab"
@@ -610,86 +593,6 @@ msgstr "Verwijderen Bevestigen"
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr "Weet u zeker dat u %1 wilt verwijderen? Deze bewerking kan niet ongedaan worden gemaakt."
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
-msgctxt "@title:tab"
-msgid "Profiles"
-msgstr "Profielen"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:15
-msgctxt "@label"
-msgid "Duplicate"
-msgstr "Dupliceren"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:45
-msgctxt "@label %1 is printer name"
-msgid "Printer: %1"
-msgstr "Printer: %1"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
-msgctxt "@action:button"
-msgid "Update \"%1\""
-msgstr "\"%1\" bijwerken"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
-msgctxt "@action:button"
-msgid "Update profile"
-msgstr "Profiel bijwerken"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
-msgctxt "@action:button"
-msgid "Discard current changes"
-msgstr "Huidige wijzigingen verwijderen"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
-msgctxt "@action:button"
-msgid "Reload profile"
-msgstr "Profiel opnieuw laden"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
-msgctxt "@label"
-msgid "Based on"
-msgstr "Gebaseerd op"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
-msgctxt "@label"
-msgid "Profile type"
-msgstr "Profieltype"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
-msgctxt "@label"
-msgid "Protected profile"
-msgstr "Beschermd profiel"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
-msgctxt "@label"
-msgid "Custom profile"
-msgstr "Aangepast profiel"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:139
-msgctxt "@action:button"
-msgid "Import"
-msgstr "Importeren"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:146
-msgctxt "@action:button"
-msgid "Export"
-msgstr "Exporteren"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
-msgctxt "@window:title"
-msgid "Import Profile"
-msgstr "Profiel Importeren"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
-msgctxt "@title:window"
-msgid "Import Profile"
-msgstr "Profiel Importeren"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
-msgctxt "@title:window"
-msgid "Export Profile"
-msgstr "Profiel Exporteren"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
@@ -905,6 +808,106 @@ msgstr "Biedt het Spiegelgereedschap."
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "Spiegelgereedschap"
+
+#~ msgctxt "@info"
+#~ msgid "A new version is available!"
+#~ msgstr "Er is een nieuwe versie beschikbaar."
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install plugin from <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+#~ msgstr ""
+#~ "Kan de invoegtoepassing van <filename>{0}</filename> niet installeren:\n"
+#~ "<message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install the plugin;\n"
+#~ "<message>{0}</message>"
+#~ msgstr ""
+#~ "Kan de invoegtoepassing niet installeren;\n"
+#~ "<message>{0}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
+#~ msgstr "Kan de invoegtoepassing niet verwijderen. De invoegtoepassing wordt na {0} keer opnieuw opstarten verwijderd."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Setting Visibility"
+#~ msgstr "Zichtbaarheid Instellen"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Check all"
+#~ msgstr "Alles aanvinken"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Filter..."
+#~ msgstr "Filteren..."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Profiles"
+#~ msgstr "Profielen"
+
+#~ msgctxt "@label"
+#~ msgid "Duplicate"
+#~ msgstr "Dupliceren"
+
+#~ msgctxt "@label %1 is printer name"
+#~ msgid "Printer: %1"
+#~ msgstr "Printer: %1"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update \"%1\""
+#~ msgstr "\"%1\" bijwerken"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update profile"
+#~ msgstr "Profiel bijwerken"
+
+#~ msgctxt "@action:button"
+#~ msgid "Discard current changes"
+#~ msgstr "Huidige wijzigingen verwijderen"
+
+#~ msgctxt "@action:button"
+#~ msgid "Reload profile"
+#~ msgstr "Profiel opnieuw laden"
+
+#~ msgctxt "@label"
+#~ msgid "Based on"
+#~ msgstr "Gebaseerd op"
+
+#~ msgctxt "@label"
+#~ msgid "Profile type"
+#~ msgstr "Profieltype"
+
+#~ msgctxt "@label"
+#~ msgid "Protected profile"
+#~ msgstr "Beschermd profiel"
+
+#~ msgctxt "@label"
+#~ msgid "Custom profile"
+#~ msgstr "Aangepast profiel"
+
+#~ msgctxt "@action:button"
+#~ msgid "Import"
+#~ msgstr "Importeren"
+
+#~ msgctxt "@action:button"
+#~ msgid "Export"
+#~ msgstr "Exporteren"
+
+#~ msgctxt "@window:title"
+#~ msgid "Import Profile"
+#~ msgstr "Profiel Importeren"
+
+#~ msgctxt "@title:window"
+#~ msgid "Import Profile"
+#~ msgstr "Profiel Importeren"
+
+#~ msgctxt "@title:window"
+#~ msgid "Export Profile"
+#~ msgstr "Profiel Exporteren"
 
 #~ msgctxt "@info"
 #~ msgid "An exception occurred while checking for updates."
