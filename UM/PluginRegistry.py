@@ -102,6 +102,7 @@ class PluginRegistry(QObject):
         preferences = self._application.getPreferences()
         disabled_plugins = preferences.getValue("general/disabled_plugins")
         disabled_plugins = disabled_plugins.split(",") if disabled_plugins else []
+        disabled_plugins = [plugin for plugin in disabled_plugins if len(plugin.strip()) > 0]
         for plugin_id in disabled_plugins:
             if plugin_id not in self._disabled_plugins:
                 self._disabled_plugins.append(plugin_id)
@@ -137,13 +138,12 @@ class PluginRegistry(QObject):
         from UM.Settings.ContainerRegistry import ContainerRegistry
         container_registry = ContainerRegistry.getInstance()
         with container_registry.lockFile():
-            if os.path.exists(self._plugin_config_filename):
-                with open(self._plugin_config_filename, "w", encoding = "utf-8") as f:
-                    data = json.dumps({"disabled": self._disabled_plugins,
-                                       "to_install": self._plugins_to_install,
-                                       "to_remove": self._plugins_to_remove,
-                                       })
-                    f.write(data)
+            with open(self._plugin_config_filename, "w", encoding = "utf-8") as f:
+                data = json.dumps({"disabled": self._disabled_plugins,
+                                   "to_install": self._plugins_to_install,
+                                   "to_remove": self._plugins_to_remove,
+                                   })
+                f.write(data)
 
     # TODO:
     # - [ ] Improve how metadata is stored. It should not be in the 'plugin' prop

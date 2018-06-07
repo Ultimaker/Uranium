@@ -166,7 +166,6 @@ class QtApplication(QApplication, Application):
         # Remove and install the plugins that have been scheduled
         self._plugin_registry.initializeBeforePluginsAreLoaded()
         self._loadPlugins()
-        self._plugin_registry.initializeAfterPluginsAreLoaded()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         self.pluginsLoaded.emit()
 
@@ -196,6 +195,11 @@ class QtApplication(QApplication, Application):
             Logger.log("i", "The preferences file '%s' cannot be found, will use default values",
                        self._preferences_filename)
             self._preferences_filename = Resources.getStoragePath(Resources.Preferences, self._app_name + ".cfg")
+
+        # FIXME: This is done here because we now use "plugins.json" to manage plugins instead of the Preferences file,
+        # but the PluginRegistry will still import data from the Preferences files if present, such as disabled plugins,
+        # so we need to reset those values AFTER the Preferences file is loaded.
+        self._plugin_registry.initializeAfterPluginsAreLoaded()
 
         # Preferences: recent files
         self._preferences.addPreference("%s/recent_files" % self._app_name, "")
