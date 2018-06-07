@@ -616,7 +616,7 @@ class PluginRegistry(QObject):
 
             metadata_file = os.path.join(location, "plugin.json")
             try:
-                with open(metadata_file, "r") as f:
+                with open(metadata_file, "r", encoding = "utf-8") as f:
                     try:
                         meta_data["plugin"] = json.loads(f.read())
                     except json.decoder.JSONDecodeError:
