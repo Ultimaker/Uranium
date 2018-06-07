@@ -289,11 +289,6 @@ class Application:
         else:
             Logger.log("i", "Preferences filename not set. Unable to save file.")
 
-    ##  Get the preferences.
-    #   \return preferences \type{Preferences}
-    def getPreferences(self) -> Preferences:
-        return Preferences.getInstance()
-
     ##  Get the currently used IETF language tag.
     #   The returned tag is during runtime used to translate strings.
     #   \returns Language tag.
