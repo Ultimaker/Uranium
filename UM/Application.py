@@ -93,6 +93,7 @@ class Application:
         self.default_theme = self.getApplicationName() #type: str
 
         preferences = Preferences.getInstance()
+        self._preferences = preferences
         preferences.addPreference("general/language", "en_US")
         preferences.addPreference("general/visible_settings", "")
         preferences.addPreference("general/plugins_to_remove", "")
@@ -146,6 +147,9 @@ class Application:
         self.hideMessageSignal.connect(self.hideMessage)
 
         self._global_container_stack = None #type: ContainerStack
+
+    def getPreferences(self) -> Preferences:
+        return self._preferences
 
     def getContainerRegistry(self) -> ContainerRegistry:
         return ContainerRegistry.getInstance()
