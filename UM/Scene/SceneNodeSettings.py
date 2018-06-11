@@ -1,0 +1,3 @@
+
+class SceneNodeSettings:
+    LockPosition = "LockPosition"
