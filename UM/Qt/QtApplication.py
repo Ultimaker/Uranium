@@ -149,6 +149,8 @@ class QtApplication(QApplication, Application):
     def startSplashWindowPhase(self) -> None:
         super().startSplashWindowPhase()
 
+        self._package_manager.initialize()
+
         # Read preferences here (upgrade won't work) to get the language in use, so the splash window can be shown in
         # the correct language.
         try:

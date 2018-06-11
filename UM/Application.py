@@ -8,6 +8,7 @@ import threading
 
 from UM.Controller import Controller
 from UM.Message import Message #For typing.
+from UM.PackageManager import PackageManager
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
@@ -75,6 +76,9 @@ class Application:
 
         self._extensions = [] #type: List[Extension]
         self._required_plugins = [] #type: List[str]
+
+        self._package_manager_class = PackageManager  # type: type
+        self._package_manager = None  # type: PackageManager
 
         self._plugin_registry = None #type: PluginRegistry
         self._container_registry_class = ContainerRegistry #type: type
@@ -183,9 +187,7 @@ class Application:
         UM.Settings.ContainerStack.setContainerRegistry(self._container_registry)
 
         # Initialize the package manager to remove and install scheduled packages.
-        from UM.PackageManager import PackageManager
-        self._package_manager = PackageManager(self)
-        self._package_manager.initialize()
+        self._package_manager = self._package_manager_class(self)
 
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)

@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Optional, Dict, Any, List, Set
+from typing import Optional, Dict, Any
 import json
 import os
 import shutil
@@ -10,7 +10,6 @@ import tempfile
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl
 
-from UM.Application import Application
 from UM.Logger import Logger
 from UM.Resources import Resources
 from UM.Version import Version
@@ -19,10 +18,10 @@ from UM.Version import Version
 class PackageManager(QObject):
     Version = 1
 
-    def __init__(self, parent = None):
+    def __init__(self, application, parent = None):
         super().__init__(parent)
 
-        self._application = Application.getInstance()
+        self._application = application
         self._container_registry = self._application.getContainerRegistry()
         self._plugin_registry = self._application.getPluginRegistry()
 
@@ -158,7 +157,7 @@ class PackageManager(QObject):
         installed_packages_dict = {}
         for package_id in all_installed_ids:
             # Skip required plugins as they should not be tampered with
-            if package_id in Application.getInstance().getRequiredPlugins():
+            if package_id in self._application.getRequiredPlugins():
                 continue
 
             package_info = None
