@@ -84,14 +84,14 @@ def test_containers_provider(container_provider: ContainerProvider, upgrade_mana
     definition_ids = {"basic_definition", "children", "functions", "inherits", "metadata_definition", "multiple_settings", "single_setting"}
     for definition_id in definition_ids:
         container = DefinitionContainer(definition_id)
-        container.deserialize(open(os.path.join(my_folder, "definitions", definition_id + ".def.json")).read())
+        container.deserialize(open(os.path.join(my_folder, "definitions", definition_id + ".def.json"), encoding = "utf-8").read())
         container_provider._containers[definition_id] = container
         container_provider.addMetadata(container.getMetaData())
 
     instance_ids = {"basic_instance", "metadata_instance", "setting_values"}
     for instance_id in instance_ids:
         container = UM.Settings.InstanceContainer.InstanceContainer(instance_id)
-        container.deserialize(open(os.path.join(my_folder, "instances", instance_id + ".inst.cfg")).read())
+        container.deserialize(open(os.path.join(my_folder, "instances", instance_id + ".inst.cfg"), encoding = "utf-8").read())
         container_provider._containers[instance_id] = container
         container_provider.addMetadata(container.getMetaData())
 

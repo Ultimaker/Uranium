@@ -46,7 +46,7 @@ class LockFile:
     #   will ensure that this is thread-safe then.
     def _createLockFile(self) -> None:
         try:
-            with open(self._filename, "w") as lock_file:
+            with open(self._filename, "w", encoding = "utf-8") as lock_file:
                 lock_file.write("%s" % os.getpid())
         except:
             Logger.log("e", "Could not create lock file [%s]" % self._filename)

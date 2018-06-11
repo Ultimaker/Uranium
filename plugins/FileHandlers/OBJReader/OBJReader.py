@@ -29,7 +29,7 @@ class OBJReader(MeshReader):
 
             mesh_builder = MeshBuilder()
             mesh_builder.setFileName(file_name)
-            f = open(file_name, "rt")
+            f = open(file_name, "rt", encoding = "utf-8")
             for line in f:
                 parts = line.split()
                 if len(parts) < 1:
