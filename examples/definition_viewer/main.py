@@ -31,7 +31,7 @@ class DefinitionLoader(QObject):
             UM.Resources.Resources.addSearchPath(dirname)
             UM.Resources.Resources.addSearchPath(os.path.realpath(os.path.join(dirname, "..")))
 
-            with open(file_path.toLocalFile()) as data:
+            with open(file_path.toLocalFile(), encoding = "utf-8") as data:
                 definition.deserialize(data.read())
 
             self._metadata = dict(definition.metaData)

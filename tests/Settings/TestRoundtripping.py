@@ -34,7 +34,7 @@ def write_data(path, data):
         f.write(data)
 
 def read_data(path):
-    with open(str(path), "rt") as f:
+    with open(str(path), "rt", encoding = "utf-8") as f:
         return f.read()
 
 ##  Run a function in one or more separate processes, waiting until all are finished.

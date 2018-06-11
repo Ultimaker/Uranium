@@ -14,6 +14,7 @@ from UM.Math.Float import Float
 from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 
+from UM.Scene.SceneNodeSettings import SceneNodeSettings
 from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
 
@@ -28,9 +29,6 @@ DIRECTION_TOLERANCE = 0.0001  # Used to check if you're perpendicular on some ax
 ##  Provides the tool to move meshes and groups
 #
 #   The tool exposes a ToolHint to show the distance of the current operation
-
-class TranslateToolSettings:
-    LockPosition = "LockPosition"
 
 
 class TranslateTool(Tool):
@@ -53,7 +51,7 @@ class TranslateTool(Tool):
                                   "X",
                                   "Y",
                                   "Z",
-                                  TranslateToolSettings.LockPosition)
+                                  SceneNodeSettings.LockPosition)
 
         # Ensure that the properties (X, Y & Z) are updated whenever the selection center is changed.
         Selection.selectionCenterChanged.connect(self.propertyChanged)
@@ -168,7 +166,7 @@ class TranslateTool(Tool):
     #   \param value type(bool) the setting state
     def setLockPosition(self, value):
         for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
-            selected_node.setSetting(TranslateToolSettings.LockPosition, value)
+            selected_node.setSetting(SceneNodeSettings.LockPosition, value)
 
     def getLockPosition(self):
         total_size = Selection.getCount()
@@ -177,7 +175,7 @@ class TranslateTool(Tool):
         if Selection.hasSelection():
             for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
 
-                if selected_node.getSetting(TranslateToolSettings.LockPosition, False):
+                if selected_node.getSetting(SceneNodeSettings.LockPosition, False):
                     true_state_counter += 1
                 else:
                     false_state_counter +=1
@@ -281,7 +279,7 @@ class TranslateTool(Tool):
 
                 op = GroupedOperation()
                 for node in self._getSelectedObjectsWithoutSelectedAncestors():
-                    if not node.getSetting(TranslateToolSettings.LockPosition, False):
+                    if not node.getSetting(SceneNodeSettings.LockPosition, False):
                         op.addOperation(TranslateOperation(node, drag))
 
                 op.push()

@@ -28,7 +28,7 @@ class TestSaveFile(unittest.TestCase):
         with SaveFile(path, "w") as f:
             f.write("test file")
 
-        with open(path) as f:
+        with open(path, encoding = "utf-8") as f:
             self.assertEqual(f.readline(), "test file")
 
     def test_multiWrite(self):
@@ -43,7 +43,7 @@ class TestSaveFile(unittest.TestCase):
         self.assertEqual(len(os.listdir(self._temp_dir.name)), 1)
 
         # And file contents should be correct.
-        with open(path) as f:
+        with open(path, encoding = "utf-8") as f:
             data = f.read()
             self.assertEqual(len(data), 9)
             self.assertEqual(data, "test file")

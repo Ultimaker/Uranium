@@ -47,7 +47,7 @@ class STLReader(MeshReader):
             f = open(file_name, "rb")
             if not self._loadBinary(mesh_builder, f):
                 f.close()
-                f = open(file_name, "rt")
+                f = open(file_name, "rt", encoding = "utf-8")
                 try:
                     self._loadAscii(mesh_builder, f)
                 except UnicodeDecodeError:

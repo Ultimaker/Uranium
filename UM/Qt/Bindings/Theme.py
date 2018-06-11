@@ -69,7 +69,7 @@ class Theme(QObject):
                     if os.path.isdir(folder) and os.path.isfile(theme_file):
                         theme_id = os.path.basename(folder)
 
-                        with open(theme_file) as f:
+                        with open(theme_file, encoding = "utf-8") as f:
                             try:
                                 data = json.load(f)
                             except json.decoder.JSONDecodeError:
@@ -167,7 +167,7 @@ class Theme(QObject):
         if path == self._path:
             return
 
-        with open(os.path.join(path, "theme.json")) as f:
+        with open(os.path.join(path, "theme.json"), encoding = "utf-8") as f:
             Logger.log("d", "Loading theme file: %s", os.path.join(path, "theme.json"))
             data = json.load(f)
 

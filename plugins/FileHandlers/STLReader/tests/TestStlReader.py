@@ -15,8 +15,8 @@ def test_readASCII(application):
     assert result
 
     if STLReader.use_numpystl:
-        # If the system the test runs on supporst numpy stl, we should also check the non numpy stl option.
-        f = open(ascii_path, "rt")
+        # If the system the test runs on supports numpy stl, we should also check the non numpy stl option.
+        f = open(ascii_path, "rt", encoding = "utf-8")
         mesh_builder = MeshBuilder()
         reader._loadAscii(mesh_builder, f)
         mesh_builder.calculateNormals(fast=True)

@@ -52,7 +52,7 @@ else:
     basedir = sys.argv[2]
     output_filename = sys.argv[3]
 
-    with open(json_filename, "r") as data_file:
+    with open(json_filename, "r", encoding = "utf-8") as data_file:
         error = False
 
         jsondatadict = json.load(data_file, object_pairs_hook=collections.OrderedDict)
@@ -68,5 +68,5 @@ else:
             appendMessage(file, "name", jsondatadict["name"])
 
     if pottxt != "":
-        with open(output_filename, "a") as output_file:
+        with open(output_filename, "a", encoding = "utf-8") as output_file:
             output_file.write(pottxt)
