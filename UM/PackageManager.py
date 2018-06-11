@@ -194,6 +194,9 @@ class PackageManager(QObject):
 
         return installed_packages_dict
 
+    def getToRemovePackageIDs(self) -> set:
+        return self._to_remove_package_set
+
     # Checks if the given package is installed (at all).
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
@@ -214,6 +217,10 @@ class PackageManager(QObject):
             if not package_info:
                 return
             package_id = package_info["package_id"]
+
+            # If the package is being installed but it is in the list on to remove, then it is deleted from that list.
+            if package_id in self._to_remove_package_set:
+                self._to_remove_package_set.remove(package_id)
 
             # Check if it is installed
             installed_package_info = self.getInstalledPackageInfo(package_info["package_id"])

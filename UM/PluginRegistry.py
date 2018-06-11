@@ -166,7 +166,7 @@ class PluginRegistry(QObject):
     #   registry. Cura uses this method to add 3rd-party plugins.
     def addExternalPlugins(self, plugin_list: List[Dict[str, Any]]) -> None:
         for plugin in plugin_list:
-            # Add the plugin id to the the all plugins list if not already there:
+            # Add the plugin id to the all plugins list if not already there:
             if plugin["id"] not in self._all_plugins:
                 self._all_plugins.append(plugin["id"])
 
@@ -358,16 +358,15 @@ class PluginRegistry(QObject):
             # Get the plugin metadata:
             plugin_metadata = self.getMetaData(plugin_id)
 
-            # Add the plugin to the list:
-            self._all_plugins.append(plugin_id)
-            self._plugins_installed.append(plugin_id)
-
             # Save all metadata to the metadata dictionary:
             self._metadata[plugin_id] = plugin_metadata
             if metadata is None or self._subsetInDict(self._metadata[plugin_id], metadata):
                 #
                 try:
                     self.loadPlugin(plugin_id)
+                    # Add the plugin to the list after actually load the plugin:
+                    self._all_plugins.append(plugin_id)
+                    self._plugins_installed.append(plugin_id)
                 except PluginNotFoundError:
                     pass
 
