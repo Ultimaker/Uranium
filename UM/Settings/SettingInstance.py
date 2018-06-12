@@ -142,7 +142,7 @@ class SettingInstance:
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
     @call_if_enabled(_traceSetProperty, _isTraceEnabled())
-    def setProperty(self, name: str, value: Any, container: ContainerInterface = None) -> None:
+    def setProperty(self, name: str, value: Any, container: ContainerInterface = None, emit_signals = True) -> None:
         if SettingDefinition.hasProperty(name):
             if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
@@ -159,23 +159,27 @@ class SettingInstance:
                     ## If state changed, emit the signal
                     if self._state != InstanceState.User:
                         self._state = InstanceState.User
-                        self.propertyChanged.emit(self._definition.key, "state")
+                        if emit_signals:
+                            self.propertyChanged.emit(self._definition.key, "state")
 
-                    self.updateRelations(container)
+                    self.updateRelations(container, emit_signals = emit_signals)
 
-                if self._validator:
+                if self._validator and emit_signals:
                     self.propertyChanged.emit(self._definition.key, "validationState")
 
-                self.propertyChanged.emit(self._definition.key, name)
+                if emit_signals:
+                    self.propertyChanged.emit(self._definition.key, name)
                 for property_name in self._definition.getPropertyNames():
                     if self._definition.dependsOnProperty(property_name) == name:
-                        self.propertyChanged.emit(self._definition.key, property_name)
+                        if emit_signals:
+                            self.propertyChanged.emit(self._definition.key, property_name)
         else:
             if name == "state":
                 if value == "InstanceState.Calculated":
                     if self._state != InstanceState.Calculated:
                         self._state = InstanceState.Calculated
-                        self.propertyChanged.emit(self._definition.key, "state")
+                        if emit_signals:
+                            self.propertyChanged.emit(self._definition.key, "state")
             else:
                 raise AttributeError("No property {0} defined".format(name))
 
@@ -227,7 +231,7 @@ class SettingInstance:
 
     ## protected:
     @call_if_enabled(_traceRelations, _isTraceEnabled())
-    def updateRelations(self, container: ContainerInterface) -> None:
+    def updateRelations(self, container: ContainerInterface, emit_signals = True) -> None:
         property_names = SettingDefinition.getPropertyNames()
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
@@ -241,11 +245,12 @@ class SettingInstance:
 
             # TODO: We should send this as a single change event instead of several of them.
             # That would increase performance by reducing the amount of updates.
-            for relation in changed_relations:
-                container.propertyChanged.emit(relation.target.key, relation.role)
-                # If the value/minimum value/etc state is updated, the validation state must be re-evaluated
-                if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
-                    container.propertyChanged.emit(relation.target.key, "validationState")
+            if emit_signals:
+                for relation in changed_relations:
+                    container.propertyChanged.emit(relation.target.key, relation.role)
+                    # If the value/minimum value/etc state is updated, the validation state must be re-evaluated
+                    if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
+                        container.propertyChanged.emit(relation.target.key, "validationState")
 
     ##  Recursive function to put all settings that require eachother for changes of a property value in a list
     #   \param relations_set \type{set} Set of keys (strings) of settings that are influenced

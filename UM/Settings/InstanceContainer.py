@@ -345,7 +345,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             instance.propertyChanged.connect(self.propertyChanged)
             self._instances[instance.definition.key] = instance
 
-        self._instances[key].setProperty(property_name, property_value, container)
+        # Do not emit any signal if the value is set from cache
+        self._instances[key].setProperty(property_name, property_value, container, emit_signals = not set_from_cache)
 
         if not set_from_cache:
             self.setDirty(True)
