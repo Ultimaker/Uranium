@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Optional, Dict, Any
+from typing import Any, Dict, List, Optional, Set
 import json
 import os
 import shutil
@@ -136,7 +136,7 @@ class PackageManager(QObject):
 
     def getAllInstalledPackageIDs(self) -> set:
         # Add bundled, installed, and to-install packages to the set of installed package IDs
-        all_installed_ids = set()
+        all_installed_ids = set() #type: Set[str]
 
         if self._bundled_package_dict.keys():
             all_installed_ids = all_installed_ids.union(set(self._bundled_package_dict.keys()))
@@ -154,7 +154,7 @@ class PackageManager(QObject):
         all_installed_ids = self.getAllInstalledPackageIDs()
 
         # map of <package_type> -> <package_id> -> <package_info>
-        installed_packages_dict = {}
+        installed_packages_dict = {} #type: Dict[str, List[Dict[str, Any]]]
         for package_id in all_installed_ids:
             # Skip required plugins as they should not be tampered with
             if package_id in self._application.getRequiredPlugins():
