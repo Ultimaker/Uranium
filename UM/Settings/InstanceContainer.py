@@ -4,7 +4,7 @@
 import configparser
 import io
 import copy
-from typing import Any, cast, Dict, List, Optional, Tuple
+from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlEngine #To take ownership of this class ourselves.
@@ -363,12 +363,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     ##  Get all the keys of the instances of this container
     #   \returns list of keys
-    def getAllKeys(self) -> List[str]:
+    def getAllKeys(self) -> Set[str]:
         keys = set(key for key in self._instances)
         if self._cached_values:
             # If we only want the keys and the actual values are still cached, just get the keys from the cache.
             keys.update(self._cached_values.keys())
-        return list(keys)
+        return keys
 
     ##  Create a new InstanceContainer with the same contents as this container
     #
