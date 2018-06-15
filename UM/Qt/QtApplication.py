@@ -447,49 +447,6 @@ class QtApplication(QApplication, Application):
     def backend(self) -> Backend:
         return self.getBackend()
 
-    ##  Load a Qt translation catalog.
-    #
-    #   This method will locate, load and install a Qt message catalog that can be used
-    #   by Qt's translation system, like qsTr() in QML files.
-    #
-    #   \param file_name The file name to load, without extension. It will be searched for in
-    #                    the i18nLocation Resources directory. If it can not be found a warning
-    #                    will be logged but no error will be thrown.
-    #   \param language The language to load translations for. This can be any valid language code
-    #                   or 'default' in which case the language is looked up based on system locale.
-    #                   If the specified language can not be found, this method will fall back to
-    #                   loading the english translations file.
-    #
-    #   \note When `language` is `default`, the language to load can be changed with the
-    #         environment variable "LANGUAGE".
-    def loadQtTranslation(self, file_name: str, language: str = "default") -> None:
-        # TODO Add support for specifying a language from preferences
-        if language == "default":
-            path = self._getDefaultLanguage(file_name)
-        else:
-            path = Resources.getPath(Resources.i18n, language, "LC_MESSAGES", file_name + ".qm")
-
-        # If all else fails, fall back to english.
-        if not path:
-            Logger.log("w", "Could not find any translations matching {0} for file {1}, falling back to english".format(language, file_name))
-            try:
-                path = Resources.getPath(Resources.i18n, "en_US", "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                Logger.log("w", "Could not find English translations for file {0}. Switching to developer english.".format(file_name))
-                return
-
-        translator = QTranslator()
-        if not translator.load(path):
-            Logger.log("e", "Unable to load translations %s", file_name)
-            return
-
-        # Store a reference to the translator.
-        # This prevents the translator from being destroyed before Qt has a chance to use it.
-        self._translators[file_name] = translator
-
-        # Finally, install the translator so Qt can use it.
-        self.installTranslator(translator)
-
     ## Create a class variable so we can manage the splash in the CrashHandler dialog when the Application instance
     # is not yet created, e.g. when an error occurs during the initialization
     splash = None
@@ -614,56 +571,6 @@ class QtApplication(QApplication, Application):
             # round the font pixel ratio to quarters
             fontPixelRatio = int(fontPixelRatio * 4)/4
             return fontPixelRatio
-
-    def _getDefaultLanguage(self, file_name: str) -> Optional[str]:
-        # If we have a language override set in the environment, try and use that.
-        lang = os.getenv("URANIUM_LANGUAGE")
-        if lang:
-            try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                pass
-
-        # Else, try and get the current language from preferences
-        lang = self.getPreferences().getValue("general/language")
-        if lang:
-            try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                pass
-
-        # If none of those are set, try to use the environment's LANGUAGE variable.
-        lang = os.getenv("LANGUAGE")
-        if lang:
-            try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                pass
-
-        # If looking up the language from the enviroment or preferences fails, try and use Qt's system locale instead.
-        locale = QLocale.system()
-
-        # First, try and find a directory for any of the provided languages
-        for lang in locale.uiLanguages():
-            try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                pass
-
-        # If that fails, see if we can extract a language code from the
-        # preferred language, regardless of the country code. This will turn
-        # "en-GB" into "en" for example.
-        lang = locale.uiLanguages()[0]
-        lang = lang[0:lang.find("-")]
-        for subdirectory in os.path.listdir(Resources.getPath(Resources.i18n)):
-            if subdirectory == "en_7S": #Never automatically go to Pirate.
-                continue
-            if not os.path.isdir(Resources.getPath(Resources.i18n, subdirectory)):
-                continue
-            if subdirectory.startswith(lang + "_"): #Only match the language code, not the country code.
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-
-        return None
 
 
 ##  Internal.
