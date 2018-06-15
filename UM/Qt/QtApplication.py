@@ -98,7 +98,7 @@ class QtApplication(QApplication, Application):
         self._tray_icon = None #type: Optional[str]
         self._tray_icon_widget = None #type: Optional[QSystemTrayIcon]
         self._theme = None #type: Optional[Theme]
-        self._renderer = None #type: QtRenderer
+        self._renderer = None #type: Optional[QtRenderer]
 
         self._job_queue = None #type: Optional[JobQueue]
         self._version_upgrade_manager = None #type: Optional[VersionUpgradeManager]
@@ -600,7 +600,7 @@ class QtApplication(QApplication, Application):
     def getInstance(cls, *args, **kwargs) -> "QtApplication":
         return cast(QtApplication, super().getInstance(**kwargs))
 
-    def _createSplashScreen(self) -> None:
+    def _createSplashScreen(self) -> QSplashScreen:
         return QSplashScreen(QPixmap(Resources.getPath(Resources.Images, self.getApplicationName() + ".png")))
 
     def _screenScaleFactor(self) -> float:
@@ -672,7 +672,7 @@ class QtApplication(QApplication, Application):
 class _QtFunctionEvent(QEvent):
     QtFunctionEvent = QEvent.User + 1
 
-    def __init__(self, fevent: QEvent):
+    def __init__(self, fevent: QEvent) -> None:
         super().__init__(self.QtFunctionEvent)
         self._function_event = fevent
 
