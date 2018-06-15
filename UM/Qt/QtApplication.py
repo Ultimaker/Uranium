@@ -345,7 +345,7 @@ class QtApplication(QApplication, Application):
     def registerObjects(self, engine):
         engine.rootContext().setContextProperty("PluginRegistry", PluginRegistry.getInstance())
 
-    def getRenderer(self):
+    def getRenderer(self) -> QtRenderer:
         if not self._renderer:
             self._renderer = QtRenderer()
 
