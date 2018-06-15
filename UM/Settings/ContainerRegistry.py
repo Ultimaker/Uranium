@@ -44,13 +44,12 @@ MaxQueryCacheSize = 1000
 #   appropriate providers.
 @signalemitter
 class ContainerRegistry(ContainerRegistryInterface):
-
-    def __init__(self, application: "QtApplication", *args, **kwargs) -> None:
+    def __init__(self, application: "QtApplication") -> None:
         if ContainerRegistry.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         ContainerRegistry.__instance = self
 
-        super().__init__(*args, **kwargs)
+        super().__init__()
 
         self._application = application # type: QtApplication
 
