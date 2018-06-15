@@ -1,7 +1,7 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, QCoreApplication, pyqtSlot, QUrl, pyqtSignal, pyqtProperty
+from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty
 
 from UM.Application import Application
 from UM.Scene.Selection import Selection
@@ -17,16 +17,27 @@ class ControllerProxy(QObject):
         self._tools_enabled = True
 
         # bind needed signals
+        self._controller.activeToolChanged.connect(self._onActiveToolChanged)
         self._controller.toolOperationStarted.connect(self._onToolOperationStarted)
         self._controller.toolOperationStopped.connect(self._onToolOperationStopped)
         self._controller.activeStageChanged.connect(self._onActiveStageChanged)
 
     toolsEnabledChanged = pyqtSignal()
     activeStageChanged = pyqtSignal()
+    activeToolChanged = pyqtSignal()
 
     @pyqtProperty(bool, notify = toolsEnabledChanged)
     def toolsEnabled(self):
         return self._tools_enabled
+
+    ##  Gets the name of the currently active tool, if any.
+    #   Otherwise, returns null.
+    #   \return The name of the currently active tool. If no tool is active,
+    #   returns null.
+    @pyqtProperty(str, notify = activeToolChanged)
+    def activeToolId(self):
+        if self._controller.getActiveTool():
+            return self._controller.getActiveTool().getPluginId()
 
     @pyqtProperty(QObject, notify = activeStageChanged)
     def activeStage(self):
@@ -83,6 +94,11 @@ class ControllerProxy(QObject):
             self.contextMenuRequested.emit(id)
         else:
             self.contextMenuRequested.emit(0)
+
+    ##  Triggers when the tool in the controller is changed.
+    #   \param tool The new tool.
+    def _onActiveToolChanged(self) -> None:
+        self.activeToolChanged.emit()
 
     def _onToolOperationStarted(self, tool):
         self._tools_enabled = False
