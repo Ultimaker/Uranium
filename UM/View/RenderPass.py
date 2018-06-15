@@ -4,7 +4,6 @@
 from typing import Optional, Tuple
 from PyQt5.QtGui import QImage #For typing.
 
-import UM.Qt.QtApplication
 from UM.Logger import Logger
 from UM.View.GL.OpenGL import OpenGL
 from UM.View.GL.FrameBufferObject import FrameBufferObject
@@ -137,6 +136,7 @@ class RenderPass:
     def _updateRenderStorage(self) -> None:
         # On Mac OS X, this function may get called by a main window resize signal during closing.
         # This will cause a crash, so don't do anything when it is shutting down.
+        import UM.Qt.QtApplication
         if UM.Qt.QtApplication.QtApplication.getInstance().isShuttingDown():
             return
         if self._width <= 0 or self._height <= 0:

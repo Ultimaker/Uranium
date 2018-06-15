@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -9,7 +9,7 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QU
 from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase
 from PyQt5.QtQml import QQmlComponent, QQmlContext
 
-from UM.Application import Application
+import UM.Application
 from UM.Decorators import deprecated
 from UM.FlameProfiler import pyqtSlot
 from UM.Logger import Logger
@@ -46,16 +46,17 @@ class Theme(QObject):
         self._path = ""
         self._icons = {}
         self._images = {}
-        Application.getInstance().getPreferences().addPreference("general/theme", Application.getInstance().default_theme)
+        application = UM.Application.Application.getInstance()
+        application.getPreferences().addPreference("general/theme", application.default_theme)
         try:
-            theme_path = Resources.getPath(Resources.Themes, Application.getInstance().getPreferences().getValue("general/theme"))
+            theme_path = Resources.getPath(Resources.Themes, application.getPreferences().getValue("general/theme"))
             self.load(theme_path)
         except FileNotFoundError:
             Logger.log("e", "Could not find theme file, resetting to the default theme.")
 
             # cannot the current theme, so go back to the default
-            Application.getInstance().getPreferences().setValue("general/theme", Application.getInstance().default_theme)
-            theme_path = Resources.getPath(Resources.Themes, Application.getInstance().getPreferences().getValue("general/theme"))
+            application.getPreferences().setValue("general/theme", application.default_theme)
+            theme_path = Resources.getPath(Resources.Themes, application.getPreferences().getValue("general/theme"))
             self.load(theme_path)
 
     @pyqtSlot(result = "QVariantList")
