@@ -92,7 +92,7 @@ class QtApplication(QApplication, Application):
 
         self._qml_import_paths = [] #type: List[str]
         self._main_qml = "main.qml" #type: str
-        self._qml_engine = None #type: ignore #Don't type this, because the type depends on the platform so it will always give an error somewhere.
+        self._qml_engine = None #type: Optional[QQmlApplicationEngine]
         self._main_window = None #type: Optional[MainWindow]
         self._tray_icon_name = tray_icon_name #type: str
         self._tray_icon = None #type: Optional[str]
