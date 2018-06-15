@@ -98,6 +98,7 @@ class QtApplication(QApplication, Application):
         self._tray_icon = None #type: Optional[str]
         self._tray_icon_widget = None #type: Optional[QSystemTrayIcon]
         self._theme = None #type: Optional[Theme]
+        self._renderer = None #type: QtRenderer
 
         self._job_queue = None #type: Optional[JobQueue]
         self._version_upgrade_manager = None #type: Optional[VersionUpgradeManager]
@@ -354,7 +355,7 @@ class QtApplication(QApplication, Application):
         if not self._renderer:
             self._renderer = QtRenderer()
 
-        return self._renderer
+        return cast(QtRenderer, self._renderer)
 
     mainWindowChanged = Signal()
 
