@@ -56,6 +56,8 @@ class SelectionTool(Tool):
     #
     #   \param event type(Event)
     def event(self, event):
+        if not self._enabled:
+            return False
         # The selection renderpass is used to identify objects in the current view
         if self._selection_pass is None:
             self._selection_pass = self._renderer.getRenderPass("selection")
