@@ -25,7 +25,7 @@ class Texture(object):
     #   \param texture_unit The texture unit to bind to.
     def bind(self, texture_unit):
         if not self._qt_texture.isCreated():
-            if self._file_name != None:
+            if self._file_name is not None:
                 self._image = QImage(self._file_name).mirrored()
             elif self._image is None: # No filename or image set.
                 self._image = QImage(1, 1, QImage.Format_ARGB32)
