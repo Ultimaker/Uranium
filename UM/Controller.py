@@ -375,6 +375,16 @@ class Controller:
         else:
             self._selection_tool = self.getTool(tool)
 
+    ##  Temporarily disables the selection tool, so that the selection cannot
+    #   change.
+    def disableSelection(self):
+        self.toolEnabledChanged.emit(self._selection_tool.getPluginId(), False)
+
+    ##  Re-enable the selection tool so that you can select and deselect objects
+    #   again.
+    def enableSelection(self):
+        self.toolEnabledChanged.emit(self._selection_tool.getPluginId(), True)
+
     def getToolsEnabled(self) -> bool:
         return self._tools_enabled
 
