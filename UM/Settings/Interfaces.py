@@ -73,8 +73,8 @@ class ContainerInterface:
         pass
 
     ##  Get all the setting keys known to this container.
-    #   \return List of keys.
-    def getAllKeys(self) -> List[str]:
+    #   \return Set of keys.
+    def getAllKeys(self) -> Set[str]:
         pass
 
     ##  Serialize this container to a string.

@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from enum import IntEnum
@@ -11,7 +11,7 @@ from time import sleep
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
-from UM.Application import Application
+import UM.Application
 from UM.PluginObject import PluginObject
 from UM.Platform import Platform
 
@@ -44,7 +44,7 @@ class Backend(PluginObject):
         self._backend_log = []
         self._backend_log_max_lines = None
 
-        Application.getInstance().callLater(self._createSocket)
+        UM.Application.Application.getInstance().callLater(self._createSocket)
 
     processingProgress = Signal()
     backendStateChange = Signal()
@@ -127,7 +127,7 @@ class Backend(PluginObject):
     
     ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
-        return [Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
+        return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
 
     ##  Start the (external) backend process.
     def _runEngineProcess(self, command_list):
@@ -164,7 +164,7 @@ class Backend(PluginObject):
     def _onSocketStateChanged(self, state):
         self._logSocketState(state)
         if state == Arcus.SocketState.Listening:
-            if not Application.getInstance().getUseExternalBackend():
+            if not UM.Application.Application.getInstance().getUseExternalBackend():
                 self.startEngine()
         elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
@@ -237,7 +237,7 @@ class Backend(PluginObject):
         if not self._socket.registerAllMessageTypes(protocol_file):
             Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
 
-        if Application.getInstance().getUseExternalBackend():
+        if UM.Application.Application.getInstance().getUseExternalBackend():
             Logger.log("i", "Listening for backend connections on %s", self._port)
 
         self._socket.listen("127.0.0.1", self._port)

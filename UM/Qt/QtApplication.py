@@ -5,26 +5,31 @@ import sys
 import os
 import signal
 from typing import List
-from typing import cast, Dict, Optional, TYPE_CHECKING
+from typing import Any, cast, Dict, Optional
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QT_VERSION_STR, PYQT_VERSION_STR
-from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext
+from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
 from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics
 from PyQt5.QtCore import QTimer
 
+from UM.Backend.Backend import Backend #For typing.
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.FileHandler.ReadFileJob import ReadFileJob
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Qt.Bindings.Theme import Theme
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 from UM.Application import Application
+from UM.PackageManager import PackageManager #For typing.
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
+from UM.Qt.Bindings.MainWindow import MainWindow #For typing.
 from UM.Signal import Signal, signalemitter
 from UM.Resources import Resources
 from UM.Logger import Logger
+from UM.Message import Message #For typing.
 from UM.i18n import i18nCatalog
+from UM.Job import Job #For typing.
 from UM.JobQueue import JobQueue
 from UM.VersionUpgradeManager import VersionUpgradeManager
 from UM.View.GL.OpenGLContext import OpenGLContext
@@ -86,24 +91,25 @@ class QtApplication(QApplication, Application):
         super().__init__(sys.argv, **kwargs) # type: ignore
 
         self._qml_import_paths = [] #type: List[str]
-        self._main_qml = "main.qml"
-        self._qml_engine = None
-        self._main_window = None
-        self._tray_icon_name = tray_icon_name
-        self._tray_icon = None
+        self._main_qml = "main.qml" #type: str
+        self._qml_engine = None #type: Optional[QQmlApplicationEngine]
+        self._main_window = None #type: Optional[MainWindow]
+        self._tray_icon_name = tray_icon_name #type: str
+        self._tray_icon = None #type: Optional[str]
         self._tray_icon_widget = None #type: Optional[QSystemTrayIcon]
-        self._theme = None
+        self._theme = None #type: Optional[Theme]
+        self._renderer = None #type: Optional[QtRenderer]
 
         self._job_queue = None #type: Optional[JobQueue]
         self._version_upgrade_manager = None #type: Optional[VersionUpgradeManager]
 
-        self._is_shutting_down = False
+        self._is_shutting_down = False #type: bool
 
-        self._recent_files = [] #type: List[str]
+        self._recent_files = [] #type: List[QUrl]
 
         self._configuration_error_message = None #type: Optional[ConfigurationErrorMessage]
 
-    def addCommandLineOptions(self):
+    def addCommandLineOptions(self) -> None:
         super().addCommandLineOptions()
         # This flag is used by QApplication. We don't process it.
         self._cli_parser.add_argument("-qmljsdebugger",
@@ -225,7 +231,7 @@ class QtApplication(QApplication, Application):
             self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
             self._tray_icon_widget.setVisible(False)
 
-    def initializeEngine(self):
+    def initializeEngine(self) -> None:
         # TODO: Document native/qml import trickery
         self._qml_engine = QQmlApplicationEngine(self)
         self._qml_engine.setOutputWarningsToStandardError(False)
@@ -249,10 +255,10 @@ class QtApplication(QApplication, Application):
     recentFilesChanged = pyqtSignal()
 
     @pyqtProperty("QVariantList", notify=recentFilesChanged)
-    def recentFiles(self):
+    def recentFiles(self) -> List[str]:
         return self._recent_files
 
-    def _onJobFinished(self, job):
+    def _onJobFinished(self, job: Job) -> None:
         if (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
             return
 
@@ -271,17 +277,17 @@ class QtApplication(QApplication, Application):
         self.getPreferences().setValue("%s/recent_files" % self.getApplicationName(), pref)
         self.recentFilesChanged.emit()
 
-    def run(self):
+    def run(self) -> None:
         pass
 
-    def hideMessage(self, message):
+    def hideMessage(self, message: Message) -> None:
         with self._message_lock:
             if message in self._visible_messages:
                 message.hide(send_signal = False)  # we're in handling hideMessageSignal so we don't want to resend it
                 self._visible_messages.remove(message)
                 self.visibleMessageRemoved.emit(message)
 
-    def showMessage(self, message):
+    def showMessage(self, message: Message) -> None:
         with self._message_lock:
             if message not in self._visible_messages:
                 self._visible_messages.append(message)
@@ -292,27 +298,27 @@ class QtApplication(QApplication, Application):
         # also show toast message when the main window is minimized
         self.showToastMessage(self._app_name, message.getText())
 
-    def _onMainWindowStateChanged(self, window_state):
+    def _onMainWindowStateChanged(self, window_state: int) -> None:
         if self._tray_icon:
             visible = window_state == Qt.WindowMinimized
             self._tray_icon_widget.setVisible(visible)
 
     # Show toast message using System tray widget.
-    def showToastMessage(self, title: str, message: str):
+    def showToastMessage(self, title: str, message: str) -> None:
         if self.checkWindowMinimizedState() and self._tray_icon_widget:
             # NOTE: Qt 5.8 don't support custom icon for the system tray messages, but Qt 5.9 does.
             #       We should use the custom icon when we switch to Qt 5.9
             self._tray_icon_widget.showMessage(title, message)
 
-    def setMainQml(self, path):
+    def setMainQml(self, path: str) -> None:
         self._main_qml = path
 
-    def exec_(self, *args, **kwargs):
+    def exec_(self, *args: Any, **kwargs: Any) -> None:
         self.applicationRunning.emit()
         super().exec_(*args, **kwargs)
         
     @pyqtSlot()
-    def reloadQML(self):
+    def reloadQML(self) -> None:
         # only reload when it is a release build
         if not self.getIsDebugMode():
             return
@@ -325,7 +331,7 @@ class QtApplication(QApplication, Application):
                 obj.hide()
 
     @pyqtSlot()
-    def purgeWindows(self):
+    def purgeWindows(self) -> None:
         # Close all root objects except the last one.
         # Should only be called by onComponentCompleted of the mainWindow.
         for obj in self._qml_engine.rootObjects():
@@ -333,30 +339,30 @@ class QtApplication(QApplication, Application):
                 obj.close()
 
     @pyqtSlot("QList<QQmlError>")
-    def __onQmlWarning(self, warnings):
+    def __onQmlWarning(self, warnings: List[QQmlError]) -> None:
         for warning in warnings:
             Logger.log("w", warning.toString())
 
     engineCreatedSignal = Signal()
 
-    def isShuttingDown(self):
+    def isShuttingDown(self) -> bool:
         return self._is_shutting_down
 
-    def registerObjects(self, engine):
+    def registerObjects(self, engine) -> None: #type: ignore #Don't type engine, because the type depends on the platform you're running on so it always gives an error somewhere.
         engine.rootContext().setContextProperty("PluginRegistry", PluginRegistry.getInstance())
 
-    def getRenderer(self):
+    def getRenderer(self) -> QtRenderer:
         if not self._renderer:
             self._renderer = QtRenderer()
 
-        return self._renderer
+        return cast(QtRenderer, self._renderer)
 
     mainWindowChanged = Signal()
 
-    def getMainWindow(self):
+    def getMainWindow(self) -> MainWindow:
         return self._main_window
 
-    def setMainWindow(self, window):
+    def setMainWindow(self, window: MainWindow) -> None:
         if window != self._main_window:
             if self._main_window is not None:
                 self._main_window.windowStateChanged.disconnect(self._onMainWindowStateChanged)
@@ -367,7 +373,7 @@ class QtApplication(QApplication, Application):
 
             self.mainWindowChanged.emit()
 
-    def setVisible(self, visible):
+    def setVisible(self, visible: bool) -> None:
         if self._main_window is not None:
             self._main_window.visible = visible
 
@@ -387,12 +393,12 @@ class QtApplication(QApplication, Application):
         return self._theme
 
     #   Handle a function that should be called later.
-    def functionEvent(self, event):
+    def functionEvent(self, event: QEvent) -> None:
         e = _QtFunctionEvent(event)
         QCoreApplication.postEvent(self, e)
 
     #   Handle Qt events
-    def event(self, event):
+    def event(self, event: QEvent) -> bool:
         if event.type() == _QtFunctionEvent.QtFunctionEvent:
             event._function_event.call()
             return True
@@ -421,7 +427,7 @@ class QtApplication(QApplication, Application):
 
         self.quit()
 
-    def checkWindowMinimizedState(self):
+    def checkWindowMinimizedState(self) -> bool:
         if self._main_window is not None and self._main_window.windowState() == Qt.WindowMinimized:
             return True
         else:
@@ -429,9 +435,8 @@ class QtApplication(QApplication, Application):
 
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   The backend is also a QObject, which can be used from qml.
-    #   \returns Backend \type{Backend}
     @pyqtSlot(result = "QObject*")
-    def getBackend(self):
+    def getBackend(self) -> Backend:
         return self._backend
 
     ##  Property used to expose the backend
@@ -439,58 +444,14 @@ class QtApplication(QApplication, Application):
     #   This makes the connection between backend and QML more reliable than the pyqtSlot above.
     #   \returns Backend \type{Backend}
     @pyqtProperty("QVariant", constant = True)
-    def backend(self):
+    def backend(self) -> Backend:
         return self.getBackend()
-
-    ##  Load a Qt translation catalog.
-    #
-    #   This method will locate, load and install a Qt message catalog that can be used
-    #   by Qt's translation system, like qsTr() in QML files.
-    #
-    #   \param file_name The file name to load, without extension. It will be searched for in
-    #                    the i18nLocation Resources directory. If it can not be found a warning
-    #                    will be logged but no error will be thrown.
-    #   \param language The language to load translations for. This can be any valid language code
-    #                   or 'default' in which case the language is looked up based on system locale.
-    #                   If the specified language can not be found, this method will fall back to
-    #                   loading the english translations file.
-    #
-    #   \note When `language` is `default`, the language to load can be changed with the
-    #         environment variable "LANGUAGE".
-    def loadQtTranslation(self, file_name, language = "default"):
-        # TODO Add support for specifying a language from preferences
-        path = None
-        if language == "default":
-            path = self._getDefaultLanguage(file_name)
-        else:
-            path = Resources.getPath(Resources.i18n, language, "LC_MESSAGES", file_name + ".qm")
-
-        # If all else fails, fall back to english.
-        if not path:
-            Logger.log("w", "Could not find any translations matching {0} for file {1}, falling back to english".format(language, file_name))
-            try:
-                path = Resources.getPath(Resources.i18n, "en_US", "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                Logger.log("w", "Could not find English translations for file {0}. Switching to developer english.".format(file_name))
-                return
-
-        translator = QTranslator()
-        if not translator.load(path):
-            Logger.log("e", "Unable to load translations %s", file_name)
-            return
-
-        # Store a reference to the translator.
-        # This prevents the translator from being destroyed before Qt has a chance to use it.
-        self._translators[file_name] = translator
-
-        # Finally, install the translator so Qt can use it.
-        self.installTranslator(translator)
 
     ## Create a class variable so we can manage the splash in the CrashHandler dialog when the Application instance
     # is not yet created, e.g. when an error occurs during the initialization
     splash = None
 
-    def createSplash(self):
+    def createSplash(self) -> None:
         if not self.getIsHeadLess():
             try:
                 QtApplication.splash = self._createSplashScreen()
@@ -502,7 +463,7 @@ class QtApplication(QApplication, Application):
                     self.processEvents()
 
     ##  Display text on the splash screen.
-    def showSplashMessage(self, message):
+    def showSplashMessage(self, message: str) -> None:
         if not QtApplication.splash:
             self.createSplash()
         
@@ -513,7 +474,7 @@ class QtApplication(QApplication, Application):
             Logger.log("d", message)
 
     ##  Close the splash screen after the application has started.
-    def closeSplash(self):
+    def closeSplash(self) -> None:
         if QtApplication.splash:
             QtApplication.splash.close()
             QtApplication.splash = None
@@ -524,7 +485,7 @@ class QtApplication(QApplication, Application):
     #                              qml instance before creation.
     #  \return None in case the creation failed (qml error), else it returns the qml instance.
     #  \note If the creation fails, this function will ensure any errors are logged to the logging service.
-    def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"]=None) -> Optional["QObject"]:
+    def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None) -> Optional["QObject"]:
         if self._qml_engine is None: # Protect in case the engine was not initialized yet
             return None
         path = QUrl.fromLocalFile(qml_file_path)
@@ -585,7 +546,7 @@ class QtApplication(QApplication, Application):
         return self._workspace_file_handler
 
     @pyqtSlot(result = QObject)
-    def getPackageManager(self, *args):
+    def getPackageManager(self) -> PackageManager:
         return self._package_manager
 
     ##  Gets the instance of this application.
@@ -596,10 +557,10 @@ class QtApplication(QApplication, Application):
     def getInstance(cls, *args, **kwargs) -> "QtApplication":
         return cast(QtApplication, super().getInstance(**kwargs))
 
-    def _createSplashScreen(self):
+    def _createSplashScreen(self) -> QSplashScreen:
         return QSplashScreen(QPixmap(Resources.getPath(Resources.Images, self.getApplicationName() + ".png")))
 
-    def _screenScaleFactor(self):
+    def _screenScaleFactor(self) -> float:
         # OSX handles sizes of dialogs behind our backs, but other platforms need
         # to know about the device pixel ratio
         if sys.platform == "darwin":
@@ -611,56 +572,6 @@ class QtApplication(QApplication, Application):
             fontPixelRatio = int(fontPixelRatio * 4)/4
             return fontPixelRatio
 
-    def _getDefaultLanguage(self, file_name):
-        # If we have a language override set in the environment, try and use that.
-        lang = os.getenv("URANIUM_LANGUAGE")
-        if lang:
-            try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                pass
-
-        # Else, try and get the current language from preferences
-        lang = self.getPreferences().getValue("general/language")
-        if lang:
-            try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                pass
-
-        # If none of those are set, try to use the environment's LANGUAGE variable.
-        lang = os.getenv("LANGUAGE")
-        if lang:
-            try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                pass
-
-        # If looking up the language from the enviroment or preferences fails, try and use Qt's system locale instead.
-        locale = QLocale.system()
-
-        # First, try and find a directory for any of the provided languages
-        for lang in locale.uiLanguages():
-            try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-            except FileNotFoundError:
-                pass
-
-        # If that fails, see if we can extract a language code from the
-        # preferred language, regardless of the country code. This will turn
-        # "en-GB" into "en" for example.
-        lang = locale.uiLanguages()[0]
-        lang = lang[0:lang.find("-")]
-        for subdirectory in os.path.listdir(Resources.getPath(Resources.i18n)):
-            if subdirectory == "en_7S": #Never automatically go to Pirate.
-                continue
-            if not os.path.isdir(Resources.getPath(Resources.i18n, subdirectory)):
-                continue
-            if subdirectory.startswith(lang + "_"): #Only match the language code, not the country code.
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
-
-        return None
-
 
 ##  Internal.
 #
@@ -668,7 +579,7 @@ class QtApplication(QApplication, Application):
 class _QtFunctionEvent(QEvent):
     QtFunctionEvent = QEvent.User + 1
 
-    def __init__(self, fevent):
+    def __init__(self, fevent: QEvent) -> None:
         super().__init__(self.QtFunctionEvent)
         self._function_event = fevent
 

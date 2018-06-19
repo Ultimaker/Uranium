@@ -85,7 +85,6 @@ class Application:
         self._container_registry = None #type: ContainerRegistry
         self._global_container_stack = None #type: ContainerStack
 
-        self._renderer = None #type: Renderer
         self._controller = None #type: Controller
         self._backend = None #type: Backend
         self._output_device_manager = None #type: OutputDeviceManager
