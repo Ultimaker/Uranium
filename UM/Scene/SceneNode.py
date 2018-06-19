@@ -2,20 +2,19 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
-import numpy
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Type
 
+import numpy
+
+from UM.Logging.Logger import Logger
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 from UM.Math.AxisAlignedBox import AxisAlignedBox
-from UM.Mesh.MeshData import MeshData
-
-from UM.Signal import Signal, signalemitter
 from UM.Mesh.MeshBuilder import MeshBuilder
-from UM.Logger import Logger
-
+from UM.Mesh.MeshData import MeshData
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
+
 
 ##  A scene node object.
 #
@@ -26,7 +25,6 @@ from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 #   These decorators can add functionality to scene nodes.
 #   \sa SceneNodeDecorator
 #   \todo Add unit testing
-@signalemitter
 class SceneNode:
     class TransformSpace:
         Local = 1 #type: int
@@ -81,10 +79,6 @@ class SceneNode:
 
         # Store custom settings to be compatible with Savitar SceneNode
         self._settings = {} #type: Dict[str, Any]
-
-        ## Signals
-        self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
-        self.parentChanged.connect(self._onParentChanged)
 
         if parent:
             parent.addChild(self)
@@ -177,15 +171,6 @@ class SceneNode:
 
             self._bounding_box_mesh = bounding_box_mesh.build()
 
-    ##  Handler for the ParentChanged signal
-    #   \param node Node from which this event was triggered.
-    def _onParentChanged(self, node: Optional["SceneNode"]) -> None:
-        for child in self.getChildren():
-            child.parentChanged.emit(self)
-
-    ##  Signal for when a \type{SceneNodeDecorator} is added / removed.
-    decoratorsChanged = Signal()
-
     ##  Add a SceneNodeDecorator to this SceneNode.
     #   \param \type{SceneNodeDecorator} decorator The decorator to add.
     def addDecorator(self, decorator: SceneNodeDecorator) -> None:
@@ -198,7 +183,6 @@ class SceneNode:
             Logger.logException("e", "Unable to add decorator.")
             return
         self._decorators.append(decorator)
-        self.decoratorsChanged.emit(self)
 
     ##  Get all SceneNodeDecorators that decorate this SceneNode.
     #   \return list of all SceneNodeDecorators.
@@ -207,7 +191,7 @@ class SceneNode:
 
     ##  Get SceneNodeDecorators by type.
     #   \param dec_type type of decorator to return.
-    def getDecorator(self, dec_type: type) -> Optional[SceneNodeDecorator]:
+    def getDecorator(self, dec_type: Type[SceneNodeDecorator]) -> Optional[SceneNodeDecorator]:
         for decorator in self._decorators:
             if type(decorator) == dec_type:
                 return decorator
@@ -218,7 +202,6 @@ class SceneNode:
         for decorator in self._decorators:
             decorator.clear()
         self._decorators = []
-        self.decoratorsChanged.emit(self)
 
     ##  Remove decorator by type.
     #   \param dec_type type of the decorator to remove.
@@ -227,7 +210,6 @@ class SceneNode:
             if type(decorator) == dec_type:
                 decorator.clear()
                 self._decorators.remove(decorator)
-                self.decoratorsChanged.emit(self)
                 break
 
     ##  Call a decoration of this SceneNode.
@@ -273,9 +255,6 @@ class SceneNode:
 
         if scene_node:
             scene_node.addChild(self)
-
-    ##  Emitted whenever the parent changes.
-    parentChanged = Signal()
 
     ##  \brief Get the visibility of this node. The parents visibility overrides the visibility.
     #   TODO: Let renderer actually use the visibility to decide whether to render or not.
@@ -339,13 +318,6 @@ class SceneNode:
     def setMeshData(self, mesh_data: Optional[MeshData]) -> None:
         self._mesh_data = mesh_data
         self._resetAABB()
-        self.meshDataChanged.emit(self)
-
-    ##  Emitted whenever the attached mesh data object changes.
-    meshDataChanged = Signal()
-
-    def _onMeshDataChanged(self) -> None:
-        self.meshDataChanged.emit(self)
 
     ##  \brief Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
@@ -353,18 +325,12 @@ class SceneNode:
         if scene_node in self._children:
             return
 
-        scene_node.transformationChanged.connect(self.transformationChanged)
-        scene_node.childrenChanged.connect(self.childrenChanged)
-        scene_node.meshDataChanged.connect(self.meshDataChanged)
-
         self._children.append(scene_node)
         self._resetAABB()
-        self.childrenChanged.emit(self)
 
-        if not scene_node._parent is self:
+        if scene_node._parent is not self:
             scene_node._parent = self
             scene_node._transformChanged()
-            scene_node.parentChanged.emit(self)
 
     ##  \brief remove a single child
     #   \param child Scene node that needs to be removed.
@@ -372,25 +338,17 @@ class SceneNode:
         if child not in self._children:
             return
 
-        child.transformationChanged.disconnect(self.transformationChanged)
-        child.childrenChanged.disconnect(self.childrenChanged)
-        child.meshDataChanged.disconnect(self.meshDataChanged)
-
         self._children.remove(child)
         child._parent = None
         child._transformChanged()
-        child.parentChanged.emit(self)
 
         self._resetAABB()
-        self.childrenChanged.emit(self)
 
     ##  \brief Removes all children and its children's children.
     def removeAllChildren(self) -> None:
         for child in self._children:
             child.removeAllChildren()
             self.removeChild(child)
-
-        self.childrenChanged.emit(self)
 
     ##  \brief Get the list of direct children
     #   \returns List of children
@@ -408,10 +366,6 @@ class SceneNode:
         for child in self._children:
             children.extend(child.getAllChildren())
         return children
-
-    ##  \brief Emitted whenever the list of children of this object or any child object changes.
-    #   \param object The object that triggered the change.
-    childrenChanged = Signal()
 
     ##  \brief Computes and returns the transformation from world to local space.
     #   \returns 4x4 transformation matrix
@@ -569,10 +523,6 @@ class SceneNode:
                 return
             self.translate(position - self._derived_position, SceneNode.TransformSpace.World)
 
-    ##  Signal. Emitted whenever the transformation of this object or any child object changes.
-    #   \param object The object that caused the change.
-    transformationChanged = Signal()
-
     ##  Rotate this scene node in such a way that it is looking at target.
     #
     #   \param target \type{Vector} The target to look at.
@@ -646,8 +596,6 @@ class SceneNode:
     def setCalculateBoundingBox(self, calculate: bool) -> None:
         self._calculate_aabb = calculate
 
-    boundingBoxChanged = Signal()
-
     def getShear(self) -> Vector:
         return self._shear
 
@@ -661,7 +609,6 @@ class SceneNode:
     def _transformChanged(self) -> None:
         self._updateTransformation()
         self._resetAABB()
-        self.transformationChanged.emit(self)
 
         for child in self._children:
             child._transformChanged()
@@ -696,7 +643,6 @@ class SceneNode:
         self._aabb = None
         if self._parent:
             self._parent._resetAABB()
-        self.boundingBoxChanged.emit()
 
     def _calculateAABB(self) -> None:
         if self._mesh_data:

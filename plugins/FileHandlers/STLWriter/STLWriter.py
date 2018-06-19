@@ -3,7 +3,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Mesh.MeshWriter import MeshWriter
-from UM.Logger import Logger
+from UM.Logging.Logger import Logger
 
 import time
 import struct

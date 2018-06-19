@@ -1,17 +1,19 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import math
+import numbers
+
+import numpy
+
+from UM.Logging.Logger import Logger
 from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshData import MeshType
 from UM.Mesh.MeshData import calculateNormalsFromVertices
 from UM.Mesh.MeshData import calculateNormalsFromIndexedVertices
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
-from UM.Logger import Logger
 
-import numpy
-import math
-import numbers
 
 ##  Builds new meshes by adding primitives.
 #

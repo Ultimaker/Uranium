@@ -10,7 +10,7 @@ import UM.Settings.DefinitionContainer
 from UM.Settings.DefinitionContainer import IncorrectDefinitionVersionError, InvalidDefinitionError
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Resources import Resources
-from UM.VersionUpgradeManager import VersionUpgradeManager
+from UM.Upgrade.VersionUpgradeManager import VersionUpgradeManager
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 

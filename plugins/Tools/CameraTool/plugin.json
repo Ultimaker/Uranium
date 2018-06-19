@@ -1,8 +1,0 @@
-{
-    "name": "Camera Tool",
-    "author": "Ultimaker B.V.",
-    "version": "1.0.0",
-    "description": "Provides the tool to manipulate the camera.",
-    "api": 4,
-    "i18n-catalog": "uranium"
-}

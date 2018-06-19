@@ -4,7 +4,7 @@ import os
 
 from PyQt5.QtWidgets import QFileDialog, QLineEdit
 
-from UM.Platform import Platform
+from UM.OS import OS
 
 
 #
@@ -17,7 +17,7 @@ class NonNativeFileDialog(QFileDialog):
 
         self._previous_extension = ""
         # Only do this on OS X
-        if Platform.isOSX():
+        if OS.isOSX():
             self.filterSelected.connect(self._onFilterChanged)
 
     def _onFilterChanged(self, selected_filter: str):
@@ -33,7 +33,7 @@ class NonNativeFileDialog(QFileDialog):
         # Get the selected extension
         # The filter string we get here is a MINE extension string which looks like below:
         #         - "Text File (*.txt)"
-        #         - "JPG Files (*.jpg, *.jpeg)"
+        #         - "JPG files (*.jpg, *.jpeg)"
         # We extract the extension part to for processing double/multi-extension file names.
         extension = selected_filter.rsplit(" ", 1)[-1]
         extension = extension.strip("()")

@@ -9,8 +9,8 @@ import shutil
 import tempfile
 from typing import Dict, Generator, List, Optional, cast
 
-from UM.Logger import Logger
-from UM.Platform import Platform
+from UM.Logging.Logger import Logger
+from UM.OS import OS
 
 class ResourceTypeError(Exception):
     pass
@@ -52,6 +52,7 @@ class Resources:
 
     ApplicationIdentifier = "UM"
     ApplicationVersion = "unknown"
+    HomeDir = None
 
     __bundled_resources_path = None #type: Optional[str]
 
@@ -335,13 +336,15 @@ class Resources:
     @classmethod
     def _getConfigStorageRootPath(cls) -> str:
         # Returns the path where we store different versions of app configurations
-        if Platform.isWindows():
+        if cls.HomeDir is not None:
+            config_path = cls.HomeDir
+        elif OS.isWindows():
             config_path = os.getenv("APPDATA")
             if not config_path: # Protect if the getenv function returns None (it should never happen)
                 config_path = "."
-        elif Platform.isOSX():
+        elif OS.isOSX():
             config_path = os.path.expanduser("~/Library/Application Support")
-        elif Platform.isLinux():
+        elif OS.isLinux():
             try:
                 config_path = os.environ["XDG_CONFIG_HOME"]
             except KeyError:
@@ -355,12 +358,12 @@ class Resources:
     def _getPossibleConfigStorageRootPathList(cls) -> List[str]:
         # Returns all possible root paths for storing app configurations (in old and new versions)
         config_root_list = [Resources._getConfigStorageRootPath()]
-        if Platform.isWindows():
+        if OS.isWindows():
             # it used to be in LOCALAPPDATA on Windows
             config_path = os.getenv("LOCALAPPDATA")
             if config_path: # Protect if the getenv function returns None (it should never happen)
                 config_root_list.append(config_path)
-        elif Platform.isOSX():
+        elif OS.isOSX():
             config_root_list.append(os.path.expanduser("~"))
 
         config_root_list = [os.path.join(n, cls.ApplicationIdentifier) for n in config_root_list]
@@ -371,7 +374,7 @@ class Resources:
         data_root_list = []
 
         # Returns all possible root paths for storing app configurations (in old and new versions)
-        if Platform.isLinux():
+        if OS.isLinux():
             # We can cast here to str since the _getDataStorageRootPath always returns a string if platform is Linux
             data_root_list.append(os.path.join(cast(str, Resources._getDataStorageRootPath()), cls.ApplicationIdentifier))
         else:
@@ -383,8 +386,8 @@ class Resources:
     @classmethod
     def _getDataStorageRootPath(cls) -> Optional[str]:
         # Returns the path where we store different versions of app data
-        data_path = None
-        if Platform.isLinux():
+        data_path = cls.HomeDir
+        if OS.isLinux() and data_path is not None:
             try:
                 data_path = os.environ["XDG_DATA_HOME"]
             except KeyError:
@@ -395,11 +398,13 @@ class Resources:
     def _getCacheStorageRootPath(cls) -> Optional[str]:
         # Returns the path where we store different versions of app configurations
         cache_path = None
-        if Platform.isWindows():
+        if cls.HomeDir is not None:
+            cache_path = cls.HomeDir
+        elif OS.isWindows():
             cache_path = os.getenv("LOCALAPPDATA")
-        elif Platform.isOSX():
+        elif OS.isOSX():
             cache_path = None
-        elif Platform.isLinux():
+        elif OS.isLinux():
             try:
                 cache_path = os.environ["XDG_CACHE_HOME"]
             except KeyError:
@@ -438,7 +443,7 @@ class Resources:
             cls.__cache_storage_path = os.path.join(cls.__config_storage_path, "cache")
         else:
             cls.__cache_storage_path = os.path.join(cache_root_path, storage_dir_name)
-            if Platform.isWindows():
+            if OS.isWindows():
                 cls.__cache_storage_path = os.path.join(cls.__cache_storage_path, "cache")
         Logger.log("d", "Cache storage path is %s", cls.__cache_storage_path)
         if not os.path.exists(cls.__config_storage_path) or not os.path.exists(cls.__data_storage_path):

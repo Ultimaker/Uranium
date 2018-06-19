@@ -8,16 +8,12 @@ import collections
 import re
 from typing import Any, List, Dict, Callable, Match, Set, Union, Optional
 
-from UM.Logger import Logger
-from UM.Settings.Interfaces import DefinitionContainerInterface
+from UM.Logging.Logger import Logger
 from UM.i18n import i18nCatalog
 
-MYPY = False
-if MYPY:
-    from UM.Settings.SettingRelation import SettingRelation
-
+from .Interfaces import DefinitionContainerInterface
 from . import SettingFunction
-from UM.Settings.Validator import Validator
+from .Validator import Validator
 
 
 ##  Type of definition property.
@@ -87,7 +83,6 @@ class SettingDefinition:
         self._i18n_catalog = i18n_catalog  # type: Optional[i18nCatalog]
 
         self._children = []     # type: List[SettingDefinition]
-        self._relations = []    # type: List[SettingRelation]
 
         # Cached set of keys of ancestors. Used for fast lookups of ancestors.
         self.__ancestors = set()  # type: Set[str]
@@ -155,13 +150,6 @@ class SettingDefinition:
     @property
     def children(self) -> List["SettingDefinition"]:
         return self._children
-
-    ##  A list of SettingRelation objects of this setting.
-    #
-    #   \return \type{list<SettingRelation>}
-    @property
-    def relations(self) -> List["SettingRelation"]:
-        return self._relations
 
     ##  Serialize this setting to a string.
     #

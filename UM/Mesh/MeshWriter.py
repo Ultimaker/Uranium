@@ -8,9 +8,7 @@ from UM.Scene.SceneNode import SceneNode
 
 ##  Base class for mesh writer objects
 class MeshWriter(FileWriter):
-    def __init__(self):
-        super().__init__()
-    
+
     ##  Output a collection of nodes to stream in such a way that it makes sense
     #   for the file format.
     #
@@ -20,7 +18,7 @@ class MeshWriter(FileWriter):
     #
     #   \param stream \type{IOStream} The stream to output to.
     #   \param nodes A collection of scene nodes to write to the stream.
-    def write(self, stream, node):
+    def write(self, stream, node, *args, **kwargs):
         raise NotImplementedError("MeshWriter plugin was not correctly implemented, no write was specified")
 
     ##  Filters a collection of nodes to only include nodes that are actual

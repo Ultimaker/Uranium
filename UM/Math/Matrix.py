@@ -1,14 +1,13 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import math
 from copy import deepcopy
+import math
+from typing import cast, Dict, List, Optional, Tuple, TYPE_CHECKING, Union
 
 import numpy
 
 from UM.Math.Vector import Vector
-
-from typing import cast, Dict, List, Optional, Tuple, TYPE_CHECKING, Union
 
 numpy.seterr(divide="ignore")
 

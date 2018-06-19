@@ -6,6 +6,7 @@ from typing import Any, Dict, Optional, cast
 
 from UM.Resources import Resources
 
+
 ##  Wraps a gettext translation catalog for simplified use.
 #
 #   This class wraps a gettext translation catalog to simplify its use.

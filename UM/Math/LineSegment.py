@@ -6,6 +6,7 @@ from typing import Optional
 from UM.Math.Float import Float  # For fuzzy comparison of edge cases.
 from UM.Math.Vector2 import Vector2 #Just for type checking.
 
+
 ##  Represents a line segment in 2D.
 #
 #   The line segment is represented by two endpoints.

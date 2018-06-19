@@ -4,11 +4,10 @@
 import configparser
 from typing import Any, Dict, IO, Optional, Tuple, Union
 
-from UM.Decorators import deprecated
-from UM.Logger import Logger
-from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To register the MIME type of the preference file.
+from UM.Logging.Logger import Logger
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.SaveFile import SaveFile
-from UM.Signal import Signal, signalemitter
+
 
 MimeTypeDatabase.addMimeType(
     MimeType(
@@ -20,18 +19,14 @@ MimeTypeDatabase.addMimeType(
 )
 
 
-##      Preferences are application based settings that are saved for future use.
-#       Typical preferences would be window size, standard machine, etc.
-#       The application preferences can be gotten from the getPreferences() function in Application
-@signalemitter
 class Preferences:
     Version = 6
 
     def __init__(self) -> None:
         super().__init__()
 
-        self._parser = None #type: Optional[configparser.ConfigParser]
-        self._preferences = {} #type: Dict[str, Any]
+        self._parser = None  # type: Optional[configparser.ConfigParser]
+        self._preferences = {}  # type: Dict[str, Any]
 
     def addPreference(self, key: str, default_value: Any) -> None:
         preference = self._findPreference(key)
@@ -64,7 +59,7 @@ class Preferences:
     #   \param default_value The new default value of the preference.
     def setDefault(self, key: str, default_value: Any) -> None:
         preference = self._findPreference(key)
-        if not preference: #Key not found.
+        if not preference:
             Logger.log("w", "Tried to set the default value of non-existing setting %s.", key)
             return
         if preference.getValue() == preference.getDefault():
@@ -76,7 +71,6 @@ class Preferences:
 
         if preference:
             preference.setValue(value)
-            self.preferenceChanged.emit(key)
         else:
             Logger.log("w", "Tried to set the value of non-existing setting %s.", key)
 
@@ -99,7 +93,6 @@ class Preferences:
 
         if preference:
             preference.setValue(preference.getDefault())
-            self.preferenceChanged.emit(key)
 
     def readFromFile(self, file: Union[str, IO[str]]) -> None:
         self._loadFile(file)
@@ -123,7 +116,6 @@ class Preferences:
                     self._preferences[group][key] = _Preference(key)
 
                 self._preferences[group][key].setValue(value)
-                self.preferenceChanged.emit("{0}/{1}".format(group, key))
 
     def writeToFile(self, file: Union[str, IO[str]]) -> None:
         parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
@@ -143,8 +135,6 @@ class Preferences:
                     parser.write(save_file)
         except Exception as e:
             Logger.log("e", "Failed to write preferences to %s: %s", file, str(e))
-
-    preferenceChanged = Signal()
 
     def _splitKey(self, key: str) -> Tuple[str, str]:
         group = "general"
@@ -187,9 +177,8 @@ class Preferences:
 
     ##  Extract data from string and store it in the Configuration parser.
     def deserialize(self, serialized: str) -> None:
-        updated_preferences = self.__updateSerialized(serialized)
         self._parser = configparser.ConfigParser(interpolation=None)
-        self._parser.read_string(updated_preferences)
+        self._parser.read_string(serialized)
         has_version = "general" in self._parser and "version" in self._parser["general"]
 
         if has_version:
@@ -202,31 +191,9 @@ class Preferences:
 
         self.__initializeSettings()
 
-    ##  Updates the given serialized data to the latest version.
-    def __updateSerialized(self, serialized: str) -> str:
-        configuration_type = "preferences"
-
-        try:
-            from UM.VersionUpgradeManager import VersionUpgradeManager
-            version = VersionUpgradeManager.getInstance().getFileVersion(configuration_type, serialized)
-            if version is not None:
-                result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version, [serialized], [""])
-                if result is not None:
-                    serialized = result.files_data[0]
-        except Exception:
-            Logger.logException("d", "An exception occured while trying to update the preferences")
-        return serialized
-
-    ##  This method is still used by some external plugins and it needs to be kept as deprecated
-    @classmethod
-    @deprecated("Please use the getPreferences function in Application", "3.3")
-    def getInstance(cls) -> "Preferences":
-        from UM.Application import Application
-        return Application.getInstance().getPreferences()
-
 
 class _Preference:
-    def __init__(self, name: str, default: Any = None, value: Any = None) -> None: #pylint: disable=bad-whitespace
+    def __init__(self, name: str, default: Any = None, value: Any = None) -> None:  # pylint: disable=bad-whitespace
         self._name = name
         self._default = default
         self._value = default if value is None else value

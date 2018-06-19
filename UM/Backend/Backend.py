@@ -7,18 +7,18 @@ import subprocess
 import sys
 import threading
 from time import sleep
-
-from UM.Backend.SignalSocket import SignalSocket
-from UM.Logger import Logger
-from UM.Signal import Signal, signalemitter
-import UM.Application
-from UM.PluginObject import PluginObject
-from UM.Platform import Platform
+from typing import TYPE_CHECKING
 
 import Arcus
 
+from UM.Backend.SignalSocket import SignalSocket
+from UM.Logging.Logger import Logger
+from UM.OS import OS
 
-##  The current processing state of the backend.
+if TYPE_CHECKING:
+    from UM.Application import Application
+
+
 class BackendState(IntEnum):
     NotStarted = 1
     Processing = 2
@@ -27,13 +27,10 @@ class BackendState(IntEnum):
     Disabled = 5
 
 
-##      Base class for any backend communication (separate piece of software).
-#       It makes use of the Socket class from libArcus for the actual communication bits.
-#       The message_handlers dict should be filled with string (full name of proto message), function pairs.
-@signalemitter
-class Backend(PluginObject):
-    def __init__(self):
-        super().__init__()  # Call super to make multiple inheritance work.
+class Backend:
+    def __init__(self, application: "Application", *args, **kwargs):
+        super().__init__(*args, **kwargs)  # Call super to make multiple inheritance work.
+        self._application = application
         self._supported_commands = {}
 
         self._message_handlers = {}
@@ -44,12 +41,8 @@ class Backend(PluginObject):
         self._backend_log = []
         self._backend_log_max_lines = None
 
-        UM.Application.Application.getInstance().callLater(self._createSocket)
-
-    processingProgress = Signal()
-    backendStateChange = Signal()
-    backendConnected = Signal()
-    backendQuit = Signal()
+    def initialize(self):
+        pass
 
     ##   \brief Start the backend / engine.
     #   Runs the engine, this is only called when the socket is fully opened & ready to accept connections
@@ -94,7 +87,7 @@ class Backend(PluginObject):
         self._backend_log.append(line)
 
     ##  Get the logging messages of the backend connection.
-    #   \returns  
+    #   \returns
     def getLog(self):
         if self._backend_log_max_lines and type(self._backend_log_max_lines) == int:
             while len(self._backend_log) >= self._backend_log_max_lines:
@@ -112,7 +105,7 @@ class Backend(PluginObject):
         else:
             Logger.log("e", "Data length was incorrect for requested type")
             return None
-    
+
     ##  \brief Convert byte array containing 6 floats per vertex
     def convertBytesToVerticeWithNormalsList(self,data):
         result = []
@@ -124,10 +117,10 @@ class Backend(PluginObject):
         else:
             Logger.log("e", "Data length was incorrect for requested type")
             return None
-    
-    ##  Get the command used to start the backend executable 
+
+    ##  Get the command used to start the backend executable
     def getEngineCommand(self):
-        return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
+        return [self._application.getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
 
     ##  Start the (external) backend process.
     def _runEngineProcess(self, command_list):
@@ -149,7 +142,6 @@ class Backend(PluginObject):
         while True:
             line = handle.readline()
             if line == b"":
-                self.backendQuit.emit()
                 break
             self._backendLog(line)
 
@@ -164,11 +156,10 @@ class Backend(PluginObject):
     def _onSocketStateChanged(self, state):
         self._logSocketState(state)
         if state == Arcus.SocketState.Listening:
-            if not UM.Application.Application.getInstance().getUseExternalBackend():
+            if not self._application.getUseExternalBackend():
                 self.startEngine()
         elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
-            self.backendConnected.emit()
 
     ## Debug function created to provide more info for CURA-2127
     def _logSocketState(self, state):
@@ -194,8 +185,8 @@ class Backend(PluginObject):
             return
 
         self._message_handlers[message.getTypeName()](message)
-    
-    ##  Private socket error handler   
+
+    ##  Private socket error handler
     def _onSocketError(self, error):
         if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
             self._port += 1
@@ -208,15 +199,10 @@ class Backend(PluginObject):
         else:
             Logger.log("w", "Unhandled socket error %s", str(error))
 
-        self._createSocket()
-
     ##  Creates a socket and attaches listeners.
     def _createSocket(self, protocol_file):
         if self._socket:
             Logger.log("d", "Previous socket existed. Closing that first.") # temp debug logging
-            self._socket.stateChanged.disconnect(self._onSocketStateChanged)
-            self._socket.messageReceived.disconnect(self._onMessageReceived)
-            self._socket.error.disconnect(self._onSocketError)
             # Hack for (at least) Linux. If the socket is connecting, the close will deadlock.
             while self._socket.getState() == Arcus.SocketState.Opening:
                 sleep(0.1)
@@ -224,12 +210,11 @@ class Backend(PluginObject):
             # So we need to force a close.
             self._socket.close()
 
-        self._socket = SignalSocket()
-        self._socket.stateChanged.connect(self._onSocketStateChanged)
-        self._socket.messageReceived.connect(self._onMessageReceived)
-        self._socket.error.connect(self._onSocketError)
-        
-        if Platform.isWindows():
+        self._socket = SignalSocket(on_state_changed_callback = self._onSocketStateChanged,
+                                    on_message_received_callback = self._onMessageReceived,
+                                    on_error_callback = self._onSocketError)
+
+        if OS.isWindows():
             # On Windows, the Protobuf DiskSourceTree does stupid things with paths.
             # So convert to forward slashes here so it finds the proto file properly.
             protocol_file = protocol_file.replace("\\", "/")
@@ -237,7 +222,7 @@ class Backend(PluginObject):
         if not self._socket.registerAllMessageTypes(protocol_file):
             Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
 
-        if UM.Application.Application.getInstance().getUseExternalBackend():
+        if self._application.getUseExternalBackend():
             Logger.log("i", "Listening for backend connections on %s", self._port)
 
         self._socket.listen("127.0.0.1", self._port)

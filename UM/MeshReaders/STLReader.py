@@ -2,25 +2,17 @@
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Mesh.MeshReader import MeshReader
-from UM.Mesh.MeshBuilder import MeshBuilder
-from UM.Logging.Logger import Logger
-from UM.Scene.SceneNode import SceneNode
-from UM.Job import Job
-from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
-
 import os
 import struct
+
 import numpy
 
+from UM.Logging.Logger import Logger
+from UM.Mesh.MeshReader import MeshReader
+from UM.Mesh.MeshBuilder import MeshBuilder
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
+from UM.Scene.SceneNode import SceneNode
 
-MimeTypeDatabase.addMimeType(
-    MimeType(
-        name = "application/x-uranium-stl-file",
-        comment = "Uranium STL File",
-        suffixes = ["stl"]
-    )
-)
 
 use_numpystl = False
 
@@ -35,10 +27,21 @@ except ImportError:
     Logger.log("w", "Could not find numpy-stl, falling back to slower code.")
     # We have our own fallback code.
 
+
 class STLReader(MeshReader):
     def __init__(self, application):
         super(STLReader, self).__init__(application)
         self._supported_extensions = [".stl"]
+
+    def initialize(self):
+        # Add mime type
+        MimeTypeDatabase.addMimeType(
+            MimeType(
+                name="application/x-uranium-stl-file",
+                comment="Uranium STL File",
+                suffixes=["stl"]
+            )
+        )
 
     def load_file(self, file_name, mesh_builder, _use_numpystl = False):
         if _use_numpystl:
@@ -53,13 +56,12 @@ class STLReader(MeshReader):
                 except UnicodeDecodeError:
                     return None
                 f.close()
-            Job.yieldThread()  # Yield somewhat to ensure the GUI has time to update a bit.
 
         mesh_builder.calculateNormals(fast = True)
         mesh_builder.setFileName(file_name)
 
     ## Decide if we need to use ascii or binary in order to read file
-    def _read(self, file_name):
+    def _read(self, file_name: str, *args, **kwargs):
         mesh_builder = MeshBuilder()
         scene_node = SceneNode()
 
@@ -133,8 +135,6 @@ class STLReader(MeshReader):
                         )
                         vertex = 0
 
-                Job.yieldThread()
-
     # Private
     ## Load the STL data from file by consdering the data as Binary.
     # \param mesh The MeshData object where the data is written to.
@@ -160,6 +160,5 @@ class STLReader(MeshReader):
                 data[6], data[8], -data[7],
                 data[9], data[11], -data[10]
             )
-            Job.yieldThread()
 
         return True

@@ -2,11 +2,10 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
-from UM.Qt.QtApplication import QtApplication #QTApplication import is required, even though it isn't used.
 from UM.Application import Application
 from UM.Signal import Signal
 from UM.PluginRegistry import PluginRegistry
-from UM.VersionUpgradeManager import VersionUpgradeManager
+from UM.Upgrade.VersionUpgradeManager import VersionUpgradeManager
 
 # This mock application must extend from Application and not QtApplication otherwise some QObjects are created and
 # a segfault is raised.

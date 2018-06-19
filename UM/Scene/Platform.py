@@ -4,7 +4,7 @@
 from . import SceneNode
 
 from UM.Application import Application
-from UM.Logger import Logger
+from UM.Logging.Logger import Logger
 from UM.Resources import Resources
 from UM.Math.Vector import Vector
 from UM.Job import Job

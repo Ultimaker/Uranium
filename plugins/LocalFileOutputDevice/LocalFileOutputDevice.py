@@ -9,14 +9,14 @@ from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 from UM.Application import Application
-from UM.Logger import Logger
+from UM.Logging.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.FileHandler.WriteFileJob import WriteFileJob
 from UM.Message import Message
 
 from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice import OutputDeviceError
-from UM.Platform import Platform
+from UM.OS import OS
 
 from UM.i18n import i18nCatalog
 
@@ -62,7 +62,7 @@ class LocalFileOutputDevice(OutputDevice):
         dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
         # Native File dialog on OS X has issues with double/multiple extension files.
-        if Platform.isOSX():
+        if OS.isOSX():
             dialog.setOption(QFileDialog.DontUseNativeDialog)
         if sys.platform == "linux" and "KDE_FULL_SESSION" in os.environ:
             dialog.setOption(QFileDialog.DontUseNativeDialog)

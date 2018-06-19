@@ -1,16 +1,13 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Operations.Operation import Operation
-
-from UM.Scene.Selection import Selection
-
-from UM.Scene.SceneNode import SceneNode
-
 from typing import Optional
 
+from UM.Operations.Operation import Operation
+from UM.Scene.Selection import Selection
+from UM.Scene.SceneNode import SceneNode
 
-##  Operation that adds a new node to the scene.
+
 class AddSceneNodeOperation(Operation):
     ##  Creates the scene node operation.
     #

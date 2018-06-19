@@ -1,27 +1,29 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Math.Vector import Vector
-from UM.Math.AxisAlignedBox import AxisAlignedBox
-from UM.Logger import Logger
-from UM.Math import NumPyUtil
-from UM.Math.Matrix import Matrix
-
-from enum import Enum
+from enum import IntEnum
+import hashlib
+from time import time
+import threading
 from typing import List, Optional
 
-import threading
 import numpy
 import numpy.linalg
 import scipy.spatial
 import scipy.spatial.qhull
-import hashlib
-from time import time
+
+from UM.Logging.Logger import Logger
+from UM.Math import NumPyUtil
+from UM.Math.AxisAlignedBox import AxisAlignedBox
+from UM.Math.Matrix import Matrix
+from UM.Math.Vector import Vector
+
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
 MAXIMUM_HULL_VERTICES_COUNT = 1024   # Maximum number of vertices to have in the convex hull.
 
-class MeshType(Enum):
+
+class MeshType(IntEnum):
     faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
     pointcloud = 2
 
