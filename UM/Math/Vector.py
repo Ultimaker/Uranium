@@ -1,9 +1,11 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import math
+
 import numpy
 import numpy.linalg
-import math
+
 from UM.Math.Float import Float
 
 # Disable divide-by-zero warnings so that 1.0 / (1.0, 0.0, 0.0) returns (1.0, Inf, Inf) without complaining

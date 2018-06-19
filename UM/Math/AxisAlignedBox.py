@@ -1,13 +1,13 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Math.Float import Float
-from UM.Math.Ray import Ray #For typing.
-from UM.Math.Vector import Vector
+from typing import Optional, Tuple, Union
 
 import numpy
 
-from typing import Optional, Tuple, Union
+from UM.Math.Float import Float
+from UM.Math.Ray import Ray
+from UM.Math.Vector import Vector
 
 
 ## Axis aligned bounding box.
@@ -25,8 +25,8 @@ class AxisAlignedBox:
             maximum = swapped_maximum
         minimum.setRoundDigits(3)
         maximum.setRoundDigits(3)
-        self._min = minimum #type: Vector
-        self._max = maximum #type: Vector
+        self._min = minimum  # type: Vector
+        self._max = maximum  # type: Vector
 
     def set(self, minimum: Optional[Vector] = None, maximum: Optional[Vector] = None, left: Optional[float] = None,
             right: Optional[float] = None, top: Optional[float] = None, bottom: Optional[float] = None,
@@ -169,4 +169,6 @@ class AxisAlignedBox:
 
     # This field is filled in below. This is needed to help static analysis tools (read: PyCharm)
     Null = None  # type: AxisAlignedBox
+
+
 AxisAlignedBox.Null = AxisAlignedBox()

@@ -1,28 +1,19 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import json
 import collections
 import copy
+import json
+from typing import Dict, Any, List, Optional, Set, Tuple
 
-from PyQt5.QtCore import QObject, pyqtProperty
-from PyQt5.QtQml import QQmlEngine
-
-from UM.i18n import i18nCatalog #For typing.
-from UM.Logger import Logger
+from UM.i18n import i18nCatalog
+from UM.Logging.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
-from UM.PluginObject import PluginObject
 from UM.Resources import Resources
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Settings.SettingDefinition import SettingDefinition
-from UM.Settings.SettingDefinition import DefinitionPropertyType
-from UM.Settings.SettingRelation import SettingRelation
-from UM.Settings.SettingRelation import RelationType
-from UM.Settings.SettingFunction import SettingFunction
-from UM.Signal import Signal
 
-from typing import Dict, Any, List, Optional, Set, Tuple
 
 class InvalidDefinitionError(Exception):
     pass
@@ -34,6 +25,7 @@ class IncorrectDefinitionVersionError(Exception):
 
 class InvalidOverrideError(Exception):
     pass
+
 
 MimeTypeDatabase.addMimeType(
     MimeType(
@@ -47,15 +39,14 @@ MimeTypeDatabase.addMimeType(
 ##  A container for SettingDefinition objects.
 #
 #
-class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
+class DefinitionContainer(DefinitionContainerInterface):
     Version = 2
 
     ##  Constructor
     #
     #   \param container_id A unique, machine readable/writable ID for this container.
-    def __init__(self, container_id: str, i18n_catalog: i18nCatalog = None, parent: QObject = None, *args, **kwargs) -> None:
+    def __init__(self, container_id: str, i18n_catalog: i18nCatalog = None, *args, **kwargs) -> None:
         super().__init__()
-        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
         self._metadata = {"id": container_id,
                           "name": container_id,
@@ -71,7 +62,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  Reimplement __setattr__ so we can make sure the definition remains unchanged after creation.
     def __setattr__(self, name: str, value: Any) -> None:
         super().__setattr__(name, value)
-        #raise NotImplementedError()
 
     ##  For pickle support
     def __getnewargs__(self) -> Tuple[str, Optional[i18nCatalog]]:
@@ -85,7 +75,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def __setstate__(self, state: Dict[str, Any]) -> None:
         # We need to call QObject.__init__() in order to initialize the underlying C++ object.
         # pickle doesn't do that so we have to do this here.
-        QObject.__init__(self, parent = None)
         self.__dict__.update(state)
 
     ##  \copydoc ContainerInterface::getId
@@ -94,15 +83,11 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def getId(self) -> str:
         return self._metadata["id"]
 
-    id = pyqtProperty(str, fget = getId, constant = True)
-
     ##  \copydoc ContainerInterface::getName
     #
     #   Reimplemented from ContainerInterface
     def getName(self) -> str:
         return self._metadata["name"]
-
-    name = pyqtProperty(str, fget = getName, constant = True)
 
     ##  \copydoc ContainerInterface::isReadOnly
     #
@@ -112,8 +97,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def setReadOnly(self, read_only: bool) -> None:
         pass
-
-    readOnly = pyqtProperty(bool, fget = isReadOnly, constant = True)
 
     ##  \copydoc ContainerInterface::getPath.
     #
@@ -132,8 +115,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     def getMetaData(self) -> Dict[str, Any]:
         return self._metadata
-
-    metaData = pyqtProperty("QVariantMap", fget = getMetaData, constant = True)
 
     @property
     def definitions(self) -> List[SettingDefinition]:
@@ -193,11 +174,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             return False
         return hasattr(definition, property_name)
 
-    ##  This signal is unused since the definition container is immutable, but is provided for API consistency.
-    propertyChanged = Signal()
-
-    metaDataChanged = Signal()
-
     ##  \copydoc ContainerInterface::serialize
     #
     #   TODO: This implementation flattens the definition container, since the
@@ -224,18 +200,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         return json.dumps(data, separators = (", ", ": "), indent = 4) # Pretty print the JSON.
 
-    @classmethod
-    def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
-        configuration_type = None
-        try:
-            parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
-            configuration_type = parsed["metadata"].get("type", "machine") #TODO: Not all definitions have a type. They get this via inheritance but that requires an instance.
-        except InvalidDefinitionError as ide:
-            raise ide
-        except Exception as e:
-            Logger.log("d", "Could not get configuration type: %s", e)
-        return configuration_type
-
     def _readAndValidateSerialized(self, serialized: str) -> Dict[str, Any]:
         parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
 
@@ -247,16 +211,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         parsed = self._preprocessParsedJson(parsed)
         return parsed
-
-    @classmethod
-    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
-        version = None
-        parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
-        try:
-            version = int(parsed["version"])
-        except Exception as e:
-            Logger.log("d", "Could not get version from serialized: %s", e)
-        return version
 
     def _preprocessParsedJson(self, parsed: Dict[str, Any]) -> Dict[str, Any]:
         # Pre-process the JSON data to include the overrides.
@@ -276,14 +230,12 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def addDefinition(self, definition: SettingDefinition) -> None:
         if definition.key not in [d.key for d in self._definitions]:
             self._definitions.append(definition)
-            self._updateRelations(definition)
 
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         # update the serialized data first
-        serialized = super().deserialize(serialized, file_name)
         parsed = self._readAndValidateSerialized(serialized)
 
         # Update properties with the data from the JSON
@@ -299,9 +251,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             definition.deserialize(value)
             self._definitions.append(definition)
 
-        for definition in self._definitions:
-            self._updateRelations(definition)
-
         return serialized
 
     ##  Gets the metadata of a definition container from a serialised format.
@@ -316,7 +265,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   singleton list. If anything went wrong, the list will be empty.
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
-        serialized = cls._updateSerialized(serialized) #Update to most recent version.
         try:
             parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
         except json.JSONDecodeError as e:
@@ -419,42 +367,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 result[key] = value
 
         return result
-
-    # Recursively update relations of settings
-    def _updateRelations(self, definition: SettingDefinition) -> None:
-        for property in SettingDefinition.getPropertyNames(DefinitionPropertyType.Function):
-            self._processFunction(definition, property)
-
-        for child in definition.children:
-            self._updateRelations(child)
-
-    # Create relation objects for all settings used by a certain function
-    def _processFunction(self, definition: SettingDefinition, property: str) -> None:
-        try:
-            function = getattr(definition, property)
-        except AttributeError:
-            return
-
-        if not isinstance(function, SettingFunction):
-            return
-
-        for setting in function.getUsedSettingKeys():
-            # Prevent circular relations between the same setting and the same property
-            # Note that the only property used by SettingFunction is the "value" property, which
-            # is why this is hard coded here.
-            if setting == definition.key and property == "value":
-                Logger.log("w", "Found circular relation for property 'value' between {0} and {1}", definition.key, setting)
-                continue
-
-            other = self._getDefinition(setting)
-            if not other:
-                continue
-
-            relation = SettingRelation(definition, other, RelationType.RequiresTarget, property)
-            definition.relations.append(relation)
-
-            relation = SettingRelation(other, definition, RelationType.RequiredByTarget, property)
-            other.relations.append(relation)
 
     def _getDefinition(self, key: str) -> Optional[SettingDefinition]:
         definition = None

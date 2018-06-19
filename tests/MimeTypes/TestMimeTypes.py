@@ -159,8 +159,8 @@ test_getMimeTypeForFile_data = [
     dict(path = os.path.join(path_base, "test.png"), name = "image/png", description = "Valid Mime Types should return the proper system mime type"),
     dict(path = os.path.join(path_base, "file.test"), name = "application/x-test", description = "New mime types should return the right values"),
     dict(path = os.path.join(path_base, "file.long.test"), name = "application/x-long-test", description = "Multiple matches should prefer the longest match"),
-    dict(path = os.path.join(path_base, "filetest.test.test"), name = "application/x-test", description = "Files with double extensions should still match"),
-    dict(path = os.path.join(path_base, ".test"), name = "application/x-test", description = "Files with only an extension should still match"),
+    dict(path = os.path.join(path_base, "filetest.test.test"), name = "application/x-test", description = "files with double extensions should still match"),
+    dict(path = os.path.join(path_base, ".test"), name = "application/x-test", description = "files with only an extension should still match"),
     dict(path = os.path.join(path_base, "pink.unicorn"), expect_fail = True, description = "Unknown types should generate an error"),
     dict(path = os.path.join(path_base, "filetest"), expect_fail = True, description = "File names with no extension should not match"),
     # Same test but without absolute path.

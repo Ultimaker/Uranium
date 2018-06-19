@@ -1,21 +1,17 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict, List, Optional, Set, TYPE_CHECKING
+from typing import Any, Dict, List, Set, Optional, TYPE_CHECKING
 
-import UM.Decorators
-from UM.Logger import Logger
-from UM.Signal import Signal
+from UM.Decorators import interface
+from UM.Logging.Logger import Logger
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 
 if TYPE_CHECKING:
-    from UM.Application import Application
     from UM.Settings.InstanceContainer import InstanceContainer
-    from UM.Settings.SettingDefinition import SettingDefinition #For typing.
+    from UM.Settings.SettingDefinition import SettingDefinition
 
-##  Shared interface between setting container types
-#
-@UM.Decorators.interface
+
 class ContainerInterface:
     ##  Get the ID of the container.
     #
@@ -99,7 +95,7 @@ class ContainerInterface:
     #   \param set_from_cache Flag to indicate that the property was set from
     #   cache. This triggers the behavior that the read_only and setDirty are
     #   ignored.
-    def setProperty(self, key: str, property_name: str, property_value: Any, container: "ContainerInterface" = None, set_from_cache: bool = False) -> None:
+    def setProperty(self, key: str, property_name: str, property_value: Any) -> None:
         pass
 
     ##  Deserialize the container from a string representation.
@@ -109,7 +105,7 @@ class ContainerInterface:
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
-        return self._updateSerialized(serialized, file_name = file_name)
+        pass
 
     ##  Deserialize just the metadata from a string representation.
     #
@@ -123,23 +119,9 @@ class ContainerInterface:
         Logger.log("w", "Class {class_name} hasn't implemented deserializeMetadata!".format(class_name = cls.__name__))
         return []
 
-    ##  Updates the given serialized data to the latest version.
-    @classmethod
-    def _updateSerialized(cls, serialized: str, file_name: Optional[str] = None) -> str:
-        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
-        version = cls.getVersionFromSerialized(serialized)
-        if configuration_type is not None and version is not None:
-            from UM.VersionUpgradeManager import VersionUpgradeManager
-            result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version,
-                                                                         [serialized],
-                                                                         [file_name if file_name else ""])
-            if result is not None:
-                serialized = result.files_data[0]
-        return serialized
-
     @classmethod
     def getLoadingPriority(cls) -> int:
-        return 9001 #Goku wins!
+        return 9001  # Goku wins!
 
     ##  Gets the configuration type of the given serialized data. (used by __updateSerialized())
     @classmethod
@@ -159,31 +141,23 @@ class ContainerInterface:
     def setPath(self, path: str) -> None:
         pass
 
-    propertyChanged = None   # type: Signal
-
-    metaDataChanged = None  # type: Signal
-
 
 class DefinitionContainerInterface(ContainerInterface):
     def findDefinitions(self, **kwargs: Any) -> List["SettingDefinition"]:
         raise NotImplementedError()
 
-    def setProperty(self, key: str, property_name: str, property_value: Any, container: "ContainerInterface" = None, set_from_cache: bool = False) -> None:
+    def setProperty(self, key: str, property_name: str, property_value: Any, container: "ContainerInterface" = None) -> None:
         raise TypeError("Can't change properties in definition containers.")
 
 
 ##  Shared interface between setting container types
 #
-@UM.Decorators.interface
+@interface
 class ContainerRegistryInterface:
     def findContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
         raise NotImplementedError()
 
     def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]:
-        raise NotImplementedError()
-
-    @classmethod
-    def getApplication(cls) -> "Application":
         raise NotImplementedError()
 
     def getEmptyInstanceContainer(self) -> "InstanceContainer":

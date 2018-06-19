@@ -1,14 +1,16 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import copy
+import math
+
 import numpy
 import numpy.linalg
-import math
-import copy
 
 from UM.Math.Vector import Vector
 from UM.Math.Float import Float
 from UM.Math.Matrix import Matrix
+
 
 ##  Unit Quaternion class based on numpy arrays.
 #

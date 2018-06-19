@@ -4,7 +4,7 @@
 from PyQt5.QtCore import QObject, QUrl #For typing.
 from typing import Optional
 
-from UM.Logger import Logger
+from UM.Logging.Logger import Logger
 from UM.FileHandler.FileHandler import FileHandler
 from UM.FileHandler.FileReader import FileReader #For typing.
 from UM.FileHandler.ReadFileJob import ReadFileJob #For typing.

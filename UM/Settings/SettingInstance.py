@@ -1,54 +1,16 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import copy #To implement deepcopy.
+import copy
 import enum
-import os
-from typing import Any, cast, Dict, Iterable, List, Optional, Set, TYPE_CHECKING
+from typing import Any, cast, Dict, Iterable, Optional
 
 from UM.Settings.Interfaces import ContainerInterface
-from UM.Signal import Signal, signalemitter
-from UM.Logger import Logger
-from UM.Decorators import call_if_enabled
-from UM.Settings.Validator import Validator #For typing.
+from UM.Logging.Logger import Logger
+from UM.Settings.Validator import Validator
 
-if TYPE_CHECKING:
-    from UM.Settings.SettingRelation import SettingRelation
-from UM.Settings.SettingRelation import RelationType
-from . import SettingFunction
+from .SettingFunction import SettingFunction
 from .SettingDefinition import SettingDefinition
-
-# Helper functions for SettingInstance tracing
-def _traceSetProperty(instance: "SettingInstance", property_name: str, property_value: Any, container: ContainerInterface) -> None:
-    Logger.log("d", "Set property '{0}' of '{1}' to '{2}', updating using values from {3}".format(property_name, instance, property_value, container))
-
-def _traceUpdateProperty(instance: "SettingInstance", property_name: str, container: ContainerInterface) -> None:
-    Logger.log("d", "Updating property '{0}' of '{1}' using container {2}".format(property_name, instance, container))
-
-def _traceRelations(instance: "SettingInstance", container: ContainerInterface) -> None:
-    Logger.log("d", "Updating relations of '{0}'", instance)
-
-    property_names = SettingDefinition.getPropertyNames()
-    property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
-    property_names.insert(0, "value")
-
-    for property_name in property_names:
-        if SettingDefinition.isReadOnlyProperty(property_name):
-            continue
-
-        changed_relations = set()   # type: Set[SettingRelation]
-        instance._addRelations(changed_relations, instance.definition.relations, property_name)
-
-        for relation in changed_relations:
-            Logger.log("d", "Emitting property change for relation {0}", relation)
-            #container.propertyChanged.emit(relation.target.key, relation.role)
-            # If the value/minimum value/etc state is updated, the validation state must be re-evaluated
-            if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
-                Logger.log("d", "Emitting validationState changed for {0}", relation)
-                container.propertyChanged.emit(relation.target.key, "validationState")
-
-def _isTraceEnabled() -> bool:
-    return "URANIUM_TRACE_SETTINGINSTANCE" in os.environ
 
 
 ##  The state of the instance
@@ -64,7 +26,6 @@ class InstanceState(enum.IntEnum):
 ##  Encapsulates all state of a setting.
 #
 #   The SettingInstance class contains all state related to a setting.
-@signalemitter
 class SettingInstance:
     ##  Constructor.
     #
@@ -141,8 +102,7 @@ class SettingInstance:
 
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
-    @call_if_enabled(_traceSetProperty, _isTraceEnabled())
-    def setProperty(self, name: str, value: Any, container: ContainerInterface = None, emit_signals = True) -> None:
+    def setProperty(self, name: str, value: Any) -> None:
         if SettingDefinition.hasProperty(name):
             if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
@@ -150,71 +110,27 @@ class SettingInstance:
 
             if name not in self.__property_values or value != self.__property_values[name]:
                 if isinstance(value, str) and value.strip().startswith("="):
-                    value = SettingFunction.SettingFunction(value[1:])
+                    value = SettingFunction(value[1:])
 
                 self.__property_values[name] = value
                 if name == "value":
-                    if not container:
-                        container = self._container
-                    ## If state changed, emit the signal
-                    if self._state != InstanceState.User:
-                        self._state = InstanceState.User
-                        if emit_signals:
-                            self.propertyChanged.emit(self._definition.key, "state")
+                    self._state = InstanceState.User
 
-                    self.updateRelations(container, emit_signals = emit_signals)
-
-                if self._validator and emit_signals:
-                    self.propertyChanged.emit(self._definition.key, "validationState")
-
-                if emit_signals:
-                    self.propertyChanged.emit(self._definition.key, name)
-                for property_name in self._definition.getPropertyNames():
-                    if self._definition.dependsOnProperty(property_name) == name:
-                        if emit_signals:
-                            self.propertyChanged.emit(self._definition.key, property_name)
         else:
             if name == "state":
                 if value == "InstanceState.Calculated":
-                    if self._state != InstanceState.Calculated:
-                        self._state = InstanceState.Calculated
-                        if emit_signals:
-                            self.propertyChanged.emit(self._definition.key, "state")
+                    self._state = InstanceState.Calculated
             else:
                 raise AttributeError("No property {0} defined".format(name))
 
-    @call_if_enabled(_traceUpdateProperty, _isTraceEnabled())
-    def updateProperty(self, name: str, container: Optional[ContainerInterface] = None):
-        if not SettingDefinition.hasProperty(name):
-            Logger.log("e", "Trying to update unknown property %s", name)
-            return
-
-        if name == "value" and self._state == InstanceState.User:
-            Logger.log("d", "Ignoring update of value for setting %s since it has been set by the user.", self._definition.key)
-            return
-
-        if self._validator:
-            self.propertyChanged.emit(self._definition.key, "validationState")
-
-        self.propertyChanged.emit(self._definition.key, name)
-
-    ##  Emitted whenever a property of this instance changes.
-    #
-    #   \param instance The instance that reported the property change (usually self).
-    #   \param property The name of the property that changed.
-    propertyChanged = Signal()
-
-    ##  The SettingDefinition this instance maintains state for.
     @property
     def definition(self) -> SettingDefinition:
         return self._definition
 
-    ##  The container of this instance.
     @property
     def container(self) -> ContainerInterface:
         return self._container
 
-    ##  Get the state of validation of this instance.
     @property
     def validationState(self) -> Optional[Validator]:
         return self._validator
@@ -228,54 +144,3 @@ class SettingInstance:
 
     def __repr__(self) -> str:
         return "<SettingInstance (0x{0:x}) definition={1} container={2}>".format(id(self), self._definition, self._container)
-
-    ## protected:
-    @call_if_enabled(_traceRelations, _isTraceEnabled())
-    def updateRelations(self, container: ContainerInterface, emit_signals = True) -> None:
-        property_names = SettingDefinition.getPropertyNames()
-        property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
-        property_names.insert(0, "value")
-
-        for property_name in property_names:
-            if SettingDefinition.isReadOnlyProperty(property_name):
-                continue
-
-            changed_relations = set()   # type: Set[SettingRelation]
-            self._addRelations(changed_relations, self._definition.relations, property_name)
-
-            # TODO: We should send this as a single change event instead of several of them.
-            # That would increase performance by reducing the amount of updates.
-            if emit_signals:
-                for relation in changed_relations:
-                    container.propertyChanged.emit(relation.target.key, relation.role)
-                    # If the value/minimum value/etc state is updated, the validation state must be re-evaluated
-                    if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
-                        container.propertyChanged.emit(relation.target.key, "validationState")
-
-    ##  Recursive function to put all settings that require eachother for changes of a property value in a list
-    #   \param relations_set \type{set} Set of keys (strings) of settings that are influenced
-    #   \param relations list of relation objects that need to be checked.
-    #   \param role name of the property value of the settings
-    def _addRelations(self, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], role: str):
-        for relation in filter(lambda r: r.role == role, relations):
-            if relation.type == RelationType.RequiresTarget:
-                continue
-
-            # Do not add relation to self.
-            if relation.target.key == self.definition.key:
-                continue
-
-            # Don't add it to list if it's already there.
-            # We do need to continue, as it might cause recursion issues otherwise.
-            if relation in relations_set:
-                continue
-
-            relations_set.add(relation)
-
-            property_names = SettingDefinition.getPropertyNames()
-            property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
-            property_names.insert(0, "value")
-
-            # Ensure that all properties of related settings are added.
-            for property_name in property_names:
-                self._addRelations(relations_set, relation.target.relations, property_name)

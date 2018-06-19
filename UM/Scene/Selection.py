@@ -2,14 +2,11 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import List
 
-from UM.Signal import Signal
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Scene.SceneNode import SceneNode
 
 from UM.Operations.GroupedOperation import GroupedOperation
-
-import copy
 
 
 ##    This class is responsible for keeping track of what objects are selected
@@ -21,17 +18,13 @@ class Selection:
     def add(cls, object):
         if object not in cls.__selection:
             cls.__selection.append(object)
-            object.transformationChanged.connect(cls._onTransformationChanged)
             cls._onTransformationChanged(object)
-            cls.selectionChanged.emit()
 
     @classmethod
     def remove(cls, object):
         if object in cls.__selection:
             cls.__selection.remove(object)
-            object.transformationChanged.disconnect(cls._onTransformationChanged)
             cls._onTransformationChanged(object)
-            cls.selectionChanged.emit()
 
     @classmethod
     ##  Get number of selected objects
@@ -76,16 +69,11 @@ class Selection:
     @classmethod
     def clear(cls):
         cls.__selection.clear()
-        cls.selectionChanged.emit()
 
     @classmethod
     ##  Check if anything is selected at all.
     def hasSelection(cls):
         return bool(cls.__selection)
-
-    selectionChanged = Signal()
-
-    selectionCenterChanged = Signal()
 
     @classmethod
     def getSelectionCenter(cls):
@@ -136,8 +124,6 @@ class Selection:
             cls.__selection_center = cls.__selection_center + object.getWorldPosition()
 
         cls.__selection_center = cls.__selection_center / len(cls.__selection)
-
-        cls.selectionCenterChanged.emit()
 
     __selection = []    # type: List[SceneNode]
     __selection_center = Vector(0, 0, 0)

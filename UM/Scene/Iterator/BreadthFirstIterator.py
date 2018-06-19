@@ -1,8 +1,9 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from . import Iterator
 from UM.Scene.SceneNode import SceneNode
+
+from . import Iterator
 
 
 class BreadthFirstIterator(Iterator.Iterator):

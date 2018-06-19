@@ -4,7 +4,6 @@
 
 import os
 
-from UM.Job import Job
 from UM.Logging.Logger import Logger
 from UM.Mesh.MeshReader import MeshReader
 from UM.Mesh.MeshBuilder import MeshBuilder
@@ -16,7 +15,10 @@ class OBJReader(MeshReader):
         super(OBJReader, self).__init__(application)
         self._supported_extensions = [".obj"]
 
-    def _read(self, file_name):
+    def initialize(self):
+        pass
+
+    def _read(self, file_name: str, *args, **kwargs):
         scene_node = None
 
         extension = os.path.splitext(file_name)[1]
@@ -50,7 +52,6 @@ class OBJReader(MeshReader):
                             if parts[1][1] and parts[idx+1][1] and parts[idx+2][1]:
                                 data += [int(parts[1][1]), int(parts[idx+1][1]), int(parts[idx+2][1])]
                         face_list.append(data)
-                Job.yieldThread()
             f.close()
 
             mesh_builder.reserveVertexCount(3 * len(face_list))
@@ -102,7 +103,6 @@ class OBJReader(MeshReader):
                 if uk != -1:
                     mesh_builder.setVertexUVCoordinates(mesh_builder.getVertexCount() - 1, uv_list[uk][0], uv_list[uk][1])
 
-                Job.yieldThread()
             if not mesh_builder.hasNormals():
                 mesh_builder.calculateNormals(fast = True)
 

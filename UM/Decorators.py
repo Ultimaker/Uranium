@@ -5,7 +5,7 @@ import copy
 import warnings
 import inspect
 
-from UM.Logger import Logger
+from UM.Logging.Logger import Logger
 
 
 ##  Decorator that can be used to indicate a method has been deprecated
@@ -56,9 +56,11 @@ def call_if_enabled(function, condition):
             return decorated_function
         return call_direct
 
+
 ##  Raised when the override decorator does not find the function it claims to override.
 class InvalidOverrideError(Exception):
     pass
+
 
 ##  Function decorator that can be used to mark a function as an override.
 #
@@ -72,6 +74,7 @@ def override(cls):
             raise InvalidOverrideError("Method {method} is marked as override but was not found in base class {cls}".format(method = function.__qualname__, cls = cls.__qualname__))
         return function
     return override_decorator
+
 
 ##  Class decorator that checks to see if all methods of the base class have been reimplemented
 #

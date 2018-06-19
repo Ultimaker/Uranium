@@ -2,11 +2,14 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 #pylint: disable=bad-whitespace
+from typing import List
+
 
 ##      Very simple class filled with a bunch of colours that are chosen thusly that they are easily distinguishable
 #       for humans.
-class ColorGenerator():
-    def __init__(self):
+class ColorGenerator:
+
+    def __init__(self) -> None:
         self._rgb_color_list = [
             [   0, 255,   0], [   0,   0, 255], [ 255,   0,   0],
             [   1, 255, 254], [ 255, 166, 254], [ 255, 219, 102],
@@ -41,12 +44,12 @@ class ColorGenerator():
     ##  Get a colour, based on index from the list
     #   \param index \type{int}
     #   \returns colour \type{list} list with 3 integers
-    def getColor(self, index):
+    def getColor(self, index: int) -> List[int]:
         while index >= len(self._color_list):
             index -= len(self._color_list)
         return self._color_list[index]
 
-    def getDistinctColor(self, index):
+    def getDistinctColor(self, index: int) -> List[int]:
         while index >= len(self._rgb_color_list):
             index -= len(self._rgb_color_list)
         return self._rgb_color_list[index]

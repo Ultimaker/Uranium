@@ -6,13 +6,10 @@ from typing import Any, Optional
 
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
-from UM.Logger import Logger
-
-MYPY = False
-if MYPY:
-    from UM.Settings.SettingInstance import SettingInstance
+from UM.Logging.Logger import Logger
 
 from . import SettingFunction
+
 
 class ValidatorState(Enum):
     Exception = "Exception"
@@ -22,6 +19,7 @@ class ValidatorState(Enum):
     MinimumWarning = "MinimumWarning"
     MaximumError = "MaximumError"
     MaximumWarning = "MaximumWarning"
+
 
 ##  Validates that a SettingInstance's value is within a certain minimum and maximum value.
 #

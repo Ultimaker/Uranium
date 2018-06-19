@@ -2,24 +2,27 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
-import builtins #To check against functions that are built-in in Python.
-import math # Imported here so it can be used easily by the setting functions.
+import builtins  # To check against functions that are built-in in Python.
+import math
 from types import CodeType
 from typing import Any, Callable, Dict, FrozenSet, NamedTuple, Optional, Set, TYPE_CHECKING
 
+from UM.Logging.Logger import Logger
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
-from UM.Logger import Logger
 
 if TYPE_CHECKING:
     from typing import FrozenSet
 
+
 class IllegalMethodError(Exception):
     pass
+
 
 def _debug_value(value: Any) -> Any:
     Logger.log("d", "Setting Function: %s", value)
     return value
+
 
 ##  Encapsulates Python code that provides a simple value calculation function.
 #
@@ -34,9 +37,9 @@ class SettingFunction:
 
         #  Keys of all settings that are referenced to in this function.
         self._used_keys = frozenset()  # type: FrozenSet[str]
-        self._used_values = frozenset() # type: FrozenSet[str]
+        self._used_values = frozenset()  # type: FrozenSet[str]
 
-        self._compiled = None #type: Optional[CodeType] #Actually an Optional['code'] object, but Python doesn't properly expose this 'code' object via any library.
+        self._compiled = None  # type: Optional[CodeType] #Actually an Optional['code'] object, but Python doesn't properly expose this 'code' object via any library.
         self._valid = False  # type: bool
 
         try:
@@ -66,7 +69,7 @@ class SettingFunction:
         if not self._valid:
             return None
 
-        locals = {} # type: Dict[str, Any]
+        locals = {}  # type: Dict[str, Any]
         # if there is a context, evaluate the values from the perspective of the original caller
         if context is not None:
             value_provider = context.rootStack()
@@ -146,6 +149,7 @@ class SettingFunction:
 
 _VisitResult = NamedTuple("_VisitResult", [("values", Set[str]), ("keys", Set[str])])
 
+
 # Helper class used to analyze a parsed function.
 #
 # It walks a Python AST generated from a Python expression. It will analyze the AST and
@@ -155,8 +159,8 @@ _VisitResult = NamedTuple("_VisitResult", [("values", Set[str]), ("keys", Set[st
 class _SettingExpressionVisitor(ast.NodeVisitor):
     def __init__(self) -> None:
         super().__init__()
-        self.values = set() #type: Set[str]
-        self.keys = set() #type: Set[str]
+        self.values = set()  # type: Set[str]
+        self.keys = set()  # type: Set[str]
 
     def visit(self, node: ast.AST) -> _VisitResult:
         super().visit(node)
