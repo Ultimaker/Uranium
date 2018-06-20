@@ -5,6 +5,7 @@ from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshData import MeshType
 from UM.Mesh.MeshData import calculateNormalsFromVertices
 from UM.Mesh.MeshData import calculateNormalsFromIndexedVertices
+from UM.Math.Color import Color #For typing.
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Logger import Logger
@@ -643,8 +644,7 @@ class MeshBuilder:
         self.addIndices(numpy.asarray(indices, dtype = numpy.int32))
         self.addColors(numpy.asarray(colors, dtype = numpy.float32))
 
-    ##  Adds a pyramid to the mesh of this mesh builder.
-    #
+    ##  Adds a square pyramid to the mesh of this mesh builder.
     #   \param width The width of the base of the pyramid.
     #   \param height The height of the pyramid (from base to notch).
     #   \param depth The depth of the base of the pyramid.
@@ -695,6 +695,60 @@ class MeshBuilder:
             vertex_count = self.getVertexCount()
             for i in range(1, 6):
                 self.setVertexColor(vertex_count - i, color)
+
+    ##  Adds a diamond to the mesh of this mesh builder.
+    #
+    #   A diamond looks like two square pyramids stuck together at their bottom
+    #   sides.
+    #   \param width The width of the waist of the diamond (the square part).
+    #   \param height The height of the diamond from bottom tip to top tip.
+    #   \param depth The depth of the waist of the diamond.
+    #   \param angle An angle of rotation to rotate the diamond by.
+    #   \param axis An axis of rotation to rotate the diamond around. If no axis
+    #   is provided and the angle of rotation is nonzero, the diamond will be
+    #   rotated around the Y-axis.
+    #   \param center The position of the centre of the diamond. If not
+    #   provided, the diamond will be placed on the coordinate origin.
+    #   \param color The colour of the diamond. If no colour is provided, a
+    #   a colour will be determined by the shader.
+    def addDiamond(self, width: float, height: float, depth: float, angle: float = 0, axis: Vector = Vector.Unit_Y, center: Vector = Vector(0, 0, 0), color: Color = None) -> None:
+        angle = math.radians(angle)
+
+        min_x = -width / 2
+        max_x = width / 2
+        min_y = -depth / 2
+        max_y = depth / 2
+        start = self.getVertexCount() #Starting index.
+
+        matrix = Matrix()
+        matrix.setByRotationAxis(angle, axis)
+        vertices = numpy.asarray([ #All 6 vertices of the diamond.
+            [min_x, 0, max_y],
+            [max_x, 0, max_y],
+            [min_x, 0, min_y],
+            [max_x, 0, min_y],
+            [0, height / 2, 0],
+            [0, -height / 2, 0]
+        ], dtype = numpy.float32)
+        vertices = vertices.dot(matrix.getData()[0:3, 0:3]) #Rotate the diamond around the axis.
+        vertices += center.getData()
+        self.addVertices(vertices)
+
+        indices = numpy.asarray([ #Connect the vertices to each other (8 triangles).
+            [start, start + 1, start + 4], #The top side of the diamond.
+            [start + 1, start + 3, start + 4],
+            [start + 3, start + 2, start + 4],
+            [start + 2, start, start + 4],
+            [start + 1, start, start + 5], #The bottom side of the diamond.
+            [start + 3, start + 1, start + 5],
+            [start + 2, start + 3, start + 5],
+            [start, start + 2, start + 5]
+        ], dtype = numpy.int32)
+        self.addIndices(indices)
+
+        if color: #If we have a colour, add the colour to each of the vertices.
+            for i in range(0, 6):
+                self.setVertexColor(start + i, color)
 
     ##  Create a mesh from points that represent a convex hull.
     #   \param hull_points list of xy values
