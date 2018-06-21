@@ -73,13 +73,13 @@ msgstr "경고"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} is available!"
-msgstr ""
+msgstr "Cura {0}을(를) 사용할 수 있습니다!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} provides better and reliable printing experience."
-msgstr ""
+msgstr "Cura {0}은(는) 보다 개선된 안정적인 인쇄 환경을 제공합니다."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
@@ -89,7 +89,7 @@ msgstr "다운로드"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
 msgid "Learn more about new features"
-msgstr ""
+msgstr "새 기능에 대해 자세히 알아보기"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
@@ -147,13 +147,13 @@ msgstr "파일이 이미 있음"
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "<filename>{0}</filename> 파일이 이미 있습니다. 덮어 쓰시겠습니까?"
+msgstr "파일이 이미 있습니다. 덮어 쓰시겠습니까?"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:156
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> 저장 중입니다"
+msgstr "저장 중입니다"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:157
 msgctxt "@info:title"
@@ -164,25 +164,25 @@ msgstr "저장"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> 저장하려고 하나 권한이 거부되었습니다"
+msgstr "?를 저장하려고하니 권한이 거부되었습니다."
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<filename>{0}</filename>: <message>{1}</message> 에 저장할 수 없습니다"
+msgstr "?에 저장할 수 없습니다"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> 에 저장됨"
+msgstr "?에 저장됨"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "File Saved"
-msgstr "파일이 저장됨"
+msgstr "저장된 파일"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
 msgctxt "@action:button"
@@ -192,7 +192,7 @@ msgstr "폴더 열기"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
-msgstr "파일이 있는 폴더를 엽니다"
+msgstr "파일이 들어있는 폴더를 엽니다"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
 #, python-brace-format
@@ -203,12 +203,12 @@ msgstr "<filename>{0}</filename>에 저장하는 중에 다음과 같은 문제�
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
 msgid "Scale"
-msgstr "스케일"
+msgstr "축척"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr "스케일 모형"
+msgstr "축척 모형"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -233,12 +233,12 @@ msgstr "모델 회전"
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror"
-msgstr "대칭"
+msgstr "거울"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
-msgstr "대칭 모델"
+msgstr "거울 모델"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:15
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:47
@@ -248,27 +248,24 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다.\n"
-"- {profiles}\n"
-"기본값으로 재설정하시겠습니까?"
+msgstr "구성이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다.\n- {profiles}\n기본값으로 재설정하시겠습니까?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
-msgstr "설정이 손상된 것 같습니다."
+msgstr "구성이 손상된 것 같습니다."
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:59
 msgctxt "@info:title"
 msgid "Configuration errors"
-msgstr "설정 오류"
+msgstr "구성 오류"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:18
 msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
-msgstr "설정을 기본값으로 재설정합니다."
+msgstr "구성을 기본값으로 재설정합니다."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:38
@@ -277,7 +274,7 @@ msgstr "설정을 기본값으로 재설정합니다."
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
-msgstr "지원되는 모든 유형 ({0})"
+msgstr "지원되는 모든 유형"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
@@ -291,20 +288,20 @@ msgstr "모든 파일"
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}일 {1:0>2}시 {2:0>2}분"
+msgstr "?일 ?시간 ?분"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:110
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}시 {1:0>2}분"
+msgstr "?시간?분"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
-msgstr[0] "{0} 일"
+msgstr[0] "일"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
@@ -312,7 +309,7 @@ msgstr[0] "{0} 일"
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] "{0} 시간"
+msgstr[0] "시간"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
@@ -321,7 +318,7 @@ msgstr[0] "{0} 시간"
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] "{0} 분"
+msgstr[0] "분"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:127
 msgctxt "@info:progress"
@@ -331,7 +328,7 @@ msgstr "플러그인 로드 중 ..."
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:135
 msgctxt "@info:progress"
 msgid "Updating configuration..."
-msgstr "설정 업데이트 중 ..."
+msgstr "구성 업데이트 중 ..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:153
 msgctxt "@info:progress"
@@ -342,21 +339,19 @@ msgstr "환경 설정로드 중 ..."
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "원본크기의 {0}% 로 개체 크기 자동조절"
+msgstr "원본 크기의 ?%로 개체 크기 자동 조절"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:65
 msgctxt "@info:title"
 msgid "Scaling Object"
-msgstr "크기 조절"
+msgstr "개체 크기 조절"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:314
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"플러그인이 설치되었습니다.\n"
-"플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
+msgstr "플러그인이 설치되었습니다.\n플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
@@ -364,15 +359,13 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"플러그인이 제거되었습니다.\n"
-"제거를 완료하려면 {0}을(를) 다시 시작하십시오."
+msgstr "플러그인이 제거되었습니다.\n제거를 완료하려면 {0}을(를) 다시 시작하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
-msgstr "{0} 이전 버전의 구성을 가져 왔습니다."
+msgstr "이전 버전의 구성을 가져 왔습니다"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:50
 msgctxt "@message"
@@ -382,14 +375,14 @@ msgstr "OpenGL을 초기화하지 못했습니다"
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:60
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "중요한 OpenGL 확장이 누락되었습니다. 이 프로그램은 Framebuffer 객체를 지원해야 합니다. 비디오 카드 드라이버를 확인하십시오."
+msgstr "중요한 OpenGL 확장이 누락되었습니다. 이 프로그램은 Framebuffer 객체를 지원해야합니다. 비디오 카드 드라이버를 확인하십시오"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:35
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
-msgstr "리셋"
+msgstr "다시 맞추다"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:167
 #, python-brace-format
@@ -405,18 +398,18 @@ msgstr "파일 수정됨"
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:169
 msgctxt "@action:button"
 msgid "Reload"
-msgstr "다시 로드하기"
+msgstr "다시 로드"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:169
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
-msgstr "수정된 파일을 트리거하여 디스크에서 다시 가져옵니다."
+msgstr "수정된 파일을 트리거하여 디스크에서 다시 로드합니다."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> 형식의 파일을 열 수 없습니다"
+msgstr "<filename>{0}</filename> 형식의 파일을 열 수 없습니다."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:47
@@ -430,12 +423,12 @@ msgstr "유효하지 않은 파일"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>을 로드하지 못했습니다"
+msgstr "?을 로드하지 못했습니다"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:54
 msgctxt "@info:title"
 msgid "Loading"
-msgstr "로딩중"
+msgstr "로드 중"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
@@ -445,7 +438,7 @@ msgstr "스냅 크기 조정"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:104
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr "균일한 크기 조정"
+msgstr "균일한 스케일링"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
 msgctxt "@option:check"
@@ -455,7 +448,7 @@ msgstr "모델 잠금"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
 msgid "Lay flat"
-msgstr "바닥에 놓기"
+msgstr "평평하게 놓으십시오"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
 msgctxt "@action:checkbox"
@@ -476,12 +469,12 @@ msgstr "새 플러그인 설치"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:51
 msgctxt "@label"
 msgid "You will need to restart the application before changes in plugins have effect."
-msgstr "플러그인의 변경 사항이 적용되기 전에 응용 프로그램을 다시 시작해야합니다."
+msgstr "플러그인의 변경 사항이 적용되기 전에 응용 프로그램을 다시 시작해야합니다"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:87
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
-msgstr "이 플러그인은 응용 프로그램을 실행하는 데 필요합니다."
+msgstr "이 플러그인은 응용 프로그램을 실행하는 데 필요합니다"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:104
 msgctxt "@label"
@@ -496,7 +489,7 @@ msgstr "플러그인 설치"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:131
 msgctxt "@title:window"
 msgid "Open file(s)"
-msgstr "파일 열기"
+msgstr "열린 파일"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:165
 msgctxt "@label"
@@ -506,17 +499,17 @@ msgstr "사용할 수 있는 텍스트 없음"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
 msgctxt "@title:window"
 msgid "About %1"
-msgstr "대략 %1"
+msgstr "대략"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:203
 msgctxt "@label"
 msgid "Author:"
-msgstr "원작자:"
+msgstr "원작자"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:225
 msgctxt "@label"
 msgid "Version:"
-msgstr "버전:"
+msgstr "버전"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:243
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
@@ -563,13 +556,13 @@ msgstr "확인"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
-msgstr "이 설정은 활성 기기에 의해 숨겨졌으며 보이지 않습니다."
+msgstr "이 설정은 활성 시스템에 의해 숨겨졌으며 보이지 않습니다."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-msgstr[0] "이 설정은 %1 값으로 숨겨져 있습니다. 이 설정을 볼 수 있게 설정 값을 변경하십시오."
+msgstr[0] "이 설정은 ?값으로 숨겨져 있습니다. 이 설정을 볼 수있게 설정 값을 변경하십시오"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 msgctxt "@title:tab"
@@ -589,7 +582,7 @@ msgstr "제거 확인"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "%1을 제거 하시겠습니까? 이것은 취소 할 수 없습니다!"
+msgstr "?을 제거 하시겠습니까? 이것ㅇ 취소 할 수 없습니다!"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
@@ -599,17 +592,17 @@ msgstr "뒤로"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
-msgstr "종료"
+msgstr "끝"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
-msgstr "다음"
+msgstr "다음 것"
 
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "description"
 msgid "Example extension to instruct people on how to create Uranium extensions."
-msgstr "우라늄 확장을 만드는 방법을 보여주는 예입니다."
+msgstr "우라늄 확장을 만드는 방법을 보여주는 확장 예입니다."
 
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "name"
@@ -644,22 +637,22 @@ msgstr "STL 파일을 읽을 수 있도록 지원합니다."
 #: FileHandlers/STLReader/plugin.json
 msgctxt "name"
 msgid "STL Reader"
-msgstr "STL 리더기"
+msgstr "STL 판독기"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
 msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Wavefront OBJ 파일을 읽을 수 있도록 합니다."
+msgstr "Wavefront OBJ 파일을 읽을 수 있습니다."
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ 리더기"
+msgstr "Wavefront OBJ 판독기"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Wavefront OBJ 파일을 작성할 수 있도록 합니다."
+msgstr "Wavefront OBJ 파일을 작성할 수 있습니다."
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
@@ -669,7 +662,7 @@ msgstr "Wavefront OBJ 작성기"
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
 msgid "Provides support for writing STL files."
-msgstr "STL 파일 작성 지원을 제공합니다."
+msgstr "STL 파일 작성 지원을 제공합니다"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
@@ -679,7 +672,7 @@ msgstr "STL 작성자"
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr "콘솔에 로그 정보를 출력합니다."
+msgstr "콘솔에 로그 정보를 출력합니다"
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
@@ -709,7 +702,7 @@ msgstr "출력 장치 예"
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
-msgstr "소프트웨어 업데이트를 확인합니다."
+msgstr "소프트웨어 업데이트를 확인합니다"
 
 #: UpdateChecker/plugin.json
 msgctxt "name"
@@ -719,17 +712,17 @@ msgstr "업데이트 검사기"
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "description"
 msgid "Example file reader to instruct people on how to create Uranium file readers."
-msgstr "우라늄 파일 리더를 만드는 방법을 보여주는 파일 리더 예입니다."
+msgstr "우라늄 파일 판독기를 만드는 방법을 보여주는 파일 판독기 예입니다."
 
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "name"
 msgid "Example File Reader"
-msgstr "파일 리더 예"
+msgstr "파일 판독기 예"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
-msgstr "로컬 파일에 저장할 수 있습니다."
+msgstr "로컬 파일에 저장할 수 있습니다"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "name"
@@ -739,7 +732,7 @@ msgstr "로컬 파일 출력 장치"
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
 msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "응용프로그램 설치와 동반되는 빌트인 설정 컨테이너를 제공합니다."
+msgstr "앱의 설치와 동반되는 빌트인 설정 용기를 제공합니다."
 
 #: LocalContainerProvider/plugin.json
 msgctxt "name"
@@ -749,7 +742,7 @@ msgstr "로컬 컨테이너 제공자"
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr "크기 조정 도구를 제공합니다."
+msgstr "크기 조정 도구를 제공합니다"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "name"
@@ -759,7 +752,7 @@ msgstr "스케일 도구"
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr "선택 도구를 제공합니다."
+msgstr "선택 도구를 제공합니다"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "name"
@@ -769,7 +762,7 @@ msgstr "선택 도구"
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
-msgstr "이동 도구를 제공합니다."
+msgstr "이동 도구를 제공합니다"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
@@ -779,7 +772,7 @@ msgstr "이동 도구"
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr "카메라 조작 도구를 제공합니다."
+msgstr "카메라 조작 도구를 제공합니다"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
@@ -789,7 +782,7 @@ msgstr "카메라 도구"
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr "회전 도구를 제공합니다."
+msgstr "회전 도구를 제공합니다"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
@@ -799,12 +792,12 @@ msgstr "회전 도구"
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr "대칭 도구를 제공합니다."
+msgstr "미러 도구를 제공합니다"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"
 msgid "Mirror Tool"
-msgstr "대칭 도구"
+msgstr "미러 도구"
 
 #~ msgctxt "@info"
 #~ msgid "A new version is available!"
