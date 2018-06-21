@@ -72,13 +72,13 @@ msgstr "Warnhinweis"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} is available!"
-msgstr ""
+msgstr "Cura {0} ist verfügbar!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} provides better and reliable printing experience."
-msgstr ""
+msgstr "Cura {0} bietet eine bessere und zuverlässige Druckerfahrung."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
@@ -88,7 +88,7 @@ msgstr "Download"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
 msgid "Learn more about new features"
-msgstr ""
+msgstr "Erfahren Sie mehr über neue Funktionen"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
@@ -247,10 +247,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:\n"
-"- {profiles}\n"
-"Möchten Sie auf die Werkseinstellungen zurücksetzen?"
+msgstr "Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:\n- {profiles}\nMöchten Sie auf die Werkseinstellungen zurücksetzen?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
@@ -290,13 +287,13 @@ msgstr "Alle Dateien (*)"
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}T. {1:0>2}St. {2:0>2}M."
+msgstr "{0:0>2}Tag {1:0>2}Stunde {2:0>2}Minute"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:110
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}St. {1:0>2}Mi."
+msgstr "{0:0>2}Stunde {1:0>2}Minute"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #, python-brace-format
@@ -356,9 +353,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Das Plugin wurde installiert. \n"
-"Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
+msgstr "Das Plugin wurde installiert. \nStarten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
@@ -366,9 +361,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"Das Plugin wurde entfernt.\n"
-"Bitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
+msgstr "Das Plugin wurde entfernt.\nBitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format
