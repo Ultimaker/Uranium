@@ -73,13 +73,13 @@ msgstr "경고"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} is available!"
-msgstr ""
+msgstr "Cura {0}을(를) 사용할 수 있습니다!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} provides better and reliable printing experience."
-msgstr ""
+msgstr "Cura {0}은(는) 보다 개선된 안정적인 인쇄 환경을 제공합니다."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
@@ -89,7 +89,7 @@ msgstr "다운로드"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
 msgid "Learn more about new features"
-msgstr ""
+msgstr "새 기능에 대해 자세히 알아보기"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
@@ -248,10 +248,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다.\n"
-"- {profiles}\n"
-"기본값으로 재설정하시겠습니까?"
+msgstr "설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다.\n- {profiles}\n기본값으로 재설정하시겠습니까?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
@@ -354,9 +351,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"플러그인이 설치되었습니다.\n"
-"플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
+msgstr "플러그인이 설치되었습니다.\n플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
@@ -364,9 +359,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"플러그인이 제거되었습니다.\n"
-"제거를 완료하려면 {0}을(를) 다시 시작하십시오."
+msgstr "플러그인이 제거되었습니다.\n제거를 완료하려면 {0}을(를) 다시 시작하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format

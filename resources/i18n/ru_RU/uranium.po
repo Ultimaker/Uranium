@@ -73,13 +73,13 @@ msgstr "Внимание"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} is available!"
-msgstr ""
+msgstr "Доступна версия {0} Cura!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} provides better and reliable printing experience."
-msgstr ""
+msgstr "Cura {0} обеспечивает еще более оптимальную и надежную печать."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
@@ -89,7 +89,7 @@ msgstr "Скачать"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
 msgid "Learn more about new features"
-msgstr ""
+msgstr "Узнайте больше о новых функциях"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
@@ -248,10 +248,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n"
-"- {profiles}\n"
-"Выполнить сброс до заводских настроек по умолчанию?"
+msgstr "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n- {profiles}\nВыполнить сброс до заводских настроек по умолчанию?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
@@ -360,9 +357,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Плагин был установлен\n"
-"Пожалуйста, перезапустите приложение для активации плагина."
+msgstr "Плагин был установлен\nПожалуйста, перезапустите приложение для активации плагина."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
@@ -370,9 +365,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"Плагин удален.\n"
-"Перезапустите {0} для завершения удаления."
+msgstr "Плагин удален.\nПерезапустите {0} для завершения удаления."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format

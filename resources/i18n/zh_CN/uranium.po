@@ -74,13 +74,13 @@ msgstr "警告"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} is available!"
-msgstr ""
+msgstr "Cura {0} 可用！"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} provides better and reliable printing experience."
-msgstr ""
+msgstr "Cura {0} 提供更好、更可靠的打印体验。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
@@ -90,7 +90,7 @@ msgstr "下载"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
 msgid "Learn more about new features"
-msgstr ""
+msgstr "了解更多新的特点"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
@@ -148,7 +148,7 @@ msgstr "文件已存在"
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "文件 <filename>{0}</filename> 已存在。确定要覆盖吗？"
+msgstr "文件 <filename>{0}</filename> 已存在。 您确定要覆盖它吗？"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:156
 #, python-brace-format
@@ -172,7 +172,7 @@ msgstr "保存 <filename>{0}</filename> 时发生错误：权限不足"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "无法保存到 <filename>{0}</filename>：<message>{1}</message>"
+msgstr "无法保存到 <filename>{0}</filename>： <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
@@ -249,10 +249,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"配置似乎已损坏。以下配置文件似乎出现问题：\n"
-"- {profiles}\n"
-"是否要恢复出厂默认设置？"
+msgstr "配置似乎已损坏。以下配置文件似乎出现问题：\n- {profiles}\n是否要恢复出厂默认设置？"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
@@ -355,9 +352,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"插件已安装。\n"
-"请重新启动应用程序以激活插件。"
+msgstr "插件已安装。\n请重新启动应用程序以激活插件。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
@@ -365,9 +360,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"插件已移除。\n"
-"请重启 {0} 完成卸载。"
+msgstr "插件已移除。\n请重启 {0} 完成卸载。"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format
