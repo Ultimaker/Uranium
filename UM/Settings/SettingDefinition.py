@@ -12,7 +12,7 @@ from UM.Logging.Logger import Logger
 from UM.i18n import i18nCatalog
 
 from .Interfaces import DefinitionContainerInterface
-from . import SettingFunction
+from .SettingFunction import SettingFunction
 from .Validator import Validator
 
 
@@ -540,7 +540,7 @@ class SettingDefinition:
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.TranslatedString:
                 self.__property_values[key] = self._i18n_catalog.i18n(str(value)) if self._i18n_catalog is not None else value
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.Function:
-                self.__property_values[key] = SettingFunction.SettingFunction(str(value))
+                self.__property_values[key] = SettingFunction(str(value))
             else:
                 Logger.log("w", "Unknown DefinitionPropertyType (%s) for key %s", key, self.__property_definitions[key]["type"])
 

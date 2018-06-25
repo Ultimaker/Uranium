@@ -44,7 +44,7 @@ class Resources:
     ContainerStacks = 10
     ## Location of cached data
     Cache = 11
-    ## Location of plugins
+    ## Location of modules
     Plugins = 12
 
     ## Any custom resource types should be greater than this to prevent collisions with standard types.
@@ -582,7 +582,7 @@ class Resources:
         DefinitionContainers: "definitions",
         InstanceContainers: "instances",
         ContainerStacks: "stacks",
-        Plugins: "plugins",
+        Plugins: "modules",
     } #type: Dict[int, str]
     __types_storage = {
         Resources: "",
@@ -592,5 +592,5 @@ class Resources:
         InstanceContainers: "instances",
         ContainerStacks: "stacks",
         Themes: "themes",
-        Plugins: "plugins",
+        Plugins: "modules",
     } #type: Dict[int, str]

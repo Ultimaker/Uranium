@@ -197,8 +197,11 @@ class Application:
     def getBackend(self) -> "Backend":
         return self._backend
 
-    def getController(self) -> Controller:
+    def getController(self) -> "Controller":
         return self._controller
+
+    def getInstallationPath(self) -> str:
+        return self._app_install_dir
 
     @staticmethod
     def getInstallPrefix() -> str:

@@ -66,7 +66,7 @@ class TestPluginRegistry():
         registry.loadPlugin("TestPlugin")
         assert registry.getTestPlugin() is None
 
-        # Other plugins should load.
+        # Other modules should load.
         registry.loadPlugin("TestPlugin2")
         assert registry.getTestPlugin().getPluginId() == "TestPlugin2"
 

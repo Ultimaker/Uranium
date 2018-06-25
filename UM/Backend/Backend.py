@@ -28,8 +28,9 @@ class BackendState(IntEnum):
 
 
 class Backend:
-    def __init__(self, application: "Application", *args, **kwargs):
+    def __init__(self, name: str, application: "Application", *args, **kwargs):
         super().__init__(*args, **kwargs)  # Call super to make multiple inheritance work.
+        self._name = name
         self._application = application
         self._supported_commands = {}
 
@@ -40,6 +41,10 @@ class Backend:
         self._process = None
         self._backend_log = []
         self._backend_log_max_lines = None
+
+    @property
+    def name(self) -> str:
+        return self._name
 
     def initialize(self):
         pass

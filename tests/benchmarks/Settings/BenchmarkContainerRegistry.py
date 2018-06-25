@@ -42,7 +42,7 @@ def container_registry(application):
     plugin = PluginRegistry.getInstance().getPluginObject("LocalContainerProvider")
     ContainerRegistry.getInstance()._providers.append(plugin)
 
-    PluginRegistry.getInstance()._plugins.clear() # remove plugins
+    PluginRegistry.getInstance()._plugins.clear() # remove modules
 
     Resources.addSearchPath(os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Settings")))
 
