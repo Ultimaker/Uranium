@@ -16,6 +16,7 @@ import numpy.linalg
 import scipy.spatial
 import scipy.spatial.qhull
 import hashlib
+from trimesh import Trimesh
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
@@ -99,8 +100,10 @@ class MeshData:
         zero_position = zero_position if zero_position is not Reuse else self._zero_position
         attributes = attributes if attributes is not Reuse else self._attributes
 
-        return MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
+        md = MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
                         file_name=file_name, center_position=center_position, zero_position=zero_position, attributes=attributes)
+        md.setTrimesh(self._trimesh)
+        return md
 
     def getHash(self):
         m = hashlib.sha256()
@@ -179,7 +182,9 @@ class MeshData:
 
             return self.set(vertices=transformed_vertices, normals=transformed_normals, center_position=center_position, zero_position=zero_position)
         else:
-            return MeshData(vertices = self._vertices)
+            md = MeshData(vertices = self._vertices)
+            md.setTrimesh(self._trimesh)
+            return md
 
     ##  Get the extents of this mesh.
     #
@@ -287,6 +292,12 @@ class MeshData:
         result = list(self._attributes.keys())
         result.sort()
         return result
+
+    def setTrimesh(self, mesh: Trimesh):
+        self._trimesh = mesh
+
+    def getTrimesh(self) -> Optional[Trimesh]:
+        return self._trimesh
 
     def toString(self) -> str:
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \

@@ -298,7 +298,9 @@ class SceneNode:
     #          If this node is a group, it will recursively concatenate all child nodes/objects.
     #   \returns MeshData
     def getMeshDataTransformed(self) -> Optional[MeshData]:
-        return MeshData(vertices = self.getMeshDataTransformedVertices(), normals = self.getMeshDataTransformedNormals())
+        md = MeshData(vertices = self.getMeshDataTransformedVertices(), normals = self.getMeshDataTransformedNormals())
+        md.setTrimesh(self._trimesh)
+        return md
 
     ##  \brief Get the transformed vertices from this scene node/object, based on the transformation of scene nodes wrt root.
     #          If this node is a group, it will recursively concatenate all child nodes/objects.
@@ -639,6 +641,16 @@ class SceneNode:
         if self._aabb is None:
             self._calculateAABB()
         return self._aabb
+
+    def getVolume(self) -> float:
+        if self.getMeshData().getTrimesh():
+            return self.getMeshData().getTrimesh().volume
+        return 0
+
+    def getSurfaceArea(self) -> float:
+        if self.getMeshData().getTrimesh():
+            return self.getMeshData().getTrimesh().area
+        return 0
 
     ##  Set whether or not to calculate the bounding box for this node.
     #

@@ -1,6 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
+import trimesh
 
 from UM.Mesh.MeshReader import MeshReader
 from UM.Mesh.MeshBuilder import MeshBuilder
@@ -85,6 +86,11 @@ class STLReader(MeshReader):
         if mesh_builder.getVertexCount() == 0:
             Logger.log("d", "File did not contain valid data, unable to read.")
             return None  # We didn't load anything.
+
+        # Added temporarily to get model statistics
+        complementary_mesh = trimesh.load(file_name)
+        mesh.setTrimesh(complementary_mesh)
+
         scene_node.setMeshData(mesh)
         Logger.log("d", "Loaded a mesh with %s vertices", mesh_builder.getVertexCount())
 
