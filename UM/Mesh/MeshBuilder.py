@@ -344,7 +344,7 @@ class MeshBuilder:
             self._vertex_count = len(vertices)
         else:
             self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
-            self._vertex_count  += len(vertices)
+            self._vertex_count += len(vertices)
 
     def addIndices(self, indices):
         if self._indices is None:
@@ -377,7 +377,7 @@ class MeshBuilder:
         end_index = self._vertex_count + len(vertices)    
         self._colors[self._vertex_count:end_index, :] = colors
         self._vertices[self._vertex_count:end_index, :] = vertices
-        self._vertex_count  += len(vertices)
+        self._vertex_count += len(vertices)
 
     ##
     # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
@@ -389,7 +389,7 @@ class MeshBuilder:
     #   Keyword arguments:
     #   - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
     #           is stored as a set of three unique vertices.
-    def calculateNormals(self, fast=False):
+    def calculateNormals(self, fast = False):
         if self._vertices is None:
             return
 
