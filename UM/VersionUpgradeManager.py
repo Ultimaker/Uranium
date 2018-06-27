@@ -274,54 +274,15 @@ class VersionUpgradeManager:
                             yield UpgradeTask(storage_path = path, file_name = configuration_file,
                                               configuration_type = old_configuration_type)
 
-    ##  Stores an old version of a configuration file away.
-    #
-    #   This old file is intended as a back-up. It will be stored in the ./old
-    #   directory in the resource directory, in a subdirectory made specifically
-    #   for the version of the old file. The subdirectory will mirror the
-    #   directory structure of the original directory.
-    #
-    #   \param resource_directory The resource directory of the configuration
-    #   type of the file in question.
-    #   \param relative_path The path relative to the resource directory to the
-    #   file in question.
-    #   \param old_version The version number in the file in question.
-    def _storeOldFile(self, resource_directory: str, relative_path: str, old_version: int) -> None:
-        old_path = os.path.join(resource_directory, relative_path)
-        old_path = os.path.abspath(old_path)
-        if Platform.isWindows():
-            # remove all unnecessary "\.\"s because it won't work with network storage on Windows
-            # os.abspath and os.normpath cannot remove all of them, so we need this manual step
-            while "\\.\\" in old_path:
-                old_path = old_path.replace("\\.\\", "\\")
-
-        newpath = os.path.join(resource_directory, "old", str(old_version), relative_path)
-        newpath = os.path.abspath(newpath)
-        if Platform.isWindows():
-            # remove all unnecessary "\.\"s because it won't work with network storage on Windows
-            # os.abspath and os.normpath cannot remove all of them, so we need this manual step
-            while "\\.\\" in newpath:
-                newpath = newpath.replace("\\.\\", "\\")
-        newpath_dir = os.path.dirname(newpath)
-
-        if os.path.exists(newpath):  # If we've updated previously but this old version was launched again, overwrite the old configuration.
-            try:
-                os.remove(newpath)
-            except OSError:  # Couldn't remove. Permissions?
-                return
-        try:  # For speed, first just try to rename the file without checking if the directory exists and stuff.
-            os.rename(old_path, newpath)  # Store the old file away.
-        except FileNotFoundError:  # Assume the target directory doesn't exist yet. The other case is that the file itself doesn't exist, but that's a coding error anyway.
-            try:
-                os.makedirs(newpath_dir, exist_ok = True)
-            except OSError:  # Assume that the directory already existed. Otherwise it's probably a permission error or OS-internal error, in which case we can't write anyway.
-                pass
-            try:
-                os.rename(old_path, newpath)  # Try again!
-            except FileExistsError:  # Couldn't remove the old file for some other reason. Internal OS error?
-                pass
-        except FileExistsError:
-            pass
+    def copyVersionFolder(self, src_path: str, dest_path: str) -> None:
+        Logger.log("i", "Copying directory from '%s' to '%s'", src_path, dest_path)
+        # we first copy everything to a temporary folder, and then move it to the new folder
+        base_dir_name = os.path.basename(src_path)
+        temp_root_dir_path = tempfile.mkdtemp("cura-copy")
+        temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
+        # src -> temp -> dest
+        shutil.copytree(src_path, temp_dir_path)
+        shutil.move(temp_dir_path, dest_path)
 
     ##  Gets the version of the given file data
     def getFileVersion(self, configuration_type: str, file_data: str) -> Optional[int]:
@@ -382,7 +343,6 @@ class VersionUpgradeManager:
 
         # If the version changed, save the new files.
         if version != old_version or configuration_type != old_configuration_type:
-            self._storeOldFile(storage_path_absolute, configuration_file, old_version)
 
             # Finding out where to store these files.
             resource_type, mime_type_name = self._current_versions[(configuration_type, version)]
