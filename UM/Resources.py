@@ -496,7 +496,7 @@ class Resources:
         temp_root_dir_path = tempfile.mkdtemp("cura-copy")
         temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
         # src -> temp -> dest
-        shutil.copytree(src_path, temp_dir_path)
+        shutil.copytree(src_path, temp_dir_path, ignore=shutil.ignore_patterns("*.log", "old"))
         shutil.move(temp_dir_path, dest_path)
 
     @classmethod
