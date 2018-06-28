@@ -85,10 +85,14 @@ class VersionUpgradeManager:
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
+        # Files that should not be checked, such as log files
         self._ignored_files = ["uranium.lock", "plugins.json"]
 
-    def registerIgnoredFile(self, file: str) -> None:
-        self._ignored_files.append(file)
+    ##  Registers a file to be ignored by version upgrade checks (eg log files).
+    #   \param file_name The base file name of the file to be ignored.
+
+    def registerIgnoredFile(self, file_name: str) -> None:
+        self._ignored_files.append(file_name)
 
     ##  Gets the paths where a specified type of file should be stored.
     #
