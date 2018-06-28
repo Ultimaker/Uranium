@@ -93,13 +93,13 @@ class OBJReader(MeshReader):
                 else:
                     mesh_builder.addFaceByPoints(vertex_list[i][0], vertex_list[i][1], vertex_list[i][2], vertex_list[j][0], vertex_list[j][1], vertex_list[j][2], vertex_list[k][0], vertex_list[k][1], vertex_list[k][2])
 
-                if ui != -1:
+                if ui != -1 and len(uv_list) > ui:
                     mesh_builder.setVertexUVCoordinates(mesh_builder.getVertexCount() - 3, uv_list[ui][0], uv_list[ui][1])
 
-                if uj != -1:
+                if uj != -1 and len(uv_list) > uj:
                     mesh_builder.setVertexUVCoordinates(mesh_builder.getVertexCount() - 2, uv_list[uj][0], uv_list[uj][1])
 
-                if uk != -1:
+                if uk != -1 and len(uv_list) > uk:
                     mesh_builder.setVertexUVCoordinates(mesh_builder.getVertexCount() - 1, uv_list[uk][0], uv_list[uk][1])
 
                 Job.yieldThread()
