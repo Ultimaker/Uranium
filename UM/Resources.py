@@ -496,8 +496,14 @@ class Resources:
         temp_root_dir_path = tempfile.mkdtemp("cura-copy")
         temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
         # src -> temp -> dest
-        shutil.copytree(src_path, temp_dir_path, ignore=shutil.ignore_patterns("*.log", "old"))
-        shutil.move(temp_dir_path, dest_path)
+        try:
+            shutil.copytree(src_path, temp_dir_path, ignore=shutil.ignore_patterns("*.log", "old"))
+            # if the dest_path exist, it needs to be removed first
+            if os.path.exists(dest_path):
+                shutil.rmtree(dest_path)
+            shutil.move(temp_dir_path, dest_path)
+        except:
+            Logger.log("e", "Something occurred when copying the version folder from '%s' to '%s'", src_path, dest_path)
 
     @classmethod
     def _findLatestDirInPaths(cls, search_path_list: List[str], dir_type: str = "config") -> Optional[str]:
