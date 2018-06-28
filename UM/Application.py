@@ -199,7 +199,12 @@ class Application:
     #   This method should be re-implemented by subclasses to start the main event loop.
     #   \exception NotImplementedError
     def run(self):
-        raise NotImplementedError("Run must be implemented by application")
+        self.addCommandLineOptions()
+        self.parseCliOptions()
+        self.initialize()
+
+        self.startSplashWindowPhase()
+        self.startPostSplashWindowPhase()
 
     def getContainerRegistry(self):
         return self._container_registry

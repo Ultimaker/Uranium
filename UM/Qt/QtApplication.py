@@ -286,7 +286,7 @@ class QtApplication(QApplication, Application):
         self.recentFilesChanged.emit()
 
     def run(self) -> None:
-        pass
+        super().run()
 
     def hideMessage(self, message: Message) -> None:
         with self._message_lock:
