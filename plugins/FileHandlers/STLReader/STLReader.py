@@ -35,9 +35,10 @@ except ImportError:
     Logger.log("w", "Could not find numpy-stl, falling back to slower code.")
     # We have our own fallback code.
 
+
 class STLReader(MeshReader):
-    def __init__(self, application):
-        super(STLReader, self).__init__(application)
+    def __init__(self) -> None:
+        super().__init__()
         self._supported_extensions = [".stl"]
 
     def load_file(self, file_name, mesh_builder, _use_numpystl = False):
