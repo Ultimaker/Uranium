@@ -254,7 +254,7 @@ class Application:
     visibleMessageAdded = Signal()
 
     ##  Hide message by ID (as provided by built-in id function)
-    def hideMessageById(self, message_id: int):
+    def hideMessageById(self, message_id: int) -> None:
         # If a user and the application tries to close same message dialog simultaneously, message_id could become an empty
         # string, and then the application will raise an error when trying to do "int(message_id)".
         # So we check the message_id here.
