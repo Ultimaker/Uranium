@@ -499,9 +499,8 @@ class Resources:
         try:
             shutil.copytree(src_path, temp_dir_path)
             # if the dest_path exist, it needs to be removed first
-            if os.path.exists(dest_path):
-                shutil.rmtree(dest_path)
-            shutil.move(temp_dir_path, dest_path)
+            if not os.path.exists(dest_path):
+                shutil.move(temp_dir_path, dest_path)
         except:
             Logger.log("e", "Something occurred when copying the version folder from '%s' to '%s'", src_path, dest_path)
 
