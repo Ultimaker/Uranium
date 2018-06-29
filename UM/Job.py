@@ -21,12 +21,21 @@ class Job:
         self._running = False   # type: bool
         self._finished = False  # type: bool
         self._result = None     # type: Any
+        self._message = ""      # type: str
         self._error = None
 
     ##  Perform the actual task of this job. Should be reimplemented by subclasses.
     #   \exception NotImplementedError
     def run(self):
         raise NotImplementedError()
+
+    # Get optional message
+    def getMessage(self) -> str:
+        return self._message
+
+    # Set optional message
+    def setMessage(self, message: str) -> None:
+        self._message = message
 
     ##  Get the result of the job.
     #

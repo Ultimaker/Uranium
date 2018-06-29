@@ -72,13 +72,13 @@ msgstr "Avvertenza"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} is available!"
-msgstr ""
+msgstr "Cura {0} è disponibile!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} provides better and reliable printing experience."
-msgstr ""
+msgstr "Cura {0} fornisce un'esperienza di stampa migliore ed affidabile."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
@@ -88,7 +88,7 @@ msgstr "Download"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
 msgid "Learn more about new features"
-msgstr ""
+msgstr "Per saperne di più sulle nuove funzionalità"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
@@ -247,10 +247,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n"
-"- {profiles}\n"
-"Ripristinare i valori predefiniti in fabbrica?"
+msgstr "La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n- {profiles}\nRipristinare i valori predefiniti in fabbrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
@@ -356,9 +353,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Il plugin è stato installato.\n"
-"Riavviare l'applicazione per attivare il plugin."
+msgstr "Il plugin è stato installato.\nRiavviare l'applicazione per attivare il plugin."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
@@ -366,9 +361,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"Il plugin è stato rimosso.\n"
-"Si prega di riavviare {0} per completare la disinstallazione."
+msgstr "Il plugin è stato rimosso.\nSi prega di riavviare {0} per completare la disinstallazione."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format

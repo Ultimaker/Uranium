@@ -72,13 +72,13 @@ msgstr "Waarschuwing"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} is available!"
-msgstr ""
+msgstr "Cura {0} is beschikbaar."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} provides better and reliable printing experience."
-msgstr ""
+msgstr "Cura {0} biedt een betere en betrouwbare printervaring."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
@@ -88,7 +88,7 @@ msgstr "Downloaden"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
 msgid "Learn more about new features"
-msgstr ""
+msgstr "Meer informatie over de nieuwe functies"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
@@ -247,10 +247,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
-"- {profiles}\n"
-"Wilt u de standaardinstellingen herstellen?"
+msgstr "Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n- {profiles}\nWilt u de standaardinstellingen herstellen?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
@@ -356,9 +353,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"De invoegtoepassing is geïnstalleerd.\n"
-"Start de toepassing opnieuw om de invoegtoepassing te activeren."
+msgstr "De invoegtoepassing is geïnstalleerd.\nStart de toepassing opnieuw om de invoegtoepassing te activeren."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
@@ -366,9 +361,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"De invoegtoepassing is verwijderd.\n"
-"Start {0} opnieuw om het verwijderen te voltooien."
+msgstr "De invoegtoepassing is verwijderd.\nStart {0} opnieuw om het verwijderen te voltooien."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format

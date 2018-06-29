@@ -246,13 +246,13 @@ class Controller:
         return self._tool_operation_active
 
     ##  Request active tool. Returns None if there is no active tool
-    #   \return Tool \type{Tool} if an tool is active, None otherwise.
+    #   \return Tool if a tool is active, None otherwise.
     def getActiveTool(self) -> Optional["Tool"]:
         return self._active_tool
 
     ##  Set the current active tool.
     #   The tool can be set by name of the tool or directly passing the tool object.
-    #   \param tool \type{Tool} or \type{string}
+    #   \param tool A tool object or the name of a tool.
     def setActiveTool(self, tool: Optional[Union["Tool", str]]):
         from UM.Tool import Tool
         if self._active_tool:

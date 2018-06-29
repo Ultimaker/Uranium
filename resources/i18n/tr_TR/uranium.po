@@ -72,13 +72,13 @@ msgstr "Uyarı"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} is available!"
-msgstr ""
+msgstr "Cura {0} yayınlandı!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} provides better and reliable printing experience."
-msgstr ""
+msgstr "Cura {0} daha iyi ve daha güvenilir bir yazdırma deneyimi sunar."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
@@ -88,7 +88,7 @@ msgstr "İndir"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
 msgid "Learn more about new features"
-msgstr ""
+msgstr "Yeni özellikler hakkında daha fazla bilgi alın"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
@@ -247,10 +247,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"Yapılandırmanız bozuk görünüyor. Aşağıdaki profillerde bir sorun var gibi görünüyor:\n"
-"- {profiles}\n"
-"Fabrika varsayılanlarına sıfırlamak ister misiniz?"
+msgstr "Yapılandırmanız bozuk görünüyor. Aşağıdaki profillerde bir sorun var gibi görünüyor:\n- {profiles}\nFabrika varsayılanlarına sıfırlamak ister misiniz?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
@@ -356,9 +353,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Eklenti kurulumu yapıldı.\n"
-" Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
+msgstr "Eklenti kurulumu yapıldı.\n Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
@@ -366,9 +361,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"Eklenti kaldırıldı.\n"
-"Kaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
+msgstr "Eklenti kaldırıldı.\nKaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format

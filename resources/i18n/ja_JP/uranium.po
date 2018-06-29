@@ -73,13 +73,13 @@ msgstr "警告"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} is available!"
-msgstr ""
+msgstr "Cura {0} は利用可能！"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cura {0} provides better and reliable printing experience."
-msgstr ""
+msgstr "Cura {0} は、信頼性の高い優れた印刷体験を提供します。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
@@ -89,7 +89,7 @@ msgstr "ダウンロード"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
 msgid "Learn more about new features"
-msgstr ""
+msgstr "新機能について詳しく見る"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
@@ -248,10 +248,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
-"- {profiles}\n"
-"工場出荷状態にリセットしますか？"
+msgstr "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n- {profiles}\n工場出荷状態にリセットしますか？"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
@@ -357,9 +354,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"プラグインがインストールされました。\n"
-"アプリケーションを再起動して、プラグインをアクティベートしてください。"
+msgstr "プラグインがインストールされました。\nアプリケーションを再起動して、プラグインをアクティベートしてください。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
@@ -367,9 +362,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"プラグインが外されました。\n"
-"{0} を再起動してアンインストールを終了してください。"
+msgstr "プラグインが外されました。\n{0} を再起動してアンインストールを終了してください。"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format

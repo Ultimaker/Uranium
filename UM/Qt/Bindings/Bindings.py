@@ -120,3 +120,7 @@ class Bindings:
 
         # Additions after 3.1
         qmlRegisterType(StageModel.StageModel, "UM", 1, 4, "StageModel")
+
+    @staticmethod
+    def addRegisterType(class_type: type, qml_import_name: str, major_version: int, minor_version: int, class_name: str) -> None:
+        qmlRegisterType(class_type, qml_import_name, major_version, minor_version, class_name)

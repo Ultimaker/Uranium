@@ -72,6 +72,11 @@ class ContainerInterface:
     def hasProperty(self, key: str, property_name: str) -> bool:
         pass
 
+    ##  Get all the setting keys known to this container.
+    #   \return Set of keys.
+    def getAllKeys(self) -> Set[str]:
+        pass
+
     ##  Serialize this container to a string.
     #
     #   The serialized representation of the container can be used to write the
@@ -165,12 +170,6 @@ class DefinitionContainerInterface(ContainerInterface):
 
     def setProperty(self, key: str, property_name: str, property_value: Any, container: "ContainerInterface" = None, set_from_cache: bool = False) -> None:
         raise TypeError("Can't change properties in definition containers.")
-
-    ##  Gets all keys of settings in this container.
-    #
-    #   \return A set of all keys of settings in this container.
-    def getAllKeys(self) -> Set[str]:
-        pass
 
 
 ##  Shared interface between setting container types

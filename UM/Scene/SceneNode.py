@@ -207,7 +207,7 @@ class SceneNode:
 
     ##  Get SceneNodeDecorators by type.
     #   \param dec_type type of decorator to return.
-    def getDecorator(self, dec_type: SceneNodeDecorator) -> Optional[SceneNodeDecorator]:
+    def getDecorator(self, dec_type: type) -> Optional[SceneNodeDecorator]:
         for decorator in self._decorators:
             if type(decorator) == dec_type:
                 return decorator
@@ -222,7 +222,7 @@ class SceneNode:
 
     ##  Remove decorator by type.
     #   \param dec_type type of the decorator to remove.
-    def removeDecorator(self, dec_type: SceneNodeDecorator) -> None:
+    def removeDecorator(self, dec_type: type) -> None:
         for decorator in self._decorators:
             if type(decorator) == dec_type:
                 decorator.clear()

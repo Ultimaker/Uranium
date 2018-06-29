@@ -1,6 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import List, Optional
+
+from typing import Optional
 
 from UM.SortedList import SortedListWithKey
 from UM.View.RenderPass import RenderPass #For typing.

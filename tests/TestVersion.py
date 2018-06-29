@@ -5,7 +5,7 @@ from UM.Version import Version
 from unittest import TestCase
 
 
-class TestResources(TestCase):
+class TestVersion(TestCase):
     def test_version(self):
         self.assertTrue(Version("1.1.0") > Version("1.0.0"))
         self.assertTrue(Version("2.1.0") > Version("1.5.0"))
