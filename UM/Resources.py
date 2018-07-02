@@ -502,10 +502,7 @@ class Resources:
             if not os.path.exists(search_path):
                 continue
 
-            if check_dir_type_func(search_path):
-                latest_config_path = search_path
-                break
-
+            # Give priority to a folder with files with version number in it
             storage_dir_name_list = next(os.walk(search_path))[1]
             if storage_dir_name_list:
                 storage_dir_name_list = sorted(storage_dir_name_list, reverse=True)
@@ -526,6 +523,12 @@ class Resources:
                     break
             if latest_config_path is not None:
                 break
+
+            # If not, check if there is a non versioned data dir
+            if check_dir_type_func(search_path):
+                latest_config_path = search_path
+                break
+
         return latest_config_path
 
     @classmethod
