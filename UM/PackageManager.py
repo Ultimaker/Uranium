@@ -99,19 +99,19 @@ class PackageManager(QObject):
 
     # (for initialize) Removes all packages that have been scheduled to be removed.
     def _removeAllScheduledPackages(self) -> None:
-        remove_failures = []
+        remove_failures = set()
         for package_id in self._to_remove_package_set:
             try:
                 self._purgePackage(package_id)
                 del self._installed_package_dict[package_id]
             except:
-                remove_failures.append(package_id)
+                remove_failures.add(package_id)
 
         if remove_failures:
             message = Message(catalog.i18nc("@error:uninstall",
                                             "There were some errors uninstalling the following packages:\n{packages}".format(
                                             packages = "- " + "\n- ".join(remove_failures))),
-                              title = self._i18n_catalog.i18nc("@info:title", "Uninstalling errors"))
+                              title = catalog.i18nc("@info:title", "Uninstalling errors"))
             message.show()
 
         self._to_remove_package_set = remove_failures
@@ -333,7 +333,7 @@ class PackageManager(QObject):
                                             "There was an error uninstalling the package {package} before installing"
                                             "new version:\n{error}.\nPlease try to upgrade again later.".format(
                                             package = package_id, error = str(e))),
-                              title = self._i18n_catalog.i18nc("@info:title", "Updating error"))
+                              title = catalog.i18nc("@info:title", "Updating error"))
             message.show()
             return
 
