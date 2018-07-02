@@ -323,11 +323,6 @@ class PackageManager(QObject):
         filename = installation_package_data["filename"]
 
         package_id = package_info["package_id"]
-
-        if not os.path.exists(filename):
-            Logger.log("w", "Package [%s] file '%s' is missing, cannot install this package", package_id, filename)
-            return
-
         Logger.log("i", "Installing package [%s] from file [%s]", package_id, filename)
 
         # remove it first and then install
@@ -340,6 +335,10 @@ class PackageManager(QObject):
                                             package = package_id, error = str(e))),
                               title = self._i18n_catalog.i18nc("@info:title", "Updating error"))
             message.show()
+            return
+
+        if not os.path.exists(filename):
+            Logger.log("w", "Package [%s] file '%s' is missing, cannot install this package", package_id, filename)
             return
 
         # Install the package
