@@ -286,8 +286,8 @@ class VersionUpgradeManager:
         temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
         # src -> temp -> dest
         try:
-            shutil.copytree(src_path, temp_dir_path)
-            # if the dest_path exist, it needs to be removed first
+            shutil.copytree(src_path, temp_dir_path, ignore = shutil.ignore_patterns("*.lock"))
+            # if the dest_path exist, don't overwrite
             if not os.path.exists(dest_path):
                 shutil.move(temp_dir_path, dest_path)
         except:
