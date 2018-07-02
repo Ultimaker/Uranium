@@ -35,10 +35,15 @@ class LockFile:
     #   This is implemented using a spin loop.
     def _waitLockFileDisappear(self) -> None:
         now = time.time()
-        while os.path.exists(self._filename) and now < os.path.getmtime(self._filename) + self._timeout and now > os.path.getmtime(self._filename):
-            Logger.log("d", self._wait_msg)
-            time.sleep(0.1)
-            now = time.time()
+        try:
+            while os.path.exists(self._filename) and now < os.path.getmtime(self._filename) + self._timeout and now > os.path.getmtime(self._filename):
+                Logger.log("d", self._wait_msg)
+                time.sleep(0.1)
+                now = time.time()
+        # Sometimes the file is deleted after checking "exists" and before checking "getmtime", and in this case this
+        # function can't find the file. If the file doesn't exist, it dissapear so this can continue.
+        except FileNotFoundError:
+            pass
 
     ##  Creates the lock file on the file system.
     #
