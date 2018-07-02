@@ -12,8 +12,8 @@ from UM.Scene.SceneNode import SceneNode
 
 
 class OBJReader(MeshReader):
-    def __init__(self, application):
-        super(OBJReader, self).__init__(application)
+    def __init__(self) -> None:
+        super().__init__()
         self._supported_extensions = [".obj"]
 
     def _read(self, file_name):

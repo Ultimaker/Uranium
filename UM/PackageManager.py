@@ -10,9 +10,13 @@ import tempfile
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl
 
+from UM import i18nCatalog
 from UM.Logger import Logger
+from UM.Message import Message
 from UM.Resources import Resources
 from UM.Version import Version
+
+catalog = i18nCatalog("uranium")
 
 
 class PackageManager(QObject):
@@ -95,10 +99,22 @@ class PackageManager(QObject):
 
     # (for initialize) Removes all packages that have been scheduled to be removed.
     def _removeAllScheduledPackages(self) -> None:
+        remove_failures = set()
         for package_id in self._to_remove_package_set:
-            self._purgePackage(package_id)
-            del self._installed_package_dict[package_id]
-        self._to_remove_package_set.clear()
+            try:
+                self._purgePackage(package_id)
+                del self._installed_package_dict[package_id]
+            except:
+                remove_failures.add(package_id)
+
+        if remove_failures:
+            message = Message(catalog.i18nc("@error:uninstall",
+                                            "There were some errors uninstalling the following packages:\n{packages}".format(
+                                            packages = "- " + "\n- ".join(remove_failures))),
+                              title = catalog.i18nc("@info:title", "Uninstalling errors"))
+            message.show()
+
+        self._to_remove_package_set = remove_failures
         self._saveManagementData()
 
     # (for initialize) Installs all packages that have been scheduled to be installed.
@@ -307,15 +323,23 @@ class PackageManager(QObject):
         filename = installation_package_data["filename"]
 
         package_id = package_info["package_id"]
+        Logger.log("i", "Installing package [%s] from file [%s]", package_id, filename)
+
+        # remove it first and then install
+        try:
+            self._purgePackage(package_id)
+        except Exception as e:
+            message = Message(catalog.i18nc("@error:update",
+                                            "There was an error uninstalling the package {package} before installing"
+                                            "new version:\n{error}.\nPlease try to upgrade again later.".format(
+                                            package = package_id, error = str(e))),
+                              title = catalog.i18nc("@info:title", "Updating error"))
+            message.show()
+            return
 
         if not os.path.exists(filename):
             Logger.log("w", "Package [%s] file '%s' is missing, cannot install this package", package_id, filename)
             return
-
-        Logger.log("i", "Installing package [%s] from file [%s]", package_id, filename)
-
-        # remove it first and then install
-        self._purgePackage(package_id)
 
         # Install the package
         with zipfile.ZipFile(filename, "r") as archive:

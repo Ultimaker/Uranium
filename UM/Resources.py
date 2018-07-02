@@ -497,11 +497,10 @@ class Resources:
         temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
         # src -> temp -> dest
         try:
-            shutil.copytree(src_path, temp_dir_path, ignore=shutil.ignore_patterns("*.log", "old"))
+            shutil.copytree(src_path, temp_dir_path, ignore = shutil.ignore_patterns("*.lock", "*.log", "old"))
             # if the dest_path exist, it needs to be removed first
-            if os.path.exists(dest_path):
-                shutil.rmtree(dest_path)
-            shutil.move(temp_dir_path, dest_path)
+            if not os.path.exists(dest_path):
+                shutil.move(temp_dir_path, dest_path)
         except:
             Logger.log("e", "Something occurred when copying the version folder from '%s' to '%s'", src_path, dest_path)
 
