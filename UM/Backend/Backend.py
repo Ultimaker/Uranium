@@ -232,7 +232,9 @@ class Backend(PluginObject):
         if Platform.isWindows():
             # On Windows, the Protobuf DiskSourceTree does stupid things with paths.
             # So convert to forward slashes here so it finds the proto file properly.
-            protocol_file = protocol_file.replace("\\", "/")
+            # Using sys.getfilesystemencoding() avoid the application crashing if it is
+            # installed on a path with non-ascii characters GitHub issue #3907
+            protocol_file = protocol_file.replace("\\", "/").encode(sys.getfilesystemencoding())
 
         if not self._socket.registerAllMessageTypes(protocol_file):
             Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
