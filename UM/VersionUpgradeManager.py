@@ -4,6 +4,7 @@
 import collections  # For deque, for breadth-first search and to track tasks, and namedtuple.
 import os  # To get the configuration file names and to rename files.
 import traceback
+import ntpath
 from typing import Any, Dict, Callable, Iterator, List, Optional, Set, Tuple
 
 import UM.Message  # To show the "upgrade succeeded" message.
@@ -81,6 +82,15 @@ class VersionUpgradeManager:
 
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
+
+        # Files that should not be checked, such as log files
+        self._ignored_files = ["uranium.lock", "plugins.json"]
+
+    ##  Registers a file to be ignored by version upgrade checks (eg log files).
+    #   \param file_name The base file name of the file to be ignored.
+
+    def registerIgnoredFile(self, file_name: str) -> None:
+        self._ignored_files.append(file_name)
 
     ##  Gets the paths where a specified type of file should be stored.
     #
@@ -258,6 +268,8 @@ class VersionUpgradeManager:
                         for configuration_file in self._getFilesInDirectory(path):
                             # Get file version. Only add this upgrade task if the current file version matches with
                             # the defined version that scans through this folder.
+                            if ntpath.basename(configuration_file) in self._ignored_files:
+                                continue
                             try:
                                 with open(os.path.join(path, configuration_file), "r", encoding = "utf-8") as f:
                                     current_version = self._get_version_functions[old_configuration_type](f.read())
