@@ -262,13 +262,15 @@ class VersionUpgradeManager:
                                 with open(os.path.join(path, configuration_file), "r", encoding = "utf-8") as f:
                                     current_version = self._get_version_functions[old_configuration_type](f.read())
                                     if current_version != src_version:
-                                        Logger.log("i", "Config file [%s] is of version [%s], which is different from the defined version [%s], no upgrade task for it from type [%s].",
+                                        Logger.log("d", "Config file [%s] is of version [%s], which is different from the defined version [%s], no upgrade task for it from type [%s].",
                                                    configuration_file, current_version, src_version, old_configuration_type)
                                         continue
                             except:
                                 Logger.log("w", "Failed to get file version: %s, skip it", configuration_file)
                                 continue
 
+                            Logger.log("i", "Create upgrade task for configuration file [%s] with type [%s] and source version [%s]",
+                                       configuration_file, old_configuration_type, current_version)
                             yield UpgradeTask(storage_path = path, file_name = configuration_file,
                                               configuration_type = old_configuration_type)
 
