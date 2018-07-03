@@ -66,7 +66,7 @@ class VersionUpgradeManager:
         super().__init__()
 
         self._application = application
-        self._version_upgrades = {} #For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
+        self._version_upgrades = {} # type: Dict[Tuple[str, int], Set[Tuple[str, int, Callable[[str, List[str]], Optional[Tuple[List[str], List[str]]]]]]]   # For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
 
         # For each config type, gives a function with which to get the version number from those files.
         self._get_version_functions = {}  # type: Dict[str, Callable[[str], int]]
@@ -75,16 +75,16 @@ class VersionUpgradeManager:
         self._storage_paths = {}  # type: Dict[str, Dict[int, Set[str]]]
 
         # To know which preference versions and types to upgrade to.
-        self._current_versions = {}
+        self._current_versions = {} # type: Dict[Tuple[str, int], Any]
 
-        self._upgrade_tasks = collections.deque()  # The files that we still have to upgrade.
+        self._upgrade_tasks = collections.deque()  # type: collections.deque  # The files that we still have to upgrade.
         self._upgrade_routes = {}  # type: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, List[str]], Optional[Tuple[List[str], List[str]]]]]] #How to upgrade from one version to another. Needs to be pre-computed after all version upgrade plug-ins are registered.
 
-        self._registry = PluginRegistry.getInstance()
+        self._registry = PluginRegistry.getInstance()   # type: PluginRegistry
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
         # Files that should not be checked, such as log files
-        self._ignored_files = ["uranium.lock", "plugins.json"]
+        self._ignored_files = ["uranium.lock", "plugins.json"]  # type: List[str]
 
     ##  Registers a file to be ignored by version upgrade checks (eg log files).
     #   \param file_name The base file name of the file to be ignored.
@@ -111,7 +111,7 @@ class VersionUpgradeManager:
     def setCurrentVersions(self, current_versions) -> None:
         self._current_versions = current_versions
 
-    def registerCurrentVersion(self, version_info: str, type_info: Any) -> None:
+    def registerCurrentVersion(self, version_info: Tuple[str, int], type_info: Any) -> None:
         if version_info in self._current_versions:
             Logger.log("d", "Overwriting current version info: %s", repr(version_info))
         self._current_versions[version_info] = type_info
@@ -416,8 +416,8 @@ class VersionUpgradeManager:
 
         return file_name
 
-    __instance = None   # type: Optional["VersionUpgradeManager"]
+    __instance = None   # type: VersionUpgradeManager
 
     @classmethod
-    def getInstance(cls, *args, **kwargs) -> Optional["VersionUpgradeManager"]:
+    def getInstance(cls, *args, **kwargs) -> "VersionUpgradeManager":
         return cls.__instance
