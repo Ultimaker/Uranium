@@ -67,7 +67,7 @@ class QtApplication(QApplication, Application):
     pluginsLoaded = Signal()
     applicationRunning = Signal()
     
-    def __init__(self, tray_icon_name: Optional[str] = None, **kwargs) -> None:
+    def __init__(self, tray_icon_name: str = None, **kwargs) -> None:
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
@@ -94,7 +94,7 @@ class QtApplication(QApplication, Application):
         self._main_qml = "main.qml" #type: str
         self._qml_engine = None #type: Optional[QQmlApplicationEngine]
         self._main_window = None #type: Optional[MainWindow]
-        self._tray_icon_name = tray_icon_name #type: str
+        self._tray_icon_name = tray_icon_name #type: Optional[str]
         self._tray_icon = None #type: Optional[str]
         self._tray_icon_widget = None #type: Optional[QSystemTrayIcon]
         self._theme = None #type: Optional[Theme]
@@ -307,7 +307,7 @@ class QtApplication(QApplication, Application):
         self.showToastMessage(self._app_name, message.getText())
 
     def _onMainWindowStateChanged(self, window_state: int) -> None:
-        if self._tray_icon:
+        if self._tray_icon and self._tray_icon_widget:
             visible = window_state == Qt.WindowMinimized
             self._tray_icon_widget.setVisible(visible)
 
@@ -330,21 +330,23 @@ class QtApplication(QApplication, Application):
         # only reload when it is a release build
         if not self.getIsDebugMode():
             return
-        self._qml_engine.clearComponentCache()
-        self._theme.reload()
-        self._qml_engine.load(self._main_qml)
-        # Hide the window. For some reason we can't close it yet. This needs to be done in the onComponentCompleted.
-        for obj in self._qml_engine.rootObjects():
-            if obj != self._qml_engine.rootObjects()[-1]:
-                obj.hide()
+        if self._qml_engine and self._theme:
+            self._qml_engine.clearComponentCache()
+            self._theme.reload()
+            self._qml_engine.load(self._main_qml)
+            # Hide the window. For some reason we can't close it yet. This needs to be done in the onComponentCompleted.
+            for obj in self._qml_engine.rootObjects():
+                if obj != self._qml_engine.rootObjects()[-1]:
+                    obj.hide()
 
     @pyqtSlot()
     def purgeWindows(self) -> None:
         # Close all root objects except the last one.
         # Should only be called by onComponentCompleted of the mainWindow.
-        for obj in self._qml_engine.rootObjects():
-            if obj != self._qml_engine.rootObjects()[-1]:
-                obj.close()
+        if self._qml_engine:
+            for obj in self._qml_engine.rootObjects():
+                if obj != self._qml_engine.rootObjects()[-1]:
+                    obj.close()
 
     @pyqtSlot("QList<QQmlError>")
     def __onQmlWarning(self, warnings: List[QQmlError]) -> None:
@@ -367,7 +369,7 @@ class QtApplication(QApplication, Application):
 
     mainWindowChanged = Signal()
 
-    def getMainWindow(self) -> MainWindow:
+    def getMainWindow(self) -> Optional[MainWindow]:
         return self._main_window
 
     def setMainWindow(self, window: MainWindow) -> None:

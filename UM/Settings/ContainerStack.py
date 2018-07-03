@@ -68,7 +68,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             "version": self.Version,
             "container_type": ContainerStack
         } #type: Dict[str, Any]
-        self._containers = []  # type: List[Union[InstanceContainer, DefinitionContainer]]
+        self._containers = []  # type: List[ContainerInterface]
         self._next_stack = None  # type: Optional[ContainerStack]
         self._read_only = False  # type: bool
         self._dirty = True  # type: bool
