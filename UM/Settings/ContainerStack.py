@@ -4,6 +4,7 @@
 import configparser
 import io
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
+from typing import Union
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
@@ -16,6 +17,7 @@ from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.ContainerFormatError import ContainerFormatError
+from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
@@ -66,7 +68,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             "version": self.Version,
             "container_type": ContainerStack
         } #type: Dict[str, Any]
-        self._containers = []  # type: List[ContainerInterface]
+        self._containers = []  # type: List[Union[InstanceContainer, DefinitionContainer]]
         self._next_stack = None  # type: Optional[ContainerStack]
         self._read_only = False  # type: bool
         self._dirty = True  # type: bool
@@ -354,7 +356,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
-    def deserialize(self, serialized, file_name = None) -> str:
+    def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         # update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
