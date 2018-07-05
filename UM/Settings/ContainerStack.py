@@ -728,6 +728,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._property_changes = {}
         self._emit_property_changed_queued = False
 
+    def __str__(self) -> str:
+        return "%s(%s)" % (type(self).__name__, self.getId())
+
 _containerRegistry = ContainerRegistryInterface() # type: ContainerRegistryInterface
 
 def setContainerRegistry(registry: ContainerRegistryInterface) -> None:

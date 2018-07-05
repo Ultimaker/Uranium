@@ -7,12 +7,14 @@ import os
 import shutil
 import zipfile
 import tempfile
+import urllib.parse  # For interpreting escape characters using unquote_plus.
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl
 
 from UM import i18nCatalog
 from UM.Logger import Logger
 from UM.Message import Message
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType  # To get the type of container we're loading.
 from UM.Resources import Resources
 from UM.Version import Version
 
@@ -395,3 +397,51 @@ class PackageManager(QObject):
                                             file_info.filename)
                         license_string = None
         return license_string
+
+    ##  Find the package files by package_id by looking at the installed folder
+    @staticmethod
+    def packageFiles(package_id):
+        data_storage_dir = os.path.abspath(Resources.getDataStoragePath())
+
+        os_walk = []
+        dirs_to_check = []
+        result = []  # 2-tuples of (dir, file_names)
+        for root_path, dir_names, file_names in os.walk(data_storage_dir):
+            os_walk.append((root_path, dir_names, file_names))
+            for dir_name in dir_names:
+                package_dir = os.path.join(root_path, dir_name, package_id)
+                if os.path.exists(package_dir):
+                    dirs_to_check.append(package_dir)
+
+        for root_path, dir_names, file_names in os_walk:
+            for dir_to_check in dirs_to_check:
+                if root_path.startswith(dir_to_check):
+                    result.append((root_path, file_names))
+
+        return result
+
+    ##  Return container ids for contents found with package_id
+    @staticmethod
+    def packageContainerIds(package_id: str):
+        package_files = PackageManager.packageFiles(package_id)
+        ids = []
+        for root_path, file_names in package_files:
+            for file_name in file_names:
+                path = os.path.join(root_path, file_name)
+                id = PackageManager.pathToId(path)
+                if id:
+                    ids.append(id)
+        return ids
+
+    ##  Try to return Id for given path by looking at its existence in the mimetype database
+    @staticmethod
+    def pathToId(path: str) -> str:
+        mime = None
+        try:
+            mime = MimeTypeDatabase.getMimeTypeForFile(path)
+        except MimeTypeDatabase.MimeTypeNotFoundError:
+            pass
+        if mime:
+            return urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(path)))
+        else:
+            return ""
