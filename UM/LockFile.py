@@ -29,7 +29,7 @@ class LockFile:
         self._filename = filename
         self._wait_msg = wait_msg
         self._timeout = timeout
-        self._pidfile = None
+        self._pidfile = -1 #type: int
 
     ##  Creates the lock file on the file system, with exclusive use.
     #
