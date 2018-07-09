@@ -3,7 +3,7 @@
 
 import os
 import time  # For timing lock file
-from typing import Any
+from typing import Any, Optional
 
 from UM.Logger import Logger
 
@@ -29,7 +29,7 @@ class LockFile:
         self._filename = filename
         self._wait_msg = wait_msg
         self._timeout = timeout
-        self._pidfile = None
+        self._pidfile = None #type: Optional[int]
 
     ##  Creates the lock file on the file system, with exclusive use.
     #
