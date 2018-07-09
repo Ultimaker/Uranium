@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 import json
 import os
 import shutil
@@ -407,7 +407,7 @@ class PackageManager(QObject):
 
     ##  Find the package files by package_id by looking at the installed folder
     @staticmethod
-    def packageFiles(package_id):
+    def getPackageFiles(package_id) -> List[Tuple[str, List[str]]]:
         data_storage_dir = os.path.abspath(Resources.getDataStoragePath())
 
         os_walk = []
@@ -429,20 +429,20 @@ class PackageManager(QObject):
 
     ##  Return container ids for contents found with package_id
     @staticmethod
-    def packageContainerIds(package_id: str):
-        package_files = PackageManager.packageFiles(package_id)
+    def getPackageContainerIds(package_id: str) -> List[str]:
+        package_files = PackageManager.getPackageFiles(package_id)
         ids = []
         for root_path, file_names in package_files:
             for file_name in file_names:
                 path = os.path.join(root_path, file_name)
-                id = PackageManager.pathToId(path)
+                id = PackageManager.convertPathToId(path)
                 if id:
                     ids.append(id)
         return ids
 
     ##  Try to return Id for given path by looking at its existence in the mimetype database
     @staticmethod
-    def pathToId(path: str) -> str:
+    def convertPathToId(path: str) -> str:
         mime = None
         try:
             mime = MimeTypeDatabase.getMimeTypeForFile(path)
