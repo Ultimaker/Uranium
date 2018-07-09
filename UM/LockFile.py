@@ -49,6 +49,9 @@ class LockFile:
     ##  Close and delete the lock file from the file system once the current thread finish what it was doing.
     def _deleteLockFile(self) -> None:
         try:
+            if self._pidfile is None:
+                Logger.log("e", "Could not determine process ID file.")
+                return
             os.close(self._pidfile)
             os.remove(self._filename)
         except:
