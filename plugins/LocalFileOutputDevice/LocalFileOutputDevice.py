@@ -61,9 +61,6 @@ class LocalFileOutputDevice(OutputDevice):
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
         dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
-        # Native File dialog on OS X has issues with double/multiple extension files.
-        if Platform.isOSX():
-            dialog.setOption(QFileDialog.DontUseNativeDialog)
         if sys.platform == "linux" and "KDE_FULL_SESSION" in os.environ:
             dialog.setOption(QFileDialog.DontUseNativeDialog)
 

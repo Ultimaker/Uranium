@@ -3,7 +3,7 @@
 
 import os
 import time  # For timing lock file
-from typing import Any
+from typing import Any, Optional
 
 from UM.Logger import Logger
 
@@ -29,7 +29,7 @@ class LockFile:
         self._filename = filename
         self._wait_msg = wait_msg
         self._timeout = timeout
-        self._pidfile = None
+        self._pidfile = None #type: Optional[int]
 
     ##  Creates the lock file on the file system, with exclusive use.
     #
@@ -49,6 +49,9 @@ class LockFile:
     ##  Close and delete the lock file from the file system once the current thread finish what it was doing.
     def _deleteLockFile(self) -> None:
         try:
+            if self._pidfile is None:
+                Logger.log("e", "Could not determine process ID file.")
+                return
             os.close(self._pidfile)
             os.remove(self._filename)
         except:
