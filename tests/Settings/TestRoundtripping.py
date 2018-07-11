@@ -71,7 +71,7 @@ def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
     instance_container = InstanceContainer("test_container")
     instance_container.setName("Test Instance Container")
     instance_container.setDefinition("inherits")
-    instance_container.addMetaDataEntry("test", "test")
+    instance_container.setMetaDataEntry("test", "test")
     instance_container.setProperty("test_setting_1", "value", 20)
 
     temp_file = tmpdir.join("instance_container_test")
@@ -99,7 +99,7 @@ def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
 
     container_stack = ContainerStack("test_stack")
     container_stack.setName("Test Container Stack")
-    container_stack.addMetaDataEntry("test", "test")
+    container_stack.setMetaDataEntry("test", "test")
     container_stack.addContainer(definition)
     container_stack.addContainer(instances)
 
