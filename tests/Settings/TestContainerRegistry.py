@@ -1,9 +1,10 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import os.path
-import pytest
+import os
 from typing import Optional
+
+import pytest
 
 import UM.PluginObject
 from UM.Resources import Resources
@@ -75,9 +76,12 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     def setPath(self, path):
         pass
 
-    ##  Gets the value of a property of a container item.
-    #
-    #   This method is not implemented in the mock container.
+    def getAllKeys(self):
+        pass
+
+    def setProperty(self, key, property_name, property_value, container = None, set_from_cache = False):
+        pass
+
     def getProperty(self, key, property_name, context = None):
         raise NotImplementedError()
 
