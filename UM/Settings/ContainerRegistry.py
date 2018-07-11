@@ -7,7 +7,7 @@ import os
 import pickle #For serializing/deserializing Python classes to binary files
 import re #For finding containers with asterisks in the constraints and for detecting backup files.
 import time
-from typing import Any, cast, Dict, List, Optional, Set, TYPE_CHECKING
+from typing import Any, cast, Dict, List, Optional, Set, Type, TYPE_CHECKING
 
 import UM.Dictionary
 import UM.FlameProfiler
@@ -662,7 +662,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         "application/x-uranium-instancecontainer": InstanceContainer,
         "application/x-uranium-containerstack": ContainerStack,
         "application/x-uranium-extruderstack": ContainerStack
-    }
+    }  # type: Dict[str, Type[ContainerInterface]]
 
     __instance = None  # type: ContainerRegistry
 
