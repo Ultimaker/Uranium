@@ -17,6 +17,10 @@ if TYPE_CHECKING:
 #
 @UM.Decorators.interface
 class ContainerInterface:
+
+    def __init__(self, *args, **kwargs):
+        pass
+
     ##  Get the ID of the container.
     #
     #   The ID should be unique, machine readable and machine writable. It is

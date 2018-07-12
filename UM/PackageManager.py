@@ -375,15 +375,20 @@ class PackageManager(QObject):
 
     # Gets package information from the given file.
     def getPackageInfo(self, filename: str) -> Dict[str, Any]:
+        package_json = {}  # type: Dict[str, Any]
         with zipfile.ZipFile(filename) as archive:
-            try:
-                # All information is in package.json
-                with archive.open("package.json") as f:
-                    package_info_dict = json.loads(f.read().decode("utf-8"))
-                    return package_info_dict
-            except Exception as e:
-                Logger.logException("w", "Could not get package information from file '%s': %s" % (filename, e))
-                return {}
+            # Go through all the files and use the first successful read as the result
+            for file_info in archive.infolist():
+                if file_info.filename.endswith("package.json"):
+                    Logger.log("d", "Found potential package.json file '%s'", file_info.filename)
+                    try:
+                        with archive.open(file_info.filename, "r") as f:
+                            package_json = json.loads(f.read().decode("utf-8"))
+                        break
+                    except:
+                        Logger.logException("e", "Failed to load potential package.json file '%s' as text file.",
+                                            file_info.filename)
+        return package_json
 
     # Gets the license file content if present in the given package file.
     # Returns None if there is no license file found.
