@@ -50,7 +50,7 @@ def container_registry(application):
     empty_container = ContainerRegistry.getInstance().getEmptyInstanceContainer()
     empty_definition_changes_container = empty_container
     empty_definition_changes_container.setMetaDataEntry("id", "empty_definition_changes")
-    empty_definition_changes_container.addMetaDataEntry("type", "definition_changes")
+    empty_definition_changes_container.setMetaDataEntry("type", "definition_changes")
     ContainerRegistry.getInstance().addContainer(empty_definition_changes_container)
 
     ContainerRegistry.getInstance().load()

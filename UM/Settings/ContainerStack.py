@@ -163,21 +163,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         else:
             return value
 
-    def addMetaDataEntry(self, key: str, value: Any) -> None:
-        if key not in self._metadata:
-            self._dirty = True
-            self._metadata[key] = value
-            self.metaDataChanged.emit(self)
-        else:
-            Logger.log("w", "Meta data with key %s was already added.", key)
-
     def setMetaDataEntry(self, key: str, value: Any) -> None:
-        if key in self._metadata:
-            self._dirty = True
+        if key not in self._metadata or self._metadata[key] != value:
             self._metadata[key] = value
+            self._dirty = True
             self.metaDataChanged.emit(self)
-        else:
-            Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
     def removeMetaDataEntry(self, key: str) -> None:
         if key in self._metadata:
@@ -727,6 +717,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         self._property_changes = {}
         self._emit_property_changed_queued = False
+
+    def __str__(self) -> str:
+        return "%s(%s)" % (type(self).__name__, self.getId())
 
 _containerRegistry = ContainerRegistryInterface() # type: ContainerRegistryInterface
 
