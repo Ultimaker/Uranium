@@ -189,6 +189,8 @@ class Application:
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
+        self.change_log_url = "https://github.com/Ultimaker/Uranium" #Where to find a more detailed description of the recent updates.
+
     def startSplashWindowPhase(self) -> None:
         pass
 
