@@ -16,12 +16,8 @@ from UM.Message import Message
 
 from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice import OutputDeviceError
-from UM.Platform import Platform
 
 from UM.i18n import i18nCatalog
-
-# HACK: This class tries to fix double file extensions problems on Mac OS X with the FileDialog.
-from .NonNativeFileDialog import NonNativeFileDialog
 
 catalog = i18nCatalog("uranium")
 
@@ -52,7 +48,7 @@ class LocalFileOutputDevice(OutputDevice):
             raise OutputDeviceError.DeviceBusyError()
 
         # Set up and display file dialog
-        dialog = NonNativeFileDialog()
+        dialog = QFileDialog()
 
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
