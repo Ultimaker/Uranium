@@ -119,3 +119,11 @@ class Duration(QObject):
             return "%02d:%02d:%02d" % (self._days * 24 + self._hours, self._minutes, self._seconds)
 
         return ""
+
+    ##  Get an integer representation of this duration.
+    #
+    #   The integer contains the number of seconds in the duration. Convert it
+    #   back to a Duration instance by providing the number of seconds to the
+    #   constructor.
+    def __int__(self):
+        return self._days * 3600 * 24 + self._hours * 3600 + self._minutes * 60 + self._seconds
