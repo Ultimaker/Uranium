@@ -227,6 +227,10 @@ class RenderBatch():
         transformation = item["transformation"]
         mesh = item["mesh"]
 
+        # Do not render if there's no vertex (empty mesh)
+        if mesh.getVertexCount() == 0:
+            return
+
         normal_matrix = None
         if mesh.hasNormals():
             normal_matrix = copy.deepcopy(transformation)
