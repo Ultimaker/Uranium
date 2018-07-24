@@ -263,7 +263,7 @@ class QtApplication(QApplication, Application):
     recentFilesChanged = pyqtSignal()
 
     @pyqtProperty("QVariantList", notify=recentFilesChanged)
-    def recentFiles(self) -> List[str]:
+    def recentFiles(self) -> List[QUrl]:
         return self._recent_files
 
     def _onJobFinished(self, job: Job) -> None:
