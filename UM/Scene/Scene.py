@@ -6,7 +6,7 @@ import os.path  # To watch files for changes.
 import threading
 from typing import Optional, List
 
-from PyQt5.QtCore import QFileSystemWatcher, QFileInfo  # To watch files for changes.
+from PyQt5.QtCore import QFileSystemWatcher  # To watch files for changes.
 
 from UM.Decorators import deprecated
 from UM.Logger import Logger
@@ -161,13 +161,14 @@ class Scene:
 
         #Multiple nodes may be loaded from the same file at different stages. Reload them all.
         from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator #To find which nodes to reload when files have changed.
-        modified_nodes = (node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path) #type: ignore
+        modified_nodes = [node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path] #type: ignore
 
         if modified_nodes:
             message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.basename(file_path)),
                               title = i18n_catalog.i18nc("@info:title", "File has been modified"))
             message.addAction("reload", i18n_catalog.i18nc("@action:button", "Reload"), icon = None, description = i18n_catalog.i18nc("@action:description", "This will trigger the modified files to reload from disk."))
-            message.actionTriggered.connect(functools.partialmethod(self._reloadNodes, modified_nodes))
+            self._reload_callback = functools.partial(self._reloadNodes, modified_nodes)
+            message.actionTriggered.connect(self._reload_callback)
             message.show()
 
     ##  Reloads a list of nodes after the user pressed the "Reload" button.
@@ -184,7 +185,8 @@ class Scene:
                 if not filename or not os.path.isfile(filename): #File doesn't exist any more.
                     continue
                 job = ReadMeshJob(filename)
-                job.finished.connect(functools.partialmethod(self._reloadJobFinished, node))
+                self._reload_finished_callback = functools.partial(self._reloadJobFinished, node)
+                job.finished.connect(self._reload_finished_callback)
                 job.start()
 
     ##  Triggered when reloading has finished.
