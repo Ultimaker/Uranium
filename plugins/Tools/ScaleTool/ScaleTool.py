@@ -257,7 +257,9 @@ class ScaleTool(Tool):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
             obj = Selection.getSelectedObject(0)
-            return abs(round(float(self.getObjectWidth() / obj.getMeshData().getExtents().width), 4))
+            mesh = obj.getMeshData()
+            if mesh is not None:
+                return abs(round(float(self.getObjectWidth() / mesh.getExtents().width), 4))
 
         return 1.0
 
@@ -268,7 +270,9 @@ class ScaleTool(Tool):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
             obj = Selection.getSelectedObject(0)
-            return abs(round(float(self.getObjectHeight() / obj.getMeshData().getExtents().height), 4))
+            mesh = obj.getMeshData()
+            if mesh is not None:
+                return abs(round(float(self.getObjectHeight() / mesh.getExtents().height), 4))
 
         return 1.0
 
@@ -279,7 +283,9 @@ class ScaleTool(Tool):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
             obj = Selection.getSelectedObject(0)
-            return abs(round(float(self.getObjectDepth() / obj.getMeshData().getExtents().depth), 4))
+            mesh = obj.getMeshData()
+            if mesh is not None:
+                return abs(round(float(self.getObjectDepth() / mesh.getExtents().depth), 4))
 
         return 1.0
 
