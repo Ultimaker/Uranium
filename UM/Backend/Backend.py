@@ -1,23 +1,23 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from enum import IntEnum
+import struct
+import subprocess
+import sys
+import threading
+from time import sleep
+from typing import Any, Dict, Optional
 
 from UM.Backend.SignalSocket import SignalSocket
-from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
-from UM.Application import Application
+import UM.Application
 from UM.PluginObject import PluginObject
 from UM.Platform import Platform
 
 import Arcus
 
-import struct
-import subprocess
-import threading
-import sys
-from time import sleep
 
 ##  The current processing state of the backend.
 class BackendState(IntEnum):
@@ -41,11 +41,11 @@ class Backend(PluginObject):
 
         self._socket = None
         self._port = 49674
-        self._process = None
+        self._process = None # type: Optional[subprocess.Popen]
         self._backend_log = []
         self._backend_log_max_lines = None
 
-        Application.getInstance().callLater(self._createSocket)
+        UM.Application.Application.getInstance().callLater(self._createSocket)
 
     processingProgress = Signal()
     backendStateChange = Signal()
@@ -128,11 +128,11 @@ class Backend(PluginObject):
     
     ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
-        return [Preferences.getInstance().getValue("backend/location"), "--port", str(self._socket.getPort())]
+        return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
 
     ##  Start the (external) backend process.
-    def _runEngineProcess(self, command_list):
-        kwargs = {}
+    def _runEngineProcess(self, command_list) -> Optional[subprocess.Popen]:
+        kwargs = {} #type: Dict[str, Any]
         if sys.platform == "win32":
             su = subprocess.STARTUPINFO()
             su.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -145,6 +145,7 @@ class Backend(PluginObject):
             Logger.log("e", "Couldn't start back-end: No permission to execute process.")
         except FileNotFoundError:
             Logger.logException("e", "Unable to find backend executable: %s", command_list[0])
+        return None
 
     def _storeOutputToLogThread(self, handle):
         while True:
@@ -165,7 +166,7 @@ class Backend(PluginObject):
     def _onSocketStateChanged(self, state):
         self._logSocketState(state)
         if state == Arcus.SocketState.Listening:
-            if not Application.getInstance().getCommandLineOption("external-backend", False):
+            if not UM.Application.Application.getInstance().getUseExternalBackend():
                 self.startEngine()
         elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
@@ -233,13 +234,14 @@ class Backend(PluginObject):
         if Platform.isWindows():
             # On Windows, the Protobuf DiskSourceTree does stupid things with paths.
             # So convert to forward slashes here so it finds the proto file properly.
-            protocol_file = protocol_file.replace("\\", "/")
+            # Using sys.getfilesystemencoding() avoid the application crashing if it is
+            # installed on a path with non-ascii characters GitHub issue #3907
+            protocol_file = protocol_file.replace("\\", "/").encode(sys.getfilesystemencoding())
 
         if not self._socket.registerAllMessageTypes(protocol_file):
             Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
 
-        if Application.getInstance().getCommandLineOption("external-backend", False):
+        if UM.Application.Application.getInstance().getUseExternalBackend():
             Logger.log("i", "Listening for backend connections on %s", self._port)
 
         self._socket.listen("127.0.0.1", self._port)
-

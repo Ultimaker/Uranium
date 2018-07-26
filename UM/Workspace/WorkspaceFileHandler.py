@@ -8,25 +8,29 @@ from UM.Logger import Logger
 from UM.FileHandler.FileHandler import FileHandler
 from UM.FileHandler.FileReader import FileReader #For typing.
 from UM.FileHandler.ReadFileJob import ReadFileJob #For typing.
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from UM.Qt.QtApplication import QtApplication
 
 
 ##  Central class for reading and writing workspaces.
 #   This class is created by Application and handles reading and writing workspace files.
 class WorkspaceFileHandler(FileHandler):
-    def __init__(self, writer_type: str = "workspace_writer", reader_type: str = "workspace_reader", parent: QObject = None) -> None:
-        super().__init__(writer_type, reader_type, parent)
+
+    def __init__(self, application: "QtApplication", writer_type: str = "workspace_writer", reader_type: str = "workspace_reader", parent: QObject = None) -> None:
+        super().__init__(application, writer_type, reader_type, parent)
         self.workspace_reader = None #type: Optional[FileReader]
 
     def readerRead(self, reader: FileReader, file_name: str, **kwargs) -> Optional[str]:
         self.workspace_reader = reader
+        results = None
         try:
             results = reader.read(file_name)
-            return results
         except:
-            Logger.logException("e", "An exception occured while loading workspace.")
+            Logger.logException("e", "An exception occurred while loading workspace.")
+            Logger.log("w", "Unable to load workspace %s", file_name)
 
-        Logger.log("w", "Unable to load workspace %s", file_name)
-        return None
+        return results
 
     def _readLocalFile(self, file: QUrl) -> None:
         from UM.FileHandler.ReadFileJob import ReadFileJob

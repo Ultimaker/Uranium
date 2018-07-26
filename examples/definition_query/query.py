@@ -33,7 +33,7 @@ SettingDefinition.addSupportedProperty("resolve", DefinitionPropertyType.Functio
 SettingDefinition.addSettingType("extruder", None, str, Validator)
 
 definition = DefinitionContainer(os.path.basename(file_path))
-with open(file_path) as f:
+with open(file_path, encoding = "utf-8") as f:
     definition.deserialize(f.read())
 
 query = json.loads(sys.argv[2])

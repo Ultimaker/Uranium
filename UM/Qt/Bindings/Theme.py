@@ -1,20 +1,20 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
-from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase, QFontInfo
-from PyQt5.QtQml import QQmlComponent, QQmlContext
-from UM.FlameProfiler import pyqtSlot
 import json
 import os
-import os.path
 import sys
 
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
+from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase
+from PyQt5.QtQml import QQmlComponent, QQmlContext
+
+import UM.Application
+from UM.Decorators import deprecated
+from UM.FlameProfiler import pyqtSlot
 from UM.Logger import Logger
 from UM.Resources import Resources
-from UM.Preferences import Preferences
-from UM.Application import Application
-from UM.Decorators import deprecated
+
 
 class Theme(QObject):
     def __init__(self, engine, parent = None):
@@ -46,18 +46,18 @@ class Theme(QObject):
         self._path = ""
         self._icons = {}
         self._images = {}
-        Preferences.getInstance().addPreference("general/theme", Application.getInstance().default_theme)
+        application = UM.Application.Application.getInstance()
+        application.getPreferences().addPreference("general/theme", application.default_theme)
         try:
-            theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
+            theme_path = Resources.getPath(Resources.Themes, application.getPreferences().getValue("general/theme"))
             self.load(theme_path)
         except FileNotFoundError:
             Logger.log("e", "Could not find theme file, resetting to the default theme.")
 
             # cannot the current theme, so go back to the default
-            Preferences.getInstance().setValue("general/theme", Application.getInstance().default_theme)
-            theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
+            application.getPreferences().setValue("general/theme", application.default_theme)
+            theme_path = Resources.getPath(Resources.Themes, application.getPreferences().getValue("general/theme"))
             self.load(theme_path)
-
 
     @pyqtSlot(result = "QVariantList")
     def getThemes(self):
@@ -70,7 +70,7 @@ class Theme(QObject):
                     if os.path.isdir(folder) and os.path.isfile(theme_file):
                         theme_id = os.path.basename(folder)
 
-                        with open(theme_file) as f:
+                        with open(theme_file, encoding = "utf-8") as f:
                             try:
                                 data = json.load(f)
                             except json.decoder.JSONDecodeError:
@@ -168,7 +168,7 @@ class Theme(QObject):
         if path == self._path:
             return
 
-        with open(os.path.join(path, "theme.json")) as f:
+        with open(os.path.join(path, "theme.json"), encoding = "utf-8") as f:
             Logger.log("d", "Loading theme file: %s", os.path.join(path, "theme.json"))
             data = json.load(f)
 

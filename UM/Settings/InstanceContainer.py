@@ -4,7 +4,7 @@
 import configparser
 import io
 import copy
-from typing import Any, cast, Dict, List, Optional, Tuple
+from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlEngine #To take ownership of this class ourselves.
@@ -221,20 +221,6 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def getMetaDataEntry(self, entry: str, default = None) -> Any:
         return self._metadata.get(entry, default)
 
-    ##  Add a new entry to the metadata of this container.
-    #
-    #   \param key \type{str} The key of the new entry.
-    #   \param value The value of the new entry.
-    #
-    #   \note This does nothing if the key already exists.
-    def addMetaDataEntry(self, key: str, value: Any) -> None:
-        if key not in self._metadata:
-            self._metadata[key] = value
-            self._dirty = True
-            self.metaDataChanged.emit(self)
-        else:
-            Logger.log("w", "Meta data with key %s was already added.", key)
-
     ##  Set a metadata entry to a certain value.
     #
     #   \param key The key of the metadata entry to set.
@@ -242,12 +228,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #
     #   \note This does nothing if the key is not already added to the metadata.
     def setMetaDataEntry(self, key: str, value: Any) -> None:
-        if key in self._metadata:
+        if key not in self._metadata or self._metadata[key] != value:
             self._metadata[key] = value
             self._dirty = True
             self.metaDataChanged.emit(self)
-        else:
-            Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
     ##  Check if this container is dirty, that is, if it changed from deserialization.
     def isDirty(self) -> bool:
@@ -345,7 +329,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             instance.propertyChanged.connect(self.propertyChanged)
             self._instances[instance.definition.key] = instance
 
-        self._instances[key].setProperty(property_name, property_value, container)
+        # Do not emit any signal if the value is set from cache
+        self._instances[key].setProperty(property_name, property_value, container, emit_signals = not set_from_cache)
 
         if not set_from_cache:
             self.setDirty(True)
@@ -362,12 +347,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     ##  Get all the keys of the instances of this container
     #   \returns list of keys
-    def getAllKeys(self) -> List[str]:
+    def getAllKeys(self) -> Set[str]:
         keys = set(key for key in self._instances)
         if self._cached_values:
             # If we only want the keys and the actual values are still cached, just get the keys from the cache.
             keys.update(self._cached_values.keys())
-        return list(keys)
+        return keys
 
     ##  Create a new InstanceContainer with the same contents as this container
     #

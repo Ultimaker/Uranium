@@ -2,21 +2,18 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections
-import itertools
 import os.path
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
 from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
-from UM.Preferences import Preferences
-from UM.Resources import Resources
 from UM.Settings import SettingRelation
 from UM.i18n import i18nCatalog
 from UM.Application import Application
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
-from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
+from UM.Settings.SettingDefinition import SettingDefinition
 
 ##  Model that provides a flattened list of the tree of SettingDefinition objects in a DefinitionContainer
 #

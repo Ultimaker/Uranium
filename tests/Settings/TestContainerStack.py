@@ -1,9 +1,11 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import pytest
 from typing import Optional
+import os
 import uuid # For creating unique ID's for each container stack.
+
+import pytest
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.ContainerStack import ContainerStack
@@ -13,6 +15,9 @@ from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal
+from UM.Resources import Resources
+
+Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
 ##  A fake container class that implements ContainerInterface.
 #
@@ -38,6 +43,9 @@ class MockContainer(ContainerInterface):
     def getName(self):
         return "Fred"
 
+    def getAllKeys(self):
+        pass
+
     ##  Get whether the container item is stored on a read only location in the filesystem.
     #
     #   \return Always returns False
@@ -52,9 +60,6 @@ class MockContainer(ContainerInterface):
     def setPath(self, path):
         pass
 
-    ##  Returns the metadata dictionary.
-    #
-    #   \return A dictionary containing metadata for this container stack.
     def getMetaData(self):
         return self._metadata
 
@@ -69,11 +74,9 @@ class MockContainer(ContainerInterface):
             return self._metadata["entry"]
         return default
 
-    ##  Gets the value of a container item property.
-    #
-    #   If the key doesn't exist, returns None.
-    #
-    #   \param key The key of the item to get.
+    def setProperty(self, key, property_name, property_value, container = None, set_from_cache = False):
+        pass
+
     def getProperty(self, key, property_name, context = None):
         if key in self.items:
             return self.items[key]

@@ -3,6 +3,7 @@
 
 from UM.Logger import LogOutput
 from UM.Resources import Resources
+from UM.VersionUpgradeManager import VersionUpgradeManager
 
 import logging
 import sys
@@ -18,6 +19,7 @@ class FileLogger(LogOutput):
         # location to save the log file. Instead, try and save in the settings location since
         # that should be writeable.
         self.setFileName(Resources.getStoragePath(Resources.Resources, file_name))
+        VersionUpgradeManager.getInstance().registerIgnoredFile(file_name)
 
     def setFileName(self, file_name):
         if ".log" in file_name:

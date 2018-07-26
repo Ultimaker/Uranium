@@ -4,6 +4,7 @@
 import ast
 import builtins #To check against functions that are built-in in Python.
 import math # Imported here so it can be used easily by the setting functions.
+from types import CodeType
 from typing import Any, Callable, Dict, FrozenSet, NamedTuple, Optional, Set, TYPE_CHECKING
 
 from UM.Settings.Interfaces import ContainerInterface
@@ -35,7 +36,7 @@ class SettingFunction:
         self._used_keys = frozenset()  # type: FrozenSet[str]
         self._used_values = frozenset() # type: FrozenSet[str]
 
-        self._compiled = None #type: ignore #Actually an Optional['code'] object, but Python doesn't properly expose this 'code' object via any library.
+        self._compiled = None #type: Optional[CodeType] #Actually an Optional['code'] object, but Python doesn't properly expose this 'code' object via any library.
         self._valid = False  # type: bool
 
         try:
@@ -84,9 +85,12 @@ class SettingFunction:
             g.update(context.context.get("override_operators", {}))
 
         try:
-            return eval(self._compiled, g, locals)
+            if self._compiled:
+                return eval(self._compiled, g, locals)
+            Logger.log("e", "An error ocurred evaluating the function {0}.".format(self))
+            return 0
         except Exception as e:
-            Logger.logException("d", "An exception occurred in inherit function %s", self)
+            Logger.logException("d", "An exception occurred in inherit function {0}: {1}".format(self, str(e)))
             return 0  # Settings may be used in calculations and they need a value
 
     def __eq__(self, other: object) -> bool:

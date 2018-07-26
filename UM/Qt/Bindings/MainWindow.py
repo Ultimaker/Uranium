@@ -9,14 +9,13 @@ from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
-from UM.Preferences import Preferences
 from UM.Signal import Signal, signalemitter
 
 from typing import Optional
 
 MYPY = False
 if MYPY:
-    from PyQt5.QtQuick import QQuickItem
+    pass
 
 ##  QQuickWindow subclass that provides the main window.
 @signalemitter
@@ -44,7 +43,7 @@ class MainWindow(QQuickWindow):
         self._app.getController().addInputDevice(self._mouse_device)
         self._app.getController().addInputDevice(self._key_device)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
-        self._preferences = Preferences.getInstance()
+        self._preferences = Application.getInstance().getPreferences()
 
         self._preferences.addPreference("general/window_width", 1280)
         self._preferences.addPreference("general/window_height", 720)
@@ -74,10 +73,17 @@ class MainWindow(QQuickWindow):
 
         self._viewport_rect = QRectF(0, 0, 1.0, 1.0)
 
+        self.closing.connect(self.preClosing)
+
         Application.getInstance().setMainWindow(self)
         self._fullscreen = False
 
         self._allow_resize = True
+
+    # This event is triggered before hideEvent(self, event) event and might prevent window closing if
+    # does not pass the check, for example if USB printer is printing
+    # The implementation is in Cura.qml
+    preClosing = pyqtSignal("QQuickCloseEvent*", arguments = ["close"])
 
     def setAllowResize(self, allow_resize: bool):
         if self._allow_resize != allow_resize:

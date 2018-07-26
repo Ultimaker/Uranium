@@ -142,8 +142,8 @@ class Signal:
         self.__type = type
 
         self._postpone_emit = False
-        self._postpone_thread = None    # type: threading.Thread
-        self._compress_postpone = False
+        self._postpone_thread = None    # type: Optional[threading.Thread]
+        self._compress_postpone = False # type: bool
         self._postponed_emits = None    # type: Any
 
         if _recordSignalNames():

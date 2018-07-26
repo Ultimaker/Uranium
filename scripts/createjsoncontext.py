@@ -87,7 +87,7 @@ else:
     basedir = sys.argv[2]
     outputfilename = sys.argv[3]
 
-    with open(jsonfilename, "r") as data_file:
+    with open(jsonfilename, "r", encoding = "utf-8") as data_file:
         error = False
 
         jsondatadict = json.load(data_file, object_pairs_hook=collections.OrderedDict)
@@ -98,6 +98,6 @@ else:
         processSettings(jsonfilename.replace(basedir, ""), jsondatadict["settings"])
 
     if pottxt != "":
-        with open(outputfilename, "w") as output_file:
+        with open(outputfilename, "w", encoding = "utf-8") as output_file:
             output_file.write(potheader())
             output_file.write(pottxt)

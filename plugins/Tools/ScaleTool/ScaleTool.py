@@ -256,7 +256,8 @@ class ScaleTool(Tool):
     def getScaleX(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().x), 4))
+            obj = Selection.getSelectedObject(0)
+            return abs(round(float(self.getObjectWidth() / obj.getMeshData().getExtents().width), 4))
 
         return 1.0
 
@@ -266,7 +267,8 @@ class ScaleTool(Tool):
     def getScaleY(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().y), 4))
+            obj = Selection.getSelectedObject(0)
+            return abs(round(float(self.getObjectHeight() / obj.getMeshData().getExtents().height), 4))
 
         return 1.0
 
@@ -276,7 +278,8 @@ class ScaleTool(Tool):
     def getScaleZ(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().z), 4))
+            obj = Selection.getSelectedObject(0)
+            return abs(round(float(self.getObjectDepth() / obj.getMeshData().getExtents().depth), 4))
 
         return 1.0
 
@@ -349,9 +352,9 @@ class ScaleTool(Tool):
     def setScaleX(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
-            if round(float(obj_scale.x), 4) != scale:
-                scale_factor = abs(scale / obj_scale.x)
+            obj_scale = self.getObjectWidth() / obj.getMeshData().getExtents().width
+            if round(float(obj_scale), 4) != scale:
+                scale_factor = abs(scale / obj_scale)
                 if self._non_uniform_scale:
                     scale_vector = Vector(scale_factor, 1, 1)
                 else:
@@ -369,9 +372,9 @@ class ScaleTool(Tool):
     def setScaleY(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
-            if round(float(obj_scale.y), 4) != scale:
-                scale_factor = abs(scale / obj_scale.y)
+            obj_scale = self.getObjectHeight() / obj.getMeshData().getExtents().height
+            if round(float(obj_scale), 4) != scale:
+                scale_factor = abs(scale / obj_scale)
                 if self._non_uniform_scale:
                     scale_vector = Vector(1, scale_factor, 1)
                 else:
@@ -389,9 +392,9 @@ class ScaleTool(Tool):
     def setScaleZ(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
-            if round(float(obj_scale.z), 4) != scale:
-                scale_factor = abs(scale / obj_scale.z)
+            obj_scale = self.getObjectDepth() / obj.getMeshData().getExtents().depth
+            if round(float(obj_scale), 4) != scale:
+                scale_factor = abs(scale / obj_scale)
                 if self._non_uniform_scale:
                     scale_vector = Vector(1, 1, scale_factor)
                 else:

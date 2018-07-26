@@ -4,18 +4,20 @@
 import configparser
 import io
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
+from typing import Union
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+
+from UM.Logger import Logger
 from PyQt5.QtQml import QQmlEngine
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
-from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.ContainerFormatError import ContainerFormatError
-import UM.Settings.ContainerRegistry
+from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
@@ -56,7 +58,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     ##  Constructor
     #
     #   \param stack_id A unique, machine readable/writable ID.
-    def __init__(self, stack_id: str, parent: QObject = None) -> None:
+    def __init__(self, stack_id: str) -> None:
         super().__init__()
         QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
@@ -161,21 +163,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         else:
             return value
 
-    def addMetaDataEntry(self, key: str, value: Any) -> None:
-        if key not in self._metadata:
-            self._dirty = True
-            self._metadata[key] = value
-            self.metaDataChanged.emit(self)
-        else:
-            Logger.log("w", "Meta data with key %s was already added.", key)
-
     def setMetaDataEntry(self, key: str, value: Any) -> None:
-        if key in self._metadata:
-            self._dirty = True
+        if key not in self._metadata or self._metadata[key] != value:
             self._metadata[key] = value
+            self._dirty = True
             self.metaDataChanged.emit(self)
-        else:
-            Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
     def removeMetaDataEntry(self, key: str) -> None:
         if key in self._metadata:
@@ -343,9 +335,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         # get version
         version = None
         try:
-            import UM.VersionUpgradeManager
-            version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
-                                                                                                  serialized)
+            from UM.VersionUpgradeManager import VersionUpgradeManager
+            version = VersionUpgradeManager.getInstance().getFileVersion(configuration_type, serialized)
         except Exception as e:
             Logger.log("d", "Could not get version from serialized: %s", e)
         return version
@@ -355,7 +346,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
-    def deserialize(self, serialized, file_name = None) -> str:
+    def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         # update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
@@ -712,7 +703,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._property_changes[key].add(property_name)
 
         if not self._emit_property_changed_queued:
-            _containerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
+            from UM.Application import Application
+            Application.getInstance().callLater(self._emitCollectedPropertyChanges)
             self._emit_property_changed_queued = True
 
     # Perform the emission of the change signals that were collected in a previous step.
@@ -725,6 +717,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         self._property_changes = {}
         self._emit_property_changed_queued = False
+
+    def __str__(self) -> str:
+        return "%s(%s)" % (type(self).__name__, self.getId())
 
 _containerRegistry = ContainerRegistryInterface() # type: ContainerRegistryInterface
 

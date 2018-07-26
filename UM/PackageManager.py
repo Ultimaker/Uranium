@@ -1,52 +1,58 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Optional, Dict, Any, List, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 import json
 import os
 import shutil
 import zipfile
 import tempfile
+import urllib.parse  # For interpreting escape characters using unquote_plus.
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl
 
-from UM.Application import Application
+from UM import i18nCatalog
 from UM.Logger import Logger
+from UM.Message import Message
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType  # To get the type of container we're loading.
 from UM.Resources import Resources
 from UM.Version import Version
+
+catalog = i18nCatalog("uranium")
 
 
 class PackageManager(QObject):
     Version = 1
 
-    def __init__(self, parent = None):
+    def __init__(self, application, parent = None):
         super().__init__(parent)
 
-        self._application = Application.getInstance()
+        self._application = application
         self._container_registry = self._application.getContainerRegistry()
         self._plugin_registry = self._application.getPluginRegistry()
 
-        # JSON files that keep track of all installed packages.
-        self._user_package_management_file_path = None
+        #JSON files that keep track of all installed packages.
+        self._user_package_management_file_path = None #type: str
+        self._bundled_package_management_file_path = None #type: str
+        for search_path in Resources.getSearchPaths():
+            candidate_bundled_path = os.path.join(search_path, "bundled_packages.json")
+            if os.path.exists(candidate_bundled_path):
+                self._bundled_package_management_file_path = candidate_bundled_path
         for search_path in (Resources.getDataStoragePath(), Resources.getConfigStoragePath()):
             candidate_user_path = os.path.join(search_path, "packages.json")
             if os.path.exists(candidate_user_path):
                 self._user_package_management_file_path = candidate_user_path
-        if self._user_package_management_file_path is None:  # Doesn't exist yet.
+        if self._user_package_management_file_path is None: #Doesn't exist yet.
             self._user_package_management_file_path = os.path.join(Resources.getDataStoragePath(), "packages.json")
 
         self._installation_dirs_dict = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}  # type: Dict[str, str]
 
-        # A dict of all bundled packages
-        self._bundled_package_dict = {}  # type: Dict[str, Dict[str, Any]]
-        # A dict of all installed packages
-        self._installed_package_dict = {}  # type: Dict[str, Dict[str, Any]]
-        # A set of packages that need to be removed at the next start
-        self._to_remove_package_set = set()  # type: Set[str]
-        # A dict of packages that need to be installed at the next start
-        self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]
+        self._bundled_package_dict = {}     # A dict of all bundled packages
+        self._installed_package_dict = {}   # A dict of all installed packages
+        self._to_remove_package_set = set() # A set of packages that need to be removed at the next start
+        self._to_install_package_dict = {}  # A dict of packages that need to be installed at the next start
 
-    installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
+    installedPackagesChanged = pyqtSignal() # Emitted whenever the installed packages collection have been changed.
 
     def initialize(self):
         self._loadManagementData()
@@ -90,16 +96,27 @@ class PackageManager(QObject):
                              "installed": self._installed_package_dict,
                              "to_remove": list(self._to_remove_package_set),
                              "to_install": self._to_install_package_dict}
-                data_dict["to_remove"] = list(data_dict["to_remove"])
                 json.dump(data_dict, f, sort_keys = True, indent = 4)
                 Logger.log("i", "Package management file %s was saved", self._user_package_management_file_path)
 
     # (for initialize) Removes all packages that have been scheduled to be removed.
     def _removeAllScheduledPackages(self) -> None:
+        remove_failures = set()
         for package_id in self._to_remove_package_set:
-            self._purgePackage(package_id)
-            del self._installed_package_dict[package_id]
-        self._to_remove_package_set.clear()
+            try:
+                self._purgePackage(package_id)
+                del self._installed_package_dict[package_id]
+            except:
+                remove_failures.add(package_id)
+
+        if remove_failures:
+            message = Message(catalog.i18nc("@error:uninstall",
+                                            "There were some errors uninstalling the following packages:\n{packages}".format(
+                                            packages = "- " + "\n- ".join(remove_failures))),
+                              title = catalog.i18nc("@info:title", "Uninstalling errors"))
+            message.show()
+
+        self._to_remove_package_set = remove_failures
         self._saveManagementData()
 
     # (for initialize) Installs all packages that have been scheduled to be installed.
@@ -107,12 +124,17 @@ class PackageManager(QObject):
         while self._to_install_package_dict:
             package_id, package_info = list(self._to_install_package_dict.items())[0]
             self._installPackage(package_info)
-            self._installed_package_dict[package_id] = self._to_install_package_dict[package_id]
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
 
+    def getBundledPackageInfo(self, package_id: str) -> Optional[dict]:
+        package_info = None
+        if package_id in self._bundled_package_dict:
+            package_info = self._bundled_package_dict[package_id]["package_info"]
+        return package_info
+
     # Checks the given package is installed. If so, return a dictionary that contains the package's information.
-    def getInstalledPackageInfo(self, package_id: str) -> Optional[Dict[str, Any]]:
+    def getInstalledPackageInfo(self, package_id: str) -> Optional[dict]:
         if package_id in self._to_remove_package_set:
             return None
 
@@ -130,9 +152,9 @@ class PackageManager(QObject):
 
         return None
 
-    def getAllInstalledPackagesInfo(self) -> Dict[str, List[Dict[str, Any]]]:
+    def getAllInstalledPackageIDs(self) -> set:
         # Add bundled, installed, and to-install packages to the set of installed package IDs
-        all_installed_ids = set()
+        all_installed_ids = set() #type: Set[str]
 
         if self._bundled_package_dict.keys():
             all_installed_ids = all_installed_ids.union(set(self._bundled_package_dict.keys()))
@@ -143,24 +165,34 @@ class PackageManager(QObject):
         if self._to_install_package_dict.keys():
             all_installed_ids = all_installed_ids.union(set(self._to_install_package_dict.keys()))
 
-        installed_packages_dict = {}  # type: Dict[str, List[Dict[str, Any]]]
+        return all_installed_ids
+
+    def getAllInstalledPackagesInfo(self) -> dict:
+
+        all_installed_ids = self.getAllInstalledPackageIDs()
+
+        # map of <package_type> -> <package_id> -> <package_info>
+        installed_packages_dict = {} #type: Dict[str, List[Dict[str, Any]]]
         for package_id in all_installed_ids:
             # Skip required plugins as they should not be tampered with
-            if package_id in Application.getInstance().getRequiredPlugins():
+            if package_id in self._application.getRequiredPlugins():
                 continue
 
             package_info = None
             # Add bundled plugins
             if package_id in self._bundled_package_dict:
                 package_info = self._bundled_package_dict[package_id]["package_info"]
+                package_info["is_installed"] = True
 
             # Add installed plugins
             if package_id in self._installed_package_dict:
                 package_info = self._installed_package_dict[package_id]["package_info"]
+                package_info["is_installed"] = True
 
             # Add to install plugins
             if package_id in self._to_install_package_dict:
                 package_info = self._to_install_package_dict[package_id]["package_info"]
+                package_info["is_installed"] = False
 
             if package_info is None:
                 continue
@@ -180,11 +212,14 @@ class PackageManager(QObject):
 
         return installed_packages_dict
 
+    def getToRemovePackageIDs(self) -> set:
+        return self._to_remove_package_set
+
     # Checks if the given package is installed (at all).
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
 
-    # This is called by drag-and-dropping package files.
+    # This is called by drag-and-dropping curapackage files.
     @pyqtSlot(QUrl)
     def installPackageViaDragAndDrop(self, file_url: str) -> None:
         filename = QUrl(file_url).toLocalFile()
@@ -200,6 +235,10 @@ class PackageManager(QObject):
             if not package_info:
                 return
             package_id = package_info["package_id"]
+
+            # If the package is being installed but it is in the list on to remove, then it is deleted from that list.
+            if package_id in self._to_remove_package_set:
+                self._to_remove_package_set.remove(package_id)
 
             # Check if it is installed
             installed_package_info = self.getInstalledPackageInfo(package_info["package_id"])
@@ -219,11 +258,11 @@ class PackageManager(QObject):
                     Logger.log("i", "Package [%s] version [%s] is scheduled to be installed.",
                                package_id, package_info["package_version"])
                     # Copy the file to cache dir so we don't need to rely on the original file to be present
-                    package_cache_dir = os.path.join(os.path.abspath(Resources.getCacheStoragePath()), "packages")
+                    package_cache_dir = os.path.join(os.path.abspath(Resources.getCacheStoragePath()), "cura_packages")
                     if not os.path.exists(package_cache_dir):
                         os.makedirs(package_cache_dir, exist_ok=True)
 
-                    target_file_path = os.path.join(package_cache_dir, package_id + ".package")
+                    target_file_path = os.path.join(package_cache_dir, package_id + ".curapackage")
                     shutil.copy2(filename, target_file_path)
 
                     self._to_install_package_dict[package_id] = {"package_info": package_info,
@@ -263,7 +302,7 @@ class PackageManager(QObject):
         self.installedPackagesChanged.emit()
 
     ##  Is the package an user installed package?
-    def isUserInstalledPackage(self, package_id: str) -> bool:
+    def isUserInstalledPackage(self, package_id: str):
         return package_id in self._installed_package_dict
 
     # Removes everything associated with the given package ID.
@@ -281,37 +320,54 @@ class PackageManager(QObject):
             break
 
     # Installs all files associated with the given package.
-    def _installPackage(self, installation_package_data: Dict[str, Any]) -> None:
+    def _installPackage(self, installation_package_data: dict):
         package_info = installation_package_data["package_info"]
         filename = installation_package_data["filename"]
 
         package_id = package_info["package_id"]
+        Logger.log("i", "Installing package [%s] from file [%s]", package_id, filename)
 
+        # Load the cached package file and extract all contents to a temporary directory
         if not os.path.exists(filename):
             Logger.log("w", "Package [%s] file '%s' is missing, cannot install this package", package_id, filename)
             return
+        try:
+            with zipfile.ZipFile(filename, "r") as archive:
+                temp_dir = tempfile.TemporaryDirectory()
+                archive.extractall(temp_dir.name)
+        except Exception:
+            Logger.logException("e", "Failed to install package from file [%s]", filename)
+            return
 
-        Logger.log("i", "Installing package [%s] from file [%s]", package_id, filename)
-
-        # If it's installed, remove it first and then install
-        if package_id in self._installed_package_dict:
+        # Remove it first and then install
+        try:
             self._purgePackage(package_id)
+        except Exception as e:
+            message = Message(catalog.i18nc("@error:update",
+                                            "There was an error uninstalling the package {package} before installing"
+                                            "new version:\n{error}.\nPlease try to upgrade again later.".format(
+                                            package = package_id, error = str(e))),
+                              title = catalog.i18nc("@info:title", "Updating error"))
+            message.show()
+            return
 
-        # Install the package
-        with zipfile.ZipFile(filename, "r") as archive:
-            temp_dir = tempfile.TemporaryDirectory()
-            archive.extractall(temp_dir.name)
+        # Copy the folders there
+        for sub_dir_name, installation_root_dir in self._installation_dirs_dict.items():
+            src_dir_path = os.path.join(temp_dir.name, "files", sub_dir_name)
+            dst_dir_path = os.path.join(installation_root_dir, package_id)
 
-            for sub_dir_name, installation_root_dir in self._installation_dirs_dict.items():
-                src_dir_path = os.path.join(temp_dir.name, "files", sub_dir_name)
-                dst_dir_path = os.path.join(installation_root_dir, package_id)
-
-                if not os.path.exists(src_dir_path):
-                    continue
-                self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
+            if not os.path.exists(src_dir_path):
+                continue
+            self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
 
         # Remove the file
-        os.remove(filename)
+        try:
+            os.remove(filename)
+        except Exception:
+            Logger.log("w", "Tried to delete file [%s], but it failed", filename)
+
+        # Move the info to the installed list of packages only when it succeeds
+        self._installed_package_dict[package_id] = self._to_install_package_dict[package_id]
 
     def __installPackageFiles(self, package_id: str, src_dir: str, dst_dir: str) -> None:
         Logger.log("i", "Moving package {package_id} from {src_dir} to {dst_dir}".format(package_id=package_id, src_dir=src_dir, dst_dir=dst_dir))
@@ -319,15 +375,20 @@ class PackageManager(QObject):
 
     # Gets package information from the given file.
     def getPackageInfo(self, filename: str) -> Dict[str, Any]:
+        package_json = {}  # type: Dict[str, Any]
         with zipfile.ZipFile(filename) as archive:
-            try:
-                # All information is in package.json
-                with archive.open("package.json") as f:
-                    package_info_dict = json.loads(f.read().decode("utf-8"))
-                    return package_info_dict
-            except Exception as e:
-                Logger.logException("w", "Could not get package information from file '%s': %s" % (filename, e))
-                return {}
+            # Go through all the files and use the first successful read as the result
+            for file_info in archive.infolist():
+                if file_info.filename.endswith("package.json"):
+                    Logger.log("d", "Found potential package.json file '%s'", file_info.filename)
+                    try:
+                        with archive.open(file_info.filename, "r") as f:
+                            package_json = json.loads(f.read().decode("utf-8"))
+                        break
+                    except:
+                        Logger.logException("e", "Failed to load potential package.json file '%s' as text file.",
+                                            file_info.filename)
+        return package_json
 
     # Gets the license file content if present in the given package file.
     # Returns None if there is no license file found.
@@ -348,3 +409,51 @@ class PackageManager(QObject):
                                             file_info.filename)
                         license_string = None
         return license_string
+
+    ##  Find the package files by package_id by looking at the installed folder
+    @staticmethod
+    def getPackageFiles(package_id) -> List[Tuple[str, List[str]]]:
+        data_storage_dir = os.path.abspath(Resources.getDataStoragePath())
+
+        os_walk = []
+        dirs_to_check = []
+        result = []  # 2-tuples of (dir, file_names)
+        for root_path, dir_names, file_names in os.walk(data_storage_dir):
+            os_walk.append((root_path, dir_names, file_names))
+            for dir_name in dir_names:
+                package_dir = os.path.join(root_path, dir_name, package_id)
+                if os.path.exists(package_dir):
+                    dirs_to_check.append(package_dir)
+
+        for root_path, dir_names, file_names in os_walk:
+            for dir_to_check in dirs_to_check:
+                if root_path.startswith(dir_to_check):
+                    result.append((root_path, file_names))
+
+        return result
+
+    ##  Return container ids for contents found with package_id
+    @staticmethod
+    def getPackageContainerIds(package_id: str) -> List[str]:
+        package_files = PackageManager.getPackageFiles(package_id)
+        ids = []
+        for root_path, file_names in package_files:
+            for file_name in file_names:
+                path = os.path.join(root_path, file_name)
+                id = PackageManager.convertPathToId(path)
+                if id:
+                    ids.append(id)
+        return ids
+
+    ##  Try to return Id for given path by looking at its existence in the mimetype database
+    @staticmethod
+    def convertPathToId(path: str) -> str:
+        mime = None
+        try:
+            mime = MimeTypeDatabase.getMimeTypeForFile(path)
+        except MimeTypeDatabase.MimeTypeNotFoundError:
+            pass
+        if mime:
+            return urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(path)))
+        else:
+            return ""

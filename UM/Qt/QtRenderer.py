@@ -182,7 +182,7 @@ class QtRenderer(Renderer):
         supports_vao = OpenGLContext.supportsVertexArrayObjects()  # fill the OpenGLContext.properties
         Logger.log("d", "Support for Vertex Array Objects: %s", supports_vao)
 
-        OpenGL.setInstance(OpenGL())
+        OpenGL()
         self._gl = OpenGL.getInstance().getBindingsObject()
 
         self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader")) #type: ShaderProgram

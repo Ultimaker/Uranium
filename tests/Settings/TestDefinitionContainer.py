@@ -8,8 +8,9 @@ import uuid
 import UM.Settings.SettingFunction
 import UM.Settings.DefinitionContainer
 from UM.Settings.DefinitionContainer import IncorrectDefinitionVersionError, InvalidDefinitionError
-from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
+from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Resources import Resources
+from UM.VersionUpgradeManager import VersionUpgradeManager
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
@@ -49,8 +50,8 @@ test_deserialize_data = [
     }})
 ]
 @pytest.mark.parametrize("file,expected", test_deserialize_data)
-def test_deserialize(file, expected, definition_container):
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)) as data:
+def test_deserialize(file, expected, definition_container, upgrade_manager: VersionUpgradeManager):
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file), encoding = "utf-8") as data:
         json = data.read()
 
     definition_container.deserialize(json)
@@ -310,7 +311,7 @@ def test_serialize_with_ignored_metadata_keys(definition_container):
 
 def test_setting_function():
     container = UM.Settings.DefinitionContainer.DefinitionContainer("test")
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", "functions.def.json")) as data:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", "functions.def.json"), encoding = "utf-8") as data:
         container.deserialize(data.read())
 
     setting_0 = container.findDefinitions(key = "test_setting_0")[0]

@@ -7,7 +7,7 @@ import os
 import pickle #For serializing/deserializing Python classes to binary files
 import re #For finding containers with asterisks in the constraints and for detecting backup files.
 import time
-from typing import Any, cast, Dict, List, Optional, Set, TYPE_CHECKING
+from typing import Any, cast, Dict, List, Optional, Set, Type, TYPE_CHECKING
 
 import UM.Dictionary
 import UM.FlameProfiler
@@ -28,12 +28,13 @@ from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For
 from UM.Signal import Signal, signalemitter
 
 if TYPE_CHECKING:
-    from UM.Application import Application
+    from UM.Qt.QtApplication import QtApplication
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
 
 # The maximum amount of query results we should cache
 MaxQueryCacheSize = 1000
+
 
 ##  Central class to manage all setting providers.
 #
@@ -43,10 +44,16 @@ MaxQueryCacheSize = 1000
 #   appropriate providers.
 @signalemitter
 class ContainerRegistry(ContainerRegistryInterface):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, application: "QtApplication") -> None:
+        if ContainerRegistry.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        ContainerRegistry.__instance = self
 
-        self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
+        super().__init__()
+
+        self._application = application # type: QtApplication
+
+        self._emptyInstanceContainer = _EmptyInstanceContainer("empty")  # type: InstanceContainer
 
         #Sorted list of container providers (keep it sorted by sorting each time you add one!).
         self._providers = [] # type: List[ContainerProvider]
@@ -311,8 +318,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         for provider in self._providers: #Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
-                    from UM.Qt.QtApplication import QtApplication
-                    QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
+                    self._application.processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
                     metadata = provider.loadMetadata(container_id)
                     if metadata is None:
                         continue
@@ -336,8 +342,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                     if container_id not in self._containers:
                         #Update UI while loading.
-                        from UM.Qt.QtApplication import QtApplication
-                        QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
+                        self._application.processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
                         try:
                             self._containers[container_id] = provider.loadContainer(container_id)
                         except:
@@ -542,7 +547,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     # Load a binary cached version of a DefinitionContainer
     def _loadCachedDefinition(self, definition_id: str, path: str) -> None:
         try:
-            cache_path = Resources.getPath(Resources.Cache, "definitions", self.getApplication().getVersion(), definition_id)
+            cache_path = Resources.getPath(Resources.Cache, "definitions", self._application.getVersion(), definition_id)
 
             cache_mtime = os.path.getmtime(cache_path)
             definition_mtime = os.path.getmtime(path)
@@ -570,7 +575,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     # Store a cached version of a DefinitionContainer
     def _saveCachedDefinition(self, definition: DefinitionContainer):
-        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self.getApplication().getVersion(), definition.id)
+        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self._application.getVersion(), definition.id)
 
         # Ensure the cache path exists
         os.makedirs(os.path.dirname(cache_path), exist_ok=True)
@@ -646,25 +651,6 @@ class ContainerRegistry(ContainerRegistryInterface):
             wait_msg = "Waiting for lock file in cache directory to disappear."
         )
 
-    ##  Get the singleton instance for this class.
-    @classmethod
-    def getInstance(cls) -> "ContainerRegistry":
-        # Note: Explicit use of class name to prevent issues with inheritance.
-        if not ContainerRegistry.__instance:
-            ContainerRegistry.__instance = cls()
-        return ContainerRegistry.__instance
-
-    @classmethod
-    def setApplication(cls, application: "Application") -> None:
-        cls.__application = application
-
-    @classmethod
-    def getApplication(cls) -> "Application":
-        return cls.__application
-
-    __application = None    # type: Application
-    __instance = None  # type: ContainerRegistry
-
     __container_types = {
         "definition": DefinitionContainer,
         "instance": InstanceContainer,
@@ -676,7 +662,14 @@ class ContainerRegistry(ContainerRegistryInterface):
         "application/x-uranium-instancecontainer": InstanceContainer,
         "application/x-uranium-containerstack": ContainerStack,
         "application/x-uranium-extruderstack": ContainerStack
-    }
+    }  # type: Dict[str, Type[ContainerInterface]]
+
+    __instance = None  # type: ContainerRegistry
+
+    @classmethod
+    def getInstance(cls, *args, **kwargs) -> "ContainerRegistry":
+        return cls.__instance
+
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
 

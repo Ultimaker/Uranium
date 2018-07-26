@@ -3,7 +3,7 @@
 
 import os
 import time  # For timing lock file
-from typing import Any
+from typing import Any, Optional
 
 from UM.Logger import Logger
 
@@ -29,49 +29,36 @@ class LockFile:
         self._filename = filename
         self._wait_msg = wait_msg
         self._timeout = timeout
+        self._pidfile = None #type: Optional[int]
 
-    ##  Block the thread until the lock file no longer exists.
+    ##  Creates the lock file on the file system, with exclusive use.
     #
-    #   This is implemented using a spin loop.
-    def _waitLockFileDisappear(self) -> None:
-        now = time.time()
-        while os.path.exists(self._filename) and now < os.path.getmtime(self._filename) + self._timeout and now > os.path.getmtime(self._filename):
-            Logger.log("d", self._wait_msg)
-            time.sleep(0.1)
-            now = time.time()
-
-    ##  Creates the lock file on the file system.
-    #
-    #   The lock file is filled with the current process ID. Python's own GIL
-    #   will ensure that this is thread-safe then.
+    #   If another thread wants to use a concurrent folder/file, but this file is still in use, then wait until the
+    #   current thread releases the lock file.
     def _createLockFile(self) -> None:
-        try:
-            with open(self._filename, "w") as lock_file:
-                lock_file.write("%s" % os.getpid())
-        except:
-            Logger.log("e", "Could not create lock file [%s]" % self._filename)
+        while(True):
+            open_flags = (os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            open_mode = 0o644
+            try:
+                self._pidfile = os.open(self._filename, open_flags, open_mode)
+                break
+            except:
+                pass
+            time.sleep(0.1)
 
-    ##  Deletes the lock file from the file system.
+    ##  Close and delete the lock file from the file system once the current thread finish what it was doing.
     def _deleteLockFile(self) -> None:
         try:
+            if self._pidfile is None:
+                Logger.log("e", "Could not determine process ID file.")
+                return
+            os.close(self._pidfile)
             os.remove(self._filename)
-        except FileNotFoundError:
-            #This can happen due to a leak in the thread-safety of this system.
-            #We ignore this leak for now, but this is how it can happen:
-            #   This thread              Other thread
-            # 1 Check if lock exists     Check if lock exists
-            # 2                          Create lock file
-            # 3 Create lock file (fails)
-            # 4 Do work                  Do work
-            # 5                          Delete lock file
-            # 6 Delete lock file (here)
-            pass
         except:
             Logger.log("e", "Could not delete lock file [%s]" % self._filename)
 
     ##  Attempt to grab the lock file for personal use.
     def __enter__(self) -> None:
-        self._waitLockFileDisappear()
         self._createLockFile()
 
     ##  Release the lock file so that other processes may use it.

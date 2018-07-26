@@ -1,10 +1,14 @@
 import os.path
 
+import sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
 import OBJReader
 
 test_path = os.path.join(os.path.dirname(OBJReader.__file__), "tests")
 
-def test_readOBJ():
+
+def test_readOBJ(application):
     reader = OBJReader.OBJReader()
     sphere_file = os.path.join(test_path, "sphere.obj")
     result = reader.read(sphere_file)

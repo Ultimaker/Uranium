@@ -88,7 +88,7 @@ def test_serialize(container_data, equals_file, loaded_container_registry):
         result = instance_container.serialize()
 
     path = Resources.getPath(Resources.InstanceContainers, equals_file)
-    with open(path) as data:
+    with open(path, encoding = "utf-8") as data:
         assert data.readline() in result
 
 test_serialize_with_ignored_metadata_keys_data = [
@@ -134,7 +134,7 @@ def test_deserialize(filename, expected):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer(filename)
 
     path = Resources.getPath(Resources.InstanceContainers, filename)
-    with open(path) as data:
+    with open(path, encoding = "utf-8") as data:
         instance_container.deserialize(data.read())
 
     for key, value in expected.items():

@@ -35,9 +35,10 @@ except ImportError:
     Logger.log("w", "Could not find numpy-stl, falling back to slower code.")
     # We have our own fallback code.
 
+
 class STLReader(MeshReader):
-    def __init__(self):
-        super(STLReader, self).__init__()
+    def __init__(self) -> None:
+        super().__init__()
         self._supported_extensions = [".stl"]
 
     def load_file(self, file_name, mesh_builder, _use_numpystl = False):
@@ -47,7 +48,7 @@ class STLReader(MeshReader):
             f = open(file_name, "rb")
             if not self._loadBinary(mesh_builder, f):
                 f.close()
-                f = open(file_name, "rt")
+                f = open(file_name, "rt", encoding = "utf-8")
                 try:
                     self._loadAscii(mesh_builder, f)
                 except UnicodeDecodeError:
@@ -59,7 +60,7 @@ class STLReader(MeshReader):
         mesh_builder.setFileName(file_name)
 
     ## Decide if we need to use ascii or binary in order to read file
-    def read(self, file_name):
+    def _read(self, file_name):
         mesh_builder = MeshBuilder()
         scene_node = SceneNode()
 

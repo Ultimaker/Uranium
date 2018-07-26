@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.3\n"
+"Project-Id-Version: Uranium 3.4\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2018-03-29 08:36+0200\n"
-"PO-Revision-Date: 2018-04-21 09:40-0300\n"
+"POT-Creation-Date: 2018-06-06 16:04+0200\n"
+"PO-Revision-Date: 2018-06-23 05:10-0300\n"
 "Last-Translator: Cláudio Sampaio <patola@makerlinux.com.br>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -50,9 +50,8 @@ msgstr "Não foi possível acessar informação sobre atualizações."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:98
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Atualização de Versão"
@@ -64,34 +63,46 @@ msgid "The version you are using does not support checking for updates."
 msgstr "A versão atual não suporta a verificação de atualizações."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Aviso"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-msgctxt "@info"
-msgid "A new version is available!"
-msgstr "Uma nova versão está disponível!"
-
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:72
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Cura {0} is available!"
+msgstr "O Cura {0} está disponível!"
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Cura {0} provides better and reliable printing experience."
+msgstr "O Cura {0} proporciona experiência de impressão melhor e mais confiável."
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
 msgctxt "@action:button"
 msgid "Download"
 msgstr "Baixar"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
+msgctxt "@action:button"
+msgid "Learn more about new features"
+msgstr "Aprenda mais sobre os novos recursos"
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
 msgstr "Um erro ocorreu ao verificar por atualizações."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:128
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:132
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Erro"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:98
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Nenhuma nova versão foi encontrada."
@@ -101,88 +112,88 @@ msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Verificar Novas Atualizações"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:33
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:35
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Arquivo Local"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:34
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
 msgstr "Salvar em Arquivo"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:35
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:37
 msgctxt "@info:tooltip"
 msgid "Save to File"
 msgstr "Salvar em Arquivo"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:56
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to File"
 msgstr "Salvar em Arquivo"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:86
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "Não há tipos de arquivos de escrita disponíveis!"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:127
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "O Arquivo Já Existe"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:127
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "O arquivo <filename>{0}</filename> já existe. Tem certeza que deseja sobrescrevê-lo?"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:150
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:156
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Salvando para <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:151
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:157
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "Salvando"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:165
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Permissão negada ao tentar salvar <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:162
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Não foi possível salvar para <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Salvo em <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "Arquivo Salvo"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Abrir Pasta"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Abre a pasta contendo o arquivo"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
@@ -229,6 +240,7 @@ msgid "Mirror Model"
 msgstr "Espelhar Modelo"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:15
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:47
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -241,11 +253,13 @@ msgstr ""
 "Você gostaria de restaurar o padrão de fábrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:57
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "Sua configuração parece estar corrompida."
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:59
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr "Erros de configuração"
@@ -255,19 +269,19 @@ msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
 msgstr "Restaurar sua configuração para o padrão de fábrica."
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:655
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:70
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:38
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:720
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Todos os Tipos Suportados ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:192
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:656
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:721
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:72
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Todos os Arquivos (*)"
@@ -311,17 +325,17 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuto"
 msgstr[1] "{0} minutos"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:112
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:127
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Carregando complementos..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:119
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:135
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Atualizando configuração..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:136
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:153
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Carregando preferências..."
@@ -337,7 +351,7 @@ msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Redimensionando Objeto"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:220
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:314
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -346,29 +360,7 @@ msgstr ""
 "O complemento foi instalado.\n"
 "Por favor reinicie a aplicação para ativar o complemento."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:231
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:270
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Failed to install plugin from <filename>{0}</filename>:\n"
-"<message>{1}</message>"
-msgstr ""
-"Falha em instalar complemento de <filename>{0}</filename>:\n"
-"<message>{1}</message>"
-
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:254
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:259
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Failed to install the plugin;\n"
-"<message>{0}</message>"
-msgstr ""
-"Falha em instalar o complemento;\n"
-"<message>{0}</message>"
-
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:421
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -378,13 +370,7 @@ msgstr ""
 "O plugin foi removido.\n"
 "Por favor reinicie {0} para finalizar a desinstalação."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-msgstr "Falha em desinstalar plugin. O plugin será removido após {0} reiniciar."
-
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:134
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
@@ -400,23 +386,30 @@ msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte a Objetos de Framebuffer. Por favor verifique os drivers de sua placa de vídeo."
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:153
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:35
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
+msgctxt "@action:button"
+msgid "Reset"
+msgstr "Restabelecer"
+
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:167
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Gostaria de recarregar {filename}?"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:154
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:168
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Arquivo foi modificado"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:169
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Recarregar"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:155
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:169
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Isto irá fazer com que arquivos modificados sejam recarregados do disco."
@@ -445,12 +438,6 @@ msgstr "Falha em carregar <filename>{0}</filename>"
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "Carregando"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Restabelecer"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
@@ -575,32 +562,17 @@ msgctxt "@action:button"
 msgid "OK"
 msgstr "OK"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:34
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "Este ajuste foi omitido para a máquina ativa e não será visível."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:51
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
 msgstr[0] "Este ajuste foi mantido invisível pelo valor de %1. Altere os valores desse ajuste para tornar este ajuste visível."
 msgstr[1] "Este ajuste foi mantido invisível pelos valores de %1. Altere os valores desses ajustes para tornar este ajuste visível."
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
-msgctxt "@title:tab"
-msgid "Setting Visibility"
-msgstr "Visibilidade de Ajustes"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
-msgctxt "@label:textbox"
-msgid "Check all"
-msgstr "Selecionar todos"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:89
-msgctxt "@label:textbox"
-msgid "Filter..."
-msgstr "Filtrar..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 msgctxt "@title:tab"
@@ -621,86 +593,6 @@ msgstr "Confirme Remoção"
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr "Tem certeza que deseja remover %1? Isto não pode ser desfeito!"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
-msgctxt "@title:tab"
-msgid "Profiles"
-msgstr "Perfis"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:15
-msgctxt "@label"
-msgid "Duplicate"
-msgstr "Duplicar"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:45
-msgctxt "@label %1 is printer name"
-msgid "Printer: %1"
-msgstr "Impressora: %1"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
-msgctxt "@action:button"
-msgid "Update \"%1\""
-msgstr "Atualizar \"%1\""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
-msgctxt "@action:button"
-msgid "Update profile"
-msgstr "Atualizar perfil"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
-msgctxt "@action:button"
-msgid "Discard current changes"
-msgstr "Descartar alterações atuais"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
-msgctxt "@action:button"
-msgid "Reload profile"
-msgstr "Recarregar perfil"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
-msgctxt "@label"
-msgid "Based on"
-msgstr "Baseado em"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
-msgctxt "@label"
-msgid "Profile type"
-msgstr "Tipo de perfil"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
-msgctxt "@label"
-msgid "Protected profile"
-msgstr "Perfil protegido"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
-msgctxt "@label"
-msgid "Custom profile"
-msgstr "Perfil personalizado"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:139
-msgctxt "@action:button"
-msgid "Import"
-msgstr "Importar"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:146
-msgctxt "@action:button"
-msgid "Export"
-msgstr "Exportar"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
-msgctxt "@window:title"
-msgid "Import Profile"
-msgstr "Importar Perfil"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
-msgctxt "@title:window"
-msgid "Import Profile"
-msgstr "Importar Perfil"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
-msgctxt "@title:window"
-msgid "Export Profile"
-msgstr "Exportar Perfil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
@@ -916,6 +808,106 @@ msgstr "Provê a ferramenta de Espelhamento."
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "Ferramenta de Espelhamento"
+
+#~ msgctxt "@info"
+#~ msgid "A new version is available!"
+#~ msgstr "Uma nova versão está disponível!"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install plugin from <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+#~ msgstr ""
+#~ "Falha em instalar complemento de <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install the plugin;\n"
+#~ "<message>{0}</message>"
+#~ msgstr ""
+#~ "Falha em instalar o complemento;\n"
+#~ "<message>{0}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
+#~ msgstr "Falha em desinstalar plugin. O plugin será removido após {0} reiniciar."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Setting Visibility"
+#~ msgstr "Visibilidade de Ajustes"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Check all"
+#~ msgstr "Selecionar todos"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Filter..."
+#~ msgstr "Filtrar..."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Profiles"
+#~ msgstr "Perfis"
+
+#~ msgctxt "@label"
+#~ msgid "Duplicate"
+#~ msgstr "Duplicar"
+
+#~ msgctxt "@label %1 is printer name"
+#~ msgid "Printer: %1"
+#~ msgstr "Impressora: %1"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update \"%1\""
+#~ msgstr "Atualizar \"%1\""
+
+#~ msgctxt "@action:button"
+#~ msgid "Update profile"
+#~ msgstr "Atualizar perfil"
+
+#~ msgctxt "@action:button"
+#~ msgid "Discard current changes"
+#~ msgstr "Descartar alterações atuais"
+
+#~ msgctxt "@action:button"
+#~ msgid "Reload profile"
+#~ msgstr "Recarregar perfil"
+
+#~ msgctxt "@label"
+#~ msgid "Based on"
+#~ msgstr "Baseado em"
+
+#~ msgctxt "@label"
+#~ msgid "Profile type"
+#~ msgstr "Tipo de perfil"
+
+#~ msgctxt "@label"
+#~ msgid "Protected profile"
+#~ msgstr "Perfil protegido"
+
+#~ msgctxt "@label"
+#~ msgid "Custom profile"
+#~ msgstr "Perfil personalizado"
+
+#~ msgctxt "@action:button"
+#~ msgid "Import"
+#~ msgstr "Importar"
+
+#~ msgctxt "@action:button"
+#~ msgid "Export"
+#~ msgstr "Exportar"
+
+#~ msgctxt "@window:title"
+#~ msgid "Import Profile"
+#~ msgstr "Importar Perfil"
+
+#~ msgctxt "@title:window"
+#~ msgid "Import Profile"
+#~ msgstr "Importar Perfil"
+
+#~ msgctxt "@title:window"
+#~ msgid "Export Profile"
+#~ msgstr "Exportar Perfil"
 
 #~ msgctxt "@info"
 #~ msgid "An exception occurred while checking for updates."
