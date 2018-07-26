@@ -61,14 +61,14 @@ class PackageManager(QObject):
 
     # (for initialize) Loads the package management file if exists
     def _loadManagementData(self) -> None:
-        # The bundles package management file should always be there
-        if not os.path.exists(self._bundled_package_management_file_path):
-            Logger.log("w", "Bundled package management file could not be found!")
-            return
-        # Load the bundled packages:
-        with open(self._bundled_package_management_file_path, "r", encoding = "utf-8") as f:
-            self._bundled_package_dict = json.load(f, encoding = "utf-8")
-            Logger.log("i", "Loaded bundled packages data from %s", self._bundled_package_management_file_path)
+        self._bundled_package_dict = {}  # type: Dict[str, Dict[str, Any]]
+        for search_path in Resources.getSearchPaths():
+            candidate_bundled_path = os.path.join(search_path, "bundled_packages.json")
+            if os.path.exists(candidate_bundled_path):
+                # Load the bundled packages:
+                with open(candidate_bundled_path, "r", encoding = "utf-8") as f:
+                    self._bundled_package_dict.update(json.load(f, encoding = "utf-8"))
+                    Logger.log("i", "Loaded bundled packages data from %s", candidate_bundled_path)
 
         # Load the user package management file
         if not os.path.exists(self._user_package_management_file_path):
