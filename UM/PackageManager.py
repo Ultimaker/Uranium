@@ -138,19 +138,24 @@ class PackageManager(QObject):
         if package_id in self._to_remove_package_set:
             return None
 
+        package_info = None
         if package_id in self._to_install_package_dict:
             package_info = self._to_install_package_dict[package_id]["package_info"]
-            return package_info
-
-        if package_id in self._installed_package_dict:
+            package_info["is_installed"] = False
+        elif package_id in self._installed_package_dict:
             package_info = self._installed_package_dict[package_id]["package_info"]
-            return package_info
-
-        if package_id in self._bundled_package_dict:
+            package_info["is_installed"] = True
+        elif package_id in self._bundled_package_dict:
             package_info = self._bundled_package_dict[package_id]["package_info"]
-            return package_info
+            package_info["is_installed"] = True
 
-        return None
+        if package_info:
+            # We also need to get information from the plugin registry such as if a plugin is active
+            package_info["is_active"] = self._plugin_registry.isActivePlugin(package_id)
+            # If the package ID is in bundled, label it as such
+            package_info["is_bundled"] = package_info["package_id"] in self._bundled_package_dict.keys() and not self.isUserInstalledPackage(package_info["package_id"])
+
+        return package_info
 
     def getAllInstalledPackageIDs(self) -> set:
         # Add bundled, installed, and to-install packages to the set of installed package IDs
@@ -178,30 +183,10 @@ class PackageManager(QObject):
             if package_id in self._application.getRequiredPlugins():
                 continue
 
-            package_info = None
-            # Add bundled plugins
-            if package_id in self._bundled_package_dict:
-                package_info = self._bundled_package_dict[package_id]["package_info"]
-                package_info["is_installed"] = True
-
-            # Add installed plugins
-            if package_id in self._installed_package_dict:
-                package_info = self._installed_package_dict[package_id]["package_info"]
-                package_info["is_installed"] = True
-
-            # Add to install plugins
-            if package_id in self._to_install_package_dict:
-                package_info = self._to_install_package_dict[package_id]["package_info"]
-                package_info["is_installed"] = False
+            package_info = self.getInstalledPackageInfo(package_id)
 
             if package_info is None:
                 continue
-
-            # We also need to get information from the plugin registry such as if a plugin is active
-            package_info["is_active"] = self._plugin_registry.isActivePlugin(package_id)
-
-            # If the package ID is in bundled, label it as such
-            package_info["is_bundled"] = package_info["package_id"] in self._bundled_package_dict.keys() and not self.isUserInstalledPackage(package_info["package_id"])
 
             # If there is not a section in the dict for this type, add it
             if package_info["package_type"] not in installed_packages_dict:
@@ -368,6 +353,7 @@ class PackageManager(QObject):
 
         # Move the info to the installed list of packages only when it succeeds
         self._installed_package_dict[package_id] = self._to_install_package_dict[package_id]
+        self._installed_package_dict[package_id]["package_info"]["is_installed"] = True
 
     def __installPackageFiles(self, package_id: str, src_dir: str, dst_dir: str) -> None:
         Logger.log("i", "Moving package {package_id} from {src_dir} to {dst_dir}".format(package_id=package_id, src_dir=src_dir, dst_dir=dst_dir))
@@ -384,6 +370,11 @@ class PackageManager(QObject):
                     try:
                         with archive.open(file_info.filename, "r") as f:
                             package_json = json.loads(f.read().decode("utf-8"))
+
+                        # Add by default properties
+                        package_json["is_active"] = True
+                        package_json["is_bundled"] = False
+                        package_json["is_installed"] = False
                         break
                     except:
                         Logger.logException("e", "Failed to load potential package.json file '%s' as text file.",
