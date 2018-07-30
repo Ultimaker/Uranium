@@ -33,11 +33,12 @@ class PackageManager(QObject):
 
         #JSON files that keep track of all installed packages.
         self._user_package_management_file_path = None #type: str
-        self._bundled_package_management_file_path = None #type: str
+        self._bundled_package_management_file_paths = [] #type: List[str]
         for search_path in Resources.getSearchPaths():
             candidate_bundled_path = os.path.join(search_path, "bundled_packages.json")
             if os.path.exists(candidate_bundled_path):
-                self._bundled_package_management_file_path = candidate_bundled_path
+                Logger.log("i", "Found bundled packages location: {location}".format(location = search_path))
+                self._bundled_package_management_file_paths.append(candidate_bundled_path)
         for search_path in (Resources.getDataStoragePath(), Resources.getConfigStoragePath()):
             candidate_user_path = os.path.join(search_path, "packages.json")
             if os.path.exists(candidate_user_path):
@@ -60,14 +61,17 @@ class PackageManager(QObject):
         self._installAllScheduledPackages()
 
     # (for initialize) Loads the package management file if exists
-    def _loadManagementData(self) -> None:        # The bundles package management file should always be there
-        if not os.path.exists(self._bundled_package_management_file_path):
-            Logger.log("w", "Bundled package management file could not be found!")
+    def _loadManagementData(self) -> None:
+        # The bundled package management file should always be there
+        if len(self._bundled_package_management_file_paths) == 0:
+            Logger.log("w", "Bundled package management files could not be found!")
             return
         # Load the bundled packages:
-        with open(self._bundled_package_management_file_path, "r", encoding = "utf-8") as f:
-            self._bundled_package_dict = json.load(f, encoding = "utf-8")
-            Logger.log("i", "Loaded bundled packages data from %s", self._bundled_package_management_file_path)
+        self._bundled_package_dict = {}
+        for search_path in self._bundled_package_management_file_paths:
+            with open(search_path, "r", encoding = "utf-8") as f:
+                self._bundled_package_dict.update(json.load(f, encoding = "utf-8"))
+                Logger.log("i", "Loaded bundled packages data from %s", search_path)
 
         # Load the user package management file
         if not os.path.exists(self._user_package_management_file_path):
