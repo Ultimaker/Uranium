@@ -4,6 +4,7 @@
 from UM.Job import Job
 import time
 from UM.Logger import Logger
+from UM.FileHandler.FileWriter import FileWriter
 
 
 ##  A Job subclass that performs writing.
@@ -56,6 +57,8 @@ class WriteFileJob(Job):
     def run(self):
         Job.yieldThread()
         begin_time = time.time()
-        self.setResult(self._writer.write(self._stream, self._data, self._mode))
+        self.setResult(self._writer.write(self._stream, self._data))
+        if not self.getResult():
+            self.setError(self._writer.getInformation())
         end_time = time.time()
         Logger.log("d", "Writing file took %s seconds", end_time - begin_time)

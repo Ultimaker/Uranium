@@ -1,13 +1,14 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
-from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
-from UM.Scene.SceneNode import SceneNode
 
 import time
-import struct
+
+from UM.i18n import i18nCatalog
+catalog = i18nCatalog("uranium")
 
 class OBJWriter(MeshWriter):
     ##  Writes the specified nodes to a stream in the OBJ format.
@@ -18,11 +19,15 @@ class OBJWriter(MeshWriter):
     #   The OBJ format only supports text mode.
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
         if mode != MeshWriter.OutputMode.TextMode:
+            Logger.log("e", "OBJWriter does not support non-text mode.")
+            self.setInformation(catalog.i18nc("@error:not supported", "OBJWriter does not support non-text mode."))
             return False
 
         try:
             MeshWriter._meshNodes(nodes).__next__()
         except StopIteration:
+            Logger.log("e", "There is no mesh to write.")
+            self.setInformation(catalog.i18nc("@error:no mesh", "There is no mesh to write."))
             return False #Don't write files without mesh data.
 
         stream.write("# URANIUM OBJ EXPORT {0}\n".format(time.strftime("%a %d %b %Y %H:%M:%S")))
