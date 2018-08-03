@@ -8,6 +8,9 @@ from UM.Logger import Logger
 import time
 import struct
 
+from UM.i18n import i18nCatalog
+catalog = i18nCatalog("uranium")
+
 class STLWriter(MeshWriter):
     ##  Write the specified sequence of nodes to a stream in the STL format.
     #
@@ -21,6 +24,7 @@ class STLWriter(MeshWriter):
             MeshWriter._meshNodes(nodes).__next__()
         except:
             Logger.log("e", "There is no mesh to write.")
+            self.setInformation(catalog.i18nc("@error:no mesh", "There is no mesh to write."))
             return False #Don't try to write a file if there is no mesh.
 
         if mode == MeshWriter.OutputMode.TextMode:
@@ -29,6 +33,7 @@ class STLWriter(MeshWriter):
             self._writeBinary(stream, MeshWriter._meshNodes(nodes))
         else:
             Logger.log("e", "Unsupported output mode writing STL to stream")
+            self.setInformation(catalog.i18nc("@error:not supported", "Unsupported output mode writing STL to stream."))
             return False
 
         return True

@@ -11,6 +11,13 @@ class FileWriter(PluginObject):
 
     def __init__(self):
         super().__init__()
+        self._information = "" # type: str
 
     def write(self, stream, data):
         raise NotImplementedError("Writer plugin was not correctly implemented, no write was specified")
+
+    def setInformation(self, information_message: str):
+        self._information = information_message
+
+    def getInformation(self) -> str:
+        return self._information
