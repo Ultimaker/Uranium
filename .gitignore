@@ -46,6 +46,7 @@ _eric6project/Uranium.e4t
 #Test results.
 tests/Settings/instances/machine_settings_with_overrides_test.cfg
 tests/Settings/profiles/simple_machine_with_overrides_test.cfg
+.pytest_cache/
 
 #MacOS
 .DS_Store

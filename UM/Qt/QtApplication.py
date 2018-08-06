@@ -271,10 +271,13 @@ class QtApplication(QApplication, Application):
             return
 
         f = QUrl.fromLocalFile(job.getFileName())
-        if f in self._recent_files:
-            self._recent_files.remove(f)
+        self.freshenRecentFiles(f)
 
-        self._recent_files.insert(0, f)
+    def freshenRecentFiles(self, filename):
+        if filename in self._recent_files:
+            self._recent_files.remove(filename)
+
+        self._recent_files.insert(0, filename)
         if len(self._recent_files) > 10:
             del self._recent_files[10]
 
