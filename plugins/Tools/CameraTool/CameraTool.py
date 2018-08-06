@@ -38,7 +38,7 @@ class CameraTool(Tool):
         self._start_drag = None
         self._start_y = None
 
-        self._drag_distance = 0.05
+        self._drag_distance = 0.01
 
         Application.getInstance().getPreferences().addPreference("view/invert_zoom", False)
         Application.getInstance().getPreferences().addPreference("view/zoom_to_mouse", False)
