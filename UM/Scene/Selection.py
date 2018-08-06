@@ -130,13 +130,7 @@ class Selection:
 
     @classmethod
     def _onTransformationChanged(cls, node):
-        cls.__selection_center = Vector.Null
-
-        for object in cls.__selection:
-            cls.__selection_center = cls.__selection_center + object.getWorldPosition()
-
-        cls.__selection_center = cls.__selection_center / len(cls.__selection)
-
+        cls.__selection_center = cls.getBoundingBox().center
         cls.selectionCenterChanged.emit()
 
     __selection = []    # type: List[SceneNode]
