@@ -16,6 +16,7 @@ from PyQt5.QtCore import QTimer
 from UM.Backend.Backend import Backend #For typing.
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.FileHandler.ReadFileJob import ReadFileJob
+from UM.FileHandler.WriteFileJob import WriteFileJob
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Qt.Bindings.Theme import Theme
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
@@ -267,12 +268,17 @@ class QtApplication(QApplication, Application):
         return self._recent_files
 
     def _onJobFinished(self, job: Job) -> None:
-        if (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
+        if isinstance(job, WriteFileJob):
+            if not job.getResult() or not job.getAddToRecentFiles():
+                # For a write file job, if it failed or it doesn't need to be added to the recent files list, we do not
+                # add it.
+                return
+        elif (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
             return
 
-        self.freshenRecentFiles(job.getFileName())
+        self.addFileToRecentFiles(job.getFileName())
 
-    def freshenRecentFiles(self, file_name: str):
+    def addFileToRecentFiles(self, file_name: str):
         file_path = QUrl.fromLocalFile(file_name)
 
         if file_path in self._recent_files:
