@@ -353,7 +353,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Das Plugin wurde installiert. \nStarten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
+msgstr "Das Plugin wurde installiert.\nStarten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:447
 #, python-brace-format
