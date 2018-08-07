@@ -159,6 +159,9 @@ class LocalFileOutputDevice(OutputDevice):
             Logger.log("e", "Operating system would not let us write to %s: %s", file_name, str(e))
             raise OutputDeviceError.WriteRequestFailedError(catalog.i18nc("@info:status Don't translate the XML tags <filename> or <message>!", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format()) from e
 
+        # Add to recent files.
+        Application.getInstance().freshenRecentFiles(file_name)
+
     def _onJobProgress(self, job, progress):
         self.writeProgress.emit(self, progress)
 

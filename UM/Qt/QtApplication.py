@@ -57,7 +57,7 @@ class UnsupportedVersionError(Exception):
 
 # Check PyQt version, we only support 5.4 or higher.
 major, minor = PYQT_VERSION_STR.split(".")[0:2]
-if int(major) < 5 or int(minor) < 4:
+if int(major) < 5 or (int(major) == 5 and int(minor) < 4):
     raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
 
 
@@ -270,14 +270,15 @@ class QtApplication(QApplication, Application):
         if (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
             return
 
-        f = QUrl.fromLocalFile(job.getFileName())
-        self.freshenRecentFiles(f)
+        self.freshenRecentFiles(job.getFileName())
 
-    def freshenRecentFiles(self, filename):
-        if filename in self._recent_files:
-            self._recent_files.remove(filename)
+    def freshenRecentFiles(self, file_name: str):
+        file_path = QUrl.fromLocalFile(file_name)
 
-        self._recent_files.insert(0, filename)
+        if file_path in self._recent_files:
+            self._recent_files.remove(file_path)
+
+        self._recent_files.insert(0, file_path)
         if len(self._recent_files) > 10:
             del self._recent_files[10]
 
