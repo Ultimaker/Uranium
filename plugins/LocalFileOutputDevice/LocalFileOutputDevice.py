@@ -142,6 +142,7 @@ class LocalFileOutputDevice(OutputDevice):
 
             job = WriteFileJob(file_writer, stream, nodes, mode)
             job.setFileName(file_name)
+            job.setAddToRecentFiles(True)  # The file will be added into the "recent files" list upon success
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)
 

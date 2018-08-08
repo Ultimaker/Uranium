@@ -16,6 +16,7 @@ from PyQt5.QtCore import QTimer
 from UM.Backend.Backend import Backend #For typing.
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
 from UM.FileHandler.ReadFileJob import ReadFileJob
+from UM.FileHandler.WriteFileJob import WriteFileJob
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Qt.Bindings.Theme import Theme
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
@@ -57,7 +58,7 @@ class UnsupportedVersionError(Exception):
 
 # Check PyQt version, we only support 5.4 or higher.
 major, minor = PYQT_VERSION_STR.split(".")[0:2]
-if int(major) < 5 or int(minor) < 4:
+if int(major) < 5 or (int(major) == 5 and int(minor) < 4):
     raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
 
 
@@ -253,14 +254,24 @@ class QtApplication(QApplication, Application):
         return self._recent_files
 
     def _onJobFinished(self, job: Job) -> None:
-        if (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
+        if isinstance(job, WriteFileJob):
+            if not job.getResult() or not job.getAddToRecentFiles():
+                # For a write file job, if it failed or it doesn't need to be added to the recent files list, we do not
+                # add it.
+                return
+        elif (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
             return
 
-        f = QUrl.fromLocalFile(job.getFileName())
-        if f in self._recent_files:
-            self._recent_files.remove(f)
+        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)):
+            self.addFileToRecentFiles(job.getFileName())
 
-        self._recent_files.insert(0, f)
+    def addFileToRecentFiles(self, file_name: str) -> None:
+        file_path = QUrl.fromLocalFile(file_name)
+
+        if file_path in self._recent_files:
+            self._recent_files.remove(file_path)
+
+        self._recent_files.insert(0, file_path)
         if len(self._recent_files) > 10:
             del self._recent_files[10]
 

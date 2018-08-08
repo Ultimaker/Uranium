@@ -25,6 +25,7 @@ class WriteFileJob(Job):
         self._data = data
         self._file_name = ""
         self._mode = mode
+        self._add_to_recent_files = False  # If this file should be added to the "recent files" list upon success
         self._message = None
         self.progress.connect(self._onProgress)
         self.finished.connect(self._onFinished)
@@ -53,6 +54,12 @@ class WriteFileJob(Job):
 
     def getMessage(self):
         return self._message
+
+    def setAddToRecentFiles(self, value: bool) -> None:
+        self._add_to_recent_files = value
+
+    def getAddToRecentFiles(self) -> bool:
+        return self._add_to_recent_files
 
     def run(self):
         Job.yieldThread()
