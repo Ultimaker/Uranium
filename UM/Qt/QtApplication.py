@@ -121,14 +121,6 @@ class QtApplication(QApplication, Application):
         self._mesh_file_handler = MeshFileHandler(self) #type: MeshFileHandler
         self._workspace_file_handler = WorkspaceFileHandler(self) #type: WorkspaceFileHandler
 
-        # For some reason, with Qt 5.9 and up, the default "windows" style seems like Windows 95. We have to set the
-        # style to "fusion" so it looks less ugly.
-        pyqt_version_parts = [int(n) for n in PYQT_VERSION_STR.split(".")]
-        if len(pyqt_version_parts) < 2:  # Make sure there are at less 2 parts in the version
-            pyqt_version_parts += [0 for _ in range(2 - len(pyqt_version_parts))]
-        if pyqt_version_parts[0] == 5 and pyqt_version_parts[1] > 8:
-            self.setStyle("fusion")
-
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
 
