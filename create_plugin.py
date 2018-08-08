@@ -27,7 +27,7 @@ def zipDirectory(path, zip_handle):
                 if extension not in excluded_extentions:
                     zip_handle.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), os.path.join(path, '..')))
 
-excluded_extentions = [".pyc"]
+excluded_extentions = [".pyc", ".umplugin"]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
