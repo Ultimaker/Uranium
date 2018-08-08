@@ -268,19 +268,16 @@ class QtApplication(QApplication, Application):
         return self._recent_files
 
     def _onJobFinished(self, job: Job) -> None:
-        if not isinstance(job, WriteFileJob) and not isinstance(job, ReadFileJob):
+        if isinstance(job, WriteFileJob):
+            if not job.getResult() or not job.getAddToRecentFiles():
+                # For a write file job, if it failed or it doesn't need to be added to the recent files list, we do not
+                # add it.
+                return
+        elif (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
             return
 
-        file_name = ""
-        if isinstance(job, WriteFileJob):
-            if job.getResult() and job.getAddToRecentFiles():
-                file_name = job.getFileName()
-        elif isinstance(job, ReadFileJob):
-            if job.getResult():
-                file_name = job.getFileName()
-
-        if file_name:
-            self.addFileToRecentFiles(file_name)
+        if isinstance(job, (ReadMeshJob, ReadFileJob)):
+            self.addFileToRecentFiles(job.getFileName())
 
     def addFileToRecentFiles(self, file_name: str) -> None:
         file_path = QUrl.fromLocalFile(file_name)
