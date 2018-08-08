@@ -276,7 +276,7 @@ class QtApplication(QApplication, Application):
         elif (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
             return
 
-        if isinstance(job, (ReadMeshJob, ReadFileJob)):
+        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)):
             self.addFileToRecentFiles(job.getFileName())
 
     def addFileToRecentFiles(self, file_name: str) -> None:
