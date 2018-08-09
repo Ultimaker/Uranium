@@ -36,7 +36,10 @@ class LockFile:
     #   If another thread wants to use a concurrent folder/file, but this file is still in use, then wait until the
     #   current thread releases the lock file.
     def _createLockFile(self) -> None:
-        while(True):
+        initial_time = time.time()
+        now = time.time()
+        # Don't wait more than the timeout
+        while(now - initial_time < self._timeout):
             open_flags = (os.O_CREAT | os.O_EXCL | os.O_WRONLY)
             open_mode = 0o644
             try:
@@ -44,15 +47,17 @@ class LockFile:
                 break
             except:
                 pass
+            Logger.log("d", self._wait_msg)
             time.sleep(0.1)
+            now = time.time()
 
     ##  Close and delete the lock file from the file system once the current thread finish what it was doing.
     def _deleteLockFile(self) -> None:
         try:
-            if self._pidfile is None:
+            if self._pidfile is None: # This is probably because it was a remaining file from a previous process that don't exist.
                 Logger.log("e", "Could not determine process ID file.")
-                return
-            os.close(self._pidfile)
+            else:
+                os.close(self._pidfile)
             os.remove(self._filename)
         except:
             Logger.log("e", "Could not delete lock file [%s]" % self._filename)
