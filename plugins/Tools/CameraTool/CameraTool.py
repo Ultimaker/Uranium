@@ -257,7 +257,7 @@ class CameraTool(Tool):
 
         move_vector = -delta * move_vector
         if delta != 0:
-            if r > self._min_zoom and r < self._max_zoom:
+            if self._min_zoom < r < self._max_zoom:
                 camera.translate(move_vector)
                 if self._zoom_to_mouse:
                     # Set the origin of the camera to the new distance, right in front of the new camera position.
