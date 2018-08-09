@@ -24,7 +24,7 @@ class CameraTool(Tool):
         self._yaw = 0
         self._pitch = 0
         self._origin = Vector(0, 0, 0)
-        self._min_zoom = 1
+        self._min_zoom = 1.0
         self._max_zoom = 2000.0
         self._manual_zoom = 200
 
@@ -60,6 +60,15 @@ class CameraTool(Tool):
     def setZoomRange(self, min: float, max: float) -> None:
         self._min_zoom = min
         self._max_zoom = max
+
+        #Clip the camera to the new zoom range.
+        camera = self._scene.getActiveCamera()
+        distance = (camera.getWorldPosition() - self._origin).length()
+        direction = (camera.getWorldPosition() - self._origin).normalized()
+        if distance < self._min_zoom:
+            camera.setPosition(self._origin + direction * self._min_zoom)
+        if distance > self._max_zoom:
+            camera.setPosition(self._origin + direction * self._max_zoom)
 
     ##  Set the point around which the camera rotates
     #
@@ -116,7 +125,6 @@ class CameraTool(Tool):
     ##  Calls the zoomaction method for the mousewheel event, mouseMoveEvent (in combo with alt or space) and when the plus or minus keys are used
     #
     #   \param event event passed from event handler
-    #   \return type(boolean)
     def initiateZoom(self, event: Event) -> bool:
         if event.type is event.MousePressEvent:
             return False
@@ -226,7 +234,7 @@ class CameraTool(Tool):
     #
     #   Note that the camera field of view is left unaffected, but instead the camera moves closer to the origin
     #   \param zoom_range factor by which the distance to the origin is multiplied, multiplied by 1280
-    def _zoomCamera(self, zoom_range: int, event: Optional[Event] = None) -> None:
+    def _zoomCamera(self, zoom_range: float, event: Optional[Event] = None) -> None:
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
             return
