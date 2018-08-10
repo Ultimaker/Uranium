@@ -23,7 +23,7 @@ class MirrorTool(Tool):
         super().__init__()
 
         self._handle = MirrorToolHandle.MirrorToolHandle()
-        self._shortcut_key = Qt.Key_W
+        self._shortcut_key = Qt.Key_M
 
         self._operation_started = False
 
@@ -55,7 +55,6 @@ class MirrorTool(Tool):
 
             # Perform a mirror operation
             if self.getLockedAxis() != ToolHandle.NoAxis:
-                op = None
                 if Selection.getCount() == 1:
                     node = Selection.getSelectedObject(0)
                     if self.getLockedAxis() == ToolHandle.XAxis:

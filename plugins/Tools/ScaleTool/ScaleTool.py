@@ -38,7 +38,7 @@ class ScaleTool(Tool):
         self._maximum_bounds = None
         self._move_up = True
 
-        self._shortcut_key = Qt.Key_A
+        self._shortcut_key = Qt.Key_S
 
         # We use the position of the scale handle when the operation starts.
         # This is done in order to prevent runaway reactions (drag changes of 100+)
