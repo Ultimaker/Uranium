@@ -1,7 +1,8 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QKeySequence
 
 from UM.Application import Application
 
@@ -17,6 +18,7 @@ class ToolModel(ListModel):
     ToolEnabledRole = Qt.UserRole + 5
     DescriptionRole = Qt.UserRole + 6
     LocationRole = Qt.UserRole + 7
+    ShortcutRole = Qt.UserRole + 8
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -34,6 +36,7 @@ class ToolModel(ListModel):
         self.addRoleName(self.ToolEnabledRole, "enabled")
         self.addRoleName(self.DescriptionRole, "description")
         self.addRoleName(self.LocationRole, "location")
+        self.addRoleName(self.ShortcutRole, "shortcut")
 
     def _onToolsChanged(self):
         items = []
@@ -51,6 +54,13 @@ class ToolModel(ListModel):
             description = tool_meta_data.get("description", "")
             icon_name = tool_meta_data.get("icon", "default.png")
 
+            #Get the shortcut and translate it to a string.
+            shortcut = self._controller.getTool(name).getShortcutKey()
+            if shortcut:
+                shortcut = QKeySequence(shortcut).toString()
+            else:
+                shortcut = ""
+
             weight = tool_meta_data.get("weight", 0)
 
             enabled = self._controller.getTool(name).getEnabled()
@@ -63,7 +73,8 @@ class ToolModel(ListModel):
                 "active": False,
                 "enabled": enabled,
                 "description": description,
-                "weight": weight
+                "weight": weight,
+                "shortcut": shortcut
             })
 
         items.sort(key = lambda t: t["weight"])
