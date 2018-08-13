@@ -6,6 +6,7 @@ from typing import Dict, Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from UM.Scene.SceneNode import SceneNode
 
+
 ##      The point of a SceneNodeDecorator is that it can be added to a SceneNode, where it then provides decorations
 #       Decorations are functions of a SceneNodeDecorator that can be called (except for functions already defined
 #       in SceneNodeDecorator).

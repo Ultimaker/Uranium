@@ -1,16 +1,12 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
 import scipy.spatial
-import shapely.geometry
 
-from UM.Math.Float import Float #For fuzzy comparison of edge cases.
-from UM.Math.LineSegment import LineSegment #For line-line intersections for computing polygon intersections.
-from UM.Math.Vector2 import Vector2 #For constructing line segments for polygon intersections.
 from UM.Logger import Logger
-
 from UM.Math import NumPyUtil
+from UM.Math import ShapelyUtil
 
 
 ##  A class representing an immutable arbitrary 2-dimensional polygon.
@@ -127,11 +123,6 @@ class Polygon:
     ##  Computes the intersection of the convex hulls of this and another
     #   polygon.
     #
-    #   This is an implementation of O'Rourke's "Chase" algorithm. For a more
-    #   detailed description of why the algorithm works the way it does, please
-    #   consult the book "Computational Geometry in C", second edition, chapter
-    #   7.6.
-    #
     #   \param other The other polygon to intersect convex hulls with.
     #   \return The intersection of the two polygons' convex hulls.
     def intersectionConvexHulls(self, other):
@@ -141,21 +132,14 @@ class Polygon:
         if len(me._points) <= 2 or len(him._points) <= 2: #If either polygon has no surface area, then the intersection is empty.
             return Polygon()
 
-        def toShapelyPolygon(convex_hull):
-            return shapely.geometry.Polygon([tuple(convex_hull._points[0]),  # top left
-                                             tuple(convex_hull._points[1]),  # bottom left
-                                             tuple(convex_hull._points[2]),  # bottom right
-                                             tuple(convex_hull._points[3]),  # top right
-                                            ])
-
-        polygen_me = toShapelyPolygon(me)
-        polygon_him = toShapelyPolygon(him)
+        polygen_me = ShapelyUtil.polygon2ShapelyPolygon(me)
+        polygon_him = ShapelyUtil.polygon2ShapelyPolygon(him)
 
         polygon_intersection = polygen_me.intersection(polygon_him)
         if polygon_intersection.area == 0:
             return Polygon()
 
-        return Polygon(points = [list(p) for p in polygon_intersection.exterior.coords])
+        return Polygon(points = [list(p) for p in polygon_intersection.exterior.coords[:4]])
 
     ##  Check to see whether this polygon intersects with another polygon.
     #
@@ -167,56 +151,16 @@ class Polygon:
         if len(self._points) < 2 or len(other.getPoints()) < 2:  # Polygon has not enough points, so it cant intersect.
             return None
 
-        retSize = 10000000.0
-        ret = None
-        for n in range(0, len(self._points)):
-            p0 = self._points[n-1]
-            p1 = self._points[n]
+        polygon_me = ShapelyUtil.polygon2ShapelyPolygon(self)
+        polygon_other = ShapelyUtil.polygon2ShapelyPolygon(other)
 
-            normal = (p1 - p0)[::-1]
-            normal[1] = -normal[1]
-            normal /= numpy.linalg.norm(normal)
-
-            aMin, aMax = self.project(normal)
-            bMin, bMax = other.project(normal)
-            if aMin > bMax:
-                return None
-            if bMin > aMax:
-                return None
-            size = min(aMax, bMax) - max(aMin, bMin)
-            if size < retSize:
-                if aMin < bMin:
-                    ret = normal * -size
-                else:
-                    ret = normal * size
-                retSize = size
-
-        for n in range(0, len(other._points)):
-            p0 = other._points[n-1]
-            p1 = other._points[n]
-
-            normal = (p1 - p0)[::-1]
-            normal[1] = -normal[1]
-            normal /= numpy.linalg.norm(normal)
-
-            aMin, aMax = self.project(normal)
-            bMin, bMax = other.project(normal)
-            if aMin > bMax:
-                return None
-            if bMin > aMax:
-                return None
-            size = min(aMax, bMax) - max(aMin, bMin)
-            if size < retSize:
-                if aMin < bMin:
-                    ret = normal * -size
-                else:
-                    ret = normal * size
-                retSize = size
-
-        if ret is not None:
-            return (ret[0], ret[1])
-        else:
-            return None
+        polygon_intersection = polygon_me.intersection(polygon_other)
+        ret_size = None
+        if polygon_intersection:
+            ret_size = (polygon_intersection.bounds[2] - polygon_intersection.bounds[0],
+                        polygon_intersection.bounds[3] - polygon_intersection.bounds[1],
+                        )
+        return ret_size
 
     ##  Calculate the convex hull around the set of points of this polygon.
     #
@@ -282,3 +226,6 @@ class Polygon:
             return 0
         else:
             return -1
+
+
+__all__ = ["Polygon"]
