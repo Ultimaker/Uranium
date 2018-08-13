@@ -535,6 +535,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         with self.lockFile():
             # Save base files first
             for instance in self.findDirtyContainers(container_type = InstanceContainer):
+                if instance.getMetaDataEntry("removed") is True:
+                    continue
                 if instance.getId() == instance.getMetaData().get("base_file"):
                     self.saveContainer(instance)
 
