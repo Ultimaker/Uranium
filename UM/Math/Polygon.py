@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
+import scipy.spatial
 import shapely.geometry
 
 from UM.Math.Float import Float #For fuzzy comparison of edge cases.
@@ -10,12 +11,6 @@ from UM.Math.Vector2 import Vector2 #For constructing line segments for polygon 
 from UM.Logger import Logger
 
 from UM.Math import NumPyUtil
-
-try:
-    import scipy.spatial
-    has_scipy = True
-except ImportError:
-    has_scipy = False
 
 
 ##  A class representing an immutable arbitrary 2-dimensional polygon.
@@ -226,54 +221,20 @@ class Polygon:
     ##  Calculate the convex hull around the set of points of this polygon.
     #
     #   \return \type{Polygon} The convex hull around the points of this polygon.
-    if has_scipy:
-        def getConvexHull(self):
-            points = self._points
+    def getConvexHull(self):
+        points = self._points
 
-            if len(points) < 1:
-                return Polygon(numpy.zeros((0, 2), numpy.float64))
-            if len(points) <= 2:
-                return Polygon(numpy.array(points, numpy.float64))
+        if len(points) < 1:
+            return Polygon(numpy.zeros((0, 2), numpy.float64))
+        if len(points) <= 2:
+            return Polygon(numpy.array(points, numpy.float64))
 
-            try:
-                hull = scipy.spatial.ConvexHull(points)
-            except scipy.spatial.qhull.QhullError:
-                return Polygon(numpy.zeros((0, 2), numpy.float64))
+        try:
+            hull = scipy.spatial.ConvexHull(points)
+        except scipy.spatial.qhull.QhullError:
+            return Polygon(numpy.zeros((0, 2), numpy.float64))
 
-            return Polygon(numpy.flipud(hull.points[hull.vertices]))
-    else:
-        def getConvexHull(self):
-            unique = {}
-            for p in self._points:
-                unique[p[0], p[1]] = 1
-
-            points = list(unique.keys())
-            points.sort()
-            if len(points) < 1:
-                return Polygon(numpy.zeros((0, 2), numpy.float32))
-            if len(points) < 2:
-                return Polygon(numpy.array(points, numpy.float32))
-
-            # Build upper half of the hull.
-            upper = [points[0], points[1]]
-            for p in points[2:]:
-                upper.append(p)
-                while len(upper) > 2 and self._isRightTurn(*upper[-3:]) != 1:
-                    del upper[-2]
-
-            # Build lower half of the hull.
-            points = points[::-1]
-            lower = [points[0], points[1]]
-            for p in points[2:]:
-                lower.append(p)
-                while len(lower) > 2 and self._isRightTurn(*lower[-3:]) != 1:
-                    del lower[-2]
-
-            # Remove duplicates.
-            del lower[0]
-            del lower[-1]
-
-            return Polygon(numpy.array(upper + lower, numpy.float32))
+        return Polygon(numpy.flipud(hull.points[hull.vertices]))
 
     ##  Perform a Minkowski sum of this polygon with another polygon.
     #
