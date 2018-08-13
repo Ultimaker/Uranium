@@ -241,7 +241,7 @@ class SceneNode:
                 try:
                     return getattr(decorator, function)(*args, **kwargs)
                 except Exception as e:
-                    Logger.log("e", "Exception calling decoration %s: %s", str(function), str(e))
+                    Logger.logException("e", "Exception calling decoration %s: %s", str(function), str(e))
                     return None
 
     ##  Does this SceneNode have a certain Decoration (as defined by a Decorator)
