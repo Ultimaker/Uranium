@@ -36,7 +36,10 @@ class LockFile:
     #   If another thread wants to use a concurrent folder/file, but this file is still in use, then wait until the
     #   current thread releases the lock file.
     def _createLockFile(self) -> None:
-        while(True):
+        start_wait = time.time()
+        while True:
+            if time.time() - start_wait > self._timeout: #Timeout expired. Overwrite the lock file.
+                os.remove(self._filename)
             open_flags = (os.O_CREAT | os.O_EXCL | os.O_WRONLY)
             open_mode = 0o644
             try:
