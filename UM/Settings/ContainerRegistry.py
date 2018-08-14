@@ -19,6 +19,7 @@ from UM.PluginRegistry import PluginRegistry #To register the container type plu
 from UM.Resources import Resources
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
+from UM.Settings.EmptyInstanceContainer import empty_container
 from . import ContainerQuery
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.DefinitionContainer import DefinitionContainer
@@ -53,7 +54,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._application = application # type: QtApplication
 
-        self._emptyInstanceContainer = _EmptyInstanceContainer("empty")  # type: InstanceContainer
+        self._emptyInstanceContainer = empty_container  # type: InstanceContainer
 
         #Sorted list of container providers (keep it sorted by sorting each time you add one!).
         self._providers = [] # type: List[ContainerProvider]
@@ -674,21 +675,3 @@ class ContainerRegistry(ContainerRegistryInterface):
 
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
-
-
-class _EmptyInstanceContainer(InstanceContainer):
-    def isDirty(self) -> bool:
-        return False
-
-    def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
-        return None
-
-    def setProperty(self, key: str, property_name: str, property_value: Any, container: ContainerInterface = None, set_from_cache: bool = False) -> None:
-        Logger.log("e", "Setting property %s of container %s which should remain empty", key, self.getName())
-        return
-
-    def getConfigurationType(self) -> str:
-        return ""  # FIXME: not sure if this is correct
-
-    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
-        return "[general]\n version = " + str(InstanceContainer.Version) + "\n name = empty\n definition = fdmprinter\n"
