@@ -611,7 +611,7 @@ class SettingDefinitionsModel(QAbstractListModel):
                 continue
 
             if child.key in self._visible:
-                if Application.getInstance().getGlobalContainerStack().getProperty(child.key, "enabled"):
+                if self._container.getProperty(child.key, "enabled"):
                     return True
 
             if self._isAnyDescendantVisible(child):
