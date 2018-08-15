@@ -47,6 +47,11 @@ Item
         }
     }
 
+    function selectTextInTextfield(selected_item){
+        selected_item.selectAll()
+        selected_item.focus = true
+    }
+
     Button
     {
         id: resetScaleButton
@@ -167,6 +172,7 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ObjectWidth", modified_text);
             }
+            Keys.onTabPressed: selectTextInTextfield(depthTextField)
         }
         TextField
         {
@@ -188,6 +194,8 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ObjectDepth", modified_text);
             }
+            Keys.onTabPressed: selectTextInTextfield(heightTextField)
+            Keys.onBacktabPressed: selectTextInTextfield(widthTextField)
         }
         TextField
         {
@@ -209,6 +217,8 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ObjectHeight", modified_text);
             }
+            Keys.onTabPressed: selectTextInTextfield(xPercentage)
+            Keys.onBacktabPressed: selectTextInTextfield(depthTextField)
         }
 
         TextField
@@ -232,6 +242,8 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ScaleX", parseFloat(modified_text) / 100);
             }
+            Keys.onTabPressed: selectTextInTextfield(zPercentage)
+            Keys.onBacktabPressed: selectTextInTextfield(heightTextField)
         }
         TextField
         {
@@ -254,6 +266,8 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ScaleZ", parseFloat(modified_text) / 100);
             }
+            Keys.onTabPressed: selectTextInTextfield(yPercentage)
+            Keys.onBacktabPressed: selectTextInTextfield(xPercentage)
         }
         TextField
         {
@@ -277,6 +291,7 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ScaleY", parseFloat(modified_text) / 100);
             }
+            Keys.onBacktabPressed: selectTextInTextfield(zPercentage)
 
         }
 

@@ -41,6 +41,11 @@ Item
         return output;
     }
 
+    function selectTextInTextfield(selected_item){
+        selected_item.selectAll()
+        selected_item.focus = true
+    }
+
     Grid
     {
         id: textfields;
@@ -97,9 +102,11 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("X", modified_text);
             }
+            Keys.onTabPressed: selectTextInTextfield(yTextField)
         }
         TextField
         {
+            id: yTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
@@ -116,9 +123,12 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("Y", modified_text);
             }
-        }
+            Keys.onTabPressed: selectTextInTextfield(zTextField)
+            Keys.onBacktabPressed: selectTextInTextfield(xTextField)
+    }
         TextField
         {
+            id: zTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
@@ -134,6 +144,7 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("Z", modified_text);
             }
+            Keys.onBacktabPressed: selectTextInTextfield(yTextField)
         }
     }
 
