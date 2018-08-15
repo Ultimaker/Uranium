@@ -3,6 +3,6 @@
     "author": "Ultimaker B.V.",
     "version": "1.0.0",
     "description": "Checks for updates of the software.",
-    "api": 4,
+    "api": 5,
     "i18n-catalog": "uranium"
 }
