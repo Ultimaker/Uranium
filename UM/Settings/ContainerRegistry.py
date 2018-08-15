@@ -19,7 +19,7 @@ from UM.PluginRegistry import PluginRegistry #To register the container type plu
 from UM.Resources import Resources
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
-from UM.Settings.EmptyInstanceContainer import empty_container
+from UM.Settings.constant_instance_containers import empty_container
 from . import ContainerQuery
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.DefinitionContainer import DefinitionContainer
