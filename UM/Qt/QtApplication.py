@@ -3,7 +3,6 @@
 
 import sys
 import os
-import signal
 from typing import List
 from typing import Any, cast, Dict, Optional
 
@@ -159,10 +158,6 @@ class QtApplication(QApplication, Application):
             self._preferences.readFromFile(preferences_filename)
         except FileNotFoundError:
             Logger.log("i", "Preferences file not found, ignore and use default language '%s'", self._default_language)
-
-        signal.signal(signal.SIGINT, signal.SIG_DFL)
-        # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
-        # these checks need to be done in your <framework>Application.py class __init__().
 
         i18n_catalog = i18nCatalog("uranium")
 

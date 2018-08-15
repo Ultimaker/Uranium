@@ -3,6 +3,7 @@
 
 import argparse
 import os
+import signal
 import sys
 import threading
 
@@ -94,6 +95,22 @@ class Application:
         self._message_lock = threading.Lock() #type: threading.Lock
 
         self._app_install_dir = self.getInstallPrefix() #type: str
+
+        # Register process shutdown hook
+        signal.signal(signal.SIGINT, self._uponProcessShutdown)
+        signal.signal(signal.SIGTERM, self._uponProcessShutdown)
+
+    def _uponProcessShutdown(self, *args, **kwargs) -> None:
+        from UM.Settings.ContainerRegistry import CONFIG_LOCK_FILENAME
+
+        lock_file_path = Resources.getStoragePath(Resources.Resources, CONFIG_LOCK_FILENAME)
+        if os.path.isfile(lock_file_path):
+            Logger.log("d", "Removing lock file %s", lock_file_path)
+            try:
+                os.remove(lock_file_path)
+            except:
+                pass
+        sys.exit(0)
 
     # Adds the command line options that can be parsed by the command line parser.
     # Can be overridden to add additional command line options to the parser.
