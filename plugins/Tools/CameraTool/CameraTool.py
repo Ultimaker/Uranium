@@ -60,7 +60,10 @@ class CameraTool(Tool):
     def setZoomRange(self, min: float, max: float) -> None:
         self._min_zoom = min
         self._max_zoom = max
+        self.clipToZoom()
 
+    ##  Makes sure that the camera is within the zoom range.
+    def clipToZoom(self) -> None:
         #Clip the camera to the new zoom range.
         camera = self._scene.getActiveCamera()
         distance = (camera.getWorldPosition() - self._origin).length()
@@ -238,6 +241,8 @@ class CameraTool(Tool):
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
             return
+
+        self.clipToZoom()
 
         self._scene.getSceneLock().acquire()
 
