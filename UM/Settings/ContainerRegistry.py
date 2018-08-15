@@ -14,7 +14,6 @@ import UM.FlameProfiler
 from UM.LockFile import LockFile
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
-from UM.PluginObject import PluginObject #For typing.
 from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
 from UM.Resources import Resources
 from UM.Settings.ContainerFormatError import ContainerFormatError
@@ -25,10 +24,10 @@ from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface, DefinitionContainerInterface
-from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For typing.
 from UM.Signal import Signal, signalemitter
 
 if TYPE_CHECKING:
+    from UM.PluginObject import PluginObject
     from UM.Qt.QtApplication import QtApplication
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
@@ -472,7 +471,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   \param container An instance of the container type to add.
     @classmethod
-    def addContainerType(cls, container: PluginObject) -> None:
+    def addContainerType(cls, container: "PluginObject") -> None:
         plugin_id = container.getPluginId()
         metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
         if "settings_container" not in metadata or "mimetype" not in metadata["settings_container"]:
