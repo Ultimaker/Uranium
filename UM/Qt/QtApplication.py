@@ -263,6 +263,9 @@ class QtApplication(QApplication, Application):
         elif (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
             return
 
+        if isinstance(job, WriteFileJob) and not job.getFileName().endswith(".curaproject.3mf"):
+            return
+
         if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)):
             self.addFileToRecentFiles(job.getFileName())
 
