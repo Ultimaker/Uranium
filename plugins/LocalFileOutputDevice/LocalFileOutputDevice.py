@@ -64,10 +64,11 @@ class LocalFileOutputDevice(OutputDevice):
         mime_types = []
         selected_filter = None
 
-        if "preferred_mimetype" in kwargs and kwargs["preferred_mimetype"] is not None:
-            preferred_mimetype = kwargs["preferred_mimetype"]
+        if "preferred_mimetypes" in kwargs and kwargs["preferred_mimetypes"] is not None:
+            preferred_mimetypes = kwargs["preferred_mimetypes"]
         else:
-            preferred_mimetype = Application.getInstance().getPreferences().getValue("local_file/last_used_type")
+            preferred_mimetypes = Application.getInstance().getPreferences().getValue("local_file/last_used_type")
+        preferred_mimetype_list = preferred_mimetypes.split(";")
 
         if not file_handler:
             file_handler = Application.getInstance().getMeshFileHandler()
@@ -78,9 +79,18 @@ class LocalFileOutputDevice(OutputDevice):
         if limit_mimetypes:
             file_types = list(filter(lambda i: i["mime_type"] in limit_mimetypes, file_types))
 
+        file_types = [ft for ft in file_types if not ft["hide_in_file_dialog"]]
+
         if len(file_types) == 0:
             Logger.log("e", "There are no file types available to write with!")
             raise OutputDeviceError.WriteRequestFailedError(catalog.i18nc("@info:warning", "There are no file types available to write with!"))
+
+        # Find the first available preferred mime type
+        preferred_mimetype = None
+        for mime_type in preferred_mimetype_list:
+            if any(ft["mime_type"] == mime_type for ft in file_types):
+                preferred_mimetype = mime_type
+                break
 
         for item in file_types:
             type_filter = "{0} (*.{1})".format(item["description"], item["extension"])

@@ -89,12 +89,14 @@ class FileHandler(QObject):
                 description = output.get("description", ext)
                 mime_type = output.get("mime_type", "text/plain")
                 mode = output.get("mode", FileWriter.OutputMode.TextMode)
+                hide_in_file_dialog = output.get("hide_in_file_dialog", False)
                 supported_types.append({
                     "id": entry["id"],
                     "extension": ext,
                     "description": description,
                     "mime_type": mime_type,
-                    "mode": mode
+                    "mode": mode,
+                    "hide_in_file_dialog": hide_in_file_dialog,
                 })
         return supported_types
 
