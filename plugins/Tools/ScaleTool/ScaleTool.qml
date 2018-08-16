@@ -172,7 +172,8 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ObjectWidth", modified_text);
             }
-            Keys.onTabPressed: selectTextInTextfield(depthTextField)
+            Keys.onBacktabPressed: selectTextInTextfield(yPercentage)
+            Keys.onTabPressed: selectTextInTextfield(xPercentage)
         }
         TextField
         {
@@ -194,8 +195,8 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ObjectDepth", modified_text);
             }
-            Keys.onTabPressed: selectTextInTextfield(heightTextField)
-            Keys.onBacktabPressed: selectTextInTextfield(widthTextField)
+            Keys.onBacktabPressed: selectTextInTextfield(xPercentage)
+            Keys.onTabPressed: selectTextInTextfield(zPercentage)
         }
         TextField
         {
@@ -217,8 +218,8 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ObjectHeight", modified_text);
             }
-            Keys.onTabPressed: selectTextInTextfield(xPercentage)
-            Keys.onBacktabPressed: selectTextInTextfield(depthTextField)
+            Keys.onBacktabPressed: selectTextInTextfield(zPercentage)
+            Keys.onTabPressed: selectTextInTextfield(yPercentage)
         }
 
         TextField
@@ -242,8 +243,8 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ScaleX", parseFloat(modified_text) / 100);
             }
-            Keys.onTabPressed: selectTextInTextfield(zPercentage)
-            Keys.onBacktabPressed: selectTextInTextfield(heightTextField)
+            Keys.onBacktabPressed: selectTextInTextfield(widthTextField)
+            Keys.onTabPressed: selectTextInTextfield(depthTextField)
         }
         TextField
         {
@@ -266,8 +267,8 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ScaleZ", parseFloat(modified_text) / 100);
             }
-            Keys.onTabPressed: selectTextInTextfield(yPercentage)
-            Keys.onBacktabPressed: selectTextInTextfield(xPercentage)
+            Keys.onBacktabPressed: selectTextInTextfield(depthTextField)
+            Keys.onTabPressed: selectTextInTextfield(heightTextField)
         }
         TextField
         {
@@ -291,7 +292,7 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("ScaleY", parseFloat(modified_text) / 100);
             }
-            Keys.onBacktabPressed: selectTextInTextfield(zPercentage)
+            Keys.onBacktabPressed: selectTextInTextfield(heightTextField)
 
         }
 
