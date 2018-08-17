@@ -8,8 +8,8 @@ from UM.Scene.SceneNode import SceneNode
 
 ##  Base class for mesh writer objects
 class MeshWriter(FileWriter):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
     
     ##  Output a collection of nodes to stream in such a way that it makes sense
     #   for the file format.

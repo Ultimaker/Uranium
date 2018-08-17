@@ -59,7 +59,7 @@ class WriteFileJob(Job):
         self._add_to_recent_files = value
 
     def getAddToRecentFiles(self) -> bool:
-        return self._add_to_recent_files
+        return self._add_to_recent_files and self._writer.getAddToRecentFiles()
 
     def run(self):
         Job.yieldThread()
