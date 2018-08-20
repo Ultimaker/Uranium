@@ -293,6 +293,7 @@ Item
                 UM.ActiveTool.setProperty("ScaleY", parseFloat(modified_text) / 100);
             }
             Keys.onBacktabPressed: selectTextInTextfield(heightTextField)
+            Keys.onTabPressed: selectTextInTextfield(widthTextField)
 
         }
 
