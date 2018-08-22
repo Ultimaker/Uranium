@@ -91,11 +91,11 @@ class OutputDeviceManagerProxy(QObject):
             return
 
         limit_mimetypes = kwargs.get("limit_mimetypes", False)
-        preferred_mimetype = kwargs.get("preferred_mimetype", None)
+        preferred_mimetypes = kwargs.get("preferred_mimetypes", None)
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, Selection.getAllSelectedObjects(), device_id, file_name, limit_mimetypes, preferred_mimetype = preferred_mimetype)
+        Application.getInstance().callLater(self._writeToDevice, Selection.getAllSelectedObjects(), device_id, file_name, limit_mimetypes, preferred_mimetypes = preferred_mimetypes)
 
     def _onActiveDeviceChanged(self) -> None:
         self.activeDeviceChanged.emit()
