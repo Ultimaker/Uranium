@@ -250,6 +250,31 @@ class SettingPropertyProvider(QObject):
 
         container.removeInstance(self._key)
 
+    @pyqtSlot()
+    def callCalculateSettingValue(self):
+
+        # the setting is not overwritten by othe stack, (machine, quality, etc)
+        property_value = None
+        if len(self._stack_levels) is 2:
+            last_entry = self._stack_levels[-1]
+            property_value = self.getPropertyValue("value", last_entry)
+        else:
+            # skip the first one, it stack from user changes or from quality
+            for last_entry in self._stack_levels[1:]:
+                property_value = self.getPropertyValue("value", last_entry)
+
+                if isinstance(property_value, SettingFunction):
+                    break
+
+        if property_value is None:
+            Logger.log("w","Unable to find a function for setting:[%s]", str())
+            return
+
+
+        self.setPropertyValue("value", property_value)
+        self.setPropertyValue("state", "InstanceState.Calculated")
+
+
     isValueUsedChanged = pyqtSignal()
     @pyqtProperty(bool, notify = isValueUsedChanged)
     def isValueUsed(self):
