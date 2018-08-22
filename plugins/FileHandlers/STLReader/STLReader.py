@@ -95,7 +95,7 @@ class STLReader(MeshReader):
         array[:, [frm, to]] = array[:, [to, frm]]
 
     def _loadWithNumpySTL(self, file_name, mesh_builder):
-        for loaded_data in stl.mesh.Mesh.from_multi_file(file_name):
+        for loaded_data in stl.mesh.Mesh.from_multi_file(file_name, mode=stl.stl.Mode.AUTOMATIC):
             vertices = numpy.resize(loaded_data.points.flatten(), (int(loaded_data.points.size / 3), 3))
 
             # Invert values of second column
