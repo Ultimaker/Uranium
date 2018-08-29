@@ -96,9 +96,12 @@ class Duration(QObject):
 
         self.durationChanged.emit()
 
-    ##  Get a string representation of this object that can be used to display in interfaces.
+    ##  Get a string representation of this object that can be used to display
+    #   in interfaces.
     #
-    #   This is not called toString() primarily because that conflicts with JavaScript"s toString()
+    #   This is not called toString() primarily because that conflicts with
+    #   JavaScript's toString().
+    #   \return A human-readable string representation of this duration.
     @pyqtSlot(int, result = str)
     def getDisplayString(self, display_format = DurationFormat.Format.Short):
         if display_format == DurationFormat.Format.Seconds:
