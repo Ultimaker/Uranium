@@ -14,20 +14,20 @@ import UM.FlameProfiler
 from UM.LockFile import LockFile
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
-from UM.PluginObject import PluginObject #For typing.
 from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
 from UM.Resources import Resources
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
+from UM.Settings.constant_instance_containers import empty_container
 from . import ContainerQuery
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface, DefinitionContainerInterface
-from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For typing.
 from UM.Signal import Signal, signalemitter
 
 if TYPE_CHECKING:
+    from UM.PluginObject import PluginObject
     from UM.Qt.QtApplication import QtApplication
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
@@ -53,7 +53,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._application = application # type: QtApplication
 
-        self._emptyInstanceContainer = _EmptyInstanceContainer("empty")  # type: InstanceContainer
+        self._emptyInstanceContainer = empty_container  # type: InstanceContainer
 
         #Sorted list of container providers (keep it sorted by sorting each time you add one!).
         self._providers = [] # type: List[ContainerProvider]
@@ -471,7 +471,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   \param container An instance of the container type to add.
     @classmethod
-    def addContainerType(cls, container: PluginObject) -> None:
+    def addContainerType(cls, container: "PluginObject") -> None:
         plugin_id = container.getPluginId()
         metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
         if "settings_container" not in metadata or "mimetype" not in metadata["settings_container"]:
@@ -674,21 +674,3 @@ class ContainerRegistry(ContainerRegistryInterface):
 
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
-
-
-class _EmptyInstanceContainer(InstanceContainer):
-    def isDirty(self) -> bool:
-        return False
-
-    def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
-        return None
-
-    def setProperty(self, key: str, property_name: str, property_value: Any, container: ContainerInterface = None, set_from_cache: bool = False) -> None:
-        Logger.log("e", "Setting property %s of container %s which should remain empty", key, self.getName())
-        return
-
-    def getConfigurationType(self) -> str:
-        return ""  # FIXME: not sure if this is correct
-
-    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
-        return "[general]\n version = " + str(InstanceContainer.Version) + "\n name = empty\n definition = fdmprinter\n"
