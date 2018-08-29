@@ -102,6 +102,7 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("X", modified_text);
             }
+            Keys.onBacktabPressed: selectTextInTextfield(zTextField)
             Keys.onTabPressed: selectTextInTextfield(yTextField)
         }
         TextField
@@ -123,9 +124,9 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("Y", modified_text);
             }
-            Keys.onTabPressed: selectTextInTextfield(zTextField)
             Keys.onBacktabPressed: selectTextInTextfield(xTextField)
-    }
+            Keys.onTabPressed: selectTextInTextfield(zTextField)
+        }
         TextField
         {
             id: zTextField
@@ -145,6 +146,7 @@ Item
                 UM.ActiveTool.setProperty("Z", modified_text);
             }
             Keys.onBacktabPressed: selectTextInTextfield(yTextField)
+            Keys.onTabPressed: selectTextInTextfield(xTextField)
         }
     }
 

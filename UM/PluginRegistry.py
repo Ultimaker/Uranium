@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 #   [plugins]: docs/plugins.md
 
 class PluginRegistry(QObject):
-    APIVersion = 4
+    APIVersion = 5
 
     def __init__(self, application: "Application", parent: QObject = None) -> None:
         if PluginRegistry.__instance is not None:
@@ -400,13 +400,6 @@ class PluginRegistry(QObject):
         if self._metadata[plugin_id].get("plugin", {}).get("api", 0) != self.APIVersion:
             Logger.log("w", "Plugin %s uses an incompatible API version, ignoring", plugin_id)
             del self._metadata[plugin_id]
-            return
-
-        #HACK: For OctoPrint plug-in version 3.2.2, it broke the start-up sequence when auto-connecting.
-        #Remove this hack once we've increased the API version number to something higher than 4.
-        version = self._metadata[plugin_id].get("plugin", {}).get("version", "0.0.0")
-        if plugin_id == "OctoPrintPlugin" and Version(version) < Version("3.3.0"):
-            Logger.log("e", "Plugin OctoPrintPlugin version {version} was disabled because it was using an old API for network connection.".format(version = version))
             return
 
         try:
