@@ -228,7 +228,6 @@ class SettingDefinitionsModel(QAbstractListModel):
         if filter_dict != self._filter_dict:
             self._filter_dict = filter_dict
             self.filterChanged.emit()
-            self._updateVisibleRows()
 
     filterChanged = pyqtSignal()
 
@@ -510,7 +509,6 @@ class SettingDefinitionsModel(QAbstractListModel):
         else:
             self._definition_list = self._container.findDefinitions()
 
-        self._updateVisibleRows()
 
         self.endResetModel()
 
