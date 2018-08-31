@@ -5,6 +5,7 @@ RecolorImage 1.0 RecolorImage.qml
 MessageStack 1.0 MessageStack.qml
 Dialog 1.0 Dialog.qml
 Wizard 1.0 Wizard.qml
+FloatingPanel 1.0 FloatingPanel.qml
 
 PreferencesDialog 1.0 Preferences/PreferencesDialog.qml
 PreferencesPage 1.0 Preferences/PreferencesPage.qml
