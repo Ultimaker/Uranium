@@ -63,7 +63,7 @@ class OpenGL:
         # those methods, in this case primarily QOpenGLFrameBufferObject::toImage(), making us
         # hard-depend on FrameBuffer Objects.
         if not self.hasFrameBufferObjects():
-            Logger.log("e", "Starup failed, OpenGL does not support Frame Buffer Objects")
+            Logger.log("e", "Startup failed, OpenGL does not support Frame Buffer Objects")
             QMessageBox.critical(None, i18n_catalog.i18nc("Critical OpenGL Extensions Missing", "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."))
             sys.exit(1)
 
