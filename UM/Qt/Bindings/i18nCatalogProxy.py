@@ -86,9 +86,9 @@ class i18nCatalogProxy(QObject): # [CodeStyle: Ultimaker code style requires cla
     #   \todo Move this to a more generic place so more things can use it.
     def _wrapFunction(self, engine, this_object, function):
         # JavaScript code that wraps the Python method call in a closure
-        wrap_js = """function(this_object) {{
+        wrap_js = """(function(this_object) {{
             return function({args}) {{ return this_object.{function}({args}) }}
-        }}"""
+        }})"""
 
         # Get the function name and argument list.
         function_name = function.__name__

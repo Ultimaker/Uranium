@@ -36,9 +36,10 @@ except ImportError:
     Logger.log("w", "Could not find numpy-stl, falling back to slower code.")
     # We have our own fallback code.
 
+
 class STLReader(MeshReader):
-    def __init__(self, application):
-        super(STLReader, self).__init__(application)
+    def __init__(self) -> None:
+        super().__init__()
         self._supported_extensions = [".stl"]
 
     def load_file(self, file_name, mesh_builder, _use_numpystl = False):
@@ -100,7 +101,7 @@ class STLReader(MeshReader):
         array[:, [frm, to]] = array[:, [to, frm]]
 
     def _loadWithNumpySTL(self, file_name, mesh_builder):
-        for loaded_data in stl.mesh.Mesh.from_multi_file(file_name):
+        for loaded_data in stl.mesh.Mesh.from_multi_file(file_name, mode=stl.stl.Mode.AUTOMATIC):
             vertices = numpy.resize(loaded_data.points.flatten(), (int(loaded_data.points.size / 3), 3))
 
             # Invert values of second column

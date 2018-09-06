@@ -4,11 +4,11 @@
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtProperty
 
 from UM.i18n import i18nCatalog
-from UM.Message import Message
 from UM.Application import Application
 from UM.Backend.Backend import BackendState
 
 i18n_catalog = i18nCatalog("uranium")
+
 
 class BackendProxy(QObject):
     def __init__(self, parent = None):

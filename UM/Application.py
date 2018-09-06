@@ -158,11 +158,9 @@ class Application:
         self._controller = Controller(self)
         self._output_device_manager = OutputDeviceManager()
 
-        self._operation_stack = OperationStack(self._controller)
+        self._operation_stack = OperationStack(self._controller) # type: OperationStack
 
         self._plugin_registry = PluginRegistry(self)  #type: PluginRegistry
-
-        self._operation_stack = OperationStack(self.getController()) #type: OperationStack
 
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, UraniumLibraryDir, "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
@@ -191,6 +189,8 @@ class Application:
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
+        self.change_log_url = "https://github.com/Ultimaker/Uranium" #Where to find a more detailed description of the recent updates.
+
     def startSplashWindowPhase(self) -> None:
         pass
 
@@ -201,7 +201,12 @@ class Application:
     #   This method should be re-implemented by subclasses to start the main event loop.
     #   \exception NotImplementedError
     def run(self):
-        raise NotImplementedError("Run must be implemented by application")
+        self.addCommandLineOptions()
+        self.parseCliOptions()
+        self.initialize()
+
+        self.startSplashWindowPhase()
+        self.startPostSplashWindowPhase()
 
     def getContainerRegistry(self):
         return self._container_registry
@@ -253,7 +258,7 @@ class Application:
     visibleMessageAdded = Signal()
 
     ##  Hide message by ID (as provided by built-in id function)
-    def hideMessageById(self, message_id: int):
+    def hideMessageById(self, message_id: int) -> None:
         # If a user and the application tries to close same message dialog simultaneously, message_id could become an empty
         # string, and then the application will raise an error when trying to do "int(message_id)".
         # So we check the message_id here.

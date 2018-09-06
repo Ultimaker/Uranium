@@ -156,19 +156,20 @@ class Scene:
 
     ##  Triggered whenever a file is changed that we currently have loaded.
     def _onFileChanged(self, file_path: str) -> None:
-        if not os.path.isfile(file_path): #File doesn't exist any more.
+        if not os.path.isfile(file_path) or os.path.getsize(file_path) == 0: #File doesn't exist any more, or it is empty
             return
 
         #Multiple nodes may be loaded from the same file at different stages. Reload them all.
         from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator #To find which nodes to reload when files have changed.
-        modified_nodes = (node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path) #type: ignore
+        modified_nodes = [node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path] #type: ignore
 
         if modified_nodes:
-            message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.basename(file_path)),
+            self._reload_message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.basename(file_path)),
                               title = i18n_catalog.i18nc("@info:title", "File has been modified"))
-            message.addAction("reload", i18n_catalog.i18nc("@action:button", "Reload"), icon = None, description = i18n_catalog.i18nc("@action:description", "This will trigger the modified files to reload from disk."))
-            message.actionTriggered.connect(functools.partialmethod(self._reloadNodes, modified_nodes))
-            message.show()
+            self._reload_message.addAction("reload", i18n_catalog.i18nc("@action:button", "Reload"), icon = None, description = i18n_catalog.i18nc("@action:description", "This will trigger the modified files to reload from disk."))
+            self._reload_callback = functools.partial(self._reloadNodes, modified_nodes)
+            self._reload_message.actionTriggered.connect(self._reload_callback)
+            self._reload_message.show()
 
     ##  Reloads a list of nodes after the user pressed the "Reload" button.
     #   \param nodes The list of nodes that needs to be reloaded.
@@ -177,6 +178,7 @@ class Scene:
     def _reloadNodes(self, nodes: List["SceneNode"], message: str, action: str) -> None:
         if action != "reload":
             return
+        self._reload_message.hide()
         for node in nodes:
             meshdata = node.getMeshData()
             if meshdata:
@@ -184,7 +186,8 @@ class Scene:
                 if not filename or not os.path.isfile(filename): #File doesn't exist any more.
                     continue
                 job = ReadMeshJob(filename)
-                job.finished.connect(functools.partialmethod(self._reloadJobFinished, node))
+                self._reload_finished_callback = functools.partial(self._reloadJobFinished, node)
+                job.finished.connect(self._reload_finished_callback)
                 job.start()
 
     ##  Triggered when reloading has finished.

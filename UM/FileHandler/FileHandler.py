@@ -16,8 +16,6 @@ i18n_catalog = i18nCatalog("uranium")
 
 if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
-    from UM.Mesh.MeshReader import MeshReader
-    from UM.Mesh.MeshWriter import MeshWriter
 
 ##  Central class for reading and writing meshes.
 #   This class is created by Application and handles reading and writing mesh files.
@@ -31,8 +29,8 @@ class FileHandler(QObject):
         super().__init__(parent)
 
         self._application = application
-        self._readers = {} # type: Dict[str, MeshReader]
-        self._writers = {} # type: Dict[str, MeshWriter]
+        self._readers = {} # type: Dict[str, FileReader]
+        self._writers = {} # type: Dict[str, FileWriter]
 
         self._writer_type = writer_type # type: str
         self._reader_type = reader_type # type: str
@@ -91,12 +89,14 @@ class FileHandler(QObject):
                 description = output.get("description", ext)
                 mime_type = output.get("mime_type", "text/plain")
                 mode = output.get("mode", FileWriter.OutputMode.TextMode)
+                hide_in_file_dialog = output.get("hide_in_file_dialog", False)
                 supported_types.append({
                     "id": entry["id"],
                     "extension": ext,
                     "description": description,
                     "mime_type": mime_type,
-                    "mode": mode
+                    "mode": mode,
+                    "hide_in_file_dialog": hide_in_file_dialog,
                 })
         return supported_types
 
@@ -114,10 +114,10 @@ class FileHandler(QObject):
                         supported_types[ext] = description
         return supported_types
 
-    def addReader(self, reader: "MeshReader") -> None:
+    def addReader(self, reader: "FileReader") -> None:
         self._readers[reader.getPluginId()] = reader
 
-    def addWriter(self, writer: "MeshWriter") -> None:
+    def addWriter(self, writer: "FileWriter") -> None:
         self._writers[writer.getPluginId()] = writer
 
     # Try to read the data from a file using a specified Reader.
@@ -131,9 +131,9 @@ class FileHandler(QObject):
     ##  Get a mesh writer object that supports writing the specified mime type
     #
     #   \param mime The mime type that should be supported.
-    #   \return A MeshWriter instance or None if no mesh writer supports the specified mime type. If there are multiple
+    #   \return A FileWriter instance or None if no mesh writer supports the specified mime type. If there are multiple
     #           writers that support the specified mime type, the first entry is returned.
-    def getWriterByMimeType(self, mime: str) -> Optional["MeshWriter"]:
+    def getWriterByMimeType(self, mime: str) -> Optional["FileWriter"]:
         writer_data = PluginRegistry.getInstance().getAllMetaData(filter={self._writer_type: {}}, active_only=True)
         for entry in writer_data:
             for output in entry[self._writer_type].get("output", []):
@@ -143,7 +143,7 @@ class FileHandler(QObject):
         return None
 
     ##  Get an instance of a mesh writer by ID
-    def getWriter(self, writer_id: str) -> Optional["MeshWriter"]:
+    def getWriter(self, writer_id: str) -> Optional["FileWriter"]:
         if writer_id not in self._writers:
             return None
 
@@ -152,7 +152,7 @@ class FileHandler(QObject):
     ##  Find a Reader that accepts the given file name.
     #   \param file_name The name of file to load.
     #   \returns Reader that accepts the given file name. If no acceptable Reader is found None is returned.
-    def getReaderForFile(self, file_name: str) -> Optional["MeshReader"]:
+    def getReaderForFile(self, file_name: str) -> Optional["FileReader"]:
         for id, reader in self._readers.items():
             try:
                 if reader.acceptsFile(file_name):

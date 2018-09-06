@@ -60,9 +60,9 @@ class Tool(PluginObject):
         return self._shortcut_key
 
     ##  Handle an event.
-    #   \param event \type{Event} The event to handle.
-    #   \return \type{bool} true if this event has been handled and requires
-    #           no further processing.
+    #   \param event The event to handle.
+    #   \return True if this event has been handled and requires no further
+    #       processing.
     #   \sa Event
     def event(self, event: Event) -> bool:
         if not self._selection_pass:

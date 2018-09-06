@@ -9,8 +9,21 @@ class FileWriter(PluginObject):
         TextMode = 1
         BinaryMode = 2
 
-    def __init__(self):
+    def __init__(self, add_to_recent_files = True, *args, **kwargs):
         super().__init__()
+        self._information = ""  # type: str
+
+        # Indicates if the file should be added to the "recent files" list if it's saved successfully.
+        self._add_to_recent_files = add_to_recent_files  # type: bool
+
+    def getAddToRecentFiles(self) -> bool:
+        return self._add_to_recent_files
 
     def write(self, stream, data):
         raise NotImplementedError("Writer plugin was not correctly implemented, no write was specified")
+
+    def setInformation(self, information_message: str):
+        self._information = information_message
+
+    def getInformation(self) -> str:
+        return self._information

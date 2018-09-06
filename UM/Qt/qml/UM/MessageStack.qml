@@ -250,7 +250,7 @@ ListView {
                                     }
                                     else
                                     {
-                                        return UM.Theme.getColor("black");
+                                        return UM.Theme.getColor("text");
                                     }
                                 }
 
@@ -378,7 +378,7 @@ ListView {
                                     }
                                     else
                                     {
-                                        return UM.Theme.getColor("black");
+                                        return UM.Theme.getColor("text");
                                     }
                                 }
 

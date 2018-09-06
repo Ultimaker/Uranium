@@ -16,12 +16,8 @@ from UM.Message import Message
 
 from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice import OutputDeviceError
-from UM.Platform import Platform
 
 from UM.i18n import i18nCatalog
-
-# HACK: This class tries to fix double file extensions problems on Mac OS X with the FileDialog.
-from .NonNativeFileDialog import NonNativeFileDialog
 
 catalog = i18nCatalog("uranium")
 
@@ -52,7 +48,7 @@ class LocalFileOutputDevice(OutputDevice):
             raise OutputDeviceError.DeviceBusyError()
 
         # Set up and display file dialog
-        dialog = NonNativeFileDialog()
+        dialog = QFileDialog()
 
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
@@ -61,9 +57,6 @@ class LocalFileOutputDevice(OutputDevice):
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
         dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
-        # Native File dialog on OS X has issues with double/multiple extension files.
-        if Platform.isOSX():
-            dialog.setOption(QFileDialog.DontUseNativeDialog)
         if sys.platform == "linux" and "KDE_FULL_SESSION" in os.environ:
             dialog.setOption(QFileDialog.DontUseNativeDialog)
 
@@ -71,10 +64,11 @@ class LocalFileOutputDevice(OutputDevice):
         mime_types = []
         selected_filter = None
 
-        if "preferred_mimetype" in kwargs and kwargs["preferred_mimetype"] is not None:
-            preferred_mimetype = kwargs["preferred_mimetype"]
+        if "preferred_mimetypes" in kwargs and kwargs["preferred_mimetypes"] is not None:
+            preferred_mimetypes = kwargs["preferred_mimetypes"]
         else:
-            preferred_mimetype = Application.getInstance().getPreferences().getValue("local_file/last_used_type")
+            preferred_mimetypes = Application.getInstance().getPreferences().getValue("local_file/last_used_type")
+        preferred_mimetype_list = preferred_mimetypes.split(";")
 
         if not file_handler:
             file_handler = Application.getInstance().getMeshFileHandler()
@@ -85,9 +79,18 @@ class LocalFileOutputDevice(OutputDevice):
         if limit_mimetypes:
             file_types = list(filter(lambda i: i["mime_type"] in limit_mimetypes, file_types))
 
+        file_types = [ft for ft in file_types if not ft["hide_in_file_dialog"]]
+
         if len(file_types) == 0:
             Logger.log("e", "There are no file types available to write with!")
             raise OutputDeviceError.WriteRequestFailedError(catalog.i18nc("@info:warning", "There are no file types available to write with!"))
+
+        # Find the first available preferred mime type
+        preferred_mimetype = None
+        for mime_type in preferred_mimetype_list:
+            if any(ft["mime_type"] == mime_type for ft in file_types):
+                preferred_mimetype = mime_type
+                break
 
         for item in file_types:
             type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
@@ -149,6 +152,7 @@ class LocalFileOutputDevice(OutputDevice):
 
             job = WriteFileJob(file_writer, stream, nodes, mode)
             job.setFileName(file_name)
+            job.setAddToRecentFiles(True)  # The file will be added into the "recent files" list upon success
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)
 

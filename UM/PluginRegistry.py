@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 #   [plugins]: docs/plugins.md
 
 class PluginRegistry(QObject):
-    APIVersion = 4
+    APIVersion = 5
 
     def __init__(self, application: "Application", parent: QObject = None) -> None:
         if PluginRegistry.__instance is not None:
@@ -402,13 +402,6 @@ class PluginRegistry(QObject):
             del self._metadata[plugin_id]
             return
 
-        #HACK: For OctoPrint plug-in version 3.2.2, it broke the start-up sequence when auto-connecting.
-        #Remove this hack once we've increased the API version number to something higher than 4.
-        version = self._metadata[plugin_id].get("plugin", {}).get("version", "0.0.0")
-        if plugin_id == "OctoPrintPlugin" and Version(version) < Version("3.3.0"):
-            Logger.log("e", "Plugin OctoPrintPlugin version {version} was disabled because it was using an old API for network connection.".format(version = version))
-            return
-
         try:
             to_register = plugin.register(self._application) #type: ignore #We catch AttributeError on this in case register() doesn't exist.
             if not to_register:
@@ -663,13 +656,6 @@ class PluginRegistry(QObject):
                 return False
         return True
 
-    #===============================================================================
-    # GRAVEYARD
-    # Methods in the graveyard are no longer used and can eventually be removed and
-    # forgotten by the ages. They aren't yet though because their memories still
-    # live on in the hearts of other classes.
-    #===============================================================================
-
     ##  Get a speficic plugin object given an ID. If not loaded, load it.
     #   \param plugin_id \type{string} The ID of the plugin object to get.
     def getPluginObject(self, plugin_id: str) -> PluginObject:
@@ -679,7 +665,6 @@ class PluginRegistry(QObject):
             raise PluginNotFoundError(plugin_id)
         return self._plugin_objects[plugin_id]
 
-    # Plugin object stuff is definitely considered depreciated.
     def _addPluginObject(self, plugin_object: PluginObject, plugin_id: str, plugin_type: str) -> None:
         plugin_object.setPluginId(plugin_id)
         self._plugin_objects[plugin_id] = plugin_object
@@ -713,13 +698,6 @@ class PluginRegistry(QObject):
         file_types.insert(0, i18n_catalog.i18nc("@item:inlistbox", "All Supported Types ({0})", " ".join(all_types)))
         file_types.append(i18n_catalog.i18nc("@item:inlistbox", "All Files (*)"))
         return file_types
-
-    @pyqtSlot(str, result = bool)
-    def isPluginFile(self, plugin_path: str) -> bool:
-        extension = os.path.splitext(plugin_path)[1].strip(".")
-        if extension.lower() in self._supported_file_types.keys():
-            return True
-        return False
 
     ##  Get the path to a plugin.
     #

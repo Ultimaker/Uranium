@@ -16,5 +16,6 @@ def getMetaData():
         ]
     }
 
+
 def register(app):
-    return { "mesh_reader": STLReader.STLReader(app) }
+    return {"mesh_reader": STLReader.STLReader()}

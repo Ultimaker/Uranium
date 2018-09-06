@@ -272,10 +272,12 @@ class SettingPropertyProvider(QObject):
 
             if self._stack.getProperty(key, "state") != InstanceState.User:
                 value_used_count += 1
+                break
 
             # If the setting has a formula the value is still used.
             if isinstance(self._stack.getRawProperty(key, "value"), SettingFunction):
                 value_used_count += 1
+                break
 
         self._value_used = relation_count == 0 or (relation_count > 0 and value_used_count != 0)
         return self._value_used
