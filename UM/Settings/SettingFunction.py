@@ -14,12 +14,15 @@ from UM.Logger import Logger
 if TYPE_CHECKING:
     from typing import FrozenSet
 
+
 class IllegalMethodError(Exception):
     pass
+
 
 def _debug_value(value: Any) -> Any:
     Logger.log("d", "Setting Function: %s", value)
     return value
+
 
 ##  Encapsulates Python code that provides a simple value calculation function.
 #
@@ -34,9 +37,9 @@ class SettingFunction:
 
         #  Keys of all settings that are referenced to in this function.
         self._used_keys = frozenset()  # type: FrozenSet[str]
-        self._used_values = frozenset() # type: FrozenSet[str]
+        self._used_values = frozenset()  # type: FrozenSet[str]
 
-        self._compiled = None #type: Optional[CodeType] #Actually an Optional['code'] object, but Python doesn't properly expose this 'code' object via any library.
+        self._compiled = None  # type: Optional[CodeType] #Actually an Optional['code'] object, but Python doesn't properly expose this 'code' object via any library.
         self._valid = False  # type: bool
 
         try:
@@ -146,6 +149,7 @@ class SettingFunction:
 
 _VisitResult = NamedTuple("_VisitResult", [("values", Set[str]), ("keys", Set[str])])
 
+
 # Helper class used to analyze a parsed function.
 #
 # It walks a Python AST generated from a Python expression. It will analyze the AST and
@@ -155,14 +159,14 @@ _VisitResult = NamedTuple("_VisitResult", [("values", Set[str]), ("keys", Set[st
 class _SettingExpressionVisitor(ast.NodeVisitor):
     def __init__(self) -> None:
         super().__init__()
-        self.values = set() #type: Set[str]
-        self.keys = set() #type: Set[str]
+        self.values = set()  # type: Set[str]
+        self.keys = set()  # type: Set[str]
 
     def visit(self, node: ast.AST) -> _VisitResult:
         super().visit(node)
         return _VisitResult(values = self.values, keys = self.keys)
 
-    def visit_Name(self, node: ast.Name) -> None: # [CodeStyle: ast.NodeVisitor requires this function name]
+    def visit_Name(self, node: ast.Name) -> None:  # [CodeStyle: ast.NodeVisitor requires this function name]
         if node.id in self._blacklist:
             raise IllegalMethodError(node.id)
 
@@ -171,8 +175,8 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
             self.keys.add(node.id)
 
     def visit_Str(self, node: ast.AST) -> None:
-        if node.s not in self._knownNames and node.s not in dir(builtins): #type: ignore #AST uses getattr stuff, so ignore type of node.s.
-            self.keys.add(node.s) #type: ignore
+        if node.s not in self._knownNames and node.s not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.s.
+            self.keys.add(node.s)  # type: ignore
 
     _knownNames = {
         "math",
@@ -181,7 +185,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "debug",
         "sum",
         "len"
-    } #type: Set[str]
+    }  # type: Set[str]
 
     _blacklist = {
         "sys",
@@ -191,4 +195,4 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "eval",
         "exec",
         "subprocess",
-    } #type: Set[str]
+    }  # type: Set[str]

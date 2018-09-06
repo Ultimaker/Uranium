@@ -4,7 +4,6 @@
 import configparser
 import io
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
-from typing import Union
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
@@ -17,7 +16,6 @@ from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.ContainerFormatError import ContainerFormatError
-from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
@@ -32,6 +30,7 @@ class IncorrectVersionError(Exception):
 
 class InvalidContainerStackError(Exception):
     pass
+
 
 MimeTypeDatabase.addMimeType(
     MimeType(
@@ -332,7 +331,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             Logger.log("d", "Could not get type from serialized.")
             return None
 
-        # get version
+        # Get version
         version = None
         try:
             from UM.VersionUpgradeManager import VersionUpgradeManager
@@ -347,7 +346,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
-        # update the serialized data first
+        # Update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
 
@@ -365,7 +364,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             self._metadata = dict(parser["metadata"])
         self._metadata["id"] = parser["general"]["id"]
         self._metadata["name"] = parser["general"].get("name", self.getId())
-        self._metadata["version"] = self.Version #Guaranteed to be equal to what's in the container. See above.
+        self._metadata["version"] = self.Version  # Guaranteed to be equal to what's in the container. See above.
         self._metadata["container_type"] = ContainerStack
 
         if "containers" in parser:
@@ -414,7 +413,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   instead.
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
-        serialized = cls._updateSerialized(serialized) #Update to most recent version.
+        serialized = cls._updateSerialized(serialized)  # Update to most recent version.
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
@@ -425,7 +424,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         try:
             metadata["name"] = parser["general"]["name"]
             metadata["version"] = parser["general"]["version"]
-        except KeyError as e: #One of the keys or the General section itself is missing.
+        except KeyError as e:  # One of the keys or the General section itself is missing.
             raise InvalidContainerStackError("Missing required fields: {error_msg}".format(error_msg = str(e)))
 
         if "metadata" in parser:
@@ -440,7 +439,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #
     #   \return A set of all setting keys in this container stack.
     def getAllKeys(self) -> Set[str]:
-        keys = set()    # type: Set[str]
+        keys = set()  # type: Set[str]
         definition_containers = [container for container in self.getContainers() if container.__class__ == DefinitionContainer] #To get all keys, get all definitions from all definition containers.
         for definition_container in cast(List[DefinitionContainer], definition_containers):
             keys |= definition_container.getAllKeys()
@@ -721,7 +720,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     def __str__(self) -> str:
         return "%s(%s)" % (type(self).__name__, self.getId())
 
-_containerRegistry = ContainerRegistryInterface() # type: ContainerRegistryInterface
+
+_containerRegistry = ContainerRegistryInterface()  # type: ContainerRegistryInterface
+
 
 def setContainerRegistry(registry: ContainerRegistryInterface) -> None:
     global _containerRegistry

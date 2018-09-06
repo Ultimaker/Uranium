@@ -55,20 +55,20 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._emptyInstanceContainer = empty_container  # type: InstanceContainer
 
-        #Sorted list of container providers (keep it sorted by sorting each time you add one!).
-        self._providers = [] # type: List[ContainerProvider]
+        # Sorted list of container providers (keep it sorted by sorting each time you add one!).
+        self._providers = []  # type: List[ContainerProvider]
         PluginRegistry.addType("container_provider", self.addProvider)
 
-        self.metadata = {} # type: Dict[str, Dict[str, Any]]
-        self._containers = {} # type: Dict[str, ContainerInterface]
+        self.metadata = {}  # type: Dict[str, Dict[str, Any]]
+        self._containers = {}  # type: Dict[str, ContainerInterface]
         self._wrong_container_ids = set() # type: Set[str]  # Set of already known wrong containers that must be skipped
-        self.source_provider = {} # type: Dict[str, Optional[ContainerProvider]] #Where each container comes from.
+        self.source_provider = {}  # type: Dict[str, Optional[ContainerProvider]]  # Where each container comes from.
         # Ensure that the empty container is added to the ID cache.
         self.metadata["empty"] = self._emptyInstanceContainer.getMetaData()
         self._containers["empty"] = self._emptyInstanceContainer
         self.source_provider["empty"] = None
         self._resource_types = {"definition": Resources.DefinitionContainers}  # type: Dict[str, int]
-        self._query_cache = collections.OrderedDict() #type: collections.OrderedDict # This should really be an ordered set but that does not exist...
+        self._query_cache = collections.OrderedDict()  # type: collections.OrderedDict # This should really be an ordered set but that does not exist...
 
         #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)

@@ -11,7 +11,8 @@ from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 if TYPE_CHECKING:
     from UM.Application import Application
     from UM.Settings.InstanceContainer import InstanceContainer
-    from UM.Settings.SettingDefinition import SettingDefinition #For typing.
+    from UM.Settings.SettingDefinition import SettingDefinition
+
 
 ##  Shared interface between setting container types
 #

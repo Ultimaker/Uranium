@@ -11,7 +11,7 @@ from UM.Logger import Logger
 MYPY = False
 if MYPY:
     from UM.Settings.SettingInstance import SettingInstance
-
+from typing import Optional
 from . import SettingFunction
 
 class ValidatorState(Enum):
@@ -40,7 +40,7 @@ class Validator(SettingFunction.SettingFunction):
         self._key = key  # type: str
 
     ##  Perform the actual validation.
-    def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Any:
+    def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Optional[ValidatorState]:
         if not value_provider:
             return
 

@@ -77,7 +77,7 @@ class SettingDefinition:
     #   \param container \type{DefinitionContainerInterface} The container of this setting. Defaults to None.
     #   \param parent \type{SettingDefinition} The parent of this setting. Defaults to None.
     #   \param i18n_catalog \type{i18nCatalog} The translation catalog to use for this setting. Defaults to None.
-    def __init__(self, key: str, container: Optional[DefinitionContainerInterface] = None, parent: Optional["SettingDefinition"] = None, i18n_catalog: i18nCatalog = None) -> None:
+    def __init__(self, key: str, container: Optional[DefinitionContainerInterface] = None, parent: Optional["SettingDefinition"] = None, i18n_catalog: Optional[i18nCatalog] = None) -> None:
         super().__init__()
 
         self._key = key  # type: str
