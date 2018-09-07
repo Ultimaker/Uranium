@@ -84,7 +84,7 @@ class VersionUpgradeManager:
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
         # Files that should not be checked, such as log files
-        self._ignored_files = ["uranium.lock", "plugins.json"]  # type: List[str]
+        self._ignored_files = ["uranium.lock", "plugins.json", "packages.json"]  # type: List[str]
 
     ##  Registers a file to be ignored by version upgrade checks (eg log files).
     #   \param file_name The base file name of the file to be ignored.
@@ -272,17 +272,17 @@ class VersionUpgradeManager:
                                 continue
                             try:
                                 with open(os.path.join(path, configuration_file), "r", encoding = "utf-8") as f:
-                                    current_version = self._get_version_functions[old_configuration_type](f.read())
-                                    if current_version != src_version:
-                                        Logger.log("d", "Config file [%s] is of version [%s], which is different from the defined version [%s], no upgrade task for it from type [%s].",
-                                                   configuration_file, current_version, src_version, old_configuration_type)
+                                    file_version = self._get_version_functions[old_configuration_type](f.read())
+                                    if file_version != src_version:
+                                        #Logger.log("d", "Config file [%s] is of version [%s], which is different from the defined version [%s], no upgrade task for it from type [%s].",
+                                        #           configuration_file, file_version, src_version, old_configuration_type)
                                         continue
                             except:
                                 Logger.log("w", "Failed to get file version: %s, skip it", configuration_file)
                                 continue
 
                             Logger.log("i", "Create upgrade task for configuration file [%s] with type [%s] and source version [%s]",
-                                       configuration_file, old_configuration_type, current_version)
+                                       configuration_file, old_configuration_type, file_version)
                             yield UpgradeTask(storage_path = path, file_name = configuration_file,
                                               configuration_type = old_configuration_type)
 
