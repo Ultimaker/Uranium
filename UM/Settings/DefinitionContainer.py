@@ -218,7 +218,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             if key in data["metadata"]:
                 del data["metadata"][key]
 
-        data["settings"] = {}  # type: Dict[str, Any]
+        data["settings"] = {}
         for definition in self.definitions:
             data["settings"][definition.key] = definition.serialize_to_dict()
 
@@ -395,7 +395,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             raise InvalidDefinitionError("Missing required properties: {properties}".format(properties = ", ".join(missing_fields)))
 
         if json_dict["version"] != self.Version:
-            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], cls.Version))
+            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], self.Version))
 
     # Recursively find a key in a dictionary
     def _findInDict(self, dictionary: Dict[str, Any], key: str):

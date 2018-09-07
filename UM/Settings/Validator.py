@@ -42,7 +42,7 @@ class Validator(SettingFunction.SettingFunction):
     ##  Perform the actual validation.
     def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Optional[ValidatorState]:
         if not value_provider:
-            return
+            return None
 
         state = ValidatorState.Unknown
         try:
