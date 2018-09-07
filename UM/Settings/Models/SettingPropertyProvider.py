@@ -29,7 +29,6 @@ class SettingPropertyProvider(QObject):
 
         self._property_map = QQmlPropertyMap(self)
 
-        self._stack_id = ""
         self._stack = None
         self._key = ""
         self._relations = set()
@@ -47,41 +46,51 @@ class SettingPropertyProvider(QObject):
 
         self.storeIndexChanged.connect(self._storeIndexChanged)
 
-    ##  Set the containerStackId property.
-    def setContainerStackId(self, stack_id):
-        if stack_id == self._stack_id:
-            return # No change.
-
-        self._stack_id = stack_id
-
+    def setContainerStack(self, stack):
         if self._stack:
             self._stack.propertiesChanged.disconnect(self._onPropertiesChanged)
             self._stack.containersChanged.disconnect(self._containersChanged)
 
-        if self._stack_id:
-            if self._stack_id == "global":
-                self._stack = Application.getInstance().getGlobalContainerStack()
-            else:
-                stacks = ContainerRegistry.getInstance().findContainerStacks(id = self._stack_id)
-                if stacks:
-                    self._stack = stacks[0]
+        self._stack = stack
 
-            if self._stack:
-                self._stack.propertiesChanged.connect(self._onPropertiesChanged)
-                self._stack.containersChanged.connect(self._containersChanged)
-        else:
-            self._stack = None
+        if self._stack:
+            self._stack.propertiesChanged.connect(self._onPropertiesChanged)
+            self._stack.containersChanged.connect(self._containersChanged)
 
         self._validator = None
         self._update()
-        self.containerStackIdChanged.emit()
+        self.containerStackChanged.emit()
+
+    ##  Set the containerStackId property.
+    def setContainerStackId(self, stack_id):
+        if stack_id == self.containerStackId:
+            return  # No change.
+
+        if stack_id:
+            if stack_id == "global":
+                self.setContainerStack(Application.getInstance().getGlobalContainerStack())
+            else:
+                stacks = ContainerRegistry.getInstance().findContainerStacks(id = stack_id)
+                if stacks:
+                    self.setContainerStack(stacks[0])
+        else:
+            self.setContainerStack(None)
 
     ##  Emitted when the containerStackId property changes.
     containerStackIdChanged = pyqtSignal()
     ##  The ID of the container stack we should query for property values.
     @pyqtProperty(str, fset = setContainerStackId, notify = containerStackIdChanged)
     def containerStackId(self):
-        return self._stack_id
+        try:
+            return self._stack.id
+        except:
+            return ""
+
+    containerStackChanged = pyqtSignal()
+
+    @pyqtProperty(QObject, fset=setContainerStack, notify=containerStackChanged)
+    def containerStack(self):
+        return self._stack
 
     removeUnusedValueChanged = pyqtSignal()
 
