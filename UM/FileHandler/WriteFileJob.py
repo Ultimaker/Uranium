@@ -64,7 +64,7 @@ class WriteFileJob(Job):
     def run(self):
         Job.yieldThread()
         begin_time = time.time()
-        self.setResult(self._writer.write(self._stream, self._data))
+        self.setResult(self._writer.write(self._stream, self._data, self._mode))
         if not self.getResult():
             self.setError(self._writer.getInformation())
         end_time = time.time()

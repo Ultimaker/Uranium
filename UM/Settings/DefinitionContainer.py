@@ -155,7 +155,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #
     #   \return A set of all keys of settings in this container.
     def getAllKeys(self) -> Set[str]:
-        keys = set() #type: Set[str]
+        keys = set()  # type: Set[str]
         for definition in self.definitions:
             keys |= definition.getAllKeys()
         return keys
@@ -205,12 +205,12 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
-        data = { } #type: Dict[str, Any] #The data to write to a JSON file.
+        data = {}  # type: Dict[str, Any]  # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
         data["metadata"] = self.getMetaData().copy()
 
-        # remove the keys that we want to ignore in the metadata
+        # Remove the keys that we want to ignore in the metadata
         if not ignored_metadata_keys:
             ignored_metadata_keys = set()
         ignored_metadata_keys |= {"name", "version", "id", "container_type"}
@@ -218,11 +218,11 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             if key in data["metadata"]:
                 del data["metadata"][key]
 
-        data["settings"] = { }
+        data["settings"] = {}
         for definition in self.definitions:
             data["settings"][definition.key] = definition.serialize_to_dict()
 
-        return json.dumps(data, separators = (", ", ": "), indent = 4) # Pretty print the JSON.
+        return json.dumps(data, separators = (", ", ": "), indent = 4)  # Pretty print the JSON.
 
     @classmethod
     def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
@@ -335,10 +335,10 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         metadata["container_type"] = DefinitionContainer
         metadata["id"] = container_id
-        try: #Move required fields to metadata.
+        try:  # Move required fields to metadata.
             metadata["name"] = parsed["name"]
             metadata["version"] = parsed["version"]
-        except KeyError as e: #Required fields not present!
+        except KeyError as e:  # Required fields not present!
             raise InvalidDefinitionError("Missing required fields: {error_msg}".format(error_msg = str(e)))
         if "metadata" in parsed:
             metadata.update(parsed["metadata"])
@@ -388,14 +388,14 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         return json_dict
 
     # Verify that a loaded json matches our basic expectations.
-    def _verifyJson(cls, json_dict: Dict[str, Any]):
+    def _verifyJson(self, json_dict: Dict[str, Any]):
         required_fields = {"version", "name", "settings", "metadata"}
         missing_fields = required_fields - json_dict.keys()
         if missing_fields:
             raise InvalidDefinitionError("Missing required properties: {properties}".format(properties = ", ".join(missing_fields)))
 
-        if json_dict["version"] != cls.Version:
-            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], cls.Version))
+        if json_dict["version"] != self.Version:
+            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], self.Version))
 
     # Recursively find a key in a dictionary
     def _findInDict(self, dictionary: Dict[str, Any], key: str):
@@ -422,16 +422,16 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     # Recursively update relations of settings
     def _updateRelations(self, definition: SettingDefinition) -> None:
-        for property in SettingDefinition.getPropertyNames(DefinitionPropertyType.Function):
-            self._processFunction(definition, property)
+        for property_name in SettingDefinition.getPropertyNames(DefinitionPropertyType.Function):
+            self._processFunction(definition, property_name)
 
         for child in definition.children:
             self._updateRelations(child)
 
     # Create relation objects for all settings used by a certain function
-    def _processFunction(self, definition: SettingDefinition, property: str) -> None:
+    def _processFunction(self, definition: SettingDefinition, property_name: str) -> None:
         try:
-            function = getattr(definition, property)
+            function = getattr(definition, property_name)
         except AttributeError:
             return
 
@@ -442,7 +442,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             # Prevent circular relations between the same setting and the same property
             # Note that the only property used by SettingFunction is the "value" property, which
             # is why this is hard coded here.
-            if setting == definition.key and property == "value":
+            if setting == definition.key and property_name == "value":
                 Logger.log("w", "Found circular relation for property 'value' between {0} and {1}", definition.key, setting)
                 continue
 
@@ -450,10 +450,10 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             if not other:
                 continue
 
-            relation = SettingRelation(definition, other, RelationType.RequiresTarget, property)
+            relation = SettingRelation(definition, other, RelationType.RequiresTarget, property_name)
             definition.relations.append(relation)
 
-            relation = SettingRelation(other, definition, RelationType.RequiredByTarget, property)
+            relation = SettingRelation(other, definition, RelationType.RequiredByTarget, property_name)
             other.relations.append(relation)
 
     def _getDefinition(self, key: str) -> Optional[SettingDefinition]:

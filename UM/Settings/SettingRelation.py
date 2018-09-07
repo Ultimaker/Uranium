@@ -5,10 +5,12 @@ import enum
 
 from UM.Settings.SettingDefinition import SettingDefinition
 
+
 ##  The type of relation, i.e. what direction does this relation have.
 class RelationType(enum.IntEnum):
     RequiresTarget = 1 # The relation represents that the owner requires the target.
     RequiredByTarget = 2 # The relation represents that the target requires the owner.
+
 
 ##  A representation of a relationship between two settings.
 #

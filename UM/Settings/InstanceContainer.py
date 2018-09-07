@@ -19,14 +19,18 @@ from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.SettingInstance import SettingInstance
 
+
 class InvalidInstanceError(Exception):
     pass
+
 
 class IncorrectInstanceVersionError(Exception):
     pass
 
+
 class DefinitionNotFoundError(Exception):
     pass
+
 
 MimeTypeDatabase.addMimeType(
     MimeType(
@@ -484,7 +488,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         try:
             parser_version = int(parser["general"]["version"])
-        except ValueError: #Version number is not integer.
+        except ValueError:  # Version number is not integer.
             raise IncorrectInstanceVersionError("Reported version {0} is not an integer.".format(parser["general"]["version"]))
         if parser_version != self.Version:
             raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(str(parser_version), self.Version))
@@ -523,7 +527,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #   instead.
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
-        serialized = cls._updateSerialized(serialized) #Update to most recent version.
+        serialized = cls._updateSerialized(serialized)  # Update to most recent version.
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
@@ -660,7 +664,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def __str__(self) -> str:
         return "<InstanceContainer '{container_id}' ('{name}')>".format(container_id = self.getId(), name = self.getName())
 
-    ##  Send postponed emits
+    ##  Send the postponed emits
     #   These emits are collected from the option postpone_emit.
     #   Note: the option can be implemented for all functions modifying the container.
     def sendPostponedEmits(self) -> None:
@@ -669,7 +673,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             signal.emit(*signal_arg)
 
 
-_containerRegistry = ContainerRegistryInterface()   # type:  ContainerRegistryInterface
+_containerRegistry = ContainerRegistryInterface()  # type:  ContainerRegistryInterface
+
 
 def setContainerRegistry(registry: ContainerRegistryInterface) -> None:
     global _containerRegistry
