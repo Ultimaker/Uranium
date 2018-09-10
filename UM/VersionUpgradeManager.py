@@ -274,8 +274,6 @@ class VersionUpgradeManager:
                                 with open(os.path.join(path, configuration_file), "r", encoding = "utf-8") as f:
                                     file_version = self._get_version_functions[old_configuration_type](f.read())
                                     if file_version != src_version:
-                                        #Logger.log("d", "Config file [%s] is of version [%s], which is different from the defined version [%s], no upgrade task for it from type [%s].",
-                                        #           configuration_file, file_version, src_version, old_configuration_type)
                                         continue
                             except:
                                 Logger.log("w", "Failed to get file version: %s, skip it", configuration_file)
