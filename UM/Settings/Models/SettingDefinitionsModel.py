@@ -52,6 +52,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._visibility_handler = None
 
         self._update_visible_row_scheduled = False  # type: bool
+        self._destroyed = False  # type: bool
 
         self._filter_dict = {}
 
@@ -66,8 +67,13 @@ class SettingDefinitionsModel(QAbstractListModel):
             self._role_names[index] = name.encode()
             index += 1
 
+        self.destroyed.connect(self._onDestroyed)
+
     ##  Emitted whenever the showAncestors property changes.
     showAncestorsChanged = pyqtSignal()
+
+    def _onDestroyed(self) -> None:
+        self._destroyed = True
 
     def setShowAncestors(self, show_ancestors: bool) -> None:
         if show_ancestors != self._show_ancestors:
@@ -528,6 +534,12 @@ class SettingDefinitionsModel(QAbstractListModel):
     # This will compute the difference between the old state and the new state and
     # insert/remove rows as appropriate.
     def _updateVisibleRows(self):
+        # This function is scheduled on the Qt event loop. By the time this is called, this object can already been
+        # destroyed because the owner QML widget was destroyed or so. We cannot cancel a call that has been scheduled,
+        # so in this case, we should do nothing if this object has already been destroyed.
+        if self._destroyed:
+            return
+
         # Reset the scheduled flag
         self._update_visible_row_scheduled = False
 
