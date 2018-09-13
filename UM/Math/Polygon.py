@@ -163,9 +163,8 @@ class Polygon:
         return ret_size
 
     ##  Calculate the convex hull around the set of points of this polygon.
-    #
-    #   \return \type{Polygon} The convex hull around the points of this polygon.
-    def getConvexHull(self):
+    #   \return The convex hull around the points of this polygon.
+    def getConvexHull(self) -> "Polygon":
         points = self._points
 
         if len(points) < 1:
