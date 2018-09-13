@@ -11,6 +11,7 @@ import time
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
+
 ##  A Job subclass that performs file loading.
 #
 class ReadFileJob(Job):

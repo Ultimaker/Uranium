@@ -5,6 +5,8 @@ import itertools
 import sys
 from typing import Iterable, Union, Optional
 
+from PyQt5.QtWidgets import QMessageBox
+
 from UM.i18n import i18nCatalog
 from UM.Message import Message
 from UM.Resources import Resources
@@ -39,13 +41,17 @@ class ConfigurationErrorMessage(Message):
             self._faulty_containers.add(container)
 
         if initial_length != len(self._faulty_containers):
-            self.setText(i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\nWould you like to reset to factory defaults? Reset will remove all your current printers and profiles.").format(profiles = "\n- ".join(self._faulty_containers)))
+            self.setText(i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles.").format(profiles = "\n- ".join(self._faulty_containers)))
             self.show()
 
     def _actionTriggered(self, _, action_id):
         if action_id == "reset":
-            Resources.factoryReset()
-            sys.exit(1)
+            result = QMessageBox.question(None, i18n_catalog.i18nc("@title:window", "Reset to factory"),
+                                          i18n_catalog.i18nc("@label",
+                                                        "Reset will remove all your current printers and profiles! Are you sure you want to reset?"))
+            if result == QMessageBox.Yes:
+                Resources.factoryReset()
+                sys.exit(1)
 
     __instance = None   # type: ConfigurationErrorMessage
 
