@@ -229,7 +229,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         configuration_type = None
         try:
             parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
-            configuration_type = parsed["metadata"].get("type", "machine") #TODO: Not all definitions have a type. They get this via inheritance but that requires an instance.
+            configuration_type = parsed.get("metadata", {}).get("type", "machine") #TODO: Not all definitions have a type. They get this via inheritance but that requires an instance.
         except InvalidDefinitionError as ide:
             raise ide
         except Exception as e:

@@ -228,34 +228,25 @@ class PackageManager(QObject):
             if package_id in self._to_remove_package_set:
                 self._to_remove_package_set.remove(package_id)
 
-            # Check if it is installed
-            installed_package_info = self.getInstalledPackageInfo(package_info["package_id"])
-            to_install_package = installed_package_info is None  # Install if the package has not been installed
-            if installed_package_info is not None:
-                # Compare versions and only schedule the installation if the given package is newer
-                new_version = package_info["package_version"]
-                installed_version = installed_package_info["package_version"]
-                if Version(new_version) > Version(installed_version):
-                    Logger.log("i", "Package [%s] version [%s] is newer than the installed version [%s], update it.",
-                               package_id, new_version, installed_version)
-                    to_install_package = True
+            # We do not check if the same package has been installed already here because, for example, in Cura,
+            # it may need to install a package with the same package-version but with a higher SDK version. So,
+            # the package-version is not the only version that can be in play here.
 
-            if to_install_package:
-                # Need to use the lock file to prevent concurrent I/O issues.
-                with self._container_registry.lockFile():
-                    Logger.log("i", "Package [%s] version [%s] is scheduled to be installed.",
-                               package_id, package_info["package_version"])
-                    # Copy the file to cache dir so we don't need to rely on the original file to be present
-                    package_cache_dir = os.path.join(os.path.abspath(Resources.getCacheStoragePath()), "cura_packages")
-                    if not os.path.exists(package_cache_dir):
-                        os.makedirs(package_cache_dir, exist_ok=True)
+            # Need to use the lock file to prevent concurrent I/O issues.
+            with self._container_registry.lockFile():
+                Logger.log("i", "Package [%s] version [%s] is scheduled to be installed.",
+                           package_id, package_info["package_version"])
+                # Copy the file to cache dir so we don't need to rely on the original file to be present
+                package_cache_dir = os.path.join(os.path.abspath(Resources.getCacheStoragePath()), "cura_packages")
+                if not os.path.exists(package_cache_dir):
+                    os.makedirs(package_cache_dir, exist_ok=True)
 
-                    target_file_path = os.path.join(package_cache_dir, package_id + ".curapackage")
-                    shutil.copy2(filename, target_file_path)
+                target_file_path = os.path.join(package_cache_dir, package_id + ".curapackage")
+                shutil.copy2(filename, target_file_path)
 
-                    self._to_install_package_dict[package_id] = {"package_info": package_info,
-                                                                 "filename": target_file_path}
-                    has_changes = True
+                self._to_install_package_dict[package_id] = {"package_info": package_info,
+                                                             "filename": target_file_path}
+                has_changes = True
         except:
             Logger.logException("c", "Failed to install package file '%s'", filename)
         finally:
