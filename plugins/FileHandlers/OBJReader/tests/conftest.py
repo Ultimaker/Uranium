@@ -2,8 +2,8 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
-# QT application import is required, even though it isn't used.
-from UM.Qt.QtApplication import QtApplication
+import Arcus #Prevents error: "PyCapsule_GetPointer called with incorrect name" with conflicting SIP configurations between Arcus and PyQt: Import Arcus first!
+from UM.Qt.QtApplication import QtApplication # QT application import is required, even though it isn't used.
 from UM.Application import Application
 from UM.Signal import Signal
 
