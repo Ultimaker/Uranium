@@ -31,14 +31,24 @@ class PackageManager(QObject):
         self._container_registry = self._application.getContainerRegistry()
         self._plugin_registry = self._application.getPluginRegistry()
 
-        #JSON files that keep track of all installed packages.
-        self._user_package_management_file_path = None #type: str
-        self._bundled_package_management_file_paths = [] #type: List[str]
+        # JSON files that keep track of all installed packages.
+        self._user_package_management_file_path = None  # type: str
+        self._bundled_package_management_file_paths = []  # type: List[str]
         for search_path in Resources.getSearchPaths():
-            candidate_bundled_path = os.path.join(search_path, "bundled_packages.json")
-            if os.path.exists(candidate_bundled_path):
-                Logger.log("i", "Found bundled packages location: {location}".format(location = search_path))
-                self._bundled_package_management_file_paths.append(candidate_bundled_path)
+            bundled_packages_dir = os.path.join(search_path, "bundled_packages")
+            if not os.path.isdir(bundled_packages_dir):
+                continue
+
+            # Load all JSON files that are located in the bundled_packages directory.
+            for file_name in os.listdir(bundled_packages_dir):
+                if not file_name.endswith(".json"):
+                    continue
+                file_path = os.path.join(bundled_packages_dir, file_name)
+                if not os.path.isfile(file_path):
+                    continue
+                self._bundled_package_management_file_paths.append(file_path)
+                Logger.log("i", "Found bundled packages JSON file: {location}".format(location = file_path))
+
         for search_path in (Resources.getDataStoragePath(), Resources.getConfigStoragePath()):
             candidate_user_path = os.path.join(search_path, "packages.json")
             if os.path.exists(candidate_user_path):
