@@ -39,7 +39,8 @@ class LockFile:
         start_wait = time.time()
         while True:
             if time.time() - start_wait > self._timeout: #Timeout expired. Overwrite the lock file.
-                os.remove(self._filename)
+                if os.path.exists(self._filename):
+                    os.remove(self._filename)
             open_flags = (os.O_CREAT | os.O_EXCL | os.O_WRONLY)
             open_mode = 0o644
             try:

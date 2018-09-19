@@ -34,16 +34,15 @@ class PackageManager(QObject):
         # JSON files that keep track of all installed packages.
         self._user_package_management_file_path = None  # type: str
         self._bundled_package_management_file_paths = []  # type: List[str]
-        for search_path in Resources.getSearchPaths():
-            bundled_packages_dir = os.path.join(search_path, "bundled_packages")
-            if not os.path.isdir(bundled_packages_dir):
+        for search_path in Resources.getAllPathsForType(Resources.BundledPackages):
+            if not os.path.isdir(search_path):
                 continue
 
             # Load all JSON files that are located in the bundled_packages directory.
-            for file_name in os.listdir(bundled_packages_dir):
+            for file_name in os.listdir(search_path):
                 if not file_name.endswith(".json"):
                     continue
-                file_path = os.path.join(bundled_packages_dir, file_name)
+                file_path = os.path.join(search_path, file_name)
                 if not os.path.isfile(file_path):
                     continue
                 self._bundled_package_management_file_paths.append(file_path)
