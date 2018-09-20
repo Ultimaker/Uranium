@@ -350,7 +350,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
 
-        if parser["general"].getint("version") != self.Version:
+        if parser.getint("general", "version") != self.Version:
             raise IncorrectVersionError()
 
         # Clear all data before starting.
