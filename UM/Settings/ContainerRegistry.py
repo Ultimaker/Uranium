@@ -370,8 +370,14 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_id not in self.source_provider:
             self.source_provider[container_id] = None #Added during runtime.
         self._clearQueryCacheByContainer(container)
-        self.containerAdded.emit(container)
         Logger.log("d", "Container [%s] added.", container_id)
+
+        # containerAdded is a custom signal and can trigger direct calls to its subscribers. This should be avoided
+        # because with the direct calls, the subscribers need to know everything about what it tries to do to avoid
+        # triggering this signal again, which eventually can end up exceeding the max recursion limit.
+        # We avoid the direct calls here to make sure that the subscribers do not need to take into account any max
+        # recursion problem.
+        self._application.callLater(self.containerAdded.emit, container)
 
     @UM.FlameProfiler.profile
     def removeContainer(self, container_id: str) -> None:
