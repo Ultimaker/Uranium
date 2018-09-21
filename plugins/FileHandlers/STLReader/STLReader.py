@@ -16,7 +16,7 @@ import numpy
 
 MimeTypeDatabase.addMimeType(
     MimeType(
-        name = "application/x-uranium-stl-file",
+        name = "model/stl",
         comment = "Uranium STL File",
         suffixes = ["stl"]
     )

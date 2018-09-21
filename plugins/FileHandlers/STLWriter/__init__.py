@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import STLWriter
@@ -11,13 +11,13 @@ def getMetaData():
         "mesh_writer": {
             "output": [
                 {
-                    "mime_type": "application/x-stl-ascii",
+                    "mime_type": "model/x.stl-ascii",
                     "mode": STLWriter.STLWriter.OutputMode.TextMode,
                     "extension": "stl",
                     "description": i18n_catalog.i18nc("@item:inlistbox", "STL File (ASCII)")
                 },
                 {
-                    "mime_type": "application/x-stl-binary",
+                    "mime_type": "model/x.stl-binary",
                     "mode": STLWriter.STLWriter.OutputMode.BinaryMode,
                     "extension": "stl",
                     "description": i18n_catalog.i18nc("@item:inlistbox", "STL File (Binary)")
