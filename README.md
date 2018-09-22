@@ -15,3 +15,5 @@ Dependencies
 - PyQt5
 - Numpy
 - Arcus
+- Shapely
+- Scipy
