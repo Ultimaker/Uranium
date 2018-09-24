@@ -33,9 +33,10 @@ class Preferences:
         self._parser = None  # type: Optional[configparser.ConfigParser]
         self._preferences = {}  # type: Dict[str, Dict[str, _Preference]]
 
-
     ##  Add a new preference to the list. If the preference was already added, it's default is set to whatever is provided
     def addPreference(self, key: str, default_value: Any) -> None:
+        if key.count("/") != 1:
+            raise Exception("Preferences must be in the [CATEGORY]/[KEY] format")
         preference = self._findPreference(key)
         if preference:
             self.setDefault(key, default_value)
@@ -159,7 +160,7 @@ class Preferences:
             group = parts[0]
             key = parts[1]
 
-        return (group, key)
+        return group, key
 
     def _findPreference(self, key: str) -> Optional[Any]:
         group, key = self._splitKey(key)
