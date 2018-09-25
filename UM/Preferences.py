@@ -70,7 +70,7 @@ class Preferences:
         if not preference:  # Key not found.
             Logger.log("w", "Tried to set the default value of non-existing setting %s.", key)
             return
-        if preference.getValue() != preference.getDefault():
+        if preference.getValue() == preference.getDefault():
             self.setValue(key, default_value)
         preference.setDefault(default_value)
 
