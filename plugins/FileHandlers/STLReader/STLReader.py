@@ -13,15 +13,6 @@ import os
 import struct
 import numpy
 
-
-MimeTypeDatabase.addMimeType(
-    MimeType(
-        name = "model/stl",
-        comment = "Uranium STL File",
-        suffixes = ["stl"]
-    )
-)
-
 use_numpystl = False
 
 try:
@@ -39,6 +30,14 @@ except ImportError:
 class STLReader(MeshReader):
     def __init__(self) -> None:
         super().__init__()
+
+        MimeTypeDatabase.addMimeType(
+            MimeType(
+                name = "model/stl",
+                comment = "Uranium STL File",
+                suffixes = ["stl"]
+            )
+        )
         self._supported_extensions = [".stl"]
 
     def load_file(self, file_name, mesh_builder, _use_numpystl = False):
