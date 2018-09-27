@@ -2,8 +2,10 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import math
-from typing import Optional
+from typing import Optional, Tuple, cast
 
+from UM.Qt.Bindings.MainWindow import MainWindow
+from UM.Qt.QtApplication import QtApplication
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Math.Vector import Vector
@@ -32,11 +34,11 @@ class CameraTool(Tool):
         self._move = False
         self._dragged = False
 
-        self._shift_is_active = None
-        self._ctrl_is_active = None
-        self._space_is_active = None
+        self._shift_is_active = False
+        self._ctrl_is_active = False
+        self._space_is_active = False
 
-        self._start_drag = None
+        self._start_drag = None  # type: Optional[Tuple[int, int]]
         self._start_y = None
 
         self._drag_distance = 0.01
@@ -66,6 +68,8 @@ class CameraTool(Tool):
     def clipToZoom(self) -> None:
         #Clip the camera to the new zoom range.
         camera = self._scene.getActiveCamera()
+        if camera is None:
+            return
         distance = (camera.getWorldPosition() - self._origin).length()
         direction = (camera.getWorldPosition() - self._origin).normalized()
         if distance < self._min_zoom:
@@ -77,9 +81,12 @@ class CameraTool(Tool):
     #
     #   \param origin type(Vector) origin point
     def setOrigin(self, origin: Vector) -> None:
+        camera = self._scene.getActiveCamera()
+        if camera is None:
+            return
         translation = origin - self._origin
         self._origin = origin
-        self._scene.getActiveCamera().translate(translation)
+        camera.translate(translation)
         self._rotateCamera(0.0, 0.0)
 
     ##  Get the point around which the camera rotates
@@ -91,7 +98,7 @@ class CameraTool(Tool):
     ##  Prepare modifier-key variables on each event
     #
     #   \param event event passed from event handler
-    def checkModifierKeys(self, event: Event) -> None:
+    def checkModifierKeys(self, event) -> None:
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         self._shift_is_active = (modifiers & QtCore.Qt.ShiftModifier) != QtCore.Qt.NoModifier
         self._ctrl_is_active = (modifiers & QtCore.Qt.ControlModifier) != QtCore.Qt.NoModifier
@@ -107,28 +114,30 @@ class CameraTool(Tool):
     #
     #   \param event event passed from event handler
     #   \return type(boolean)
-    def moveEvent(self, event: Event) -> bool:
+    def moveEvent(self, event) -> bool:
         if MouseEvent.MiddleButton in event.buttons:  # mousewheel
             return True
         elif MouseEvent.LeftButton in event.buttons and self._shift_is_active is True:  # shift -> leftbutton
             return True
         elif MouseEvent.RightButton in event.buttons and self._shift_is_active is True:  # shift -> rightbutton
             return True
+        return False
 
     ##  Check if the event warrants a call off the _rotateCamera method
     #
     #   \param event event passed from event handler
     #   \return type(boolean)
-    def rotateEvent(self, event: Event) -> bool:
+    def rotateEvent(self, event) -> bool:
         if MouseEvent.RightButton in event.buttons:  # rightbutton
             return True
         elif MouseEvent.LeftButton in event.buttons and self._space_is_active is True:  # shift -> leftbutton
             return True
+        return False
 
     ##  Calls the zoomaction method for the mousewheel event, mouseMoveEvent (in combo with alt or space) and when the plus or minus keys are used
     #
     #   \param event event passed from event handler
-    def initiateZoom(self, event: Event) -> bool:
+    def initiateZoom(self, event) -> bool:
         if event.type is event.MousePressEvent:
             return False
         elif event.type is Event.MouseMoveEvent and self._space_is_active is False: #space -> mousemove
@@ -151,6 +160,7 @@ class CameraTool(Tool):
             elif event.key == KeyEvent.PlusKey or event.key == KeyEvent.EqualKey:  # same story as the minus and underscore key: it checks for both the plus and equal key (so you won't have to do shift -> equal, to use the plus-key)
                 self._zoomCamera(self._manual_zoom)
                 return True
+        return False
 
     ##  Rotate camera around origin.
     #
@@ -162,7 +172,7 @@ class CameraTool(Tool):
         self._rotateCamera(temp_x, temp_y)
 
     ##  Handle mouse and keyboard events
-    def event(self, event: Event) -> bool:
+    def event(self, event) -> bool:
         self.checkModifierKeys(event)
         # Handle mouse- and keyboard-initiated zoom-events
         self.initiateZoom(event)
@@ -191,7 +201,7 @@ class CameraTool(Tool):
 
         elif event.type is Event.MouseMoveEvent:
             if self._rotate or self._move:
-                diff = (event.x - self._start_drag[0], event.y - self._start_drag[1])
+                diff = (event.x - self._start_drag[0], event.y - self._start_drag[1])  # type: ignore
                 length_squared = diff[0] * diff[0] + diff[1] * diff[1]
 
                 if length_squared > (self._drag_distance * self._drag_distance):
@@ -219,7 +229,7 @@ class CameraTool(Tool):
     ##  Move the camera in response to a mouse event.
     #
     #   \param event event passed from event handler
-    def _moveCamera(self, event: Event) -> None:
+    def _moveCamera(self, event) -> None:
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
             return
@@ -256,14 +266,14 @@ class CameraTool(Tool):
         move_vector = Vector(0.0, 0.0, 1.0)
 
         if event is not None and self._zoom_to_mouse:
-            viewport_center_x = Application.getInstance().getRenderer().getViewportWidth() / 2
-            viewport_center_y = Application.getInstance().getRenderer().getViewportHeight() / 2
+            viewport_center_x = QtApplication.getInstance().getRenderer().getViewportWidth() / 2
+            viewport_center_y = QtApplication.getInstance().getRenderer().getViewportHeight() / 2
+            main_window = cast(MainWindow, QtApplication.getInstance().getMainWindow())
+            mouse_diff_center_x = viewport_center_x - main_window.mouseX
+            mouse_diff_center_y = viewport_center_y - main_window.mouseY
 
-            mouse_diff_center_x = viewport_center_x - Application.getInstance().getMainWindow().mouseX
-            mouse_diff_center_y = viewport_center_y - Application.getInstance().getMainWindow().mouseY
-
-            x_component = mouse_diff_center_x / Application.getInstance().getRenderer().getViewportWidth()
-            y_component = mouse_diff_center_y / Application.getInstance().getRenderer().getViewportHeight()
+            x_component = mouse_diff_center_x / QtApplication.getInstance().getRenderer().getViewportWidth()
+            y_component = mouse_diff_center_y / QtApplication.getInstance().getRenderer().getViewportHeight()
 
             move_vector = Vector(x_component, -y_component, 1)
             move_vector = move_vector.normalized()

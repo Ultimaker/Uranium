@@ -43,7 +43,7 @@ def main():
         uraniumUMPath = os.path.join("..", "Uranium")
     uraniumPath = os.path.dirname(uraniumUMPath)
 
-    mypy_path_parts = [".", os.path.join(".", "plugins"), os.path.join(".", "plugins", "VersionUpgrade"),
+    mypy_path_parts = [".", os.path.join(".", "plugins"), os.path.join(".", "plugins", "Tools"), os.path.join(".", "plugins", "FileHandlers"), os.path.join(".", "plugins", "Views") , 
                        uraniumPath, os.path.join(uraniumPath, "stubs")]
 
     os.putenv("MYPYPATH", os.pathsep.join(mypy_path_parts))
@@ -56,10 +56,13 @@ def main():
     print("Found mypy module path: %s" % mypy_module)
 
     plugins = findModules("plugins")
+    plugins.extend(findModules("plugins/Tools"))
+    plugins.extend(findModules("plugins/FileHandlers"))
+    plugins.extend(findModules("plugins/Views"))
     plugins.sort()
 
     mods = ["UM"] + plugins
-
+    failed = False
     for mod in mods:
         print("------------- Checking module {mod}".format(**locals()))
         if sys.platform == "win32":
@@ -68,10 +71,13 @@ def main():
             result = subprocess.run([sys.executable, mypy_module, "-p", mod, "--ignore-missing-imports"])
         if result.returncode != 0:
             print("\nModule {mod} failed checking. :(".format(**locals()))
-            return 1
-    else:
+            failed = True
+            #return 1
+    if not failed:
         print("\n\nDone checking. All is good.")
-    return 0
+        return 0
+    else: 
+        return 1
 
 
 if __name__ == "__main__":
