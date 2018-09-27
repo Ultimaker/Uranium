@@ -13,112 +13,10 @@ from UM.Settings.ContainerStack import IncorrectVersionError
 from UM.Settings.ContainerStack import InvalidContainerStackError
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
-from UM.Settings.Interfaces import ContainerInterface
-from UM.Signal import Signal
 from UM.Resources import Resources
+from tests.Settings.MockContainer import MockContainer
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
-
-##  A fake container class that implements ContainerInterface.
-#
-#   This allows us to test the container stack independent of any actual
-#   implementation of the containers. If something were to go wrong in the
-#   actual implementations, the tests in this suite are unaffected.
-class MockContainer(ContainerInterface):
-    ##  Creates a mock container with a new unique ID.
-    def __init__(self, container_id: str = None):
-        self._metadata = {}
-        self._metadata["id"] = str(uuid.uuid4() if container_id is None else container_id)
-        self.items = {}
-
-    ##  Gets the unique ID of the container.
-    #
-    #   \return A unique identifier for this container.
-    def getId(self):
-        return self._metadata["id"]
-
-    ##  Gives an arbitrary name.
-    #
-    #   \return Some string.
-    def getName(self):
-        return "Fred"
-
-    def getAllKeys(self):
-        pass
-
-    ##  Get whether the container item is stored on a read only location in the filesystem.
-    #
-    #   \return Always returns False
-    def isReadOnly(self):
-        return False
-
-    ##  Mock get path
-    def getPath(self):
-        return "/path/to/the/light/side"
-
-    ##  Mock set path
-    def setPath(self, path):
-        pass
-
-    def getMetaData(self):
-        return self._metadata
-
-    ##  Gets an entry from the metadata.
-    #
-    #   \param entry The entry to get from the metadata.
-    #   \param default The default value in case the entry is missing.
-    #   \return The value belonging to the requested entry, or the default if no
-    #   such key exists.
-    def getMetaDataEntry(self, entry, default = None):
-        if entry in self._metadata:
-            return self._metadata["entry"]
-        return default
-
-    def setProperty(self, key, property_name, property_value, container = None, set_from_cache = False):
-        pass
-
-    def getProperty(self, key, property_name, context = None):
-        if key in self.items:
-            return self.items[key]
-        return None
-
-    propertyChanged = Signal()
-    containersChanged = Signal()
-
-    metaDataChanged = Signal()
-
-    def hasProperty(self, key, property_name):
-        return key in self.items
-
-    ##  Serialises this container.
-    #
-    #   The serialisation of the mock needs to be kept simple, so it only
-    #   serialises the ID. This makes the tests succeed if the serialisation
-    #   creates different instances (which is desired).
-    #
-    #   \return A static string representing a container.
-    def serialize(self, ignored_metadata_keys = None):
-        return str(self._metadata["id"])
-
-    ##  Deserialises a string to a container.
-    #
-    #   The serialisation of the mock needs to be kept simple, so it only
-    #   deserialises the ID. This makes the tests succeed if the serialisation
-    #   creates different instances (which is desired).
-    #
-    #   \param serialized A serialised mock container.
-    #   \param file_name The file name that the file originated from.
-    def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
-        self._metadata["id"] = int(serialized)
-        return serialized
-
-    @classmethod
-    def getConfigurationTypeFromSerialized(cls, serialized: str):
-        raise NotImplementedError()
-
-    @classmethod
-    def getVersionFromSerialized(cls, serialized):
-        raise NotImplementedError()
 
 
 ##  Creates a brand new container stack to test with.
@@ -174,6 +72,7 @@ def test_deserialize_wrong_version(container_stack, container_registry):
 
     with pytest.raises(IncorrectVersionError):
         container_stack.deserialize(serialised)
+
 
 ##  Tests deserialising a container stack from files that are missing entries.
 #
@@ -237,6 +136,7 @@ def test_deserialize_missing_items(container_stack, container_registry):
 
     with pytest.raises(InvalidContainerStackError):
         container_stack.deserialize(serialised_no_general)
+
 
 ##  Tests deserialising a container stack with various subcontainers.
 #
@@ -310,6 +210,7 @@ def test_deserialize_containers(container_stack, container_registry):
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container, container_b]
 
+
 ##  Individual test cases for test_findContainer.
 #
 #   Each test case has:
@@ -375,6 +276,7 @@ test_findContainer_data = [
     }
 ]
 
+
 ##  Tests finding a container by a filter.
 #
 #   \param container_stack A new container stack from a fixture.
@@ -394,6 +296,7 @@ def test_findContainer(container_stack, data):
     else:
         assert answer is not None
         assert data["result"].items() <= answer.getMetaData().items()
+
 
 ##  Tests getting a container by index.
 #
@@ -418,6 +321,7 @@ def test_getContainer(container_stack):
     with pytest.raises(IndexError):
         container_stack.getContainer(-1)
 
+
 ##  Tests getting and changing the metadata of the container stack.
 #
 #   \param container_stack A new container stack from a fixture.
@@ -427,6 +331,7 @@ def test_getMetaData(container_stack):
 
     meta_data["foo"] = "bar" #Try adding an entry.
     assert container_stack.getMetaDataEntry("foo") == "bar"
+
 
 ##  Individual test cases for test_getValue.
 #
@@ -474,6 +379,7 @@ test_getValue_data = [
     }
 ]
 
+
 ##  Tests getting item values from the container stack.
 #
 #   \param container_stack A new container stack from a fixture.
@@ -489,6 +395,7 @@ def test_getValue(container_stack, data):
     answer = container_stack.getProperty(data["key"], "value") # Do the actual query.
 
     assert answer == data["result"]
+
 
 ##  Tests removing containers from the stack.
 #
@@ -519,6 +426,7 @@ def test_removeContainer(container_stack):
     container_stack.addContainer(container2)
     container_stack.removeContainer(1)
     assert container_stack.getContainers() == [container2, container0]
+
 
 ##  Tests replacing a container in the stack.
 #
@@ -552,6 +460,7 @@ def test_replaceContainer(container_stack):
     with pytest.raises(Exception):
         container_stack.replaceContainer(2, container_stack)
     assert container_stack.getContainers() == [container2, container1_replacement, container0_replacement]
+
 
 ##  Tests serialising and deserialising the container stack.
 #
@@ -666,9 +575,11 @@ def test_serialize_with_ignored_metadata_keys(container_stack):
 #   auto-mode.
 def test_setName(container_stack, application):
     name_change_counter = 0
+
     def increment_name_change_counter():
         nonlocal name_change_counter
         name_change_counter += 1
+
     container_stack.nameChanged.connect(increment_name_change_counter) # To make sure it emits the signal.
 
     different_name = "test"
@@ -687,6 +598,7 @@ def test_setName(container_stack, application):
     assert container_stack.getName() == different_name
     assert name_change_counter == 2 # Didn't signal.
 
+
 ##  Tests the next stack functionality.
 #
 #   \param container_stack A new container stack from a fixture.
@@ -696,14 +608,15 @@ def test_setNextStack(container_stack):
     assert container_stack.getNextStack() == container
 
     with pytest.raises(Exception):
-        container_stack.setNextStack(container_stack) # Can't set itself as next stack.
+        container_stack.setNextStack(container_stack)  # Can't set itself as next stack.
+
 
 ##  Test backward compatibility of container config file format change
 #
 #   This tests whether ContainerStack can still deserialize containers using the old
 #   format where we would have a single comma separated entry with the containers.
 def test_backwardCompatibility(container_stack, container_registry):
-    container_a = MockContainer("a")
+    container_a = MockContainer({"id" : "a"})
     container_registry.addContainer(container_a) # Make sure this container isn't the one it complains about.
 
     serialised = """
@@ -717,10 +630,11 @@ def test_backwardCompatibility(container_stack, container_registry):
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container_a, container_a, container_a]
 
+
 ##  Test serialization and deserialization of a stack with containers with special characters in their ID
 #
 def test_idSpecialCharacters(container_stack, container_registry):
-    container_ab = MockContainer("a,b") # Comma used to break deserialize
+    container_ab = MockContainer({"id" : "a,b"}) # Comma used to break deserialize
     container_registry.addContainer(container_ab)
 
     serialized = """
@@ -748,7 +662,7 @@ def test_idSpecialCharacters(container_stack, container_registry):
     container_stack.deserialize(serialized)
     assert container_stack.getContainers() == [container_ab]
 
-    test_container_0 = MockContainer("= TestContainer with, some? Special $ Characters #12")
+    test_container_0 = MockContainer({"id": "= TestContainer with, some? Special $ Characters #12"})
     container_registry.addContainer(test_container_0)
 
     serialized = """
@@ -764,7 +678,7 @@ def test_idSpecialCharacters(container_stack, container_registry):
     container_stack.deserialize(serialized)
     assert container_stack.getContainers() == [test_container_0]
 
-    test_container_1 = MockContainer("☂℮﹩⊥ ḉ◎η☂αїη℮ґ")
+    test_container_1 = MockContainer({"id" : "☂℮﹩⊥ ḉ◎η☂αїη℮ґ"})
     container_registry.addContainer(test_container_1)
 
     # Special unicode characters are handled properly
