@@ -1,5 +1,6 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import Optional, Tuple
 
 import numpy
 import scipy.spatial
@@ -55,8 +56,8 @@ class Polygon:
         coordinates = (("[" + str(point[0]) + "," + str(point[1]) + "]") for point in self._points)
         return "[" + ", ".join(coordinates) + "]"
 
-    def isValid(self):
-        return self._points is not None and len(self._points)
+    def isValid(self) -> bool:
+        return bool(self._points is not None and len(self._points))
 
     def getPoints(self):
         return self._points
@@ -66,7 +67,7 @@ class Polygon:
     #   \param normal The normal to project on.
     #   \return A tuple describing the line segment of this Polygon projected on to the infinite line described by normal.
     #           The first element is the minimum value, the second the maximum.
-    def project(self, normal):
+    def project(self, normal) -> Tuple[float, float]:
         projection_min = numpy.dot(normal, self._points[0])
 
         projection_max = projection_min
@@ -75,13 +76,13 @@ class Polygon:
             projection_min = min(projection_min, projection)
             projection_max = max(projection_max, projection)
 
-        return (projection_min, projection_max)
+        return projection_min, projection_max
 
     ##  Moves the polygon by a fixed offset.
     #
     #   \param x The distance to move along the X-axis.
     #   \param y The distance to move along the Y-axis.
-    def translate(self, x = 0, y = 0):
+    def translate(self, x = 0, y = 0) -> "Polygon":
         if self.isValid():
             return Polygon(numpy.add(self._points, numpy.array([[x, y]])))
         else:
@@ -91,11 +92,11 @@ class Polygon:
     #
     #   \param point_on_axis A point on the axis to mirror across.
     #   \param axis_direction The direction vector of the axis to mirror across.
-    def mirror(self, point_on_axis, axis_direction):
+    def mirror(self, point_on_axis, axis_direction) -> Optional["Polygon"]:
         #Input checking.
         if axis_direction == [0, 0, 0]:
             Logger.log("w", "Tried to mirror a polygon over an axis with direction [0, 0, 0].")
-            return #Axis has no direction. Can't expect us to mirror anything!
+            return None  # Axis has no direction. Can't expect us to mirror anything!
         axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
         if not self.isValid(): # Not a valid polygon, so don't do anything.
             return self
@@ -125,7 +126,7 @@ class Polygon:
     #
     #   \param other The other polygon to intersect convex hulls with.
     #   \return The intersection of the two polygons' convex hulls.
-    def intersectionConvexHulls(self, other):
+    def intersectionConvexHulls(self, other: "Polygon") -> "Polygon":
         me = self.getConvexHull()
         him = other.getConvexHull()
 
@@ -145,7 +146,7 @@ class Polygon:
     #
     #   \param other \type{Polygon} The polygon to check for intersection.
     #   \return A tuple of the x and y distance of intersection, or None if no intersection occured.
-    def intersectsPolygon(self, other):
+    def intersectsPolygon(self, other: "Polygon") -> Optional[Tuple[float, float]]:
         if other is None:
             return None
         if len(self._points) < 2 or len(other.getPoints()) < 2:  # Polygon has not enough points, so it cant intersect.
@@ -183,7 +184,7 @@ class Polygon:
     #
     #   \param other The polygon to perform a Minkowski sum with.
     #   \return \type{Polygon} The Minkowski sum of this polygon with other.
-    def getMinkowskiSum(self, other):
+    def getMinkowskiSum(self, other: "Polygon") -> "Polygon":
         points = numpy.zeros((len(self._points) * len(other._points), 2))
         for n in range(0, len(self._points)):
             for m in range(0, len(other._points)):
@@ -198,7 +199,7 @@ class Polygon:
     #
     #   \param other \type{Polygon} The Polygon to do a Minkowski addition with.
     #   \return The convex hull around the Minkowski sum of this Polygon with other
-    def getMinkowskiHull(self, other):
+    def getMinkowskiHull(self, other: "Polygon") -> "Polygon":
         sum = self.getMinkowskiSum(other)
         return sum.getConvexHull()
 
@@ -209,7 +210,7 @@ class Polygon:
     #
     #   \param point The point to check of whether it is inside.
     #   \return True if it is inside, or False otherwise.
-    def isInside(self, point):
+    def isInside(self, point) -> bool:
         for i in range(0,len(self._points)):
             if self._isRightTurn(self._points[i], self._points[(i + 1) % len(self._points)], point) == -1: #Outside this halfplane!
                 return False
