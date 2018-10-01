@@ -37,7 +37,7 @@ msgstr "Plik Wavefront OBJ"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:23
 msgctxt "@error:not supported"
 msgid "OBJWriter does not support non-text mode."
-msgstr "Zapisywacz OBJ Nie obsługuje trybu nietekstowego."
+msgstr "OBJWriter nie obsługuje trybu nietekstowego."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:30
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:27
@@ -328,7 +328,7 @@ msgid ""
 msgstr ""
 "Wystąpił błąd podczas odinstalowywania pakietu {package} przed instalacją nowej wersji:\n"
 "{error}.\n"
-"Spróbuj zaktualizować ponownie później."
+"Proszę spróbować zaktualizować ponownie później."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:338
 msgctxt "@info:title"
