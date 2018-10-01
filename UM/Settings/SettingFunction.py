@@ -24,7 +24,10 @@ def _debug_value(value: Any) -> Any:
     return value
 
 
-##  Encapsulates Python code that provides a simple value calculation function.
+#
+# This class is used to evaluate Python codes (or you can call them formulas) for a setting's property. If a setting's
+# property is a static type, e.g., a string, an int, a float, etc., its value will just be interpreted as it is, but
+# when it's a Python code (formula), the value needs to be evaluated via this class.
 #
 class SettingFunction:
     ##  Constructor.
