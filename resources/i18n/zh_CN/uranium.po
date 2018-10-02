@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.5\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-09-19 17:07+0200\n"
-"PO-Revision-Date: 2018-04-11 15:55+0100\n"
+"PO-Revision-Date: 2018-02-10 11:20+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: PCDotFan <pc@edu.ax>, Chinese <info@bothof.nl>\n"
 "Language: zh_CN\n"
@@ -38,13 +38,13 @@ msgstr "Wavefront OBJ 文件"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:23
 msgctxt "@error:not supported"
 msgid "OBJWriter does not support non-text mode."
-msgstr ""
+msgstr "OBJWriter 不支持非文本模式。"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:30
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:27
 msgctxt "@error:no mesh"
 msgid "There is no mesh to write."
-msgstr ""
+msgstr "没有要写入的网格。"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
@@ -59,7 +59,7 @@ msgstr "STL 文件 (二进制)"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:36
 msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
-msgstr ""
+msgstr "将 STL 写入流时的不支持的输出模式。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
 msgctxt "@info"
@@ -310,11 +310,13 @@ msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
 msgstr ""
+"卸载以下程序包时出现了一些错误：\n"
+"{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:128
 msgctxt "@info:title"
 msgid "Uninstalling errors"
-msgstr ""
+msgstr "卸载错误"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:335
 #, python-brace-format
@@ -324,11 +326,14 @@ msgid ""
 "{error}.\n"
 "Please try to upgrade again later."
 msgstr ""
+"在安装新版本之前卸载程序包 {package} 时出现了一个错误：\n"
+"{error}。\n"
+"请稍后再次尝试升级。"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:338
 msgctxt "@info:title"
 msgid "Updating error"
-msgstr ""
+msgstr "正在更新错误"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
 #, python-brace-format
@@ -442,6 +447,9 @@ msgid ""
 "- {profiles}\n"
 "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
+"配置似乎已损坏。以下配置文件似乎出现问题：\n"
+"- {profiles}\n"
+"是否要恢复出厂默认设置？重置将移除所有当前的打印机和配置文件。"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:167
 #, python-brace-format
