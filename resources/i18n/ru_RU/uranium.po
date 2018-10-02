@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.5\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-09-19 17:07+0200\n"
-"PO-Revision-Date: 2018-04-11 15:55+0100\n"
+"PO-Revision-Date: 2018-10-02 11:10+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Ruslan Popov <ruslan.popov@gmail.com>, Russian <info@bothof.nl>\n"
 "Language: ru_RU\n"
@@ -37,13 +37,13 @@ msgstr "Wavefront OBJ File"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:23
 msgctxt "@error:not supported"
 msgid "OBJWriter does not support non-text mode."
-msgstr ""
+msgstr "Средство записи OBJ (OBJWriter) не поддерживает нетекстовый режим."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:30
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:27
 msgctxt "@error:no mesh"
 msgid "There is no mesh to write."
-msgstr ""
+msgstr "Отсутствует объект для записи."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
@@ -58,7 +58,7 @@ msgstr "Файл STL (бинарный)"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:36
 msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
-msgstr ""
+msgstr "Неподдерживаемый режим вывода при записи STL для потоковой передачи."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
 msgctxt "@info"
@@ -309,11 +309,13 @@ msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
 msgstr ""
+"Возникли некоторые ошибки при удалении этих пакетов: \n"
+"{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:128
 msgctxt "@info:title"
 msgid "Uninstalling errors"
-msgstr ""
+msgstr "Ошибки при удалении"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:335
 #, python-brace-format
@@ -323,11 +325,14 @@ msgid ""
 "{error}.\n"
 "Please try to upgrade again later."
 msgstr ""
+"Возникла ошибка при удалении пакета {package} перед установкой новой версии: \n"
+"{error}.\n"
+"Повторите попытку обновления позже."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:338
 msgctxt "@info:title"
 msgid "Updating error"
-msgstr ""
+msgstr "Ошибка при обновлении"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
 #, python-brace-format
@@ -447,6 +452,9 @@ msgid ""
 "- {profiles}\n"
 "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
+"Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями: \n"
+"- {profiles}\n"
+"Выполнить сброс до заводских настроек по умолчанию? Сброс приведет к удалению данных всех текущих принтеров и профилей."
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:167
 #, python-brace-format

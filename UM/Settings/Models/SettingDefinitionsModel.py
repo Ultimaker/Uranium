@@ -75,6 +75,10 @@ class SettingDefinitionsModel(QAbstractListModel):
     def _onDestroyed(self) -> None:
         self._destroyed = True
 
+    @pyqtSlot(bool)
+    def setDestroyed(self, value):
+        self._destroyed = value
+
     def setShowAncestors(self, show_ancestors: bool) -> None:
         if show_ancestors != self._show_ancestors:
             self._show_ancestors = show_ancestors
