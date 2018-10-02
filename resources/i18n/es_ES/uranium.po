@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.5\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-09-19 17:07+0200\n"
-"PO-Revision-Date: 2018-04-11 15:55+0100\n"
+"PO-Revision-Date: 2018-10-02 10:50+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Spanish <info@bothof.nl>\n"
 "Language: es_ES\n"
@@ -37,13 +37,13 @@ msgstr "Archivo Wavefront OBJ"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:23
 msgctxt "@error:not supported"
 msgid "OBJWriter does not support non-text mode."
-msgstr ""
+msgstr "OBJWriter no es compatible con el modo sin texto."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:30
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:27
 msgctxt "@error:no mesh"
 msgid "There is no mesh to write."
-msgstr ""
+msgstr "No existe malla en la que escribir."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
@@ -58,12 +58,12 @@ msgstr "Archivo STL (binario)"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:36
 msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
-msgstr ""
+msgstr "Modo de escritura no compatible al tratar de guardar el STL."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
 msgctxt "@info"
 msgid "Could not access update information."
-msgstr "No se pudo acceder a la información actualizada."
+msgstr "No se pudo acceder a la información de la actualización."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
@@ -71,7 +71,7 @@ msgstr "No se pudo acceder a la información actualizada."
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:138
 msgctxt "@info:title"
 msgid "Version Upgrade"
-msgstr "Actualización de la versión"
+msgstr "Actualización de versión"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
@@ -309,11 +309,13 @@ msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
 msgstr ""
+"Se han producido algunos errores al desinstalar los siguientes paquetes:\n"
+"{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:128
 msgctxt "@info:title"
 msgid "Uninstalling errors"
-msgstr ""
+msgstr "Errores de desinstalación"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:335
 #, python-brace-format
@@ -323,11 +325,14 @@ msgid ""
 "{error}.\n"
 "Please try to upgrade again later."
 msgstr ""
+"Se ha producido un error al desinstalar el paquete {package} antes de instalar la nueva versión:\n"
+"{error}.\n"
+"Vuelva a intentar actualizar más tarde."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:338
 msgctxt "@info:title"
 msgid "Updating error"
-msgstr ""
+msgstr "Error de actualización"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
 #, python-brace-format
@@ -444,6 +449,9 @@ msgid ""
 "- {profiles}\n"
 "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
+"Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n"
+"- {profiles}\n"
+"¿Desea restablecer los valores predeterminados de fábrica? Si los restablece se borrarán sus impresoras y perfiles actuales."
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:167
 #, python-brace-format
