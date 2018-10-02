@@ -332,7 +332,7 @@ class PackageManager(QObject):
             self._purgePackage(package_id)
         except Exception as e:
             message = Message(catalog.i18nc("@error:update",
-                                            "There was an error uninstalling the package {package} before installing"
+                                            "There was an error uninstalling the package {package} before installing "
                                             "new version:\n{error}.\nPlease try to upgrade again later.".format(
                                             package = package_id, error = str(e))),
                               title = catalog.i18nc("@info:title", "Updating error"))
