@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 import re  # To replace parts of version strings with regex.
-from typing import cast, Union
+from typing import cast, Union, List
 
 
 ##  Represents a version number, like "3.2.8" and allows comparison of those
@@ -14,7 +14,7 @@ class Version:
     #   the major, minor and revision version numbers. All text is ignored.
     #
     #   \param version A string or bytes representing a version number.
-    def __init__(self, version: Union[str, bytes]) -> None:
+    def __init__(self, version: Union[str, bytes, List[Union[int, str]]]) -> None:
         super().__init__()
 
         if type(version) == bytes:
