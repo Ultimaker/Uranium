@@ -1,5 +1,6 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import Optional, Union, Dict, List
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
@@ -29,19 +30,20 @@ class Message(QObject):
     #   \param dismissible Can the user dismiss the message?
     #   \param title Phrase that will be shown above the message
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
-    def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None, title = None, parent = None, use_inactivity_timer = True): #pylint: disable=bad-whitespace
+    def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
+                 title: Optional[str] = None, parent = None, use_inactivity_timer: bool = True) -> None:
         super().__init__(parent)
         from UM.Application import Application
         self._application = Application.getInstance()
         self._visible = False
         self._text = text
-        self._progress = progress # If progress is set to -1, the progress is seen as indeterminate
-        self._max_progress = 100
+        self._progress = progress  # If progress is set to -1, the progress is seen as indeterminate
+        self._max_progress = 100  # type: float
         self._lifetime = lifetime
-        self._lifetime_timer = None
+        self._lifetime_timer = None  # type: Optional[QTimer]
 
         self._use_inactivity_timer = use_inactivity_timer
-        self._inactivity_timer = None
+        self._inactivity_timer = None  # type: Optional[QTimer]
 
         self._dismissable = dismissable  # Can the message be closed by user?
         if not self._dismissable:
@@ -50,7 +52,7 @@ class Message(QObject):
             if self._lifetime == 0 and self._progress is None:
                 self._dismissable = True
 
-        self._actions = []
+        self._actions = []  # type: List[Dict[str, Union[str, int]]]
         self._title = title
 
     # We use these signals as QTimers need to be triggered from a qThread. By using signals to pass it,
@@ -59,36 +61,36 @@ class Message(QObject):
     inactivityTimerStart = pyqtSignal()
     actionTriggered = Signal()
 
-    def _stopInactivityTimer(self):
+    def _stopInactivityTimer(self) -> None:
         if self._inactivity_timer:
             self._inactivity_timer.stop()
 
-    def _startInactivityTimer(self):
+    def _startInactivityTimer(self) -> None:
         if self._inactivity_timer:
             # There is some progress indication, but no lifetime, so the inactivity timer needs to run.
             if self._progress is not None and self._lifetime == 0:
                 self._inactivity_timer.start()
 
-    def _onInactivityTriggered(self):
+    def _onInactivityTriggered(self) -> None:
         Logger.log("d", "Hiding message because of inactivity")
         self.hide()
 
     ##  Show the message (if not already visible)
-    def show(self):
+    def show(self) -> None:
         if not self._visible:
             self._visible = True
             self._application.showMessageSignal.emit(self)
             self.inactivityTimerStart.emit()
 
     ##  Can the message be closed by user?
-    def isDismissable(self):
+    def isDismissable(self) -> bool:
         return self._dismissable
 
     ##  Set the lifetime timer of the message.
     #   This is used by the QT application once the message is shown.
     #   If the lifetime is set to 0, no timer is added.
     #   This function is required as the QTimer needs to be created on a QThread.
-    def setLifetimeTimer(self, timer):
+    def setLifetimeTimer(self, timer: QTimer) -> None:
         self._lifetime_timer = timer
         if self._lifetime_timer:
             if self._lifetime:
@@ -100,7 +102,7 @@ class Message(QObject):
 
     ##  Set the inactivity timer of the message.
     #   This function is required as the QTimer needs to be created on a QThread.
-    def setInactivityTimer(self, inactivity_timer):
+    def setInactivityTimer(self, inactivity_timer: QTimer) -> None:
         if not self._use_inactivity_timer:
             return
         self._inactivity_timer = inactivity_timer
@@ -117,7 +119,7 @@ class Message(QObject):
     #   \param icon Source of the icon to be used
     #   \param button_style Description the button style (used for Button and Link)
     #   \param button_align Define horizontal position of the action item
-    def addAction(self, action_id, name, icon, description, button_style = ActionButtonStyle.DEFAULT, button_align = ActionButtonStyle.BUTTON_ALIGN_RIGHT):
+    def addAction(self, action_id: str, name: str, icon: str, description: str, button_style: int = ActionButtonStyle.DEFAULT, button_align: int = ActionButtonStyle.BUTTON_ALIGN_RIGHT):
         self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description, "button_style": button_style, "button_align": button_align})
 
     ##  Get the list of actions to display buttons for on the message.
@@ -125,14 +127,14 @@ class Message(QObject):
     #   Each action is a dictionary with the elements provided in ``addAction``.
     #
     #   \return A list of actions.
-    def getActions(self):
+    def getActions(self) -> List[Dict[str, Union[str, int]]]:
         return self._actions
 
     ##  Changes the text on the message.
     #
     #   \param text The new text for the message. Please ensure that this text
     #   is internationalised.
-    def setText(self, text: str):
+    def setText(self, text: str) -> None:
         self._text = text
 
     ##  Returns the text in the message.
@@ -144,7 +146,7 @@ class Message(QObject):
     ##  Sets the maximum numerical value of the progress bar on the message.
     #
     #   If the reported progress hits this number, the bar will appear filled.
-    def setMaxProgress(self, max_progress):
+    def setMaxProgress(self, max_progress: float) -> None:
         self._max_progress = max_progress
 
     ##  Gets the maximum value of the progress bar on the message.
@@ -154,16 +156,17 @@ class Message(QObject):
     #   \return The maximum value of the progress bar on the message.
     #
     #   \see getProgress
-    def getMaxProgress(self):
+    def getMaxProgress(self) -> float:
         return self._max_progress
 
     ##  Changes the state of the progress bar.
     #
     #   \param progress The new progress to display to the user. This should be
     #   between 0 and the value of ``getMaxProgress()``.
-    def setProgress(self, progress):
-        self._progress = progress
-        self.progressChanged.emit(self)
+    def setProgress(self, progress: float) -> None:
+        if self._progress != progress:
+            self._progress = progress
+            self.progressChanged.emit(self)
         self.inactivityTimerStart.emit()
 
     ##  Signal that gets emitted whenever the state of the progress bar on this
@@ -173,27 +176,28 @@ class Message(QObject):
     ##  Returns the current progress.
     #
     #   This should be a value between 0 and the value of ``getMaxProgress()``.
-    def getProgress(self):
+    #   If no progress is set (because the message doesn't have it) None is returned
+    def getProgress(self) -> Optional[float]:
         return self._progress
 
     ##  Changes the message title.
     #
     #   \param text The new title for the message. Please ensure that this text
     #   is internationalised.
-    def setTitle(self, title: str):
+    def setTitle(self, title: str) -> None:
         self._title = title
 
     ##  Returns the message title.
     #
     #   \return The message title.
-    def getTitle(self) -> str:
+    def getTitle(self) -> Optional[str]:
         return self._title
 
     ##  Hides this message.
     #
     #   While the message object continues to exist in memory, it appears to the
     #   user that it is gone.
-    def hide(self, send_signal = True):
+    def hide(self, send_signal = True) -> None:
         if self._visible:
             self._visible = False
             self.inactivityTimerStop.emit()
