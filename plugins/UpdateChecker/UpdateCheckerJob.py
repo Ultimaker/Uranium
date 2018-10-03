@@ -31,6 +31,7 @@ class UpdateCheckerJob(Job):
         no_new_version = True
 
         application_name = Application.getInstance().getApplicationName()
+
         Logger.log("i", "Checking for new version of %s" % application_name)
         try:
             headers = {"User-Agent": "%s - %s" % (application_name, Application.getInstance().getVersion())}
@@ -69,8 +70,8 @@ class UpdateCheckerJob(Job):
                             if local_version < newest_version:
                                 Logger.log("i", "Found a new version of the software. Spawning message")
 
-                                title_message = i18n_catalog.i18nc("@info:status","Cura {0} is available!", newest_version)
-                                content_message = i18n_catalog.i18nc("@info:status","Cura {0} provides better and reliable printing experience.", newest_version)
+                                title_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} is available!".format(application_name = application_name.title(), version_number = newest_version))
+                                content_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} provides a better and more reliable printing experience.".format(application_name = application_name.title(), version_number = newest_version))
 
                                 message = Message(text = content_message, title = title_message)
                                 message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
