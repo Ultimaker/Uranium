@@ -3,8 +3,6 @@
 
 from . import LocalFileOutputDevicePlugin
 
-from UM.i18n import i18nCatalog
-catalog = i18nCatalog("uranium")
 
 def getMetaData():
     return {

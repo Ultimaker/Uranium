@@ -3,8 +3,6 @@
 
 from . import UpdateChecker
 
-from UM.i18n import i18nCatalog
-i18n_catalog = i18nCatalog("uranium")
 
 def getMetaData():
     return {
