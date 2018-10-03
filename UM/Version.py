@@ -29,9 +29,9 @@ class Version:
             version = version.replace("_", ".")
             version = version.replace("\"", "")
             version = re.sub(r"[A-Z]+", "", version)
-            version_list = version.split(".")
+            version_list = version.split(".")  # type: ignore
         elif isinstance(version, list):
-            version_list = version
+            version_list = version  # type: ignore
         else:
             version_list = []
 
