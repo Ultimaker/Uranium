@@ -76,7 +76,7 @@ class UpdateCheckerJob(Job):
                                 message = Message(text = content_message, title = title_message)
                                 message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
 
-                                message.addAction("new_features", i18n_catalog.i18nc("@action:button", "Learn more about new features"),"[no_icon]", "[no_description]",
+                                message.addAction("new_features", i18n_catalog.i18nc("@action:button", "Learn more about the new features"), "[no_icon]", "[no_description]",
                                                   button_style = Message.ActionButtonStyle.LINK,
                                                   button_align = Message.ActionButtonStyle.BUTTON_ALIGN_LEFT)
 
