@@ -169,6 +169,7 @@ class ContainerInterface:
     metaDataChanged = None  # type: Signal
 
 
+@UM.Decorators.interface
 class DefinitionContainerInterface(ContainerInterface):
     def findDefinitions(self, **kwargs: Any) -> List["SettingDefinition"]:
         raise NotImplementedError()
