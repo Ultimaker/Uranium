@@ -1,6 +1,6 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
+from json import JSONDecodeError
 from typing import Any, Dict, List, Optional, Set, Tuple
 import json
 import os
@@ -93,7 +93,12 @@ class PackageManager(QObject):
 
             # Load the user packages:
             with open(self._user_package_management_file_path, "r", encoding="utf-8") as f:
-                management_dict = json.load(f, encoding="utf-8")
+                try:
+                    management_dict = json.load(f, encoding="utf-8")
+                except JSONDecodeError:
+                    # The file got corrupted, ignore it. This happens extremely infrequently.
+                    # The file will get overridden once a user downloads something.
+                    return
                 self._installed_package_dict = management_dict.get("installed", {})
                 self._to_remove_package_set = set(management_dict.get("to_remove", []))
                 self._to_install_package_dict = management_dict.get("to_install", {})
