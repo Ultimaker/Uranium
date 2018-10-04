@@ -51,7 +51,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         super().__init__()
 
-        self._application = application # type: QtApplication
+        self._application = application  # type: QtApplication
 
         self._emptyInstanceContainer = empty_container  # type: InstanceContainer
 
@@ -98,7 +98,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     ##  Adds a container provider to search through containers in.
     def addProvider(self, provider: ContainerProvider) -> None:
         self._providers.append(provider)
-        #Re-sort every time. It's quadratic, but there shouldn't be that many providers anyway...
+        # Re-sort every time. It's quadratic, but there shouldn't be that many providers anyway...
         self._providers.sort(key = lambda provider: PluginRegistry.getInstance().getMetaData(provider.getPluginId())["container_provider"].get("priority", 0))
 
     ##  Find all DefinitionContainer objects matching certain criteria.
@@ -118,7 +118,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
     def findDefinitionContainersMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
-        return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = DefinitionContainer, **kwargs))
+        return self.findContainersMetadata(container_type = DefinitionContainer, **kwargs)
 
     ##  Find all InstanceContainer objects matching certain criteria.
     #
@@ -137,7 +137,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
     def findInstanceContainersMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
-        return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = InstanceContainer, **kwargs))
+        return self.findContainersMetadata(container_type = InstanceContainer, **kwargs)
 
     ##  Find all ContainerStack objects matching certain criteria.
     #
@@ -155,7 +155,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
     def findContainerStacksMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
-        return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = ContainerStack, **kwargs))
+        return self.findContainersMetadata(container_type = ContainerStack, **kwargs)
 
     ##  Find all container objects matching certain criteria.
     #
@@ -169,13 +169,13 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   list if nothing was found.
     @UM.FlameProfiler.profile
     def findContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
-        #Find the metadata of the containers and grab the actual containers from there.
+         # Find the metadata of the containers and grab the actual containers from there.
         results_metadata = self.findContainersMetadata(ignore_case = ignore_case, **kwargs)
         result = []
         for metadata in results_metadata:
-            if metadata["id"] in self._containers: #Already loaded, so just return that.
+            if metadata["id"] in self._containers:  # Already loaded, so just return that.
                 result.append(self._containers[metadata["id"]])
-            else: # Metadata is loaded, but not the actual data.
+            else:  # Metadata is loaded, but not the actual data.
                 if metadata["id"] in self._wrong_container_ids:
                     Logger.logException("e", "Error when loading container {container_id}: This is a weird container, probably some file is missing".format(container_id = metadata["id"]))
                     continue
@@ -206,12 +206,12 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
     def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[Dict[str, Any]]:
-        #Create the query object.
+        # Create the query object.
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         candidates = None
 
         if "id" in kwargs and kwargs["id"] is not None and "*" not in kwargs["id"] and not ignore_case:
-            if kwargs["id"] not in self.metadata: #If we're looking for an unknown ID, try to lazy-load that one.
+            if kwargs["id"] not in self.metadata:  # If we're looking for an unknown ID, try to lazy-load that one.
                 if kwargs["id"] not in self.source_provider:
                     for candidate in self._providers:
                         if kwargs["id"] in candidate.getAllIds():
@@ -229,13 +229,13 @@ class ContainerRegistry(ContainerRegistryInterface):
                 self.metadata[metadata["id"]] = metadata
                 self.source_provider[metadata["id"]] = provider
 
-            #Since IDs are the primary key and unique we can now simply request the candidate and check if it matches all requirements.
+            # Since IDs are the primary key and unique we can now simply request the candidate and check if it matches all requirements.
             if kwargs["id"] not in self.metadata:
-                return [] #No result, so return an empty list.
+                return []  # No result, so return an empty list.
             candidates = [self.metadata[kwargs["id"]]]
 
         if query.isHashable() and query in self._query_cache:
-            #If the exact same query is in the cache, we can re-use the query result.
+            # If the exact same query is in the cache, we can re-use the query result.
             self._query_cache.move_to_end(query) #Query was used, so make sure to update its position so that it doesn't get pushed off as a rarely-used query.
             return self._query_cache[query].getResult()
 
@@ -252,7 +252,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 # to be discarded.
                 self._query_cache.popitem(last = False)
 
-        return query.getResult()
+        return cast(List[Dict[str, Any]], query.getResult())  # As the execute of the query is done, result won't be none.
 
     ##  Specialized find function to find only the modified container objects
     #   that also match certain criteria.
@@ -271,20 +271,20 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
     def findDirtyContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
-        #Find the metadata of the containers and grab the actual containers from there.
+        # Find the metadata of the containers and grab the actual containers from there.
         #
-        #We could apply the "is in self._containers" filter and the "isDirty" filter
-        #to this metadata find function as well to filter earlier, but since the
-        #filters in findContainersMetadata are applied in arbitrary order anyway
-        #this will have very little effect except to prevent a list copy.
+        # We could apply the "is in self._containers" filter and the "isDirty" filter
+        # to this metadata find function as well to filter earlier, but since the
+        # filters in findContainersMetadata are applied in arbitrary order anyway
+        # this will have very little effect except to prevent a list copy.
         results_metadata = self.findContainersMetadata(ignore_case = ignore_case, **kwargs)
 
         result = []
         for metadata in results_metadata:
-            if metadata["id"] not in self._containers: #Not yet loaded, so it can't be dirty.
+            if metadata["id"] not in self._containers:  # Not yet loaded, so it can't be dirty.
                 continue
             candidate = self._containers[metadata["id"]]
-            if hasattr(candidate, "isDirty") and candidate.isDirty(): #type: ignore #Check for hasattr because only InstanceContainers and Stacks have this method.
+            if hasattr(candidate, "isDirty") and candidate.isDirty():  # type: ignore #Check for hasattr because only InstanceContainers and Stacks have this method.
                 result.append(self._containers[metadata["id"]])
         return result
 
@@ -301,7 +301,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def isReadOnly(self, container_id: str) -> bool:
         provider = self.source_provider.get(container_id)
         if not provider:
-            return False #If no provider had the container, that means that the container was only in memory. Then it's always modifiable.
+            return False  # If no provider had the container, that means that the container was only in memory. Then it's always modifiable.
         return provider.isReadOnly(container_id)
 
     ##  Returns whether a container is completely loaded or not.
@@ -315,10 +315,10 @@ class ContainerRegistry(ContainerRegistryInterface):
     ##  Load the metadata of all available definition containers, instance
     #   containers and container stacks.
     def loadAllMetadata(self) -> None:
-        for provider in self._providers: #Automatically sorted by the priority queue.
-            for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
+        for provider in self._providers:  # Automatically sorted by the priority queue.
+            for container_id in list(provider.getAllIds()):  # Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
-                    self._application.processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
+                    self._application.processEvents()  # Update the user interface because loading takes a while. Specifically the loading screen.
                     metadata = provider.loadMetadata(container_id)
                     if metadata is None:
                         continue
@@ -333,16 +333,16 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   that were already added when the first call to this method happened will not be re-added.
     @UM.FlameProfiler.profile
     def load(self) -> None:
-        #Disable garbage collection to speed up the loading (at the cost of memory usage).
+        # Disable garbage collection to speed up the loading (at the cost of memory usage).
         gc.disable()
         resource_start_time = time.time()
 
-        with self.lockCache(): #Because we might be writing cache files.
+        with self.lockCache():  # Because we might be writing cache files.
             for provider in self._providers:
-                for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
+                for container_id in list(provider.getAllIds()):  # Make copy of all IDs since it might change during iteration.
                     if container_id not in self._containers:
-                        #Update UI while loading.
-                        self._application.processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
+                        # Update UI while loading.
+                        self._application.processEvents()  # Update the user interface because loading takes a while. Specifically the loading screen.
                         try:
                             self._containers[container_id] = provider.loadContainer(container_id)
                         except:
