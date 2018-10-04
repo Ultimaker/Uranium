@@ -63,6 +63,8 @@ class Application:
         self._is_headless = False #type: bool
         self._use_external_backend = False #type: bool
 
+        self.CONFIG_LOCK_FILENAME = "{name}.lock".format(name = self._app_name)
+
         self._cli_args = None #type: argparse.Namespace
         self._cli_parser = argparse.ArgumentParser(prog = self._app_name, add_help = False) #type: argparse.ArgumentParser
 
