@@ -628,11 +628,11 @@ class ContainerRegistry(ContainerRegistryInterface):
     ##  Get the lock filename including full path
     #   Dependent on when you call this function, Resources.getConfigStoragePath may return different paths
     def getLockFilename(self) -> str:
-        return Resources.getStoragePath(Resources.Resources, self._application.CONFIG_LOCK_FILENAME)
+        return Resources.getStoragePath(Resources.Resources, self._application.getApplicationLockFilename())
 
     ##  Get the cache lock filename including full path.
     def getCacheLockFilename(self) -> str:
-        return Resources.getStoragePath(Resources.Cache, self._application.CONFIG_LOCK_FILENAME)
+        return Resources.getStoragePath(Resources.Cache, self._application.getApplicationLockFilename())
 
     ##  Contextmanager to create a lock file and remove it afterwards.
     def lockFile(self) -> LockFile:
