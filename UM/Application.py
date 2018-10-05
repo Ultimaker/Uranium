@@ -63,7 +63,7 @@ class Application:
         self._is_headless = False #type: bool
         self._use_external_backend = False #type: bool
 
-        self.CONFIG_LOCK_FILENAME = "{name}.lock".format(name = self._app_name)
+        self.CONFIG_LOCK_FILENAME = "{name}.lock".format(name = self._app_name) # type: str
 
         self._cli_args = None #type: argparse.Namespace
         self._cli_parser = argparse.ArgumentParser(prog = self._app_name, add_help = False) #type: argparse.ArgumentParser
@@ -212,6 +212,10 @@ class Application:
 
     def getContainerRegistry(self):
         return self._container_registry
+
+    ##  Get the lock filename
+    def getApplicationLockFilename(self) -> str:
+        return self.CONFIG_LOCK_FILENAME
 
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()

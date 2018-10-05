@@ -43,10 +43,11 @@ class LockFile:
                 try:
                     os.remove(self._filename)
                 except Exception as e:
+                    stats = None
                     try:
                         stats = os.stat(self._filename)
                     except:
-                        stats = None
+                        pass
                     raise RuntimeError("Failed to remove lock file with stats = {stats}. Exception: {exception}".format(stats = stats, exception = e))
             open_flags = (os.O_CREAT | os.O_EXCL | os.O_WRONLY)
             open_mode = 0o666
