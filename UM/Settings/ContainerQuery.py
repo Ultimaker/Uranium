@@ -36,7 +36,7 @@ class ContainerQuery:
     ##  Get the class of the containers that this query should find, if any.
     #
     #   If the query doesn't filter on container type, `None` is returned.
-    def getContainerType(self) -> Optional[Type["ContainerInterface"]]:
+    def getContainerType(self) -> Optional[Type]:
         return self._kwargs.get("container_type")
 
     ##  Retrieve the result of this query.
