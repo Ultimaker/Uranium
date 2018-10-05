@@ -4,6 +4,8 @@
 import re
 from typing import Optional, TYPE_CHECKING, List, Type, Dict, Any, cast
 
+from UM.Logger import Logger
+
 if TYPE_CHECKING:
     from UM.Settings.ContainerRegistry import ContainerRegistry
     from UM.Settings.Interfaces import ContainerInterface
@@ -34,7 +36,7 @@ class ContainerQuery:
     ##  Get the class of the containers that this query should find, if any.
     #
     #   If the query doesn't filter on container type, `None` is returned.
-    def getContainerType(self) -> Optional[Type["ContainerInterface"]]:
+    def getContainerType(self) -> Optional[type]:
         return self._kwargs.get("container_type")
 
     ##  Retrieve the result of this query.
@@ -116,12 +118,17 @@ class ContainerQuery:
     # Check to see if a container matches with a specific typed property
     def _matchType(self, metadata: Dict[str, Any], property_name: str, value: Type):
         if property_name == "container_type":
-            container_type = cast(type, metadata.get(property_name))
-            try:
-                return issubclass(container_type, value)  # Also allow subclasses.
-            except TypeError:
-                # Since the type error that we got is extremely not helpful, we re-raise it with more info.
-                raise TypeError("The requested container_type is not a type but a %s with the value %s", type(container_type), container_type)
+            container_type = metadata.get(property_name)
+            if isinstance(container_type, type):
+                try:
+                    return issubclass(container_type, value)  # Also allow subclasses.
+                except TypeError:
+                    # Since the type error that we got is extremely not helpful, we re-raise it with more info.
+                    raise TypeError("The value {value} of the property {property} is not a type but a {type}: {metadata}"
+                                    .format(value = value, property = property_name, type = type(value), metadata = metadata))
+            else:
+                raise TypeError("Container type {container_type} is not a type but a {type}: {metadata}"
+                           .format(container_type = container_type, type = type(container_type), metadata = metadata))
         return value == metadata.get(property_name)  # If the metadata entry doesn't exist, match on None.
 
     # Helper function to simplify ignore case handling
