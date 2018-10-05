@@ -124,11 +124,9 @@ class ContainerQuery:
                     return issubclass(container_type, value)  # Also allow subclasses.
                 except TypeError:
                     # Since the type error that we got is extremely not helpful, we re-raise it with more info.
-                    raise TypeError("Container type {container_type} is not a type but a {type}: {metadata}"
-                                    .format(container_type = container_type, type = type(container_type), metadata = metadata))
+                    raise TypeError("The value {value} of the property {property} is not a type but a {type}: {metadata}"
+                                    .format(value = value, property = property_name, type = type(value), metadata = metadata))
             else:
-                Logger.log("w", "Container type {container_type} is not a type but a {type}: {metadata}"
-                           .format(container_type = container_type, type = type(container_type), metadata = metadata))
                 raise TypeError("Container type {container_type} is not a type but a {type}: {metadata}"
                            .format(container_type = container_type, type = type(container_type), metadata = metadata))
         return value == metadata.get(property_name)  # If the metadata entry doesn't exist, match on None.
