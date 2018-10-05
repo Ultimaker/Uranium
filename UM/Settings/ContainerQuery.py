@@ -2,13 +2,10 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import re
-from typing import Optional, TYPE_CHECKING, List, Type, Dict, Any, cast
-
-from UM.Logger import Logger
+from typing import Optional, TYPE_CHECKING, List, Type, Dict, Any
 
 if TYPE_CHECKING:
     from UM.Settings.ContainerRegistry import ContainerRegistry
-    from UM.Settings.Interfaces import ContainerInterface
 
 ##  Wrapper class to perform a search for a certain set of containers.
 #
