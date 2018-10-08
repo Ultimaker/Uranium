@@ -17,6 +17,7 @@ from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Scene.SceneNode import SceneNode
 from UM.Signal import Signal, signalemitter
 from UM.i18n import i18nCatalog
+from UM.Platform import Platform
 
 i18n_catalog = i18nCatalog("uranium")
 
