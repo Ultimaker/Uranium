@@ -17,6 +17,7 @@ from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Scene.SceneNode import SceneNode
 from UM.Signal import Signal, signalemitter
 from UM.i18n import i18nCatalog
+from UM.Platform import Platform
 
 i18n_catalog = i18nCatalog("uranium")
 
@@ -147,12 +148,16 @@ class Scene:
     ##  Add a file to be watched for changes.
     #   \param file_path The path to the file that must be watched.
     def addWatchedFile(self, file_path: str) -> None:
-        self._file_watcher.addPath(file_path)
+        # The QT 5.10.0 issue, only on Windows. Cura crashes after loading a stl file from USB/sd-card/Cloud-based drive
+        if not Platform.isWindows():
+            self._file_watcher.addPath(file_path)
 
     ##  Remove a file so that it will no longer be watched for changes.
     #   \param file_path The path to the file that must no longer be watched.
     def removeWatchedFile(self, file_path: str) -> None:
-        self._file_watcher.removePath(file_path)
+        # The QT 5.10.0 issue, only on Windows. Cura crashes after loading a stl file from USB/sd-card/Cloud-based drive
+        if not Platform.isWindows():
+            self._file_watcher.removePath(file_path)
 
     ##  Triggered whenever a file is changed that we currently have loaded.
     def _onFileChanged(self, file_path: str) -> None:
