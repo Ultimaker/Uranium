@@ -29,7 +29,7 @@ class LockFile:
     def __init__(self, filename: str, timeout: int = 10, wait_msg: str = "Waiting for lock file to disappear...") -> None:
         self._filename = filename
         self._wait_msg = wait_msg
-        self._timeout = timeout
+        self._timeout = timeout + 100
         self._pidfile = None #type: Optional[int]
 
     ##  Creates the lock file on the file system, with exclusive use.
@@ -67,18 +67,18 @@ class LockFile:
         from ctypes import windll
 
         # Define attributes and flags for the file
-        GENERIC_ALL = 0x10000000
+        GENERIC_READ_WRITE = 0x40000000 | 0x80000000 #Read and write rights.
         NO_SHARE = 0
-        CREATE_NEW = 1
-        FILE_FLAG_DELETE_ON_CLOSE = 0x04000000
-        FILE_ATTRIBUTE_NORMAL = 0x80
+        CREATE_NEW = 1 #Only create the file if it doesn't already exist.
+        FILE_FLAG_DELETE_ON_CLOSE = 0x04000000 #Delete the file when we close the file handle.
+        FILE_ATTRIBUTE_NORMAL = 0x80 #Default auxiliary flags.
 
         self._pidfile = None
         while True:
             try:
                 # Try to create the lock file with the Windows API. For more information visit:
                 # https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-createfilew
-                self._pidfile = windll.kernel32.CreateFileW(self._filename, GENERIC_ALL, NO_SHARE, None, CREATE_NEW,
+                self._pidfile = windll.kernel32.CreateFileW(self._filename, GENERIC_READ_WRITE, NO_SHARE, None, CREATE_NEW,
                                                             FILE_FLAG_DELETE_ON_CLOSE | FILE_ATTRIBUTE_NORMAL, None)
                 if self._pidfile is not None and self._pidfile != -1: # -1 is the INVALID_HANDLE
                     break
