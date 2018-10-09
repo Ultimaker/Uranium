@@ -25,6 +25,7 @@ from UM.PackageManager import PackageManager #For typing.
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
 from UM.Qt.Bindings.MainWindow import MainWindow #For typing.
+from UM.Qt.Bindings.OutputDevicesModel import OutputDevicesModel
 from UM.Signal import Signal, signalemitter
 from UM.Resources import Resources
 from UM.Logger import Logger
@@ -110,6 +111,8 @@ class QtApplication(QApplication, Application):
 
         self._configuration_error_message = None #type: Optional[ConfigurationErrorMessage]
 
+        self._output_devices_model = None  # type: Optional[OutputDevicesModel]
+
     def addCommandLineOptions(self) -> None:
         super().addCommandLineOptions()
         # This flag is used by QApplication. We don't process it.
@@ -118,6 +121,8 @@ class QtApplication(QApplication, Application):
 
     def initialize(self) -> None:
         super().initialize()
+
+        self._output_devices_model = OutputDevicesModel(self)
 
         self._mesh_file_handler = MeshFileHandler(self) #type: MeshFileHandler
         self._workspace_file_handler = WorkspaceFileHandler(self) #type: WorkspaceFileHandler
@@ -147,6 +152,10 @@ class QtApplication(QApplication, Application):
 
         Logger.log("i", "Initializing version upgrade manager ...")
         self._version_upgrade_manager = VersionUpgradeManager(self)
+
+    @pyqtSlot(result = QObject)
+    def getOutputDevicesModel(self) -> "OutputDevicesModel":
+        return self._output_devices_model
 
     def startSplashWindowPhase(self) -> None:
         super().startSplashWindowPhase()

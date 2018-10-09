@@ -5,9 +5,7 @@ from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
-from UM.OutputDevice import OutputDeviceError
 
-import time
 
 ##  A list model providing a list of all registered OutputDevice instances.
 #
