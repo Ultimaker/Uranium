@@ -1,8 +1,8 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import re
-from typing import Optional, TYPE_CHECKING, List, Type, Dict, Any
+from typing import Any, cast, Dict, Iterable, List, Optional, Type, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from UM.Settings.ContainerRegistry import ContainerRegistry
@@ -65,6 +65,7 @@ class ContainerQuery:
     def execute(self, candidates: Optional[List[Any]] = None) -> None:
         if candidates is None:
             candidates = list(self._registry.metadata.values())
+        filtered_candidates = cast(Iterable, candidates)
 
         # Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
@@ -75,10 +76,10 @@ class ContainerQuery:
                     key_filter = lambda candidate, key = key, value = value: self._matchString(candidate, key, value)
             else:
                 key_filter = lambda candidate, key = key, value = value: self._matchType(candidate, key, value)
-            candidates = list(filter(key_filter, candidates))
+            filtered_candidates = filter(key_filter, filtered_candidates)
 
         # Execute all filters.
-        self._result = candidates
+        self._result = list(filtered_candidates)
 
     def __hash__(self) -> int:
         return hash(self.__key())

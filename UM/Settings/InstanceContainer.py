@@ -210,7 +210,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             "id": self.getId(),
             "name": self.getName(),
             "definition": self.getMetaData().get("definition"),
-            "version": self.getMetaData().get("version", 0)
+            "version": self.getMetaData().get("version", 0),
+            "container_type": InstanceContainer
         }
         self._metadata.update(metadata)
         self._dirty = True
