@@ -370,6 +370,11 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         index = self._definition_list.index(definitions[0])
 
+        # Make sure self._row_index_list is populated
+        if self._update_visible_row_scheduled:
+            self._update_visible_row_scheduled = False
+            self._updateVisibleRows()
+
         try:
             return self._row_index_list.index(index)
         except ValueError:
