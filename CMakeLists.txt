@@ -45,8 +45,6 @@ add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages 
 # Build Translations
 CREATE_TRANSLATION_TARGETS()
 
-configure_file(${CMAKE_SOURCE_DIR}/LibraryDir.py.in ${CMAKE_SOURCE_DIR}/UM/LibraryDir.py @ONLY)
-
 if(EXISTS /etc/debian_version)
     install(DIRECTORY UM DESTINATION lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}/dist-packages)
 else()

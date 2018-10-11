@@ -24,11 +24,6 @@ from UM.View.Renderer import Renderer #For typing.
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
 
-try:
-    from UM.LibraryDir import UraniumLibraryDir
-except ImportError:
-    UraniumLibraryDir = "lib"
-
 from typing import TYPE_CHECKING, Dict, List, Callable, Any, Optional
 if TYPE_CHECKING:
     from UM.Backend.Backend import Backend
@@ -162,7 +157,9 @@ class Application:
 
         self._plugin_registry = PluginRegistry(self)  #type: PluginRegistry
 
-        self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, UraniumLibraryDir, "uranium"))
+        self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib", "uranium"))
+        self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib64", "uranium"))
+        self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib32", "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "Resources", "uranium", "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "Resources", self._app_name, "plugins"))
