@@ -274,10 +274,6 @@ class PluginRegistry(QObject):
 
         return self._metadata[plugin_id]
 
-    #   Get the list of plugin locations:
-    def getPluginLocations(self) -> List[str]:
-        return self._plugin_locations
-
     @pyqtSlot(str, result="QVariantMap")
     def installPlugin(self, plugin_path: str) -> Optional[Dict[str, str]]:
         plugin_path = QUrl(plugin_path).toLocalFile()
