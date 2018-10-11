@@ -24,7 +24,7 @@ from UM.View.Renderer import Renderer #For typing.
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
 
-from typing import TYPE_CHECKING, Dict, List, Callable, Any, Optional
+from typing import TYPE_CHECKING, List, Callable, Any, Optional
 if TYPE_CHECKING:
     from UM.Backend.Backend import Backend
     from UM.Settings.ContainerStack import ContainerStack
