@@ -315,7 +315,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   the serialized data. Due to legacy problem, those data may not be available if it comes from an ancient Cura.
     @classmethod
     def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
-        parser = configparser.ConfigParser(interpolation=None, empty_lines_in_values=False)
+        parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values=False)
         parser.read_string(serialized)
 
         if "general" not in parser or any(pn not in parser["general"] for pn in ("version", "name", "id")):

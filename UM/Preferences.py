@@ -193,7 +193,7 @@ class Preferences:
     ##  Extract data from string and store it in the Configuration parser.
     def deserialize(self, serialized: str) -> None:
         updated_preferences = self.__updateSerialized(serialized)
-        self._parser = configparser.ConfigParser(interpolation=None)
+        self._parser = configparser.ConfigParser(interpolation = None)
         self._parser.read_string(updated_preferences)
         has_version = "general" in self._parser and "version" in self._parser["general"]
 
