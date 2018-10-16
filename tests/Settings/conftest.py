@@ -8,9 +8,7 @@ import os.path
 import pytest
 import unittest.mock #For mocking the container provider priority.
 
-from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
-from UM.Signal import Signal
 from UM.VersionUpgradeManager import VersionUpgradeManager
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
