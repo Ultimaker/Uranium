@@ -224,7 +224,7 @@ class Preferences:
 
     ##  This method is still used by some external plugins and it needs to be kept as deprecated
     @classmethod
-    @deprecated("Please use the getPreferences function in Application", "3.3")
+    @deprecated("Please use Application.getInstance().getPreferences() instead", "3.3")
     def getInstance(cls) -> "Preferences":
         from UM.Application import Application
         return Application.getInstance().getPreferences()
