@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
@@ -30,6 +30,9 @@ class UpdateChecker(Extension):
             self.checkNewVersion(True)
 
         self._download_url = None
+
+        #Which version was the latest shown in the version upgrade dialog. Don't show these updates twice.
+        Application.getInstance().getPreferences().addPreference("info/latest_update_version_shown", "0.0.0")
 
     ##  Connect with software.ultimaker.com, load latest.json and check version info.
     #   If the version info is higher then the current version, spawn a message to
