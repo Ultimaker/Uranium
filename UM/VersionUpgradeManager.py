@@ -3,8 +3,8 @@
 
 import collections  # For deque, for breadth-first search and to track tasks, and namedtuple.
 import os  # To get the configuration file names and to rename files.
+import re
 import traceback
-import ntpath
 from typing import Any, Dict, Callable, Iterator, List, Optional, Set, Tuple
 
 import UM.Message  # To show the "upgrade succeeded" message.
@@ -83,14 +83,16 @@ class VersionUpgradeManager:
         self._registry = PluginRegistry.getInstance()   # type: PluginRegistry
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
-        # Files that should not be checked, such as log files
-        self._ignored_files = ["uranium.lock", "plugins.json", "packages.json"]  # type: List[str]
+        #Regular expressions of the files that should not be checked, such as log files.
+        self._ignored_files = ["^.*\.lock$", "^plugins\.json$", "^packages.json$", "^.*\.log$"]  # type: List[str]
 
     ##  Registers a file to be ignored by version upgrade checks (eg log files).
     #   \param file_name The base file name of the file to be ignored.
 
     def registerIgnoredFile(self, file_name: str) -> None:
-        self._ignored_files.append(file_name)
+        # Convert the file name to a regular expresion to add to the ignored files
+        file_name_regex = "^" + re.escape(file_name) + "$"
+        self._ignored_files.append(file_name_regex)
 
     ##  Gets the paths where a specified type of file should be stored.
     #
@@ -260,6 +262,7 @@ class VersionUpgradeManager:
         for key in self._storage_paths:
             self._storage_paths[key] = collections.OrderedDict(sorted(self._storage_paths[key].items()))
 
+        combined_regex_ignored_files = "(" + ")|(".join(self._ignored_files) + ")"
         for old_configuration_type, version_storage_paths_dict in self._storage_paths.items():
             for src_version, storage_paths in version_storage_paths_dict.items():
                 for prefix in storage_path_prefixes:
@@ -268,7 +271,7 @@ class VersionUpgradeManager:
                         for configuration_file in self._getFilesInDirectory(path):
                             # Get file version. Only add this upgrade task if the current file version matches with
                             # the defined version that scans through this folder.
-                            if ntpath.basename(configuration_file) in self._ignored_files:
+                            if re.match(combined_regex_ignored_files, configuration_file):
                                 continue
                             try:
                                 with open(os.path.join(path, configuration_file), "r", encoding = "utf-8") as f:

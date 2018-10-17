@@ -1,10 +1,13 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import cast
+from unittest.mock import MagicMock
 
 import pytest
 import Arcus #Prevents error: "PyCapsule_GetPointer called with incorrect name" with conflicting SIP configurations between Arcus and PyQt: Import Arcus first!
 from UM.Qt.QtApplication import QtApplication #QTApplication import is required, even though it isn't used.
 from UM.Application import Application
+from UM.Qt.QtRenderer import QtRenderer
 from UM.Signal import Signal
 from UM.PluginRegistry import PluginRegistry
 from UM.VersionUpgradeManager import VersionUpgradeManager
@@ -25,6 +28,9 @@ class FixtureApplication(Application):
 
     def processEvents(self):
         pass
+
+    def getRenderer(self):
+        return MagicMock()
 
 @pytest.fixture()
 def application():

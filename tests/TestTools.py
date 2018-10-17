@@ -8,11 +8,8 @@ from UM.Controller import Controller
 from UM.Tool import Tool
 
 
-def test_tools():
-    mock_application = MagicMock()
-
-    Application.getInstance = MagicMock(return_type = mock_application)
-    controller = Controller(mock_application)
+def test_tools(application):
+    controller = Controller(application)
 
     # Switch out the emits with a mock.
     controller.toolsChanged.emit = MagicMock()
@@ -36,7 +33,7 @@ def test_tools():
     assert controller.toolsChanged.emit.call_count == 2
     assert len(controller.getAllTools()) == 2
 
-    # Set if with an unknown name.
+    # Set active tool with an unknown name.
     controller.setActiveTool("nope nope!")
     assert controller.getActiveTool() is None
     assert controller.activeToolChanged.emit.call_count == 0
@@ -59,12 +56,3 @@ def test_tools():
     assert controller.getTool("ZOMG") is None
     assert controller.getTool("test_tool_1") == test_tool_1
     assert controller.getTool("test_tool_2") == test_tool_2
-
-
-
-
-
-
-
-
-
