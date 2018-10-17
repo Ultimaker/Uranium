@@ -3,6 +3,7 @@
 
 import re
 from typing import Any, cast, Dict, Iterable, List, Optional, Type, TYPE_CHECKING
+from UM.Logger import Logger
 
 if TYPE_CHECKING:
     from UM.Settings.ContainerRegistry import ContainerRegistry
@@ -125,8 +126,11 @@ class ContainerQuery:
                     raise TypeError("The value {value} of the property {property} is not a type but a {type}: {metadata}"
                                     .format(value = value, property = property_name, type = type(value), metadata = metadata))
             else:
-                raise TypeError("Container type {container_type} is not a type but a {type}: {metadata}"
-                           .format(container_type = container_type, type = type(container_type), metadata = metadata))
+                # We attempted to match something that isn't a type.
+                Logger.log("w", "Container type {container_type} is not a type but a {type}: {metadata}"
+                           .format(container_type=container_type, type=type(container_type), metadata=metadata))
+                return False
+
         return value == metadata.get(property_name)  # If the metadata entry doesn't exist, match on None.
 
     # Helper function to simplify ignore case handling
