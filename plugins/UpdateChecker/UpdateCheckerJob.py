@@ -69,21 +69,7 @@ class UpdateCheckerJob(Job):
                             newest_version = Version([int(value["major"]), int(value["minor"]), int(value["revision"])])
                             if local_version < newest_version:
                                 Logger.log("i", "Found a new version of the software. Spawning message")
-
-                                title_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} is available!".format(application_name = application_name.title(), version_number = newest_version))
-                                content_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} provides a better and more reliable printing experience.".format(application_name = application_name.title(), version_number = newest_version))
-
-                                message = Message(text = content_message, title = title_message)
-                                message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
-
-                                message.addAction("new_features", i18n_catalog.i18nc("@action:button", "Learn more about the new features"), "[no_icon]", "[no_description]",
-                                                  button_style = Message.ActionButtonStyle.LINK,
-                                                  button_align = Message.ActionButtonStyle.BUTTON_ALIGN_LEFT)
-
-                                if self._set_download_url_callback:
-                                    self._set_download_url_callback(value["url"])
-                                message.actionTriggered.connect(self._callback)
-                                message.show()
+                                self.showUpdate(newest_version, value["url"])
                                 no_new_version = False
                                 break
                     else:
@@ -97,3 +83,20 @@ class UpdateCheckerJob(Job):
 
         if no_new_version and not self.silent:
             Message(i18n_catalog.i18nc("@info", "No new version was found."), title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
+
+    def showUpdate(self, newest_version: Version, download_url: str) -> None:
+        application_name = Application.getInstance().getApplicationName()
+        title_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} is available!".format(application_name = application_name.title(), version_number = newest_version))
+        content_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} provides a better and more reliable printing experience.".format(application_name = application_name.title(), version_number = newest_version))
+
+        message = Message(text = content_message, title = title_message)
+        message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
+
+        message.addAction("new_features", i18n_catalog.i18nc("@action:button", "Learn more about the new features"), "[no_icon]", "[no_description]",
+                          button_style = Message.ActionButtonStyle.LINK,
+                          button_align = Message.ActionButtonStyle.BUTTON_ALIGN_LEFT)
+
+        if self._set_download_url_callback:
+            self._set_download_url_callback(download_url)
+        message.actionTriggered.connect(self._callback)
+        message.show()
