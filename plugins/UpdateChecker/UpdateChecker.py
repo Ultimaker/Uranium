@@ -27,7 +27,7 @@ class UpdateChecker(Extension):
 
         Application.getInstance().getPreferences().addPreference("info/automatic_update_check", True)
         if Application.getInstance().getPreferences().getValue("info/automatic_update_check"):
-            self.checkNewVersion(True)
+            self.checkNewVersion(silent = True, display_same_version = False)
 
         self._download_url = None
 
@@ -38,11 +38,15 @@ class UpdateChecker(Extension):
     #   If the version info is higher then the current version, spawn a message to
     #   allow the user to download it.
     #
-    #   \param silent type(boolean) Suppresses messages other than "new version found" messages.
-    #                               This is used when checking for a new version at startup.
-    def checkNewVersion(self, silent = False):
+    #   \param silent Suppresses messages other than "new version found"
+    #   messages. This is used when checking for a new version at startup.
+    #   \param display_same_version Whether to display the same update message
+    #   twice (True) or suppress the update message if the user has already seen
+    #   the update for a particular version. When manually checking for updates,
+    #   the user wants to display the update even if he's already seen it.
+    def checkNewVersion(self, silent = False, display_same_version = True):
         self._download_url = None
-        job = UpdateCheckerJob(silent, self.url, self._onActionTriggered, self._onSetDownloadUrl)
+        job = UpdateCheckerJob(silent, display_same_version, self.url, self._onActionTriggered, self._onSetDownloadUrl)
         job.start()
 
     def _onSetDownloadUrl(self, download_url):

@@ -18,9 +18,10 @@ i18n_catalog = i18nCatalog("uranium")
 
 ##  This job checks if there is an update available on the provided URL.
 class UpdateCheckerJob(Job):
-    def __init__(self, silent = False, url = None, callback = None, set_download_url_callback = None):
+    def __init__(self, silent = False, display_same_version = True, url = None, callback = None, set_download_url_callback = None):
         super().__init__()
         self.silent = silent
+        self.display_same_version = display_same_version
         self._url = url
         self._callback = callback
         self._set_download_url_callback = set_download_url_callback
@@ -87,8 +88,8 @@ class UpdateCheckerJob(Job):
     def showUpdate(self, newest_version: Version, download_url: str) -> None:
         preferences = Application.getInstance().getPreferences()
         latest_version_shown = preferences.getValue("info/latest_update_version_shown")
-        if latest_version_shown == newest_version:
-            return #Don't show this update again. The user already clicked it away.
+        if latest_version_shown == newest_version and not self.display_same_version:
+            return #Don't show this update again. The user already clicked it away and doesn't want it again.
         preferences.setValue("info/latest_update_version_shown", str(newest_version))
 
         application_name = Application.getInstance().getApplicationName()
