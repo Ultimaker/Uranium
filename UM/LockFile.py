@@ -64,7 +64,7 @@ class LockFile:
     #   If another thread wants to use a concurrent folder/file, but this file is still in use, then wait until the
     #   current thread releases the lock file.
     def _createLockFileWindows(self) -> None:
-        from ctypes import windll
+        from ctypes import windll  # type: ignore
 
         # Define attributes and flags for the file
         GENERIC_READ_WRITE = 0x40000000 | 0x80000000 #Read and write rights.
@@ -100,7 +100,7 @@ class LockFile:
     ##  Close and delete the lock file in Windows using the Windows API. For more info visit:
     #   https://msdn.microsoft.com/en-us/9b84891d-62ca-4ddc-97b7-c4c79482abd9
     def _deleteLockFileWindows(self) -> None:
-        from ctypes import windll
+        from ctypes import windll  # type: ignore
         try:
             windll.kernel32.CloseHandle(self._pidfile)
         except:
