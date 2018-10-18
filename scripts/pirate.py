@@ -10,6 +10,7 @@ po_file = sys.argv[2]
 
 #Translates English to Pirate.
 def translate(english):
+    english = english.replace("&", "") #Pirates don't take shortcuts.
     for eng, pir in pirateofdoom.pirate.items():
         matches = list(re.finditer(r"\b" + eng.lower() + r"\b", english.lower()))
         matches = [match.start(0) for match in matches]
