@@ -11,7 +11,7 @@ Item
     id: base
     width: childrenRect.width
     height: childrenRect.height
-    UM.I18nCatalog { id: catalog; name:"uranium"}
+    UM.I18nCatalog { id: catalog; name: "uranium"}
 
     // We use properties for the text as doing the bindings indirectly doesn't cause any breaks
     // Javascripts don't seem to play well with the bindings (and sometimes break em)
