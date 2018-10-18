@@ -10,7 +10,7 @@ Item
 {
     width: childrenRect.width
     height: childrenRect.height
-    UM.I18nCatalog { id: catalog; name:"uranium"}
+    UM.I18nCatalog { id: catalog; name: "uranium"}
     Button
     {
         id: resetRotationButton
