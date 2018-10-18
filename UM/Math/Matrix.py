@@ -159,7 +159,7 @@ class Matrix:
         M[:3, 3] = direction.getData()[:3]
         self._data = M
 
-    def setTranslation(self, translation: Vector) -> None:
+    def setTranslation(self, translation: Union[Vector, "Matrix"]) -> None:
         self._data[:3, 3] = translation.getData()
 
     def getTranslation(self) -> Vector:

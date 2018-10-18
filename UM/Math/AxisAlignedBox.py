@@ -77,7 +77,7 @@ class AxisAlignedBox:
         return self._max.z - self._min.z
 
     @property
-    def center(self) -> float:
+    def center(self) -> Vector:
         return self._min + ((self._max - self._min) / 2.0)
 
     @property
