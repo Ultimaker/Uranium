@@ -71,12 +71,12 @@ class UpdateCheckerJob(Job):
                                 Logger.log("i", "Found a new version of the software. Spawning message")
 
                                 title_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} is available!".format(application_name = application_name.title(), version_number = newest_version))
-                                content_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} provides a better and more reliable printing experience.".format(application_name = application_name.title(), version_number = newest_version))
+                                content_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} provides a better, more reliable printing experience.".format(application_name = application_name.title(), version_number = newest_version))
 
                                 message = Message(text = content_message, title = title_message)
                                 message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
 
-                                message.addAction("new_features", i18n_catalog.i18nc("@action:button", "Learn more about the new features"), "[no_icon]", "[no_description]",
+                                message.addAction("new_features", i18n_catalog.i18nc("@action:button", "Learn more"), "[no_icon]", "[no_description]",
                                                   button_style = Message.ActionButtonStyle.LINK,
                                                   button_align = Message.ActionButtonStyle.BUTTON_ALIGN_LEFT)
 

@@ -88,13 +88,13 @@ msgstr ""
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:72
 #, python-brace-format
 msgctxt "@info:status"
-msgid "Cura {0} is available!"
+msgid "Ultimaker Cura {0} is available!"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
 #, python-brace-format
 msgctxt "@info:status"
-msgid "Cura {0} provides better and reliable printing experience."
+msgid "Ultimaker Cura {0} provides a better, more reliable printing experience."
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
@@ -104,7 +104,7 @@ msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@action:button"
-msgid "Learn more about new features"
+msgid "Learn more"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
