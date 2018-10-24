@@ -29,7 +29,7 @@ class LockFile:
     def __init__(self, filename: str, timeout: int = 10, wait_msg: str = "Waiting for lock file to disappear...") -> None:
         self._filename = filename
         self._wait_msg = wait_msg
-        self._timeout = timeout + 100
+        self._timeout = timeout
         self._pidfile = None #type: Optional[int]
 
     ##  Creates the lock file on the file system, with exclusive use.
