@@ -69,6 +69,11 @@ class UpdateCheckerJob(Job):
                         if platform.system() == os: #TODO: add architecture check
                             newest_version = Version([int(value["major"]), int(value["minor"]), int(value["revision"])])
                             if local_version < newest_version:
+                                preferences = Application.getInstance().getPreferences()
+                                latest_version_shown = preferences.getValue("info/latest_update_version_shown")
+                                if latest_version_shown == newest_version and not self.display_same_version:
+                                    continue #Don't show this update again. The user already clicked it away and doesn't want it again.
+                                preferences.setValue("info/latest_update_version_shown", str(newest_version))
                                 Logger.log("i", "Found a new version of the software. Spawning message")
                                 self.showUpdate(newest_version, value["url"])
                                 no_new_version = False
@@ -86,12 +91,6 @@ class UpdateCheckerJob(Job):
             Message(i18n_catalog.i18nc("@info", "No new version was found."), title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
 
     def showUpdate(self, newest_version: Version, download_url: str) -> None:
-        preferences = Application.getInstance().getPreferences()
-        latest_version_shown = preferences.getValue("info/latest_update_version_shown")
-        if latest_version_shown == newest_version and not self.display_same_version:
-            return #Don't show this update again. The user already clicked it away and doesn't want it again.
-        preferences.setValue("info/latest_update_version_shown", str(newest_version))
-
         application_name = Application.getInstance().getApplicationName()
         title_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} is available!".format(application_name = application_name.title(), version_number = newest_version))
         content_message = i18n_catalog.i18nc("@info:status","{application_name} {version_number} provides a better and more reliable printing experience.".format(application_name = application_name.title(), version_number = newest_version))
