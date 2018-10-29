@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 3.5\n"
-"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2018-09-19 17:07+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-10-29 15:16+0100\n"
 "PO-Revision-Date: 2018-10-02 11:05+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Ultimaker <info@ultimaker.com>, Dutch <info@bothof.nl>\n"
@@ -59,69 +59,69 @@ msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
 msgstr "Niet-ondersteunde uitvoermodus bij het schrijven van STL naar stream."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:44
 msgctxt "@info"
 msgid "Could not access update information."
 msgstr "Geen toegang tot update-informatie."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:98
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:138
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:45
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Versie-upgrade"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:57
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "Het controleren op updates wordt in de door u gebruikte versie niet ondersteund."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:57
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:187
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:72
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Cura {0} is available!"
-msgstr "Cura {0} is beschikbaar."
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:73
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Cura {0} provides better and reliable printing experience."
-msgstr "Cura {0} biedt een betere en betrouwbare printervaring."
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:76
-msgctxt "@action:button"
-msgid "Download"
-msgstr "Downloaden"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
-msgctxt "@action:button"
-msgid "Learn more about new features"
-msgstr "Meer informatie over de nieuwe functies"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
 msgstr "Er is een fout opgetreden tijdens het controleren op updates."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:94
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:194
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:132
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Fout"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:98
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Er is geen nieuwe versie gevonden."
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Downloaden"
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
+msgctxt "@action:button"
+msgid "Learn more about the new features"
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -286,7 +286,7 @@ msgstr "Herstel uw configuratie naar de standaardinstellingen."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:38
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:698
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:699
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -295,13 +295,13 @@ msgstr "Alle Ondersteunde Typen ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:699
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:700
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Alle Bestanden (*)"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:126
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:131
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -311,24 +311,21 @@ msgstr ""
 "Er zijn fouten opgetreden bij het de-installeren van de volgende packages:\n"
 "{packages}"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:128
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:133
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "Fouten bij het de-installeren"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:335
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:340
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
-"There was an error uninstalling the package {package} before installingnew version:\n"
+"There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
 msgstr ""
-"Er is een fout opgetreden bij het de-installeren van de package {package} vóór installatie van de nieuwe versie:\n"
-"{error}.\n"
-"Probeer de upgrade later opnieuw uit te voeren."
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:338
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Fout bij het bijwerken"
@@ -398,7 +395,7 @@ msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Object schalen"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:312
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:313
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -407,7 +404,7 @@ msgstr ""
 "De invoegtoepassing is geïnstalleerd.\n"
 "Start de toepassing opnieuw om de invoegtoepassing te activeren."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:433
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:434
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -417,7 +414,7 @@ msgstr ""
 "De invoegtoepassing is verwijderd.\n"
 "Start {0} opnieuw om het verwijderen te voltooien."
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:138
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
@@ -433,77 +430,84 @@ msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is ondersteuning voor Framebuffer-objecten vereist. Controleer het stuurprogramma voor uw videokaart."
 
-#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:30
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:65
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Herstellen"
 
-#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:42
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:44
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
-"Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
-"Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
-"- {profiles}\n"
-"Wilt u de standaardinstellingen herstellen? Hiermee worden al uw huidige printers en profielen gewist."
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:167
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Wilt u {filename} opnieuw laden?"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:168
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:173
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Het bestand is gewijzigd"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:169
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:174
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Opnieuw laden"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:169
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:174
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Hiermee wordt het opnieuw laden van de bestanden vanaf de schijf geactiveerd."
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:33
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "Kan geen bestanden openen van het type <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:32
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:47
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:70
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:33
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:48
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "Ongeldig bestand"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:45
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:70
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:46
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "Kan <filename>{0}</filename> niet laden"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:54
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "Laden"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:91
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:94
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Schalen in Stappen"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:109
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:112
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Uniform Schalen"
@@ -867,6 +871,38 @@ msgstr "Biedt het Spiegelgereedschap."
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "Spiegelgereedschap"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} is available!"
+#~ msgstr "Cura {0} is beschikbaar."
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} provides better and reliable printing experience."
+#~ msgstr "Cura {0} biedt een betere en betrouwbare printervaring."
+
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about new features"
+#~ msgstr "Meer informatie over de nieuwe functies"
+
+#~ msgctxt "@error:update"
+#~ msgid ""
+#~ "There was an error uninstalling the package {package} before installingnew version:\n"
+#~ "{error}.\n"
+#~ "Please try to upgrade again later."
+#~ msgstr ""
+#~ "Er is een fout opgetreden bij het de-installeren van de package {package} vóór installatie van de nieuwe versie:\n"
+#~ "{error}.\n"
+#~ "Probeer de upgrade later opnieuw uit te voeren."
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+#~ msgstr ""
+#~ "Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
+#~ "- {profiles}\n"
+#~ "Wilt u de standaardinstellingen herstellen? Hiermee worden al uw huidige printers en profielen gewist."
 
 #~ msgctxt "@info"
 #~ msgid "A new version is available!"
