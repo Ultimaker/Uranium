@@ -18,9 +18,9 @@ class ViewModel(ListModel):
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self._controller = Application.getInstance().getController()
-        self._controller.viewsChanged.connect(self._onViewsChanged)
-        self._controller.activeViewChanged.connect(self._onViewsChanged)
-        self._onViewsChanged()  
+        self._controller.viewsChanged.connect(self._update)
+        self._controller.activeViewChanged.connect(self._update)
+        self._update()
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
@@ -28,11 +28,11 @@ class ViewModel(ListModel):
         self.addRoleName(self.DescriptionRole, "description")
         self.addRoleName(self.IconRole, "icon")
 
-    def _onViewsChanged(self) -> None:
+    def _update(self) -> None:
         items = []
         views = self._controller.getAllViews()
-        currentView = self._controller.getActiveView()
-        if currentView is None:
+        current_view = self._controller.getActiveView()
+        if current_view is None:
             return
 
         for view_id in views:
@@ -51,7 +51,7 @@ class ViewModel(ListModel):
             items.append({
                 "id": view_id,
                 "name": name,
-                "active": view_id == currentView.getPluginId(),
+                "active": view_id == current_view.getPluginId(),
                 "description": description,
                 "icon": icon_name,
                 "weight": weight
