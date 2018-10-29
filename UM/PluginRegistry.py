@@ -422,7 +422,7 @@ class PluginRegistry(QObject):
             Logger.log("i", "Loaded plugin %s", plugin_id)
 
         except KeyError as e:
-            Logger.log("e", "Error loading plugin %s:", plugin_id)
+            Logger.logException("e", "Error loading plugin %s:", plugin_id)
             Logger.log("e", "Unknown plugin type: %s", str(e))
         except Exception as e:
             Logger.logException("e", "Error loading plugin %s:", plugin_id)
