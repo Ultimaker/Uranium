@@ -577,7 +577,7 @@ class QtApplication(QApplication, Application):
             # determine a device pixel ratio from font metrics, using the same logic as UM.Theme
             fontPixelRatio = QFontMetrics(QCoreApplication.instance().font()).ascent() / 11
             # round the font pixel ratio to quarters
-            fontPixelRatio = int(fontPixelRatio * 4)/4
+            fontPixelRatio = int(fontPixelRatio * 4) / 4
             return fontPixelRatio
 
 
