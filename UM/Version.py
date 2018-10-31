@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 import re  # To replace parts of version strings with regex.
 from typing import cast, Union, List
+from UM.Logger import Logger
 
 
 ##  Represents a version number, like "3.2.8" and allows comparison of those
@@ -14,7 +15,7 @@ class Version:
     #   the major, minor and revision version numbers. All text is ignored.
     #
     #   \param version A string or bytes representing a version number.
-    def __init__(self, version: Union[str, bytes, List[Union[int, str]]]) -> None:
+    def __init__(self, version: Union[str, bytes, List[Union[int, str]], int]) -> None:
         super().__init__()
 
         if type(version) == bytes:
@@ -32,7 +33,10 @@ class Version:
             version_list = version.split(".")  # type: ignore
         elif isinstance(version, list):
             version_list = version  # type: ignore
+        elif isinstance(version, int):
+            version_list = [version]  # type: ignore
         else:
+            Logger.log("w", "Unable to convert version %s of type %s into a usable version", version, type(version))
             version_list = []
 
         self._major = 0
