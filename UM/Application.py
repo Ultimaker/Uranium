@@ -44,7 +44,7 @@ class Application:
     #   \param version \type{string} Version, formatted as major.minor.rev
     #   \param build_type Additional version info on the type of build this is, such as "master".
     #   \param is_debug_mode Whether to run in debug mode.
-    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
+    def __init__(self, name: str, version: str, app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
         if Application.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         Application.__instance = self
@@ -52,6 +52,7 @@ class Application:
         super().__init__()  # Call super to make multiple inheritance work.
 
         self._app_name = name #type: str
+        self._app_display_name = app_display_name if app_display_name else name  # type: str
         self._version = version #type: str
         self._build_type = build_type #type: str
         self._is_debug_mode = is_debug_mode #type: bool
@@ -292,6 +293,9 @@ class Application:
     #   \returns app_name \type{string}
     def getApplicationName(self) -> str:
         return self._app_name
+
+    def getApplicationDisplayName(self) -> str:
+        return self._app_display_name
 
     ##  Get the preferences.
     #   \return preferences \type{Preferences}
