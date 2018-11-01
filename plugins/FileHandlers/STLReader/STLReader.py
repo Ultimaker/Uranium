@@ -41,9 +41,17 @@ class STLReader(MeshReader):
         self._supported_extensions = [".stl"]
 
     def load_file(self, file_name, mesh_builder, _use_numpystl = False):
+        file_read = False
         if _use_numpystl:
-            self._loadWithNumpySTL(file_name, mesh_builder)
-        else:
+            Logger.log("i", "Using NumPy-STL to load STL data.")
+            try:
+                self._loadWithNumpySTL(file_name, mesh_builder)
+                file_read = True
+            except:
+                Logger.logException("e", "Reading file failed with Numpy-STL!")
+        
+        if not file_read:
+            Logger.log("i", "Using legacy code to load STL data.")
             f = open(file_name, "rb")
             if not self._loadBinary(mesh_builder, f):
                 f.close()
