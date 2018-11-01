@@ -190,11 +190,11 @@ class CameraTool(Tool):
 
         # Handle mouse-initiated rotate- and move-events
         if event.type is Event.MousePressEvent:
-            if self.moveEvent(event) == True:
+            if self.moveEvent(event):
                 self._move = True
                 self._start_drag = (event.x, event.y)
-                return False
-            elif self.rotateEvent(event) == True:
+                return True
+            elif self.rotateEvent(event):
                 self._rotate = True
                 self._start_drag = (event.x, event.y)
                 return True
