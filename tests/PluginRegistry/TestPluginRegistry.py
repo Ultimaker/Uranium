@@ -1,14 +1,14 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-#!/usr/bin/env python2
-
 import pytest
 import os
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
 from UM.PluginError import PluginNotFoundError
+from UM.Version import Version
+
 
 class FixtureRegistry(PluginRegistry):
 
@@ -25,6 +25,7 @@ class FixtureRegistry(PluginRegistry):
 
         return None
 
+
 @pytest.fixture
 def registry(application):
     registry = FixtureRegistry(application)
@@ -32,12 +33,13 @@ def registry(application):
     registry.addType("test", registry.registerTestPlugin)
     return registry
 
+
 class TestPluginRegistry():
     def test_metaData(self, registry):
         metadata = registry.getMetaData("TestPlugin")
         assert metadata == {"id": "TestPlugin",
                             "plugin": {"name": "TestPlugin",
-                                       "api": 5,
+                                       "api": Version(5),
                                        "version": "1.0.0"},
                             "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
                             }
@@ -54,7 +56,7 @@ class TestPluginRegistry():
         
     def test_findAllPlugins(self, registry):
         names = registry._findInstalledPlugins()
-        assert sorted(names) == ["EmptyPlugin","OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"]
+        assert sorted(names) == ["EmptyPlugin", "OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"]
         
     def test_pluginNotFound(self, registry):
         with pytest.raises(PluginNotFoundError):
