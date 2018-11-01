@@ -47,7 +47,11 @@ class ActiveViewProxy(QObject):
         action = getattr(self._active_view, action_name)
         if action:
             action(data)
-    
+
+    @pyqtProperty(bool, notify = activeViewChanged)
+    def valid(self) -> bool:
+        return self._active_view is not None
+
     def _onActiveViewChanged(self) -> None:
         self._active_view = Application.getInstance().getController().getActiveView()
         self.activeViewChanged.emit()
