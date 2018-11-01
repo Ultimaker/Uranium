@@ -6,8 +6,8 @@ from unittest import TestCase
 import pytest
 
 major_versions = [Version("1"), Version(b"1"), Version(1), Version([1]), Version(["1"]), Version("1."), Version("MOD-1"), Version("1B")]
-major_minor_versions = [Version("1.2"), Version("1-2"), Version("1_2"), Version(b"1.2"), Version("1.2BETA"), Version([1, 2]), Version(["1", "2"]), Version([1, "2"]),]
-major_minor_revision_versions = [Version("1.2.3"), Version("1.2.3BETA"), Version("1_2-3"), Version(b"1.2.3"), Version([1, 2, 3]), Version(["1", "2", "3"]), Version([1, "2", 3]), Version("MOD-1.2.3")]
+major_minor_versions = [Version("1.2"), Version("1-2"), Version("1_2"), Version(b"1.2"), Version("1.2BETA"), Version([1, 2]), Version(["1", "2"]), Version([1, "2"]), Version([1, b"2"])]
+major_minor_revision_versions = [Version("1.2.3"), Version("1.2.3BETA"), Version("1_2-3"), Version(b"1.2.3"), Version([1, 2, 3]), Version(["1", "2", "3"]), Version([1, "2", 3]), Version("MOD-1.2.3"), Version(["1", 2, b"3"])]
 
 
 def check_version_equals(first_version: Version, second_version: Version):
