@@ -15,7 +15,7 @@ class Version:
     #   the major, minor and revision version numbers. All text is ignored.
     #
     #   \param version A string or bytes representing a version number.
-    def __init__(self, version: Union[str, bytes, List[Union[int, str]], int]) -> None:
+    def __init__(self, version: Union[str, bytes, int, List[Union[int, str]]]) -> None:
         super().__init__()
 
         if type(version) == bytes:
