@@ -59,6 +59,7 @@ class PluginRegistry(QObject):
         # When actually loading the preferences, it's set to a list. This way we can see the
         # difference between no list and an empty one.
         self._disabled_plugins = []  # type: List[str]
+        self._outdated_plugins = []  # type: List[str]
         self._plugins_to_install = dict()  # type: Dict[str, dict]
         self._plugins_to_remove = []  # type: List[str]
 
@@ -314,8 +315,9 @@ class PluginRegistry(QObject):
 
     #   Check by ID if a plugin is active (enabled):
     def isActivePlugin(self, plugin_id: str) -> bool:
-        if plugin_id not in self._disabled_plugins:
+        if plugin_id not in self._disabled_plugins and plugin_id not in self._outdated_plugins:
             return True
+
         return False
 
     #   Check by ID if a plugin is available:
@@ -376,10 +378,7 @@ class PluginRegistry(QObject):
             Logger.log("w", "Plugin %s was already loaded", plugin_id)
             return
 
-        # If the plugin is in the list of disabled plugins, alert and return:
-        if plugin_id in self._disabled_plugins:
-            Logger.log("d", "Plugin %s was disabled", plugin_id)
-            return
+
 
         # Find the actual plugin on drive:
         plugin = self._findPlugin(plugin_id)
@@ -400,12 +399,14 @@ class PluginRegistry(QObject):
 
         if plugin_api_version.getMajor() != self.APIVersion.getMajor():
             Logger.log("w", "Plugin %s uses an incompatible major API version (plugin: %s, application: %s).", plugin_id, plugin_api_version, self.APIVersion)
+            self._outdated_plugins.append(plugin_id)
             return
 
         if plugin_api_version > self.APIVersion:
             # As per the last check, the major version numbers match up. It could be that the plugin needs a higher
             # minor or revision version number, so also check for that.
             Logger.log("w", "Plugin %s uses an incompatible minor API version (plugin: %s, application: %s).", plugin_id, plugin_api_version, self.APIVersion)
+            self._outdated_plugins.append(plugin_id)
             return
 
         try:
