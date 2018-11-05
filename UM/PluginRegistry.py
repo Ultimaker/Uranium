@@ -399,15 +399,13 @@ class PluginRegistry(QObject):
         plugin_api_version = self._metadata[plugin_id].get("plugin", {}).get("api", Version("0"))
 
         if plugin_api_version.getMajor() != self.APIVersion.getMajor():
-            Logger.log("w", "Plugin %s uses an incompatible API version, disabling", plugin_id)
-            self.disablePlugin(plugin_id)
+            Logger.log("w", "Plugin %s uses an incompatible major API version (plugin: %s, application: %s).", plugin_id, plugin_api_version, self.APIVersion)
             return
 
         if plugin_api_version > self.APIVersion:
             # As per the last check, the major version numbers match up. It could be that the plugin needs a higher
             # minor or revision version number, so also check for that.
-            Logger.log("w", "Plugin %s uses an incompatible API version (bloop), disabling", plugin_id)
-            self.disablePlugin(plugin_id)
+            Logger.log("w", "Plugin %s uses an incompatible minor API version (plugin: %s, application: %s).", plugin_id, plugin_api_version, self.APIVersion)
             return
 
         try:
