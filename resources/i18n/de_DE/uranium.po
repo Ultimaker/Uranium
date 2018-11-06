@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-10-29 15:16+0100\n"
-"PO-Revision-Date: 2018-10-02 10:45+0100\n"
+"PO-Revision-Date: 2018-11-06 15:42+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: German <info@bothof.nl>\n"
 "Language: de_DE\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
@@ -213,7 +214,7 @@ msgstr "Öffnet den Ordner, der die gespeicherte Datei enthält"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Das Speichern unter <filename>{0}</filename>: <message>{1}</message> hat nicht funktioniert."
+msgstr "Das Speichern unter <filename>{0}</filename>: <message>{1}</message> hat nicht funktioniert"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
@@ -262,7 +263,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:\n- {profiles}\nMöchten Sie auf die Werkseinstellungen zurücksetzen?"
+msgstr ""
+"Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:\n"
+"- {profiles}\n"
+"Möchten Sie auf die Werkseinstellungen zurücksetzen?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -304,7 +308,9 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr "Beim Deinstallieren der folgenden Pakete traten Fehler auf:\n{packages}"
+msgstr ""
+"Beim Deinstallieren der folgenden Pakete traten Fehler auf:\n"
+"{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:133
 msgctxt "@info:title"
@@ -318,7 +324,10 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr "Beim Deinstallieren des Pakets {package} vor dem Installieren einer neuen Version trat ein Fehler auf:\n{error}.\nVersuchen Sie später erneut, die Aktualisierung durchzuführen."
+msgstr ""
+"Beim Deinstallieren des Pakets {package} vor dem Installieren einer neuen Version trat ein Fehler auf:\n"
+"{error}.\n"
+"Versuchen Sie später erneut, die Aktualisierung durchzuführen."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -395,7 +404,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Das Plugin wurde installiert.\nStarten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
+msgstr ""
+"Das Plugin wurde installiert.\n"
+"Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:434
 #, python-brace-format
@@ -403,7 +414,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "Das Plugin wurde entfernt.\nBitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
+msgstr ""
+"Das Plugin wurde entfernt.\n"
+"Bitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
 #, python-brace-format
@@ -414,7 +427,7 @@ msgstr "Eine Konfiguration einer älteren Version von {0} wurde importiert."
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:57
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr "OpenGL konnte nicht initialisiert werden."
+msgstr "OpenGL konnte nicht initialisiert werden"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:67
 msgctxt "Critical OpenGL Extensions Missing"
@@ -435,7 +448,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:\n- {profiles}\n Möchten Sie auf die Werkseinstellungen zurücksetzen? Durch das Zurücksetzen werden all Ihre aktuellen Drucker und Profile entfernt."
+msgstr ""
+"Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:\n"
+"- {profiles}\n"
+" Möchten Sie auf die Werkseinstellungen zurücksetzen? Durch das Zurücksetzen werden all Ihre aktuellen Drucker und Profile entfernt."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
@@ -472,7 +488,7 @@ msgstr "Damit werden die geänderten Dateien erneut von der Festplatte geladen."
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "Dateien des Typs <filename>{0}</filename> können nicht geöffnet werden."
+msgstr "Dateien des Typs <filename>{0}</filename> können nicht geöffnet werden"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:33
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:48

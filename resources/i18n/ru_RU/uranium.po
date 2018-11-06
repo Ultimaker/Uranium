@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-10-29 15:16+0100\n"
-"PO-Revision-Date: 2018-10-02 11:10+0100\n"
+"PO-Revision-Date: 2018-11-06 15:50+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Ruslan Popov <ruslan.popov@gmail.com>, Russian <info@bothof.nl>\n"
 "Language: ru_RU\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
@@ -263,7 +263,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n- {profiles}\nВыполнить сброс до заводских настроек по умолчанию?"
+msgstr ""
+"Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n"
+"- {profiles}\n"
+"Выполнить сброс до заводских настроек по умолчанию?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -305,7 +308,9 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr "Возникли некоторые ошибки при удалении этих пакетов: \n{packages}"
+msgstr ""
+"Возникли некоторые ошибки при удалении этих пакетов: \n"
+"{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:133
 msgctxt "@info:title"
@@ -319,7 +324,10 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr "Возникла ошибка при удалении пакета {package} перед установкой новой версии:\n{error}.\nПовторите попытку обновления позже."
+msgstr ""
+"Возникла ошибка при удалении пакета {package} перед установкой новой версии:\n"
+"{error}.\n"
+"Повторите попытку обновления позже."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -399,7 +407,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Плагин был установлен\nПожалуйста, перезапустите приложение для активации плагина."
+msgstr ""
+"Плагин был установлен\n"
+"Пожалуйста, перезапустите приложение для активации плагина."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:434
 #, python-brace-format
@@ -407,7 +417,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "Плагин удален.\nПерезапустите {0} для завершения удаления."
+msgstr ""
+"Плагин удален.\n"
+"Перезапустите {0} для завершения удаления."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
 #, python-brace-format
@@ -439,7 +451,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n- {profiles}\nВыполнить сброс до заводских настроек по умолчанию? Сброс приведет к удалению данных всех текущих принтеров и профилей."
+msgstr ""
+"Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n"
+"- {profiles}\n"
+"Выполнить сброс до заводских настроек по умолчанию? Сброс приведет к удалению данных всех текущих принтеров и профилей."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
@@ -836,7 +851,7 @@ msgstr "Предоставляет инструмент \"Перемещение
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Move Tool"
-msgstr "Инструмент \"Перемещение\"."
+msgstr "Инструмент \"Перемещение\""
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"

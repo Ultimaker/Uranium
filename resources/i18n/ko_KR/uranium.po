@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-10-29 15:16+0100\n"
-"PO-Revision-Date: 2018-10-02 11:00+0100\n"
+"PO-Revision-Date: 2018-11-06 15:47+0100\n"
 "Last-Translator: Jinbuhm Kim <Jinbuhm.Kim@gmail.com>\n"
 "Language-Team: Jinbuhm Kim, <Jinbuhm.Kim@gmail.com>, Korean <info@bothof.nl>\n"
 "Language: ko_KR\n"
@@ -58,7 +58,7 @@ msgstr "STL 파일 (바이너리)"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:36
 msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
-msgstr "스트리밍할 STL을 작성하는 지원되지 않는 출력 모드"
+msgstr "스트리밍할 STL을 작성하는 지원되지 않는 출력 모드."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:44
 msgctxt "@info"
@@ -263,7 +263,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다.\n- {profiles}\n기본값으로 재설정하시겠습니까?"
+msgstr ""
+"설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다.\n"
+"- {profiles}\n"
+"기본값으로 재설정하시겠습니까?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -305,7 +308,9 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr "다음 패키지를 제거하는 중에 오류가 발생했습니다. \n{packages}"
+msgstr ""
+"다음 패키지를 제거하는 중에 오류가 발생했습니다. \n"
+"{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:133
 msgctxt "@info:title"
@@ -319,7 +324,10 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr "새 버전을 설치하기 전 패키지 {package}(을)를 제거하는 중에 오류가 발생했습니다. \n{error}.\n 업그레이드를 나중에 다시 시도하십시오."
+msgstr ""
+"새 버전을 설치하기 전 패키지 {package}(을)를 제거하는 중에 오류가 발생했습니다. \n"
+"{error}.\n"
+" 업그레이드를 나중에 다시 시도하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -393,7 +401,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "플러그인이 설치되었습니다.\n플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
+msgstr ""
+"플러그인이 설치되었습니다.\n"
+"플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:434
 #, python-brace-format
@@ -401,7 +411,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "플러그인이 제거되었습니다.\n제거를 완료하려면 {0}을(를) 다시 시작하십시오."
+msgstr ""
+"플러그인이 제거되었습니다.\n"
+"제거를 완료하려면 {0}을(를) 다시 시작하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
 #, python-brace-format
@@ -433,7 +445,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다:\n- {profiles}\n 기본값으로 재설정하시겠습니까? 재설정하면 현재 모든 프린터 및 프로파일이 제거됩니다."
+msgstr ""
+"설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다:\n"
+"- {profiles}\n"
+" 기본값으로 재설정하시겠습니까? 재설정하면 현재 모든 프린터 및 프로파일이 제거됩니다."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
