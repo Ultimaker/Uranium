@@ -460,7 +460,7 @@ msgstr "Restaurar de fábrica"
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr "Restaurar removerá todas as suas impressoras e perfis atuais!  Tem certeza que quer restaurar?"
+msgstr "Restaurar removerá todas as suas impressoras e perfis atuais! Tem certeza que quer restaurar?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format
