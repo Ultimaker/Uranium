@@ -11,6 +11,7 @@ from UM.Version import Version
 
 
 class FixtureRegistry(PluginRegistry):
+    APIVersion = Version("5.5.0")
 
     def __init__(self, application: "Application"):
         PluginRegistry._PluginRegistry__instance = None
@@ -84,3 +85,27 @@ class TestPluginRegistry():
     def test_ignoreOldApi(self, registry):
         registry.loadPlugin("OldTestPlugin")
         assert registry.getTestPlugin() is None
+
+    def test_isPluginApiVersionCompatible(self, registry):
+        # Same version is compatible
+        assert registry._isPluginApiVersionCompatible(registry.APIVersion)
+
+        # Lower major version is not compatible
+        api_version = Version("4.0.0")
+        assert not registry._isPluginApiVersionCompatible(api_version)
+
+        # Higher major version is not compatible
+        api_version = Version("6.0.0")
+        assert not registry._isPluginApiVersionCompatible(api_version)
+
+        # Same major version but higher minor version is not compatible
+        api_version = Version("5.7.0")
+        assert not registry._isPluginApiVersionCompatible(api_version)
+
+        # Same major version but lower minor version is compatible
+        api_version = Version("5.3.0")
+        assert registry._isPluginApiVersionCompatible(api_version)
+
+        # Same major version but different patch version should not matter, it should be compatible
+        api_version = Version("5.0.5")
+        assert registry._isPluginApiVersionCompatible(api_version)

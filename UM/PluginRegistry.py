@@ -371,14 +371,17 @@ class PluginRegistry(QObject):
                 except PluginNotFoundError:
                     pass
 
+    # Checks if the given plugin API version is compatible with the current version.
+    def _isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
+        return plugin_api_version.getMajor() == self.APIVersion.getMajor() \
+               and plugin_api_version.getMinor() <= self.APIVersion.getMinor()
+
     #   Load a single plugin by ID:
     def loadPlugin(self, plugin_id: str) -> None:
         # If plugin has already been loaded, do not load it again:
         if plugin_id in self._plugins:
             Logger.log("w", "Plugin %s was already loaded", plugin_id)
             return
-
-
 
         # Find the actual plugin on drive:
         plugin = self._findPlugin(plugin_id)
@@ -396,16 +399,9 @@ class PluginRegistry(QObject):
 
         # If API version is incompatible, don't load it.
         plugin_api_version = self._metadata[plugin_id].get("plugin", {}).get("api", Version("0"))
-
-        if plugin_api_version.getMajor() != self.APIVersion.getMajor():
-            Logger.log("w", "Plugin %s uses an incompatible major API version (plugin: %s, application: %s).", plugin_id, plugin_api_version, self.APIVersion)
-            self._outdated_plugins.append(plugin_id)
-            return
-
-        if plugin_api_version > self.APIVersion:
-            # As per the last check, the major version numbers match up. It could be that the plugin needs a higher
-            # minor or revision version number, so also check for that.
-            Logger.log("w", "Plugin %s uses an incompatible minor API version (plugin: %s, application: %s).", plugin_id, plugin_api_version, self.APIVersion)
+        if not self._isPluginApiVersionCompatible(plugin_api_version):
+            Logger.log("w", "Plugin [%s] with API version [%s] is incompatible with the current API version [%s].",
+                       plugin_id, plugin_api_version, self.APIVersion)
             self._outdated_plugins.append(plugin_id)
             return
 
