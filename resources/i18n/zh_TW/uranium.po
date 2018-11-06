@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-10-29 15:16+0100\n"
-"PO-Revision-Date: 2018-10-02 11:25+0100\n"
+"PO-Revision-Date: 2018-11-04 13:26+0800\n"
 "Last-Translator: Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language-Team: Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language: zh_TW\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Lang-Code: xx\n"
 "Country-Code: XX\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
@@ -108,13 +108,13 @@ msgstr "軟體版本已是最新。"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
-msgstr ""
+msgstr "{application_name} {version_number} 已可下載！"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
+msgstr "{application_name} {version_number} 提供更好、更可靠的列印體驗。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
 msgctxt "@action:button"
@@ -124,7 +124,7 @@ msgstr "下載"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
 msgctxt "@action:button"
 msgid "Learn more about the new features"
-msgstr ""
+msgstr "詳細了解新功能"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -327,6 +327,9 @@ msgid ""
 "{error}.\n"
 "Please try to upgrade again later."
 msgstr ""
+"在安裝新版本前，移除軟體包 {package} 發生了錯誤：\n"
+"{error}。\n"
+"請稍後再嘗試升級。"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -445,16 +448,19 @@ msgid ""
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
+"你的設定似乎已損毀。下列的參數中似乎有些問題：\n"
+"- {profiles}\n"
+"你是否願意重置為出廠預設值？重置將移除你目前所有的印表機和列印參數。"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
 msgid "Reset to factory"
-msgstr ""
+msgstr "重置為出廠狀態"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
+msgstr "重置將移除你目前所有的印表機和列印參數！你確定要重置嗎？"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format
