@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-10-29 15:16+0100\n"
-"PO-Revision-Date: 2018-10-02 10:55+0100\n"
+"PO-Revision-Date: 2018-11-06 15:44+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: French <info@bothof.nl>\n"
 "Language: fr_FR\n"
@@ -106,13 +106,13 @@ msgstr "Aucune nouvelle version n'a été trouvée."
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
-msgstr ""
+msgstr "{application_name} {version_number} est disponible !"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
+msgstr "{application_name} {version_number} offre une expérience d'impression plus agréable et plus fiable."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
 msgctxt "@action:button"
@@ -122,7 +122,7 @@ msgstr "Télécharger"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
 msgctxt "@action:button"
 msgid "Learn more about the new features"
-msgstr ""
+msgstr "En savoir plus sur les nouvelles fonctionnalités"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -174,7 +174,7 @@ msgstr "Enregistrement vers <filename>{0}</filename>"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:160
 msgctxt "@info:title"
 msgid "Saving"
-msgstr "Enregistrement..."
+msgstr "Enregistrement"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
 #, python-brace-format
@@ -325,6 +325,9 @@ msgid ""
 "{error}.\n"
 "Please try to upgrade again later."
 msgstr ""
+"Il y a eu une erreur lors de la désinstallation du paquet {package} avant d'installer la nouvelle version :\n"
+"{error}.\n"
+"Veuillez réessayer la mise à jour plus tard."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -394,7 +397,7 @@ msgstr "Mise à l'échelle automatique de l'objet à {0}% de sa taille d'origine
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:64
 msgctxt "@info:title"
 msgid "Scaling Object"
-msgstr "Mise à l'échelle de l'objet..."
+msgstr "Mise à l'échelle de l'objet"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:313
 msgctxt "@info:status"
@@ -446,16 +449,19 @@ msgid ""
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
+"Votre configuration semble corrompue. Un problème est survenu avec les profils suivants :\n"
+"- {profiles}\n"
+" Souhaitez-vous restaurer les paramètres d'usine par défaut ? Cette réinitialisation supprimera toutes vos imprimantes et profils actuels."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
 msgid "Reset to factory"
-msgstr ""
+msgstr "Restaurer les paramètres d'usine"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
+msgstr "La réinitialisation supprimera toutes vos imprimantes et profils actuels ! Êtes-vous sûr de vouloir réinitialiser ?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format
@@ -501,7 +507,7 @@ msgstr "Échec du chargement de <filename>{0}</filename>"
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
 msgctxt "@info:title"
 msgid "Loading"
-msgstr "Chargement..."
+msgstr "Chargement"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:94
 msgctxt "@option:check"
@@ -676,7 +682,7 @@ msgstr "Suivant"
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "description"
 msgid "Example extension to instruct people on how to create Uranium extensions."
-msgstr "Exemple d'extension pour illustrer la manière de créer des extensions Uranium"
+msgstr "Exemple d'extension pour illustrer la manière de créer des extensions Uranium."
 
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "name"
@@ -736,7 +742,7 @@ msgstr "Générateur OBJ Wavefront"
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
 msgid "Provides support for writing STL files."
-msgstr "Permet l'écriture de fichiers STL"
+msgstr "Permet l'écriture de fichiers STL."
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
@@ -756,7 +762,7 @@ msgstr "Journal d'évènements en console"
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "description"
 msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr "Exemple d'outil pour illustrer la manière de créer des outils Uranium"
+msgstr "Exemple d'outil pour illustrer la manière de créer des outils Uranium."
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "name"
@@ -766,7 +772,7 @@ msgstr "Exemple d'outil"
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "description"
 msgid "Example output device to instruct people on how to create Uranium output devices."
-msgstr "Exemple de périphérique de sortie pour illustrer la manière de créer des périphériques de sortie Uranium"
+msgstr "Exemple de périphérique de sortie pour illustrer la manière de créer des périphériques de sortie Uranium."
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "name"
@@ -786,7 +792,7 @@ msgstr "Mise à jour du contrôleur"
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "description"
 msgid "Example file reader to instruct people on how to create Uranium file readers."
-msgstr "Exemple de lecteur de fichier pour illustrer la manière de créer des lecteurs de fichier Uranium"
+msgstr "Exemple de lecteur de fichier pour illustrer la manière de créer des lecteurs de fichier Uranium."
 
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "name"

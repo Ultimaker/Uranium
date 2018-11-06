@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-10-29 15:16+0100\n"
-"PO-Revision-Date: 2018-10-02 11:00+0100\n"
+"PO-Revision-Date: 2018-11-06 15:47+0100\n"
 "Last-Translator: Jinbuhm Kim <Jinbuhm.Kim@gmail.com>\n"
 "Language-Team: Jinbuhm Kim, <Jinbuhm.Kim@gmail.com>, Korean <info@bothof.nl>\n"
 "Language: ko_KR\n"
@@ -58,7 +58,7 @@ msgstr "STL 파일 (바이너리)"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:36
 msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
-msgstr "스트리밍할 STL을 작성하는 지원되지 않는 출력 모드"
+msgstr "스트리밍할 STL을 작성하는 지원되지 않는 출력 모드."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:44
 msgctxt "@info"
@@ -106,13 +106,13 @@ msgstr "새 버전이 없습니다."
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
-msgstr ""
+msgstr "{application_name} {version_number}을(를) 사용할 수 있습니다!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
+msgstr "{application_name} {version_number}은(는) 보다 개선된 안정적인 인쇄 환경을 제공합니다."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
 msgctxt "@action:button"
@@ -122,7 +122,7 @@ msgstr "다운로드"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
 msgctxt "@action:button"
 msgid "Learn more about the new features"
-msgstr ""
+msgstr "새 기능에 대해 자세히 알아보기"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -325,6 +325,9 @@ msgid ""
 "{error}.\n"
 "Please try to upgrade again later."
 msgstr ""
+"새 버전을 설치하기 전 패키지 {package}(을)를 제거하는 중에 오류가 발생했습니다. \n"
+"{error}.\n"
+" 업그레이드를 나중에 다시 시도하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -443,16 +446,19 @@ msgid ""
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
+"설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다:\n"
+"- {profiles}\n"
+" 기본값으로 재설정하시겠습니까? 재설정하면 현재 모든 프린터 및 프로파일이 제거됩니다."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
 msgid "Reset to factory"
-msgstr ""
+msgstr "기본값으로 재설정"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
+msgstr "재설정하면 현재 모든 프린터 및 프로파일이 제거됩니다! 정말로 재설정하시겠습니까?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format
