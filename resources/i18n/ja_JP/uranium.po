@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-10-29 15:16+0100\n"
-"PO-Revision-Date: 2018-10-02 11:00+0100\n"
+"PO-Revision-Date: 2018-11-06 15:47+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Brule <jason@brule.co.jp>, Japanese <info@bothof.nl>\n"
 "Language: ja_JP\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
@@ -106,13 +106,13 @@ msgstr "新しいバージョンが見つかりました。"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
-msgstr ""
+msgstr "{application_name} {version_number} が利用可能です！"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
+msgstr "{application_name} {version_number} なら、より優れた信頼性の隊かい印刷体験が得られます。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
 msgctxt "@action:button"
@@ -122,7 +122,7 @@ msgstr "ダウンロード"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
 msgctxt "@action:button"
 msgid "Learn more about the new features"
-msgstr ""
+msgstr "新機能について詳しく見る"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -157,13 +157,13 @@ msgstr "書き出すために利用可能なファイルがありません！"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
 msgctxt "@title:window"
 msgid "File Already Exists"
-msgstr "すでに存在するファイルです。"
+msgstr "すでに存在するファイルです"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？ "
+msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
 #, python-brace-format
@@ -180,7 +180,7 @@ msgstr "保存中"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr " <filename>{0}</filename>保存中に却下されました。"
+msgstr "<filename>{0}</filename>保存中に却下されました"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:171
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:187
@@ -193,7 +193,7 @@ msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}<
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>に保存しました。"
+msgstr "<filename>{0}</filename>に保存しました"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
 msgctxt "@info:title"
@@ -325,6 +325,9 @@ msgid ""
 "{error}.\n"
 "Please try to upgrade again later."
 msgstr ""
+"新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n"
+"{error}.\n"
+"後からアップグレードをやり直してください。"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -383,7 +386,7 @@ msgstr "コンフィグレーションをアップデートする…"
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:201
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr "プレファレンスをロード中"
+msgstr "プレファレンスをロード中…"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:64
 #, python-format, python-brace-format
@@ -424,7 +427,7 @@ msgstr "前のバージョン {0} のコンフィグレーションが取り込�
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:57
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr "OpenGLの初期化に失敗しました。"
+msgstr "OpenGLの初期化に失敗しました"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:67
 msgctxt "Critical OpenGL Extensions Missing"
@@ -446,16 +449,19 @@ msgid ""
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
+"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
+"- {profiles}\n"
+"工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
 msgid "Reset to factory"
-msgstr ""
+msgstr "工場リセット"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
+msgstr "リセットすると、現在のプリンターおよびプロファイルがすべて削除されます。本当にリセットしてよろしいですか？"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format
@@ -496,7 +502,7 @@ msgstr "無効なファイル"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>を読み込むのに失敗しました。"
+msgstr "<filename>{0}</filename>を読み込むのに失敗しました"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
 msgctxt "@info:title"
@@ -567,7 +573,7 @@ msgstr "ファイルを開く"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:165
 msgctxt "@label"
 msgid "No text available"
-msgstr "利用可能なテキストがありません。"
+msgstr "利用可能なテキストがありません"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
 msgctxt "@title:window"
@@ -651,12 +657,12 @@ msgstr "タイプ"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr "モデルを取り除きました。"
+msgstr "モデルを取り除きました"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "%1を取り外しますか？この作業はやり直しが効きません。 "
+msgstr "%1を取り外しますか？この作業はやり直しが効きません！"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
@@ -686,7 +692,7 @@ msgstr "拡張子の例"
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
-msgstr "シンプルソリッドメッシュビューを供給する"
+msgstr "シンプルソリッドメッシュビューを供給する。"
 
 #: Views/SimpleView/plugin.json
 msgctxt "name"
@@ -696,7 +702,7 @@ msgstr "シンプルビュー"
 #: FileLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr "ログ情報を設定フォルダーのファイルにアウトプットする"
+msgstr "ログ情報を設定フォルダーのファイルにアウトプットする。"
 
 #: FileLogger/plugin.json
 msgctxt "name"
@@ -746,7 +752,7 @@ msgstr "STLライター"
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr "ログ情報をコンソールにアウトプットする"
+msgstr "ログ情報をコンソールにアウトプットする。"
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
@@ -776,7 +782,7 @@ msgstr "出力デバイスの例"
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
-msgstr "ソフトウェアのアップデートを確認中"
+msgstr "ソフトウェアのアップデートを確認中。"
 
 #: UpdateChecker/plugin.json
 msgctxt "name"
@@ -816,7 +822,7 @@ msgstr "ローカルコンテナプロバイダー"
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr "スケールツールを供給すｒ"
+msgstr "スケールツールを供給すｒ。"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "name"
@@ -826,7 +832,7 @@ msgstr "スケールツール"
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr "セレクションツールを供給する"
+msgstr "セレクションツールを供給する。"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "name"
@@ -836,7 +842,7 @@ msgstr "セレクションツール"
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
-msgstr "ムーブツールを供給する"
+msgstr "ムーブツールを供給する。"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
@@ -846,7 +852,7 @@ msgstr "ムーブツール"
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr "カメラを操作するためのツールを供給する"
+msgstr "カメラを操作するためのツールを供給する。"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
@@ -856,7 +862,7 @@ msgstr "カメラツール"
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr "回転ツールを供給する"
+msgstr "回転ツールを供給する。"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
@@ -866,7 +872,7 @@ msgstr "回転ツール"
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr "ミラーツールを供給する"
+msgstr "ミラーツールを供給する。"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"

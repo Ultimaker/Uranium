@@ -110,13 +110,13 @@ msgstr "Não foi encontrada uma nova versão."
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
-msgstr ""
+msgstr "A {application_name} {version_number} encontra-se disponível!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
+msgstr "A {application_name} {version_number} proporciona uma experiência de impressão melhor e mais fiável."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
 msgctxt "@action:button"
@@ -126,7 +126,7 @@ msgstr "Transferir"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
 msgctxt "@action:button"
 msgid "Learn more about the new features"
-msgstr ""
+msgstr "Descubra mais sobre as novas funcionalidades"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -267,10 +267,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n"
-"- {profiles}\n"
-"Deseja repor as predefinições de fábrica?"
+msgstr "A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n- {profiles}\nDeseja repor as predefinições de fábrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -312,9 +309,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr ""
-"Ocorreram alguns erros ao desinstalar os seguintes pacotes:\n"
-"{packages}"
+msgstr "Ocorreram alguns erros ao desinstalar os seguintes pacotes:\n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:133
 msgctxt "@info:title"
@@ -328,7 +323,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
+msgstr "Ocorreu um erro ao desinstalar o pacote {package} antes de instalar uma nova versão:\n{error}.\nTente atualizar novamente mais tarde."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -405,9 +400,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"O plug-in foi instalado.\n"
-"Por favor reinicie a aplicação para ativar o plug-in."
+msgstr "O plug-in foi instalado.\nPor favor reinicie a aplicação para ativar o plug-in."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:434
 #, python-brace-format
@@ -415,9 +408,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"O plug-in foi removido.\n"
-"Por favor reinicie o {0} para concluir a desinstalação."
+msgstr "O plug-in foi removido.\nPor favor reinicie o {0} para concluir a desinstalação."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
 #, python-brace-format
@@ -449,17 +440,17 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
+msgstr "A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n- {profiles}\n Deseja repor as predefinições de fábrica? A reposição removerá todos os perfis e impressoras atuais."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
 msgid "Reset to factory"
-msgstr ""
+msgstr "Repor predefinições de fábrica"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
+msgstr "A reposição irá remover todos os perfis e impressoras atuais! Tem a certeza de que deseja efetuar a reposição?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format
