@@ -397,6 +397,11 @@ class PluginRegistry(QObject):
             except InvalidMetaDataError:
                 return
 
+        # Do not load plugin that has been disabled
+        if plugin_id in self._disabled_plugins:
+            Logger.log("i", "Plugin [%s] has been disabled. Skip loading it.", plugin_id)
+            return
+
         # If API version is incompatible, don't load it.
         plugin_api_version = self._metadata[plugin_id].get("plugin", {}).get("api", Version("0"))
         if not self._isPluginApiVersionCompatible(plugin_api_version):
