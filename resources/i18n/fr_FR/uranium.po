@@ -106,13 +106,13 @@ msgstr "Aucune nouvelle version n'a été trouvée."
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
-msgstr ""
+msgstr "{application_name} {version_number} est disponible !"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
+msgstr "{application_name} {version_number} offre une expérience d'impression plus agréable et plus fiable."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
 msgctxt "@action:button"
@@ -122,7 +122,7 @@ msgstr "Télécharger"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
 msgctxt "@action:button"
 msgid "Learn more about the new features"
-msgstr ""
+msgstr "En savoir plus sur les nouvelles fonctionnalités"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -263,10 +263,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"Votre configuration semble corrompue. Il semble y avoir un problème avec les profils suivants :\n"
-"- {profiles}\n"
-"Souhaitez-vous rétablir les paramètres d'usine?"
+msgstr "Votre configuration semble corrompue. Il semble y avoir un problème avec les profils suivants :\n- {profiles}\nSouhaitez-vous rétablir les paramètres d'usine?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -308,9 +305,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr ""
-"Des erreurs se sont produites lors de la désinstallation des paquets suivants :\n"
-"{packages}"
+msgstr "Des erreurs se sont produites lors de la désinstallation des paquets suivants :\n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:133
 msgctxt "@info:title"
@@ -324,7 +319,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
+msgstr "Il y a eu une erreur lors de la désinstallation du paquet {package} avant d'installer la nouvelle version :\n{error}.\nVeuillez réessayer la mise à jour plus tard."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -401,9 +396,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Le plug-in a été installé.\n"
-"Veuillez redémarrer l'application pour activer le plug-in."
+msgstr "Le plug-in a été installé.\nVeuillez redémarrer l'application pour activer le plug-in."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:434
 #, python-brace-format
@@ -411,9 +404,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"Le plug-in a été supprimé.\n"
-"Veuillez redémarrer {0} pour terminer la désinstallation."
+msgstr "Le plug-in a été supprimé.\nVeuillez redémarrer {0} pour terminer la désinstallation."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
 #, python-brace-format
@@ -445,17 +436,17 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
+msgstr "Votre configuration semble corrompue. Un problème est survenu avec les profils suivants :\n- {profiles}\n Souhaitez-vous restaurer les paramètres d'usine par défaut ? Cette réinitialisation supprimera toutes vos imprimantes et profils actuels."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
 msgid "Reset to factory"
-msgstr ""
+msgstr "Restaurer les paramètres d'usine"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
+msgstr "La réinitialisation supprimera toutes vos imprimantes et profils actuels ! Êtes-vous sûr de vouloir réinitialiser ?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format

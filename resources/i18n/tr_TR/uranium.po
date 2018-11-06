@@ -105,13 +105,13 @@ msgstr "Yeni sürüm bulunamadı."
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
-msgstr ""
+msgstr "{application_name} {version_number} yayınlandı!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
+msgstr "{application_name} {version_number}, daha iyi ve daha güvenilir bir yazdırma deneyimi sunar."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
 msgctxt "@action:button"
@@ -121,7 +121,7 @@ msgstr "İndir"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
 msgctxt "@action:button"
 msgid "Learn more about the new features"
-msgstr ""
+msgstr "Yeni özellikler hakkında daha fazla bilgi alın"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -262,10 +262,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"Yapılandırmanız bozuk görünüyor. Aşağıdaki profillerde bir sorun var gibi görünüyor:\n"
-"- {profiles}\n"
-"Fabrika varsayılanlarına sıfırlamak ister misiniz?"
+msgstr "Yapılandırmanız bozuk görünüyor. Aşağıdaki profillerde bir sorun var gibi görünüyor:\n- {profiles}\nFabrika varsayılanlarına sıfırlamak ister misiniz?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -307,9 +304,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr ""
-"Şu paketler kaldırılırken bazı hatalar meydana geldi:\n"
-"{packages}"
+msgstr "Şu paketler kaldırılırken bazı hatalar meydana geldi:\n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:133
 msgctxt "@info:title"
@@ -323,7 +318,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
+msgstr "Yeni sürüm yüklenmeden önce {package} paketi kaldırılırken hata meydana geldi:\n{error}.\nLütfen daha sonra tekrar yükseltmeyi deneyin."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -400,9 +395,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Eklenti kurulumu yapıldı.\n"
-"Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
+msgstr "Eklenti kurulumu yapıldı.\nEklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:434
 #, python-brace-format
@@ -410,9 +403,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"Eklenti kaldırıldı.\n"
-"Kaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
+msgstr "Eklenti kaldırıldı.\nKaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
 #, python-brace-format
@@ -444,17 +435,17 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
+msgstr "Yapılandırmanız bozuk görünüyor. Şu profillerde bir sorun var gibi görünüyor:\n- {profiles}\n Fabrika varsayılanlarına sıfırlamak ister misiniz? Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
 msgid "Reset to factory"
-msgstr ""
+msgstr "Fabrika ayarlarına sıfırla"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
+msgstr "Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır! Sıfırlamak istediğinizden emin misiniz?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format
