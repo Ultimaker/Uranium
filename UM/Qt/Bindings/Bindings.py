@@ -22,7 +22,6 @@ from . import Theme
 from . import OpenGLContextProxy
 from . import PointingRectangle
 from . import ActiveToolProxy
-from . import ActiveViewProxy
 from . import OutputDevicesModel
 from . import SelectionProxy
 from . import OutputDeviceManagerProxy
@@ -92,7 +91,6 @@ class Bindings:
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, "UM", 1, 0, "Preferences", PreferencesProxy.createPreferencesProxy)
         qmlRegisterSingletonType(Theme.Theme, "UM", 1, 0, "Theme", Theme.createTheme)
         qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, "ActiveTool", ActiveToolProxy.createActiveToolProxy)
-        qmlRegisterSingletonType(ActiveViewProxy.ActiveViewProxy, "UM", 1, 0, "ActiveView", ActiveViewProxy.createActiveViewProxy)
         qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, "Selection", SelectionProxy.createSelectionProxy)
 
         qmlRegisterUncreatableType(Duration, "UM", 1, 0, "Duration", "")
