@@ -23,6 +23,7 @@ from UM.Preferences import Preferences
 from UM.View.Renderer import Renderer #For typing.
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
+from UM.Version import Version
 
 from typing import TYPE_CHECKING, List, Callable, Any, Optional
 if TYPE_CHECKING:
@@ -44,12 +45,14 @@ class Application:
     #   \param version \type{string} Version, formatted as major.minor.rev
     #   \param build_type Additional version info on the type of build this is, such as "master".
     #   \param is_debug_mode Whether to run in debug mode.
-    def __init__(self, name: str, version: str, app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
+    def __init__(self, name: str, version: str, api_version: str = "5.0.0", app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
         if Application.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         Application.__instance = self
 
         super().__init__()  # Call super to make multiple inheritance work.
+
+        self._api_version = Version(api_version)
 
         self._app_name = name #type: str
         self._app_display_name = app_display_name if app_display_name else name  # type: str
@@ -94,6 +97,9 @@ class Application:
         self._message_lock = threading.Lock() #type: threading.Lock
 
         self._app_install_dir = self.getInstallPrefix() #type: str
+
+    def getAPIVersion(self) -> "Version":
+        return self._api_version
 
     # Adds the command line options that can be parsed by the command line parser.
     # Can be overridden to add additional command line options to the parser.

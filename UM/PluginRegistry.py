@@ -7,10 +7,8 @@ import os
 import shutil  # For deleting plugin directories;
 import stat    # For setting file permissions correctly;
 import zipfile
-
-from UM.Logger import Logger
-from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 import types
+from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
@@ -39,15 +37,14 @@ if TYPE_CHECKING:
 #   [plugins]: docs/plugins.md
 
 class PluginRegistry(QObject):
-    APIVersion = Version("5.0.0")
-
     def __init__(self, application: "Application", parent: QObject = None) -> None:
         if PluginRegistry.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         PluginRegistry.__instance = self
 
         super().__init__(parent)
-        self._application = application #type: Application
+        self._application = application  # type: Application
+        self._api_version = application.getAPIVersion()
 
         self._all_plugins = []        # type: List[str]
         self._metadata = {}           # type: Dict[str, Dict[str, Any]]
@@ -373,8 +370,8 @@ class PluginRegistry(QObject):
 
     # Checks if the given plugin API version is compatible with the current version.
     def _isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
-        return plugin_api_version.getMajor() == self.APIVersion.getMajor() \
-               and plugin_api_version.getMinor() <= self.APIVersion.getMinor()
+        return plugin_api_version.getMajor() == self._api_version.getMajor() \
+               and plugin_api_version.getMinor() <= self._api_version.getMinor()
 
     #   Load a single plugin by ID:
     def loadPlugin(self, plugin_id: str) -> None:
@@ -406,7 +403,7 @@ class PluginRegistry(QObject):
         plugin_api_version = self._metadata[plugin_id].get("plugin", {}).get("api", Version("0"))
         if not self._isPluginApiVersionCompatible(plugin_api_version):
             Logger.log("w", "Plugin [%s] with API version [%s] is incompatible with the current API version [%s].",
-                       plugin_id, plugin_api_version, self.APIVersion)
+                       plugin_id, plugin_api_version, self._api_version)
             self._outdated_plugins.append(plugin_id)
             return
 

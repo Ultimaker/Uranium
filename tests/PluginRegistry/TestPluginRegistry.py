@@ -11,11 +11,11 @@ from UM.Version import Version
 
 
 class FixtureRegistry(PluginRegistry):
-    APIVersion = Version("5.5.0")
 
     def __init__(self, application: "Application"):
         PluginRegistry._PluginRegistry__instance = None
         super().__init__(application)
+        self._api_version = Version("5.5.0")
 
     def registerTestPlugin(self, plugin):
         self._test_plugin = plugin
@@ -88,7 +88,7 @@ class TestPluginRegistry():
 
     def test_isPluginApiVersionCompatible(self, registry):
         # Same version is compatible
-        assert registry._isPluginApiVersionCompatible(registry.APIVersion)
+        assert registry._isPluginApiVersionCompatible(registry._api_version)
 
         # Lower major version is not compatible
         api_version = Version("4.0.0")
