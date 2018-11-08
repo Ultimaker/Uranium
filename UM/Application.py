@@ -45,7 +45,7 @@ class Application:
     #   \param version \type{string} Version, formatted as major.minor.rev
     #   \param build_type Additional version info on the type of build this is, such as "master".
     #   \param is_debug_mode Whether to run in debug mode.
-    def __init__(self, name: str, version: str, api_version: str = "5.0.0", app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
+    def __init__(self, name: str, version: str, api_version: str, app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
         if Application.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         Application.__instance = self
