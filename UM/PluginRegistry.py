@@ -44,7 +44,7 @@ class PluginRegistry(QObject):
 
         super().__init__(parent)
         self._application = application  # type: Application
-        self._api_version = application.getAPIVersion()
+        self._api_version = application.getAPIVersion()  # type: Version
 
         self._all_plugins = []        # type: List[str]
         self._metadata = {}           # type: Dict[str, Dict[str, Any]]

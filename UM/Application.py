@@ -52,7 +52,7 @@ class Application:
 
         super().__init__()  # Call super to make multiple inheritance work.
 
-        self._api_version = Version(api_version)
+        self._api_version = Version(api_version)  # type: Version
 
         self._app_name = name #type: str
         self._app_display_name = app_display_name if app_display_name else name  # type: str
