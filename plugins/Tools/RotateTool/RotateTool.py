@@ -56,13 +56,11 @@ class RotateTool(Tool):
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
             # Snap is toggled when pressing the shift button
-            self._snap_rotation = (not self._snap_rotation)
-            self.propertyChanged.emit()
+            self.setRotationSnap(not self._snap_rotation)
 
         if event.type == Event.KeyReleaseEvent and event.key == KeyEvent.ShiftKey:
             # Snap is "toggled back" when releasing the shift button
-            self._snap_rotation = (not self._snap_rotation)
-            self.propertyChanged.emit()
+            self.setRotationSnap(not self._snap_rotation)
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
             # Start a rotate operation
