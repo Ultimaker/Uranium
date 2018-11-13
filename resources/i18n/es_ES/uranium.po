@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2018-10-29 15:16+0100\n"
-"PO-Revision-Date: 2018-10-02 10:50+0100\n"
+"PO-Revision-Date: 2018-11-06 15:43+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Spanish <info@bothof.nl>\n"
 "Language: es_ES\n"
@@ -106,13 +106,13 @@ msgstr "No se ha encontrado ninguna versión nueva."
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
-msgstr ""
+msgstr "¡Está disponible {application_name} {version_number}!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
+msgstr "{application_name} {version_number} ofrece unos resultados de impresión mejores y más fiables."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
 msgctxt "@action:button"
@@ -122,7 +122,7 @@ msgstr "Descargar"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
 msgctxt "@action:button"
 msgid "Learn more about the new features"
-msgstr ""
+msgstr "Obtenga más información sobre las nuevas características"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -152,7 +152,7 @@ msgstr "Guardar en archivo"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:86
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
-msgstr "No hay tipos de archivo disponibles con los que escribir."
+msgstr "¡No hay tipos de archivo disponibles con los que escribir!"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
 msgctxt "@title:window"
@@ -214,7 +214,7 @@ msgstr "Abre la carpeta que contiene el archivo"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Se ha producido un error al guardar <filename>{0}</filename>: <message>{1}</message>."
+msgstr "Se ha producido un error al guardar <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
@@ -325,6 +325,9 @@ msgid ""
 "{error}.\n"
 "Please try to upgrade again later."
 msgstr ""
+"Se ha producido un error al desinstalar el paquete {package} antes de instalar la nueva versión:\n"
+"{error}.\n"
+"Vuelva a intentar actualizar más tarde."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
 msgctxt "@info:title"
@@ -446,16 +449,19 @@ msgid ""
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
+"Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n"
+"- {profiles}\n"
+" ¿Desea restablecer los valores predeterminados de fábrica? Si los restablece se borrarán sus impresoras y perfiles actuales."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
 msgid "Reset to factory"
-msgstr ""
+msgstr "Restablecer los valores fabrica"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
+msgstr "Si los restablece se borrarán sus impresoras y perfiles actuales. ¿Seguro que desea restablecerlos?"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
 #, python-brace-format
@@ -466,7 +472,7 @@ msgstr "¿Desea volver a cargar {filename}?"
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:173
 msgctxt "@info:title"
 msgid "File has been modified"
-msgstr "Se ha modificado el archivo."
+msgstr "Se ha modificado el archivo"
 
 #: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:174
 msgctxt "@action:button"
@@ -482,7 +488,7 @@ msgstr "Los archivos modificados volverán a cargarse desde el disco."
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "No se pueden abrir archivos tipo <filename>{0}</filename>."
+msgstr "No se pueden abrir archivos tipo <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:33
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:48

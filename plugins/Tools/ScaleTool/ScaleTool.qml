@@ -90,7 +90,6 @@ Item
             id: snapScalingCheckbox
 
             width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
-
             text: catalog.i18nc("@option:check", "Snap Scaling")
 
             style: UM.Theme.styles.checkbox;
@@ -105,16 +104,30 @@ Item
             }
         }
 
+        Binding
+        {
+            target: snapScalingCheckbox
+            property: "checked"
+            value: UM.ActiveTool.properties.getValue("ScaleSnap")
+        }
+
         CheckBox
         {
-            width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
+            id: uniformScalingCheckbox
 
+            width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
             text: catalog.i18nc("@option:check", "Uniform Scaling")
 
             style: UM.Theme.styles.checkbox;
-
             checked: !UM.ActiveTool.properties.getValue("NonUniformScale");
             onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked);
+        }
+
+        Binding
+        {
+            target: uniformScalingCheckbox
+            property: "checked"
+            value: !UM.ActiveTool.properties.getValue("NonUniformScale")
         }
     }
 

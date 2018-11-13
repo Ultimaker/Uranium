@@ -244,7 +244,6 @@ class VersionUpgradeManager:
     #   \return The filename of each file relative to the specified directory.
     def _getFilesInDirectory(self, directory: str) -> Iterator[str]:
         for (path, directory_names, file_names) in os.walk(directory, topdown = True):
-            directory_names[:] = []  # Only go to one level.
             for filename in file_names:
                 relative_path = os.path.relpath(path, directory)
                 yield os.path.join(relative_path, filename)

@@ -425,7 +425,7 @@ class PluginRegistry(QObject):
             self.enablePlugin(plugin_id)
             Logger.log("i", "Loaded plugin %s", plugin_id)
 
-        except Exception:
+        except Exception as ex:
             Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
     #   Uninstall a plugin with a given ID:

@@ -77,19 +77,17 @@ class ScaleTool(Tool):
         # Handle modifier keys: Shift toggles snap, Control toggles uniform scaling
         if event.type == Event.KeyPressEvent:
             if event.key == KeyEvent.ShiftKey:
-                self._snap_scale = False
-                self.propertyChanged.emit()
+                self.setScaleSnap(not self._snap_scale)
+
             elif event.key == KeyEvent.ControlKey:
-                self._non_uniform_scale = True
-                self.propertyChanged.emit()
+                self.setNonUniformScale(not self._non_uniform_scale)
 
         if event.type == Event.KeyReleaseEvent:
             if event.key == KeyEvent.ShiftKey:
-                self._snap_scale = True
-                self.propertyChanged.emit()
+                self.setScaleSnap(not self._snap_scale)
+
             elif event.key == KeyEvent.ControlKey:
-                self._non_uniform_scale = False
-                self.propertyChanged.emit()
+                self.setNonUniformScale(not self._non_uniform_scale)
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
             # Initialise a scale operation
