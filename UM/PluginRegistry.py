@@ -7,12 +7,8 @@ import os
 import shutil  # For deleting plugin directories;
 import stat    # For setting file permissions correctly;
 import zipfile
-
-from UM.Preferences import Preferences
-from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
-from UM.Logger import Logger
-from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 import types
+from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
@@ -41,15 +37,14 @@ if TYPE_CHECKING:
 #   [plugins]: docs/plugins.md
 
 class PluginRegistry(QObject):
-    APIVersion = 5
-
     def __init__(self, application: "Application", parent: QObject = None) -> None:
         if PluginRegistry.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         PluginRegistry.__instance = self
 
         super().__init__(parent)
-        self._application = application #type: Application
+        self._application = application  # type: Application
+        self._api_version = application.getAPIVersion()  # type: Version
 
         self._all_plugins = []        # type: List[str]
         self._metadata = {}           # type: Dict[str, Dict[str, Any]]
@@ -61,6 +56,7 @@ class PluginRegistry(QObject):
         # When actually loading the preferences, it's set to a list. This way we can see the
         # difference between no list and an empty one.
         self._disabled_plugins = []  # type: List[str]
+        self._outdated_plugins = []  # type: List[str]
         self._plugins_to_install = dict()  # type: Dict[str, dict]
         self._plugins_to_remove = []  # type: List[str]
 
@@ -316,8 +312,9 @@ class PluginRegistry(QObject):
 
     #   Check by ID if a plugin is active (enabled):
     def isActivePlugin(self, plugin_id: str) -> bool:
-        if plugin_id not in self._disabled_plugins:
+        if plugin_id not in self._disabled_plugins and plugin_id not in self._outdated_plugins:
             return True
+
         return False
 
     #   Check by ID if a plugin is available:
@@ -371,16 +368,16 @@ class PluginRegistry(QObject):
                 except PluginNotFoundError:
                     pass
 
+    # Checks if the given plugin API version is compatible with the current version.
+    def _isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
+        return plugin_api_version.getMajor() == self._api_version.getMajor() \
+               and plugin_api_version.getMinor() <= self._api_version.getMinor()
+
     #   Load a single plugin by ID:
     def loadPlugin(self, plugin_id: str) -> None:
         # If plugin has already been loaded, do not load it again:
         if plugin_id in self._plugins:
             Logger.log("w", "Plugin %s was already loaded", plugin_id)
-            return
-
-        # If the plugin is in the list of disabled plugins, alert and return:
-        if plugin_id in self._disabled_plugins:
-            Logger.log("d", "Plugin %s was disabled", plugin_id)
             return
 
         # Find the actual plugin on drive:
@@ -397,14 +394,21 @@ class PluginRegistry(QObject):
             except InvalidMetaDataError:
                 return
 
-        #If API version is incompatible, don't load it.
-        if self._metadata[plugin_id].get("plugin", {}).get("api", 0) != self.APIVersion:
-            Logger.log("w", "Plugin %s uses an incompatible API version, disabling", plugin_id)
-            self.disablePlugin(plugin_id)
+        # Do not load plugin that has been disabled
+        if plugin_id in self._disabled_plugins:
+            Logger.log("i", "Plugin [%s] has been disabled. Skip loading it.", plugin_id)
+            return
+
+        # If API version is incompatible, don't load it.
+        plugin_api_version = self._metadata[plugin_id].get("plugin", {}).get("api", Version("0"))
+        if not self._isPluginApiVersionCompatible(plugin_api_version):
+            Logger.log("w", "Plugin [%s] with API version [%s] is incompatible with the current API version [%s].",
+                       plugin_id, plugin_api_version, self._api_version)
+            self._outdated_plugins.append(plugin_id)
             return
 
         try:
-            to_register = plugin.register(self._application) #type: ignore #We catch AttributeError on this in case register() doesn't exist.
+            to_register = plugin.register(self._application)  # type: ignore  # We catch AttributeError on this in case register() doesn't exist.
             if not to_register:
                 Logger.log("e", "Plugin %s did not return any objects to register", plugin_id)
                 return
@@ -421,10 +425,7 @@ class PluginRegistry(QObject):
             self.enablePlugin(plugin_id)
             Logger.log("i", "Loaded plugin %s", plugin_id)
 
-        except KeyError as e:
-            Logger.logException("e", "Error loading plugin %s:", plugin_id)
-            Logger.log("e", "Unknown plugin type: %s", str(e))
-        except Exception as e:
+        except Exception as ex:
             Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
     #   Uninstall a plugin with a given ID:
@@ -614,6 +615,14 @@ class PluginRegistry(QObject):
                     if "version" not in meta_data["plugin"]:
                         Logger.log("e", "Version must be set!")
                         raise InvalidMetaDataError(plugin_id)
+
+                    # Check if the plugin states what API version it needs.
+                    if "api" not in meta_data["plugin"]:
+                        Logger.log("e", "api must be set!")
+                        raise InvalidMetaDataError(plugin_id)
+                    else:
+                        # Store the api_version as a Version object.
+                        meta_data["plugin"]["api"] = Version(meta_data["plugin"]["api"])
 
                     if "i18n-catalog" in meta_data["plugin"]:
                         # A catalog was set, try to translate a few strings

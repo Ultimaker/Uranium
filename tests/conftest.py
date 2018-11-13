@@ -16,7 +16,7 @@ from UM.VersionUpgradeManager import VersionUpgradeManager
 # a segfault is raised.
 class FixtureApplication(Application):
     def __init__(self):
-        super().__init__(name = "test", version = "1.0")
+        super().__init__(name = "test", version = "1.0", api_version = "5.0.0")
         super().initialize()
         Signal._signalQueue = self
 

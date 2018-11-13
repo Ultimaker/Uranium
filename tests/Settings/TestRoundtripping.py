@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 # This is a set of tests to test roundtripping for containers.
@@ -11,7 +11,7 @@
 import pytest
 import os
 import multiprocessing.pool
-import unittest.mock #For MagicMock and patch.
+import unittest.mock  # For MagicMock and patch.
 
 from UM.SaveFile import SaveFile
 from UM.Settings.ContainerStack import ContainerStack
@@ -20,11 +20,11 @@ from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Resources import Resources
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
-pytestmark = pytest.mark.skip("Temporary skip these tests")
 
 @pytest.fixture(params = [1, 2, 5, 10])
 def process_count(request):
     return request.param
+
 
 def write_data(path, data):
     if not isinstance(data, str):
@@ -33,9 +33,11 @@ def write_data(path, data):
     with SaveFile(str(path), "wt") as f:
         f.write(data)
 
+
 def read_data(path):
     with open(str(path), "rt", encoding = "utf-8") as f:
         return f.read()
+
 
 ##  Run a function in one or more separate processes, waiting until all are finished.
 def mp_run(process_count, function, *args):
@@ -54,6 +56,7 @@ def mp_run(process_count, function, *args):
 
     return actual_results
 
+
 def test_roundtrip_basic(tmpdir, process_count):
     data = "test"
     temp_file = tmpdir.join("test")
@@ -67,6 +70,10 @@ def test_roundtrip_basic(tmpdir, process_count):
     for result in results:
         assert result == data
 
+
+@pytest.mark.skip(reason = "Skipping this test since it fails when running in some machines and also in the CI. "
+                           "Probably due to a problem with the library. I'm getting NotImplementedError when trying "
+                           "to findDefinitionContainers. It seems that the container registry is not correctly set.")
 def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
     instance_container = InstanceContainer("test_container")
     instance_container.setName("Test Instance Container")
@@ -92,6 +99,7 @@ def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
         assert deserialized_container.getName() == instance_container.getName()
         assert deserialized_container.getMetaData() == instance_container.getMetaData()
         assert deserialized_container.getProperty("test_setting_1", "value") == instance_container.getProperty("test_setting_1", "value")
+
 
 def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
     definition = loaded_container_registry.findDefinitionContainers(id = "multiple_settings")[0]
