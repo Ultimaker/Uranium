@@ -44,53 +44,33 @@ class MeshListModel(ListModel):
 
     def _rootChanged(self):
         self._scene.getRoot().childrenChanged.connect(self.updateList)
-        self.updateList(self._scene.getRoot()) # Manually trigger the update
+        self.updateList(self._scene.getRoot())  # Manually trigger the update
 
-    @pyqtSlot("long",int)
+    @pyqtSlot("long", int)
     def moveItem(self, key, new_index):
         for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
-            if id(node) == key:
-                # Found moved node.
-                old_index = self.find("key",key)
-                if old_index == new_index: # No change.
-                    return
+            if id(node) != key:
+                continue
+            # Found moved node.
+            old_index = self.find("key", key)
+            if old_index == new_index:  # No change.
+                return
 
-                new_model_entry = self.getItem(new_index) # Model data of location node should move to.
+            new_model_entry = self.getItem(new_index)  # Model data of location node should move to.
 
-                for parent_node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
-                    if id(parent_node) == new_model_entry["parent_key"]:
-                        # Found group the object is moving to.
-                        group_move = False
-                        if id(node.getParent()) != id(parent_node):
-                            if new_model_entry["is_group"]:
-                                if old_index > new_index:
-                                    # Node was moved onto a group entry, and it was moved from a higher index.
-                                    # This means that it needs to move outside of that group and one index lower as the group it moved on.
-                                    node.setParent(self._scene.getRoot())
-                                    children = self._scene.getRoot().getChildren()
-                                    new_index = children.index(parent_node)  # Take the old place of the group node
-                                    children.insert(new_index, node)
-                                    old_index = [i for i, child in enumerate(children) if child == node and i != new_index][0]
-
-                                    del children[old_index]
-                                    self.updateList(node)
-                                    return
-
-                            group_move = True
-                            # Move to different group.
-                            node.setParent(parent_node)
-                            self.removeItem(old_index) # Remove 'old' (now moved) item
-                            if parent_node not in self._collapsed_nodes and node in self._collapsed_nodes:
-                                self._collapsed_nodes.remove(node)
-                            if parent_node in self._collapsed_nodes and node not in self._collapsed_nodes:
-                                self._collapsed_nodes.append(node)
-                        else:
-                            # Node was moved within same group;
-                            if new_model_entry["is_group"]:
-                                # A node was moved onto it's own parent. This means that the parent needs to be set to Root
+            for parent_node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+                if id(parent_node) == new_model_entry["parent_key"]:
+                    # Found group the object is moving to.
+                    group_move = False
+                    if id(node.getParent()) != id(parent_node):
+                        if new_model_entry["is_group"]:
+                            if old_index > new_index:
+                                # Node was moved onto a group entry, and it was moved from a higher index.
+                                # This means that it needs to move outside of that group and one index lower as the
+                                # group it moved on.
                                 node.setParent(self._scene.getRoot())
                                 children = self._scene.getRoot().getChildren()
-                                new_index = children.index(parent_node) # Take the old place of the group node
+                                new_index = children.index(parent_node)  # Take the old place of the group node
                                 children.insert(new_index, node)
                                 old_index = [i for i, child in enumerate(children) if child == node and i != new_index][0]
 
@@ -98,39 +78,61 @@ class MeshListModel(ListModel):
                                 self.updateList(node)
                                 return
 
-                        # Magical move
-                        for node2 in Application.getInstance().getController().getScene().getRoot().getAllChildren():
-                            if id(node2) == new_model_entry["key"]:
-                                # Ensure that items within a group are in the correct order.
-                                children = parent_node.getChildren()
+                        group_move = True
+                        # Move to different group.
+                        node.setParent(parent_node)
+                        self.removeItem(old_index)  # Remove 'old' (now moved) item
+                        if parent_node not in self._collapsed_nodes and node in self._collapsed_nodes:
+                            self._collapsed_nodes.remove(node)
+                        if parent_node in self._collapsed_nodes and node not in self._collapsed_nodes:
+                            self._collapsed_nodes.append(node)
+                    else:
+                        # Node was moved within same group;
+                        if new_model_entry["is_group"]:
+                            # A node was moved onto it's own parent. This means that the parent needs to be set to Root
+                            node.setParent(self._scene.getRoot())
+                            children = self._scene.getRoot().getChildren()
+                            new_index = children.index(parent_node) # Take the old place of the group node
+                            children.insert(new_index, node)
+                            old_index = [i for i, child in enumerate(children) if child == node and i != new_index][0]
 
-                                if node2 == parent_node:
-                                    a , b = self.find("key",(id(children[0]))), self.find("key",(id(children[-1])))
-                                    children.insert(0, children[-1])
-                                    children.pop()
+                            del children[old_index]
+                            self.updateList(node)
+                            return
 
-                                else:
-                                    new_index = children.index(node2)
-                                    if new_index > children.index(node) or (group_move and False):
-                                        new_index += 1
-                                    children.insert(new_index, node)
-                                    old_index = [i for i, child in enumerate(children) if child == node and i != new_index][0]
-                                    del children[old_index]
-                                break
+                    # Magical move
+                    for node2 in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+                        if id(node2) == new_model_entry["key"]:
+                            # Ensure that items within a group are in the correct order.
+                            children = parent_node.getChildren()
 
-                        else:
-                            # Switch happend to dummy?
-                            if old_index < new_index:
-                                # Move is such that parent needs to be reset.
-                                node.setParent(self._scene.getRoot())
-                                children = self._scene.getRoot().getChildren()
-                                new_index = children.index(parent_node) + 1
+                            if node2 == parent_node:
+                                a , b = self.find("key",(id(children[0]))), self.find("key",(id(children[-1])))
+                                children.insert(0, children[-1])
+                                children.pop()
+
+                            else:
+                                new_index = children.index(node2)
+                                if new_index > children.index(node) or (group_move and False):
+                                    new_index += 1
                                 children.insert(new_index, node)
                                 old_index = [i for i, child in enumerate(children) if child == node and i != new_index][0]
                                 del children[old_index]
+                            break
 
-                        self.updateList(node)
-                        break
+                    else:
+                        # Switch happend to dummy?
+                        if old_index < new_index:
+                            # Move is such that parent needs to be reset.
+                            node.setParent(self._scene.getRoot())
+                            children = self._scene.getRoot().getChildren()
+                            new_index = children.index(parent_node) + 1
+                            children.insert(new_index, node)
+                            old_index = [i for i, child in enumerate(children) if child == node and i != new_index][0]
+                            del children[old_index]
+
+                    self.updateList(node)
+                    break
 
     def updateList(self, trigger_node):
         self.clear()
@@ -141,9 +143,9 @@ class MeshListModel(ListModel):
                     if root_child in self._collapsed_nodes:
                         self._collapsed_nodes.append(node)
 
-                    data = {"name":node.getName(),
+                    data = {"name": node.getName(),
                             "visibility": node.isVisible(),
-                            "key": (id(node)),
+                            "key": id(node),
                             "selected": Selection.isSelected(node),
                             "collapsed": node in self._collapsed_nodes,
                             "parent_key": parent_key,
@@ -151,7 +153,7 @@ class MeshListModel(ListModel):
                             "is_dummy": False
                             }
                     self.appendItem(data)
-                data = { "name": "Dummy " + root_child.getName(),
+                data = {"name": "Dummy " + root_child.getName(),
                          "visibility": True,
                          "key": 0,
                          "selected": Selection.isSelected(node),
@@ -163,21 +165,21 @@ class MeshListModel(ListModel):
                 self.appendItem(data)
 
             elif type(root_child) is SceneNode or type(root_child) is PointCloudNode: # Item is not a group node.
-                data = {"name":root_child.getName(),
+                data = {"name": root_child.getName(),
                         "visibility": root_child.isVisible(),
-                        "key": (id(root_child)),
+                        "key": id(root_child),
                         "selected": Selection.isSelected(root_child),
                         "collapsed": root_child in self._collapsed_nodes,
                         "parent_key": 0,
-                        "is_group":bool(root_child.callDecoration("isGroup")),
-                        "is_dummy" : False
+                        "is_group": bool(root_child.callDecoration("isGroup")),
+                        "is_dummy": False
                         }
 
                 # Check if data exists, if yes, remove old and re-add.
                 index = self.find("key",(id(root_child)))
                 if index is not None and index >= 0:
                     self.removeItem(index)
-                    self.insertItem(index,data)
+                    self.insertItem(index, data)
                 else:
                     self.appendItem(data)
 
