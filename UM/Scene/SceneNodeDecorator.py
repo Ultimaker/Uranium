@@ -12,9 +12,9 @@ if TYPE_CHECKING:
 #       in SceneNodeDecorator).
 #       \sa SceneNode
 class SceneNodeDecorator:
-    def __init__(self, node: "SceneNode" = None) -> None:
+    def __init__(self, node: Optional["SceneNode"] = None) -> None:
         super().__init__()
-        self._node = node
+        self._node = node  # type: Optional["SceneNode"]
         
     def setNode(self, node: "SceneNode") -> None:
         self._node = node
