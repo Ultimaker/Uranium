@@ -6,7 +6,7 @@ class GroupDecorator(SceneNodeDecorator):
     def __init__(self):
         super().__init__()
 
-        self._old_parent = None # Used to keep track of previous parent when an empty group removes itself from the scene
+        self._old_parent = None  # Used to keep track of previous parent when an empty group removes itself from the scene
 
     def setNode(self, node):
         super().setNode(node)
