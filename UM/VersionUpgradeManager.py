@@ -384,7 +384,7 @@ class VersionUpgradeManager:
             for file_idx, file_data in enumerate(files_data):
                 try:
                     upgrade_step_result = upgrade_step(file_data, file_names_without_extension[file_idx])
-                except Exception as e:  # Upgrade failed due to a coding error in the plug-in.
+                except Exception:  # Upgrade failed due to a coding error in the plug-in.
                     Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type,
                                         upgrade_step.__module__, traceback.format_exc())
                     return None
