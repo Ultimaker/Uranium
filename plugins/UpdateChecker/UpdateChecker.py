@@ -23,6 +23,7 @@ class UpdateChecker(Extension):
 
     def __init__(self):
         super().__init__()
+        self.setMenuName(i18n_catalog.i18nc("@item:inmenu", "Update Checker"))
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
 
         Application.getInstance().getPreferences().addPreference("info/automatic_update_check", True)
