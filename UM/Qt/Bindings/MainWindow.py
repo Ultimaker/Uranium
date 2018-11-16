@@ -13,9 +13,6 @@ from UM.Signal import Signal, signalemitter
 
 from typing import Optional
 
-MYPY = False
-if MYPY:
-    pass
 
 ##  QQuickWindow subclass that provides the main window.
 @signalemitter
