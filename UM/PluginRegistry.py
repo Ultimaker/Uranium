@@ -235,7 +235,7 @@ class PluginRegistry(QObject):
         active_only = kwargs.get("active_only", False)
         metadata_list = []
         for plugin_id in self._all_plugins:
-            if active_only and plugin_id in self._disabled_plugins:
+            if active_only and (plugin_id in self._disabled_plugins or plugin_id in self._outdated_plugins):
                 continue
             plugin_metadata = self.getMetaData(plugin_id)
             if self._subsetInDict(plugin_metadata, data_filter):
