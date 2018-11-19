@@ -4,6 +4,8 @@
 enable_testing()
 include(CMakeParseArguments)
 
+add_custom_target(test-verbose COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
+
 function(uranium_add_test)
     set(_single_args NAME DIRECTORY PYTHONPATH)
     cmake_parse_arguments("" "" "${_single_args}" "" ${ARGN})
