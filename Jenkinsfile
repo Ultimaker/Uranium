@@ -27,19 +27,11 @@ parallel_nodes(['linux && cura', 'windows && cura']) {
                 // Try and run the unit tests. If this stage fails, we consider the build to be "unstable".
                 stage('Unit Test') {
                     if (isUnix()) {
-                        // For Linux to show everything
-                        def branch = env.BRANCH_NAME
-                        if(!fileExists("${env.CURA_ENVIRONMENT_PATH}/${branch}")) {
-                            branch = "master"
-                        }
-
+                        // For Linux
                         try {
-                            sh """
-                                cd ..
-                                export PYTHONPATH=.
-                                ${env.CURA_ENVIRONMENT_PATH}/${branch}/bin/pytest -x --verbose --full-trace --capture=no ./tests
-                            """
-                        } catch(e) {
+                            sh 'make CTEST_OUTPUT_ON_FAILURE=TRUE test'
+                        } catch(e)
+                        {
                             currentBuild.result = "UNSTABLE"
                         }
                     }
