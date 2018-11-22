@@ -238,6 +238,23 @@ Item
             Keys.onTabPressed: selectTextInTextfield(yPercentage)
         }
 
+        // Validate to 0.1 mm
+        property var validateMinimumSize: function(newValue, lastValue, currentModelSize)
+        {
+            var modified_text = newValue.replace(",", ".") // User convenience. We use dots for decimal values
+            var tempNewValue = parseFloat(modified_text)
+            var originalSize = (100 * currentModelSize) / lastValue // model size without scaling
+            var nextSize = (tempNewValue * originalSize) / 100
+            var minAllowedSize = 0.1 // The new size cannot be lower than this value
+
+            if(nextSize >= minAllowedSize)
+            {
+                return tempNewValue
+            }
+
+            return -1
+        }
+
         TextField
         {
             id: xPercentage
@@ -248,16 +265,19 @@ Item
             text: xPercentageText
             validator: DoubleValidator
             {
-                // Validate to 0.1 mm
-                bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectWidth") / UM.ActiveTool.properties.getValue("ScaleX")));
                 decimals: 4
                 locale: "en_US"
             }
-
+            property var lastEnteredValue: parseFloat(xPercentageText)
             onEditingFinished:
             {
-                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ScaleX", parseFloat(modified_text) / 100);
+                var currentModelSize = UM.ActiveTool.properties.getValue("ObjectWidth")
+                var parsedValue = -1
+                if((parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)) > 0)
+                {
+                    UM.ActiveTool.setProperty("ScaleX", parsedValue / 100);
+                    lastEnteredValue = parsedValue
+                }
             }
             Keys.onBacktabPressed: selectTextInTextfield(widthTextField)
             Keys.onTabPressed: selectTextInTextfield(depthTextField)
@@ -272,16 +292,19 @@ Item
             text: zPercentageText
             validator: DoubleValidator
             {
-                // Validate to 0.1 mm
-                bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectDepth") / UM.ActiveTool.properties.getValue("ScaleZ")));
                 decimals: 4
                 locale: "en_US"
             }
-
+            property var lastEnteredValue: parseFloat(zPercentageText)
             onEditingFinished:
             {
-                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ScaleZ", parseFloat(modified_text) / 100);
+                var currentModelSize = UM.ActiveTool.properties.getValue("ObjectDepth")
+                var parsedValue = -1
+                if((parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)) > 0)
+                {
+                    UM.ActiveTool.setProperty("ScaleZ", parsedValue / 100);
+                    lastEnteredValue = parsedValue
+                }
             }
             Keys.onBacktabPressed: selectTextInTextfield(depthTextField)
             Keys.onTabPressed: selectTextInTextfield(heightTextField)
@@ -297,16 +320,19 @@ Item
             text: yPercentageText
             validator: DoubleValidator
             {
-                // Validate to 0.1 mm
-                bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectHeight") / UM.ActiveTool.properties.getValue("ScaleY")))
                 decimals: 4
                 locale: "en_US"
             }
-
+            property var lastEnteredValue: parseFloat(yPercentageText)
             onEditingFinished:
             {
-                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ScaleY", parseFloat(modified_text) / 100);
+                var currentModelSize = UM.ActiveTool.properties.getValue("ObjectHeight")
+                var parsedValue = -1
+                if((parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)) > 0)
+                {
+                    UM.ActiveTool.setProperty("ScaleY", parsedValue / 100);
+                    lastEnteredValue = parsedValue
+                }
             }
             Keys.onBacktabPressed: selectTextInTextfield(heightTextField)
             Keys.onTabPressed: selectTextInTextfield(widthTextField)
