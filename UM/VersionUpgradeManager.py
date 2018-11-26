@@ -95,6 +95,8 @@ class VersionUpgradeManager:
             "^2.[0-7]/.*$",
             "^cura\\.*$",
             "^cura/.*$",
+            "^plugins\\.*$",    # Don't upgrade manually installed plug-ins.
+            "^plugins/.*$"
         ]  # type: List[str]
 
     ##  Registers a file to be ignored by version upgrade checks (eg log files).
