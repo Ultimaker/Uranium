@@ -40,6 +40,7 @@ TabButton
                 anchors
                 {
                     bottom: parent.bottom
+                    bottomMargin: parent.parent.parent.checked ? 0 : parent.parent.border.width //Allow margin if tab is not selected.
                     left: parent.left
                     leftMargin: parent.parent.border.width
                     right: parent.right
