@@ -23,13 +23,11 @@ TabButton
         //Make the lining go straight down on the bottom side of the left and right sides.
         Rectangle
         {
-            anchors
-            {
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-            }
-            height: parent.radius + parent.border.width
+            anchors.bottom: parent.bottom
+            width: parent.width
+            //We take almost the entire height of the tab button, since this "manual" lining has no anti-aliasing.
+            //We can hardly prevent anti-aliasing on the border of the tab since the tabs are positioned with some spacing that is not necessarily a multiple of the number of tabs.
+            height: parent.height - (parent.radius + parent.border.width)
             color: parent.border.color
 
             //Don't add lining at the bottom side.
@@ -45,7 +43,7 @@ TabButton
                     rightMargin: parent.parent.border.width
                 }
                 color: parent.parent.color
-                height: parent.parent.radius + parent.parent.border.width
+                height: parent.height - anchors.bottomMargin
             }
         }
     }
