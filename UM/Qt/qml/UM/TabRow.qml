@@ -16,4 +16,12 @@ TabBar
     height: 50
 
     spacing: UM.Theme.getSize("default_margin").width //Space between the tabs.
+
+    background: Rectangle
+    {
+        width: parent.width
+        anchors.bottom: parent.bottom
+        height: UM.Theme.getSize("default_lining").height
+        color: UM.Theme.getColor("lining")
+    }
 }
