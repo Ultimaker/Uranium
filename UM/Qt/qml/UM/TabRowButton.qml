@@ -10,13 +10,11 @@ import UM 1.2 as UM
  */
 TabButton
 {
+    anchors.top: parent.top
     height: parent.height
 
     background: Rectangle
     {
-        width: parent.width
-        height: parent.height
-
         radius: UM.Theme.getSize("default_radius").width
         border.color: UM.Theme.getColor("lining")
         border.width: UM.Theme.getSize("default_lining").width
