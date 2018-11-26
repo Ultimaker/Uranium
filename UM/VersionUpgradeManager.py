@@ -87,7 +87,7 @@ class VersionUpgradeManager:
         self._ignored_files = [
             "^.*\.lock$",       # Don't upgrade the configuration file lock. It's not persistent.
             "^plugins\.json$",  # plugins.json and packages.json need to remain the same for the version upgrade plug-ins.
-            "^packages.json$",
+            "^packages\.json$",
             "^.*\.log$",        # Don't process the log. It's not needed and it could be really big.
             "^3.[0-3]\\.*$",    # Don't upgrade folders that are back-ups from older version upgrades. Until v3.3 we stored the back-up in the config folder itself.
             "^3.[0-3]/.*$",
