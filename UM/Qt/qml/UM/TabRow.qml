@@ -13,7 +13,7 @@ TabBar
     id: base
 
     width: parent.width
-    height: 50
+    height: 40 * screenScaleFactor
 
     spacing: UM.Theme.getSize("narrow_margin").width //Space between the tabs.
 
