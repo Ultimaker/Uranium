@@ -10,6 +10,8 @@ import UM 1.2 as UM
  */
 TabButton
 {
+    height: parent.height
+
     background: Rectangle
     {
         width: parent.width
