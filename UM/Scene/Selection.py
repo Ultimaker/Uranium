@@ -1,6 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import List
+from typing import List, Optional
 
 from UM.Signal import Signal
 from UM.Math.Vector import Vector
@@ -18,7 +18,7 @@ import copy
 #     to all selected objects.
 class Selection:
     @classmethod
-    def add(cls, object):
+    def add(cls, object: SceneNode) -> None:
         if object not in cls.__selection:
             cls.__selection.append(object)
             object.transformationChanged.connect(cls._onTransformationChanged)
@@ -26,7 +26,7 @@ class Selection:
             cls.selectionChanged.emit()
 
     @classmethod
-    def remove(cls, object):
+    def remove(cls, object: SceneNode) -> None:
         if object in cls.__selection:
             cls.__selection.remove(object)
             object.transformationChanged.disconnect(cls._onTransformationChanged)
@@ -35,15 +35,15 @@ class Selection:
 
     @classmethod
     ##  Get number of selected objects
-    def getCount(cls):
+    def getCount(cls) -> int:
         return len(cls.__selection)
 
     @classmethod
-    def getAllSelectedObjects(cls):
+    def getAllSelectedObjects(cls) -> List[SceneNode]:
         return cls.__selection
 
     @classmethod
-    def getBoundingBox(cls):
+    def getBoundingBox(cls) -> AxisAlignedBox:
         bounding_box = None  # don't start with an empty bounding box, because that includes (0,0,0)
         for node in cls.__selection:
             if not isinstance(node, SceneNode):
@@ -63,14 +63,14 @@ class Selection:
     ##  Get selected object by index
     #   \param index index of the object to return
     #   \returns selected object or None if index was incorrect / not found
-    def getSelectedObject(cls, index):
+    def getSelectedObject(cls, index: int) -> Optional[SceneNode]:
         try:
             return cls.__selection[index]
-        except:
+        except IndexError:
             return None
 
     @classmethod
-    def isSelected(cls, object):
+    def isSelected(cls, object: SceneNode) -> bool:
         return object in cls.__selection
 
     @classmethod
@@ -80,7 +80,7 @@ class Selection:
 
     @classmethod
     ##  Check if anything is selected at all.
-    def hasSelection(cls):
+    def hasSelection(cls) -> bool:
         return bool(cls.__selection)
 
     selectionChanged = Signal()
@@ -88,7 +88,7 @@ class Selection:
     selectionCenterChanged = Signal()
 
     @classmethod
-    def getSelectionCenter(cls):
+    def getSelectionCenter(cls) -> Vector:
         if not cls.__selection:
             cls.__selection_center = Vector.Null
 

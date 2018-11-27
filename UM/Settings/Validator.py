@@ -23,6 +23,7 @@ class ValidatorState(Enum):
     MaximumError = "MaximumError"
     MaximumWarning = "MaximumWarning"
 
+
 ##  Validates that a SettingInstance's value is within a certain minimum and maximum value.
 #
 #   This class performs validation of any value that has __lt__ and __gt__ implemented, but
