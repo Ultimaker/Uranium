@@ -84,7 +84,20 @@ class VersionUpgradeManager:
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
         #Regular expressions of the files that should not be checked, such as log files.
-        self._ignored_files = ["^.*\.lock$", "^plugins\.json$", "^packages.json$", "^.*\.log$"]  # type: List[str]
+        self._ignored_files = [
+            "^.*\.lock$",       # Don't upgrade the configuration file lock. It's not persistent.
+            "^plugins\.json$",  # plugins.json and packages.json need to remain the same for the version upgrade plug-ins.
+            "^packages\.json$",
+            "^.*\.log$",        # Don't process the log. It's not needed and it could be really big.
+            "^3.[0-3]\\.*$",    # Don't upgrade folders that are back-ups from older version upgrades. Until v3.3 we stored the back-up in the config folder itself.
+            "^3.[0-3]/.*$",
+            "^2.[0-7]\\.*$",
+            "^2.[0-7]/.*$",
+            "^cura\\.*$",
+            "^cura/.*$",
+            "^plugins\\.*$",    # Don't upgrade manually installed plug-ins.
+            "^plugins/.*$"
+        ]  # type: List[str]
 
     ##  Registers a file to be ignored by version upgrade checks (eg log files).
     #   \param file_name The base file name of the file to be ignored.
