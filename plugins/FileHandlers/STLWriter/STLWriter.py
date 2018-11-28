@@ -22,10 +22,10 @@ class STLWriter(MeshWriter):
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
         try:
             MeshWriter._meshNodes(nodes).__next__()
-        except:
+        except StopIteration:
             Logger.log("e", "There is no mesh to write.")
             self.setInformation(catalog.i18nc("@error:no mesh", "There is no mesh to write."))
-            return False #Don't try to write a file if there is no mesh.
+            return False  # Don't try to write a file if there is no mesh.
 
         if mode == MeshWriter.OutputMode.TextMode:
             self._writeAscii(stream, MeshWriter._meshNodes(nodes))

@@ -82,27 +82,25 @@ class PackageManager(QObject):
                 self._bundled_package_dict.update(json.load(f, encoding = "utf-8"))
                 Logger.log("i", "Loaded bundled packages data from %s", search_path)
 
-        # Load the user package management file
-        if not os.path.exists(self._user_package_management_file_path):
-            Logger.log("i", "User package management file %s doesn't exist, do nothing", self._user_package_management_file_path)
-            return
-
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
         container_registry = self._application.getContainerRegistry()
         with container_registry.lockFile():
-
-            # Load the user packages:
-            with open(self._user_package_management_file_path, "r", encoding="utf-8") as f:
-                try:
-                    management_dict = json.load(f, encoding="utf-8")
-                except JSONDecodeError:
-                    # The file got corrupted, ignore it. This happens extremely infrequently.
-                    # The file will get overridden once a user downloads something.
-                    return
-                self._installed_package_dict = management_dict.get("installed", {})
-                self._to_remove_package_set = set(management_dict.get("to_remove", []))
-                self._to_install_package_dict = management_dict.get("to_install", {})
-                Logger.log("i", "Loaded user packages management file from %s", self._user_package_management_file_path)
+            try:
+                # Load the user packages:
+                with open(self._user_package_management_file_path, "r", encoding="utf-8") as f:
+                    try:
+                        management_dict = json.load(f, encoding="utf-8")
+                    except JSONDecodeError:
+                        # The file got corrupted, ignore it. This happens extremely infrequently.
+                        # The file will get overridden once a user downloads something.
+                        return
+                    self._installed_package_dict = management_dict.get("installed", {})
+                    self._to_remove_package_set = set(management_dict.get("to_remove", []))
+                    self._to_install_package_dict = management_dict.get("to_install", {})
+                    Logger.log("i", "Loaded user packages management file from %s", self._user_package_management_file_path)
+            except FileNotFoundError:
+                Logger.log("i", "User package management file %s doesn't exist, do nothing", self._user_package_management_file_path)
+                return
 
     def _saveManagementData(self) -> None:
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads

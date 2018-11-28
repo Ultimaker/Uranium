@@ -31,7 +31,7 @@ class GroupDecorator(SceneNodeDecorator):
             # A group that no longer has children may remove itself from the scene
             self._old_parent = self._node.getParent()
             self._node.setParent(None)
-            Selection.remove(self.getNode())
+            Selection.remove(self._node)
         else:
             # A group that has removed itself from the scene because it had no children may add itself back to the scene
             # when a child is added to it.
