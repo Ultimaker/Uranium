@@ -11,12 +11,12 @@ from UM.Logger import Logger
 
 from PyQt5 import QtCore, QtWidgets
 
+
 ##  Provides the tool to select meshes and groups
 #
 #   Note that the tool has two implementations for different modes of selection:
 #   Pixel Selection Mode and BoundingBox Selection Mode. Of these two, only Pixel Selection Mode
 #   is in active use. BoundingBox Selection Mode may not be functional.
-
 class SelectionTool(Tool):
     PixelSelectionMode = 1
     BoundingBoxSelectionMode = 2
@@ -30,9 +30,9 @@ class SelectionTool(Tool):
         self._selection_pass = None
 
         self._selection_mode = self.PixelSelectionMode
-        self._ctrl_is_active = None # Ctrl modifier key is used for sub-selection
+        self._ctrl_is_active = None  # Ctrl modifier key is used for sub-selection
         self._alt_is_active = None
-        self._shift_is_active = None # Shift modifier key is used for multi-selection
+        self._shift_is_active = None  # Shift modifier key is used for multi-selection
 
     ##  Prepare modifier-key variables on each event
     #
@@ -42,7 +42,6 @@ class SelectionTool(Tool):
         self._shift_is_active = modifiers & QtCore.Qt.ShiftModifier
         self._ctrl_is_active = modifiers & QtCore.Qt.ControlModifier
         self._alt_is_active = modifiers & QtCore.Qt.AltModifier
-
 
     ##  Set the selection mode
     #
@@ -64,7 +63,7 @@ class SelectionTool(Tool):
         if event.type == MouseEvent.MousePressEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
             # Perform a selection operation
             if self._selection_mode == self.PixelSelectionMode:
-                self._pixelSelection(event)
+                return self._pixelSelection(event)
             else:
                 self._boundingBoxSelection(event)
         elif event.type == MouseEvent.MouseReleaseEvent and MouseEvent.LeftButton in event.buttons:
@@ -106,46 +105,57 @@ class SelectionTool(Tool):
             item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
         else:
             Logger.log("w", "Selection pass is None. getRenderPass('selection') returned None")
-            return
+            return False
 
         if not item_id and not self._shift_is_active:
-            Selection.clear()
-            return
+            if Selection.hasSelection():
+                Selection.clear()
+                return True
+            return False  # Nothing was selected before and the user didn't click on an object.
 
         # Find the scene-node which matches the node-id
         for node in BreadthFirstIterator(self._scene.getRoot()):
-            if id(node) == item_id:
-                if self._isNodeInGroup(node):
-                    is_selected = Selection.isSelected(self._findTopGroupNode(node))
+            if id(node) != item_id:
+                continue
+
+            if self._isNodeInGroup(node):
+                is_selected = Selection.isSelected(self._findTopGroupNode(node))
+            else:
+                is_selected = Selection.isSelected(node)
+
+            if self._shift_is_active:
+                if is_selected:
+                    # Deselect the SceneNode and its siblings in a group
+                    if node.getParent():
+                        if self._ctrl_is_active or not self._isNodeInGroup(node):
+                            Selection.remove(node)
+                        else:
+                            Selection.remove(self._findTopGroupNode(node))
+                        return True
                 else:
-                    is_selected = Selection.isSelected(node)
-                if self._shift_is_active:
-                    if is_selected:
-                        # Deselect the scenenode and its sibblings in a group
-                        if node.getParent():
-                            if self._ctrl_is_active or not self._isNodeInGroup(node):
-                                Selection.remove(node)
-                            else:
-                                Selection.remove(self._findTopGroupNode(node))
-                    else:
-                        # Select the scenenode and its sibblings in a group
-                        if node.getParent():
-                            if self._ctrl_is_active or not self._isNodeInGroup(node):
-                                Selection.add(node)
-                            else:
-                                Selection.add(self._findTopGroupNode(node))
-                else:
-                    if not is_selected or Selection.getCount() > 1:
-                        # Select only the scenenode and its sibblings in a group
-                        Selection.clear()
-                        if node.getParent():
-                            if self._ctrl_is_active or not self._isNodeInGroup(node):
-                                Selection.add(node)
-                            else:
-                                Selection.add(self._findTopGroupNode(node))
-                    elif self._isNodeInGroup(node) and self._ctrl_is_active:
-                        Selection.clear()
-                        Selection.add(node)
+                    # Select the SceneNode and its siblings in a group
+                    if node.getParent():
+                        if self._ctrl_is_active or not self._isNodeInGroup(node):
+                            Selection.add(node)
+                        else:
+                            Selection.add(self._findTopGroupNode(node))
+                        return True
+            else:
+                if not is_selected or Selection.getCount() > 1:
+                    # Select only the SceneNode and its siblings in a group
+                    Selection.clear()
+                    if node.getParent():
+                        if self._ctrl_is_active or not self._isNodeInGroup(node):
+                            Selection.add(node)
+                        else:
+                            Selection.add(self._findTopGroupNode(node))
+                        return True
+                elif self._isNodeInGroup(node) and self._ctrl_is_active:
+                    Selection.clear()
+                    Selection.add(node)
+                    return True
+
+        return False
 
     ##  Check whether a node is in a group
     #
