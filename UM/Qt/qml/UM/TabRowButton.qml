@@ -12,6 +12,7 @@ TabButton
 {
     anchors.top: parent.top
     height: parent.height
+    checked: model.index == 0 //First button is checked by default.
 
     background: Rectangle
     {
