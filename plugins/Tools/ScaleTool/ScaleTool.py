@@ -120,6 +120,7 @@ class ScaleTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), self._saved_handle_position.y))
 
             self.setDragStart(event.x, event.y)
+            return True
 
         if event.type == Event.MouseMoveEvent:
             # Perform a scale operation

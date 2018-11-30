@@ -311,11 +311,14 @@ class Controller:
 
     ##  Process an event
     #   \param event \type{Event} event to be handle.
-    #   The event is first passed to the selection tool, then the camera tool and finally the active tool.
+    #   The event is first passed to the selection tool, then the active tool and finally the camera tool.
     #   If none of these events handle it (when they return something that does not evaluate to true)
     #   a context menu signal is emitted.
     def event(self, event: Event):
         if self._selection_tool and self._selection_tool.event(event):
+            return
+
+        if self._active_tool and self._active_tool.event(event):
             return
 
         if self._camera_tool and self._camera_tool.event(event):
@@ -328,10 +331,6 @@ class Controller:
                 for key, tool in self._tools.items():
                     if tool.getShortcutKey() is not None and event.key == tool.getShortcutKey():
                         self.setActiveTool(tool)
-
-        # If we are not doing camera control, pass the event to the active tool.
-        if self._active_tool and self._active_tool.event(event):
-            return
 
         if self._active_view:
             self._active_view.event(event)
