@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2018 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
@@ -182,7 +182,7 @@ PreferencesPage
                 if (base.currentItem === null) {
                     return;
                 }
-                for (var i = 0; i < objectList.model.rowCount(); ++i)
+                for (var i = 0; i < objectList.model.count; ++i)
                 {
                     if (objectList.model.getItem(i).id == base.currentItem.id)
                     {
