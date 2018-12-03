@@ -15,7 +15,7 @@ try:
                                                        'CRITICAL': 'red,bg_white',
                                                        },
                                          )
-except ModuleNotFoundError:
+except ImportError:  # ModuleNotFoundError was new for 3.6 and we're still on 3.5
     from logging import Formatter
     logging_formatter = Formatter("%(asctime)s - %(levelname)s - %(message)s")
 
