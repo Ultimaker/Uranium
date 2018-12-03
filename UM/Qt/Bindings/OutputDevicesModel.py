@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
@@ -58,7 +58,7 @@ class OutputDevicesModel(ListModel):
 
     @pyqtProperty(int, notify = outputDevicesChanged)
     def deviceCount(self):
-        return self.rowCount()
+        return self.count
 
     def _update(self):
         self.beginResetModel()

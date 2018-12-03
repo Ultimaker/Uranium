@@ -30,8 +30,9 @@ ListView {
         property variant actions: model.actions
         property variant model_id: model.id
 
-        property int totalMessageHeight: {
-            if (message.actions == null || message.actions.rowCount() == 0)
+        property int totalMessageHeight:
+        {
+            if (message.actions == null || message.actions.count == 0)
             {
                 return message.labelHeight
             }
@@ -173,18 +174,21 @@ ListView {
                 model:
                 {
                     var filteredModel = new Array()
-                    var sizeOfActions = message.actions == null ? 0 : message.actions.rowCount()
-                    if(sizeOfActions == 0 ){
+                    var sizeOfActions = message.actions == null ? 0 : message.actions.count
+                    if(sizeOfActions == 0)
+                    {
                         return 0;
                     }
 
-                    for(var index = 0; index < sizeOfActions; index++){
+                    for(var index = 0; index < sizeOfActions; index++)
+                    {
                         var actionButton = message.actions.getItem(index)
 
                         var alignPosition = actionButton["button_align"]
 
                         //ActionButtonStyle.BUTTON_ALIGN_RIGHT == 3
-                        if (alignPosition == 3){
+                        if (alignPosition == 3)
+                        {
                             filteredModel.push(actionButton)
                         }
                     }
@@ -301,18 +305,21 @@ ListView {
                 model:
                 {
                     var filteredModel = new Array()
-                    var sizeOfActions = message.actions == null ? 0 : message.actions.rowCount()
-                    if(sizeOfActions == 0 ){
+                    var sizeOfActions = message.actions == null ? 0 : message.actions.count
+                    if(sizeOfActions == 0)
+                    {
                         return 0;
                     }
 
-                    for(var index = 0; index < sizeOfActions; index++){
+                    for(var index = 0; index < sizeOfActions; index++)
+                    {
                         var actionButton = message.actions.getItem(index)
 
                         var alignPosition = actionButton["button_align"]
 
                         //ActionButtonStyle.BUTTON_ALIGN_LEFT == 2
-                        if (alignPosition == 2){
+                        if (alignPosition == 2)
+                        {
                             filteredModel.push(actionButton)
                         }
                     }
