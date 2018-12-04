@@ -319,7 +319,11 @@ class Controller:
             return
 
         if self._active_tool and self._active_tool.event(event):
-            return
+
+            # If a model was moved using Shift key then CameraTool will apply camera movement after releasing shift key.
+            # To prevent it pass mouse.
+            if event.type != Event.MouseReleaseEvent:
+                return
 
         if self._camera_tool and self._camera_tool.event(event):
             return
