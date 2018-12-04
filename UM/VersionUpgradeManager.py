@@ -85,18 +85,18 @@ class VersionUpgradeManager:
 
         #Regular expressions of the files that should not be checked, such as log files.
         self._ignored_files = [
-            "^.*\.lock$",       # Don't upgrade the configuration file lock. It's not persistent.
-            "^plugins\.json$",  # plugins.json and packages.json need to remain the same for the version upgrade plug-ins.
-            "^packages\.json$",
-            "^.*\.log$",        # Don't process the log. It's not needed and it could be really big.
-            "^3.[0-3]\\.*$",    # Don't upgrade folders that are back-ups from older version upgrades. Until v3.3 we stored the back-up in the config folder itself.
-            "^3.[0-3]/.*$",
-            "^2.[0-7]\\.*$",
-            "^2.[0-7]/.*$",
-            "^cura\\.*$",
-            "^cura/.*$",
-            "^plugins\\.*",    # Don't upgrade manually installed plug-ins.
-            "^plugins/.*"
+            ".*\.lock",       # Don't upgrade the configuration file lock. It's not persistent.
+            "plugins\.json",  # plugins.json and packages.json need to remain the same for the version upgrade plug-ins.
+            "packages\.json",
+            ".*\.log",        # Don't process the log. It's not needed and it could be really big.
+            "3.[0-3]\\.*",    # Don't upgrade folders that are back-ups from older version upgrades. Until v3.3 we stored the back-up in the config folder itself.
+            "3.[0-3]/.*",
+            "2.[0-7]\\.*",
+            "2.[0-7]/.*",
+            "cura\\.*",
+            "cura/.*",
+            "plugins\\.*",    # Don't upgrade manually installed plug-ins.
+            "plugins/.*",
         ]  # type: List[str]
 
     ##  Registers a file to be ignored by version upgrade checks (eg log files).
@@ -104,7 +104,7 @@ class VersionUpgradeManager:
 
     def registerIgnoredFile(self, file_name: str) -> None:
         # Convert the file name to a regular expresion to add to the ignored files
-        file_name_regex = "^" + re.escape(file_name) + "$"
+        file_name_regex = re.escape(file_name)
         self._ignored_files.append(file_name_regex)
 
     ##  Gets the paths where a specified type of file should be stored.
@@ -274,7 +274,8 @@ class VersionUpgradeManager:
         for key in self._storage_paths:
             self._storage_paths[key] = collections.OrderedDict(sorted(self._storage_paths[key].items()))
 
-        combined_regex_ignored_files = "(" + ")|(".join(self._ignored_files) + ")"
+        # Use pattern: /^(pattern_a|pattern_b|pattern_c|...)$/
+        combined_regex_ignored_files = "^(" + "|".join(self._ignored_files) + ")"
         for old_configuration_type, version_storage_paths_dict in self._storage_paths.items():
             for src_version, storage_paths in version_storage_paths_dict.items():
                 for prefix in storage_path_prefixes:
