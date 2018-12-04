@@ -238,11 +238,13 @@ Item
             Keys.onTabPressed: selectTextInTextfield(yPercentage)
         }
 
-        // Validate to 0.1 mm
-        property var validateMinimumSize: function(newValue, lastValue, currentModelSize)
+        // To ensure that new size after scaling matches to the conditions (size cannot be less than 0.1 mm) it needs
+        // to be validated. To do this the method finds a model original size and apply new scale. If a new size passes
+        // the requirements is returned new size otherwise -1 which means not valid.
+        function validateMinimumSize(newValue, lastValue, currentModelSize)
         {
-            var modified_text = newValue.replace(",", ".") // User convenience. We use dots for decimal values
-            var tempNewValue = parseFloat(modified_text)
+            var modifiedText = newValue.replace(",", ".") // User convenience. We use dots for decimal values
+            var tempNewValue = parseFloat(modifiedText)
             var originalSize = (100 * currentModelSize) / lastValue // model size without scaling
             var nextSize = (tempNewValue * originalSize) / 100
             var minAllowedSize = 0.1 // The new size cannot be lower than this value
