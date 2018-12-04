@@ -4,7 +4,6 @@
 from PyQt5.QtCore import QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, pyqtSignal
 from typing import Dict, List, Any
 
-from UM.Decorators import deprecated
 
 
 ##  Convenience base class for models of a list of items.
