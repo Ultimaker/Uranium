@@ -1,5 +1,5 @@
-// Copyright (c) 2015 Ultimaker B.V.
-// Cura is released under the terms of the LGPLv3 or higher.
+// Copyright (c) 2018 Ultimaker B.V.
+// Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
 import QtQuick.Controls 1.1
@@ -150,11 +150,11 @@ UM.Dialog
                         anchors.top: progressButton.bottom
                         x: ((wizardProgress.width - progressArrow.width) / 2) | 0
                         visible: pagesModel.get(pagesModel.count - 1) && title != pagesModel.get(pagesModel.count - 1).title ? true : false
-                        UM.RecolorImage {
+                        UM.RecolorImage
+                        {
                             id: downArrow
                             width: UM.Theme.getSize("standard_arrow").width
                             height: UM.Theme.getSize("standard_arrow").height
-                            sourceSize.width: width
                             sourceSize.height: width
                             color: palette.mid
                             source: UM.Theme.getIcon("arrow_bottom")

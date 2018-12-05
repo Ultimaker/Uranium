@@ -61,9 +61,9 @@ ListView {
                 topMargin: UM.Theme.getSize("default_margin").width;
             }
 
-            UM.RecolorImage {
+            UM.RecolorImage
+            {
                 anchors.fill: parent;
-                sourceSize.width: width
                 sourceSize.height: width
                 color: UM.Theme.getColor("message_text")
                 source: UM.Theme.getIcon("cross1")
