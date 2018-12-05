@@ -2,8 +2,8 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, pyqtSignal
-
 from typing import Dict, List, Any
+
 
 
 ##  Convenience base class for models of a list of items.
@@ -18,14 +18,21 @@ class ListModel(QAbstractListModel):
         self._items = []  # type: List[Dict[str, Any]]
         self._role_names = {}  # type: Dict[int, bytes]
 
-    # While it would be nice to expose rowCount() as a count property so
-    # far implementing that only causes crashes due to an infinite recursion
-    # in PyQt.
+    itemsChanged = pyqtSignal()
 
-    ##  Reimplemented from QAbstractListModel
+    @pyqtProperty(int, notify = itemsChanged)
+    def count(self) -> int:
+        return len(self._items)
+
+    ##  This function is necessary because it is abstract in QAbstractListModel.
+    #
+    #   Under the hood, Qt will call this function when it needs to know how
+    #   many items are in the model.
+    #   This pyqtSlot will not be linked to the itemsChanged signal, so please
+    #   use the normal count() function instead.
     @pyqtSlot(result = int)
     def rowCount(self, parent = None) -> int:
-        return len(self._items)
+        return self.count
 
     def addRoleName(self, role: int, name: str):
         # Qt roleNames expects a QByteArray. PyQt 5.5 does not convert str to bytearray implicitly so
@@ -48,8 +55,6 @@ class ListModel(QAbstractListModel):
             return self._items[index]
         except:
             return {}
-
-    itemsChanged = pyqtSignal()
 
     ##  The list of items in this model.
     @pyqtProperty("QVariantList", notify = itemsChanged)

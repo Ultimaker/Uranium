@@ -430,16 +430,32 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return result
 
+    ##  Reimplemented from ListModel only because we want to use it in static
+    #   context in the subclass.
+    itemsChanged = pyqtSignal()
+
     ##  Reimplemented from QAbstractListModel
-    # Note that rowCount() is overridden from QAbstractItemModel. The signature of the method in that
-    # class is "int rowCount(const QModelIndex& parent)" which makes this slot declaration incorrect.
-    # TODO: fix the pointer when actually using this parameter.
-    @pyqtSlot(QObject, result = int)
-    def rowCount(self, parent = None):
+    #
+    #   Note that count() is overridden from QAbstractItemModel. The signature
+    #   of the method in that class is "int count()" which makes this slot
+    #   declaration incorrect.
+    #   TODO: fix the pointer when actually using this parameter.
+    @pyqtProperty(int, notify = itemsChanged)
+    def count(self):
         if not self._container:
             return 0
 
         return len(self._row_index_list)
+
+    ##  This function is necessary because it is abstract in QAbstractListModel.
+    #
+    #   Under the hood, Qt will call this function when it needs to know how
+    #   many items are in the model.
+    #   This pyqtSlot will not be linked to the itemsChanged signal, so please
+    #   use the normal count() function instead.
+    @pyqtSlot(QObject, result = int)
+    def rowCount(self, parent = None) -> int:
+        return self.count
 
     ##  Reimplemented from QAbstractListModel
     def data(self, index, role):

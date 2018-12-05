@@ -15,7 +15,7 @@ class Version:
     #   the major, minor and revision version numbers. All text is ignored.
     #
     #   \param version A string or bytes representing a version number.
-    def __init__(self, version: Union[str, bytes, int, List[Union[int, str, bytes]]]) -> None:
+    def __init__(self, version: Union[str, bytes, int, "Version", List[Union[int, str, bytes]]]) -> None:
         super().__init__()
 
         if type(version) == bytes:
@@ -35,6 +35,8 @@ class Version:
             version_list = version  # type: ignore
         elif isinstance(version, int):
             version_list = [version]  # type: ignore
+        elif isinstance(version, Version):
+            version_list = [version.getMajor(), version.getMinor(), version.getRevision(), version.getPostfixType(), version.getPostfixVersion()]  # type: ignore
         else:
             Logger.log("w", "Unable to convert version %s of type %s into a usable version", version, type(version))
             version_list = []
