@@ -433,6 +433,9 @@ class QtApplication(QApplication, Application):
         except Exception as e:
             Logger.log("e", "Exception while closing backend: %s", repr(e))
 
+        if self._tray_icon_widget:
+            self._tray_icon_widget.deleteLater()
+
         self.quit()
 
     def checkWindowMinimizedState(self) -> bool:

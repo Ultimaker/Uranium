@@ -251,6 +251,7 @@ class TranslateTool(Tool):
                     self.setLockedAxis(ToolHandle.XAxis)  # Do not move y / vertical
 
             self.setDragPlane(Plane(plane_vector, 0))
+            return True
 
         if event.type == Event.MouseMoveEvent:
             # Perform a translate operation
