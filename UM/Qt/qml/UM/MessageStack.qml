@@ -48,6 +48,7 @@ ListView {
         color: UM.Theme.getColor("message_background")
         border.width: UM.Theme.getSize("default_lining").width
         border.color: UM.Theme.getColor("message_border")
+        radius: UM.Theme.getSize("message_radius").width
 
         Button {
             id: closeButton;
@@ -61,23 +62,22 @@ ListView {
                 topMargin: UM.Theme.getSize("default_margin").width;
             }
 
-            UM.RecolorImage
+            style: ButtonStyle
             {
-                anchors.fill: parent;
-                sourceSize.height: width
-                color: UM.Theme.getColor("message_text")
-                source: UM.Theme.getIcon("cross1")
+                background: UM.RecolorImage
+                {
+                    width: UM.Theme.getSize("message_close").width
+                    sourceSize.width: width
+                    color: control.hovered ? UM.Theme.getColor("message_close_hover") : UM.Theme.getColor("message_close")
+                    source: UM.Theme.getIcon("cross1")
+                }
+
+                label: Label {}
             }
 
             onClicked: base.model.hideMessage(model.id)
             visible: model.dismissable
             enabled: model.dismissable
-
-            style: ButtonStyle {
-                background: Rectangle {
-                    color: UM.Theme.getColor("message_background")
-                }
-            }
         }
 
         Label {
@@ -95,7 +95,8 @@ ListView {
             text: model.title == undefined ? "" : model.title
             color: UM.Theme.getColor("message_text")
             font: UM.Theme.getFont("default_bold")
-            wrapMode: Text.Wrap;
+            wrapMode: Text.Wrap
+            renderType: Text.NativeRendering
         }
 
         Label {
@@ -120,7 +121,8 @@ ListView {
             }
             color: UM.Theme.getColor("message_text")
             font: UM.Theme.getFont("default")
-            wrapMode: Text.Wrap;
+            wrapMode: Text.Wrap
+            renderType: Text.NativeRendering
         }
 
         ProgressBar
@@ -208,6 +210,7 @@ ListView {
                                 id: messageStackButtonBackground
                                 width: parent.width
                                 height: parent.height
+                                radius: UM.Theme.getSize("message_button_radius").width
                                 color:
                                 {
                                     if (modelData.button_style == 0)
