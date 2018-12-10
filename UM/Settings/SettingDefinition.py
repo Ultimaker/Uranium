@@ -79,7 +79,7 @@ class SettingDefinition:
     #   \param i18n_catalog \type{i18nCatalog} The translation catalog to use for this setting. Defaults to None.
     def __init__(self, key: str, container: Optional[DefinitionContainerInterface] = None, parent: Optional["SettingDefinition"] = None, i18n_catalog: Optional[i18nCatalog] = None) -> None:
         super().__init__()
-
+        self._all_keys = Set()  # type: Set[str]
         self._key = key  # type: str
         self._container = container # type: Optional[DefinitionContainerInterface]
         self._parent = parent   # type:  Optional["SettingDefinition"]
@@ -127,6 +127,11 @@ class SettingDefinition:
     #   behaviour doesn't combine well with a non-default __getattr__.
     def __setstate__(self, state):
         self.__dict__.update(state)
+        # For 4.0 we added the _all_keys property, but the pickling fails to restore this.
+        # This is just there to prevent issues for developers, since only releases ignore caches.
+        # If you're reading this after that. Remove this.
+        if not hasattr(self, "_all_keys"):
+            self._all_keys = set()
 
     ##  The key of this setting.
     #
@@ -173,17 +178,19 @@ class SettingDefinition:
     #
     #   \return A set of the key in this definition and all its descendants.
     def getAllKeys(self) -> Set[str]:
-        keys = set()
-        keys.add(self.key)
-        for child in self.children:
-            keys |= child.getAllKeys() #Recursively get all keys of all descendants.
-        return keys
+        if self._all_keys:
+            # It was reset, re-calculate them
+            self._all_keys = set()
+            self._all_keys.add(self.key)
+            for child in self.children:
+                self._all_keys |= child.getAllKeys()  # Recursively get all keys of all descendants.
+        return self._all_keys
 
     ##  Serialize this setting to a dict.
     #
     #   \return \type{dict} A representation of this setting definition.
     def serialize_to_dict(self) -> Dict[str, Any]:
-        result = {}     # type: Dict[str, Any]
+        result = {}  # type: Dict[str, Any]
         result["label"] = self.key
 
         result["children"] = {}
@@ -575,7 +582,7 @@ class SettingDefinition:
 
     def _updateDescendants(self, definition: "SettingDefinition" = None) -> Dict[str, "SettingDefinition"]:
         result = {}
-
+        self._all_keys = set()  # Reset the keys cache.
         if not definition:
             definition = self
 
