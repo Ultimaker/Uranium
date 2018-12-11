@@ -350,7 +350,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def findDefinitions(self, **kwargs: Any) -> List[SettingDefinition]:
         if len(kwargs) == 1 and "key" in kwargs:
             # If we are searching for a single definition by exact key, we can speed up things by retrieving from the cache.
-            key = kwargs.get("key")
+            key = kwargs["key"]
             if key in self._definition_cache:
                 return [self._definition_cache[key]]
 
