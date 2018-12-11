@@ -79,7 +79,7 @@ class SettingDefinition:
     #   \param i18n_catalog \type{i18nCatalog} The translation catalog to use for this setting. Defaults to None.
     def __init__(self, key: str, container: Optional[DefinitionContainerInterface] = None, parent: Optional["SettingDefinition"] = None, i18n_catalog: Optional[i18nCatalog] = None) -> None:
         super().__init__()
-        self._all_keys = Set()  # type: Set[str]
+        self._all_keys = set()  # type: Set[str]
         self._key = key  # type: str
         self._container = container # type: Optional[DefinitionContainerInterface]
         self._parent = parent   # type:  Optional["SettingDefinition"]
