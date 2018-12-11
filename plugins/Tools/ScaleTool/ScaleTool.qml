@@ -280,6 +280,11 @@ Item
                     UM.ActiveTool.setProperty("ScaleX", parsedValue / 100);
                     lastEnteredValue = parsedValue
                 }
+                else
+                {
+                    // value is not valid (the object will become too small), so restore it to the old value
+                    text = base.roundFloat(100 * UM.ActiveTool.properties.getValue("ScaleX"), 4)
+                }
             }
             Keys.onBacktabPressed: selectTextInTextfield(widthTextField)
             Keys.onTabPressed: selectTextInTextfield(depthTextField)
@@ -306,6 +311,11 @@ Item
                 {
                     UM.ActiveTool.setProperty("ScaleZ", parsedValue / 100);
                     lastEnteredValue = parsedValue
+                }
+                else
+                {
+                    // value is not valid (the object will become too small), so restore it to the old value
+                    text = base.roundFloat(100 * UM.ActiveTool.properties.getValue("ScaleZ"), 4)
                 }
             }
             Keys.onBacktabPressed: selectTextInTextfield(depthTextField)
@@ -334,6 +344,11 @@ Item
                 {
                     UM.ActiveTool.setProperty("ScaleY", parsedValue / 100);
                     lastEnteredValue = parsedValue
+                }
+                else
+                {
+                    // value is not valid (the object will become too small), so restore it to the old value
+                    text = base.roundFloat(100 * UM.ActiveTool.properties.getValue("ScaleY"), 4)
                 }
             }
             Keys.onBacktabPressed: selectTextInTextfield(heightTextField)
