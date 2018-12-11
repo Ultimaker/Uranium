@@ -244,14 +244,14 @@ Item
         function validateMinimumSize(newValue, lastValue, currentModelSize)
         {
             var modifiedText = newValue.replace(",", ".") // User convenience. We use dots for decimal values
-            var tempNewValue = parseFloat(modifiedText)
+            var parsedNewValue = parseFloat(modifiedText)
             var originalSize = (100 * currentModelSize) / lastValue // model size without scaling
-            var nextSize = (tempNewValue * originalSize) / 100
-            var minAllowedSize = 0.1 // The new size cannot be lower than this value
+            var newSize = (parsedNewValue * originalSize) / 100
+            const minAllowedSize = 0.1 // The new size cannot be lower than this value
 
-            if(nextSize >= minAllowedSize)
+            if (newSize >= minAllowedSize)
             {
-                return tempNewValue
+                return parsedNewValue
             }
 
             return -1
