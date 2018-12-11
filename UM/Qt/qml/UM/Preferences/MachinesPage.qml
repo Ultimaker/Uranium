@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2018 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
@@ -10,10 +10,10 @@ ManagementPage {
     id: base;
 
     title: catalog.i18nc("@title:tab", "Printers");
-    property int numInstances: model.rowCount();
+    property int numInstances: model.count
     model: UM.MachineInstancesModel
     {
-        onDataChanged: numInstances = model.rowCount()
+        onDataChanged: numInstances = model.count
     }
 
     onAddObject: model.requestAddMachine();

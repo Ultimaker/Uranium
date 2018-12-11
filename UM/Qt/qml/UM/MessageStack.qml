@@ -30,8 +30,9 @@ ListView {
         property variant actions: model.actions
         property variant model_id: model.id
 
-        property int totalMessageHeight: {
-            if (message.actions == null || message.actions.rowCount() == 0)
+        property int totalMessageHeight:
+        {
+            if (message.actions == null || message.actions.count == 0)
             {
                 return message.labelHeight
             }
@@ -47,6 +48,7 @@ ListView {
         color: UM.Theme.getColor("message_background")
         border.width: UM.Theme.getSize("default_lining").width
         border.color: UM.Theme.getColor("message_border")
+        radius: UM.Theme.getSize("message_radius").width
 
         Button {
             id: closeButton;
@@ -60,23 +62,22 @@ ListView {
                 topMargin: UM.Theme.getSize("default_margin").width;
             }
 
-            UM.RecolorImage {
-                anchors.fill: parent;
-                sourceSize.width: width
-                sourceSize.height: width
-                color: UM.Theme.getColor("message_text")
-                source: UM.Theme.getIcon("cross1")
+            style: ButtonStyle
+            {
+                background: UM.RecolorImage
+                {
+                    width: UM.Theme.getSize("message_close").width
+                    sourceSize.width: width
+                    color: control.hovered ? UM.Theme.getColor("message_close_hover") : UM.Theme.getColor("message_close")
+                    source: UM.Theme.getIcon("cross1")
+                }
+
+                label: Label {}
             }
 
             onClicked: base.model.hideMessage(model.id)
             visible: model.dismissable
             enabled: model.dismissable
-
-            style: ButtonStyle {
-                background: Rectangle {
-                    color: UM.Theme.getColor("message_background")
-                }
-            }
         }
 
         Label {
@@ -94,7 +95,8 @@ ListView {
             text: model.title == undefined ? "" : model.title
             color: UM.Theme.getColor("message_text")
             font: UM.Theme.getFont("default_bold")
-            wrapMode: Text.Wrap;
+            wrapMode: Text.Wrap
+            renderType: Text.NativeRendering
         }
 
         Label {
@@ -119,7 +121,8 @@ ListView {
             }
             color: UM.Theme.getColor("message_text")
             font: UM.Theme.getFont("default")
-            wrapMode: Text.Wrap;
+            wrapMode: Text.Wrap
+            renderType: Text.NativeRendering
         }
 
         ProgressBar
@@ -173,18 +176,21 @@ ListView {
                 model:
                 {
                     var filteredModel = new Array()
-                    var sizeOfActions = message.actions == null ? 0 : message.actions.rowCount()
-                    if(sizeOfActions == 0 ){
+                    var sizeOfActions = message.actions == null ? 0 : message.actions.count
+                    if(sizeOfActions == 0)
+                    {
                         return 0;
                     }
 
-                    for(var index = 0; index < sizeOfActions; index++){
+                    for(var index = 0; index < sizeOfActions; index++)
+                    {
                         var actionButton = message.actions.getItem(index)
 
                         var alignPosition = actionButton["button_align"]
 
                         //ActionButtonStyle.BUTTON_ALIGN_RIGHT == 3
-                        if (alignPosition == 3){
+                        if (alignPosition == 3)
+                        {
                             filteredModel.push(actionButton)
                         }
                     }
@@ -204,6 +210,7 @@ ListView {
                                 id: messageStackButtonBackground
                                 width: parent.width
                                 height: parent.height
+                                radius: UM.Theme.getSize("message_button_radius").width
                                 color:
                                 {
                                     if (modelData.button_style == 0)
@@ -301,18 +308,21 @@ ListView {
                 model:
                 {
                     var filteredModel = new Array()
-                    var sizeOfActions = message.actions == null ? 0 : message.actions.rowCount()
-                    if(sizeOfActions == 0 ){
+                    var sizeOfActions = message.actions == null ? 0 : message.actions.count
+                    if(sizeOfActions == 0)
+                    {
                         return 0;
                     }
 
-                    for(var index = 0; index < sizeOfActions; index++){
+                    for(var index = 0; index < sizeOfActions; index++)
+                    {
                         var actionButton = message.actions.getItem(index)
 
                         var alignPosition = actionButton["button_align"]
 
                         //ActionButtonStyle.BUTTON_ALIGN_LEFT == 2
-                        if (alignPosition == 2){
+                        if (alignPosition == 2)
+                        {
                             filteredModel.push(actionButton)
                         }
                     }
