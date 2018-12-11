@@ -45,12 +45,19 @@ class Backend(PluginObject):
         self._backend_log = []
         self._backend_log_max_lines = None
 
+        self._backend_state = BackendState.NotStarted
+
         UM.Application.Application.getInstance().callLater(self._createSocket)
 
     processingProgress = Signal()
     backendStateChange = Signal()
     backendConnected = Signal()
     backendQuit = Signal()
+
+    def setState(self, new_state):
+        if new_state != self._backend_state:
+            self._backend_state = new_state
+            self.backendStateChange.emit(self._backend_state)
 
     ##   \brief Start the backend / engine.
     #   Runs the engine, this is only called when the socket is fully opened & ready to accept connections
