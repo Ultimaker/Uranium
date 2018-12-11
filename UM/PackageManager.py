@@ -102,6 +102,56 @@ class PackageManager(QObject):
                 Logger.log("i", "User package management file %s doesn't exist, do nothing", self._user_package_management_file_path)
                 return
 
+        # For packages that become bundled in the new releases, but a lower version was installed previously, we need
+        # to remove the old lower version that's installed in the user's folder.
+        for package_id, installed_package_dict in self._installed_package_dict.items():
+            bundled_package_dict = self._bundled_package_dict.get(package_id)
+            if bundled_package_dict is None:
+                continue
+
+            result = self._comparePacakgeWithBundledVersions(installed_package_dict["package_info"],
+                                                             bundled_package_dict["package_info"])
+            # The bundled package is newer
+            if result <= 0:
+                self._to_remove_package_set.add(package_id)
+                continue
+
+        # Also check the to-install packages to avoid installing packages that have a lower version than the bundled
+        # ones.
+        to_remove_package_ids = set()
+        for package_id, to_install_package_dict in self._to_install_package_dict.items():
+            bundled_package_dict = self._bundled_package_dict.get(package_id)
+            if bundled_package_dict is None:
+                continue
+
+            result = self._comparePacakgeWithBundledVersions(to_install_package_dict["package_info"],
+                                                             bundled_package_dict["package_info"])
+            # The bundled package is newer
+            if result <= 0:
+                to_remove_package_ids.add(package_id)
+                continue
+        for package_id in to_remove_package_ids:
+            del self._to_install_package_dict[package_id]
+
+    # Compares the SDK versions and the package versions of the given package info dicts.
+    # Returns -1, 0, 1 indicating if the versions in dict1 is lower than, equal to, or higher than dict2.
+    #  - The package with the higher SDK version is considered having the higher version number. If they are the same,
+    #  - if the bundled package version is greater than or equal to the given package, -1 is returned. Otherwise, 1.
+    def _comparePacakgeWithBundledVersions(self, info_dict, bundled_info_dict) -> int:
+        # If the bundled version has a higher SDK version, use the bundled version by removing the installed one.
+        info_dict1 = Version(info_dict["sdk_version"])
+        info_dict2 = Version(bundled_info_dict["sdk_version"])
+        if info_dict1 < info_dict2:
+            return -1
+
+        # Remove the package with the old version to favour the newer bundled version.
+        version1 = Version(info_dict["package_version"])
+        version2 = Version(bundled_info_dict["package_version"])
+        if version1 <= version2:
+            return -1
+
+        return 1
+
     def _saveManagementData(self) -> None:
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
         container_registry = self._application.getContainerRegistry()
