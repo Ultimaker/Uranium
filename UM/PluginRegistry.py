@@ -463,6 +463,9 @@ class PluginRegistry(QObject):
 
         local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
 
+        if plugin_id in self._bundled_plugin_cache:
+            del self._bundled_plugin_cache[plugin_id]
+
         try:
             with zipfile.ZipFile(plugin_path, "r") as zip_ref:
                 plugin_folder = os.path.join(local_plugin_path, plugin_id)
@@ -487,6 +490,9 @@ class PluginRegistry(QObject):
     def _removePlugin(self, plugin_id: str) -> None:
         plugin_folder = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
         plugin_path = os.path.join(plugin_folder, plugin_id)
+
+        if plugin_id in self._bundled_plugin_cache:
+            del self.bundled_plugin_cache[plugin_id]
 
         Logger.log("i", "Attempting to remove plugin '%s' from directory '%s'", plugin_id, plugin_path)
         shutil.rmtree(plugin_path)
