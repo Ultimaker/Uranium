@@ -178,7 +178,7 @@ class SettingDefinition:
     #
     #   \return A set of the key in this definition and all its descendants.
     def getAllKeys(self) -> Set[str]:
-        if self._all_keys:
+        if not self._all_keys:
             # It was reset, re-calculate them
             self._all_keys = set()
             self._all_keys.add(self.key)
