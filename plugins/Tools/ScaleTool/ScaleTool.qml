@@ -274,8 +274,8 @@ Item
             onEditingFinished:
             {
                 var currentModelSize = UM.ActiveTool.properties.getValue("ObjectWidth")
-                var parsedValue = -1
-                if((parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)) > 0)
+                var parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)
+                if (parsedValue > 0)
                 {
                     UM.ActiveTool.setProperty("ScaleX", parsedValue / 100);
                     lastEnteredValue = parsedValue
@@ -301,8 +301,8 @@ Item
             onEditingFinished:
             {
                 var currentModelSize = UM.ActiveTool.properties.getValue("ObjectDepth")
-                var parsedValue = -1
-                if((parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)) > 0)
+                var parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)
+                if (parsedValue > 0)
                 {
                     UM.ActiveTool.setProperty("ScaleZ", parsedValue / 100);
                     lastEnteredValue = parsedValue
@@ -329,8 +329,8 @@ Item
             onEditingFinished:
             {
                 var currentModelSize = UM.ActiveTool.properties.getValue("ObjectHeight")
-                var parsedValue = -1
-                if((parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)) > 0)
+                var parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)
+                if (parsedValue > 0)
                 {
                     UM.ActiveTool.setProperty("ScaleY", parsedValue / 100);
                     lastEnteredValue = parsedValue
