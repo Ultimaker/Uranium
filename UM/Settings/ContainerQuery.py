@@ -73,6 +73,8 @@ class ContainerQuery:
             if isinstance(value, str):
                 if ("*" or "|") in value:
                     key_filter = lambda candidate, key = key, value = value: self._matchRegExp(candidate, key, value)
+                elif value[0] == "[" and value[-1] == "]":
+                    key_filter = lambda candidate, key=key, value=value: self._matchRegMultipleExp(candidate, key, value)
                 else:
                     key_filter = lambda candidate, key = key, value = value: self._matchString(candidate, key, value)
             else:
@@ -100,6 +102,18 @@ class ContainerQuery:
             return False
         value = re.escape(value)  # Escape for regex patterns.
         value = "^" + value.replace("\\*", ".*").replace("\\(", "(").replace("\\)", ")").replace("\\|", "|") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
+        if self._ignore_case:
+            value_pattern = re.compile(value, re.IGNORECASE)
+        else:
+            value_pattern = re.compile(value)
+
+        return value_pattern.match(str(metadata[property_name]))
+
+    def _matchRegMultipleExp(self, metadata: Dict[str, Any], property_name: str, value: str):
+        if property_name not in metadata:
+            return False
+
+        value = "^" + value.replace("\\[", ".[").replace("\\]", "]") + "$" #Match on any string and add anchors for a complete match.
         if self._ignore_case:
             value_pattern = re.compile(value, re.IGNORECASE)
         else:
