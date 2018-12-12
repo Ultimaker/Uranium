@@ -69,6 +69,8 @@ class PluginRegistry(QObject):
         self._plugin_locations = []  # type: List[str]
         self._folder_cache = {}      # type: Dict[str, List[Tuple[str, str]]]
 
+        self._bundled_plugin_cache = {}  # type: Dict[str, bool]
+
         self._supported_file_types = {"umplugin": "Uranium Plugin"} # type: Dict[str, str]
 
     def initializeBeforePluginsAreLoaded(self) -> None:
@@ -326,6 +328,8 @@ class PluginRegistry(QObject):
         return plugin_id in self._plugins_installed
 
     def isBundledPlugin(self, plugin_id: str) -> bool:
+        if plugin_id in self._bundled_plugin_cache:
+            return self._bundled_plugin_cache[plugin_id]
         install_prefix = os.path.abspath(self._application.getInstallPrefix())
 
         # Go through all plugin locations and check if the given plugin is located in the installation path.
@@ -342,7 +346,7 @@ class PluginRegistry(QObject):
             if result:
                 is_bundled = True
                 break
-
+        self._bundled_plugin_cache[plugin_id] = is_bundled
         return is_bundled
 
     ##  Load all plugins matching a certain set of metadata
@@ -459,6 +463,9 @@ class PluginRegistry(QObject):
 
         local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
 
+        if plugin_id in self._bundled_plugin_cache:
+            del self._bundled_plugin_cache[plugin_id]
+
         try:
             with zipfile.ZipFile(plugin_path, "r") as zip_ref:
                 plugin_folder = os.path.join(local_plugin_path, plugin_id)
@@ -483,6 +490,9 @@ class PluginRegistry(QObject):
     def _removePlugin(self, plugin_id: str) -> None:
         plugin_folder = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
         plugin_path = os.path.join(plugin_folder, plugin_id)
+
+        if plugin_id in self._bundled_plugin_cache:
+            del self.bundled_plugin_cache[plugin_id]
 
         Logger.log("i", "Attempting to remove plugin '%s' from directory '%s'", plugin_id, plugin_path)
         shutil.rmtree(plugin_path)
@@ -568,7 +578,7 @@ class PluginRegistry(QObject):
                     sub_folders.append(entry)
             self._folder_cache[folder] = sub_folders
 
-        for (file, file_path) in self._folder_cache[folder]:
+        for file, file_path in self._folder_cache[folder]:
             if file == plugin_id and os.path.exists(os.path.join(file_path, "__init__.py")):
                 return folder
             else:

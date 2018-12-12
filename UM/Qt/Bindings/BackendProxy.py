@@ -39,9 +39,11 @@ class BackendProxy(QObject):
         return self._state
 
     def _onProcessingProgress(self, amount):
-        self._progress = amount
-        self.processingProgress.emit(amount)
+        if self._progress != amount:
+            self._progress = amount
+            self.processingProgress.emit(amount)
 
     def _onBackendStateChange(self, state):
-        self._state = state
-        self.backendStateChange.emit(state)
+        if self._state != state:
+            self._state = state
+            self.backendStateChange.emit(state)

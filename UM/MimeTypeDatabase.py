@@ -149,9 +149,9 @@ class MimeTypeDatabase:
     @classmethod
     def getMimeTypeForFile(cls, file_name: str) -> MimeType:
         # Properly normalize the file name to only be the base name of a path if we pass a path.
-        file_name = os.path.basename(os.path.realpath(file_name))
+        file_name = os.path.basename(file_name)
 
-        matches = [] # type: List[MimeType]
+        matches = []  # type: List[MimeType]
         for mime_type in cls.__custom_mimetypes:
             # Check if the file name ends with the suffixes, starting at the first . encountered.
             # This means that "suffix" will not match, ".suffix" will and "suffix.something.suffix" will also match
