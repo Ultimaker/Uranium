@@ -64,10 +64,16 @@ class ListModel(QAbstractListModel):
     ##  Replace all items at once.
     #   \param items The new list of items.
     def setItems(self, items: List[Dict[str, Any]]) -> None:
-        self.beginResetModel()
-        self._items = items
-        self.endResetModel()
-        self.itemsChanged.emit()
+        if len(self._items) != len(items):
+            self.beginResetModel()
+            self._items = items
+            self.endResetModel()
+            self.itemsChanged.emit()
+        else:
+            # If the length hasn't changed, we can just notify that the data was changed. This will prevent the existing
+            # QML items from being re-created every time some data changed.
+            self._items = items
+            self.dataChanged.emit(self.index(0, 0), self.index(len(self._items) - 1, 0))
 
     ##  Add an item to the list.
     #   \param item The item to add.
