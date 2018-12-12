@@ -540,19 +540,24 @@ class SettingDefinitionsModel(QAbstractListModel):
             if catalog.hasTranslationLoaded():
                 self._i18n_catalog = catalog
 
-        self.beginResetModel()
-
-        self._definition_list.clear()
-        self._row_index_list.clear()
-
         if self._root:
-            self._definition_list = self._root.findDefinitions()
+            new_definitions = self._root.findDefinitions()
         else:
-            self._definition_list = self._container.findDefinitions()
+            new_definitions = self._container.findDefinitions()
 
-        self._scheduleUpdateVisibleRows()
-
-        self.endResetModel()
+        # Check if a full reset is required
+        if len(new_definitions) != len(self._definition_list):
+            self.beginResetModel()
+            self._definition_list = new_definitions
+            self._row_index_list.clear()
+            self._scheduleUpdateVisibleRows()
+            self.endResetModel()
+        else:
+            # If the length hasn't changed, we can just notify that the data was changed. This will prevent the existing
+            # QML setting items from being re-created every you switch between machines.
+            self._definition_list = new_definitions
+            self._scheduleUpdateVisibleRows()
+            self.dataChanged.emit(self.index(0, 0), self.index(len(self._definition_list) - 1, 0))
 
     # Update the list of visible rows.
     #
