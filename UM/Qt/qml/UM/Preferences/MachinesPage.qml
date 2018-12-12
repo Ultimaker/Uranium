@@ -31,7 +31,7 @@ ManagementPage {
 
         Label {
             text: base.currentItem && base.currentItem.name ? base.currentItem.name : ""
-            font: UM.Theme.getFont("large")
+            font: UM.Theme.getFont("large_bold")
             width: parent.width
             elide: Text.ElideRight
         }
