@@ -27,9 +27,6 @@ class StageModel(ListModel):
     def _onStagesChanged(self):
         items = []
         stages = self._controller.getAllStages()
-        current_stage = self._controller.getActiveStage()
-        if current_stage is None:
-            return
 
         for stage_id, stage in stages.items():
             view_meta_data = PluginRegistry.getInstance().getMetaData(stage_id).get("stage", {})
