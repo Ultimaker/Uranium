@@ -64,16 +64,37 @@ class ListModel(QAbstractListModel):
     ##  Replace all items at once.
     #   \param items The new list of items.
     def setItems(self, items: List[Dict[str, Any]]) -> None:
-        if len(self._items) != len(items):
-            self.beginResetModel()
-            self._items = items
-            self.endResetModel()
-            self.itemsChanged.emit()
-        else:
-            # If the length hasn't changed, we can just notify that the data was changed. This will prevent the existing
-            # QML items from being re-created every time some data changed.
-            self._items = items
-            self.dataChanged.emit(self.index(0, 0), self.index(len(self._items) - 1, 0))
+        # We do not use model reset because of the following:
+        #   - it is very slow
+        #   - it can cause crashes on Mac OS X for some reason when endResetModel() is called (CURA-6015)
+        # So in this case, we use insertRows(), removeRows() and dataChanged signals to do
+        # smarter model update.
+
+        old_row_count = len(self._items)
+        new_row_count = len(items)
+        changed_row_count = min(old_row_count, new_row_count)
+
+        for i in range(changed_row_count):
+            self._items[i] = items[i]
+
+        if old_row_count < new_row_count:
+            # there are new items, append them at the end of the current item list
+            self.beginInsertRows(QModelIndex(), old_row_count, new_row_count - 1)
+            self._items += items[old_row_count:new_row_count]
+            self.endInsertRows()
+
+        elif old_row_count > new_row_count:
+            # the number of new items is less than the current number. Remove the not-needed ones.
+            self.beginRemoveRows(QModelIndex(), new_row_count, old_row_count - 1)
+            self._items = self._items[:new_row_count]
+            self.endRemoveRows()
+
+        # Notify that the existing items have been changed.
+        if changed_row_count >= 0:
+            self.dataChanged.emit(self.index(0, 0), self.index(changed_row_count - 1, 0))
+
+        # Notify with the custom signal itemsChanged to keep it backwards compatible in case something relies on it.
+        self.itemsChanged.emit()
 
     ##  Add an item to the list.
     #   \param item The item to add.
