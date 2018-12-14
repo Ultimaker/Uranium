@@ -74,19 +74,28 @@ class ListModel(QAbstractListModel):
         new_row_count = len(items)
         changed_row_count = min(old_row_count, new_row_count)
 
-        for i in range(changed_row_count):
-            self._items[i] = items[i]
+        need_to_add = old_row_count < new_row_count
+        need_to_remove = old_row_count > new_row_count
 
-        if old_row_count < new_row_count:
-            # there are new items, append them at the end of the current item list
+        # In the case of insertion and deletion, we need to call beginInsertRows()/beginRemoveRows() and
+        # endInsertRows()/endRemoveRows() before we modify the items.
+        # In the case of modification on the existing items, we only need to modify the items and then emit
+        # dataChanged().
+        #
+        # Here it is simplified to replace the complete items list instead of adding/removing/modifying them one by one,
+        # and it needs to make sure that the necessary signals (insert/remove/modified) are emitted before and after
+        # the item replacement.
+
+        if need_to_add:
             self.beginInsertRows(QModelIndex(), old_row_count, new_row_count - 1)
-            self._items += items[old_row_count:new_row_count]
-            self.endInsertRows()
-
-        elif old_row_count > new_row_count:
-            # the number of new items is less than the current number. Remove the not-needed ones.
+        elif need_to_remove:
             self.beginRemoveRows(QModelIndex(), new_row_count, old_row_count - 1)
-            self._items = self._items[:new_row_count]
+
+        self._items = items
+
+        if need_to_add:
+            self.endInsertRows()
+        elif need_to_remove:
             self.endRemoveRows()
 
         # Notify that the existing items have been changed.
