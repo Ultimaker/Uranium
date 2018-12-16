@@ -259,19 +259,31 @@ Item
 
         function evaluateTextChange(text, lastEnteredValue, valueName, scaleName)
         {
-            var currentModelSize = UM.ActiveTool.properties.getValue(valueName)
-            var parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)
+            var currentModelSize = UM.ActiveTool.properties.getValue(valueName);
+            var parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize);
+            if (parsedValue > 0 && ! UM.ActiveTool.properties.getValue("NonUniformScale"))
+            {
+                var scale = parsedValue / lastEnteredValue;
+                var x = UM.ActiveTool.properties.getValue("ScaleX") * 100;
+                var y = UM.ActiveTool.properties.getValue("ScaleY") * 100;
+                var z = UM.ActiveTool.properties.getValue("ScaleZ") * 100;
+                var newX = textfields.validateMinimumSize(
+                    (x * scale).toString(), x, UM.ActiveTool.properties.getValue("ObjectWidth"));
+                var newY = textfields.validateMinimumSize(
+                    (y * scale).toString(), y, UM.ActiveTool.properties.getValue("ObjectHeight"));
+                var newZ = textfields.validateMinimumSize(
+                    (z * scale).toString(), z, UM.ActiveTool.properties.getValue("ObjectDepth"));
+                if (newX <= 0 || newY <= 0 || newZ <= 0)
+                {
+                    parsedValue = -1;
+                }
+            }
             if (parsedValue > 0)
             {
                 UM.ActiveTool.setProperty(scaleName, parsedValue / 100);
-                lastEnteredValue = parsedValue
-            }
-            else
-            {
-                // value is not valid (the object will become too small), so restore it to the old value
-                text = base.roundFloat(100 * UM.ActiveTool.properties.getValue(scaleName), 4)
-            }
-            return [text, lastEnteredValue]
+                lastEnteredValue = parsedValue;
+            } // 'else' the value is not valid (the object will become too small)
+            return lastEnteredValue;
         }
 
         TextField
@@ -289,7 +301,7 @@ Item
             }
             property var lastEnteredValue: parseFloat(xPercentageText)
             onEditingFinished:
-                [text, lastEnteredValue] = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectWidth", "ScaleX")
+                lastEnteredValue = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectWidth", "ScaleX")
             Keys.onBacktabPressed: selectTextInTextfield(widthTextField)
             Keys.onTabPressed: selectTextInTextfield(depthTextField)
         }
@@ -308,7 +320,7 @@ Item
             }
             property var lastEnteredValue: parseFloat(zPercentageText)
             onEditingFinished:
-                [text, lastEnteredValue] = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectDepth", "ScaleZ")
+                lastEnteredValue = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectDepth", "ScaleZ")
             Keys.onBacktabPressed: selectTextInTextfield(depthTextField)
             Keys.onTabPressed: selectTextInTextfield(heightTextField)
         }
@@ -328,7 +340,7 @@ Item
             }
             property var lastEnteredValue: parseFloat(yPercentageText)
             onEditingFinished:
-                [text, lastEnteredValue] = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectHeight", "ScaleY")
+                lastEnteredValue = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectHeight", "ScaleY")
             Keys.onBacktabPressed: selectTextInTextfield(heightTextField)
             Keys.onTabPressed: selectTextInTextfield(widthTextField)
 
