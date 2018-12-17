@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2018 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
@@ -31,7 +31,6 @@ MouseArea
 
         anchors.fill: parent
         anchors.margins: base.iconMargin
-        sourceSize.width: width
         sourceSize.height: width
 
         color: base.containsMouse ? base.hoverColor : base.color
