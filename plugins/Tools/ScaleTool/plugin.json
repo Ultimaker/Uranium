@@ -1,7 +1,7 @@
 {
     "name": "Scale Tool",
     "author": "Ultimaker B.V.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Provides the Scale tool.",
     "api": "6.0",
     "i18n-catalog": "uranium"

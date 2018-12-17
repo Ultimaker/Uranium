@@ -1,7 +1,7 @@
 {
     "name": "Simple View",
     "author": "Ultimaker B.V.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Provides a simple solid mesh view.",
     "api": "6.0",
     "i18n-catalog": "uranium"
