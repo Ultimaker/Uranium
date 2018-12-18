@@ -1,8 +1,8 @@
 {
     "name": "Wavefront OBJ Reader",
     "author": "Ultimaker B.V.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Makes it possible to read Wavefront OBJ files.",
-    "api": 5,
+    "api": "6.0",
     "i18n-catalog": "uranium"
 }

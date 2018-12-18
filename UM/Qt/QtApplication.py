@@ -417,6 +417,9 @@ class QtApplication(QApplication, Application):
         Logger.log("d", "Shutting down %s", self.getApplicationName())
         self._is_shutting_down = True
 
+        # garbage collect tray icon so it gets properly closed before the application is closed
+        self._tray_icon_widget = None
+
         if save_data:
             try:
                 self.savePreferences()
