@@ -257,46 +257,33 @@ Item
             return -1
         }
 
-        // Parses and evaluates the given new scaling value and check if it will be valid.
-        // Returns the parsed value if it's valid, which will be > 0, or -1 if the new value is not valid.
         function evaluateTextChange(text, lastEnteredValue, valueName, scaleName)
         {
             var currentModelSize = UM.ActiveTool.properties.getValue(valueName);
             var parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize);
-            if (parsedValue > 0)
+            if (parsedValue > 0 && ! UM.ActiveTool.properties.getValue("NonUniformScale"))
             {
-                if (! UM.ActiveTool.properties.getValue("NonUniformScale"))
+                var scale = parsedValue / lastEnteredValue;
+                var x = UM.ActiveTool.properties.getValue("ScaleX") * 100;
+                var y = UM.ActiveTool.properties.getValue("ScaleY") * 100;
+                var z = UM.ActiveTool.properties.getValue("ScaleZ") * 100;
+                var newX = textfields.validateMinimumSize(
+                    (x * scale).toString(), x, UM.ActiveTool.properties.getValue("ObjectWidth"));
+                var newY = textfields.validateMinimumSize(
+                    (y * scale).toString(), y, UM.ActiveTool.properties.getValue("ObjectHeight"));
+                var newZ = textfields.validateMinimumSize(
+                    (z * scale).toString(), z, UM.ActiveTool.properties.getValue("ObjectDepth"));
+                if (newX <= 0 || newY <= 0 || newZ <= 0)
                 {
-                    // For uniform scaling, check all axis see if they will have valid values.
-                    var scale = parsedValue / lastEnteredValue;
-                    var x = UM.ActiveTool.properties.getValue("ScaleX") * 100;
-                    var y = UM.ActiveTool.properties.getValue("ScaleY") * 100;
-                    var z = UM.ActiveTool.properties.getValue("ScaleZ") * 100;
-                    var newX = textfields.validateMinimumSize(
-                        (x * scale).toString(), x, UM.ActiveTool.properties.getValue("ObjectWidth"));
-                    var newY = textfields.validateMinimumSize(
-                        (y * scale).toString(), y, UM.ActiveTool.properties.getValue("ObjectHeight"));
-                    var newZ = textfields.validateMinimumSize(
-                        (z * scale).toString(), z, UM.ActiveTool.properties.getValue("ObjectDepth"));
-                    if (newX <= 0 || newY <= 0 || newZ <= 0)
-                    {
-                        parsedValue = -1;
-                    }
-                }
-                else
-                {
-                    // For non-uniform scaling, only check the given axis.
-                    var scale = parsedValue / lastEnteredValue;
-                    var length = UM.ActiveTool.properties.getValue(scaleName) * 100;
-                    var newLength = textfields.validateMinimumSize(
-                        (length * scale).toString(), length, UM.ActiveTool.properties.getValue(valueName));
-                    if (newLength <= 0)
-                    {
-                        parsedValue = -1;
-                    }
+                    parsedValue = -1;
                 }
             }
-            return parsedValue;
+            if (parsedValue > 0)
+            {
+                UM.ActiveTool.setProperty(scaleName, parsedValue / 100);
+                lastEnteredValue = parsedValue;
+            } // 'else' the value is not valid (the object will become too small)
+            return lastEnteredValue;
         }
 
         TextField
@@ -314,17 +301,7 @@ Item
             }
             property var lastEnteredValue: parseFloat(xPercentageText)
             onEditingFinished:
-            {
-                var parsedValue = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectWidth", "ScaleX");
-                if (parsedValue > 0)
-                {
-                    UM.ActiveTool.setProperty("ScaleX", parsedValue / 100);
-                }
-                else
-                {
-                    text = xPercentageText;
-                }
-            }
+                lastEnteredValue = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectWidth", "ScaleX")
             Keys.onBacktabPressed: selectTextInTextfield(widthTextField)
             Keys.onTabPressed: selectTextInTextfield(depthTextField)
         }
@@ -343,17 +320,7 @@ Item
             }
             property var lastEnteredValue: parseFloat(zPercentageText)
             onEditingFinished:
-            {
-                var parsedValue = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectDepth", "ScaleZ");
-                if (parsedValue > 0)
-                {
-                    UM.ActiveTool.setProperty("ScaleZ", parsedValue / 100);
-                }
-                else
-                {
-                    text = zPercentageText;
-                }
-            }
+                lastEnteredValue = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectDepth", "ScaleZ")
             Keys.onBacktabPressed: selectTextInTextfield(depthTextField)
             Keys.onTabPressed: selectTextInTextfield(heightTextField)
         }
@@ -373,17 +340,7 @@ Item
             }
             property var lastEnteredValue: parseFloat(yPercentageText)
             onEditingFinished:
-            {
-                var parsedValue = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectHeight", "ScaleY");
-                if (parsedValue > 0)
-                {
-                    UM.ActiveTool.setProperty("ScaleY", parsedValue / 100);
-                }
-                else
-                {
-                    text = yPercentageText;
-                }
-            }
+                lastEnteredValue = textfields.evaluateTextChange(text, lastEnteredValue, "ObjectHeight", "ScaleY")
             Keys.onBacktabPressed: selectTextInTextfield(heightTextField)
             Keys.onTabPressed: selectTextInTextfield(widthTextField)
 
