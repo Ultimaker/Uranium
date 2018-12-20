@@ -15,7 +15,7 @@ class FixtureRegistry(PluginRegistry):
     def __init__(self, application: "Application"):
         PluginRegistry._PluginRegistry__instance = None
         super().__init__(application)
-        self._api_version = Version("6.5.0")
+        self._api_version = Version("5.5.0")
 
     def registerTestPlugin(self, plugin):
         self._test_plugin = plugin
@@ -40,7 +40,7 @@ class TestPluginRegistry():
         metadata = registry.getMetaData("TestPlugin")
         assert metadata == {"id": "TestPlugin",
                             "plugin": {"name": "TestPlugin",
-                                       "api": Version(6),
+                                       "api": Version(5),
                                        "version": "1.0.0"},
                             "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
                             }
@@ -95,17 +95,17 @@ class TestPluginRegistry():
         assert not registry._isPluginApiVersionCompatible(api_version)
 
         # Higher major version is not compatible
-        api_version = Version("999.0.0")
+        api_version = Version("6.0.0")
         assert not registry._isPluginApiVersionCompatible(api_version)
 
         # Same major version but higher minor version is not compatible
-        api_version = Version("6.7.0")
+        api_version = Version("5.7.0")
         assert not registry._isPluginApiVersionCompatible(api_version)
 
         # Same major version but lower minor version is compatible
-        api_version = Version("6.3.0")
+        api_version = Version("5.3.0")
         assert registry._isPluginApiVersionCompatible(api_version)
 
         # Same major version but different patch version should not matter, it should be compatible
-        api_version = Version("6.0.5")
+        api_version = Version("5.0.5")
         assert registry._isPluginApiVersionCompatible(api_version)
