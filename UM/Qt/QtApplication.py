@@ -128,7 +128,7 @@ class QtApplication(QApplication, Application):
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
 
-        if major_version is None and minor_version is None and profile is None:
+        if major_version is None and minor_version is None and profile is None and not self.getIsHeadLess():
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
             QMessageBox.critical(None, "Failed to probe OpenGL",
                                  "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
@@ -136,7 +136,8 @@ class QtApplication(QApplication, Application):
         else:
             opengl_version_str = OpenGLContext.versionAsText(major_version, minor_version, profile)
             Logger.log("d", "Detected most suitable OpenGL context version: %s", opengl_version_str)
-        OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
+        if not self.getIsHeadLess():
+            OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
 
         self._qml_import_paths.append(os.path.join(os.path.dirname(sys.executable), "qml"))
         self._qml_import_paths.append(os.path.join(self.getInstallPrefix(), "Resources", "qml"))
