@@ -43,7 +43,6 @@ def test_matchMultipleTokens():
     for test_case in test_cases:
         result = cq._matchRegMultipleTokens(**test_case["input"])
         if test_case["match"]:
-            print("!!!! result = ", result)
             assert result is not None
         else:
             assert result is None
