@@ -56,10 +56,10 @@ class UnsupportedVersionError(Exception):
     pass
 
 
-# Check PyQt version, we only support 5.4 or higher.
+# Check PyQt version, we only support 5.9 or higher.
 major, minor = PYQT_VERSION_STR.split(".")[0:2]
-if int(major) < 5 or (int(major) == 5 and int(minor) < 4):
-    raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
+if int(major) < 5 or (int(major) == 5 and int(minor) < 9):
+    raise UnsupportedVersionError("This application requires at least PyQt 5.9.0")
 
 
 ##  Application subclass that provides a Qt application object.

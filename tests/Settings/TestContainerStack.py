@@ -14,7 +14,7 @@ from UM.Settings.ContainerStack import InvalidContainerStackError
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Resources import Resources
-from tests.Settings.MockContainer import MockContainer
+from MockContainer import MockContainer
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 

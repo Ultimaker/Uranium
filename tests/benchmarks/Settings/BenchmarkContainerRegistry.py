@@ -38,6 +38,7 @@ def container_registry(application):
 
     ContainerRegistry.getInstance()._containers = {} # clear containers from previous iteration
 
+    PluginRegistry.getInstance().addPluginLocation(os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "plugins")))
     PluginRegistry.getInstance().loadPlugin("LocalContainerProvider")
     plugin = PluginRegistry.getInstance().getPluginObject("LocalContainerProvider")
     ContainerRegistry.getInstance()._providers.append(plugin)
@@ -59,8 +60,8 @@ def container_registry(application):
 
 
 benchmark_findContainers_data = [
-    { "id": 'basic_definition' },
-    { "name": "Test"},
+    { "id": "basic_definition" },
+    { "name": "Test" },
     { "name": "T*" },
     { "name": "Test", "category": "Test" },
     { "name": "*", "category": "*" },

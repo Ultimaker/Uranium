@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, pyqtSignal
-from typing import Dict, List, Any
+from typing import Any, Callable, Dict, List
 
 
 
@@ -35,8 +35,8 @@ class ListModel(QAbstractListModel):
         return self.count
 
     def addRoleName(self, role: int, name: str):
-        # Qt roleNames expects a QByteArray. PyQt 5.5 does not convert str to bytearray implicitly so
-        # force the conversion manually.
+        # Qt roleNames expects a QByteArray. PyQt 5 does not convert str to
+        # bytearray implicitly so force the conversion manually.
         self._role_names[role] = name.encode("utf-8")
 
     def roleNames(self):
@@ -145,7 +145,7 @@ class ListModel(QAbstractListModel):
 
     ##  Sort the list.
     #   \param fun The callable to use for determining the sort key.
-    def sort(self, fun):
+    def sort(self, fun: Callable[[Any], float]) -> None:
         self.beginResetModel()
         self._items.sort(key = fun)
         self.endResetModel()
@@ -155,7 +155,7 @@ class ListModel(QAbstractListModel):
     #   \param value
     #   \return index of setting if found, None otherwise
     @pyqtSlot(str, QVariant, result = int)
-    def find(self, key, value):
+    def find(self, key: str, value: Any) -> int:
         for i in range(len(self._items)):
             if key in self._items[i]:
                 if self._items[i][key] == value:
