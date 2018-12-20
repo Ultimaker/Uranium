@@ -464,7 +464,7 @@ class QtApplication(QApplication, Application):
 
     ## Create a class variable so we can manage the splash in the CrashHandler dialog when the Application instance
     # is not yet created, e.g. when an error occurs during the initialization
-    splash = None
+    splash = None  # type: Optional[QSplashScreen]
 
     def createSplash(self) -> None:
         if not self.getIsHeadLess():
