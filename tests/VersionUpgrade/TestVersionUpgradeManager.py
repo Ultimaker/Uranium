@@ -137,7 +137,7 @@ class TestVersionUpgradeManager():
                     "author": "Ultimaker",
                     "version": "1.0",
                     "description": "Upgrade plug-in to test with.",
-                    "api": 2
+                    "api": "6.0"
                 },
                 "version_upgrade": {}
             }

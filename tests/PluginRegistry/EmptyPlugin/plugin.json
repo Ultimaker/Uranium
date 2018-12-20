@@ -1,5 +1,5 @@
 {
     "name": "EmptyPlugin",
-    "api": 5,
+    "api": "6.0",
     "version": "1.0.0"
 }
