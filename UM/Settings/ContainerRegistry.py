@@ -313,6 +313,8 @@ class ContainerRegistry(ContainerRegistryInterface):
     ##  Load the metadata of all available definition containers, instance
     #   containers and container stacks.
     def loadAllMetadata(self) -> None:
+        gc.disable()
+        resource_start_time = time.time()
         for provider in self._providers:  # Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()):  # Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
@@ -322,6 +324,8 @@ class ContainerRegistry(ContainerRegistryInterface):
                         continue
                     self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
+        Logger.log("d", "Loading metadata into container registry took %s seconds", time.time() - resource_start_time)
+        gc.enable()
         ContainerRegistry.allMetadataLoaded.emit()
 
     ##  Load all available definition containers, instance containers and
@@ -628,8 +632,9 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   that doesn't work automatically between pyqtSignal and UM.Signal.
     def _onContainerMetaDataChanged(self, *args: ContainerInterface, **kwargs: Any) -> None:
         container = args[0]
-        self.metadata[container.getId()] = container.getMetaData()  # refresh the metadata
-        self.containerMetaDataChanged.emit(*args, **kwargs)
+        if self.metadata[container.getId()] != container.getMetaData():
+            self.metadata[container.getId()] = container.getMetaData()
+            self.containerMetaDataChanged.emit(*args, **kwargs)
 
     ##  Get the lock filename including full path
     #   Dependent on when you call this function, Resources.getConfigStoragePath may return different paths
