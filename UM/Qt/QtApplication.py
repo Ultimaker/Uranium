@@ -221,12 +221,13 @@ class QtApplication(QApplication, Application):
                 continue
             self._recent_files.append(QUrl.fromLocalFile(file_name))
 
-        # Initialize System tray icon and make it invisible because it is used only to show pop up messages
-        self._tray_icon = None
-        if self._tray_icon_name:
-            self._tray_icon = QIcon(Resources.getPath(Resources.Images, self._tray_icon_name))
-            self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
-            self._tray_icon_widget.setVisible(False)
+        if not self.getIsHeadLess():
+            # Initialize System tray icon and make it invisible because it is used only to show pop up messages
+            self._tray_icon = None
+            if self._tray_icon_name:
+                self._tray_icon = QIcon(Resources.getPath(Resources.Images, self._tray_icon_name))
+                self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
+                self._tray_icon_widget.setVisible(False)
 
     def initializeEngine(self) -> None:
         # TODO: Document native/qml import trickery
