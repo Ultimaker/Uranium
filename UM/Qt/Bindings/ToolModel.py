@@ -92,4 +92,5 @@ class ToolModel(ListModel):
     def _onToolEnabledChanged(self, tool_id, enabled):
         index = self.find("id", tool_id)
         if index >= 0:
-            self.setProperty(index, "enabled", enabled)
+            self._items[index]["enabled"] = enabled
+            self.dataChanged.emit(self.index(index, 0), self.index(index, 0), [self.ToolEnabledRole])
