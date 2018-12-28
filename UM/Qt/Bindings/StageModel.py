@@ -12,27 +12,21 @@ from UM.Qt.ListModel import ListModel
 class StageModel(ListModel):
     IdRole = Qt.UserRole + 1
     NameRole = Qt.UserRole + 2
-    ActiveRole = Qt.UserRole + 3
     StageRole = Qt.UserRole + 4
 
     def __init__(self, parent = None):
         super().__init__(parent)
         self._controller = Application.getInstance().getController()
         self._controller.stagesChanged.connect(self._onStagesChanged)
-        self._controller.activeStageChanged.connect(self._onStagesChanged)
         self._onStagesChanged()
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
-        self.addRoleName(self.ActiveRole, "active")
         self.addRoleName(self.StageRole, "stage")
 
     def _onStagesChanged(self):
         items = []
         stages = self._controller.getAllStages()
-        current_stage = self._controller.getActiveStage()
-        if current_stage is None:
-            return
 
         for stage_id, stage in stages.items():
             view_meta_data = PluginRegistry.getInstance().getMetaData(stage_id).get("stage", {})
@@ -48,7 +42,6 @@ class StageModel(ListModel):
             items.append({
                 "id": stage_id,
                 "name": name,
-                "active": stage_id == current_stage.getPluginId(),
                 "stage": stage,
                 "weight": weight
             })

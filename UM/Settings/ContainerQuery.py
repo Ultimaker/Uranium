@@ -71,7 +71,10 @@ class ContainerQuery:
         # Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
             if isinstance(value, str):
-                if ("*" or "|") in value:
+                if value.startswith("[") and value.endswith("]"):
+                    # With [token1|token2|token3|...], we try to find if any of the given tokens is present in the value
+                    key_filter = lambda candidate, key = key, value = value: self._matchRegMultipleTokens(candidate, key, value)
+                elif ("*" or "|") in value:
                     key_filter = lambda candidate, key = key, value = value: self._matchRegExp(candidate, key, value)
                 else:
                     key_filter = lambda candidate, key = key, value = value: self._matchString(candidate, key, value)
@@ -100,6 +103,19 @@ class ContainerQuery:
             return False
         value = re.escape(value)  # Escape for regex patterns.
         value = "^" + value.replace("\\*", ".*").replace("\\(", "(").replace("\\)", ")").replace("\\|", "|") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
+        if self._ignore_case:
+            value_pattern = re.compile(value, re.IGNORECASE)
+        else:
+            value_pattern = re.compile(value)
+
+        return value_pattern.match(str(metadata[property_name]))
+
+    def _matchRegMultipleTokens(self, metadata: Dict[str, Any], property_name: str, value: str):
+        if property_name not in metadata:
+            return False
+
+        # Use pattern /^(token1|token2|token3|...)$/ to look for any match of the given tokens
+        value = "^" + value.replace("[", "(").replace("]", ")") + "$" #Match on any string and add anchors for a complete match.
         if self._ignore_case:
             value_pattern = re.compile(value, re.IGNORECASE)
         else:
