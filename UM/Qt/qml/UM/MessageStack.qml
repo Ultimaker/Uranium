@@ -17,7 +17,7 @@ ListView {
 
     model: UM.VisibleMessagesModel { }
     spacing: UM.Theme.getSize("message_margin").height
-    
+
     interactive: false;
     delegate: Rectangle
     {
@@ -50,16 +50,18 @@ ListView {
         border.color: UM.Theme.getColor("message_border")
         radius: UM.Theme.getSize("message_radius").width
 
-        Button {
-            id: closeButton;
-            width: UM.Theme.getSize("message_close").width;
-            height: UM.Theme.getSize("message_close").height;
+        Button
+        {
+            id: closeButton
+            width: UM.Theme.getSize("message_close").width
+            height: UM.Theme.getSize("message_close").height
 
-            anchors {
-                right: parent.right;
-                rightMargin: UM.Theme.getSize("default_margin").width;
-                top: parent.top;
-                topMargin: UM.Theme.getSize("default_margin").width;
+            anchors
+            {
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+                top: parent.top
+                topMargin: UM.Theme.getSize("default_margin").width
             }
 
             style: ButtonStyle
@@ -80,16 +82,18 @@ ListView {
             enabled: model.dismissable
         }
 
-        Label {
+        Label
+        {
             id: messageTitle
 
-            anchors {
-                left: parent.left;
+            anchors
+            {
+                left: parent.left
                 leftMargin: UM.Theme.getSize("message_inner_margin").width
                 right: closeButton.left
                 rightMargin: UM.Theme.getSize("message_inner_margin").width
-                top: closeButton.top;
-                topMargin: model.title != undefined ? -Math.round(UM.Theme.getSize("default_margin").height / 4) : 0;
+                top: closeButton.top
+                topMargin: model.title != undefined ? -Math.round(UM.Theme.getSize("default_margin").height / 4) : 0
             }
 
             text: model.title == undefined ? "" : model.title
@@ -99,24 +103,28 @@ ListView {
             renderType: Text.NativeRendering
         }
 
-        Label {
+        Label
+        {
             id: messageLabel
 
-            anchors {
-                left: parent.left;
+            anchors
+            {
+                left: parent.left
                 leftMargin: UM.Theme.getSize("message_inner_margin").width
-                right: closeButton.left;
-                top: model.progress != null ? messageTitle.bottom : messageTitle.bottom;
+                right: closeButton.left
+                top: model.progress != null ? messageTitle.bottom : messageTitle.bottom
                 topMargin: message.labelTopBottomMargin;
             }
 
-            function getProgressText(){
+            function getProgressText()
+            {
                 var progress = Math.floor(model.progress)
                 return "%1 %2%".arg(model.text).arg(progress)
             }
 
             text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? "" : model.text
-            onLinkActivated: {
+            onLinkActivated:
+            {
                 Qt.openUrlExternally(link);
             }
             color: UM.Theme.getColor("message_text")
@@ -153,9 +161,10 @@ ListView {
         //Right aligned Action Buttons
         RowLayout
         {
-            id: actionButtons;
+            id: actionButtons
 
-            anchors {
+            anchors
+            {
                 right: closeButton.right
                 top:
                 {
@@ -196,17 +205,21 @@ ListView {
                     }
                     return filteredModel
                 }
-                delegate: Button {
+                delegate: Button
+                {
                     id: messageStackButton
                     onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
                     text: modelData.name
-                    style: ButtonStyle {
-                        background: Item {
+                    style: ButtonStyle
+                    {
+                        background: Item
+                        {
                             property int standardWidth: UM.Theme.getSize("message_button").width
                             property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("message_inner_margin").width
                             implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
                             implicitHeight: UM.Theme.getSize("message_button").height
-                            Rectangle {
+                            Rectangle
+                            {
                                 id: messageStackButtonBackground
                                 width: parent.width
                                 height: parent.height
@@ -234,7 +247,8 @@ ListView {
                                 }
                                 Behavior on color { ColorAnimation { duration: 50; } }
                             }
-                            Label {
+                            Label
+                            {
                                 id: messageStackButtonText
                                 anchors.centerIn: parent
                                 text: control.text
@@ -261,19 +275,23 @@ ListView {
                                     }
                                 }
 
-                                font: {
+                                font:
+                                {
                                     if (modelData.button_style == 0)
-                                        return UM.Theme.getFont("default")
+                                    {
+                                        return UM.Theme.getFont("default");
+                                    }
                                     else
                                     {
-                                        var obj = UM.Theme.getFont("default")
-                                        obj.underline = true
-                                        return obj
+                                        var obj = UM.Theme.getFont("default");
+                                        obj.underline = true;
+                                        return obj;
                                     }
                                 }
                             }
                         }
-                        label: Label{
+                        label: Label
+                        {
                             visible: false
                         }
                     }
@@ -284,9 +302,10 @@ ListView {
         //Left aligned Action Buttons
         RowLayout
         {
-            id: leftActionButtons;
+            id: leftActionButtons
 
-            anchors {
+            anchors
+            {
                 left: messageLabel.left
                 leftMargin: -UM.Theme.getSize("message_inner_margin").width / 2
                 top:
@@ -328,17 +347,21 @@ ListView {
                     }
                     return filteredModel
                 }
-                delegate: Button {
+                delegate: Button
+                {
                     id: messageStackButton
                     onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
                     text: modelData.name
-                    style: ButtonStyle {
-                        background: Item {
+                    style: ButtonStyle
+                    {
+                        background: Item
+                        {
                             property int standardWidth: UM.Theme.getSize("message_button").width
                             property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("message_inner_margin").width
                             implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
                             implicitHeight: UM.Theme.getSize("message_button").height
-                            Rectangle {
+                            Rectangle
+                            {
                                 id: messageStackButtonBackground
                                 width: parent.width
                                 height: parent.height
@@ -359,13 +382,15 @@ ListView {
                                             return UM.Theme.getColor("message_button");
                                         }
                                     }
-                                    else{
+                                    else
+                                    {
                                         return "transparent";
                                     }
                                 }
                                 Behavior on color { ColorAnimation { duration: 50; } }
                             }
-                            Label {
+                            Label
+                            {
                                 id: messageStackButtonText
                                 anchors.centerIn: parent
                                 text: control.text
@@ -392,19 +417,23 @@ ListView {
                                     }
                                 }
 
-                                font: {
+                                font:
+                                {
                                     if (modelData.button_style == 0)
-                                        return UM.Theme.getFont("default")
+                                    {
+                                        return UM.Theme.getFont("default");
+                                    }
                                     else
                                     {
-                                        var obj = UM.Theme.getFont("default")
-                                        obj.underline = true
-                                        return obj
+                                        var obj = UM.Theme.getFont("default");
+                                        obj.underline = true;
+                                        return obj;
                                     }
                                 }
                             }
                         }
-                        label: Label{
+                        label: Label
+                        {
                             visible: false
                         }
                     }
@@ -413,7 +442,8 @@ ListView {
         }
     }
 
-    add: Transition {
+    add: Transition
+    {
         NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 200; }
     }
 
