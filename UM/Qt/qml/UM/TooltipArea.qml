@@ -1,3 +1,6 @@
+// Copyright (c) 2018 Ultimaker B.V.
+// Uranium is released under the terms of the LGPLv3 or higher.
+
 import QtQuick 2.4
 import QtQuick.Controls.Private 1.0
 
@@ -6,7 +9,8 @@ import QtQuick.Controls.Private 1.0
 // Tested on: Qt 5.4.1
 // Based on https://www.kullo.net/blog/tooltiparea-the-missing-tooltip-component-of-qt-quick/
 
-MouseArea {
+MouseArea
+{
     id: _root
     property string text: ""
 
@@ -15,7 +19,8 @@ MouseArea {
     onExited: Tooltip.hideText()
     onCanceled: Tooltip.hideText()
 
-    Timer {
+    Timer
+    {
         interval: 1000
         running: _root.enabled && _root.containsMouse && _root.text.length
         onTriggered: Tooltip.showText(_root, Qt.point(_root.mouseX, _root.mouseY), wrapText(_root.text))
