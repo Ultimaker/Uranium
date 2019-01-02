@@ -194,6 +194,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return _containerRegistry.isReadOnly(self.getId())
     readOnly = pyqtProperty(bool, fget = getReadOnly)
 
+    def getNumInstances(self) -> int:
+        return len(self._instances)
+
     ##  \copydoc ContainerInterface::getMetaData
     #
     #   Reimplemented from ContainerInterface
