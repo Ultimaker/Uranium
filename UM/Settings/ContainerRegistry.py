@@ -167,7 +167,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   list if nothing was found.
     @UM.FlameProfiler.profile
     def findContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
-         # Find the metadata of the containers and grab the actual containers from there.
+        # Find the metadata of the containers and grab the actual containers from there.
         results_metadata = self.findContainersMetadata(ignore_case = ignore_case, **kwargs)
         result = []
         for metadata in results_metadata:
@@ -301,6 +301,14 @@ class ContainerRegistry(ContainerRegistryInterface):
         if not provider:
             return False  # If no provider had the container, that means that the container was only in memory. Then it's always modifiable.
         return provider.isReadOnly(container_id)
+
+    # Gets the container file path with for the container with the given ID. Returns None if the container/file doesn't
+    # exist.
+    def getContainerFilePathById(self, container_id: str) -> Optional[str]:
+        provider = self.source_provider.get(container_id)
+        if not provider:
+            return None
+        return provider.getContainerFilePathById(container_id)
 
     ##  Returns whether a container is completely loaded or not.
     #
