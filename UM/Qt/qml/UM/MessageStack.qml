@@ -241,7 +241,8 @@ ListView {
                                             return UM.Theme.getColor("message_button");
                                         }
                                     }
-                                    else{
+                                    else
+                                    {
                                         return "transparent";
                                     }
                                 }
@@ -254,7 +255,7 @@ ListView {
                                 text: control.text
                                 color:
                                 {
-                                    if (modelData.button_style == 0)
+                                    if (modelData.button_style == 0) //DEFAULT
                                     {
                                         if(control.pressed)
                                         {
@@ -268,6 +269,10 @@ ListView {
                                         {
                                             return UM.Theme.getColor("message_button_text");
                                         }
+                                    }
+                                    else if(modelData.button_style == 1) //LINK
+                                    {
+                                        return UM.Theme.getColor("text_link");
                                     }
                                     else
                                     {
