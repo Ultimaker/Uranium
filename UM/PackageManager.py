@@ -139,9 +139,9 @@ class PackageManager(QObject):
     #  - if the bundled package version is greater than or equal to the given package, -1 is returned. Otherwise, 1.
     def _comparePacakgeWithBundledVersions(self, info_dict: Dict[str, Any], bundled_info_dict: Dict[str, Any]) -> int:
         # If the bundled version has a higher SDK version, use the bundled version by removing the installed one.
-        info_dict1 = Version(info_dict["sdk_version"])
-        info_dict2 = Version(bundled_info_dict["sdk_version"])
-        if info_dict1 < info_dict2:
+        sdk_version1 = Version(info_dict["sdk_version"])
+        sdk_version2 = Version(bundled_info_dict["sdk_version"])
+        if sdk_version1 < sdk_version2:
             return -1
 
         # Remove the package with the old version to favour the newer bundled version.
