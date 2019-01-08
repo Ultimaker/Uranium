@@ -35,6 +35,13 @@ class Theme(QObject):
         self._em_height = int(QFontMetrics(QCoreApplication.instance().font()).ascent())
         self._em_width = self._em_height
 
+        # Cache the initial language in the preferences. For fonts, a special font can be defined with, for example,
+        # "medium" and "medium_nl_NL". If the special one exists, getFont() will return that, otherwise the default
+        # will be returned. We cache the initial language here is because Cura can only change its language if it gets
+        # restarted, so we need to keep the fonts consistent in a single Cura run.
+        self._preferences = UM.Application.Application.getInstance().getPreferences()
+        self._lang_code = self._preferences.getValue("general/language")
+
         self._initializeDefaults()
 
         self.reload()
@@ -127,7 +134,11 @@ class Theme(QObject):
         return QUrl()
 
     @pyqtSlot(str, result = "QFont")
-    def getFont(self, font_name):
+    def getFont(self, font_name: str):
+        lang_specific_font_name = "%s_%s" % (font_name, self._lang_code)
+        if lang_specific_font_name in self._fonts:
+            return self._fonts[lang_specific_font_name]
+
         if font_name in self._fonts:
             return self._fonts[font_name]
 
