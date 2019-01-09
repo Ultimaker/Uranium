@@ -152,6 +152,8 @@ class Backend(PluginObject):
             Logger.log("e", "Couldn't start back-end: No permission to execute process.")
         except FileNotFoundError:
             Logger.logException("e", "Unable to find backend executable: %s", command_list[0])
+        except BlockingIOError:
+            Logger.log("e", "Couldn't start back-end: Resource is temporarily unavailable")
         return None
 
     def _storeOutputToLogThread(self, handle):
