@@ -24,6 +24,8 @@ from . import RotateToolHandle
 import math
 import time
 
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
 
 ##  Provides the tool to rotate meshes and groups
 #
@@ -220,7 +222,7 @@ class RotateTool(Tool):
     #   Note: The LayFlat functionality is mostly used for 3d printing and should probably be moved into the Cura project
     def layFlat(self):
         self.operationStarted.emit(self)
-        self._progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False, title = "Object Rotation")
+        self._progress_message = Message(i18n_catalog.i18nc("@label", "Laying object flat on buildplate..."), lifetime = 0, dismissable = False, title = i18n_catalog.i18nc("@title", "Object Rotation"))
         self._progress_message.setProgress(0)
 
         self._iterations = 0
