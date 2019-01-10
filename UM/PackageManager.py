@@ -147,8 +147,11 @@ class PackageManager(QObject):
         # Remove the package with the old version to favour the newer bundled version.
         version1 = Version(info_dict1["package_version"])
         version2 = Version(info_dict2["package_version"])
-        if version1 <= version2:
+        if version1 < version2:
             return -1
+
+        if version1 == version2:
+            return 0
 
         return 1
 
