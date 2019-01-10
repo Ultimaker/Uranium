@@ -109,8 +109,8 @@ class PackageManager(QObject):
             if bundled_package_dict is None:
                 continue
 
-            result = self._comparePacakgeWithBundledVersions(installed_package_dict["package_info"],
-                                                             bundled_package_dict["package_info"])
+            result = self._comparePackageVersions(installed_package_dict["package_info"],
+                                                  bundled_package_dict["package_info"])
             # The bundled package is newer
             if result <= 0:
                 self._to_remove_package_set.add(package_id)
@@ -124,8 +124,8 @@ class PackageManager(QObject):
             if bundled_package_dict is None:
                 continue
 
-            result = self._comparePacakgeWithBundledVersions(to_install_package_dict["package_info"],
-                                                             bundled_package_dict["package_info"])
+            result = self._comparePackageVersions(to_install_package_dict["package_info"],
+                                                  bundled_package_dict["package_info"])
             # The bundled package is newer
             if result <= 0:
                 to_remove_package_ids.add(package_id)
@@ -133,20 +133,20 @@ class PackageManager(QObject):
         for package_id in to_remove_package_ids:
             del self._to_install_package_dict[package_id]
 
-    # Compares the SDK versions and the package versions of the given package info dicts.
+    # Compares the SDK versions and the package versions of the two given package info dicts.
     # Returns -1, 0, 1 indicating if the versions in dict1 is lower than, equal to, or higher than dict2.
     #  - The package with the higher SDK version is considered having the higher version number. If they are the same,
     #  - if the bundled package version is greater than or equal to the given package, -1 is returned. Otherwise, 1.
-    def _comparePacakgeWithBundledVersions(self, info_dict: Dict[str, Any], bundled_info_dict: Dict[str, Any]) -> int:
+    def _comparePackageVersions(self, info_dict1: Dict[str, Any], info_dict2: Dict[str, Any]) -> int:
         # If the bundled version has a higher SDK version, use the bundled version by removing the installed one.
-        sdk_version1 = Version(info_dict["sdk_version"])
-        sdk_version2 = Version(bundled_info_dict["sdk_version"])
+        sdk_version1 = Version(info_dict1["sdk_version"])
+        sdk_version2 = Version(info_dict2["sdk_version"])
         if sdk_version1 < sdk_version2:
             return -1
 
         # Remove the package with the old version to favour the newer bundled version.
-        version1 = Version(info_dict["package_version"])
-        version2 = Version(bundled_info_dict["package_version"])
+        version1 = Version(info_dict1["package_version"])
+        version2 = Version(info_dict2["package_version"])
         if version1 <= version2:
             return -1
 
