@@ -94,9 +94,11 @@ Item
 
             style: UM.Theme.styles.checkbox;
             checked: UM.ActiveTool.properties.getValue("ScaleSnap");
-            onClicked: {
+            onClicked:
+            {
                 UM.ActiveTool.setProperty("ScaleSnap", checked);
-                if (snapScalingCheckbox.checked){
+                if (snapScalingCheckbox.checked)
+                {
                     UM.ActiveTool.setProperty("ScaleX", parseFloat(xPercentage.text) / 100);
                     UM.ActiveTool.setProperty("ScaleY", parseFloat(yPercentage.text) / 100);
                     UM.ActiveTool.setProperty("ScaleZ", parseFloat(zPercentage.text) / 100);
@@ -141,33 +143,38 @@ Item
         flow: Grid.TopToBottom;
         spacing: Math.round(UM.Theme.getSize("default_margin").width / 2);
 
-        Text
+        Label
         {
             height: UM.Theme.getSize("setting_control").height;
             text: "X";
             font: UM.Theme.getFont("default");
             color: UM.Theme.getColor("x_axis");
             verticalAlignment: Text.AlignVCenter;
+            renderType: Text.NativeRendering
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
-        Text
+        Label
         {
             height: UM.Theme.getSize("setting_control").height;
             text: "Y";
             font: UM.Theme.getFont("default");
             color: UM.Theme.getColor("z_axis"); // This is intentional. The internal axis are switched.
             verticalAlignment: Text.AlignVCenter;
+            renderType: Text.NativeRendering
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
-        Text
+        Label
         {
             height: UM.Theme.getSize("setting_control").height;
             text: "Z";
             font: UM.Theme.getFont("default");
             color: UM.Theme.getColor("y_axis"); // This is intentional. The internal axis are switched.
             verticalAlignment: Text.AlignVCenter;
+            renderType: Text.NativeRendering
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
-
         TextField
         {
             id: widthTextField

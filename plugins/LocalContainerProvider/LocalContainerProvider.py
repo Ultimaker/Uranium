@@ -36,6 +36,9 @@ class LocalContainerProvider(ContainerProvider):
 
         self._is_read_only_cache = {}  # type: Dict[str, bool]
 
+    def getContainerFilePathById(self, container_id: str) -> Optional[str]:
+        return self._id_to_path.get(container_id)
+
     ##  Gets the IDs of all local containers.
     #
     #   \return A sequence of all container IDs.

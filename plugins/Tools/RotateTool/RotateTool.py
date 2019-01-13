@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Tool import Tool
@@ -23,6 +23,9 @@ from . import RotateToolHandle
 
 import math
 import time
+
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
 
 ##  Provides the tool to rotate meshes and groups
 #
@@ -210,7 +213,7 @@ class RotateTool(Tool):
     def resetRotation(self):
 
         for node in self._getSelectedObjectsWithoutSelectedAncestors():
-            node.setMirror(Vector(1,1,1))
+            node.setMirror(Vector(1, 1, 1))
 
         Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)
 
@@ -219,7 +222,7 @@ class RotateTool(Tool):
     #   Note: The LayFlat functionality is mostly used for 3d printing and should probably be moved into the Cura project
     def layFlat(self):
         self.operationStarted.emit(self)
-        self._progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False, title = "Object Rotation")
+        self._progress_message = Message(i18n_catalog.i18nc("@label", "Laying object flat on buildplate..."), lifetime = 0, dismissable = False, title = i18n_catalog.i18nc("@title", "Object Rotation"))
         self._progress_message.setProgress(0)
 
         self._iterations = 0
@@ -249,9 +252,10 @@ class RotateTool(Tool):
     #
     #   Note that the LayFlatOperation rate-limits these callbacks to prevent the UI from being flooded with property change notifications,
     #   \param iterations type(int) number of iterations performed since the last callback
-    def _layFlatProgress(self, iterations):
+    def _layFlatProgress(self, iterations: int):
         self._iterations += iterations
-        self._progress_message.setProgress(100 * self._iterations / self._total_iterations)
+        if self._progress_message:
+            self._progress_message.setProgress(100 * self._iterations / self._total_iterations)
 
     ##  Called when the LayFlatJob is done running all of its LayFlatOperations
     #
@@ -262,6 +266,7 @@ class RotateTool(Tool):
             self._progress_message = None
 
         self.operationStopped.emit(self)
+
 
 ##  A LayFlatJob bundles multiple LayFlatOperations for multiple selected objects
 #
