@@ -60,6 +60,14 @@ class TestPluginRegistry():
                             "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
                             }
 
+    def test_getPluginLocation(self, registry):
+        # Plugin is not loaded yet, so it should raise a KeyError
+        with pytest.raises(KeyError):
+            registry.getPluginPath("TestPlugin")
+
+        registry.loadPlugin("TestPlugin")
+        assert registry.getPluginPath("TestPlugin") == os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin")
+
     @pytest.mark.parametrize("plugin_data", valid_plugin_json_data)
     def test_valid_plugin_json(self, plugin_data, registry):
         registry._parsePluginInfo("beep", plugin_data, {})
