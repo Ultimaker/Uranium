@@ -69,11 +69,11 @@ class TestPluginRegistry():
         assert registry.getPluginPath("TestPlugin") == os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin")
 
     @pytest.mark.parametrize("plugin_data", valid_plugin_json_data)
-    def test_valid_plugin_json(self, plugin_data, registry):
+    def test_validPluginJson(self, plugin_data, registry):
         registry._parsePluginInfo("beep", plugin_data, {})
 
     @pytest.mark.parametrize("plugin_data", invalid_plugin_json_data)
-    def test_invalid_plugin_json(self, plugin_data, registry):
+    def test_invalidPluginJson(self, plugin_data, registry):
         with pytest.raises(InvalidMetaDataError):
             registry._parsePluginInfo("beep", plugin_data, {})
 
