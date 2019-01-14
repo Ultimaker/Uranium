@@ -353,7 +353,7 @@ class PluginRegistry(QObject):
     #   \param meta_data \type{dict} The meta data that needs to be matched.
     #   \sa loadPlugin
     #   NOTE: This is the method which kicks everything off at app launch.
-    def loadPlugins(self, metadata: Optional[dict] = None) -> None:
+    def loadPlugins(self, metadata: Optional[Dict[str, Any]] = None) -> None:
         # Get a list of all installed plugins:
         plugin_ids = self._findInstalledPlugins()
         for plugin_id in plugin_ids:
