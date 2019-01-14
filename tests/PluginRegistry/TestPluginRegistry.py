@@ -6,8 +6,22 @@ import os
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
-from UM.PluginError import PluginNotFoundError
+from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.Version import Version
+
+
+valid_plugin_json_data = [
+    "{\"name\": \"TestPlugin1\", \"api\": 5, \"version\": \"1.0.0\"}",
+    "{\"name\": \"TestPlugin2\", \"supported_sdk_versions\": [5], \"version\": \"1.0.0\"}",
+    "{\"name\": \"TestPlugin3\", \"api\": 5, \"supported_sdk_versions\": [5], \"version\": \"1.0.0\"}",
+    "{\"name\": \"TestPlugin3\", \"supported_sdk_versions\": [5, 6, \"2\"], \"version\": \"1.0.0\"}"
+]
+
+invalid_plugin_json_data = [
+    "",  # Invalid JSON
+    "{\"name\": \"TestPlugin1\", \"api\": 5}",  # No version
+    "{\"name\": \"TestPlugin2\", \"version\": \"1.0.0\"}"  # No API or supported_sdk_version set.
+]
 
 
 class FixtureRegistry(PluginRegistry):
@@ -45,6 +59,15 @@ class TestPluginRegistry():
                                        "version": "1.0.0"},
                             "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
                             }
+
+    @pytest.mark.parametrize("plugin_data", valid_plugin_json_data)
+    def test_valid_plugin_json(self, plugin_data, registry):
+        registry._parsePluginInfo("beep", plugin_data, {})
+
+    @pytest.mark.parametrize("plugin_data", invalid_plugin_json_data)
+    def test_invalid_plugin_json(self, plugin_data, registry):
+        with pytest.raises(InvalidMetaDataError):
+            registry._parsePluginInfo("beep", plugin_data, {})
 
     def test_load(self, registry):
         registry.loadPlugin("TestPlugin")

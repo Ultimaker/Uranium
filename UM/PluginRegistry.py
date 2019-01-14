@@ -595,9 +595,9 @@ class PluginRegistry(QObject):
         return None
 
     #   Load the plugin data from the stream and in-place update the metadata.
-    def _parsePluginInfo(self, plugin_id, file_stream, meta_data):
+    def _parsePluginInfo(self, plugin_id, file_data, meta_data):
         try:
-            meta_data["plugin"] = json.loads(file_stream.read())
+            meta_data["plugin"] = json.loads(file_data)
         except json.decoder.JSONDecodeError:
             Logger.logException("e", "Failed to parse plugin.json for plugin %s", plugin_id)
             raise InvalidMetaDataError(plugin_id)
@@ -654,7 +654,7 @@ class PluginRegistry(QObject):
             metadata_file = os.path.join(location, "plugin.json")
             try:
                 with open(metadata_file, "r", encoding = "utf-8") as file_stream:
-                    self._parsePluginInfo(plugin_id, file_stream, meta_data)
+                    self._parsePluginInfo(plugin_id, file_stream.read(), meta_data)
 
             except FileNotFoundError:
                 Logger.logException("e", "Unable to find the required plugin.json file for plugin %s", plugin_id)
