@@ -40,7 +40,8 @@ class TestPluginRegistry():
         metadata = registry.getMetaData("TestPlugin")
         assert metadata == {"id": "TestPlugin",
                             "plugin": {"name": "TestPlugin",
-                                       "api": Version(5),
+                                       "api": 5,
+                                       "supported_sdk_versions": [Version(5)],
                                        "version": "1.0.0"},
                             "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
                             }
