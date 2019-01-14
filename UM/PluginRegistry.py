@@ -319,14 +319,6 @@ class PluginRegistry(QObject):
 
         return False
 
-    #   Check by ID if a plugin is available:
-    def isAvailablePlugin(self, plugin_id: str) -> bool:
-        return plugin_id in self._plugins_available
-
-    #   Check by ID if a plugin is installed:
-    def isInstalledPlugin(self, plugin_id: str) -> bool:
-        return plugin_id in self._plugins_installed
-
     def isBundledPlugin(self, plugin_id: str) -> bool:
         if plugin_id in self._bundled_plugin_cache:
             return self._bundled_plugin_cache[plugin_id]
