@@ -77,6 +77,27 @@ class TestPluginRegistry():
         with pytest.raises(InvalidMetaDataError):
             registry._parsePluginInfo("beep", plugin_data, {})
 
+    def test_getInstalledPlugins(self, registry):
+        assert registry.getInstalledPlugins() == []  # Should be empty by default
+        registry.loadPlugins()
+        # All the plugins in this test should be marked as installed.
+        assert registry.getInstalledPlugins() == ['OldTestPlugin', 'PluginNoVersionNumber', 'EmptyPlugin', 'TestPlugin', 'TestPlugin2']
+
+    def test_isActivePlugin(self, registry):
+        # The plugins shouldn't be active yet (because they aren't loaded)
+        assert not registry.isActivePlugin("TestPlugin")
+        assert not registry.isActivePlugin("PluginNoVersionNumber")
+
+        registry.loadPlugins()  # Load them up
+
+        assert registry.isActivePlugin("TestPlugin")
+        # Doesn't have a version number, so should not be active.
+        assert not registry.isActivePlugin("PluginNoVersionNumber")
+
+        # Should no longer be active after we disable it.
+        registry.disablePlugin("TestPlugin")
+        assert not registry.isActivePlugin("TestPlugin")
+
     def test_load(self, registry):
         registry.loadPlugin("TestPlugin")
 

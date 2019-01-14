@@ -314,7 +314,7 @@ class PluginRegistry(QObject):
 
     #   Check by ID if a plugin is active (enabled):
     def isActivePlugin(self, plugin_id: str) -> bool:
-        if plugin_id not in self._disabled_plugins and plugin_id not in self._outdated_plugins:
+        if plugin_id not in self._disabled_plugins and plugin_id not in self._outdated_plugins and plugin_id in self._all_plugins:
             return True
 
         return False
