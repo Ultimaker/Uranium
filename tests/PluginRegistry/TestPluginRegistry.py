@@ -95,6 +95,9 @@ class TestPluginRegistry():
         with pytest.raises(PluginNotFoundError):
             registry.loadPlugin("NoSuchPlugin")
 
+        with pytest.raises(PluginNotFoundError):
+            registry.getPluginObject("ThisPluginDoesntExist!")
+
     def test_disabledPlugin(self, registry):
         # Disabled plugin should not be loaded
         registry._disabled_plugins = ["TestPlugin"]
