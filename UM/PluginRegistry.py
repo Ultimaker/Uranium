@@ -262,7 +262,7 @@ class PluginRegistry(QObject):
         for plugin_id in self._plugins_to_install:
             if plugin_id not in plugins:
                 plugins.append(plugin_id)
-        return plugins
+        return sorted(plugins)
 
     #   Get the metadata for a certain plugin:
     #   NOTE: InvalidMetaDataError is raised when no metadata can be found or
@@ -314,18 +314,10 @@ class PluginRegistry(QObject):
 
     #   Check by ID if a plugin is active (enabled):
     def isActivePlugin(self, plugin_id: str) -> bool:
-        if plugin_id not in self._disabled_plugins and plugin_id not in self._outdated_plugins:
+        if plugin_id not in self._disabled_plugins and plugin_id not in self._outdated_plugins and plugin_id in self._all_plugins:
             return True
 
         return False
-
-    #   Check by ID if a plugin is available:
-    def isAvailablePlugin(self, plugin_id: str) -> bool:
-        return plugin_id in self._plugins_available
-
-    #   Check by ID if a plugin is installed:
-    def isInstalledPlugin(self, plugin_id: str) -> bool:
-        return plugin_id in self._plugins_installed
 
     def isBundledPlugin(self, plugin_id: str) -> bool:
         if plugin_id in self._bundled_plugin_cache:
@@ -353,7 +345,7 @@ class PluginRegistry(QObject):
     #   \param meta_data \type{dict} The meta data that needs to be matched.
     #   \sa loadPlugin
     #   NOTE: This is the method which kicks everything off at app launch.
-    def loadPlugins(self, metadata: Optional[dict] = None) -> None:
+    def loadPlugins(self, metadata: Optional[Dict[str, Any]] = None) -> None:
         # Get a list of all installed plugins:
         plugin_ids = self._findInstalledPlugins()
         for plugin_id in plugin_ids:
@@ -594,6 +586,41 @@ class PluginRegistry(QObject):
 
         return None
 
+    #   Load the plugin data from the stream and in-place update the metadata.
+    def _parsePluginInfo(self, plugin_id, file_data, meta_data):
+        try:
+            meta_data["plugin"] = json.loads(file_data)
+        except json.decoder.JSONDecodeError:
+            Logger.logException("e", "Failed to parse plugin.json for plugin %s", plugin_id)
+            raise InvalidMetaDataError(plugin_id)
+
+        # Check if metadata is valid;
+        if "version" not in meta_data["plugin"]:
+            Logger.log("e", "Version must be set!")
+            raise InvalidMetaDataError(plugin_id)
+
+        # Check if the plugin states what API version it needs.
+        if "api" not in meta_data["plugin"] and "supported_sdk_versions" not in meta_data["plugin"]:
+            Logger.log("e", "The API or the supported_sdk_versions must be set!")
+            raise InvalidMetaDataError(plugin_id)
+        else:
+            # Store the api_version as a Version object.
+            all_supported_sdk_versions = []  # type: List[Version]
+            if "supported_sdk_versions" in meta_data["plugin"]:
+                all_supported_sdk_versions += [Version(supported_version) for supported_version in
+                                               meta_data["plugin"]["supported_sdk_versions"]]
+            if "api" in meta_data["plugin"]:
+                all_supported_sdk_versions += [Version(meta_data["plugin"]["api"])]
+            meta_data["plugin"]["supported_sdk_versions"] = all_supported_sdk_versions
+
+        if "i18n-catalog" in meta_data["plugin"]:
+            # A catalog was set, try to translate a few strings
+            i18n_catalog = i18nCatalog(meta_data["plugin"]["i18n-catalog"])
+            if "name" in meta_data["plugin"]:
+                meta_data["plugin"]["name"] = i18n_catalog.i18n(meta_data["plugin"]["name"])
+            if "description" in meta_data["plugin"]:
+                meta_data["plugin"]["description"] = i18n_catalog.i18n(meta_data["plugin"]["description"])
+
     ##  private:
     #   Populate the list of metadata
     #   \param plugin_id \type{string}
@@ -620,39 +647,8 @@ class PluginRegistry(QObject):
 
             metadata_file = os.path.join(location, "plugin.json")
             try:
-                with open(metadata_file, "r", encoding = "utf-8") as f:
-                    try:
-                        meta_data["plugin"] = json.loads(f.read())
-                    except json.decoder.JSONDecodeError:
-                        Logger.logException("e", "Failed to parse plugin.json for plugin %s", plugin_id)
-                        raise InvalidMetaDataError(plugin_id)
-
-                    # Check if metadata is valid;
-                    if "version" not in meta_data["plugin"]:
-                        Logger.log("e", "Version must be set!")
-                        raise InvalidMetaDataError(plugin_id)
-
-                    # Check if the plugin states what API version it needs.
-                    if "api" not in meta_data["plugin"] and "supported_sdk_versions" not in meta_data["plugin"]:
-                        Logger.log("e", "The API or the supported_sdk_versions must be set!")
-                        raise InvalidMetaDataError(plugin_id)
-                    else:
-                        # Store the api_version as a Version object.
-                        all_supported_sdk_versions = []  # type: List[Version]
-                        if "supported_sdk_versions" in meta_data["plugin"]:
-                            all_supported_sdk_versions += [Version(supported_version) for supported_version in meta_data["plugin"]["supported_sdk_versions"]]
-                        if "api" in meta_data["plugin"]:
-                            all_supported_sdk_versions += [Version(meta_data["plugin"]["api"])]
-                        meta_data["plugin"]["supported_sdk_versions"] = all_supported_sdk_versions
-
-                    if "i18n-catalog" in meta_data["plugin"]:
-                        # A catalog was set, try to translate a few strings
-                        i18n_catalog = i18nCatalog(meta_data["plugin"]["i18n-catalog"])
-                        if "name" in meta_data["plugin"]:
-                             meta_data["plugin"]["name"] = i18n_catalog.i18n(meta_data["plugin"]["name"])
-                        if "description" in meta_data["plugin"]:
-                            meta_data["plugin"]["description"] = i18n_catalog.i18n(meta_data["plugin"]["description"])
-
+                with open(metadata_file, "r", encoding = "utf-8") as file_stream:
+                    self._parsePluginInfo(plugin_id, file_stream.read(), meta_data)
             except FileNotFoundError:
                 Logger.logException("e", "Unable to find the required plugin.json file for plugin %s", plugin_id)
                 raise InvalidMetaDataError(plugin_id)
