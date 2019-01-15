@@ -638,10 +638,12 @@ class PluginRegistry(QObject):
                         raise InvalidMetaDataError(plugin_id)
                     else:
                         # Store the api_version as a Version object.
+                        all_supported_sdk_versions = []
                         if "supported_sdk_versions" in meta_data["plugin"]:
-                            meta_data["plugin"]["supported_sdk_versions"] = [Version(supported_version) for supported_version in meta_data["plugin"]["supported_sdk_versions"]]
-                        else:
-                            meta_data["plugin"]["supported_sdk_versions"] = [Version(meta_data["plugin"]["api"])]
+                            all_supported_sdk_versions += [Version(supported_version) for supported_version in meta_data["plugin"]["supported_sdk_versions"]]
+                        if "api" in meta_data["plugin"]:
+                            all_supported_sdk_versions += [Version(meta_data["plugin"]["api"])]
+                        meta_data["plugin"]["supported_sdk_versions"] = all_supported_sdk_versions
 
                     if "i18n-catalog" in meta_data["plugin"]:
                         # A catalog was set, try to translate a few strings
