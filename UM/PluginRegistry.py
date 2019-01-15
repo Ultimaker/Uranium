@@ -373,7 +373,7 @@ class PluginRegistry(QObject):
                     pass
 
     # Checks if the given plugin API version is compatible with the current version.
-    def _isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
+    def isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
         return plugin_api_version.getMajor() == self._api_version.getMajor() \
                and plugin_api_version.getMinor() <= self._api_version.getMinor()
 
@@ -407,7 +407,7 @@ class PluginRegistry(QObject):
         supported_sdk_versions = self._metadata[plugin_id].get("plugin", {}).get("supported_sdk_versions", [Version("0")])
         is_plugin_supported = False
         for supported_sdk_version in supported_sdk_versions:
-            is_plugin_supported |= self._isPluginApiVersionCompatible(supported_sdk_version)
+            is_plugin_supported |= self.isPluginApiVersionCompatible(supported_sdk_version)
             if is_plugin_supported:
                 break
 
