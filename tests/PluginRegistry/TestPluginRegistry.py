@@ -81,7 +81,7 @@ class TestPluginRegistry():
         assert registry.getInstalledPlugins() == []  # Should be empty by default
         registry.loadPlugins()
         # All the plugins in this test should be marked as installed.
-        assert registry.getInstalledPlugins() == ['OldTestPlugin', 'PluginNoVersionNumber', 'EmptyPlugin', 'TestPlugin', 'TestPlugin2']
+        assert registry.getInstalledPlugins() == sorted(['OldTestPlugin', 'PluginNoVersionNumber', 'EmptyPlugin', 'TestPlugin', 'TestPlugin2'])
 
     def test_isActivePlugin(self, registry):
         # The plugins shouldn't be active yet (because they aren't loaded)

@@ -262,7 +262,7 @@ class PluginRegistry(QObject):
         for plugin_id in self._plugins_to_install:
             if plugin_id not in plugins:
                 plugins.append(plugin_id)
-        return plugins
+        return sorted(plugins)
 
     #   Get the metadata for a certain plugin:
     #   NOTE: InvalidMetaDataError is raised when no metadata can be found or
