@@ -82,6 +82,11 @@ class Message(QObject):
             self._application.showMessageSignal.emit(self)
             self.inactivityTimerStart.emit()
 
+    ## Returns a boolean indicating whether the message is currently visible.
+    @property
+    def visible(self) -> bool:
+        return self._visible
+
     ##  Can the message be closed by user?
     def isDismissable(self) -> bool:
         return self._dismissable
