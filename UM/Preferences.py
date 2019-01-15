@@ -218,8 +218,8 @@ class Preferences:
                 result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version, [serialized], [""])
                 if result is not None:
                     serialized = result.files_data[0]
-        except Exception:
-            Logger.logException("d", "An exception occured while trying to update the preferences")
+        except:
+            Logger.logException("d", "An exception occurred while trying to update the preferences.")
         return serialized
 
     ##  This method is still used by some external plugins and it needs to be kept as deprecated

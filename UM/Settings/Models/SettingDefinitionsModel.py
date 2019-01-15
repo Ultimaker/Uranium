@@ -16,6 +16,7 @@ from UM.Application import Application
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.SettingDefinition import SettingDefinition
 
+
 ##  Model that provides a flattened list of the tree of SettingDefinition objects in a DefinitionContainer
 #
 #   This model exposes the tree of SettingDefinition objects in a DefinitionContainer as a list of settings.
@@ -76,7 +77,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._destroyed = True
 
     @pyqtSlot(bool)
-    def setDestroyed(self, value):
+    def setDestroyed(self, value: bool) -> None:
         self._destroyed = value
 
     def setShowAncestors(self, show_ancestors: bool) -> None:
@@ -87,11 +88,11 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     @pyqtProperty(bool, fset=setShowAncestors, notify=showAncestorsChanged)
     # Should we still show ancestors, even if filter says otherwise?
-    def showAncestors(self):
+    def showAncestors(self) -> bool:
         return self._show_ancestors
 
     ##  Set the containerId property.
-    def setContainerId(self, container_id):
+    def setContainerId(self, container_id: str) -> None:
         if container_id != self._container_id:
             self._container_id = container_id
 
@@ -106,13 +107,14 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Emitted whenever the containerId property changes.
     containerIdChanged = pyqtSignal()
+
     ##  The ID of the DefinitionContainer object this model exposes.
     @pyqtProperty(str, fset = setContainerId, notify = containerIdChanged)
-    def containerId(self):
+    def containerId(self) -> str:
         return self._container_id
 
     ##  Set the rootKey property.
-    def setRootKey(self, key):
+    def setRootKey(self, key: str) -> None:
         if key != self._root_key:
             self._root_key = key
 
@@ -129,6 +131,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Emitted when the rootKey property changes.
     rootKeyChanged = pyqtSignal()
+
     ##  The SettingDefinition to use as root for the list.
     @pyqtProperty(str, fset = setRootKey, notify = rootKeyChanged)
     def rootKey(self):
@@ -146,7 +149,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Whether or not the model should show all definitions regardless of visibility.
     @pyqtProperty(bool, fset = setShowAll, notify = showAllChanged)
-    def showAll(self):
+    def showAll(self) -> bool:
         return self._show_all
 
     visibilityChanged = pyqtSignal()
@@ -211,12 +214,12 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  This property indicates which settings should never be visibile.
     @pyqtProperty("QStringList", fset = setExpanded, notify = expandedChanged)
-    def expanded(self):
+    def expanded(self) -> List[str]:
         return list(self._expanded)
 
     visibleCountChanged = pyqtSignal()
     @pyqtProperty(int, notify = visibleCountChanged)
-    def visibleCount(self):
+    def visibleCount(self) -> int:
         count = 0
         for index in self._row_index_list:
             definition = self._definition_list[index]
@@ -226,7 +229,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         return count
 
     @pyqtProperty(int, notify = visibleCountChanged)
-    def categoryCount(self):
+    def categoryCount(self) -> int:
         count = 0
         for index in self._row_index_list:
             definition = self._definition_list[index]
@@ -259,7 +262,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Show the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
-    def expandRecursive(self, key):
+    def expandRecursive(self, key: str) -> None:
         if not self._container:
             return
 
@@ -274,7 +277,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Hide the children of a specified SettingDefinition.
     @pyqtSlot(str)
-    def collapse(self, key):
+    def collapse(self, key: str) -> None:
         if not self._container:
             return
 
@@ -296,16 +299,16 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Show a single SettingDefinition.
     @pyqtSlot(str)
-    def show(self, key):
+    def show(self, key: str) -> None:
         self.setVisible(key, True)
 
     ##  Hide a single SettingDefinition.
     @pyqtSlot(str)
-    def hide(self, key):
+    def hide(self, key: str) -> None:
         self.setVisible(key, False)
 
     @pyqtSlot(bool)
-    def setAllExpandedVisible(self, visible):
+    def setAllExpandedVisible(self, visible: bool) -> None:
         new_visible = set()
 
         for index in self._row_index_list:
@@ -319,7 +322,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             self._visibility_handler.setVisible(self._visible - new_visible)
 
     @pyqtSlot(bool)
-    def setAllVisible(self, visible):
+    def setAllVisible(self, visible: bool) -> None:
         new_visible = set()
 
         for definition in self._definition_list:
@@ -333,7 +336,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Set a single SettingDefinition's visible state
     @pyqtSlot(str, bool)
-    def setVisible(self, key, visible):
+    def setVisible(self, key: str, visible: bool) -> None:
         if key in self._visible and visible:
             # Ignore already visible settings that need to be made visible.
             return
@@ -357,11 +360,11 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Get a single SettingDefinition's visible state
     @pyqtSlot(str, result = bool)
-    def getVisible(self, key):
+    def getVisible(self, key: str) -> bool:
         return key in self._visible
 
     @pyqtSlot(str, result = int)
-    def getIndex(self, key):
+    def getIndex(self, key: str) -> int:
         if not self._container:
             return -1
         definitions = self._container.findDefinitions(key = key)
@@ -507,7 +510,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     def roleNames(self):
         return self._role_names
 
-    def _onVisibilityChanged(self):
+    def _onVisibilityChanged(self) -> None:
         self._visible = self._visibility_handler.getVisible()
 
         for row in range(len(self._row_index_list)):
@@ -516,21 +519,21 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._updateVisibleRows()
 
     # Schedules to call _updateVisibleRows() later.
-    def _scheduleUpdateVisibleRows(self):
+    def _scheduleUpdateVisibleRows(self) -> None:
         if not self._update_visible_row_scheduled:
             self._update_visible_row_scheduled = True
             Application.getInstance().callLater(self._updateVisibleRows)
 
     ##  Force updating the model.
     @pyqtSlot()
-    def forceUpdate(self):
+    def forceUpdate(self) -> None:
         self._update()
 
     # Update the internal list of definitions and the visibility mapping.
     #
     # Note that this triggers a model reset and should only be called when the
     # underlying data needs to be updated. Otherwise call _updateVisibleRows.
-    def _update(self):
+    def _update(self) -> None:
         if not self._container:
             return
 
@@ -563,7 +566,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     #
     # This will compute the difference between the old state and the new state and
     # insert/remove rows as appropriate.
-    def _updateVisibleRows(self):
+    def _updateVisibleRows(self) -> None:
         # This function is scheduled on the Qt event loop. By the time this is called, this object can already been
         # destroyed because the owner QML widget was destroyed or so. We cannot cancel a call that has been scheduled,
         # so in this case, we should do nothing if this object has already been destroyed.

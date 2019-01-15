@@ -365,7 +365,7 @@ class PluginRegistry(QObject):
                     pass
 
     # Checks if the given plugin API version is compatible with the current version.
-    def _isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
+    def isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
         return plugin_api_version.getMajor() == self._api_version.getMajor() \
                and plugin_api_version.getMinor() <= self._api_version.getMinor()
 
@@ -399,7 +399,7 @@ class PluginRegistry(QObject):
         supported_sdk_versions = self._metadata[plugin_id].get("plugin", {}).get("supported_sdk_versions", [Version("0")])
         is_plugin_supported = False
         for supported_sdk_version in supported_sdk_versions:
-            is_plugin_supported |= self._isPluginApiVersionCompatible(supported_sdk_version)
+            is_plugin_supported |= self.isPluginApiVersionCompatible(supported_sdk_version)
             if is_plugin_supported:
                 break
 
@@ -605,11 +605,13 @@ class PluginRegistry(QObject):
             raise InvalidMetaDataError(plugin_id)
         else:
             # Store the api_version as a Version object.
+            all_supported_sdk_versions = []  # type: List[Version]
             if "supported_sdk_versions" in meta_data["plugin"]:
-                meta_data["plugin"]["supported_sdk_versions"] = [Version(supported_version) for supported_version in
-                                                                 meta_data["plugin"]["supported_sdk_versions"]]
-            else:
-                meta_data["plugin"]["supported_sdk_versions"] = [Version(meta_data["plugin"]["api"])]
+                all_supported_sdk_versions += [Version(supported_version) for supported_version in
+                                               meta_data["plugin"]["supported_sdk_versions"]]
+            if "api" in meta_data["plugin"]:
+                all_supported_sdk_versions += [Version(meta_data["plugin"]["api"])]
+            meta_data["plugin"]["supported_sdk_versions"] = all_supported_sdk_versions
 
         if "i18n-catalog" in meta_data["plugin"]:
             # A catalog was set, try to translate a few strings
@@ -647,7 +649,6 @@ class PluginRegistry(QObject):
             try:
                 with open(metadata_file, "r", encoding = "utf-8") as file_stream:
                     self._parsePluginInfo(plugin_id, file_stream.read(), meta_data)
-
             except FileNotFoundError:
                 Logger.logException("e", "Unable to find the required plugin.json file for plugin %s", plugin_id)
                 raise InvalidMetaDataError(plugin_id)

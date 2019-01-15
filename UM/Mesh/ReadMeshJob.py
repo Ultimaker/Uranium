@@ -12,6 +12,7 @@ import math
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
+
 ##  A Job subclass that performs mesh loading.
 #
 #   The result of this Job is a MeshData object.
