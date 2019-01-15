@@ -373,7 +373,7 @@ class PluginRegistry(QObject):
                     pass
 
     # Checks if the given plugin API version is compatible with the current version.
-    def _isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
+    def isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
         return plugin_api_version.getMajor() == self._api_version.getMajor() \
                and plugin_api_version.getMinor() <= self._api_version.getMinor()
 
@@ -404,10 +404,16 @@ class PluginRegistry(QObject):
             return
 
         # If API version is incompatible, don't load it.
-        plugin_api_version = self._metadata[plugin_id].get("plugin", {}).get("api", Version("0"))
-        if not self._isPluginApiVersionCompatible(plugin_api_version):
-            Logger.log("w", "Plugin [%s] with API version [%s] is incompatible with the current API version [%s].",
-                       plugin_id, plugin_api_version, self._api_version)
+        supported_sdk_versions = self._metadata[plugin_id].get("plugin", {}).get("supported_sdk_versions", [Version("0")])
+        is_plugin_supported = False
+        for supported_sdk_version in supported_sdk_versions:
+            is_plugin_supported |= self.isPluginApiVersionCompatible(supported_sdk_version)
+            if is_plugin_supported:
+                break
+
+        if not is_plugin_supported:
+            Logger.log("w", "Plugin [%s] with supported sdk versions [%s] is incompatible with the current sdk version [%s].",
+                       plugin_id, [str(version) for version in supported_sdk_versions], self._api_version)
             self._outdated_plugins.append(plugin_id)
             return
 
@@ -627,12 +633,17 @@ class PluginRegistry(QObject):
                         raise InvalidMetaDataError(plugin_id)
 
                     # Check if the plugin states what API version it needs.
-                    if "api" not in meta_data["plugin"]:
-                        Logger.log("e", "api must be set!")
+                    if "api" not in meta_data["plugin"] and "supported_sdk_versions" not in meta_data["plugin"]:
+                        Logger.log("e", "The API or the supported_sdk_versions must be set!")
                         raise InvalidMetaDataError(plugin_id)
                     else:
                         # Store the api_version as a Version object.
-                        meta_data["plugin"]["api"] = Version(meta_data["plugin"]["api"])
+                        all_supported_sdk_versions = []  # type: List[Version]
+                        if "supported_sdk_versions" in meta_data["plugin"]:
+                            all_supported_sdk_versions += [Version(supported_version) for supported_version in meta_data["plugin"]["supported_sdk_versions"]]
+                        if "api" in meta_data["plugin"]:
+                            all_supported_sdk_versions += [Version(meta_data["plugin"]["api"])]
+                        meta_data["plugin"]["supported_sdk_versions"] = all_supported_sdk_versions
 
                     if "i18n-catalog" in meta_data["plugin"]:
                         # A catalog was set, try to translate a few strings
