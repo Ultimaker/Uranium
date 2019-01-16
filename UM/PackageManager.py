@@ -401,6 +401,7 @@ class PackageManager(QObject):
             dst_dir_path = os.path.join(installation_root_dir, package_id)
 
             if not os.path.exists(src_dir_path):
+                Logger.log("w", "The path %s does not exist, so not installing the files", src_dir_path)
                 continue
             self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
 
