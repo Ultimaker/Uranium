@@ -9,4 +9,4 @@ class WorkspaceWriter(FileWriter):
         super().__init__()
 
     def write(self, stream, node):
-        pass
+        raise NotImplementedError("WorkspaceWriter plugin was not correctly implemented, no write was specified")
