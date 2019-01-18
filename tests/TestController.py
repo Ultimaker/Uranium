@@ -139,6 +139,7 @@ def test_setActiveStage(application):
     stage_1.onStageDeselected.assert_called_with()
     assert controller.getActiveStage() == stage_2
 
+
 def test_getStage(application):
     controller = Controller(application)
     stage_1 = Stage()
@@ -183,7 +184,7 @@ def test_addTools(application):
 
     test_tool_1 = Tool()
     test_tool_1.setPluginId("test_tool_1")
-
+    test_tool_1.event = MagicMock()
     test_tool_2 = Tool()
     test_tool_2.setPluginId("test_tool_2")
 
@@ -206,6 +207,8 @@ def test_addTools(application):
     controller.setActiveTool(test_tool_1)
     assert controller.getActiveTool() == test_tool_1
     assert controller.activeToolChanged.emit.call_count == 1
+    # Check if the tool got notified that it's not active.
+    assert test_tool_1.event.call_args_list[0][0][0].type == Event.ToolActivateEvent
 
     # Set active tool by ID, but the same as is already active.
     controller.setActiveTool("test_tool_1")
@@ -216,6 +219,8 @@ def test_addTools(application):
     controller.setActiveTool("test_tool_2")
     assert controller.getActiveTool() == test_tool_2
     assert controller.activeToolChanged.emit.call_count == 2
+    # Check if the tool got notified that it's no longer active.
+    assert test_tool_1.event.call_args_list[1][0][0].type == Event.ToolDeactivateEvent
 
     assert controller.getTool("ZOMG") is None
     assert controller.getTool("test_tool_1") == test_tool_1
