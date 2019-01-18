@@ -3,7 +3,6 @@
 
 import time
 
-from UM.Benchmark import Benchmark
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent, KeyEvent
 
@@ -100,7 +99,6 @@ class TranslateTool(Tool):
     #
     #   \param x type(float) location in mm
     def setX(self, x):
-        Benchmark.start("Moving object in X from {start} to {end}".format(start = self.getX(), end = x))
         parsed_x = self._parseInt(x)
         bounding_box = Selection.getBoundingBox()
 
@@ -118,7 +116,6 @@ class TranslateTool(Tool):
     #
     #   \param y type(float) location in mm
     def setY(self, y):
-        Benchmark.start("Moving object in Y from {start} to {end}".format(start = self.getY(), end = y))
         parsed_y = self._parseInt(y)
         bounding_box = Selection.getBoundingBox()
 
@@ -139,7 +136,6 @@ class TranslateTool(Tool):
     #
     #   \param z type(float) location in mm
     def setZ(self, z):
-        Benchmark.start("Moving object in Z from {start} to {end}".format(start = self.getZ(), end = z))
         parsed_z = self._parseInt(z)
         bounding_box = Selection.getBoundingBox()
 
@@ -161,7 +157,6 @@ class TranslateTool(Tool):
     def setEnabledAxis(self, axis):
         self._enabled_axis = axis
         self._handle.setEnabledAxis(axis)
-
 
     ##  Set lock setting to the object. This setting will be used to prevent model movement on the build plate
     #
