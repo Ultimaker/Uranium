@@ -16,10 +16,9 @@ if TYPE_CHECKING:
 ##  Central class for reading and writing workspaces.
 #   This class is created by Application and handles reading and writing workspace files.
 class WorkspaceFileHandler(FileHandler):
-
     def __init__(self, application: "QtApplication", writer_type: str = "workspace_writer", reader_type: str = "workspace_reader", parent: QObject = None) -> None:
         super().__init__(application, writer_type, reader_type, parent)
-        self.workspace_reader = None #type: Optional[FileReader]
+        self.workspace_reader = None  # type: Optional[FileReader]
 
     def readerRead(self, reader: FileReader, file_name: str, **kwargs) -> Optional[str]:
         self.workspace_reader = reader

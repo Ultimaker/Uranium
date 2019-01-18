@@ -106,11 +106,14 @@ class ToolHandle(SceneNode.SceneNode):
             return
 
         if axis:
-            self._shader.setUniformValue("u_activeColor", self._axis_color_map[axis])
+            self._shader.setUniformValue("u_activeColor", self._axis_color_map.get(axis, Color()))
         else:
             self._shader.setUniformValue("u_activeColor", self._disabled_axis_color)
         self._active_axis = axis
         self._scene.sceneChanged.emit(self)
+
+    def getActiveAxis(self):
+        return self._active_axis
 
     def isAxis(self, value):
         return value in self._axis_color_map
