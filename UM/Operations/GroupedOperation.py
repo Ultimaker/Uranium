@@ -3,6 +3,7 @@
 
 from . import Operation
 
+
 ##  An operation that groups several other operations together.
 #
 #   The intent of this operation is to hide an underlying chain of operations
@@ -16,7 +17,10 @@ class GroupedOperation(Operation.Operation):
     def __init__(self):
         super().__init__()
         self._children = []
-        self._finalised = False #Indicates if this operation is ever used. After that, it may no longer be modified.
+        self._finalised = False  # Indicates if this operation is ever used. After that, it may no longer be modified.
+
+    def getNumChildrenOperations(self) -> int:
+        return len(self._children)
 
     ##  Adds an operation to this group.
     #
@@ -59,7 +63,7 @@ class GroupedOperation(Operation.Operation):
     def mergeWith(self, other):
         if type(other) is not GroupedOperation:
             return False
-        if len(other._children) != len(self._children): #Must be operations on the same number of children.
+        if len(other._children) != len(self._children):  # Must be operations on the same number of children.
             return False
 
         op = GroupedOperation()
