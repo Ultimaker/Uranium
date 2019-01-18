@@ -32,6 +32,7 @@ try:
 except ImportError:
     from _dummy_thread import get_ident
 
+
 def recursive_repr(func):
     """Decorator to prevent infinite repr recursion."""
     repr_running = set()
