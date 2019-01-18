@@ -53,3 +53,18 @@ def test_check_version_smaller_2(first_version, second_version):
     # Just to be on the really safe side
     assert first_version != second_version
     assert not first_version > second_version
+
+
+def test_versionPostfix():
+    version = Version("1.2.3-alpha.4")
+    assert version.getPostfixType() == "alpha"
+    assert version.getPostfixVersion() == 4
+    assert version.hasPostFix()
+    assert not Version("").hasPostFix()
+
+    assert version <= Version("1.2.3-alpha.5")
+    assert version < Version("1.2.3-alpha.5")
+
+def test_versionWeirdCompares():
+    version = Version("1.2.3-alpha.4")
+    assert not version == 12
