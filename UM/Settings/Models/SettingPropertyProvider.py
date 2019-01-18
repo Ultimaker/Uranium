@@ -51,6 +51,9 @@ class SettingPropertyProvider(QObject):
         self.storeIndexChanged.connect(self._storeIndexChanged)
 
     def setContainerStack(self, stack: Optional[ContainerStack]) -> None:
+        if self._stack == stack:
+            return  # Nothing to do, attempting to set stack to the same value.
+
         if self._stack:
             self._stack.propertiesChanged.disconnect(self._onPropertiesChanged)
             self._stack.containersChanged.disconnect(self._containersChanged)
@@ -82,6 +85,7 @@ class SettingPropertyProvider(QObject):
 
     ##  Emitted when the containerStackId property changes.
     containerStackIdChanged = pyqtSignal()
+
     ##  The ID of the container stack we should query for property values.
     @pyqtProperty(str, fset = setContainerStackId, notify = containerStackIdChanged)
     def containerStackId(self) -> str:
@@ -308,6 +312,7 @@ class SettingPropertyProvider(QObject):
                 continue
 
             has_values_changed = True
+
             self._property_map.insert(property_name, self._getPropertyValue(property_name))
 
         self._updateStackLevels()
