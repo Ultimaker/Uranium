@@ -28,8 +28,8 @@ from UM.Settings.Validator import Validator
 #   This class provides the property values through QObject dynamic properties so that they
 #   are available from QML.
 class SettingPropertyProvider(QObject):
-    def __init__(self, parent = None, *args, **kwargs) -> None:
-        super().__init__(parent = parent, *args, **kwargs)
+    def __init__(self, parent = None) -> None:
+        super().__init__(parent = parent)
 
         self._property_map = QQmlPropertyMap(self)
 
