@@ -10,9 +10,11 @@ from UM.JobQueue import JobQueue
 import time
 import threading
 
+
 class ShortTestJob(Job):
     def run(self):
         self.setResult("TestJob")
+
 
 class LongTestJob(Job):
     def run(self):
@@ -24,7 +26,8 @@ def job_queue():
     JobQueue._JobQueue__instance = None
     return JobQueue()
 
-class TestJobQueue():
+
+class TestJobQueue:
     def test_create(self):
         JobQueue._JobQueue__instance = None
         jq = JobQueue()
@@ -85,6 +88,3 @@ class TestJobQueue():
 
     def test_remove(self):
         pass
-
-if __name__ == "__main__":
-    unittest.main()
