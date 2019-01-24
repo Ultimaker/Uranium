@@ -13,6 +13,7 @@ class Message(QObject):
     class ActionButtonStyle:
         DEFAULT = 0
         LINK = 1
+        SECONDARY = 2
 
 
     class ActionButtonAlignment:
