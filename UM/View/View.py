@@ -23,7 +23,7 @@ class View(QObject, PluginObject):
         self._controller = UM.Application.Application.getInstance().getController()  # type: Controller
         self._components = {}  # type: Dict[str, QUrl]
 
-    @pyqtProperty(str)
+    @pyqtProperty(str, constant = True)
     def name(self) -> str:
         return self.getPluginId()
 
