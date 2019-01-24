@@ -102,7 +102,7 @@ class UpdateCheckerJob(Job):
 
         message.addAction("new_features", i18n_catalog.i18nc("@action:button", "Learn more"), "[no_icon]", "[no_description]",
                           button_style = Message.ActionButtonStyle.LINK,
-                          button_align = Message.ActionButtonStyle.BUTTON_ALIGN_LEFT)
+                          button_align = Message.ActionButtonAlignment.ALIGN_LEFT)
 
         if self._set_download_url_callback:
             self._set_download_url_callback(download_url)

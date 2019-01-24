@@ -13,8 +13,11 @@ class Message(QObject):
     class ActionButtonStyle:
         DEFAULT = 0
         LINK = 1
-        BUTTON_ALIGN_LEFT = 2
-        BUTTON_ALIGN_RIGHT = 3
+
+
+    class ActionButtonAlignment:
+        ALIGN_LEFT = 2
+        ALIGN_RIGHT = 3
 
 
     ##  Class for displaying messages to the user.
@@ -124,7 +127,7 @@ class Message(QObject):
     #   \param icon Source of the icon to be used
     #   \param button_style Description the button style (used for Button and Link)
     #   \param button_align Define horizontal position of the action item
-    def addAction(self, action_id: str, name: str, icon: str, description: str, button_style: int = ActionButtonStyle.DEFAULT, button_align: int = ActionButtonStyle.BUTTON_ALIGN_RIGHT):
+    def addAction(self, action_id: str, name: str, icon: str, description: str, button_style: int = ActionButtonStyle.DEFAULT, button_align: int = ActionButtonAlignment.ALIGN_RIGHT):
         self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description, "button_style": button_style, "button_align": button_align})
 
     ##  Get the list of actions to display buttons for on the message.
