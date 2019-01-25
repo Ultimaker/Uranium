@@ -9,16 +9,59 @@ import QtQuick.Layouts 1.1
 import UM 1.0 as UM
 import "."
 
-ListView {
+ListView
+{
     id: base
-    boundsBehavior: ListView.StopAtBounds;
-    verticalLayoutDirection: ListView.BottomToTop;
-    visible: true
+    boundsBehavior: ListView.StopAtBounds
+    verticalLayoutDirection: ListView.BottomToTop
 
     model: UM.VisibleMessagesModel { }
     spacing: UM.Theme.getSize("message_margin").height
 
-    interactive: false;
+    // Messages can have actions, which are displayed by means of buttons. The message stack supports 3 styles
+    // of buttons "Primary", "Secondary" and "Link" (aka; "tertiary")
+    property Component primaryButton: Component
+    {
+        Button
+        {
+            text: model.name
+        }
+    }
+
+    property Component secondaryButton: Component
+    {
+        Button
+        {
+            text: model.name
+        }
+    }
+
+    property Component link: Component
+    {
+        Button
+        {
+            text: model.name
+            style: ButtonStyle
+            {
+                background: Item {}
+
+                label: Label
+                {
+                    text: control.text
+                    font:
+                    {
+                        var defaultFont = UM.Theme.getFont("default")
+                        defaultFont.underline = true
+                        return defaultFont
+                    }
+                    color: UM.Theme.getColor("text_link")
+                }
+            }
+        }
+    }
+
+    interactive: false
+
     delegate: Rectangle
     {
         id: message
@@ -144,7 +187,7 @@ ListView {
             // Doing this in an explicit binding since the implicit binding breaks on occasion.
             Binding { target: totalProgressBar; property: "value"; value: model.progress }
 
-            visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
+            visible: model.progress == null ? false: true //if the progress is null (for example with the loaded message) -> hide the progressbar
             indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
             style: UM.Theme.styles.progressbar
 
@@ -205,100 +248,31 @@ ListView {
                     }
                     return filteredModel
                 }
-                delegate: Button
-                {
-                    id: messageStackButton
-                    onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
-                    text: modelData.name
-                    style: ButtonStyle
-                    {
-                        background: Item
-                        {
-                            property int standardWidth: UM.Theme.getSize("message_button").width
-                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("message_inner_margin").width
-                            implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
-                            implicitHeight: UM.Theme.getSize("message_button").height
-                            Rectangle
-                            {
-                                id: messageStackButtonBackground
-                                width: parent.width
-                                height: parent.height
-                                radius: UM.Theme.getSize("message_button_radius").width
-                                color:
-                                {
-                                    if (modelData.button_style == 0)
-                                    {
-                                        if(control.pressed)
-                                        {
-                                            return UM.Theme.getColor("message_button_active");
-                                        }
-                                        else if(control.hovered)
-                                        {
-                                            return UM.Theme.getColor("message_button_hover");
-                                        }
-                                        else
-                                        {
-                                            return UM.Theme.getColor("message_button");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        return "transparent";
-                                    }
-                                }
-                                Behavior on color { ColorAnimation { duration: 50; } }
-                            }
-                            Label
-                            {
-                                id: messageStackButtonText
-                                anchors.centerIn: parent
-                                text: control.text
-                                color:
-                                {
-                                    if (modelData.button_style == 0) //DEFAULT
-                                    {
-                                        if(control.pressed)
-                                        {
-                                            return UM.Theme.getColor("message_button_text_active");
-                                        }
-                                        else if(control.hovered)
-                                        {
-                                            return UM.Theme.getColor("message_button_text_hover");
-                                        }
-                                        else
-                                        {
-                                            return UM.Theme.getColor("message_button_text");
-                                        }
-                                    }
-                                    else if(modelData.button_style == 1) //LINK
-                                    {
-                                        return UM.Theme.getColor("text_link");
-                                    }
-                                    else
-                                    {
-                                        return UM.Theme.getColor("text");
-                                    }
-                                }
 
-                                font:
-                                {
-                                    if (modelData.button_style == 0)
-                                    {
-                                        return UM.Theme.getFont("default");
-                                    }
-                                    else
-                                    {
-                                        var obj = UM.Theme.getFont("default");
-                                        obj.underline = true;
-                                        return obj;
-                                    }
-                                }
-                            }
-                        }
-                        label: Label
+                // Put the delegate in a loader so we can connect to it's signals.
+                // We also need to use a different component based on the style of the action.
+                delegate: Loader
+                {
+                    id: actionButton
+                    sourceComponent:
+                    {
+                        if (modelData.button_style == 0)
                         {
-                            visible: false
+                            return base.primaryButton
+                        } else if (modelData.button_style == 1)
+                        {
+                            return base.link
+                        } else if (modelData.button_style == 2)
+                        {
+                            return base.secondaryButton
                         }
+                        return base.primaryButton // We got to use something, so use primary.
+                    }
+                    property var model: modelData
+                    Connections
+                    {
+                        target: actionButton.item
+                        onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
                     }
                 }
             }
