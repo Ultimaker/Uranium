@@ -79,6 +79,21 @@ class TestPluginRegistry():
         # The result will be cached the second time, so ensure we test that path as well.
         assert registry.isBundledPlugin("NOPE") == False
 
+
+    def test_addSupportedPluginExtension(self, registry):
+        registry.addSupportedPluginExtension("blarg", "zomg")
+        description_added = False
+        extension_added = False
+
+        for file_type in registry.supportedPluginExtensions:
+            if "blarg" in file_type:
+                extension_added = True
+            if "zomg" in file_type:
+                description_added = True
+
+        assert extension_added
+        assert description_added
+
     def test_metaData(self, registry):
         metadata = registry.getMetaData("TestPlugin")
         assert metadata == {"id": "TestPlugin",
@@ -86,7 +101,8 @@ class TestPluginRegistry():
                                        "api": 5,
                                        "supported_sdk_versions": [Version(5)],
                                        "version": "1.0.0",
-                                        "i18n-catalog": "bla"},
+                                        "i18n-catalog": "bla",
+                                       "description": "test"},
                             "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
                             }
 
@@ -132,6 +148,8 @@ class TestPluginRegistry():
         registry.loadPlugin("TestPlugin")
 
         assert registry.getTestPlugin().getPluginId() == "TestPlugin"
+
+        assert registry.getPluginObject("TestPlugin") == registry.getTestPlugin()
     
     def test_loadNested(self, registry):
         registry.loadPlugin("TestPlugin2")
