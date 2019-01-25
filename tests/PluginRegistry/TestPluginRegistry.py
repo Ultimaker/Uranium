@@ -65,9 +65,14 @@ class TestPluginRegistry():
 
     def test_uninstallPlugin(self, registry):
         with patch("builtins.open", mock_open()) as mock_file:
-            registry.uninstallPlugin("BLARG") # It doesn't exist, so don't do anything.
+            registry.uninstallPlugin("BLARG")  # It doesn't exist, so don't do anything.
             handle = mock_file()
             handle.write.assert_not_called()
+
+            registry.loadPlugins()
+            registry.uninstallPlugin("TestPlugin")
+            handle.write.assert_called_once_with('{"disabled": [], "to_install": {}, "to_remove": ["TestPlugin"]}')
+            assert "TestPlugin" not in registry.getInstalledPlugins()
 
     def test_isBundledPlugin(self, registry):
         assert registry.isBundledPlugin("NOPE") == False
