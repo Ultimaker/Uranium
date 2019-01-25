@@ -66,7 +66,7 @@ ListView
     {
         id: message
 
-        property int labelHeight: messageLabel.height + (UM.Theme.getSize("message_inner_margin").height * 2)
+        property int labelHeight: messageLabel.height + (UM.Theme.getSize("default_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
         property variant actions: model.actions
         property variant model_id: model.id
@@ -77,13 +77,13 @@ ListView
             {
                 return message.labelHeight
             }
-            return messageLabel.height + Math.max(actionButtons.height, leftActionButtons.height) + messageTitle.height + Math.round(UM.Theme.getSize("message_inner_margin").height * 1.5)
+            return messageLabel.height + Math.max(actionButtons.height, leftActionButtons.height) + messageTitle.height + UM.Theme.getSize("default_margin").height * 3
         }
 
-        property int totalProgressBarHeight : Math.round(message.labelHeight + message.progressBarHeight + UM.Theme.getSize("default_margin").height / 2) + actionButtons.height
+        property int totalProgressBarHeight: message.labelHeight + message.progressBarHeight + UM.Theme.getSize("narrow_margin").height + actionButtons.height
 
         width: UM.Theme.getSize("message").width
-        height: (model.progress == null) ? totalMessageHeight : totalProgressBarHeight
+        height: model.progress == null ? totalMessageHeight : totalProgressBarHeight
         anchors.horizontalCenter: parent.horizontalCenter
 
         color: UM.Theme.getColor("message_background")
@@ -100,9 +100,8 @@ ListView
             anchors
             {
                 right: parent.right
-                rightMargin: UM.Theme.getSize("default_margin").width
+                margins: UM.Theme.getSize("default_margin").width
                 top: parent.top
-                topMargin: UM.Theme.getSize("default_margin").width
             }
 
             style: ButtonStyle
@@ -130,9 +129,11 @@ ListView
             anchors
             {
                 left: parent.left
-                leftMargin: UM.Theme.getSize("message_inner_margin").width
+                leftMargin: UM.Theme.getSize("default_margin").width
+
                 right: closeButton.left
-                rightMargin: UM.Theme.getSize("message_inner_margin").width
+                rightMargin: UM.Theme.getSize("default_margin").width
+
                 top: closeButton.top
                 topMargin: model.title != undefined ? -Math.round(UM.Theme.getSize("default_margin").height / 4) : 0
             }
@@ -151,23 +152,21 @@ ListView
             anchors
             {
                 left: parent.left
-                leftMargin: UM.Theme.getSize("message_inner_margin").width
+                leftMargin: UM.Theme.getSize("default_margin").width
+
                 right: closeButton.left
+
                 top: model.progress != null ? messageTitle.bottom : messageTitle.bottom
                 topMargin: UM.Theme.getSize("narrow_margin").height
             }
 
             function getProgressText()
             {
-                var progress = Math.floor(model.progress)
-                return "%1 %2%".arg(model.text).arg(progress)
+                return "%1 %2%".arg(model.text).arg(Math.floor(model.progress))
             }
 
             text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? "" : model.text
-            onLinkActivated:
-            {
-                Qt.openUrlExternally(link);
-            }
+            onLinkActivated: Qt.openUrlExternally(link)
             color: UM.Theme.getColor("text")
             font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap
@@ -176,30 +175,39 @@ ListView
 
         ProgressBar
         {
-            id: totalProgressBar;
-            minimumValue: 0;
-            maximumValue: model.max_progress;
-
+            id: totalProgressBar
+            minimumValue: 0
+            maximumValue: model.max_progress
             value: 0
 
             // Doing this in an explicit binding since the implicit binding breaks on occasion.
-            Binding { target: totalProgressBar; property: "value"; value: model.progress }
+            Binding
+            {
+                target: totalProgressBar
+                property: "value"
+                value: model.progress
+            }
 
-            visible: model.progress == null ? false: true //if the progress is null (for example with the loaded message) -> hide the progressbar
-            indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
+            visible: model.progress == null ? false: true // If the progress is null (for example with the loaded message) -> hide the progressbar
+            indeterminate: model.progress == -1 ? true: false //If the progress is unknown (-1) -> the progressbar is indeterminate
             style: UM.Theme.styles.progressbar
 
             property string backgroundColor: UM.Theme.getColor("message_progressbar_background")
             property string controlColor: UM.Theme.getColor("message_progressbar_control")
 
-            anchors.top: messageLabel.bottom
-            anchors.topMargin: Math.round(UM.Theme.getSize("message_inner_margin").height / 2)
-            anchors.left: parent.left
-            anchors.leftMargin: UM.Theme.getSize("message_inner_margin").width
-            anchors.right: closeButton.right
+            anchors
+            {
+                top: messageLabel.bottom
+                topMargin: UM.Theme.getSize("default_margin").height
+
+                left: parent.left
+                leftMargin: UM.Theme.getSize("default_margin").width
+
+                right: closeButton.right
+            }
         }
 
-        //Right aligned Action Buttons
+        // Right aligned Action Buttons
         RowLayout
         {
             id: actionButtons
@@ -207,18 +215,8 @@ ListView
             anchors
             {
                 right: closeButton.right
-                top:
-                {
-                    if(model.progress != undefined)
-                    {
-                        return totalProgressBar.bottom
-                    }
-                    else
-                    {
-                        return messageLabel.bottom
-                    }
-                }
-                topMargin: Math.round(UM.Theme.getSize("default_margin").width / 2)
+                top: model.progress != undefined ? totalProgressBar.bottom : messageLabel.bottom
+                topMargin: UM.Theme.getSize("narrow_margin").width
             }
 
             Repeater
@@ -238,7 +236,7 @@ ListView
 
                         var alignPosition = actionButton["button_align"]
 
-                        //ActionButtonStyle.BUTTON_ALIGN_RIGHT == 3
+                        // ActionButtonStyle.BUTTON_ALIGN_RIGHT == 3
                         if (alignPosition == 3)
                         {
                             filteredModel.push(actionButton)
@@ -276,7 +274,7 @@ ListView
             }
         }
 
-        //Left aligned Action Buttons
+        // Left aligned Action Buttons
         RowLayout
         {
             id: leftActionButtons
@@ -284,19 +282,10 @@ ListView
             anchors
             {
                 left: messageLabel.left
-                leftMargin: -UM.Theme.getSize("message_inner_margin").width / 2
-                top:
-                {
-                    if(model.progress != undefined)
-                    {
-                        return totalProgressBar.bottom
-                    }
-                    else
-                    {
-                        return messageLabel.bottom
-                    }
-                }
-                topMargin: Math.round(UM.Theme.getSize("default_margin").width / 2)
+                leftMargin: UM.Theme.getSize("narrow_margin").width
+
+                top: model.progress != undefined ? totalProgressBar.bottom : messageLabel.bottom
+                topMargin: UM.Theme.getSize("narrow_margin").width
             }
 
             Repeater
@@ -316,7 +305,7 @@ ListView
 
                         var alignPosition = actionButton["button_align"]
 
-                        //ActionButtonStyle.BUTTON_ALIGN_LEFT == 2
+                        // ActionButtonStyle.BUTTON_ALIGN_LEFT == 2
                         if (alignPosition == 2)
                         {
                             filteredModel.push(actionButton)
