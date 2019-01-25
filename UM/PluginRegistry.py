@@ -146,7 +146,7 @@ class PluginRegistry(QObject):
         except:
             # Since we're writing to file (and waiting for a lock), there are a few things that can go wrong.
             # There is no need to crash the application for this, but it is a failure that we want to log.
-            Logger.log("e", "Unable to save the plugin data.")
+            Logger.logException("e", "Unable to save the plugin data.")
 
     # TODO:
     # - [ ] Improve how metadata is stored. It should not be in the 'plugin' prop
@@ -435,6 +435,9 @@ class PluginRegistry(QObject):
     def uninstallPlugin(self, plugin_id: str) -> Dict[str, str]:
         result = {"status": "error", "message": "", "id": plugin_id}
         success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart {0} to finish uninstall.", self._application.getApplicationName())
+
+        if plugin_id not in self._plugins_installed:
+            return result
 
         in_to_install = plugin_id in self._plugins_to_install
         if in_to_install:

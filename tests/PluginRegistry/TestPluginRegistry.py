@@ -1,5 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from unittest.mock import patch, mock_open
 
 import pytest
 import os
@@ -30,6 +31,7 @@ class FixtureRegistry(PluginRegistry):
         PluginRegistry._PluginRegistry__instance = None
         super().__init__(application)
         self._api_version = Version("5.5.0")
+        self._plugin_config_filename = "test_file"
 
     def registerTestPlugin(self, plugin):
         self._test_plugin = plugin
@@ -50,13 +52,36 @@ def registry(application):
 
 
 class TestPluginRegistry():
+
+    def test_init(self, registry):
+        # Without loading anything, this shouldn't fail.
+        registry.initializeBeforePluginsAreLoaded()
+
+    def test_savePluginData(self, registry):
+        with patch("builtins.open", mock_open()) as mock_file:
+            registry._savePluginData()
+            handle = mock_file()
+            handle.write.assert_called_once_with('{"disabled": [], "to_install": {}, "to_remove": []}')
+
+    def test_uninstallPlugin(self, registry):
+        with patch("builtins.open", mock_open()) as mock_file:
+            registry.uninstallPlugin("BLARG") # It doesn't exist, so don't do anything.
+            handle = mock_file()
+            handle.write.assert_not_called()
+
+    def test_isBundledPlugin(self, registry):
+        assert registry.isBundledPlugin("NOPE") == False
+        # The result will be cached the second time, so ensure we test that path as well.
+        assert registry.isBundledPlugin("NOPE") == False
+
     def test_metaData(self, registry):
         metadata = registry.getMetaData("TestPlugin")
         assert metadata == {"id": "TestPlugin",
                             "plugin": {"name": "TestPlugin",
                                        "api": 5,
                                        "supported_sdk_versions": [Version(5)],
-                                       "version": "1.0.0"},
+                                       "version": "1.0.0",
+                                        "i18n-catalog": "bla"},
                             "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
                             }
 
