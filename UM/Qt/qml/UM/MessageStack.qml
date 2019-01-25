@@ -16,7 +16,7 @@ ListView
     verticalLayoutDirection: ListView.BottomToTop
 
     model: UM.VisibleMessagesModel { }
-    spacing: UM.Theme.getSize("message_margin").height
+    spacing: UM.Theme.getSize("default_margin").height
 
     // Messages can have actions, which are displayed by means of buttons. The message stack supports 3 styles
     // of buttons "Primary", "Secondary" and "Link" (aka; "tertiary")
@@ -66,10 +66,8 @@ ListView
     {
         id: message
 
-        property int labelTopBottomMargin: Math.round(UM.Theme.getSize("default_margin").height / 2)
         property int labelHeight: messageLabel.height + (UM.Theme.getSize("message_inner_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
-        property int closeButtonHeight: UM.Theme.getSize("message_close").height
         property variant actions: model.actions
         property variant model_id: model.id
 
@@ -117,7 +115,7 @@ ListView
                     source: UM.Theme.getIcon("cross1")
                 }
 
-                label: Label {}
+                label: Item {}
             }
 
             onClicked: base.model.hideMessage(model.id)
@@ -140,7 +138,7 @@ ListView
             }
 
             text: model.title == undefined ? "" : model.title
-            color: UM.Theme.getColor("message_text")
+            color: UM.Theme.getColor("text")
             font: UM.Theme.getFont("default_bold")
             wrapMode: Text.Wrap
             renderType: Text.NativeRendering
@@ -156,7 +154,7 @@ ListView
                 leftMargin: UM.Theme.getSize("message_inner_margin").width
                 right: closeButton.left
                 top: model.progress != null ? messageTitle.bottom : messageTitle.bottom
-                topMargin: message.labelTopBottomMargin;
+                topMargin: UM.Theme.getSize("narrow_margin").height
             }
 
             function getProgressText()
@@ -170,7 +168,7 @@ ListView
             {
                 Qt.openUrlExternally(link);
             }
-            color: UM.Theme.getColor("message_text")
+            color: UM.Theme.getColor("text")
             font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap
             renderType: Text.NativeRendering
