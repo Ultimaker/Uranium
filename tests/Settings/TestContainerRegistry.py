@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -66,6 +67,58 @@ def test_addContainerType(container_registry, plugin_registry):
 
     with pytest.raises(Exception):
         container_registry.addContainerType(None)
+
+
+def test_readOnly(container_registry):
+    assert not container_registry.isReadOnly("NotAContainerThatIsLoaded")
+
+    test_container = DefinitionContainer("omgzomg")
+    container_registry.addContainer(test_container)
+
+    mock_provider = MagicMock()
+    mock_provider.isReadOnly = MagicMock(return_value = True)
+    container_registry.source_provider = {"omgzomg": mock_provider}
+    assert container_registry.isReadOnly("omgzomg")
+
+
+def test_getContainerFilePathByID(container_registry):
+    # There is no provider and the container isn't even there.
+    assert container_registry.getContainerFilePathById("NotAContainerThatIsLoaded") is None
+
+    test_container = DefinitionContainer("omgzomg")
+    container_registry.addContainer(test_container)
+
+    mock_provider = MagicMock()
+    mock_provider.getContainerFilePathById = MagicMock(return_value="")
+    container_registry.source_provider = {"omgzomg": mock_provider}
+    assert container_registry.getContainerFilePathById("omgzomg") == ""
+
+
+def test_isLoaded(container_registry):
+    assert not container_registry.isLoaded("NotAContainerThatIsLoaded")
+    test_container = DefinitionContainer("omgzomg")
+    container_registry.addContainer(test_container)
+    assert container_registry.isLoaded("omgzomg")
+
+
+def test_removeContainer(container_registry):
+    # Removing a container that isn't added shouldn't break
+    container_registry.removeContainer("NotAContainerThatIsLoaded")
+
+    test_container = DefinitionContainer("omgzomg")
+    container_registry.addContainer(test_container)
+    container_registry.removeContainer("omgzomg")
+    assert not container_registry.isLoaded("omgzomg")
+
+
+def test_renameContainer(container_registry):
+    test_container = InstanceContainer("omgzomg")
+    container_registry.addContainer(test_container)
+    container_registry.renameContainer("omgzomg", "BEEP")
+    assert test_container.getMetaDataEntry("name") == "BEEP"
+    # Ensure that the container is marked as dirty
+    assert "omgzomg" in [container.getId() for container in container_registry.findDirtyContainers()]
+
 
 ##  Tests the creation of the container registry.
 #
