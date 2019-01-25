@@ -1,5 +1,6 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import Optional
 
 from PyQt5.QtCore import QObject, pyqtProperty, Q_ENUMS, pyqtSignal
 from UM.FlameProfiler import pyqtSlot
@@ -28,7 +29,7 @@ class Duration(QObject):
     #
     #   \param duration The duration in seconds. If this is None (the default), an invalid Duration object will be created.
     #   \param parent The QObject parent.
-    def __init__(self, duration = None, parent = None):
+    def __init__(self, duration: Optional[int] = None, parent = None) -> None:
         super().__init__(parent)
 
         self._days = -1
@@ -36,7 +37,7 @@ class Duration(QObject):
         self._minutes = -1
         self._seconds = -1
 
-        if duration != None:
+        if duration is not None:
             self.setDuration(duration)
 
     durationChanged = pyqtSignal()

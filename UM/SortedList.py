@@ -35,8 +35,8 @@ from functools import wraps
 from sys import hexversion
 
 if hexversion < 0x03000000:
-    from itertools import imap as map  # pylint: disable=redefined-builtin
-    from itertools import izip as zip  # pylint: disable=redefined-builtin
+    from itertools import imap as map  # type: ignore
+    from itertools import izip as zip  # type: ignore
     try:
         from thread import get_ident
     except ImportError:
@@ -1577,7 +1577,7 @@ class SortedList(MutableSequence):
     __gt__ = __make_cmp(gt, '>', 'greater than')
     __le__ = __make_cmp(le, '<=', 'less than or equal to')
     __ge__ = __make_cmp(ge, '>=', 'greater than or equal to')
-    __make_cmp = staticmethod(__make_cmp)
+    __make_cmp = staticmethod(__make_cmp)  # type: ignore
 
 
     @recursive_repr()
