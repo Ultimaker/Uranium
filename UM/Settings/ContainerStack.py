@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
@@ -471,7 +471,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     ##  Get a container by index.
     #
-    #   \param index \type{int} The index of the container to get.
+    #   \param index The index of the container to get.
     #
     #   \return The container at the specified index.
     #
