@@ -6,6 +6,7 @@ from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from PyQt5.QtCore import QTimer, pyqtSignal, QObject
 
+
 ## Class for displaying messages to the user.
 @signalemitter
 class Message(QObject):
@@ -35,7 +36,7 @@ class Message(QObject):
     #   \param title Phrase that will be shown above the message
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
     def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
-                 title: Optional[str] = None, parent = None, use_inactivity_timer: bool = True) -> None:
+                 title: Optional[str] = None, parent = None, use_inactivity_timer: bool = True, image_source: str = "", image_caption: str = "") -> None:
         super().__init__(parent)
         from UM.Application import Application
         self._application = Application.getInstance()
@@ -45,6 +46,9 @@ class Message(QObject):
         self._max_progress = 100  # type: float
         self._lifetime = lifetime
         self._lifetime_timer = None  # type: Optional[QTimer]
+
+        self._image_source = image_source
+        self._image_caption = image_caption
 
         self._use_inactivity_timer = use_inactivity_timer
         self._inactivity_timer = None  # type: Optional[QTimer]
@@ -138,6 +142,12 @@ class Message(QObject):
     #   \return A list of actions.
     def getActions(self) -> List[Dict[str, Union[str, int]]]:
         return self._actions
+
+    def getImageSource(self) -> str:
+        return self._image_source
+
+    def getImageCaption(self) -> str:
+        return self._image_caption
 
     ##  Changes the text on the message.
     #

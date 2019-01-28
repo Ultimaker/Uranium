@@ -17,6 +17,8 @@ class VisibleMessagesModel(ListModel):
     DismissableRole = Qt.UserRole + 8
     TileRole = Qt.UserRole + 9
     StyleRole = Qt.UserRole + 10
+    ImageSourceRole = Qt.UserRole + 11
+    ImageCaptionRole = Qt.UserRole + 12
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -29,6 +31,8 @@ class VisibleMessagesModel(ListModel):
         self.addRoleName(self.ActionsRole, "actions")
         self.addRoleName(self.DismissableRole, "dismissable")
         self.addRoleName(self.TileRole, "title")
+        self.addRoleName(self.ImageSourceRole, "image_source")
+        self.addRoleName(self.ImageCaptionRole, "image_caption")
         self._populateMessageList()
 
     def _populateMessageList(self):
@@ -43,7 +47,9 @@ class VisibleMessagesModel(ListModel):
             "id": str(id(message)),
             "actions": self.createActionsModel(message.getActions()),
             "dismissable": message.isDismissable(),
-            "title": message.getTitle()
+            "title": message.getTitle(),
+            "image_source": message.getImageSource(),
+            "image_caption": message.getImageCaption()
         })
         message.progressChanged.connect(self._onMessageProgress)
 

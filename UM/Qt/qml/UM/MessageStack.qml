@@ -139,6 +139,54 @@ ListView
                 height: parent.height
             }
         }
+        Item
+        {
+            id: imageItem
+            visible: messageImage.progress == 1.0
+            height: visible ? childrenRect.height: 0
+
+            anchors
+            {
+                left: parent.left
+                leftMargin: UM.Theme.getSize("default_margin").width
+
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+
+                top: titleBar.bottom
+                topMargin: visible ? UM.Theme.getSize("narrow_margin").height: 0
+            }
+            Image
+            {
+                id: messageImage
+                anchors
+                {
+                    left: parent.left
+                    right: parent.right
+                }
+                height: 0.5 * UM.Theme.getSize("message").width
+                fillMode: Image.PreserveAspectFit
+                source: model.image_source
+            }
+
+            Label
+            {
+                id: imageCaption
+                anchors
+                {
+                    left: parent.left
+                    right: parent.right
+                    top: messageImage.bottom
+                    topMargin: UM.Theme.getSize("narrow_margin").height
+                }
+
+                text: model.image_caption
+                horizontalAlignment: Text.AlignHCenter
+                color: UM.Theme.getColor("text")
+                font: UM.Theme.getFont("large_bold")
+                height: contentHeight
+            }
+        }
 
         Label
         {
@@ -152,7 +200,7 @@ ListView
                 right: parent.right
                 rightMargin: UM.Theme.getSize("default_margin").width
 
-                top: titleBar.bottom
+                top: imageItem.bottom
                 topMargin: UM.Theme.getSize("narrow_margin").height
             }
 
