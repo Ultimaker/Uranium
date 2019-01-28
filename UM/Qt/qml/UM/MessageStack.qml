@@ -66,24 +66,13 @@ ListView
     {
         id: message
 
-        property int labelHeight: messageLabel.height + (UM.Theme.getSize("default_margin").height * 2)
-        property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
         property variant actions: model.actions
         property variant model_id: model.id
 
-        property int totalMessageHeight:
-        {
-            if (message.actions == null || message.actions.count == 0)
-            {
-                return message.labelHeight
-            }
-            return messageLabel.height + Math.max(actionButtons.height, leftActionButtons.height) + messageTitle.height + UM.Theme.getSize("default_margin").height * 3
-        }
-
-        property int totalProgressBarHeight: message.labelHeight + message.progressBarHeight + UM.Theme.getSize("narrow_margin").height + actionButtons.height
-
         width: UM.Theme.getSize("message").width
-        height: model.progress == null ? totalMessageHeight : totalProgressBarHeight
+        // Height is the size of the children + a margin on top & bottom.
+        height: childrenRect.height + 2 * UM.Theme.getSize("default_margin").height
+
         anchors.horizontalCenter: parent.horizontalCenter
 
         color: UM.Theme.getColor("message_background")
@@ -91,58 +80,64 @@ ListView
         border.color: UM.Theme.getColor("message_border")
         radius: UM.Theme.getSize("message_radius").width
 
-        Button
+        Item
         {
-            id: closeButton
-            width: UM.Theme.getSize("message_close").width
-            height: UM.Theme.getSize("message_close").height
+            id: titleBar
 
             anchors
             {
+                top: parent.top
+                left: parent.left
                 right: parent.right
                 margins: UM.Theme.getSize("default_margin").width
-                top: parent.top
             }
 
-            style: ButtonStyle
+            height: UM.Theme.getSize("message_close").height
+
+            Button
             {
-                background: UM.RecolorImage
+                id: closeButton
+                width: UM.Theme.getSize("message_close").width
+                height: UM.Theme.getSize("message_close").height
+
+                anchors.right: parent.right
+
+                style: ButtonStyle
                 {
-                    width: UM.Theme.getSize("message_close").width
-                    sourceSize.width: width
-                    color: control.hovered ? UM.Theme.getColor("message_close_hover") : UM.Theme.getColor("message_close")
-                    source: UM.Theme.getIcon("cross1")
+                    background: UM.RecolorImage
+                    {
+                        width: UM.Theme.getSize("message_close").width
+                        sourceSize.width: width
+                        color: control.hovered ? UM.Theme.getColor("message_close_hover") : UM.Theme.getColor("message_close")
+                        source: UM.Theme.getIcon("cross1")
+                    }
+
+                    label: Item {}
                 }
 
-                label: Item {}
+                onClicked: base.model.hideMessage(model.id)
+                visible: model.dismissable
+                enabled: model.dismissable
             }
 
-            onClicked: base.model.hideMessage(model.id)
-            visible: model.dismissable
-            enabled: model.dismissable
-        }
-
-        Label
-        {
-            id: messageTitle
-
-            anchors
+            Label
             {
-                left: parent.left
-                leftMargin: UM.Theme.getSize("default_margin").width
+                id: messageTitle
 
-                right: closeButton.left
-                rightMargin: UM.Theme.getSize("default_margin").width
+                anchors
+                {
+                    left: parent.left
+                    right: closeButton.left
+                    rightMargin: UM.Theme.getSize("default_margin").width
+                }
 
-                top: closeButton.top
-                topMargin: model.title != undefined ? -Math.round(UM.Theme.getSize("default_margin").height / 4) : 0
+                text: model.title == undefined ? "" : model.title
+                color: UM.Theme.getColor("text")
+                font: UM.Theme.getFont("default_bold")
+                wrapMode: Text.Wrap
+                renderType: Text.NativeRendering
+                height: parent.height
             }
-
-            text: model.title == undefined ? "" : model.title
-            color: UM.Theme.getColor("text")
-            font: UM.Theme.getFont("default_bold")
-            wrapMode: Text.Wrap
-            renderType: Text.NativeRendering
         }
 
         Label
@@ -154,11 +149,14 @@ ListView
                 left: parent.left
                 leftMargin: UM.Theme.getSize("default_margin").width
 
-                right: closeButton.left
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
 
-                top: model.progress != null ? messageTitle.bottom : messageTitle.bottom
+                top: titleBar.bottom
                 topMargin: UM.Theme.getSize("narrow_margin").height
             }
+
+            height: contentHeight
 
             function getProgressText()
             {
@@ -203,7 +201,8 @@ ListView
                 left: parent.left
                 leftMargin: UM.Theme.getSize("default_margin").width
 
-                right: closeButton.right
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
             }
         }
 
@@ -214,7 +213,9 @@ ListView
 
             anchors
             {
-                right: closeButton.right
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+
                 top: model.progress != undefined ? totalProgressBar.bottom : messageLabel.bottom
                 topMargin: UM.Theme.getSize("narrow_margin").width
             }
