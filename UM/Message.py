@@ -34,6 +34,8 @@ class Message(QObject):
     #                   if lifetime is 0, it will never automatically be destroyed.
     #   \param dismissible Can the user dismiss the message?
     #   \param title Phrase that will be shown above the message
+    #   \param image_source an absolute path where an image can be found to be displayed (QUrl.toLocalFile()) can be used for that.
+    #   \param image_caption Text to be displayed below the image (or anywhere really, it's up tot the QML to handle that)
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
     def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
                  title: Optional[str] = None, parent = None, use_inactivity_timer: bool = True, image_source: str = "", image_caption: str = "") -> None:
