@@ -38,7 +38,7 @@ class Message(QObject):
     #   \param image_caption Text to be displayed below the image (or anywhere really, it's up tot the QML to handle that)
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
     def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
-                 title: Optional[str] = None, parent = None, use_inactivity_timer: bool = True, image_source: str = "", image_caption: str = "") -> None:
+                 title: Optional[str] = None, parent = None, use_inactivity_timer: bool = True, image_source: str = "", image_caption: str = "", option_text: str = "", option_state: bool = True) -> None:
         super().__init__(parent)
         from UM.Application import Application
         self._application = Application.getInstance()
@@ -49,6 +49,8 @@ class Message(QObject):
         self._lifetime = lifetime
         self._lifetime_timer = None  # type: Optional[QTimer]
 
+        self._option_text = option_text
+        self._option_state = option_state
         self._image_source = image_source
         self._image_caption = image_caption
 
@@ -70,6 +72,7 @@ class Message(QObject):
     inactivityTimerStop = pyqtSignal()
     inactivityTimerStart = pyqtSignal()
     actionTriggered = Signal()
+    optionToggled = Signal()
 
     def _stopInactivityTimer(self) -> None:
         if self._inactivity_timer:
@@ -144,6 +147,12 @@ class Message(QObject):
     #   \return A list of actions.
     def getActions(self) -> List[Dict[str, Union[str, int]]]:
         return self._actions
+
+    def getOptionText(self) -> str:
+        return self._option_text
+
+    def getOptionState(self) -> bool:
+        return self._option_state
 
     def getImageSource(self) -> str:
         return self._image_source

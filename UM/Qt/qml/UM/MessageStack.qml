@@ -219,6 +219,35 @@ ListView
             renderType: Text.NativeRendering
         }
 
+
+        CheckBox
+        {
+            id: optionToggle
+            anchors
+            {
+                top: messageLabel.bottom
+                topMargin: visible ? UM.Theme.getSize("narrow_margin").height: 0
+                left: parent.left
+                leftMargin: UM.Theme.getSize("default_margin").width
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+            }
+            text: model.option_text
+            visible: text != ""
+            height: visible ? undefined: 0
+            checked: model.option_state
+            onCheckedChanged: base.model.optionToggled(message.model_id, checked)
+            style: CheckBoxStyle
+            {
+                label: Label
+                {
+                    text: control.text
+                    font: UM.Theme.getFont("default")
+                    color: UM.Theme.getColor("text")
+                }
+            }
+        }
+
         ProgressBar
         {
             id: totalProgressBar
@@ -238,13 +267,14 @@ ListView
             indeterminate: model.progress == -1 ? true: false //If the progress is unknown (-1) -> the progressbar is indeterminate
             style: UM.Theme.styles.progressbar
 
+
             property string backgroundColor: UM.Theme.getColor("message_progressbar_background")
             property string controlColor: UM.Theme.getColor("message_progressbar_control")
 
             anchors
             {
-                top: messageLabel.bottom
-                topMargin: UM.Theme.getSize("default_margin").height
+                top: optionToggle.bottom
+                topMargin: visible ? UM.Theme.getSize("narrow_margin").height: 0
 
                 left: parent.left
                 leftMargin: UM.Theme.getSize("default_margin").width
@@ -264,7 +294,7 @@ ListView
                 right: parent.right
                 rightMargin: UM.Theme.getSize("default_margin").width
 
-                top: model.progress != undefined ? totalProgressBar.bottom : messageLabel.bottom
+                top: totalProgressBar.bottom
                 topMargin: UM.Theme.getSize("narrow_margin").width
             }
 
@@ -333,7 +363,7 @@ ListView
                 left: messageLabel.left
                 leftMargin: UM.Theme.getSize("narrow_margin").width
 
-                top: model.progress != undefined ? totalProgressBar.bottom : messageLabel.bottom
+                top: totalProgressBar.bottom
                 topMargin: UM.Theme.getSize("narrow_margin").width
             }
 

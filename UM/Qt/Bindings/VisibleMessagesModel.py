@@ -19,6 +19,8 @@ class VisibleMessagesModel(ListModel):
     StyleRole = Qt.UserRole + 10
     ImageSourceRole = Qt.UserRole + 11
     ImageCaptionRole = Qt.UserRole + 12
+    OptionTextRole = Qt.UserRole + 13
+    OptionStateRole = Qt.UserRole + 14
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -33,6 +35,8 @@ class VisibleMessagesModel(ListModel):
         self.addRoleName(self.TileRole, "title")
         self.addRoleName(self.ImageSourceRole, "image_source")
         self.addRoleName(self.ImageCaptionRole, "image_caption")
+        self.addRoleName(self.OptionTextRole, "option_text")
+        self.addRoleName(self.OptionStateRole, "option_state")
         self._populateMessageList()
 
     def _populateMessageList(self):
@@ -49,7 +53,9 @@ class VisibleMessagesModel(ListModel):
             "dismissable": message.isDismissable(),
             "title": message.getTitle(),
             "image_source": message.getImageSource(),
-            "image_caption": message.getImageCaption()
+            "image_caption": message.getImageCaption(),
+            "option_text": message.getOptionText(),
+            "option_state": message.getOptionState()
         })
         message.progressChanged.connect(self._onMessageProgress)
 
@@ -68,6 +74,13 @@ class VisibleMessagesModel(ListModel):
     @pyqtSlot(str)
     def hideMessage(self, message_id):
         Application.getInstance().hideMessageById(message_id)
+
+    @pyqtSlot(str, bool)
+    def optionToggled(self, message_id, value):
+        for message in Application.getInstance().getVisibleMessages():
+            if str(id(message)) == message_id:
+                message.optionToggled.emit(value)
+                break
 
     @pyqtSlot(str, str)
     def actionTriggered(self, message_id, action_id):
