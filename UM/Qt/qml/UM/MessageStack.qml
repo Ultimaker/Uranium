@@ -134,7 +134,7 @@ ListView
                 text: model.title == undefined ? "" : model.title
                 color: UM.Theme.getColor("text")
                 font: UM.Theme.getFont("default_bold")
-                wrapMode: Text.Wrap
+                elide: Text.ElideRight
                 renderType: Text.NativeRendering
                 height: parent.height
             }
@@ -182,6 +182,7 @@ ListView
 
                 text: model.image_caption
                 horizontalAlignment: Text.AlignHCenter
+                elide: Text.ElideRight
                 color: UM.Theme.getColor("text")
                 font: UM.Theme.getFont("large_bold")
                 height: contentHeight
@@ -244,6 +245,7 @@ ListView
                     text: control.text
                     font: UM.Theme.getFont("default")
                     color: UM.Theme.getColor("text")
+                    elide: Text.ElideRight
                 }
             }
         }
