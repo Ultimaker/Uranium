@@ -409,8 +409,9 @@ class ContainerRegistry(ContainerRegistryInterface):
                 # has been deleted, but due to lazy loading, it hasnt even been loaded yet. The issues is that in order
                 # to notify the rest of the code, we need to actually *have* the container. So we need to load it
                 # in order to remove it...
-                if container_id in self.source_provider:
-                    new_container = self.source_provider[container_id].loadContainer(container_id)
+                provider = self.source_provider.get(container_id)
+                if provider:
+                    container = provider.loadContainer(container_id)
             del self.metadata[container_id]
         if container_id in self.source_provider:
             if self.source_provider[container_id] is not None:
