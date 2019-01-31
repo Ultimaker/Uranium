@@ -6,6 +6,7 @@ from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from PyQt5.QtCore import QTimer, pyqtSignal, QObject
 
+
 ## Class for displaying messages to the user.
 @signalemitter
 class Message(QObject):
@@ -13,8 +14,12 @@ class Message(QObject):
     class ActionButtonStyle:
         DEFAULT = 0
         LINK = 1
-        BUTTON_ALIGN_LEFT = 2
-        BUTTON_ALIGN_RIGHT = 3
+        SECONDARY = 2
+
+
+    class ActionButtonAlignment:
+        ALIGN_LEFT = 2
+        ALIGN_RIGHT = 3
 
 
     ##  Class for displaying messages to the user.
@@ -29,9 +34,11 @@ class Message(QObject):
     #                   if lifetime is 0, it will never automatically be destroyed.
     #   \param dismissible Can the user dismiss the message?
     #   \param title Phrase that will be shown above the message
+    #   \param image_source an absolute path where an image can be found to be displayed (QUrl.toLocalFile()) can be used for that.
+    #   \param image_caption Text to be displayed below the image (or anywhere really, it's up tot the QML to handle that)
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
     def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
-                 title: Optional[str] = None, parent = None, use_inactivity_timer: bool = True) -> None:
+                 title: Optional[str] = None, parent = None, use_inactivity_timer: bool = True, image_source: str = "", image_caption: str = "", option_text: str = "", option_state: bool = True) -> None:
         super().__init__(parent)
         from UM.Application import Application
         self._application = Application.getInstance()
@@ -41,6 +48,11 @@ class Message(QObject):
         self._max_progress = 100  # type: float
         self._lifetime = lifetime
         self._lifetime_timer = None  # type: Optional[QTimer]
+
+        self._option_text = option_text
+        self._option_state = option_state
+        self._image_source = image_source
+        self._image_caption = image_caption
 
         self._use_inactivity_timer = use_inactivity_timer
         self._inactivity_timer = None  # type: Optional[QTimer]
@@ -60,6 +72,7 @@ class Message(QObject):
     inactivityTimerStop = pyqtSignal()
     inactivityTimerStart = pyqtSignal()
     actionTriggered = Signal()
+    optionToggled = Signal()
 
     def _stopInactivityTimer(self) -> None:
         if self._inactivity_timer:
@@ -124,7 +137,7 @@ class Message(QObject):
     #   \param icon Source of the icon to be used
     #   \param button_style Description the button style (used for Button and Link)
     #   \param button_align Define horizontal position of the action item
-    def addAction(self, action_id: str, name: str, icon: str, description: str, button_style: int = ActionButtonStyle.DEFAULT, button_align: int = ActionButtonStyle.BUTTON_ALIGN_RIGHT):
+    def addAction(self, action_id: str, name: str, icon: str, description: str, button_style: int = ActionButtonStyle.DEFAULT, button_align: int = ActionButtonAlignment.ALIGN_RIGHT):
         self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description, "button_style": button_style, "button_align": button_align})
 
     ##  Get the list of actions to display buttons for on the message.
@@ -134,6 +147,18 @@ class Message(QObject):
     #   \return A list of actions.
     def getActions(self) -> List[Dict[str, Union[str, int]]]:
         return self._actions
+
+    def getOptionText(self) -> str:
+        return self._option_text
+
+    def getOptionState(self) -> bool:
+        return self._option_state
+
+    def getImageSource(self) -> str:
+        return self._image_source
+
+    def getImageCaption(self) -> str:
+        return self._image_caption
 
     ##  Changes the text on the message.
     #

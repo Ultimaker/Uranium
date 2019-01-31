@@ -9,40 +9,70 @@ import QtQuick.Layouts 1.1
 import UM 1.0 as UM
 import "."
 
-ListView {
+ListView
+{
     id: base
-    boundsBehavior: ListView.StopAtBounds;
-    verticalLayoutDirection: ListView.BottomToTop;
-    visible: true
+    boundsBehavior: ListView.StopAtBounds
+    verticalLayoutDirection: ListView.BottomToTop
 
     model: UM.VisibleMessagesModel { }
-    spacing: UM.Theme.getSize("message_margin").height
+    spacing: UM.Theme.getSize("default_margin").height
 
-    interactive: false;
+    // Messages can have actions, which are displayed by means of buttons. The message stack supports 3 styles
+    // of buttons "Primary", "Secondary" and "Link" (aka; "tertiary")
+    property Component primaryButton: Component
+    {
+        Button
+        {
+            text: model.name
+        }
+    }
+
+    property Component secondaryButton: Component
+    {
+        Button
+        {
+            text: model.name
+        }
+    }
+
+    property Component link: Component
+    {
+        Button
+        {
+            text: model.name
+            style: ButtonStyle
+            {
+                background: Item {}
+
+                label: Label
+                {
+                    text: control.text
+                    font:
+                    {
+                        var defaultFont = UM.Theme.getFont("default")
+                        defaultFont.underline = true
+                        return defaultFont
+                    }
+                    color: UM.Theme.getColor("text_link")
+                }
+            }
+        }
+    }
+
+    interactive: false
+
     delegate: Rectangle
     {
         id: message
 
-        property int labelTopBottomMargin: Math.round(UM.Theme.getSize("default_margin").height / 2)
-        property int labelHeight: messageLabel.height + (UM.Theme.getSize("message_inner_margin").height * 2)
-        property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
-        property int closeButtonHeight: UM.Theme.getSize("message_close").height
         property variant actions: model.actions
         property variant model_id: model.id
 
-        property int totalMessageHeight:
-        {
-            if (message.actions == null || message.actions.count == 0)
-            {
-                return message.labelHeight
-            }
-            return messageLabel.height + Math.max(actionButtons.height, leftActionButtons.height) + messageTitle.height + Math.round(UM.Theme.getSize("message_inner_margin").height * 1.5)
-        }
-
-        property int totalProgressBarHeight : Math.round(message.labelHeight + message.progressBarHeight + UM.Theme.getSize("default_margin").height / 2) + actionButtons.height
-
         width: UM.Theme.getSize("message").width
-        height: (model.progress == null) ? totalMessageHeight : totalProgressBarHeight
+        // Height is the size of the children + a margin on top & bottom.
+        height: childrenRect.height + 2 * UM.Theme.getSize("default_margin").height
+
         anchors.horizontalCenter: parent.horizontalCenter
 
         color: UM.Theme.getColor("message_background")
@@ -50,57 +80,113 @@ ListView {
         border.color: UM.Theme.getColor("message_border")
         radius: UM.Theme.getSize("message_radius").width
 
-        Button
+        Item
         {
-            id: closeButton
-            width: UM.Theme.getSize("message_close").width
-            height: UM.Theme.getSize("message_close").height
+            id: titleBar
 
             anchors
             {
-                right: parent.right
-                rightMargin: UM.Theme.getSize("default_margin").width
                 top: parent.top
-                topMargin: UM.Theme.getSize("default_margin").width
+                left: parent.left
+                right: parent.right
+                margins: UM.Theme.getSize("default_margin").width
             }
 
-            style: ButtonStyle
+            height: UM.Theme.getSize("message_close").height
+
+            Button
             {
-                background: UM.RecolorImage
+                id: closeButton
+                width: UM.Theme.getSize("message_close").width
+                height: UM.Theme.getSize("message_close").height
+
+                anchors.right: parent.right
+
+                style: ButtonStyle
                 {
-                    width: UM.Theme.getSize("message_close").width
-                    sourceSize.width: width
-                    color: control.hovered ? UM.Theme.getColor("message_close_hover") : UM.Theme.getColor("message_close")
-                    source: UM.Theme.getIcon("cross1")
+                    background: UM.RecolorImage
+                    {
+                        width: UM.Theme.getSize("message_close").width
+                        sourceSize.width: width
+                        color: control.hovered ? UM.Theme.getColor("message_close_hover") : UM.Theme.getColor("message_close")
+                        source: UM.Theme.getIcon("cross1")
+                    }
+
+                    label: Item {}
                 }
 
-                label: Label {}
+                onClicked: base.model.hideMessage(model.id)
+                visible: model.dismissable
+                enabled: model.dismissable
             }
 
-            onClicked: base.model.hideMessage(model.id)
-            visible: model.dismissable
-            enabled: model.dismissable
-        }
+            Label
+            {
+                id: messageTitle
 
-        Label
+                anchors
+                {
+                    left: parent.left
+                    right: closeButton.left
+                    rightMargin: UM.Theme.getSize("default_margin").width
+                }
+
+                text: model.title == undefined ? "" : model.title
+                color: UM.Theme.getColor("text")
+                font: UM.Theme.getFont("default_bold")
+                elide: Text.ElideRight
+                renderType: Text.NativeRendering
+                height: parent.height
+            }
+        }
+        Item
         {
-            id: messageTitle
+            id: imageItem
+            visible: messageImage.progress == 1.0
+            height: visible ? childrenRect.height: 0
 
             anchors
             {
                 left: parent.left
-                leftMargin: UM.Theme.getSize("message_inner_margin").width
-                right: closeButton.left
-                rightMargin: UM.Theme.getSize("message_inner_margin").width
-                top: closeButton.top
-                topMargin: model.title != undefined ? -Math.round(UM.Theme.getSize("default_margin").height / 4) : 0
+                leftMargin: UM.Theme.getSize("default_margin").width
+
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+
+                top: titleBar.bottom
+                topMargin: visible ? UM.Theme.getSize("narrow_margin").height: 0
+            }
+            Image
+            {
+                id: messageImage
+                anchors
+                {
+                    left: parent.left
+                    right: parent.right
+                }
+                height: 0.5 * UM.Theme.getSize("message").width
+                fillMode: Image.PreserveAspectFit
+                source: model.image_source
             }
 
-            text: model.title == undefined ? "" : model.title
-            color: UM.Theme.getColor("message_text")
-            font: UM.Theme.getFont("default_bold")
-            wrapMode: Text.Wrap
-            renderType: Text.NativeRendering
+            Label
+            {
+                id: imageCaption
+                anchors
+                {
+                    left: parent.left
+                    right: parent.right
+                    top: messageImage.bottom
+                    topMargin: UM.Theme.getSize("narrow_margin").height
+                }
+
+                text: model.image_caption
+                horizontalAlignment: Text.AlignHCenter
+                elide: Text.ElideRight
+                color: UM.Theme.getColor("text")
+                font: UM.Theme.getFont("large_bold")
+                height: contentHeight
+            }
         }
 
         Label
@@ -110,74 +196,108 @@ ListView {
             anchors
             {
                 left: parent.left
-                leftMargin: UM.Theme.getSize("message_inner_margin").width
-                right: closeButton.left
-                top: model.progress != null ? messageTitle.bottom : messageTitle.bottom
-                topMargin: message.labelTopBottomMargin;
+                leftMargin: UM.Theme.getSize("default_margin").width
+
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+
+                top: imageItem.bottom
+                topMargin: UM.Theme.getSize("narrow_margin").height
             }
+
+            height: contentHeight
 
             function getProgressText()
             {
-                var progress = Math.floor(model.progress)
-                return "%1 %2%".arg(model.text).arg(progress)
+                return "%1 %2%".arg(model.text).arg(Math.floor(model.progress))
             }
 
             text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? "" : model.text
-            onLinkActivated:
-            {
-                Qt.openUrlExternally(link);
-            }
-            color: UM.Theme.getColor("message_text")
+            onLinkActivated: Qt.openUrlExternally(link)
+            color: UM.Theme.getColor("text")
             font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap
             renderType: Text.NativeRendering
         }
 
+
+        CheckBox
+        {
+            id: optionToggle
+            anchors
+            {
+                top: messageLabel.bottom
+                topMargin: visible ? UM.Theme.getSize("narrow_margin").height: 0
+                left: parent.left
+                leftMargin: UM.Theme.getSize("default_margin").width
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+            }
+            text: model.option_text
+            visible: text != ""
+            height: visible ? undefined: 0
+            checked: model.option_state
+            onCheckedChanged: base.model.optionToggled(message.model_id, checked)
+            style: CheckBoxStyle
+            {
+                label: Label
+                {
+                    text: control.text
+                    font: UM.Theme.getFont("default")
+                    color: UM.Theme.getColor("text")
+                    elide: Text.ElideRight
+                }
+            }
+        }
+
         ProgressBar
         {
-            id: totalProgressBar;
-            minimumValue: 0;
-            maximumValue: model.max_progress;
-
+            id: totalProgressBar
+            minimumValue: 0
+            maximumValue: model.max_progress
             value: 0
 
             // Doing this in an explicit binding since the implicit binding breaks on occasion.
-            Binding { target: totalProgressBar; property: "value"; value: model.progress }
+            Binding
+            {
+                target: totalProgressBar
+                property: "value"
+                value: model.progress
+            }
 
-            visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
-            indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
+            visible: model.progress == null ? false: true // If the progress is null (for example with the loaded message) -> hide the progressbar
+            indeterminate: model.progress == -1 ? true: false //If the progress is unknown (-1) -> the progressbar is indeterminate
             style: UM.Theme.styles.progressbar
+
 
             property string backgroundColor: UM.Theme.getColor("message_progressbar_background")
             property string controlColor: UM.Theme.getColor("message_progressbar_control")
 
-            anchors.top: messageLabel.bottom
-            anchors.topMargin: Math.round(UM.Theme.getSize("message_inner_margin").height / 2)
-            anchors.left: parent.left
-            anchors.leftMargin: UM.Theme.getSize("message_inner_margin").width
-            anchors.right: closeButton.right
+            anchors
+            {
+                top: optionToggle.bottom
+                topMargin: visible ? UM.Theme.getSize("narrow_margin").height: 0
+
+                left: parent.left
+                leftMargin: UM.Theme.getSize("default_margin").width
+
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+            }
         }
 
-        //Right aligned Action Buttons
+        // Right aligned Action Buttons
         RowLayout
         {
             id: actionButtons
 
             anchors
             {
-                right: closeButton.right
-                top:
-                {
-                    if(model.progress != undefined)
-                    {
-                        return totalProgressBar.bottom
-                    }
-                    else
-                    {
-                        return messageLabel.bottom
-                    }
-                }
-                topMargin: Math.round(UM.Theme.getSize("default_margin").width / 2)
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+
+                top: totalProgressBar.bottom
+                topMargin: UM.Theme.getSize("narrow_margin").width
             }
 
             Repeater
@@ -197,7 +317,7 @@ ListView {
 
                         var alignPosition = actionButton["button_align"]
 
-                        //ActionButtonStyle.BUTTON_ALIGN_RIGHT == 3
+                        // ActionButtonStyle.BUTTON_ALIGN_RIGHT == 3
                         if (alignPosition == 3)
                         {
                             filteredModel.push(actionButton)
@@ -205,106 +325,37 @@ ListView {
                     }
                     return filteredModel
                 }
-                delegate: Button
-                {
-                    id: messageStackButton
-                    onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
-                    text: modelData.name
-                    style: ButtonStyle
-                    {
-                        background: Item
-                        {
-                            property int standardWidth: UM.Theme.getSize("message_button").width
-                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("message_inner_margin").width
-                            implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
-                            implicitHeight: UM.Theme.getSize("message_button").height
-                            Rectangle
-                            {
-                                id: messageStackButtonBackground
-                                width: parent.width
-                                height: parent.height
-                                radius: UM.Theme.getSize("message_button_radius").width
-                                color:
-                                {
-                                    if (modelData.button_style == 0)
-                                    {
-                                        if(control.pressed)
-                                        {
-                                            return UM.Theme.getColor("message_button_active");
-                                        }
-                                        else if(control.hovered)
-                                        {
-                                            return UM.Theme.getColor("message_button_hover");
-                                        }
-                                        else
-                                        {
-                                            return UM.Theme.getColor("message_button");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        return "transparent";
-                                    }
-                                }
-                                Behavior on color { ColorAnimation { duration: 50; } }
-                            }
-                            Label
-                            {
-                                id: messageStackButtonText
-                                anchors.centerIn: parent
-                                text: control.text
-                                color:
-                                {
-                                    if (modelData.button_style == 0) //DEFAULT
-                                    {
-                                        if(control.pressed)
-                                        {
-                                            return UM.Theme.getColor("message_button_text_active");
-                                        }
-                                        else if(control.hovered)
-                                        {
-                                            return UM.Theme.getColor("message_button_text_hover");
-                                        }
-                                        else
-                                        {
-                                            return UM.Theme.getColor("message_button_text");
-                                        }
-                                    }
-                                    else if(modelData.button_style == 1) //LINK
-                                    {
-                                        return UM.Theme.getColor("text_link");
-                                    }
-                                    else
-                                    {
-                                        return UM.Theme.getColor("text");
-                                    }
-                                }
 
-                                font:
-                                {
-                                    if (modelData.button_style == 0)
-                                    {
-                                        return UM.Theme.getFont("default");
-                                    }
-                                    else
-                                    {
-                                        var obj = UM.Theme.getFont("default");
-                                        obj.underline = true;
-                                        return obj;
-                                    }
-                                }
-                            }
-                        }
-                        label: Label
+                // Put the delegate in a loader so we can connect to it's signals.
+                // We also need to use a different component based on the style of the action.
+                delegate: Loader
+                {
+                    id: actionButton
+                    sourceComponent:
+                    {
+                        if (modelData.button_style == 0)
                         {
-                            visible: false
+                            return base.primaryButton
+                        } else if (modelData.button_style == 1)
+                        {
+                            return base.link
+                        } else if (modelData.button_style == 2)
+                        {
+                            return base.secondaryButton
                         }
+                        return base.primaryButton // We got to use something, so use primary.
+                    }
+                    property var model: modelData
+                    Connections
+                    {
+                        target: actionButton.item
+                        onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
                     }
                 }
             }
         }
 
-        //Left aligned Action Buttons
+        // Left aligned Action Buttons
         RowLayout
         {
             id: leftActionButtons
@@ -312,19 +363,10 @@ ListView {
             anchors
             {
                 left: messageLabel.left
-                leftMargin: -UM.Theme.getSize("message_inner_margin").width / 2
-                top:
-                {
-                    if(model.progress != undefined)
-                    {
-                        return totalProgressBar.bottom
-                    }
-                    else
-                    {
-                        return messageLabel.bottom
-                    }
-                }
-                topMargin: Math.round(UM.Theme.getSize("default_margin").width / 2)
+                leftMargin: UM.Theme.getSize("narrow_margin").width
+
+                top: totalProgressBar.bottom
+                topMargin: UM.Theme.getSize("narrow_margin").width
             }
 
             Repeater
@@ -344,7 +386,7 @@ ListView {
 
                         var alignPosition = actionButton["button_align"]
 
-                        //ActionButtonStyle.BUTTON_ALIGN_LEFT == 2
+                        // ActionButtonStyle.BUTTON_ALIGN_LEFT == 2
                         if (alignPosition == 2)
                         {
                             filteredModel.push(actionButton)
@@ -352,95 +394,31 @@ ListView {
                     }
                     return filteredModel
                 }
-                delegate: Button
-                {
-                    id: messageStackButton
-                    onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
-                    text: modelData.name
-                    style: ButtonStyle
-                    {
-                        background: Item
-                        {
-                            property int standardWidth: UM.Theme.getSize("message_button").width
-                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("message_inner_margin").width
-                            implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
-                            implicitHeight: UM.Theme.getSize("message_button").height
-                            Rectangle
-                            {
-                                id: messageStackButtonBackground
-                                width: parent.width
-                                height: parent.height
-                                color:
-                                {
-                                    if (modelData.button_style == 0)
-                                    {
-                                        if(control.pressed)
-                                        {
-                                            return UM.Theme.getColor("message_button_active");
-                                        }
-                                        else if(control.hovered)
-                                        {
-                                            return UM.Theme.getColor("message_button_hover");
-                                        }
-                                        else
-                                        {
-                                            return UM.Theme.getColor("message_button");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        return "transparent";
-                                    }
-                                }
-                                Behavior on color { ColorAnimation { duration: 50; } }
-                            }
-                            Label
-                            {
-                                id: messageStackButtonText
-                                anchors.centerIn: parent
-                                text: control.text
-                                color:
-                                {
-                                    if (modelData.button_style == 0)
-                                    {
-                                        if(control.pressed)
-                                        {
-                                            return UM.Theme.getColor("message_button_text_active");
-                                        }
-                                        else if(control.hovered)
-                                        {
-                                            return UM.Theme.getColor("message_button_text_hover");
-                                        }
-                                        else
-                                        {
-                                            return UM.Theme.getColor("message_button_text");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        return UM.Theme.getColor("text");
-                                    }
-                                }
 
-                                font:
-                                {
-                                    if (modelData.button_style == 0)
-                                    {
-                                        return UM.Theme.getFont("default");
-                                    }
-                                    else
-                                    {
-                                        var obj = UM.Theme.getFont("default");
-                                        obj.underline = true;
-                                        return obj;
-                                    }
-                                }
-                            }
-                        }
-                        label: Label
+                // Put the delegate in a loader so we can connect to it's signals.
+                // We also need to use a different component based on the style of the action.
+                delegate: Loader
+                {
+                    id: actionButton
+                    sourceComponent:
+                    {
+                        if (modelData.button_style == 0)
                         {
-                            visible: false
+                            return base.primaryButton
+                        } else if (modelData.button_style == 1)
+                        {
+                            return base.link
+                        } else if (modelData.button_style == 2)
+                        {
+                            return base.secondaryButton
                         }
+                        return base.primaryButton // We got to use something, so use primary.
+                    }
+                    property var model: modelData
+                    Connections
+                    {
+                        target: actionButton.item
+                        onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
                     }
                 }
             }
