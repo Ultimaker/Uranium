@@ -3,6 +3,7 @@
 
 from typing import Union
 
+
 ##  An RGBA color value.
 #
 #   This class represents an RGBA color value, in the range of 0.0 to 1.0.
@@ -89,15 +90,3 @@ class Color:
                 int(value[5:7], 16) / 255,
                 1.0
             )
-
-    ##  Returns a 7-character string in "#RRGGBB" format representing the color.
-    #
-    #   \param include_alpha Whether to return a 7-character "#RRGGBB" or a 9 character "#AARRGGBB" format.
-    #   \return A 7- or 9-character string representing a color in "#AARRGGBB" format.
-    def toHexString(self, include_alpha = False):
-        value = ((int(self._r * 255) & 255) << 16) + \
-                ((int(self._g * 255) & 255) << 8) + \
-                (int(self._b * 255) & 255)
-        if include_alpha:
-            value += (int(self._a * 255) & 255) << 24
-        return "#%s" % hex(value)[2:]
