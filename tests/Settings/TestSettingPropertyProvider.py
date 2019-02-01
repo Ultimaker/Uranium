@@ -90,7 +90,7 @@ def test_valueChanges(container_registry):
     # We now ask for the second instance container to be targeted
     setting_property_provider.setStoreIndex(1)
     assert setting_property_provider.storeIndex == 1
-    
+
     setting_property_provider.setPropertyValue("value", 2)
     setting_property_provider._update()
     # So now we should see a change in that instance container
