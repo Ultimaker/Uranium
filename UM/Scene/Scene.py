@@ -28,10 +28,10 @@ i18n_catalog = i18nCatalog("uranium")
 @signalemitter
 class Scene:
     def __init__(self) -> None:
-        super().__init__()  # Call super to make multiple inheritance work.
+        super().__init__()
 
         from UM.Scene.SceneNode import SceneNode
-        self._root = SceneNode(name= "Root")
+        self._root = SceneNode(name = "Root")
         self._root.setCalculateBoundingBox(False)
         self._connectSignalsRoot()
         self._active_camera = None  # type: Optional[Camera]
