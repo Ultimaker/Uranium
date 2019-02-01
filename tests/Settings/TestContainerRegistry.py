@@ -112,12 +112,26 @@ def test_removeContainer(container_registry):
 
 
 def test_renameContainer(container_registry):
+    # Ensure that renaming an unknown container doesn't break
+    container_registry.renameContainer("ContainerThatDoesntExist", "whatever")
+
     test_container = InstanceContainer("omgzomg")
     container_registry.addContainer(test_container)
+
+    # Attempting a rename to the same name should not mark the container as dirty.
+    container_registry.renameContainer("omgzomg", "omgzomg")
+    assert "omgzomg" not in [container.getId() for container in container_registry.findDirtyContainers()]
+
     container_registry.renameContainer("omgzomg", "BEEP")
     assert test_container.getMetaDataEntry("name") == "BEEP"
     # Ensure that the container is marked as dirty
     assert "omgzomg" in [container.getId() for container in container_registry.findDirtyContainers()]
+
+    # Rename the container and also try to give it a new ID
+    container_registry.renameContainer("omgzomg", "BEEPz", "omgzomg2")
+    assert "omgzomg2" in [container.getId() for container in container_registry.findDirtyContainers()]
+    # The old ID should not be in the list of dirty containers now.
+    assert "omgzomg" not in [container.getId() for container in container_registry.findDirtyContainers()]
 
 
 ##  Tests the creation of the container registry.
