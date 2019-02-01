@@ -11,6 +11,8 @@ Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 test_Preference_data = [
     {"key": "test/zomg", "default": 10},
     {"key": "test/BLORP", "default": "True"},
+    {"key": "testing/BLORP", "default": "False"},
+    {"key": "testing/omgzomg", "default": dict()}
 ]
 
 test_newValues_data = [None, 10, "omgzomg", -20, 12.1, 2j, {"test", "more_test"}, [10, 20, 30], "True", "true", dict()]
@@ -46,6 +48,7 @@ def test_readWrite():
     assert preferences.getValue("general/foo") == new_preferences.getValue("general/foo")
     assert preferences.getValue("test/more_test") == new_preferences.getValue("test/more_test")
 
+
 def test_malformattedKey():
     preferences = Preferences()
     with pytest.raises(Exception):
@@ -57,6 +60,10 @@ def test_addPreference(preference):
     preferences = Preferences()
     preferences.addPreference(preference["key"], preference["default"])
     assert preferences.getValue(preference["key"]) == parseValue(preference["default"])
+
+    # Attempt to add the preference again, but with a different default.
+    preferences.addPreference(preference["key"], preference["key"])
+    assert preferences.getValue(preference["key"]) == parseValue(preference["key"])
 
 
 @pytest.mark.parametrize("preference", test_Preference_data)
@@ -88,3 +95,11 @@ def test_setResetValue(new_value):
         assert preferences.preferenceChanged.emit.call_count == 0
 
     assert preferences.getValue("test/test") == default_value
+
+
+def test_nonExistingSetting():
+    preferences = Preferences()
+    # Test that attempting to modify a non existing setting in any way doesn't break things.
+    preferences.setDefault("nonExistingPreference", "whatever")
+    preferences.setValue("nonExistingPreference", "whatever")
+    preferences.removePreference("nonExistingPreference")
