@@ -30,7 +30,8 @@ class TestVector(unittest.TestCase):
         self.assertEqual(self._vector.angleToVector(third_vector),self._vector.angleToVector(fourth_vector))
 
     def test_normalize(self):
-        pass
+        vector = Vector(10, 10, 10)
+        assert vector.normalized().length() == 1
 
     def test_setValues(self):
         x = 10
@@ -38,6 +39,9 @@ class TestVector(unittest.TestCase):
         z = 10 
         temp_vector = Vector(x,y,z)
         numpy.testing.assert_array_almost_equal(temp_vector.getData(), numpy.array([x,y,z]))
+
+        temp_vector2 = temp_vector.set(1, 2, 3)
+        numpy.testing.assert_array_almost_equal(temp_vector2.getData(), numpy.array([1, 2, 3]))
 
     def test_negPos(self):
         v = Vector(0, 1, 0)
