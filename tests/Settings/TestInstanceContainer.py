@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import unittest.mock #For MagicMock and patch.
@@ -10,11 +10,14 @@ import UM.Settings.SettingInstance
 import UM.Settings.SettingDefinition
 import UM.Settings.SettingRelation
 from UM.Resources import Resources
+import copy
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
+
 
 def test_create():
     container = UM.Settings.InstanceContainer.InstanceContainer("test")
     assert container.getId() == "test"
+
 
 ##  Test whether setting a property on an instance correctly updates dependencies.
 #
@@ -64,6 +67,7 @@ def test_instance_setProperty():
     assert definition2.value(instance_container) == 100
     assert definition2.maximum_value(instance_container) == 200
 
+
 test_serialize_data = [
     ({"definition": "basic_definition", "name": "Basic"}, "basic_instance.inst.cfg"),
     ({"definition": "basic_definition", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6}}, "metadata_instance.inst.cfg"),
@@ -71,6 +75,8 @@ test_serialize_data = [
         "test_setting_0": 20, "test_setting_1": 20, "test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20
     }}, "setting_values.inst.cfg"),
 ]
+
+
 @pytest.mark.parametrize("container_data,equals_file", test_serialize_data)
 def test_serialize(container_data, equals_file, loaded_container_registry):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
@@ -91,6 +97,7 @@ def test_serialize(container_data, equals_file, loaded_container_registry):
     with open(path, encoding = "utf-8") as data:
         assert data.readline() in result
 
+
 test_serialize_with_ignored_metadata_keys_data = [
     ({"definition": "basic_definition", "name": "Basic", "metadata": {"secret": "something", "secret2": "something2"}}, "basic_instance.inst.cfg"),
     ({"definition": "basic_definition", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6, "secret": "something", "secret2": "something2"}}, "metadata_instance.inst.cfg"),
@@ -100,6 +107,8 @@ test_serialize_with_ignored_metadata_keys_data = [
         "test_setting_0": 20, "test_setting_1": 20, "test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20
       }}, "setting_values.inst.cfg"),
 ]
+
+
 @pytest.mark.parametrize("container_data,equals_file", test_serialize_with_ignored_metadata_keys_data)
 def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loaded_container_registry):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
@@ -124,11 +133,14 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
     for key in ignored_metadata_keys:
         assert key not in new_metadata
 
+
 test_deserialize_data = [
     ("basic_instance.inst.cfg", {"metaData": {"name": "Basic"}}),
     ("metadata_instance.inst.cfg", {"metaData": {"name": "Metadata", "author": "Ultimaker", "bool": "False", "integer": "6"}}),
-    ("setting_values.inst.cfg", {"metaData": {"name": "Setting Values"}, "values": {"test_setting_0": 20}}),
+    ("setting_values.inst.cfg", {"metaData": {"name": "Setting Values"}, "values": {"test_setting_0": 20, "test_setting_1": 20,"test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20}}),
 ]
+
+
 @pytest.mark.parametrize("filename,expected", test_deserialize_data)
 def test_deserialize(filename, expected):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer(filename)
@@ -141,7 +153,91 @@ def test_deserialize(filename, expected):
         if key == "values":
             for key, value in value.items():
                 assert instance_container.getProperty(key, "value") == value
+                # We also expect to find an single instance for every key we expect to have a value for.
+                assert instance_container.getInstance(key) is not None
+                assert instance_container.hasProperty(key, "value")
+
+            all_keys = instance_container.getAllKeys()
+            all_expected_keys = set(expected["values"].keys())
+            assert all_keys == all_expected_keys
         elif key == "metaData":
             assert instance_container.metaData.items() >= value.items()
         else:
             assert getattr(instance_container, key) == value
+
+    # Check if deepcopy works
+    container_copied = copy.deepcopy(instance_container)
+    assert instance_container == container_copied
+
+    # Check if clearing the container works.
+    instance_container.clear()
+    assert instance_container.getNumInstances() == 0
+
+
+@pytest.mark.parametrize("filename,expected", test_deserialize_data)
+def test_deserialiseMetadata(filename, expected):
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer(filename)
+
+    path = Resources.getPath(Resources.InstanceContainers, filename)
+    with open(path, encoding="utf-8") as data:
+        metadata = instance_container.deserializeMetadata(data.read(), filename)
+
+    # We're only interested in the metadata now.
+    for key, value in expected["metaData"].items():
+        assert metadata[0][key] == value
+
+
+@pytest.mark.parametrize("filename,expected", test_deserialize_data)
+def test_duplicate(filename, expected):
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer(filename)
+
+    path = Resources.getPath(Resources.InstanceContainers, filename)
+    with open(path, encoding="utf-8") as data:
+        instance_container.deserialize(data.read())
+
+    duplicated_container = instance_container.duplicate(instance_container.getId())
+    assert duplicated_container == instance_container
+
+
+def test_compare():
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("setting_values.inst.cfg")
+    path = Resources.getPath(Resources.InstanceContainers, "setting_values.inst.cfg")
+    with open(path, encoding="utf-8") as data:
+        instance_container.deserialize(data.read())
+
+    # Time to do some checking!
+    assert not instance_container == instance_container.duplicate("different_id")
+    assert instance_container != instance_container.duplicate("different_id")
+
+    container_with_added_metadata = instance_container.duplicate(instance_container.getId())
+    container_with_added_metadata.setMetaDataEntry("yay", "whoo")
+    assert not instance_container == container_with_added_metadata
+
+    container_with_changed_metadata = instance_container.duplicate(instance_container.getId())
+    container_with_changed_metadata.setMetaData({"name": "SomethingDifferentAlltogether!"})
+    assert not instance_container == container_with_changed_metadata
+
+    container_with_removed_instance = instance_container.duplicate(instance_container.getId())
+    container_with_removed_instance.removeInstance("test_setting_0")
+    assert not instance_container == container_with_removed_instance
+
+
+def test_setMetadata():
+    container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    container.metaDataChanged = unittest.mock.MagicMock()
+    container.setMetaDataEntry("YAY", "whoo")
+    assert container.metaDataChanged.emit.call_count == 1
+    assert container.getMetaDataEntry("YAY") == "whoo"
+
+    # Setting it again shouldn't trigger a notification
+    container.setMetaDataEntry("YAY", "whoo")
+    assert container.metaDataChanged.emit.call_count == 1
+
+    # Actually changing it should trigger an update.
+    container.setMetaDataEntry("YAY", "woot")
+    assert container.metaDataChanged.emit.call_count == 2
+    assert container.getMetaDataEntry("YAY") == "woot"
+
+    # Setting the entire metadata to the same value should also not trigger an update.
+    container.setMetaData(container.getMetaData())
+    assert container.metaDataChanged.emit.call_count == 2
