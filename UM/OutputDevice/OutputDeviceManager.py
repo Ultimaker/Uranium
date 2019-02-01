@@ -198,7 +198,7 @@ class OutputDeviceManager:
     #   \param plugin_id The ID of the plugin to remove.
     #
     #   \note This does nothing if the specified plugin_id was not found.
-    def removeOutputDevicePlugin(self, plugin_id):
+    def removeOutputDevicePlugin(self, plugin_id: str) -> None:
         Logger.log("d", "Remove output device plugin %s", plugin_id)
         if plugin_id not in self._plugins:
             return
