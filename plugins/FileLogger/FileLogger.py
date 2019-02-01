@@ -6,13 +6,12 @@ from UM.Resources import Resources
 from UM.VersionUpgradeManager import VersionUpgradeManager
 
 import logging
-import sys
-import os.path
+
 
 class FileLogger(LogOutput):
-    def __init__(self, file_name):
+    def __init__(self, file_name: str) -> None:
         super().__init__()
-        self._logger =  logging.getLogger(self._name)  # Create python logger
+        self._logger = logging.getLogger(self._name)  # Create python logger
         self._logger.setLevel(logging.DEBUG)
 
         # Do not try to save to the app dir as it may not be writeable or may not be the right
@@ -21,7 +20,7 @@ class FileLogger(LogOutput):
         self.setFileName(Resources.getStoragePath(Resources.Resources, file_name))
         VersionUpgradeManager.getInstance().registerIgnoredFile(file_name)
 
-    def setFileName(self, file_name):
+    def setFileName(self, file_name: str) -> None:
         if ".log" in file_name:
             file_handler = logging.FileHandler(file_name, encoding = "utf-8")
             format_handler = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
@@ -33,7 +32,7 @@ class FileLogger(LogOutput):
     ##  Log message to file. 
     #   \param log_type "e" (error) , "i"(info), "d"(debug) or "w"(warning)
     #   \param message String containing message to be logged
-    def log(self, log_type, message):
+    def log(self, log_type: str, message: str) -> None:
         if log_type == "w":  # Warning
             self._logger.warning(message)
         elif log_type == "i":  # Info

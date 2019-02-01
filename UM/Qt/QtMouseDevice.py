@@ -1,11 +1,11 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, QEvent, QObject
-from PyQt5.QtGui import QMouseEvent
+from PyQt5.QtCore import Qt, QEvent
 
 from UM.InputDevice import InputDevice
 from UM.Event import MouseEvent, WheelEvent
+
 
 ##  An InputDevice subclass that processes Qt mouse events and returns a UM.Event.MouseEvent
 class QtMouseDevice(InputDevice):

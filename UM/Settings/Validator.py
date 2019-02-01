@@ -2,17 +2,14 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from enum import Enum
-from typing import Any, Optional
+from typing import Optional
 
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Logger import Logger
 
-MYPY = False
-if MYPY:
-    from UM.Settings.SettingInstance import SettingInstance
-from typing import Optional
 from . import SettingFunction
+
 
 class ValidatorState(Enum):
     Exception = "Exception"

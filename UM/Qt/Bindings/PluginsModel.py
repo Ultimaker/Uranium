@@ -1,14 +1,11 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import os
-
 from PyQt5.QtCore import Qt
 
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
 from UM.Logger import Logger
-from UM.Resources import Resources
 
 
 class PluginsModel(ListModel):

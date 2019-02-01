@@ -4,7 +4,7 @@
 import configparser
 import ast
 
-from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture, QOpenGLVertexArrayObject, QOpenGLBuffer
+from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
 from UM.Logger import Logger
 
 from UM.Math.Vector import Vector
@@ -15,6 +15,7 @@ from UM.Math.Color import Color
 ##  Raised when an error occurs during loading of the shader file.
 class InvalidShaderProgramError(Exception):
     pass
+
 
 ##  An abstract class for dealing with shader programs.
 #

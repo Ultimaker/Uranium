@@ -14,7 +14,7 @@ from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl
 from UM import i18nCatalog
 from UM.Logger import Logger
 from UM.Message import Message
-from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType  # To get the type of container we're loading.
+from UM.MimeTypeDatabase import MimeTypeDatabase  # To get the type of container we're loading.
 
 from UM.Resources import Resources
 from UM.Version import Version

@@ -17,7 +17,7 @@ import traceback
 import functools
 
 from UM.Event import CallFunctionEvent
-from UM.Decorators import deprecated, call_if_enabled
+from UM.Decorators import call_if_enabled
 from UM.Logger import Logger
 from UM.Platform import Platform
 from UM import FlameProfiler

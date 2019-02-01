@@ -21,10 +21,6 @@ from UM.Platform import Platform
 
 i18n_catalog = i18nCatalog("uranium")
 
-MYPY = False
-if MYPY:
-    from UM.Scene.SceneNode import SceneNode
-
 
 ##  Container object for the scene graph
 #

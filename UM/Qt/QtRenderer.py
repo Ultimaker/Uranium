@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
-from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage, QOpenGLVertexArrayObject
+from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLVertexArrayObject
 from typing import List, Optional, Tuple
 
 from UM.Application import Application
@@ -22,8 +22,6 @@ from UM.View.RenderBatch import RenderBatch
 from UM.Signal import Signal, signalemitter
 
 from UM.Logger import Logger
-
-
 
 MYPY = False
 if MYPY:
@@ -45,13 +43,13 @@ class QtRenderer(Renderer):
     def __init__(self) -> None:
         super().__init__()
 
-        self._controller = Application.getInstance().getController() #type: Controller
-        self._scene = self._controller.getScene() #type: Scene
+        self._controller = Application.getInstance().getController()  # type: Controller
+        self._scene = self._controller.getScene()  # type: Scene
 
-        self._initialized = False #type: bool
+        self._initialized = False  # type: bool
 
-        self._light_position = Vector(0, 0, 0) #type: Vector
-        self._background_color = QColor(128, 128, 128) #type: QColor
+        self._light_position = Vector(0, 0, 0)  # type: Vector
+        self._background_color = QColor(128, 128, 128)  # type: QColor
         self._viewport_width = 0  # type: int
         self._viewport_height = 0  # type: int
         self._window_width = 0  # type: int
