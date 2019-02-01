@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from json import JSONDecodeError
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
 import json
 import os
 import shutil
@@ -15,16 +15,20 @@ from UM import i18nCatalog
 from UM.Logger import Logger
 from UM.Message import Message
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType  # To get the type of container we're loading.
+
 from UM.Resources import Resources
 from UM.Version import Version
 
 catalog = i18nCatalog("uranium")
 
+if TYPE_CHECKING:
+    from UM.Qt.QtApplication import QtApplication
+
 
 class PackageManager(QObject):
     Version = 1
 
-    def __init__(self, application, parent = None):
+    def __init__(self, application: "QtApplication", parent: Optional[QObject] = None) -> None:
         super().__init__(parent)
 
         self._application = application
@@ -32,7 +36,7 @@ class PackageManager(QObject):
         self._plugin_registry = self._application.getPluginRegistry()
 
         # JSON files that keep track of all installed packages.
-        self._user_package_management_file_path = None  # type: str
+        self._user_package_management_file_path = None  # type: Optional[str]
         self._bundled_package_management_file_paths = []  # type: List[str]
         for search_path in Resources.getAllPathsForType(Resources.BundledPackages):
             if not os.path.isdir(search_path):
@@ -52,19 +56,19 @@ class PackageManager(QObject):
             candidate_user_path = os.path.join(search_path, "packages.json")
             if os.path.exists(candidate_user_path):
                 self._user_package_management_file_path = candidate_user_path
-        if self._user_package_management_file_path is None: #Doesn't exist yet.
+        if self._user_package_management_file_path is None:  # Doesn't exist yet.
             self._user_package_management_file_path = os.path.join(Resources.getDataStoragePath(), "packages.json")
 
         self._installation_dirs_dict = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}  # type: Dict[str, str]
 
-        self._bundled_package_dict = {}     # A dict of all bundled packages
-        self._installed_package_dict = {}   # A dict of all installed packages
-        self._to_remove_package_set = set() # A set of packages that need to be removed at the next start
-        self._to_install_package_dict = {}  # A dict of packages that need to be installed at the next start
+        self._bundled_package_dict = {}  # type: Dict[str, Dict[str, Any]] # A dict of all bundled packages
+        self._installed_package_dict = {}  # type: Dict[str, Dict[str, Any]] # A dict of all installed packages
+        self._to_remove_package_set = set()  # type: Set[str] # A set of packages that need to be removed at the next start
+        self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that need to be installed at the next start
 
-    installedPackagesChanged = pyqtSignal() # Emitted whenever the installed packages collection have been changed.
+    installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
 
-    def initialize(self):
+    def initialize(self) -> None:
         self._loadManagementData()
         self._removeAllScheduledPackages()
         self._installAllScheduledPackages()
@@ -87,7 +91,7 @@ class PackageManager(QObject):
         with container_registry.lockFile():
             try:
                 # Load the user packages:
-                with open(self._user_package_management_file_path, "r", encoding="utf-8") as f:
+                with open(cast(str, self._user_package_management_file_path), "r", encoding="utf-8") as f:
                     try:
                         management_dict = json.load(f, encoding="utf-8")
                     except JSONDecodeError:
@@ -159,7 +163,7 @@ class PackageManager(QObject):
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
         container_registry = self._application.getContainerRegistry()
         with container_registry.lockFile():
-            with open(self._user_package_management_file_path, "w", encoding = "utf-8") as f:
+            with open(cast(str,self._user_package_management_file_path), "w", encoding = "utf-8") as f:
                 data_dict = {"version": PackageManager.Version,
                              "installed": self._installed_package_dict,
                              "to_remove": list(self._to_remove_package_set),
@@ -195,14 +199,14 @@ class PackageManager(QObject):
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
 
-    def getBundledPackageInfo(self, package_id: str) -> Optional[dict]:
+    def getBundledPackageInfo(self, package_id: str) -> Optional[Dict[str, Any]]:
         package_info = None
         if package_id in self._bundled_package_dict:
             package_info = self._bundled_package_dict[package_id]["package_info"]
         return package_info
 
     # Checks the given package is installed. If so, return a dictionary that contains the package's information.
-    def getInstalledPackageInfo(self, package_id: str) -> Optional[dict]:
+    def getInstalledPackageInfo(self, package_id: str) -> Optional[Dict[str, Any]]:
         if package_id in self._to_remove_package_set:
             return None
 
@@ -225,9 +229,9 @@ class PackageManager(QObject):
 
         return package_info
 
-    def getAllInstalledPackageIDs(self) -> set:
+    def getAllInstalledPackageIDs(self) -> Set[str]:
         # Add bundled, installed, and to-install packages to the set of installed package IDs
-        all_installed_ids = set() #type: Set[str]
+        all_installed_ids = set()  # type: Set[str]
 
         if self._bundled_package_dict.keys():
             all_installed_ids = all_installed_ids.union(set(self._bundled_package_dict.keys()))
@@ -240,12 +244,12 @@ class PackageManager(QObject):
 
         return all_installed_ids
 
-    def getAllInstalledPackagesInfo(self) -> dict:
+    def getAllInstalledPackagesInfo(self) -> Dict[str, List[Dict[str, Any]]]:
 
         all_installed_ids = self.getAllInstalledPackageIDs()
 
         # map of <package_type> -> <package_id> -> <package_info>
-        installed_packages_dict = {} #type: Dict[str, List[Dict[str, Any]]]
+        installed_packages_dict = {}  # type: Dict[str, List[Dict[str, Any]]]
         for package_id in all_installed_ids:
             # Skip required plugins as they should not be tampered with
             if package_id in self._application.getRequiredPlugins():
@@ -265,7 +269,7 @@ class PackageManager(QObject):
 
         return installed_packages_dict
 
-    def getToRemovePackageIDs(self) -> set:
+    def getToRemovePackageIDs(self) -> Set[str]:
         return self._to_remove_package_set
 
     # Checks if the given package is installed (at all).
@@ -346,7 +350,7 @@ class PackageManager(QObject):
         self.installedPackagesChanged.emit()
 
     ##  Is the package an user installed package?
-    def isUserInstalledPackage(self, package_id: str):
+    def isUserInstalledPackage(self, package_id: str) -> bool:
         return package_id in self._installed_package_dict
 
     # Removes everything associated with the given package ID.
@@ -364,7 +368,7 @@ class PackageManager(QObject):
             break
 
     # Installs all files associated with the given package.
-    def _installPackage(self, installation_package_data: dict):
+    def _installPackage(self, installation_package_data: Dict[str, Any]) -> None:
         package_info = installation_package_data["package_info"]
         filename = installation_package_data["filename"]
 
