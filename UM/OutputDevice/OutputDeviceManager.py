@@ -1,10 +1,16 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import Dict, Optional, TYPE_CHECKING
+
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
+
+if TYPE_CHECKING:
+    from UM.OutputDevice.OutputDevice import OutputDevice
+    from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 
 ##  Manages all available output devices and the plugin objects used to create them.
 #
@@ -41,12 +47,12 @@ from UM.PluginRegistry import PluginRegistry
 @signalemitter
 class OutputDeviceManager:
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-        self._output_devices = {}
-        self._plugins = {}
-        self._active_device = None
+        self._output_devices = {}  # type: Dict[str, OutputDevice]
+        self._plugins = {}  # type: Dict[str, OutputDevicePlugin]
+        self._active_device = None  # type: Optional[OutputDevice]
         self._active_device_override = False
         self._write_in_progress = False
         PluginRegistry.addType("output_device", self.addOutputDevicePlugin)
@@ -88,7 +94,7 @@ class OutputDeviceManager:
     #
     #   \param device_id The ID of the device to retrieve.
     #   \return \type{OutputDevice} The output device corresponding to the ID or None if not found.
-    def getOutputDevice(self, device_id):
+    def getOutputDevice(self, device_id: str) -> Optional["OutputDevice"]:
         return self._output_devices.get(device_id, None)
 
     ##  Emitted whenever an output device is added or removed.
@@ -99,7 +105,7 @@ class OutputDeviceManager:
     #   \param \type{OutputDevice} The output device to add.
     #
     #   \note Does nothing if a device with the same ID as the passed device was already added.
-    def addOutputDevice(self, device):
+    def addOutputDevice(self, device: "OutputDevice") -> None:
         if device.getId() in self._output_devices:
             Logger.log("i", "Output Device %s already added", device.getId())
             return
@@ -122,7 +128,7 @@ class OutputDeviceManager:
     #
     #   \note This does nothing if the device_id does not correspond to a registered device.
     #   \return Whether the device was successfully removed or not.
-    def removeOutputDevice(self, device_id) -> bool:
+    def removeOutputDevice(self, device_id: str) -> bool:
         if device_id not in self._output_devices:
             Logger.log("w", "Could not find output device with id %s to remove", device_id)
             return False
@@ -136,7 +142,7 @@ class OutputDeviceManager:
         device.writeSuccess.disconnect(self.writeSuccess)
         self.outputDevicesChanged.emit()
 
-        if self._active_device.getId() == device_id:
+        if self._active_device is not None and self._active_device.getId() == device_id:
             self._write_in_progress = False
             self.resetActiveDevice()
         return True
@@ -154,7 +160,7 @@ class OutputDeviceManager:
     #
     #   \note This does nothing if the device_id does not correspond to a registered device.
     #   \note This will override the default active device selection behaviour.
-    def setActiveDevice(self, device_id):
+    def setActiveDevice(self, device_id: str) -> None:
         if device_id not in self._output_devices:
             return
 
@@ -165,7 +171,7 @@ class OutputDeviceManager:
             self.activeDeviceChanged.emit()
 
     ##  Reset the active device to the default device.
-    def resetActiveDevice(self):
+    def resetActiveDevice(self) -> None:
         self._active_device = self._findHighestPriorityDevice()
         self._active_device_override = False
         self._write_in_progress = False
@@ -176,7 +182,7 @@ class OutputDeviceManager:
     #   \param \type{OutputDevicePlugin} The plugin to add.
     #
     #   \note This does nothing if the plugin was already added.
-    def addOutputDevicePlugin(self, plugin):
+    def addOutputDevicePlugin(self, plugin: "OutputDevicePlugin") -> None:
         if plugin.getPluginId() in self._plugins:
             Logger.log("i", "Output Device Plugin %s was already added.", plugin.getPluginId())
             return
@@ -209,12 +215,12 @@ class OutputDeviceManager:
     #   \param plugin_id The ID of the plugin to retrieve
     #
     #   \return The plugin corresponding to the specified ID or None if it was not found.
-    def getOutputDevicePlugin(self, plugin_id):
+    def getOutputDevicePlugin(self, plugin_id: str) -> Optional["OutputDevicePlugin"]:
         return self._plugins.get(plugin_id, None)
 
     ##  private:
 
-    def _findHighestPriorityDevice(self):
+    def _findHighestPriorityDevice(self) -> Optional["OutputDevice"]:
         device = None
         for key, value in self._output_devices.items():
             if not device or value.getPriority() > device.getPriority():
