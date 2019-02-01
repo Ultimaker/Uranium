@@ -317,6 +317,16 @@ def test_loadAllMetada(container_registry):
     assert container_registry.isLoaded(instances[0].get("id"))
 
 
+def test_findLazyLoadedContainers(container_registry):
+    container_registry.loadAllMetadata()
+    container_registry.containerLoadComplete.emit = MagicMock()
+    # Only metadata should be loaded at this moment, so no loadComplete signals should have been fired.
+    assert container_registry.containerLoadComplete.emit.call_count == 0
+    result = container_registry.findContainers(id = "single_setting")
+    assert len(result) == 1
+    assert container_registry.containerLoadComplete.emit.call_count == 1
+
+
 ##  Tests the making of a unique name for containers in the registry.
 #
 #   \param container_registry A new container registry from a fixture.
