@@ -321,6 +321,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     ##  Load the metadata of all available definition containers, instance
     #   containers and container stacks.
     def loadAllMetadata(self) -> None:
+        self._clearQueryCache()
         gc.disable()
         resource_start_time = time.time()
         for provider in self._providers:  # Automatically sorted by the priority queue.

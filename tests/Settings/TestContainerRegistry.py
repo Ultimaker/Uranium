@@ -272,6 +272,7 @@ def test_findContainerStacks(container_registry, data):
 
     _verifyMetaDataMatches(results, data["result"])
 
+
 ##  Tests the loading of containers into the registry.
 #
 #   \param container_registry A new container registry from a fixture.
@@ -294,6 +295,27 @@ def test_load(container_registry):
     assert "metadata_definition" in ids_found
     assert "single_setting" in ids_found
     assert "inherits" in ids_found
+
+
+##  Test that uses the lazy loading part of the registry. Instead of loading eveyrthing, we load the metadata
+#   so that the containers can be loaded just in time.
+def test_loadAllMetada(container_registry):
+    # Before we start, the container should not even be there.
+    instances_before = container_registry.findInstanceContainersMetadata(author="Ultimaker")
+    assert len(instances_before) == 0
+
+    container_registry.loadAllMetadata()
+
+    instances = container_registry.findInstanceContainersMetadata(author="Ultimaker")
+    assert len(instances) == 1
+
+    # Since we only loaded the metadata, the actual container should not be loaded just yet.
+    assert not container_registry.isLoaded(instances[0].get("id"))
+
+    # As we asked for it, the lazy loading should kick in and actually load it.
+    container_registry.findInstanceContainers(id = instances[0].get("id"))
+    assert container_registry.isLoaded(instances[0].get("id"))
+
 
 ##  Tests the making of a unique name for containers in the registry.
 #
