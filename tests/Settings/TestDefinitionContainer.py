@@ -77,6 +77,19 @@ def test_deserialize(file, expected, definition_container, upgrade_manager: Vers
     assert all_keys == all_expected_keys
 
 
+@pytest.mark.parametrize("file,expected", test_deserialize_data)
+def test_deserializeMetadata(file, expected, definition_container, upgrade_manager: VersionUpgradeManager):
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file), encoding = "utf-8") as data:
+        json = data.read()
+
+    metadata = definition_container.deserializeMetadata(json, file)
+
+    assert metadata[0]["container_type"] == UM.Settings.DefinitionContainer.DefinitionContainer
+    assert metadata[0]["id"] == file
+
+    for key, value in expected["metadata"].items():
+        assert metadata[0][key] == value
+
 
 ##  Tests deserialising bad definition container JSONs.
 #
