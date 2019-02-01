@@ -89,12 +89,30 @@ def test_valueChanges(container_registry):
 
     # We now ask for the second instance container to be targeted
     setting_property_provider.setStoreIndex(1)
+    assert setting_property_provider.storeIndex == 1
+    
     setting_property_provider.setPropertyValue("value", 2)
     setting_property_provider._update()
     # So now we should see a change in that instance container
     assert setting_property_provider.getPropertyValue("value", 1) == 2
     # But not if we ask the provider, because the container above it still has a 25 as value!
     assert setting_property_provider.getPropertyValue("value", 0) == 25
+
+    assert setting_property_provider.stackLevels == [0, 1, 2]
+
+    # We're asking for an index that doesn't exist.
+    assert setting_property_provider.getPropertyValue("value", 2000) is None
+
+    # The value is used, so the property must be true
+    assert setting_property_provider.isValueUsed
+
+    # Try to remove the setting from the container
+    setting_property_provider.removeFromContainer(0)
+    assert setting_property_provider.getPropertyValue("value", 0) is None
+
+    # Ensure that a weird index doesn't break
+    setting_property_provider.removeFromContainer(90001)
+
 
 
 
