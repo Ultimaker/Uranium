@@ -44,12 +44,6 @@ class View(QObject, PluginObject):
     def getController(self):
         return self._controller
 
-    ##  Set the controller object associated with this View.
-    #   \param controller The controller object to use.
-    #   \sa Controller
-    def setController(self, controller: "Controller") -> None:
-        self._controller = controller
-
     ##  Get the Renderer instance for this View.
     def getRenderer(self):
         return self._renderer
