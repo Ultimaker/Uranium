@@ -1,7 +1,7 @@
 // Copyright (c) 2018 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
-import QtQuick 2.2
+import QtQuick 2.3
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
@@ -154,19 +154,24 @@ ListView
                 rightMargin: UM.Theme.getSize("default_margin").width
 
                 top: titleBar.bottom
-                topMargin: visible ? UM.Theme.getSize("narrow_margin").height: 0
+                topMargin: visible ? UM.Theme.getSize("default_margin").height: 0
             }
             Image
             {
                 id: messageImage
                 anchors
                 {
-                    left: parent.left
-                    right: parent.right
+                    horizontalCenter: parent.horizontalCenter
                 }
-                height: 0.5 * UM.Theme.getSize("message").width
+                height: UM.Theme.getSize("message_image").height
                 fillMode: Image.PreserveAspectFit
                 source: model.image_source
+                sourceSize
+                {
+                    height: height
+                    width: width
+                }
+                mipmap: true
             }
 
             Label
