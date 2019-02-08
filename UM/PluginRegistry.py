@@ -165,29 +165,6 @@ class PluginRegistry(QObject):
     # PUBLIC METHODS
     #===============================================================================
 
-    #   If used, this can add available plugins (from a remote server) to the
-    #   registry. Cura uses this method to add 3rd-party plugins.
-    def addExternalPlugins(self, plugin_list: List[Dict[str, Any]]) -> None:
-        for plugin in plugin_list:
-            # Add the plugin id to the all plugins list if not already there:
-            if plugin["id"] not in self._all_plugins:
-                self._all_plugins.append(plugin["id"])
-
-                # Does this look redundant?
-                # It is. Should be simplfied in the future but changing it right
-                # now may break other functionality.
-                if plugin["id"] not in self._plugins_available:
-                    self._plugins_available.append(plugin["id"])
-            self._metadata[plugin["id"]] = {
-                "id": plugin["id"],
-                "plugin": plugin,
-                "update_url": plugin["file_location"]
-            }
-
-            # Keep a note of plugins which are not Ultimaker plugins:
-            if plugin["id"] not in self._plugins_external:
-                self._plugins_external.append(plugin["id"])
-
     #   Add a plugin location to the list of locations to search:
     def addPluginLocation(self, location: str) -> None:
         #TODO: Add error checking!

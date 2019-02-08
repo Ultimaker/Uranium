@@ -56,6 +56,7 @@ class TestPluginRegistry():
     def test_init(self, registry):
         # Without loading anything, this shouldn't fail.
         registry.initializeBeforePluginsAreLoaded()
+        registry.initializeAfterPluginsAreLoaded()
 
     def test_savePluginData(self, registry):
         with patch("builtins.open", mock_open()) as mock_file:
@@ -79,7 +80,6 @@ class TestPluginRegistry():
         # The result will be cached the second time, so ensure we test that path as well.
         assert registry.isBundledPlugin("NOPE") == False
 
-
     def test_addSupportedPluginExtension(self, registry):
         registry.addSupportedPluginExtension("blarg", "zomg")
         description_added = False
@@ -93,6 +93,11 @@ class TestPluginRegistry():
 
         assert extension_added
         assert description_added
+
+    def test_requiredPlugins(self, registry):
+        assert registry.checkRequiredPlugins(["EmptyPlugin", "OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"])
+
+        assert not registry.checkRequiredPlugins(["TheNotLoadedPlugin"])
 
     def test_metaData(self, registry):
         metadata = registry.getMetaData("TestPlugin")
@@ -143,6 +148,17 @@ class TestPluginRegistry():
         # Should no longer be active after we disable it.
         registry.disablePlugin("TestPlugin")
         assert not registry.isActivePlugin("TestPlugin")
+
+    def test_allActivePlugins(self, registry):
+        registry.loadPlugins()  # Load them up
+        all_active_plugin_ids = registry.getActivePlugins()
+
+        all_plugins_found = True
+        for plugin_id in ['EmptyPlugin', 'TestPlugin', 'TestPlugin2']:
+            if plugin_id not in all_active_plugin_ids:
+                all_plugins_found = False
+
+        assert all_plugins_found
 
     def test_load(self, registry):
         registry.loadPlugin("TestPlugin")
