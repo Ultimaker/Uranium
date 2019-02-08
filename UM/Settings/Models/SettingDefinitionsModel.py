@@ -491,7 +491,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             data = ""
 
         if isinstance(data, collections.OrderedDict):
-            result = [] 
+            result = []
             for key, value in data.items():
                 if self._i18n_catalog:
                     value = self._i18n_catalog.i18nc(definition.key + " option " + key, value)
