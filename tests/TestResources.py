@@ -154,7 +154,6 @@ class TestResources(TestCase):
             except:
                 pass
 
-
     def test_copyLatestDirsIfPresent(self):
         # Just don't fail.
         Resources._copyLatestDirsIfPresent()
