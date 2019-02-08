@@ -107,6 +107,11 @@ class TestPluginRegistry():
         path = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/UraniumExampleExtensionPlugin.umplugin")
         registry._installPlugin("UraniumExampleExtensionPlugin", path)
 
+    def test__subsetInDict(self, registry):
+        assert not registry._subsetInDict({}, {"test": "test"})
+        assert not registry._subsetInDict( {"test": "omg"}, {"test": "test"})
+        assert registry._subsetInDict({"test": "test", "zomg": "omg"}, {"test": "test"})
+
     def test_requiredPlugins(self, registry):
         assert registry.checkRequiredPlugins(["EmptyPlugin", "OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"])
 
