@@ -127,6 +127,18 @@ class TestResources(TestCase):
         Resources.addStorageType(0, "/test")
         assert Resources.getStoragePathForType(0) == "/test"
 
+    def test_copyVersionFolder(self):
+        import tempfile
+        import os
+        folder_to_copy = tempfile.mkdtemp("test_folder_origin")
+        file_to_copy = tempfile.mkstemp(dir=str(folder_to_copy))
+
+        folder_to_move_to = tempfile.mkdtemp("test_folder_destination")
+
+        Resources.copyVersionFolder(str(folder_to_copy), str(folder_to_move_to) + "/target")
+        # We put a temp file in the folder to copy, check if it arrived there.
+        assert len(os.listdir(str(folder_to_move_to) + "/target")) == 1
+
     def test_addRemoveStorageType(self):
         Resources.addStorageType(9901, "YAY")
         Resources.addType(9902, "whoo")

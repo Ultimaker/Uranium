@@ -503,6 +503,8 @@ class Resources:
             # if the dest_path exist, it needs to be removed first
             if not os.path.exists(dest_path):
                 shutil.move(temp_dir_path, dest_path)
+            else:
+                Logger.log("e", "Unable to copy files to %s as the folder already exists", dest_path)
         except:
             Logger.log("e", "Something occurred when copying the version folder from '%s' to '%s'", src_path, dest_path)
 
