@@ -139,6 +139,18 @@ class TestResources(TestCase):
         # We put a temp file in the folder to copy, check if it arrived there.
         assert len(os.listdir(str(folder_to_move_to) + "/target")) == 1
 
+    def test_findLatestDirInPaths(self):
+        import tempfile
+        test_folder = tempfile.mkdtemp("test_folder")
+        os.mkdir(os.path.join(test_folder, "whatever"))
+
+        # There is no folder that matches what we're looking for!
+        assert Resources._findLatestDirInPaths([test_folder]) is None
+
+        os.mkdir(os.path.join(test_folder, Resources.ApplicationVersion))
+        # We should obviously find the folder that was created by means of the ApplicationVersion.
+        assert Resources._findLatestDirInPaths([test_folder]) == os.path.join(test_folder, Resources.ApplicationVersion)
+
     def test_addRemoveStorageType(self):
         Resources.addStorageType(9901, "YAY")
         Resources.addType(9902, "whoo")
