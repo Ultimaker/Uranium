@@ -129,6 +129,36 @@ class TestResources(TestCase):
         # We didn't add any paths, so it will use defaults
         assert Resources._getPossibleDataStorageRootPathList() == ['/tmp/test']
 
+    def test_factoryReset(self):
+        Resources.factoryReset()
+        # Check if the data is deleted!
+        assert len(os.listdir(Resources.getDataStoragePath())) == 0
+
+        # The data folder should still be there, but it should also have created a zip with the data it deleted.
+        assert len(os.listdir(os.path.dirname(Resources.getDataStoragePath()))) == 2
+
+        # Clean up after our ass.
+        folder = os.path.dirname(Resources.getDataStoragePath())
+        for file in os.listdir(folder):
+            file_path = os.path.join(folder, file)
+            print(file_path)
+            try:
+                os.unlink(file_path)
+            except:
+                pass
+        folder =  os.path.dirname(Resources.getDataStoragePath())
+        for file in os.listdir(folder):
+            file_path = os.path.join(folder, file)
+            try:
+                os.unlink(file_path)
+            except:
+                pass
+
+
+    def test_copyLatestDirsIfPresent(self):
+        # Just don't fail.
+        Resources._copyLatestDirsIfPresent()
+
     def test_getStoragePathForType(self):
         with pytest.raises(ResourceTypeError):
             # No types have been added, so this should break!
