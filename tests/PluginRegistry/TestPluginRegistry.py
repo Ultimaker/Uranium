@@ -118,8 +118,7 @@ class TestPluginRegistry():
         assert not registry.checkRequiredPlugins(["TheNotLoadedPlugin"])
 
     def test_metaData(self, registry):
-        metadata = registry.getMetaData("TestPlugin")
-        assert metadata == {"id": "TestPlugin",
+        expected_metadata = {"id": "TestPlugin",
                             "plugin": {"name": "TestPlugin",
                                        "api": 5,
                                        "supported_sdk_versions": [Version(5)],
@@ -128,6 +127,16 @@ class TestPluginRegistry():
                                        "description": "test"},
                             "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
                             }
+
+        metadata = registry.getMetaData("TestPlugin")
+        assert metadata == expected_metadata
+
+        all_metadata = registry.getAllMetaData()
+
+        for plugin_metadata in all_metadata:
+            if plugin_metadata.get("id") == "TestPlugin":
+                assert plugin_metadata == metadata
+
 
     def test_getPluginLocation(self, registry):
         # Plugin is not loaded yet, so it should raise a KeyError
