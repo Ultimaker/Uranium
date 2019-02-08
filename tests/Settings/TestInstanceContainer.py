@@ -165,6 +165,8 @@ def test_deserialize(filename, expected):
         else:
             assert getattr(instance_container, key) == value
 
+    assert len(expected.get("values", [])) == len(instance_container.findInstances())
+
     # Check if deepcopy works
     container_copied = copy.deepcopy(instance_container)
     assert instance_container == container_copied
