@@ -94,6 +94,19 @@ class TestPluginRegistry():
         assert extension_added
         assert description_added
 
+    def test_installPlugin(self, registry):
+        path = "file://" + os.path.abspath(os.path.dirname(os.path.abspath(__file__))+ "/UraniumExampleExtensionPlugin.umplugin")
+        result = registry.installPlugin(path)
+        assert result.get("status") == "ok"
+
+        # Ensure that the plugin is now marked as installed (although the actual installation happens on next restart!)
+        assert "UraniumExampleExtensionPlugin" in registry.getInstalledPlugins()
+
+    def test__installPlugin(self, registry):
+        # This tests that the unpacking of the plugin doesn't fail.
+        path = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/UraniumExampleExtensionPlugin.umplugin")
+        registry._installPlugin("UraniumExampleExtensionPlugin", path)
+
     def test_requiredPlugins(self, registry):
         assert registry.checkRequiredPlugins(["EmptyPlugin", "OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"])
 
