@@ -108,30 +108,6 @@ class Backend(PluginObject):
             while len(self._backend_log) >= self._backend_log_max_lines:
                 del(self._backend_log[0])
         return self._backend_log
-
-    ##  \brief Convert byte array containing 3 floats per vertex
-    def convertBytesToVerticeList(self, data):
-        result = []
-        if not (len(data) % 12):
-            if data is not None:
-                for index in range(0, int(len(data) / 12)):  # For each 12 bits (3 floats)
-                    result.append(struct.unpack("fff", data[index * 12: index * 12 + 12]))
-                return result
-        else:
-            Logger.log("e", "Data length was incorrect for requested type")
-            return None
-    
-    ##  \brief Convert byte array containing 6 floats per vertex
-    def convertBytesToVerticeWithNormalsList(self,data):
-        result = []
-        if not (len(data) % 24):
-            if data is not None:
-                for index in range(0,int(len(data)/24)):  # For each 24 bits (6 floats)
-                    result.append(struct.unpack("ffffff", data[index * 24: index * 24 + 24]))
-                return result
-        else:
-            Logger.log("e", "Data length was incorrect for requested type")
-            return None
     
     ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
