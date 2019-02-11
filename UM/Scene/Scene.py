@@ -46,6 +46,8 @@ class Scene:
         self._file_watcher = QFileSystemWatcher()
         self._file_watcher.fileChanged.connect(self._onFileChanged)
 
+        self._reload_message = None  # type: Optional[Message]
+
     def _connectSignalsRoot(self) -> None:
         self._root.transformationChanged.connect(self.sceneChanged)
         self._root.childrenChanged.connect(self.sceneChanged)
@@ -169,6 +171,10 @@ class Scene:
         modified_nodes = [node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path]  # type: ignore
 
         if modified_nodes:
+            # Hide the message if it was already visible
+            if self._reload_message is not None:
+                self._reload_message.hide()
+
             self._reload_message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.basename(file_path)),
                               title = i18n_catalog.i18nc("@info:title", "File has been modified"))
             self._reload_message.addAction("reload", i18n_catalog.i18nc("@action:button", "Reload"), icon = "", description = i18n_catalog.i18nc("@action:description", "This will trigger the modified files to reload from disk."))
@@ -183,7 +189,8 @@ class Scene:
     def _reloadNodes(self, nodes: List["SceneNode"], message: str, action: str) -> None:
         if action != "reload":
             return
-        self._reload_message.hide()
+        if self._reload_message is not None:
+            self._reload_message.hide()
         for node in nodes:
             meshdata = node.getMeshData()
             if meshdata:
