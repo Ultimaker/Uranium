@@ -102,7 +102,7 @@ class TestPluginRegistry():
         assert description_added
 
     def test_installPlugin(self, registry):
-        path = "file://" + os.path.abspath(os.path.dirname(os.path.abspath(__file__))+ "/UraniumExampleExtensionPlugin.umplugin")
+        path = "file://" + os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/UraniumExampleExtensionPlugin.umplugin")
         result = registry.installPlugin(path)
         assert result.get("status") == "ok"
 
@@ -143,7 +143,6 @@ class TestPluginRegistry():
         for plugin_metadata in all_metadata:
             if plugin_metadata.get("id") == "TestPlugin":
                 assert plugin_metadata == metadata
-
 
     def test_getPluginLocation(self, registry):
         # Plugin is not loaded yet, so it should raise a KeyError

@@ -489,7 +489,10 @@ class PluginRegistry(QObject):
                         break
         except zipfile.BadZipFile:
             Logger.logException("e", "Failed to load plug-in file. The zip archive seems to be corrupt.")
-            return None #Signals that loading this failed.
+            return None  # Signals that loading this failed.
+        except FileNotFoundError:
+            Logger.logException("e", "Failed to load plug-in file as we were unable to find it.")
+            return None  # Signals that loading this failed.
         return plugin_id
 
     #   Returns a list of all possible plugin ids in the plugin locations:
