@@ -78,7 +78,8 @@ def test_setVisible():
     model.setVisibilityHandler(mocked_visibility_handler)
     model.setAllVisible(True)
     # Ensure that the visibility handler got notified that things were changed.
-    mocked_visibility_handler.setVisible.assert_called_once()
+
+    assert mocked_visibility_handler.setVisible.call_count == 1
 
 
 def test_getIndex():
@@ -132,7 +133,7 @@ def test_setAllExpandedVisible():
     model.expand("test_setting")
 
     model.setAllExpandedVisible(True)
-    mocked_visibility_handler.setVisible.assert_called_once()
+    assert mocked_visibility_handler.setVisible.call_count == 1
 
 
 def test_dataHappy():

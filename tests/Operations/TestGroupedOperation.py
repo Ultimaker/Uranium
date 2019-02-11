@@ -47,7 +47,7 @@ def test_addAndMergeOperations():
     merged_operation = group_operation_1.mergeWith(group_operation_2)
 
     # The merge of the nested operation should have been called once.
-    operation_1.mergeWith.assert_called_once()
+    assert operation_1.mergeWith.call_count == 1
 
     # Number of operations should still be the same.
     assert merged_operation.getNumChildrenOperations() == 1

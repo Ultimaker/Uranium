@@ -66,19 +66,19 @@ def test_addRemoveOutputDevicePlugin():
 
     manager.addOutputDevicePlugin(plugin_1)
     assert manager.getOutputDevicePlugin("plugin_one") == plugin_1
-    plugin_1.start.assert_called_once()
+    assert plugin_1.start.call_count == 1
 
     # adding it again shouldn't cause the start to be called again!
     manager.addOutputDevicePlugin(plugin_1)
-    plugin_1.start.assert_called_once()
+    assert plugin_1.start.call_count == 1
 
     manager.removeOutputDevicePlugin("plugin_one")
     assert manager.getOutputDevicePlugin("plugin_one") is None
-    plugin_1.stop.assert_called_once()
+    assert plugin_1.start.call_count == 1
 
     # And removing it again shouldn't cause issues.
     manager.removeOutputDevicePlugin("plugin_two")
-    plugin_1.stop.assert_called_once()
+    assert plugin_1.start.call_count == 1
 
     # As the default output device plugin is an interface, the start and stop will raise exceptions.
     # but the outputdevice manager should be robust against that, so even in that case it shouldn't fail!

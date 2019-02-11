@@ -15,11 +15,11 @@ def test_setContainerStack(container_registry):
 
     setting_property_provider.containerStackChanged = MagicMock()
     setting_property_provider.setContainerStack(container_stack)
-    setting_property_provider.containerStackChanged.emit.assert_called_once()
+    assert setting_property_provider.containerStackChanged.emit.call_count == 1
 
     # Should not do anything (since its' the same stack)
     setting_property_provider.setContainerStack(container_stack)
-    setting_property_provider.containerStackChanged.emit.assert_called_once()
+    assert setting_property_provider.containerStackChanged.emit.call_count == 1
 
     with patch("UM.Settings.ContainerRegistry.ContainerRegistry.getInstance", MagicMock(return_value = container_registry)):
         setting_property_provider.setContainerStackId("test")
