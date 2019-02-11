@@ -158,12 +158,15 @@ class TestResources(TestCase):
         # Just don't fail.
         Resources._copyLatestDirsIfPresent()
 
-    def test_getStoragePathForType(self):
+    def test_getStoragePathForType_Linux(self):
+        if platform.system() != "Linux":
+            self.skipTest("not on Linux")
+
         with pytest.raises(ResourceTypeError):
             # No types have been added, so this should break!
             Resources.getAllResourcesOfType(0)
         with pytest.raises(UnsupportedStorageTypeError):
-            # We still havent added it, so it should fail (again)
+            # We still haven't added it, so it should fail (again)
             Resources.getStoragePathForType(0)
 
         Resources.addStorageType(0, "/test")
