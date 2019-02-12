@@ -141,6 +141,28 @@ class Polygon:
 
         return Polygon(points = [list(p) for p in polygon_intersection.exterior.coords[:4]])
 
+    #  Computes the convex hull of the union of the convex hulls of this and another polygon.
+    #
+    #   \param other The other polygon to combine convex hulls with.
+    #   \return The convex hull of the union of the two polygons' convex hulls.
+    def unionConvexHulls(self, other: "Polygon") -> "Polygon":
+        my_hull = self.getConvexHull()
+        other_hull = other.getConvexHull()
+
+        if len(my_hull._points) <= 2:
+            return other_hull
+        if len(other_hull._points) <= 2:
+            return my_hull
+
+        my_polygon = ShapelyUtil.polygon2ShapelyPolygon(my_hull)
+        other_polygon = ShapelyUtil.polygon2ShapelyPolygon(other_hull)
+
+        polygon_union = my_polygon.union(other_polygon).convex_hull
+        if polygon_union.area == 0:
+            return Polygon()
+
+        return Polygon(points = [list(p) for p in polygon_union.exterior.coords[:4]])
+
     ##  Check to see whether this polygon intersects with another polygon.
     #
     #   \param other \type{Polygon} The polygon to check for intersection.
