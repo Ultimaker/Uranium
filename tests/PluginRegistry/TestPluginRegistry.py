@@ -102,7 +102,10 @@ class TestPluginRegistry():
         assert description_added
 
     def test_installPlugin(self, registry):
-        path = "file://" + os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/UraniumExampleExtensionPlugin.umplugin")
+        path = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/UraniumExampleExtensionPlugin.umplugin")
+        if not path.startswith("/"):
+            path = "/" + path
+        path = "file://" + path
         result = registry.installPlugin(path)
         assert result.get("status") == "ok"
 
