@@ -236,7 +236,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
 
-    def _readAndValidateSerialized(self, serialized: str) -> Dict[str, Any]:
+    def readAndValidateSerialized(self, serialized: str) -> Tuple[Dict[str, Any], bool]:
         parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
 
         if "inherits" in parsed:
@@ -245,8 +245,9 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         self._verifyJson(parsed)
 
-        parsed = self._preprocessParsedJson(parsed)
-        return parsed
+        is_valid = self._isValidParsedJson(parsed)
+
+        return parsed, is_valid
 
     @classmethod
     def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
@@ -258,17 +259,19 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not get version from serialized: %s", e)
         return version
 
-    def _preprocessParsedJson(self, parsed: Dict[str, Any]) -> Dict[str, Any]:
+    def _isValidParsedJson(self, parsed: Dict[str, Any]) -> bool:
         # Pre-process the JSON data to include the overrides.
+        is_valid = True
         if "overrides" in parsed:
             for key, value in parsed["overrides"].items():
                 setting = self._findInDict(parsed["settings"], key)
                 if setting is None:
                     Logger.log("w","Unable to override setting %s", key)
+                    is_valid = False
                 else:
                     setting.update(value)
 
-        return parsed
+        return is_valid
 
     ##  Add a setting definition instance if it doesn't exist yet.
     #
@@ -284,7 +287,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         # update the serialized data first
         serialized = super().deserialize(serialized, file_name)
-        parsed = self._readAndValidateSerialized(serialized)
+        parsed, is_valid = self.readAndValidateSerialized(serialized)
 
         # Update properties with the data from the JSON
         old_id = self.getId() #The ID must be set via the constructor. Retain it.
