@@ -161,7 +161,7 @@ class Polygon:
         if polygon_union.area == 0:
             return Polygon()
 
-        return Polygon(points = [list(p) for p in polygon_union.exterior.coords[:4]])
+        return Polygon(points = [list(p) for p in polygon_union.exterior.coords[:-1]])
 
     ##  Check to see whether this polygon intersects with another polygon.
     #
