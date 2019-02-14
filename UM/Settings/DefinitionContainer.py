@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -245,7 +245,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         self._verifyJson(parsed)
 
-        is_valid = self._isValidParsedJson(parsed)
+        is_valid = self._preprocessParsedJson(parsed)
 
         return parsed, is_valid
 
@@ -259,7 +259,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not get version from serialized: %s", e)
         return version
 
-    def _isValidParsedJson(self, parsed: Dict[str, Any]) -> bool:
+    # Returns whether the parsed JSON is valid.
+    def _preprocessParsedJson(self, parsed: Dict[str, Any]) -> bool:
         # Pre-process the JSON data to include the overrides.
         is_valid = True
         if "overrides" in parsed:
