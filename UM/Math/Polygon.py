@@ -56,7 +56,7 @@ class Polygon:
         return "[" + ", ".join(coordinates) + "]"
 
     def isValid(self) -> bool:
-        return bool(self._points is not None and len(self._points))
+        return bool(self._points is not None and len(self._points) >= 3)
 
     def getPoints(self):
         return self._points
@@ -149,9 +149,9 @@ class Polygon:
         my_hull = self.getConvexHull()
         other_hull = other.getConvexHull()
 
-        if len(my_hull._points) <= 2:
+        if not my_hull.isValid():
             return other_hull
-        if len(other_hull._points) <= 2:
+        if not other_hull.isValid():
             return my_hull
 
         my_polygon = ShapelyUtil.polygon2ShapelyPolygon(my_hull)
