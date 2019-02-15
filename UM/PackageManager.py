@@ -332,7 +332,6 @@ class PackageManager(QObject):
         if not self.isPackageInstalled(package_id):
             Logger.log("i", "Attempt to remove package [%s] that is not installed, do nothing.", package_id)
             return
-
         # Extra safety check
         if package_id not in self._installed_package_dict and package_id in self._bundled_package_dict:
             Logger.log("i", "Not uninstalling [%s] because it is a bundled package.")
@@ -345,7 +344,6 @@ class PackageManager(QObject):
             if package_id in self._to_install_package_dict:
                 # Remove from the delayed installation list if present
                 del self._to_install_package_dict[package_id]
-
         self._saveManagementData()
         self.installedPackagesChanged.emit()
 
