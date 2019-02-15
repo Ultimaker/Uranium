@@ -3,6 +3,7 @@
 
 import pytest
 import unittest.mock
+from unittest.mock import MagicMock
 
 from UM.PackageManager import PackageManager
 
@@ -53,3 +54,22 @@ def test_comparePackageVersions():
         expected_result = test_case_dict["expected_result"]
 
         assert expected_result == package_manager._comparePackageVersions(info_dict1, info_dict2)
+
+
+def test_emptyInit():
+    manager = PackageManager(MagicMock())
+
+    assert not manager.getAllInstalledPackageIDs()
+    assert not manager.getAllInstalledPackagesInfo()
+
+    manager.installedPackagesChanged = MagicMock()
+    manager.removePackage("packageThatDoesNotExist")
+    assert manager.installedPackagesChanged.emit().call_count == 0
+
+    with pytest.raises(FileNotFoundError):
+        assert manager.getPackageLicense("FileThatDoesntExist.package") == {}
+
+    assert manager.getPackageFiles("packageThatDoesNotExist") == []
+
+    assert manager.getPackageContainerIds("packageThatDoesNotExist") == []
+
