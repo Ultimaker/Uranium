@@ -150,6 +150,9 @@ class Matrix:
         except:
             return Matrix(self._data)
 
+    def transpose(self) -> None:
+        self._data = numpy.transpose(self._data)
+
     ##  Translate the matrix based on Vector.
     #   \param direction The vector by which the matrix needs to be translated.
     def translate(self, direction: Vector) -> None:
