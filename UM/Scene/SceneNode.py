@@ -419,7 +419,7 @@ class SceneNode:
         if self._world_transformation is None:
             self._updateTransformation()
 
-        return deepcopy(self._world_transformation)
+        return Matrix(self._world_transformation.getData())
 
     ##  \brief Returns the local transformation with respect to its parent. (from parent to local)
     #   \retuns transformation 4x4 (homogenous) matrix
@@ -427,10 +427,10 @@ class SceneNode:
         if self._transformation is None:
             self._updateTransformation()
 
-        return deepcopy(self._transformation)
+        return Matrix(self._transformation.getData())
 
     def setTransformation(self, transformation: Matrix):
-        self._transformation = deepcopy(transformation) # Make a copy to ensure we never change the given transformation
+        self._transformation = Matrix(transformation.getData()) # Make a copy to ensure we never change the given transformation
         self._transformChanged()
 
     ##  Get the local orientation value.
@@ -549,7 +549,7 @@ class SceneNode:
         elif transform_space == SceneNode.TransformSpace.Parent:
             self._transformation.preMultiply(translation_matrix)
         elif transform_space == SceneNode.TransformSpace.World:
-            world_transformation = deepcopy(self._world_transformation)
+            world_transformation = Matrix(self._world_transformation.getData())
             self._transformation.multiply(self._world_transformation.getInverse())
             self._transformation.multiply(translation_matrix)
             self._transformation.multiply(world_transformation)
