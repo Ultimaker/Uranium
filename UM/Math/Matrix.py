@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import math
-from copy import deepcopy
 
 import numpy
 
@@ -51,11 +50,17 @@ class Matrix:
     # axis sequences for Euler angles
     _NEXT_AXIS = [1, 2, 0, 1]
 
-    def __init__(self, data: Optional[List[List[float]]] = None) -> None:
+    def __init__(self, data: Optional[Union[List[List[float]], numpy.array]] = None) -> None:
         if data is None:
             self._data = numpy.identity(4, dtype = numpy.float64)
         else:
             self._data = numpy.array(data, copy=True, dtype = numpy.float64)
+
+    def __deepcopy__(self, memo):
+        # So, you must be asking yourself, why not let python handle this simple case on it's own? Well, that's because
+        # we found out that this is about 3x faster.
+        # Note that actually using Matrix(self._data) (without the deepcopy) is another factor 3 faster.
+        return Matrix(self._data)
 
     def __eq__(self, other: object) -> bool:
         if self is other:
@@ -136,14 +141,17 @@ class Matrix:
         try:
             return Matrix(numpy.linalg.inv(self._data))
         except:
-            return deepcopy(self)
+            return Matrix(self._data)
 
     ##  Return the transpose of the matrix.
     def getTransposed(self) -> "Matrix":
         try:
             return Matrix(numpy.transpose(self._data))
         except:
-            return deepcopy(self)
+            return Matrix(self._data)
+
+    def transpose(self) -> None:
+        self._data = numpy.transpose(self._data)
 
     ##  Translate the matrix based on Vector.
     #   \param direction The vector by which the matrix needs to be translated.

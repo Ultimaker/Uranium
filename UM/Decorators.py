@@ -6,7 +6,7 @@ import warnings
 import inspect
 
 from UM.Logger import Logger
-
+import time
 
 ##  Decorator that can be used to indicate a method has been deprecated
 #
@@ -109,3 +109,19 @@ def immutable(cls):
 
 def sameSignature(a: inspect.Signature, b: inspect.Signature) -> bool:
     return len(a.parameters) == len(b.parameters)
+
+
+def timeit(method):
+    def timed(*args, **kw):
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+
+        if "log_time" in kw:
+            name = kw.get("log_name", method.__name__.upper())
+            kw["log_time"][name] = int((te - ts) * 1000)
+        else:
+            print("Function %r took %2.2f ms" % (method.__name__, (te - ts) * 1000))
+        return result
+
+    return timed

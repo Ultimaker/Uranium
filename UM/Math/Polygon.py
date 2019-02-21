@@ -56,7 +56,7 @@ class Polygon:
         return "[" + ", ".join(coordinates) + "]"
 
     def isValid(self) -> bool:
-        return bool(self._points is not None and len(self._points))
+        return bool(self._points is not None and len(self._points) >= 3)
 
     def getPoints(self):
         return self._points
@@ -140,6 +140,28 @@ class Polygon:
             return Polygon()
 
         return Polygon(points = [list(p) for p in polygon_intersection.exterior.coords[:4]])
+
+    #  Computes the convex hull of the union of the convex hulls of this and another polygon.
+    #
+    #   \param other The other polygon to combine convex hulls with.
+    #   \return The convex hull of the union of the two polygons' convex hulls.
+    def unionConvexHulls(self, other: "Polygon") -> "Polygon":
+        my_hull = self.getConvexHull()
+        other_hull = other.getConvexHull()
+
+        if not my_hull.isValid():
+            return other_hull
+        if not other_hull.isValid():
+            return my_hull
+
+        my_polygon = ShapelyUtil.polygon2ShapelyPolygon(my_hull)
+        other_polygon = ShapelyUtil.polygon2ShapelyPolygon(other_hull)
+
+        polygon_union = my_polygon.union(other_polygon).convex_hull
+        if polygon_union.area == 0:
+            return Polygon()
+
+        return Polygon(points = [list(p) for p in polygon_union.exterior.coords[:-1]])
 
     ##  Check to see whether this polygon intersects with another polygon.
     #
