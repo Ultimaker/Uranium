@@ -397,6 +397,16 @@ class ContainerRegistry(ContainerRegistryInterface):
             Logger.log("w", "Tried to delete container {container_id}, which doesn't exist or isn't loaded.".format(container_id = container_id))
             return  # Ignore.
 
+        # CURA-6237
+        # Do not try to operate on invalid containers because removeContainer() needs to load it if it's not loaded yet
+        # (see below), but an invalid container cannot be loaded.
+        if container_id in self._wrong_container_ids:
+            Logger.log("w", "Container [%s] is faulty, it won't be able to be loaded, so no need to remove, skip.")
+            # delete the metadata if present
+            if container_id in self.metadata:
+                del self.metadata[container_id]
+            return
+
         container = None
         if container_id in self._containers:
             container = self._containers[container_id]
