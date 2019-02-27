@@ -66,9 +66,14 @@ def test_addRemoveOutputDevicePlugin():
 
     manager.addOutputDevicePlugin(plugin_1)
     assert manager.getOutputDevicePlugin("plugin_one") == plugin_1
+    # Outputdevice manager wasn't started, so the start of the plugin should not be called
+    assert plugin_1.start.call_count == 0
+
+    # So once we do, it should be called.
+    manager.start()
     assert plugin_1.start.call_count == 1
 
-    # adding it again shouldn't cause the start to be called again!
+    # Adding it again shouldn't cause the start to be called again!
     manager.addOutputDevicePlugin(plugin_1)
     assert plugin_1.start.call_count == 1
 
