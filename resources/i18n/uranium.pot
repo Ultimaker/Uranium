@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-27 11:08+0100\n"
+"POT-Creation-Date: 2019-02-27 11:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -705,4 +705,210 @@ msgstr ""
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
+msgstr ""
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "description"
+msgid ""
+"Example extension to instruct people on how to create Uranium extensions."
+msgstr ""
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "name"
+msgid "Example Extension"
+msgstr ""
+
+#: Views/SimpleView/plugin.json
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr ""
+
+#: Views/SimpleView/plugin.json
+msgctxt "name"
+msgid "Simple View"
+msgstr ""
+
+#: FileLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr ""
+
+#: FileLogger/plugin.json
+msgctxt "name"
+msgid "File Logger"
+msgstr ""
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr ""
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr ""
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr ""
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr ""
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr ""
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr ""
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr ""
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr ""
+
+#: ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr ""
+
+#: ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr ""
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "description"
+msgid "Example tool to instruct people on how to create Uranium tools."
+msgstr ""
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "name"
+msgid "Example Tool"
+msgstr ""
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "description"
+msgid ""
+"Example output device to instruct people on how to create Uranium output "
+"devices."
+msgstr ""
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "name"
+msgid "Example Output Device"
+msgstr ""
+
+#: UpdateChecker/plugin.json
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr ""
+
+#: UpdateChecker/plugin.json
+msgctxt "name"
+msgid "Update Checker"
+msgstr ""
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "description"
+msgid ""
+"Example file reader to instruct people on how to create Uranium file readers."
+msgstr ""
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "name"
+msgid "Example File Reader"
+msgstr ""
+
+#: LocalFileOutputDevice/plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr ""
+
+#: LocalFileOutputDevice/plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr ""
+
+#: LocalContainerProvider/plugin.json
+msgctxt "description"
+msgid ""
+"Provides built-in setting containers that come with the installation of the "
+"application."
+msgstr ""
+
+#: LocalContainerProvider/plugin.json
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr ""
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr ""
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr ""
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr ""
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr ""
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr ""
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "name"
+msgid "Move Tool"
+msgstr ""
+
+#: Tools/CameraTool/plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr ""
+
+#: Tools/CameraTool/plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr ""
+
+#: Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr ""
+
+#: Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr ""
+
+#: Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr ""
+
+#: Tools/MirrorTool/plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
 msgstr ""
