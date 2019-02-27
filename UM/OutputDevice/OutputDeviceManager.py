@@ -1,7 +1,6 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Dict, Optional, TYPE_CHECKING
-
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
@@ -57,22 +56,28 @@ class OutputDeviceManager:
         self._write_in_progress = False
         PluginRegistry.addType("output_device", self.addOutputDevicePlugin)
 
+        self._is_running = False
+
     ##  Emitted whenever a registered device emits writeStarted.
     #
     #   \sa OutputDevice::writeStarted
     writeStarted = Signal()
+
     ##  Emitted whenever a registered device emits writeProgress.
     #
     #   \sa OutputDevice::writeProgress
     writeProgress = Signal()
+
     ##  Emitted whenever a registered device emits writeFinished.
     #
     #   \sa OutputDevice::writeFinished
     writeFinished = Signal()
+
     ##  Emitted whenever a registered device emits writeError.
     #
     #   \sa OutputDevice::writeError
     writeError = Signal()
+
     ##  Emitted whenever a registered device emits writeSuccess.
     #
     #   \sa OutputDevice::writeSuccess
@@ -99,6 +104,20 @@ class OutputDeviceManager:
 
     ##  Emitted whenever an output device is added or removed.
     outputDevicesChanged = Signal()
+
+    def start(self):
+        for plugin_id, plugin in self._plugins.items():
+            try:
+                plugin.start()
+            except Exception:
+                Logger.logException("e", "Exception starting OutputDevicePlugin %s", plugin.getPluginId())
+
+    def stop(self):
+        for plugin_id, plugin in self._plugins.items():
+            try:
+                plugin.stop()
+            except Exception:
+                Logger.logException("e", "Exception starting OutputDevicePlugin %s", plugin.getPluginId())
 
     ##  Add and register an output device.
     #
@@ -188,10 +207,11 @@ class OutputDeviceManager:
             return
 
         self._plugins[plugin.getPluginId()] = plugin
-        try:
-            plugin.start()
-        except Exception as e:
-            Logger.log("e", "Exception starting plugin %s: %s", plugin.getPluginId(), repr(e))
+        if self._is_running:
+            try:
+                plugin.start()
+            except Exception:
+                Logger.logException("e", "Exception starting OutputDevicePlugin %s", plugin.getPluginId())
 
     ##  Remove an OutputDevicePlugin by ID.
     #
