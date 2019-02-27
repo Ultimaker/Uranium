@@ -56,7 +56,7 @@ else:
         error = False
 
         jsondatadict = json.load(data_file, object_pairs_hook=collections.OrderedDict)
-        if "name" not in jsondatadict or ("api" not in jsondatadict or "supported_sdk_versions" not in jsondatadict) or "version" not in jsondatadict:
+        if "name" not in jsondatadict or ("api" not in jsondatadict and "supported_sdk_versions" not in jsondatadict) or "version" not in jsondatadict:
             print("The plugin.json file found on %s is invalid, ignoring it" % json_filename)
             exit(1)
 

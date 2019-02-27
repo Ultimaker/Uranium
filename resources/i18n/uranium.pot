@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-29 15:16+0100\n"
+"POT-Creation-Date: 2019-02-27 11:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,7 +68,7 @@ msgstr ""
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:45
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr ""
@@ -102,13 +102,13 @@ msgctxt "@info"
 msgid "No new version was found."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:98
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -116,17 +116,22 @@ msgid ""
 "printing experience."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
 msgctxt "@action:button"
 msgid "Download"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
 msgctxt "@action:button"
-msgid "Learn more about the new features"
+msgid "Learn more"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr ""
@@ -252,6 +257,16 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr ""
 
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr ""
+
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror"
@@ -291,7 +306,7 @@ msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:38
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:699
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:729
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -300,13 +315,13 @@ msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:700
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:730
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:131
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:182
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -314,12 +329,12 @@ msgid ""
 "{packages}"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:133
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:340
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:391
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -329,7 +344,7 @@ msgid ""
 "Please try to upgrade again later."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:343
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr ""
@@ -401,14 +416,14 @@ msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:313
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:311
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:434
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -416,7 +431,7 @@ msgid ""
 "Please restart {0} to finish uninstall."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:140
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
@@ -464,63 +479,63 @@ msgid ""
 "want to reset?"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:172
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:178
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:173
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:179
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:174
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:180
 msgctxt "@action:button"
 msgid "Reload"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:174
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:180
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:33
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:35
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:33
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:48
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:35
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:50
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:72
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:46
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:48
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:72
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:57
 msgctxt "@info:title"
 msgid "Loading"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:94
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:112
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:190
+#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:196
 msgctxt "@option:check"
 msgid "Lock Model"
 msgstr ""
@@ -530,7 +545,7 @@ msgctxt "@action:button"
 msgid "Lay flat"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:56
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr ""
@@ -624,13 +639,18 @@ msgctxt "@title:window"
 msgid "Rename"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:56
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:74
 msgctxt "@action:button"
 msgid "OK"
 msgstr ""
