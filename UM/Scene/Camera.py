@@ -62,7 +62,7 @@ class Camera(SceneNode.SceneNode):
     def setViewportWidth(self, width: int) -> None:
         self._viewport_width = width
     
-    def setViewPortHeight(self, height: int) -> None:
+    def setViewportHeight(self, height: int) -> None:
         self._viewport_height = height
         
     def setViewportSize(self, width: int, height: int) -> None:
