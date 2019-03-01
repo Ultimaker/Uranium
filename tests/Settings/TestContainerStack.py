@@ -26,6 +26,7 @@ Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 def container_stack():
     return ContainerStack(str(uuid.uuid4()))
 
+
 ##  Tests the creation of a container stack.
 #
 #   The actual creation is done in a fixture though.
@@ -33,6 +34,7 @@ def container_stack():
 #   \param container_stack A new container stack from a fixture.
 def test_container_stack(container_stack):
     assert container_stack is not None
+
 
 ##  Tests adding a container to the stack.
 #
@@ -47,11 +49,13 @@ def test_addContainer(container_stack):
         container_stack.addContainer(container_stack) # Adding itself gives an exception.
     assert container_stack.getContainers() == [container] # Make sure that adding itself didn't change the state, even if it raises an exception.
 
+
 ##  Tests deserialising a container stack from a corrupted string.
 def test_deserialize_syntax_error(container_stack):
     serialised = "["
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
+
 
 ##  Tests deserialising a container stack when the version number is wrong.
 #
@@ -325,13 +329,25 @@ def test_getContainer(container_stack):
 ##  Tests getting and changing the metadata of the container stack.
 #
 #   \param container_stack A new container stack from a fixture.
-def test_getMetaData(container_stack):
+def test_getSimpleMetaData(container_stack):
     meta_data = container_stack.getMetaData()
     assert meta_data is not None
 
     meta_data["foo"] = "bar" #Try adding an entry.
     assert container_stack.getMetaDataEntry("foo") == "bar"
 
+
+def test_getNestedMetadata(container_stack):
+    mock_container = MockContainer({"derp": "omg!"})
+    container_stack.addContainer(mock_container)
+    assert container_stack.getMetaDataEntry("derp") == "omg!"
+
+
+def test_removeMetadata(container_stack):
+    container_stack.setMetaData({"foo": "blorp!"})
+
+    container_stack.removeMetaDataEntry("foo")
+    assert container_stack.getMetaDataEntry("foo") is None
 
 ##  Individual test cases for test_getValue.
 #
@@ -728,3 +744,4 @@ def _test_serialize_cycle(container_stack, ignored_metadata_keys: Optional[set] 
     #ID and nextStack are allowed to be different.
     assert metadata.items() <= container_stack.getMetaData().items()
     assert containers == container_stack.getContainers()
+
