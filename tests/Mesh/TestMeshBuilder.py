@@ -1,6 +1,7 @@
 import numpy
 
 from UM.Math.Color import Color
+from UM.Math.Vector import Vector
 from UM.Mesh.MeshBuilder import MeshBuilder
 
 
@@ -61,6 +62,12 @@ def test_setVertexColor():
 
 def test_calculateNormals():
     builder = MeshBuilder()
+    # Builder shouldn't start off with normals
+    assert not builder.hasNormals()
+    # Ensure that if there are no vertices / faces that calling the calculate doesn't break anything.
+    builder.calculateNormals()
+    assert not builder.hasNormals()
+
     builder.addFaceByPoints(0, 0, 0, 10, 0, 0, 10, 10, 0)
 
     builder.calculateNormals()
@@ -71,3 +78,53 @@ def test_calculateNormals():
     builder2.addFaceByPoints(0, 0, 0, 0, 10, 0, 0, 10, 10)
     builder2.calculateNormals(fast = True)
     assert numpy.array_equal(builder2.getNormals(), numpy.array([[1., 0., 0], [1., 0., 0.], [1., 0., 0.]]))
+
+
+def test_addLine():
+    builder = MeshBuilder()
+    builder.addLine(Vector(0, 0, 0), Vector(10, 11, 12))
+
+    assert builder.getVertexCount() == 2
+    assert builder.getVertex(1)[0] == 10
+    assert builder.getVertex(1)[1] == 11
+    assert builder.getVertex(1)[2] == 12
+
+
+def test_addLineWithColor():
+    builder = MeshBuilder()
+    builder.addLine(Vector(0, 0, 0), Vector(10, 11, 12), Color(1.0, 0.5, 0.25))
+
+    assert builder.getColors()[0][0] == 1.0
+    assert builder.getColors()[0][1] == 0.5
+    assert builder.getColors()[0][2] == 0.25
+
+    assert builder.getColors()[1][0] == 1.0
+    assert builder.getColors()[1][1] == 0.5
+    assert builder.getColors()[1][2] == 0.25
+
+
+def test_reserveFaceCount():
+    builder = MeshBuilder()
+    builder.addVertex(1, 2, 3)
+
+    builder.reserveFaceCount(200)
+    # Reserving face count should reset the verts
+    assert builder.getVertexCount() == 0
+
+
+def test_reserveFaceAndVertexCount():
+    builder = MeshBuilder()
+    builder.addVertex(1, 2, 3)
+
+    builder.reserveFaceAndVertexCount(200, 20)
+    # Reserving face count should reset the verts
+    assert builder.getVertexCount() == 0
+
+
+def test_reserveVertexCount():
+    builder = MeshBuilder()
+    builder.addVertex(1, 2, 3)
+
+    builder.reserveVertexCount(10)
+    # Reserving face count should reset the verts
+    assert builder.getVertexCount() == 0
