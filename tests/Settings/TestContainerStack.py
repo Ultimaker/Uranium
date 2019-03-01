@@ -409,7 +409,8 @@ def test_getValue(container_stack, data):
         container_stack.addContainer(mockup)
 
     answer = container_stack.getProperty(data["key"], "value") # Do the actual query.
-
+    # Check if the reason the answer is None is because the property just isn't there
+    assert container_stack.hasProperty(data["key"], "value") == (answer is not None)
     assert answer == data["result"]
 
 
@@ -744,4 +745,22 @@ def _test_serialize_cycle(container_stack, ignored_metadata_keys: Optional[set] 
     #ID and nextStack are allowed to be different.
     assert metadata.items() <= container_stack.getMetaData().items()
     assert containers == container_stack.getContainers()
+
+
+def test_getSetReadOnly(container_stack):
+    container_stack.setReadOnly(True)
+    assert container_stack.isReadOnly()
+    container_stack.setReadOnly(False)
+    assert not container_stack.isReadOnly()
+
+
+def test_isSetDirty(container_stack):
+    assert container_stack.isDirty()
+    container_stack.setDirty(False)
+    assert not container_stack.isDirty()
+
+
+def test_getSetPath(container_stack):
+    container_stack.setPath("OMG")
+    assert container_stack.getPath() == "OMG"
 

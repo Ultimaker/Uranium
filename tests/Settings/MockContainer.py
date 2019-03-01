@@ -94,7 +94,7 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     #
     #   This method is not implemented in the mock container.
     def hasProperty(self, key, property_name):
-        raise NotImplementedError()
+        return key in self.items
 
     ##  Serializes the container to a string representation.
     #
