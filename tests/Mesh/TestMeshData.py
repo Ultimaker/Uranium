@@ -3,7 +3,7 @@ import numpy
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Math.Vector import Vector
 from UM.Mesh.MeshBuilder import MeshBuilder
-from UM.Mesh.MeshData import MeshData
+from UM.Mesh.MeshData import MeshData, MeshType
 from UM.Math.Matrix import Matrix
 
 
@@ -52,3 +52,52 @@ def test_getExtentsTransposed():
 
     assert extents.maximum == Vector(20, 20, 20)
     assert extents.minimum == Vector(0, 0, 0)
+
+
+def test_attributes():
+    attributes = { "test": {
+                "value": [10],
+                "derp": "OMG"
+                }}
+    mesh_data = MeshData(attributes = attributes)
+
+    assert mesh_data.hasAttribute("test")
+    assert mesh_data.getAttribute("test") == { "value": [10], "derp": "OMG" }
+
+    assert mesh_data.attributeNames() == ["test"]
+
+
+def test_hasData():
+    # Simple test to see if the has whatever functions do their job correctly
+
+    empty_mesh = MeshData()
+
+    assert not empty_mesh.hasNormals()
+    assert not empty_mesh.hasColors()
+    assert not empty_mesh.hasUVCoordinates()
+    assert not empty_mesh.hasIndices()
+
+    filled_mesh = MeshData(normals = [], colors = [], uvs = [], indices=[])
+    assert filled_mesh.hasNormals()
+    assert filled_mesh.hasColors()
+    assert filled_mesh.hasUVCoordinates()
+    assert filled_mesh.hasIndices()
+
+
+def test_counts():
+    empty_mesh = MeshData()
+
+    assert empty_mesh.getFaceCount() == 0
+    assert empty_mesh.getVertexCount() == 0
+
+    filled_mesh = MeshData(indices = numpy.zeros((5, 3), dtype=numpy.float32), vertices = numpy.zeros((12, 3), dtype=numpy.float32))
+
+    assert filled_mesh.getFaceCount() == 5
+    assert filled_mesh.getVertexCount() == 12
+
+
+def test_getPositionAndType():
+    mesh_data = MeshData(zero_position=Vector(0, 12, 13), center_position=Vector(10, 20, 30), type = MeshType.pointcloud)
+    assert mesh_data.getZeroPosition() == Vector(0, 12, 13)
+    assert mesh_data.getCenterPosition() == Vector(10, 20, 30)
+    assert mesh_data.getType() == MeshType.pointcloud
