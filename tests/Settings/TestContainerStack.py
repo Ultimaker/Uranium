@@ -145,6 +145,42 @@ def test_deserialize_missing_items(container_stack, container_registry):
         container_stack.deserialize(serialised_no_general)
 
 
+def test_deserializeMetadata():
+    serialised = """
+        [general]
+        name = Test
+        id = testid
+        version = {version}
+        
+        [metadata]
+        foo = bar
+        """.format(version=ContainerStack.Version)
+    metadata = ContainerStack.deserializeMetadata(serialised, "testid")[0]
+    assert metadata["name"] == "Test"
+    assert metadata["id"] == "testid"
+    assert metadata["version"] == str(ContainerStack.Version)
+
+
+def test_deserializeInvalidMetadata():
+    # No version
+    serialised = """
+            [general]
+            name = Test
+            id = testid
+            """
+    with pytest.raises(InvalidContainerStackError):
+        ContainerStack.deserializeMetadata(serialised, "testid")
+
+    # No name
+    serialised = """
+           [general]
+           id = testid
+           version = {version}
+           """.format(version=ContainerStack.Version)
+    with pytest.raises(InvalidContainerStackError):
+        ContainerStack.deserializeMetadata(serialised, "testid")
+
+
 ##  Tests deserialising a container stack with various subcontainers.
 #
 #   Sorry for the indenting.
