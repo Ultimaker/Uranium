@@ -1,6 +1,7 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from UM.OutputDevice.OutputDeviceManager import ManualDeviceAdditionAttempt
 from UM.PluginObject import PluginObject
 from UM.Application import Application
 
@@ -34,3 +35,12 @@ class OutputDevicePlugin(PluginObject):
     ##  Called by OutputDeviceManager to indicate the plugin should stop its device detection.
     def stop(self):
         raise NotImplementedError("Stop should be implemented by subclasses")
+
+    def canAddManualDevice(self, address: str) -> ManualDeviceAdditionAttempt:
+        return ManualDeviceAdditionAttempt.NO
+
+    def addManualDevice(self, address: str) -> None:
+        pass
+
+    def removeManualDevice(self, key: str, address: str = None) -> None:
+        pass

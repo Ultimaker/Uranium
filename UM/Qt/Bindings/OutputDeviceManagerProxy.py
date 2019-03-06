@@ -53,6 +53,15 @@ class OutputDeviceManagerProxy(QObject):
     def activeDeviceDescription(self) -> str:
         return self._device_manager.getActiveDevice().getDescription()
 
+    @pyqtSlot(str)
+    def addManualDevice(self, address: str) -> None:
+        self._device_manager.addManualDevice(address)
+
+    @pyqtSlot(str)
+    @pyqtSlot(str, str)
+    def removeManualDevice(self, key: str, address: str = None) -> None:
+        self._device_manager.removeManualDevice(key, address)
+
     ##  Request that the current scene is written to the output device.
     #
     #   The output device to write with will be selected based on the device_id.

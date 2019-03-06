@@ -1,15 +1,23 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import Dict, Optional, TYPE_CHECKING
+from enum import Enum
+from typing import List, Dict, Optional, TYPE_CHECKING
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
-
 if TYPE_CHECKING:
     from UM.OutputDevice.OutputDevice import OutputDevice
     from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
+
+# Used internally to determine plugins capable of 'manual' addition of devices, see also [add|remove]ManualDevice below.
+class ManualDeviceAdditionAttempt(Enum):
+    NO = 0,        # The plugin can't add a device 'manually' (or at least not with the given parameters).
+    POSSIBLE = 1,  # The plugin will try to add the (specified) device 'manually', unless another plugin has priority.
+    PRIORITY = 2   # The plugin has determined by the specified parameters that it's responsible for adding this device
+                   #     and thus has priority. If this fails, the plugins that replied 'POSSIBLE' will be tried.
+                   #     NOTE: This last value should be used with great care!
 
 ##  Manages all available output devices and the plugin objects used to create them.
 #
@@ -237,6 +245,45 @@ class OutputDeviceManager:
     #   \return The plugin corresponding to the specified ID or None if it was not found.
     def getOutputDevicePlugin(self, plugin_id: str) -> Optional["OutputDevicePlugin"]:
         return self._plugins.get(plugin_id, None)
+
+    ##  Sometimes automatic discovery doesn't or can't work, and a device has to be added 'manually' by some address.
+    #   This will loop through all plugins to find one that accepts the address.
+    #   Note that a plugin can claim priority for certain addresses, but this should be used with great care!
+    #   \param address The address of this device, often an IP or similar.
+    #   \param plugin_types Limit the search to these plugins (or empty list for 'accept all', which is the default).
+    def addManualDevice(self, address: str, plugin_types: List[str] = []) -> Optional["OutputDevice"]:
+        priority_order = [
+                ManualDeviceAdditionAttempt.PRIORITY,
+                ManualDeviceAdditionAttempt.POSSIBLE
+            ]   # type: List[ManualDeviceAdditionAttempt]
+        plugins_by_priority = {}  # type: Dict[ManualDeviceAdditionAttempt, List[str]]
+
+        for plugin_id, plugin in self._plugins.items():
+            if plugin and (plugin_id in plugin_types or not plugin_types):
+                can_add = plugin.canAddManualDevice(address)
+                if can_add not in plugins_by_priority:
+                    plugins_by_priority[can_add] = []
+                plugins_by_priority[can_add].append(plugin_id)
+
+        for priority in priority_order:
+            if priority not in plugins_by_priority:  # None of the plugins that specified 'NO' will be requested.
+                continue
+            for plugin_id in plugins_by_priority[priority]:
+                plugin = self._plugins[plugin_id]
+                if plugin:
+                    plugin.removeManualDevice("", address)
+                    device = plugin.addManualDevice(address)  # Currently assumed to be a blocking call.
+                    if device:
+                        Logger.log("d", "Added %s manually via address (%s).", address, str(priority))
+                        return device
+
+        Logger.log("d", "Could not find a plugin to accept adding %s manually via address.", address)
+        return None
+
+    def removeManualDevice(self, key: str, plugin_types: List[str] = []) -> None:
+        for plugin_id, plugin in self._plugins:
+            if plugin and (plugin_id in plugin_types or not plugin_types):
+                plugin.removeManualDevice(key)
 
     ##  private:
 
