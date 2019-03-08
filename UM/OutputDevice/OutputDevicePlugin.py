@@ -4,6 +4,7 @@
 from UM.OutputDevice.OutputDeviceManager import ManualDeviceAdditionAttempt
 from UM.PluginObject import PluginObject
 from UM.Application import Application
+from UM.Signal import Signal
 
 
 ##  Base class for output device plugins.
@@ -19,6 +20,9 @@ from UM.Application import Application
 #
 #   \sa OutputDeviceManager
 class OutputDevicePlugin(PluginObject):
+    addDeviceSignal = Signal()
+    removeDeviceSignal = Signal()
+
     def __init__(self):
         super().__init__()
 
@@ -36,11 +40,17 @@ class OutputDevicePlugin(PluginObject):
     def stop(self):
         raise NotImplementedError("Stop should be implemented by subclasses")
 
+    ## Used to check if this adress makes sense to this plugin w.r.t. adding(/removing) a manual device.
+    #  /return 'No', 'possible', or 'priority' (in the last case this plugin takes precedence, use with care).
     def canAddManualDevice(self, address: str) -> ManualDeviceAdditionAttempt:
         return ManualDeviceAdditionAttempt.NO
 
+    ## Add a manual device by the specified address (for example, an IP).
+    #  Since this may be asynchronous, use the 'addDeviceSignal' when the machine actually has been added.
     def addManualDevice(self, address: str) -> None:
         pass
 
+    ## Remove a manual device by either the name and/or the specified address.
+    #  Since this may be asynchronous, use the 'removeDeviceSignal' when the machine actually has been added.
     def removeManualDevice(self, key: str, address: str = None) -> None:
         pass

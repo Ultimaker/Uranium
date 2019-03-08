@@ -55,11 +55,13 @@ class OutputDeviceManagerProxy(QObject):
 
     @pyqtSlot(str)
     def addManualDevice(self, address: str) -> None:
+        #self._device_manager.addDeviceSignal.connect(self._onAddManualDevice)
         self._device_manager.addManualDevice(address)
 
     @pyqtSlot(str)
     @pyqtSlot(str, str)
     def removeManualDevice(self, key: str, address: str = None) -> None:
+        self._device_manager.removeDeviceSignal.connect(self._onRemoveManualDevice)
         self._device_manager.removeManualDevice(key, address)
 
     ##  Request that the current scene is written to the output device.
@@ -142,6 +144,20 @@ class OutputDeviceManagerProxy(QObject):
             message.show()
         except Exception as e:
             Logger.logException("e", "Unable to write to file %s: %s", file_name, e)
+
+    def _onManualDeviceAdded(self, name: str, address: str) -> None:
+
+        print("ON ADD MANUAL DEVICE {0} {1}".format(name, address))
+
+        self._device_manager.addedManualDevice.disconnect()
+        # TODO!
+
+    def _onManualDeviceRemoved(self, name) -> None:
+
+        print("ON REMOVE MANUAL DEVICE {0}".format(name))
+
+        self._device_manager.removedManualDevice.disconnect()
+        # TODO!
 
 
 def createOutputDeviceManagerProxy(engine: QQmlEngine, script_engine: QJSEngine) -> OutputDeviceManagerProxy:
