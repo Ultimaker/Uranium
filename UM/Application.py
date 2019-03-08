@@ -398,9 +398,10 @@ class Application:
     @staticmethod
     def getInstallPrefix() -> str:
         if "python" in os.path.basename(sys.executable):
-            return os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
+            executable = sys.argv[0]
         else:
-            return os.path.abspath(os.path.join(os.path.dirname(sys.executable), ".."))
+            executable = sys.executable
+        return os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(executable)), ".."))
 
     __instance = None   # type: Application
 
