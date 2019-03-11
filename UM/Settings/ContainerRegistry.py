@@ -329,7 +329,10 @@ class ContainerRegistry(ContainerRegistryInterface):
                 if container_id not in self.metadata:
                     self._application.processEvents()  # Update the user interface because loading takes a while. Specifically the loading screen.
                     metadata = provider.loadMetadata(container_id)
-                    if metadata is None:
+                    if not self._isMetadataValid(metadata):
+                        Logger.log("w", "Invalid metadata for container {container_id}: {metadata}".format(container_id = container_id, metadata = metadata))
+                        if container_id in self.metadata:
+                            del self.metadata[container_id]
                         continue
                     self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
@@ -397,6 +400,16 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_id not in self.metadata:
             Logger.log("w", "Tried to delete container {container_id}, which doesn't exist or isn't loaded.".format(container_id = container_id))
             return  # Ignore.
+
+        # CURA-6237
+        # Do not try to operate on invalid containers because removeContainer() needs to load it if it's not loaded yet
+        # (see below), but an invalid container cannot be loaded.
+        if container_id in self._wrong_container_ids:
+            Logger.log("w", "Container [%s] is faulty, it won't be able to be loaded, so no need to remove, skip.")
+            # delete the metadata if present
+            if container_id in self.metadata:
+                del self.metadata[container_id]
+            return
 
         container = None
         if container_id in self._containers:
@@ -652,6 +665,15 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Always emit containerMetaDataChanged, even if the dictionary didn't actually change: The contents of the dictionary might have changed in-place!
         self.metadata[container.getId()] = container.getMetaData()  # refresh the metadata
         self.containerMetaDataChanged.emit(*args, **kwargs)
+
+    ##  Validate a metadata object.
+    #
+    #   If the metadata is invalid, the container is not allowed to be in the
+    #   registry.
+    #   \param metadata A metadata object.
+    #   \return Whether this metadata was valid.
+    def _isMetadataValid(self, metadata: Optional[Dict[str, Any]]) -> bool:
+        return metadata is not None
 
     ##  Get the lock filename including full path
     #   Dependent on when you call this function, Resources.getConfigStoragePath may return different paths
