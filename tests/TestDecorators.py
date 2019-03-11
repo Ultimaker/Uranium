@@ -1,10 +1,9 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
 
 from UM.Decorators import interface
-from UM.Signal import Signal, signalemitter
 
 def test_interface():
     def declare_interface():

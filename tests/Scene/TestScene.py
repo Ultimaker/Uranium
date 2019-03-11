@@ -16,7 +16,6 @@ def test_ignoreSceneChanges():
 
     scene.setIgnoreSceneChanges(ignore_scene_changes=False)
     root.addChild(SceneNode())
-    print(scene.sceneChanged.emit.mock_calls)
     assert scene.sceneChanged.emit.call_count == 2
 
 
