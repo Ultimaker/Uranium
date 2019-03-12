@@ -122,12 +122,12 @@ msgstr "Скачать"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
 msgctxt "@action:button"
 msgid "Learn more"
-msgstr ""
+msgstr "Узнать больше"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Update Checker"
-msgstr ""
+msgstr "Проверка обновлений"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
@@ -254,12 +254,12 @@ msgstr "Вращение модели"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr ""
+msgstr "Плоское горизонтальное расположение объекта на печатающем столе..."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@title"
 msgid "Object Rotation"
-msgstr ""
+msgstr "Вращение объекта"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -278,10 +278,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n"
-"- {profiles}\n"
-"Выполнить сброс до заводских настроек по умолчанию?"
+msgstr "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n- {profiles}\nВыполнить сброс до заводских настроек по умолчанию?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -323,9 +320,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr ""
-"Возникли некоторые ошибки при удалении этих пакетов: \n"
-"{packages}"
+msgstr "Возникли некоторые ошибки при удалении этих пакетов: \n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
 msgctxt "@info:title"
@@ -339,10 +334,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
-"Возникла ошибка при удалении пакета {package} перед установкой новой версии:\n"
-"{error}.\n"
-"Повторите попытку обновления позже."
+msgstr "Возникла ошибка при удалении пакета {package} перед установкой новой версии:\n{error}.\nПовторите попытку обновления позже."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
 msgctxt "@info:title"
@@ -422,9 +414,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Плагин был установлен\n"
-"Пожалуйста, перезапустите приложение для активации плагина."
+msgstr "Плагин был установлен\nПожалуйста, перезапустите приложение для активации плагина."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
 #, python-brace-format
@@ -432,9 +422,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"Плагин удален.\n"
-"Перезапустите {0} для завершения удаления."
+msgstr "Плагин удален.\nПерезапустите {0} для завершения удаления."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
 #, python-brace-format
@@ -466,10 +454,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n"
-"- {profiles}\n"
-"Выполнить сброс до заводских настроек по умолчанию? Сброс приведет к удалению данных всех текущих принтеров и профилей."
+msgstr "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n- {profiles}\nВыполнить сброс до заводских настроек по умолчанию? Сброс приведет к удалению данных всех текущих принтеров и профилей."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
@@ -642,7 +627,7 @@ msgstr "Переименовать"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
 msgctxt "@info"
 msgid "Please provide a new name."
-msgstr ""
+msgstr "Укажите новое имя."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
@@ -925,6 +910,7 @@ msgstr "Инструмент \"Зеркало\""
 #~ "{error}.\n"
 #~ "Please try to upgrade again later."
 #~ msgstr ""
+
 #~ "Возникла ошибка при удалении пакета {package} перед установкой новой версии: \n"
 #~ "{error}.\n"
 #~ "Повторите попытку обновления позже."
@@ -935,6 +921,7 @@ msgstr "Инструмент \"Зеркало\""
 #~ "- {profiles}\n"
 #~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 #~ msgstr ""
+
 #~ "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями: \n"
 #~ "- {profiles}\n"
 #~ "Выполнить сброс до заводских настроек по умолчанию? Сброс приведет к удалению данных всех текущих принтеров и профилей."
@@ -948,6 +935,7 @@ msgstr "Инструмент \"Зеркало\""
 #~ "Failed to install plugin from <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 #~ msgstr ""
+
 #~ "Не удалось установить плагин из <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 
@@ -956,6 +944,7 @@ msgstr "Инструмент \"Зеркало\""
 #~ "Failed to install the plugin;\n"
 #~ "<message>{0}</message>"
 #~ msgstr ""
+
 #~ "Не удалось установить плагин;\n"
 #~ "<message>{0}</message>"
 
@@ -1224,6 +1213,7 @@ msgstr "Инструмент \"Зеркало\""
 #~ "The plugin has been installed.\n"
 #~ " Please re-start the application to active the plugin."
 #~ msgstr ""
+
 #~ "Плагин был установлен.\n"
 #~ "Пожалуйста, перезапустите приложение для активации плагина."
 

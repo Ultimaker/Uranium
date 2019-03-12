@@ -122,12 +122,12 @@ msgstr "다운로드"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
 msgctxt "@action:button"
 msgid "Learn more"
-msgstr ""
+msgstr "자세히 알아보기"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Update Checker"
-msgstr ""
+msgstr "업데이트 검사기"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
@@ -254,12 +254,12 @@ msgstr "모델 회전"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr ""
+msgstr "빌드 플레이트에 개체 평평하게 놓기..."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@title"
 msgid "Object Rotation"
-msgstr ""
+msgstr "개체 회전"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -278,10 +278,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다.\n"
-"- {profiles}\n"
-"기본값으로 재설정하시겠습니까?"
+msgstr "설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다.\n- {profiles}\n기본값으로 재설정하시겠습니까?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -323,9 +320,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr ""
-"다음 패키지를 제거하는 중에 오류가 발생했습니다. \n"
-"{packages}"
+msgstr "다음 패키지를 제거하는 중에 오류가 발생했습니다. \n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
 msgctxt "@info:title"
@@ -339,10 +334,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
-"새 버전을 설치하기 전 패키지 {package}(을)를 제거하는 중에 오류가 발생했습니다. \n"
-"{error}.\n"
-" 업그레이드를 나중에 다시 시도하십시오."
+msgstr "새 버전을 설치하기 전 패키지 {package}(을)를 제거하는 중에 오류가 발생했습니다. \n{error}.\n 업그레이드를 나중에 다시 시도하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
 msgctxt "@info:title"
@@ -416,9 +408,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"플러그인이 설치되었습니다.\n"
-"플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
+msgstr "플러그인이 설치되었습니다.\n플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
 #, python-brace-format
@@ -426,9 +416,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"플러그인이 제거되었습니다.\n"
-"제거를 완료하려면 {0}을(를) 다시 시작하십시오."
+msgstr "플러그인이 제거되었습니다.\n제거를 완료하려면 {0}을(를) 다시 시작하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
 #, python-brace-format
@@ -460,10 +448,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다:\n"
-"- {profiles}\n"
-" 기본값으로 재설정하시겠습니까? 재설정하면 현재 모든 프린터 및 프로파일이 제거됩니다."
+msgstr "설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다:\n- {profiles}\n 기본값으로 재설정하시겠습니까? 재설정하면 현재 모든 프린터 및 프로파일이 제거됩니다."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
@@ -636,7 +621,7 @@ msgstr "이름 바꾸기"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
 msgctxt "@info"
 msgid "Please provide a new name."
-msgstr ""
+msgstr "새 이름을 입력하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
@@ -917,6 +902,7 @@ msgstr "대칭 도구"
 #~ "{error}.\n"
 #~ "Please try to upgrade again later."
 #~ msgstr ""
+
 #~ "새 버전을 설치하기 전 패키지 {package}(을)를 제거하는 중에 오류가 발생했습니다. \n"
 #~ "{error}.\n"
 #~ "업그레이드를 나중에 다시 시도하십시오."
@@ -927,6 +913,7 @@ msgstr "대칭 도구"
 #~ "- {profiles}\n"
 #~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 #~ msgstr ""
+
 #~ "설정이 손상된 것 같습니다. 다음 프로파일에 문제가 발생한 것 같습니다.\n"
 #~ "- {profiles}\n"
 #~ "기본값으로 재설정하시겠습니까? 재설정하면 현재 모든 프린터 및 프로파일이 제거됩니다."
@@ -940,6 +927,7 @@ msgstr "대칭 도구"
 #~ "Failed to install plugin from <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 #~ msgstr ""
+
 #~ "<filename>{0}</filename>에서 플러그인을 설치하지 못했습니다:\n"
 #~ "<message>{1}</message>"
 
@@ -948,6 +936,7 @@ msgstr "대칭 도구"
 #~ "Failed to install the plugin;\n"
 #~ "<message>{0}</message>"
 #~ msgstr ""
+
 #~ "플러그인을 설치하지 못했습니다;\n"
 #~ "<message>{0}</message>"
 

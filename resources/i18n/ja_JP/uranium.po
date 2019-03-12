@@ -122,12 +122,12 @@ msgstr "ダウンロード"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
 msgctxt "@action:button"
 msgid "Learn more"
-msgstr ""
+msgstr "詳しく見る"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Update Checker"
-msgstr ""
+msgstr "アップデートチェッカー"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
@@ -254,12 +254,12 @@ msgstr "モデルを回転させる"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr ""
+msgstr "オブジェクトをビルドプレート上に平に並べる"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@title"
 msgid "Object Rotation"
-msgstr ""
+msgstr "オブジェクト回転"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -278,10 +278,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
-"- {profiles}\n"
-"工場出荷状態にリセットしますか？"
+msgstr "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n- {profiles}\n工場出荷状態にリセットしますか？"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -323,9 +320,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr ""
-"次のパッケージのアンインストールでエラーが発生しました:\n"
-"{packages}"
+msgstr "次のパッケージのアンインストールでエラーが発生しました:\n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
 msgctxt "@info:title"
@@ -339,10 +334,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
-"新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n"
-"{error}.\n"
-"後からアップグレードをやり直してください。"
+msgstr "新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n{error}.\n後からアップグレードをやり直してください。"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
 msgctxt "@info:title"
@@ -419,9 +411,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"プラグインがインストールされました。\n"
-"アプリケーションを再起動して、プラグインをアクティベートしてください。"
+msgstr "プラグインがインストールされました。\nアプリケーションを再起動して、プラグインをアクティベートしてください。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
 #, python-brace-format
@@ -429,9 +419,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"プラグインが外されました。\n"
-"{0} を再起動してアンインストールを終了してください。"
+msgstr "プラグインが外されました。\n{0} を再起動してアンインストールを終了してください。"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
 #, python-brace-format
@@ -463,10 +451,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
-"- {profiles}\n"
-"工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
+msgstr "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n- {profiles}\n工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
@@ -639,7 +624,7 @@ msgstr "名前を変える"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
 msgctxt "@info"
 msgid "Please provide a new name."
-msgstr ""
+msgstr "新しい名前を入力してください。"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
@@ -921,6 +906,7 @@ msgstr "ミラーツール"
 #~ "{error}.\n"
 #~ "Please try to upgrade again later."
 #~ msgstr ""
+
 #~ "新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n"
 #~ "{error}.\n"
 #~ "後からアップグレードをやり直してください"
@@ -931,6 +917,7 @@ msgstr "ミラーツール"
 #~ "- {profiles}\n"
 #~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 #~ msgstr ""
+
 #~ "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
 #~ "- {profiles}\n"
 #~ "工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
@@ -944,6 +931,7 @@ msgstr "ミラーツール"
 #~ "Failed to install plugin from <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 #~ msgstr ""
+
 #~ "プラグインのインストールに失敗しました。<filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 
@@ -952,6 +940,7 @@ msgstr "ミラーツール"
 #~ "Failed to install the plugin;\n"
 #~ "<message>{0}</message>"
 #~ msgstr ""
+
 #~ "プラグインのインストールに失敗しました。\n"
 #~ "<message>{0}</message>"
 
