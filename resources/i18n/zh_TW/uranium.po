@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.0\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2019-02-27 11:24+0100\n"
-"PO-Revision-Date: 2018-11-04 13:26+0800\n"
+"PO-Revision-Date: 2019-02-28 19:45+0800\n"
 "Last-Translator: Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language-Team: Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language: zh_TW\n"
@@ -124,12 +124,12 @@ msgstr "下載"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
 msgctxt "@action:button"
 msgid "Learn more"
-msgstr ""
+msgstr "瞭解更多"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Update Checker"
-msgstr ""
+msgstr "韌體更新檢查"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
@@ -256,12 +256,12 @@ msgstr "旋轉模型"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr ""
+msgstr "將物件平放在列印平台上..."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@title"
 msgid "Object Rotation"
-msgstr ""
+msgstr "物件旋轉"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -638,7 +638,7 @@ msgstr "重新命名"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
 msgctxt "@info"
 msgid "Please provide a new name."
-msgstr ""
+msgstr "請提供一個新名字。"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
