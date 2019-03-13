@@ -40,6 +40,7 @@ class OutputDevicePlugin(PluginObject):
     def stop(self):
         raise NotImplementedError("Stop should be implemented by subclasses")
 
+
     ## Used to check if this adress makes sense to this plugin w.r.t. adding(/removing) a manual device.
     #  /return 'No', 'possible', or 'priority' (in the last case this plugin takes precedence, use with care).
     def canAddManualDevice(self, address: str) -> ManualDeviceAdditionAttempt:
@@ -53,4 +54,8 @@ class OutputDevicePlugin(PluginObject):
     ## Remove a manual device by either the name and/or the specified address.
     #  Since this may be asynchronous, use the 'removeDeviceSignal' when the machine actually has been added.
     def removeManualDevice(self, key: str, address: str = None) -> None:
+        pass
+
+    ## Refresh the available/discovered printers for an output device that handles network printers.
+    def refreshConnections(self) -> None:
         pass

@@ -141,7 +141,6 @@ class TestResources(TestCase):
         folder = os.path.dirname(Resources.getDataStoragePath())
         for file in os.listdir(folder):
             file_path = os.path.join(folder, file)
-            print(file_path)
             try:
                 os.unlink(file_path)
             except:
