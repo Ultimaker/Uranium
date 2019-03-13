@@ -74,6 +74,10 @@ class OutputDeviceManagerProxy(QObject):
         else:
             return catalog.i18nc("@label used when a printer-property (like its name) isn't found", "unknown")
 
+    @pyqtSlot()
+    def refreshConnections(self) -> None:
+        return self._device_manager.refreshConnections()
+
     ##  Request that the current scene is written to the output device.
     #
     #   The output device to write with will be selected based on the device_id.

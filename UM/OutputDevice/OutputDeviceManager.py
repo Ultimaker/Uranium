@@ -132,6 +132,13 @@ class OutputDeviceManager:
             except Exception:
                 Logger.logException("e", "Exception starting OutputDevicePlugin %s", plugin.getPluginId())
 
+    def refreshConnections(self):
+        for plugin_id, plugin in self._plugins.items():
+            try:
+                plugin.refreshConnections()
+            except Exception:
+                Logger.logException("e", "Exception refreshConnections OutputDevicePlugin %s", plugin.getPluginId())
+
     ##  Add and register an output device.
     #
     #   \param \type{OutputDevice} The output device to add.
