@@ -320,7 +320,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr "Er zijn fouten opgetreden bij het de-installeren van de volgende packages:\n{packages}"
+msgstr "Er zijn fouten opgetreden bij het deïnstalleren van de volgende packages:\n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
 msgctxt "@info:title"
