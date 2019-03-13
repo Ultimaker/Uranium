@@ -20,8 +20,8 @@ from UM.Signal import Signal
 #
 #   \sa OutputDeviceManager
 class OutputDevicePlugin(PluginObject):
-    addDeviceSignal = Signal()
-    removeDeviceSignal = Signal()
+    addManualDeviceSignal = Signal()
+    removeManualDeviceSignal = Signal()
 
     def __init__(self):
         super().__init__()

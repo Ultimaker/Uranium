@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 from PyQt5.QtQml import QQmlEngine, QJSEngine #For typing.
-from typing import List, Mapping, Optional, TYPE_CHECKING
+from typing import Dict, List, Mapping, Optional, TYPE_CHECKING
 
 from UM.Application import Application
 from UM.i18n import i18nCatalog
@@ -27,7 +27,10 @@ class OutputDeviceManagerProxy(QObject):
         self._device_manager.activeDeviceChanged.connect(self._onActiveDeviceChanged)
         self._onActiveDeviceChanged()
 
+        self._manualDeviceInfo = {}
+
     activeDeviceChanged = pyqtSignal()
+    manualDeviceChanged = pyqtSignal()
     
     @pyqtProperty(str, notify = activeDeviceChanged)
     def activeDevice(self) -> str:
@@ -55,14 +58,21 @@ class OutputDeviceManagerProxy(QObject):
 
     @pyqtSlot(str)
     def addManualDevice(self, address: str) -> None:
-        #self._device_manager.addDeviceSignal.connect(self._onAddManualDevice)
+        self._device_manager.addedManualDevice.connect(self._onManualDeviceAdded)
         self._device_manager.addManualDevice(address)
 
     @pyqtSlot(str)
     @pyqtSlot(str, str)
     def removeManualDevice(self, key: str, address: str = None) -> None:
-        self._device_manager.removeDeviceSignal.connect(self._onRemoveManualDevice)
+        self._device_manager.removedManualDevice.connect(self._onManualDeviceRemoved)
         self._device_manager.removeManualDevice(key, address)
+
+    @pyqtSlot(str, result = str)
+    def manualDeviceProperty(self, key: str) -> str:
+        if key in self._manualDeviceInfo:
+            return self._manualDeviceInfo[key]
+        else:
+            return catalog.i18nc("@label used when a printer-property (like its name) isn't found", "unknown")
 
     ##  Request that the current scene is written to the output device.
     #
@@ -145,20 +155,27 @@ class OutputDeviceManagerProxy(QObject):
         except Exception as e:
             Logger.logException("e", "Unable to write to file %s: %s", file_name, e)
 
-    def _onManualDeviceAdded(self, name: str, address: str) -> None:
+    def _onManualDeviceAdded(self, device_id: str, address: str, properties: Dict[bytes, bytes]) -> None:
+        self._device_manager.addedManualDevice.disconnect(self._onManualDeviceAdded)
 
-        print("ON ADD MANUAL DEVICE {0} {1}".format(name, address))
+        self._manualDeviceInfo.clear()
 
-        self._device_manager.addedManualDevice.disconnect()
-        # TODO!
+        for key in properties:  # NOTE: .items() flattens the 'bytes' objects to int for some reason.
+            value = properties[key]
+            if isinstance(key, bytes) and isinstance(value, bytes):
+                self._manualDeviceInfo[bytes.decode(key, "utf-8")] = bytes.decode(value, "utf-8")
 
-    def _onManualDeviceRemoved(self, name) -> None:
+        self._manualDeviceInfo["device_id"] = device_id
+        if "address" not in self._manualDeviceInfo:
+            self._manualDeviceInfo["address"] = address
 
-        print("ON REMOVE MANUAL DEVICE {0}".format(name))
+        self.manualDeviceChanged.emit()
 
-        self._device_manager.removedManualDevice.disconnect()
-        # TODO!
-
+    def _onManualDeviceRemoved(self, name: str) -> None:
+        self._device_manager.removedManualDevice.disconnect(self._onManualDeviceRemoved)
+        # TODO?
+        self._manualDeviceInfo.clear()
+        self.manualDeviceChanged.emit()
 
 def createOutputDeviceManagerProxy(engine: QQmlEngine, script_engine: QJSEngine) -> OutputDeviceManagerProxy:
     return OutputDeviceManagerProxy()
