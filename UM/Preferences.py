@@ -194,7 +194,12 @@ class Preferences:
     def deserialize(self, serialized: str) -> None:
         updated_preferences = self.__updateSerialized(serialized)
         self._parser = configparser.ConfigParser(interpolation = None)
-        self._parser.read_string(updated_preferences)
+        try:
+            self._parser.read_string(updated_preferences)
+        except configparser.MissingSectionHeaderError:
+            Logger.log("w", "Could not deserialize preferences from loaded project")
+            self._parser = None
+            return
         has_version = "general" in self._parser and "version" in self._parser["general"]
 
         if has_version:
