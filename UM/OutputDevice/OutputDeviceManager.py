@@ -278,7 +278,7 @@ class OutputDeviceManager:
                 if plugin:
                     plugin.addManualDeviceSignal.connect(self._onManualDeviceAdded)
                     plugin.removeManualDevice("", address)
-                    plugin.addManualDevice(address)  # Currently assumed to be a blocking call.
+                    plugin.addManualDevice(address)
                     return
 
         Logger.log("d", "Could not find a plugin to accept adding %s manually via address.", address)
