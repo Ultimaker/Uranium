@@ -334,7 +334,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr "Er is een fout opgetreden bij het de-installeren van de package {package} vóór installatie van de nieuwe versie:\n{error}.\nProbeer de upgrade later opnieuw uit te voeren."
+msgstr "Er is een fout opgetreden bij het deïnstalleren van de package {package} vóór installatie van de nieuwe versie:\n{error}.\nProbeer de upgrade later opnieuw uit te voeren."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
 msgctxt "@info:title"
