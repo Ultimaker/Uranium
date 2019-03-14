@@ -177,7 +177,6 @@ class OutputDeviceManagerProxy(QObject):
 
     def _onManualDeviceRemoved(self, name: str) -> None:
         self._device_manager.removedManualDevice.disconnect(self._onManualDeviceRemoved)
-        # TODO?
         self._manualDeviceInfo.clear()
         self.manualDeviceChanged.emit()
 

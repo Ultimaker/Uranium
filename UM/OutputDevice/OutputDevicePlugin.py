@@ -40,7 +40,6 @@ class OutputDevicePlugin(PluginObject):
     def stop(self):
         raise NotImplementedError("Stop should be implemented by subclasses")
 
-
     ## Used to check if this adress makes sense to this plugin w.r.t. adding(/removing) a manual device.
     #  /return 'No', 'possible', or 'priority' (in the last case this plugin takes precedence, use with care).
     def canAddManualDevice(self, address: str) -> ManualDeviceAdditionAttempt:
