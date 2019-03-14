@@ -256,7 +256,7 @@ msgstr "Obróć model"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr "Ustaw obiekt płasko, na powierzchni druku."
+msgstr "Ustawiam obiekt płasko na powierzchni druku..."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@title"
