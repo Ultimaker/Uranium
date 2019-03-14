@@ -396,7 +396,7 @@ msgstr "Обновление конфигурации..."
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:201
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr "Загрузка настроек…"
+msgstr "Загрузка настроек..."
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:64
 #, python-format, python-brace-format
