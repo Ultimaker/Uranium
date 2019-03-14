@@ -126,12 +126,12 @@ msgstr "Transferir"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
 msgctxt "@action:button"
 msgid "Learn more"
-msgstr ""
+msgstr "Saber mais"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Update Checker"
-msgstr ""
+msgstr "Verificador de Atualizações"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
@@ -258,12 +258,12 @@ msgstr "Rodar o Modelo"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr ""
+msgstr "A colocar horizontalmente o objeto na placa de construção..."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@title"
 msgid "Object Rotation"
-msgstr ""
+msgstr "Rotação do objeto"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -282,10 +282,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n"
-"- {profiles}\n"
-"Deseja repor as predefinições de fábrica?"
+msgstr "A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n- {profiles}\nDeseja repor as predefinições de fábrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -327,9 +324,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr ""
-"Ocorreram alguns erros ao desinstalar os seguintes pacotes:\n"
-"{packages}"
+msgstr "Ocorreram alguns erros ao desinstalar os seguintes pacotes:\n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
 msgctxt "@info:title"
@@ -343,10 +338,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
-"Ocorreu um erro ao desinstalar o pacote {package} antes de instalar uma nova versão:\n"
-"{error}.\n"
-"Tente atualizar novamente mais tarde."
+msgstr "Ocorreu um erro ao desinstalar o pacote {package} antes de instalar uma nova versão:\n{error}.\nTente atualizar novamente mais tarde."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
 msgctxt "@info:title"
@@ -423,9 +415,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"O plug-in foi instalado.\n"
-"Por favor reinicie a aplicação para ativar o plug-in."
+msgstr "O plug-in foi instalado.\nPor favor reinicie a aplicação para ativar o plug-in."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
 #, python-brace-format
@@ -433,9 +423,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"O plug-in foi removido.\n"
-"Por favor reinicie o {0} para concluir a desinstalação."
+msgstr "O plug-in foi removido.\nPor favor reinicie o {0} para concluir a desinstalação."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
 #, python-brace-format
@@ -467,10 +455,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n"
-"- {profiles}\n"
-" Deseja repor as predefinições de fábrica? A reposição removerá todos os perfis e impressoras atuais."
+msgstr "A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n- {profiles}\n Deseja repor as predefinições de fábrica? A reposição removerá todos os perfis e impressoras atuais."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
@@ -644,7 +629,7 @@ msgstr "Mudar o Nome"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
 msgctxt "@info"
 msgid "Please provide a new name."
-msgstr ""
+msgstr "Forneça um novo nome."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
@@ -933,6 +918,7 @@ msgstr "Ferramenta Espelhar"
 #~ "{error}.\n"
 #~ "Please try to upgrade again later."
 #~ msgstr ""
+
 #~ "Ocorreu um erro ao desinstalar o pacote {package} antes de instalar uma nova versão:\n"
 #~ "{error}.\n"
 #~ "Tente atualizar novamente mais tarde."
@@ -943,6 +929,7 @@ msgstr "Ferramenta Espelhar"
 #~ "- {profiles}\n"
 #~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 #~ msgstr ""
+
 #~ "A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n"
 #~ "- {profiles}\n"
 #~ "Deseja repor as predefinições de fábrica? A reposição removerá todos os perfis e impressoras atuais."
@@ -956,6 +943,7 @@ msgstr "Ferramenta Espelhar"
 #~ "Failed to install plugin from <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 #~ msgstr ""
+
 #~ "Não foi possível instalar o plug-in em <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 
@@ -964,6 +952,7 @@ msgstr "Ferramenta Espelhar"
 #~ "Failed to install the plugin;\n"
 #~ "<message>{0}</message>"
 #~ msgstr ""
+
 #~ "Não foi possível instalar o plug-in;\n"
 #~ "<message>{0}</message>"
 
