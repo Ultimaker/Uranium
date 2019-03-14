@@ -15,6 +15,7 @@ PreferencesPage
     property alias section: objectList.section;
     property alias delegate: objectList.delegate;
     property string nameRole: "name";
+    property string sectionRole: "group"
     property bool detailsVisible: true;
 
     property variant objectList: objectList;
@@ -103,7 +104,7 @@ PreferencesPage
                     base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null;
                 }
 
-                section.property: "group"
+                section.property: base.sectionRole
                 section.criteria: ViewSection.FullString
                 section.delegate: Rectangle
                 {
