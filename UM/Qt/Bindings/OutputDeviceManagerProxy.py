@@ -75,6 +75,10 @@ class OutputDeviceManagerProxy(QObject):
             return catalog.i18nc("@label used when a printer-property (like its name) isn't found", "unknown")
 
     @pyqtSlot()
+    def startDiscovery(self) -> None:
+        return self._device_manager.startDiscovery()
+
+    @pyqtSlot()
     def refreshConnections(self) -> None:
         return self._device_manager.refreshConnections()
 

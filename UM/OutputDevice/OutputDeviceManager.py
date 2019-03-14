@@ -132,7 +132,14 @@ class OutputDeviceManager:
             except Exception:
                 Logger.logException("e", "Exception starting OutputDevicePlugin %s", plugin.getPluginId())
 
-    def refreshConnections(self):
+    def startDiscovery(self) -> None:
+        for plugin_id, plugin in self._plugins.items():
+            try:
+                plugin.startDiscovery()
+            except Exception:
+                Logger.logException("e", "Exception startDiscovery OutputDevicePlugin %s", plugin.getPluginId())
+
+    def refreshConnections(self) -> None:
         for plugin_id, plugin in self._plugins.items():
             try:
                 plugin.refreshConnections()
