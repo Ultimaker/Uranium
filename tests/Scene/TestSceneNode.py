@@ -178,8 +178,63 @@ class SceneNodeTest(unittest.TestCase):
         self.assertEqual(node2.getWorldPosition(), Vector(15,15,25))
         self.assertEqual(node2.getPosition(), Vector(0,0,10))
 
+    def test_setName(self):
+        node = SceneNode()
+        node.setName("DERP")
+        assert node.getName() == "DERP"
 
+    def test_getDepth(self):
+        node1 = SceneNode()
+        node2 = SceneNode()
+        node3 = SceneNode()
+        node4 = SceneNode()
 
+        node1.addChild(node2)
+        node1.addChild(node3)
+        node2.addChild(node4)
+
+        assert node1.getDepth() == 0
+        assert node2.getDepth() == 1
+        assert node3.getDepth() == 1
+        assert node4.getDepth() == 2
+
+    def test_visibility(self):
+        node1 = SceneNode()
+        node1.setVisible(True)
+        assert node1.isVisible()
+
+        node2 = SceneNode()
+        node1.addChild(node2)
+        node2.setVisible(True)
+        assert node2.isVisible()
+
+        node1.setVisible(False)
+        assert not node1.isVisible()
+        assert not node2.isVisible()
+
+    def test_enabled(self):
+        node1 = SceneNode()
+        node1.setEnabled(True)
+        assert node1.isEnabled()
+
+        node2 = SceneNode()
+        node1.addChild(node2)
+        node2.setEnabled(True)
+        assert node2.isEnabled()
+
+        node1.setEnabled(False)
+        assert not node1.isEnabled()
+        assert not node2.isEnabled()
+
+    def test_removeChildren(self):
+        node1 = SceneNode()
+        node2 = SceneNode()
+        node1.addChild(node2)
+        assert node1.hasChildren()
+
+        node1.removeAllChildren()
+
+        assert not node1.hasChildren()
 
     def test_rotateWorld(self):
         pass
