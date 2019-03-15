@@ -183,5 +183,10 @@ class MimeTypeDatabase:
     def addMimeType(cls, mime_type: MimeType) -> None:
         cls.__custom_mimetypes.append(mime_type)
 
+    @classmethod
+    def removeMimeType(cls, mime_type: MimeType) -> None:
+        if mime_type in cls.__custom_mimetypes:
+            cls.__custom_mimetypes.remove(mime_type)
+
     __system_database = QMimeDatabase()
     __custom_mimetypes = [] # type: List[MimeType]
