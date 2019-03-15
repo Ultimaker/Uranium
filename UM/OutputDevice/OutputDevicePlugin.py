@@ -55,6 +55,10 @@ class OutputDevicePlugin(PluginObject):
     def removeManualDevice(self, key: str, address: str = None) -> None:
         pass
 
+    ## Starts to discovery network devices that can be handled by this plugin.
+    def startDiscovery(self) -> None:
+        pass
+
     ## Refresh the available/discovered printers for an output device that handles network printers.
     def refreshConnections(self) -> None:
         pass
