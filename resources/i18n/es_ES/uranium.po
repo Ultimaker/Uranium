@@ -122,12 +122,12 @@ msgstr "Descargar"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
 msgctxt "@action:button"
 msgid "Learn more"
-msgstr ""
+msgstr "Más información"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Update Checker"
-msgstr ""
+msgstr "Comprobador de actualizaciones"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
@@ -254,12 +254,12 @@ msgstr "Modelo Rotar"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr ""
+msgstr "Colocando objeto en plano sobre la placa de impresión..."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@title"
 msgid "Object Rotation"
-msgstr ""
+msgstr "Rotación de objetos"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -278,10 +278,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n"
-"- {profiles}\n"
-"¿Desea restablecer los valores predeterminados de fábrica?"
+msgstr "Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n- {profiles}\n¿Desea restablecer los valores predeterminados de fábrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -323,9 +320,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr ""
-"Se han producido algunos errores al desinstalar los siguientes paquetes:\n"
-"{packages}"
+msgstr "Se han producido algunos errores al desinstalar los siguientes paquetes:\n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
 msgctxt "@info:title"
@@ -339,10 +334,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
-"Se ha producido un error al desinstalar el paquete {package} antes de instalar la nueva versión:\n"
-"{error}.\n"
-"Vuelva a intentar actualizar más tarde."
+msgstr "Se ha producido un error al desinstalar el paquete {package} antes de instalar la nueva versión:\n{error}.\nVuelva a intentar actualizar más tarde."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
 msgctxt "@info:title"
@@ -419,9 +411,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"El complemento se ha instalado.\n"
-"Reinicie la aplicación para activarlo."
+msgstr "El complemento se ha instalado.\nReinicie la aplicación para activarlo."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
 #, python-brace-format
@@ -429,9 +419,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"El complemento se ha eliminado.\n"
-"Pulse «Reiniciar» {0} para finalizar el proceso de desinstalación."
+msgstr "El complemento se ha eliminado.\nPulse «Reiniciar» {0} para finalizar el proceso de desinstalación."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
 #, python-brace-format
@@ -463,10 +451,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n"
-"- {profiles}\n"
-" ¿Desea restablecer los valores predeterminados de fábrica? Si los restablece se borrarán sus impresoras y perfiles actuales."
+msgstr "Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n- {profiles}\n ¿Desea restablecer los valores predeterminados de fábrica? Si los restablece se borrarán sus impresoras y perfiles actuales."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
@@ -639,7 +624,7 @@ msgstr "Cambiar nombre"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
 msgctxt "@info"
 msgid "Please provide a new name."
-msgstr ""
+msgstr "Introduzca otro nombre."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
@@ -921,6 +906,7 @@ msgstr "Herramienta Espejo"
 #~ "{error}.\n"
 #~ "Please try to upgrade again later."
 #~ msgstr ""
+
 #~ "Se ha producido un error al desinstalar el paquete {package} antes de instalar la nueva versión:\n"
 #~ "{error}.\n"
 #~ "Vuelva a intentar actualizar más tarde."
@@ -931,6 +917,7 @@ msgstr "Herramienta Espejo"
 #~ "- {profiles}\n"
 #~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 #~ msgstr ""
+
 #~ "Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n"
 #~ "- {profiles}\n"
 #~ "¿Desea restablecer los valores predeterminados de fábrica? Si los restablece se borrarán sus impresoras y perfiles actuales."
@@ -944,6 +931,7 @@ msgstr "Herramienta Espejo"
 #~ "Failed to install plugin from <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 #~ msgstr ""
+
 #~ "No se ha podido instalar el complemento desde <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 
@@ -952,6 +940,7 @@ msgstr "Herramienta Espejo"
 #~ "Failed to install the plugin;\n"
 #~ "<message>{0}</message>"
 #~ msgstr ""
+
 #~ "Se ha producido un error al instalar el complemento;\n"
 #~ "<message>{0}</message>"
 
@@ -1220,6 +1209,7 @@ msgstr "Herramienta Espejo"
 #~ "The plugin has been installed.\n"
 #~ " Please re-start the application to active the plugin."
 #~ msgstr ""
+
 #~ "El complemento se ha instalado.\n"
 #~ " Reinicie la aplicación para activarlo."
 
