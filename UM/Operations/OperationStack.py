@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import UM.Application
+from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
 
 import threading
@@ -57,6 +58,8 @@ class OperationStack():
             self.changed.emit()
         finally:
             self._lock.release()
+
+        Logger.log("d", " ".join(repr(operation).splitlines()))  # Don't remove; used in regression-tests.
 
     ##  Undo the current operation.
     #
