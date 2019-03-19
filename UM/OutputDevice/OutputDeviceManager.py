@@ -91,10 +91,10 @@ class OutputDeviceManager:
     writeSuccess = Signal()
 
     ##  Emitted whenever a device has been added manually.
-    addedManualDevice = Signal()
+    manualDeviceAdded = Signal()
 
     ##  Emitted whenever a device has been removed manually.
-    removedManualDevice = Signal()
+    manualDeviceRemoved = Signal()
 
     ##  Get a list of all registered output devices.
     #
@@ -270,7 +270,7 @@ class OutputDeviceManager:
     #   Note that a plugin can claim priority for certain addresses, but this should be used with great care!
     #   \param address The address of this device, often an IP or similar.
     #   \param plugin_types Limit the search to these plugins (or empty list for 'accept all', which is the default).
-    def addManualDevice(self, address: str, plugin_types: List[str] = []) -> None:
+    def addManualDevice(self, address: str, plugin_types: Optional[List[str]] = None) -> None:
         priority_order = [
                 ManualDeviceAdditionAttempt.PRIORITY,
                 ManualDeviceAdditionAttempt.POSSIBLE
@@ -278,7 +278,7 @@ class OutputDeviceManager:
         plugins_by_priority = {}  # type: Dict[ManualDeviceAdditionAttempt, List[str]]
 
         for plugin_id, plugin in self._plugins.items():
-            if plugin and (plugin_id in plugin_types or not plugin_types):
+            if plugin and (not plugin_types or plugin_id in plugin_types):
                 can_add = plugin.canAddManualDevice(address)
                 if can_add not in plugins_by_priority:
                     plugins_by_priority[can_add] = []
@@ -297,9 +297,9 @@ class OutputDeviceManager:
 
         Logger.log("d", "Could not find a plugin to accept adding %s manually via address.", address)
 
-    def removeManualDevice(self, key: str, plugin_types: List[str] = []) -> None:
+    def removeManualDevice(self, key: str, plugin_types: Optional[List[str]] = None) -> None:
         for plugin_id, plugin in self._plugins:
-            if plugin and (plugin_id in plugin_types or not plugin_types):
+            if plugin and (not plugin_types or plugin_id in plugin_types):
                 plugin.removeManualDeviceSignal.connect(self._onManualDeviceRemoved)
                 plugin.removeManualDevice(key)
 
@@ -309,13 +309,13 @@ class OutputDeviceManager:
         plugin = self._plugins[plugin_id]
         if plugin:
             plugin.addManualDeviceSignal.disconnect(self._onManualDeviceAdded)
-            self.addedManualDevice.emit(device_id, address, properties)
+            self.manualDeviceAdded.emit(device_id, address, properties)
 
     def _onManualDeviceRemoved(self, plugin_id: str, key: str, address: str) -> None:
         plugin = self._plugins[plugin_id]
         if plugin:
             plugin.removeManualDeviceSignal.disconnect(self._onManualDeviceRemoved)
-            self.removedManualDevice.emit(key, address)
+            self.manualDeviceRemoved.emit(key, address)
 
     def _findHighestPriorityDevice(self) -> Optional["OutputDevice"]:
         device = None

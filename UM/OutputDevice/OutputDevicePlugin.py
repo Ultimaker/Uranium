@@ -42,7 +42,7 @@ class OutputDevicePlugin(PluginObject):
 
     ## Used to check if this adress makes sense to this plugin w.r.t. adding(/removing) a manual device.
     #  /return 'No', 'possible', or 'priority' (in the last case this plugin takes precedence, use with care).
-    def canAddManualDevice(self, address: str) -> ManualDeviceAdditionAttempt:
+    def canAddManualDevice(self, address: str = "") -> ManualDeviceAdditionAttempt:
         return ManualDeviceAdditionAttempt.NO
 
     ## Add a manual device by the specified address (for example, an IP).

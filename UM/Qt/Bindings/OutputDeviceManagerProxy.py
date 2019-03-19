@@ -58,13 +58,13 @@ class OutputDeviceManagerProxy(QObject):
 
     @pyqtSlot(str)
     def addManualDevice(self, address: str) -> None:
-        self._device_manager.addedManualDevice.connect(self._onManualDeviceAdded)
+        self._device_manager.manualDeviceAdded.connect(self._onManualDeviceAdded)
         self._device_manager.addManualDevice(address)
 
     @pyqtSlot(str)
     @pyqtSlot(str, str)
     def removeManualDevice(self, key: str, address: str = None) -> None:
-        self._device_manager.removedManualDevice.connect(self._onManualDeviceRemoved)
+        self._device_manager.manualDeviceRemoved.connect(self._onManualDeviceRemoved)
         self._device_manager.removeManualDevice(key, address)
 
     @pyqtSlot(str, result = str)
@@ -164,14 +164,18 @@ class OutputDeviceManagerProxy(QObject):
             Logger.logException("e", "Unable to write to file %s: %s", file_name, e)
 
     def _onManualDeviceAdded(self, device_id: str, address: str, properties: Dict[bytes, bytes]) -> None:
-        self._device_manager.addedManualDevice.disconnect(self._onManualDeviceAdded)
+        self._device_manager.manualDeviceAdded.disconnect(self._onManualDeviceAdded)
 
         self._manualDeviceInfo.clear()
 
         for key in properties:  # NOTE: .items() flattens the 'bytes' objects to int for some reason.
             value = properties[key]
-            if isinstance(key, bytes) and isinstance(value, bytes):
-                self._manualDeviceInfo[bytes.decode(key, "utf-8")] = bytes.decode(value, "utf-8")
+            try:
+                decoded_key = bytes.decode(key, "utf-8")
+                decoded_value = bytes.decode(value, "utf-8")
+                self._manualDeviceInfo[decoded_key] = decoded_value
+            except UnicodeError:
+                Logger.log("i", "Value of key '{0}' from device properties is not an utf-8 string.".format(decoded_key))
 
         self._manualDeviceInfo["device_id"] = device_id
         if "address" not in self._manualDeviceInfo:
@@ -180,7 +184,7 @@ class OutputDeviceManagerProxy(QObject):
         self.manualDeviceChanged.emit()
 
     def _onManualDeviceRemoved(self, name: str) -> None:
-        self._device_manager.removedManualDevice.disconnect(self._onManualDeviceRemoved)
+        self._device_manager.manualDeviceRemoved.disconnect(self._onManualDeviceRemoved)
         self._manualDeviceInfo.clear()
         self.manualDeviceChanged.emit()
 
