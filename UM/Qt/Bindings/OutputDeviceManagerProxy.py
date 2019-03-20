@@ -27,7 +27,7 @@ class OutputDeviceManagerProxy(QObject):
         self._device_manager.activeDeviceChanged.connect(self._onActiveDeviceChanged)
         self._onActiveDeviceChanged()
 
-        self._manualDeviceInfo = {}
+        self._manualDeviceInfo = {}  # type: Dict[str, str]
 
     activeDeviceChanged = pyqtSignal()
     manualDeviceChanged = pyqtSignal()
