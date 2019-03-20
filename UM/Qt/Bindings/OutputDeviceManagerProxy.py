@@ -170,12 +170,12 @@ class OutputDeviceManagerProxy(QObject):
 
         for key in properties:  # NOTE: .items() flattens the 'bytes' objects to int for some reason.
             value = properties[key]
-            try:
-                decoded_key = bytes.decode(key, "utf-8")
-                decoded_value = bytes.decode(value, "utf-8")
-                self._manualDeviceInfo[decoded_key] = decoded_value
-            except UnicodeError:
-                Logger.log("i", "Value of key '{0}' from device properties is not an utf-8 string.".format(decoded_key))
+            if isinstance(key, bytes) and isinstance(value, bytes):
+                self._manualDeviceInfo[bytes.decode(key, "utf-8")] = bytes.decode(value, "utf-8")
+            elif isinstance(key, bytes) and isinstance(value, int):
+                self._manualDeviceInfo[bytes.decode(key, "utf-8")] = str(value)
+            else:
+                Logger.log("i", "Can't decode value of key '{0}' from device properties.".format(repr(key)))
 
         self._manualDeviceInfo["device_id"] = device_id
         if "address" not in self._manualDeviceInfo:
