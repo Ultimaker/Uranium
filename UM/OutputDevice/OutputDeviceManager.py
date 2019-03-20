@@ -275,27 +275,19 @@ class OutputDeviceManager:
                 ManualDeviceAdditionAttempt.PRIORITY,
                 ManualDeviceAdditionAttempt.POSSIBLE
             ]  # type: List[ManualDeviceAdditionAttempt]
-        plugins_by_priority = {}  # type: Dict[ManualDeviceAdditionAttempt, List[str]]
 
-        for plugin_id, plugin in self._plugins.items():
-            if plugin and (not plugin_types or plugin_id in plugin_types):
-                can_add = plugin.canAddManualDevice(address)
-                if can_add not in plugins_by_priority:
-                    plugins_by_priority[can_add] = []
-                plugins_by_priority[can_add].append(plugin_id)
+        accepted_plugins = [item[1] for item in
+                            filter(lambda plugin_item: (not plugin_types or plugin_item[0] in plugin_types) and
+                            plugin_item[1].canAddManualDevice(address) in priority_order, self._plugins.items())
+                            ]
 
-        for priority in priority_order:
-            if priority not in plugins_by_priority:  # None of the plugins that specified 'NO' will be requested.
-                continue
-            for plugin_id in plugins_by_priority[priority]:
-                plugin = self._plugins[plugin_id]
-                if plugin:
-                    plugin.addManualDeviceSignal.connect(self._onManualDeviceAdded)
-                    plugin.removeManualDevice("", address)
-                    plugin.addManualDevice(address)
-                    return
+        if not accepted_plugins:
+            Logger.log("d", "Could not find a plugin to accept adding %s manually via address.", address)
 
-        Logger.log("d", "Could not find a plugin to accept adding %s manually via address.", address)
+        plugin = max(accepted_plugins, key = lambda p: priority_order.index(p.canAddManualDevice(address)))
+        plugin.addManualDeviceSignal.connect(self._onManualDeviceAdded)
+        plugin.removeManualDevice("", address)
+        plugin.addManualDevice(address)
 
     def removeManualDevice(self, key: str, plugin_types: Optional[List[str]] = None) -> None:
         for plugin_id, plugin in self._plugins:
