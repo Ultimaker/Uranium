@@ -286,10 +286,10 @@ class OutputDeviceManager:
 
         plugin = max(accepted_plugins, key = lambda p: priority_order.index(p.canAddManualDevice(address)))
         plugin.addManualDeviceSignal.connect(self._onManualDeviceAdded)
-        plugin.removeManualDevice("", address)
+        plugin.removeManualDeviceSignal.connect(self._onManualDeviceRemoved)
         plugin.addManualDevice(address)
 
-    def removeManualDevice(self, key: str, address) -> None:
+    def removeManualDevice(self, key: str, address: str) -> None:
         for plugin_id, plugin in self._plugins.items():
             plugin.removeManualDeviceSignal.connect(self._onManualDeviceRemoved)
             plugin.removeManualDevice(key, address = address)

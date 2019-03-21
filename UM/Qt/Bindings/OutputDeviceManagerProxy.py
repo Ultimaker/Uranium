@@ -56,9 +56,14 @@ class OutputDeviceManagerProxy(QObject):
     def activeDeviceDescription(self) -> str:
         return self._device_manager.getActiveDevice().getDescription()
 
+    @pyqtProperty(bool)
+    def hasManualDevice(self) -> bool:
+        return len(self._manualDeviceInfo.keys()) > 0
+
     @pyqtSlot(str)
     def addManualDevice(self, address: str) -> None:
         self._device_manager.manualDeviceAdded.connect(self._onManualDeviceAdded)
+        self._device_manager.manualDeviceRemoved.connect(self._onManualDeviceRemoved)
         self._device_manager.addManualDevice(address)
 
     @pyqtSlot(str)
@@ -183,7 +188,8 @@ class OutputDeviceManagerProxy(QObject):
 
         self.manualDeviceChanged.emit()
 
-    def _onManualDeviceRemoved(self, name: str) -> None:
+    # Note that this can also signify that the addition of the device failed. In that case 'device_id' is empty.
+    def _onManualDeviceRemoved(self, device_id: str, address: str) -> None:
         self._device_manager.manualDeviceRemoved.disconnect(self._onManualDeviceRemoved)
         self._manualDeviceInfo.clear()
         self.manualDeviceChanged.emit()

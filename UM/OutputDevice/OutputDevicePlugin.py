@@ -22,7 +22,15 @@ from UM.Signal import Signal
 #
 #   \sa OutputDeviceManager
 class OutputDevicePlugin(PluginObject):
+
+    # Emitted when a device was added manually.
+    # With arguments: plugin-id(str), device-id(str), address(str), (optional) properties(Dict[bytes, bytes])
+    # Named ...Signal to avoid confusion with the function-names.
     addManualDeviceSignal = Signal()
+
+    # Emitted when a manually added device was failed to add, or was removed, when failed to add, device-id is empty.
+    # With arguments: plugin-id(str), device-id(str), address(str)
+    # Named ...Signal to avoid confusion with the function-names.
     removeManualDeviceSignal = Signal()
 
     def __init__(self):
@@ -49,6 +57,7 @@ class OutputDevicePlugin(PluginObject):
 
     ## Add a manual device by the specified address (for example, an IP).
     #  Since this may be asynchronous, use the 'addDeviceSignal' when the machine actually has been added.
+    #  (Note that the 'removeManualDeviceSignal' can be used to signal a failed addition attempt as well.
     def addManualDevice(self, address: str) -> None:
         pass
 
