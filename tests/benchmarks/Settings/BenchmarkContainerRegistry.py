@@ -38,6 +38,9 @@ def container_registry(application):
 
     ContainerRegistry.getInstance()._containers = {} # clear containers from previous iteration
 
+    root_plugin_dir = os.path.join(os.path.dirname(__file__), "..", "..", "..", "plugins")
+    PluginRegistry.getInstance().addPluginLocation(root_plugin_dir)
+
     PluginRegistry.getInstance().loadPlugin("LocalContainerProvider")
     plugin = PluginRegistry.getInstance().getPluginObject("LocalContainerProvider")
     ContainerRegistry.getInstance()._providers.append(plugin)
