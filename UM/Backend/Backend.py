@@ -134,7 +134,11 @@ class Backend(PluginObject):
 
     def _storeOutputToLogThread(self, handle):
         while True:
-            line = handle.readline()
+            try:
+                line = handle.readline()
+            except OSError:
+                Logger.logException("w", "Exception handling stdout log from backend.")
+                continue
             if line == b"":
                 self.backendQuit.emit()
                 break
@@ -142,7 +146,11 @@ class Backend(PluginObject):
 
     def _storeStderrToLogThread(self, handle):
         while True:
-            line = handle.readline()
+            try:
+                line = handle.readline()
+            except OSError:
+                Logger.logException("w", "Exception handling stderr log from backend.")
+                continue
             if line == b"":
                 break
             self._backendLog(line)
