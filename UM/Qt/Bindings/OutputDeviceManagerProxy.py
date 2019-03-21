@@ -63,7 +63,7 @@ class OutputDeviceManagerProxy(QObject):
 
     @pyqtSlot(str)
     @pyqtSlot(str, str)
-    def removeManualDevice(self, key: str, address: str = None) -> None:
+    def removeManualDevice(self, key: str, address: Optional[str] = None) -> None:
         self._device_manager.manualDeviceRemoved.connect(self._onManualDeviceRemoved)
         self._device_manager.removeManualDevice(key, address)
 

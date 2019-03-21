@@ -1,6 +1,8 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from typing import Optional
+
 from UM.OutputDevice.OutputDeviceManager import ManualDeviceAdditionAttempt
 from UM.PluginObject import PluginObject
 from UM.Application import Application
@@ -52,7 +54,7 @@ class OutputDevicePlugin(PluginObject):
 
     ## Remove a manual device by either the name and/or the specified address.
     #  Since this may be asynchronous, use the 'removeDeviceSignal' when the machine actually has been added.
-    def removeManualDevice(self, key: str, address: str = None) -> None:
+    def removeManualDevice(self, key: str, address: Optional[str] = None) -> None:
         pass
 
     ## Starts to discovery network devices that can be handled by this plugin.
