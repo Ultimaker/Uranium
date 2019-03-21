@@ -122,12 +122,12 @@ msgstr "Downloaden"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
 msgctxt "@action:button"
 msgid "Learn more"
-msgstr ""
+msgstr "Meer informatie"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Update Checker"
-msgstr ""
+msgstr "Updatecontrole"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
@@ -254,12 +254,12 @@ msgstr "Model Roteren"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr ""
+msgstr "Object plat op platform plaatsen..."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
 msgctxt "@title"
 msgid "Object Rotation"
-msgstr ""
+msgstr "Objectrotatie"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -278,10 +278,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr ""
-"Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
-"- {profiles}\n"
-"Wilt u de standaardinstellingen herstellen?"
+msgstr "Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n- {profiles}\nWilt u de standaardinstellingen herstellen?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
@@ -323,9 +320,7 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr ""
-"Er zijn fouten opgetreden bij het de-installeren van de volgende packages:\n"
-"{packages}"
+msgstr "Er zijn fouten opgetreden bij het deïnstalleren van de volgende packages:\n{packages}"
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
 msgctxt "@info:title"
@@ -339,10 +334,7 @@ msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
-"Er is een fout opgetreden bij het de-installeren van de package {package} vóór installatie van de nieuwe versie:\n"
-"{error}.\n"
-"Probeer de upgrade later opnieuw uit te voeren."
+msgstr "Er is een fout opgetreden bij het deïnstalleren van de package {package} vóór installatie van de nieuwe versie:\n{error}.\nProbeer de upgrade later opnieuw uit te voeren."
 
 #: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
 msgctxt "@info:title"
@@ -419,9 +411,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"De invoegtoepassing is geïnstalleerd.\n"
-"Start de toepassing opnieuw om de invoegtoepassing te activeren."
+msgstr "De invoegtoepassing is geïnstalleerd.\nStart de toepassing opnieuw om de invoegtoepassing te activeren."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
 #, python-brace-format
@@ -429,9 +419,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"De invoegtoepassing is verwijderd.\n"
-"Start {0} opnieuw om het verwijderen te voltooien."
+msgstr "De invoegtoepassing is verwijderd.\nStart {0} opnieuw om het verwijderen te voltooien."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
 #, python-brace-format
@@ -463,10 +451,7 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
-"- {profiles}\n"
-" Wilt u de standaardinstellingen herstellen? Hiermee worden al uw huidige printers en profielen gewist."
+msgstr "Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n- {profiles}\n Wilt u de standaardinstellingen herstellen? Hiermee worden al uw huidige printers en profielen gewist."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
@@ -639,7 +624,7 @@ msgstr "Hernoemen"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
 msgctxt "@info"
 msgid "Please provide a new name."
-msgstr ""
+msgstr "Geef een nieuwe naam op."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
@@ -921,6 +906,7 @@ msgstr "Spiegelgereedschap"
 #~ "{error}.\n"
 #~ "Please try to upgrade again later."
 #~ msgstr ""
+
 #~ "Er is een fout opgetreden bij het de-installeren van de package {package} vóór installatie van de nieuwe versie:\n"
 #~ "{error}.\n"
 #~ "Probeer de upgrade later opnieuw uit te voeren."
@@ -931,6 +917,7 @@ msgstr "Spiegelgereedschap"
 #~ "- {profiles}\n"
 #~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 #~ msgstr ""
+
 #~ "Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
 #~ "- {profiles}\n"
 #~ "Wilt u de standaardinstellingen herstellen? Hiermee worden al uw huidige printers en profielen gewist."
@@ -944,6 +931,7 @@ msgstr "Spiegelgereedschap"
 #~ "Failed to install plugin from <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 #~ msgstr ""
+
 #~ "Kan de invoegtoepassing van <filename>{0}</filename> niet installeren:\n"
 #~ "<message>{1}</message>"
 
@@ -952,6 +940,7 @@ msgstr "Spiegelgereedschap"
 #~ "Failed to install the plugin;\n"
 #~ "<message>{0}</message>"
 #~ msgstr ""
+
 #~ "Kan de invoegtoepassing niet installeren;\n"
 #~ "<message>{0}</message>"
 
@@ -1220,6 +1209,7 @@ msgstr "Spiegelgereedschap"
 #~ "The plugin has been installed.\n"
 #~ " Please re-start the application to active the plugin."
 #~ msgstr ""
+
 #~ "De invoegtoepassing is geïnstalleerd.\n"
 #~ " Start de toepassing opnieuw om de invoegtoepassing te activeren."
 

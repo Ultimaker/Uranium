@@ -1,14 +1,14 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import unittest
 import numpy
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
+import copy
 
 class TestMatrix(unittest.TestCase):
     def setUp(self):
-        self._matrix = Matrix()
         # Called before the first testfunction is executed
         pass
 
@@ -36,15 +36,52 @@ class TestMatrix(unittest.TestCase):
         numpy.testing.assert_array_almost_equal(temp_matrix.getData(), numpy.array([[0.5,0,0,5],[0,0.5,0,5],[0,0,0.5,5],[0,0,0,1]]))
 
     def test_setByScaleFactor(self):
-        self._matrix.setByScaleFactor(0.5)
-        numpy.testing.assert_array_almost_equal(self._matrix.getData(), numpy.array([[0.5,0,0,0],[0,0.5,0,0],[0,0,0.5,0],[0,0,0,1]]))
+        matrix = Matrix()
+        matrix.setByScaleFactor(0.5)
+        numpy.testing.assert_array_almost_equal(matrix.getData(), numpy.array([[0.5,0,0,0],[0,0.5,0,0],[0,0,0.5,0],[0,0,0,1]]))
+
+        assert matrix.getScale() == Vector(0.5, 0.5, 0.5)
+
+    def test_scaleByFactor(self):
+        matrix = Matrix()
+        matrix.scaleByFactor(2)
+        assert matrix.getScale() == Vector(2, 2, 2)
 
     def test_setByRotation(self):
         pass
 
     def test_setByTranslation(self):
-        self._matrix.setByTranslation(Vector(0,1,0))
-        numpy.testing.assert_array_almost_equal(self._matrix.getData(), numpy.array([[1,0,0,0],[0,1,0,1],[0,0,1,0],[0,0,0,1]]))
+        matrix = Matrix()
+        matrix.setByTranslation(Vector(0,1,0))
+        numpy.testing.assert_array_almost_equal(matrix.getData(), numpy.array([[1,0,0,0],[0,1,0,1],[0,0,1,0],[0,0,0,1]]))
+
+    def test_deepcopy(self):
+        matrix = Matrix()
+
+        # Set some data
+        matrix.setRow(1, [1, 2, 3])
+        matrix.setColumn(2, [3, 4, 5])
+
+        copied_matrix = copy.deepcopy(matrix)
+        assert copied_matrix == matrix
+
+    def test_compare(self):
+        matrix = Matrix()
+        matrix2 = Matrix()
+
+        assert matrix == matrix
+        assert not matrix == "zomg"
+
+        matrix._data = None
+        matrix2._data = None
+        assert matrix == matrix2
+
+    def test_translate(self):
+        matrix = Matrix()
+        matrix.translate(Vector(1, 1, 1))
+        assert matrix.getTranslation() == Vector(1, 1, 1)
+        matrix.translate(Vector(2, 3, 4))
+        assert matrix.getTranslation() == Vector(3, 4, 5)
 
     def test_setToIdentity(self):
         pass
@@ -60,6 +97,3 @@ class TestMatrix(unittest.TestCase):
 
     def test_dot(self):
         pass
-
-if __name__ == "__main__":
-    unittest.main()
