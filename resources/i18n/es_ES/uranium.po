@@ -522,7 +522,7 @@ msgstr "Escala uniforme"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:196
 msgctxt "@option:check"
 msgid "Lock Model"
-msgstr "Modelo Bloquear"
+msgstr "Bloquear Modelo"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
