@@ -156,10 +156,14 @@ class RotateTool(Tool):
                 self.propertyChanged.emit()
 
                 # Rotate around the saved centeres of all selected nodes
-                op = GroupedOperation()
-                for node, position in self._saved_node_positions:
-                    op.addOperation(RotateOperation(node, rotation, rotate_around_point = position))
-                op.push()
+                if len(self._saved_node_positions) > 1:
+                    op = GroupedOperation()
+                    for node, position in self._saved_node_positions:
+                        op.addOperation(RotateOperation(node, rotation, rotate_around_point = position))
+                    op.push()
+                else:
+                    for node, position in self._saved_node_positions:
+                        RotateOperation(node, rotation, rotate_around_point=position).push()
 
                 self.setDragStart(event.x, event.y)
             return True
