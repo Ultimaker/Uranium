@@ -279,3 +279,6 @@ class Quaternion(object):
 
     def __repr__(self):
         return "Quaternion(x={0}, y={1}, z={2}, w={3})".format(self.x, self.y, self.z, self.w)
+
+    def __str__(self):
+        return "Q<{0},{1},{2},w={3}>".format(self.x, self.y, self.z, self.w)

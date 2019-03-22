@@ -56,4 +56,4 @@ class RotateOperation(Operation.Operation):
     #
     #   \return A programmer-readable representation of this operation.
     def __repr__(self):
-        return "RotateOperation(node = {0}, rotation={1})".format(self._node, self._rotation)
+        return "RotateOp.(node={0},rot.={1})".format(self._node, self._rotation)
