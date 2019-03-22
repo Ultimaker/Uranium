@@ -4,7 +4,7 @@
 import os
 import sys
 
-from PyQt5.QtCore import QUrl
+from PyQt5.QtCore import QUrl, QDir
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
@@ -101,6 +101,10 @@ class LocalFileOutputDevice(OutputDevice):
                 if file_name:
                     file_name += "." + item["extension"]
 
+        # CURA-6411: This code was moved up here otherwise in macOS (for some reason) the setDirectory call doesn't work
+        stored_directory = Application.getInstance().getPreferences().getValue("local_file/dialog_save_path")
+        dialog.setDirectory(stored_directory)
+
         # Add the file name before adding the extension to the dialog
         if file_name is not None:
             dialog.selectFile(file_name)
@@ -108,9 +112,6 @@ class LocalFileOutputDevice(OutputDevice):
         dialog.setNameFilters(filters)
         if selected_filter is not None:
             dialog.selectNameFilter(selected_filter)
-
-        stored_directory = Application.getInstance().getPreferences().getValue("local_file/dialog_save_path")
-        dialog.setDirectory(stored_directory)
 
         if not dialog.exec_():
             raise OutputDeviceError.UserCanceledError()
