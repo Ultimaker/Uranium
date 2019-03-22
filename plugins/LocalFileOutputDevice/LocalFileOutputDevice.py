@@ -4,7 +4,7 @@
 import os
 import sys
 
-from PyQt5.QtCore import QUrl, QDir
+from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
