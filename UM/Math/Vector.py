@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
@@ -24,7 +24,7 @@ class Vector(object):
     #   \param x X coordinate of vector.
     #   \param y Y coordinate of vector.
     #   \param z Z coordinate of vector.
-    def __init__(self, x=None, y=None, z=None, data=None, round_digits=None):
+    def __init__(self, x = None, y = None, z = None, data = None, round_digits = None):
         if x is not None and y is not None and z is not None:
             self._data = numpy.array([x, y, z], dtype = numpy.float64)
         elif data is not None:
@@ -56,7 +56,7 @@ class Vector(object):
     def z(self):
         return numpy.float64(self._data[2])
 
-    def set(self, x=None, y=None, z=None):
+    def set(self, x = None, y = None, z = None):
         new_x = self._data[0] if x is None else x
         new_y = self._data[1] if y is None else y
         new_z = self._data[2] if z is None else z
@@ -64,8 +64,8 @@ class Vector(object):
 
     ##  Get the angle from this vector to another
     def angleToVector(self, vector):
-        v0 = numpy.array(self._data, dtype = numpy.float64, copy=False)
-        v1 = numpy.array(vector.getData(), dtype = numpy.float64, copy=False)
+        v0 = numpy.array(self._data, dtype = numpy.float64, copy = False)
+        v1 = numpy.array(vector.getData(), dtype = numpy.float64, copy = False)
         dot = numpy.sum(v0 * v1)
         dot /= self._normalizeVector(v0) * self._normalizeVector(v1)
         return numpy.arccos(numpy.fabs(dot))
@@ -80,7 +80,7 @@ class Vector(object):
 
     ##  Return length, i.e. Euclidean norm, of ndarray along axis.
     def _normalizeVector(self, data):
-        data = numpy.array(data, dtype = numpy.float64, copy=True)
+        data = numpy.array(data, dtype = numpy.float64, copy = True)
         if data.ndim == 1:
             return math.sqrt(numpy.dot(data, data))
         data *= data
@@ -99,7 +99,7 @@ class Vector(object):
         return Vector(result[0], result[1], result[2])
 
     def multiply(self, matrix):
-        d = numpy.empty(4, dtype=numpy.float64)
+        d = numpy.empty(4, dtype = numpy.float64)
         d[0] = self._data[0]
         d[1] = self._data[1]
         d[2] = self._data[2]
@@ -137,25 +137,25 @@ class Vector(object):
     #
     #   \param epsilon optional tolerance value for the comparision.
     #   \returns True if the two vectors are the same.
-    def equals(self, other, epsilon=1e-6):
+    def equals(self, other, epsilon = 1e-6):
         return Float.fuzzyCompare(self.x, other.x, epsilon) and \
                Float.fuzzyCompare(self.y, other.y, epsilon) and \
                Float.fuzzyCompare(self.z, other.z, epsilon)
 
     def __add__(self, other):
         if type(other) is Vector:
-            return Vector(data=self._data + other._data)
+            return Vector(data = self._data + other._data)
         else:
-            return Vector(data=self._data + other)
+            return Vector(data = self._data + other)
 
     def __iadd__(self, other):
         return self + other
 
     def __sub__(self, other):
         if type(other) is Vector:
-            return Vector(data=self._data - other._data)
+            return Vector(data = self._data - other._data)
         else:
-            return Vector(data=self._data - other)
+            return Vector(data = self._data - other)
 
     def __isub__(self, other):
         return self - other
@@ -182,7 +182,7 @@ class Vector(object):
             new_data = self._data / other._data
         else:
             raise NotImplementedError()
-        return Vector(data=new_data)
+        return Vector(data = new_data)
 
     def __itruediv__(self, other):
         return self / other
