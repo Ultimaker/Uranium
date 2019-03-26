@@ -48,6 +48,8 @@ class Resources:
     Plugins = 12
     ## Location of data regarding bundled packages
     BundledPackages = 13
+    ## Location of text files
+    Texts = 14
 
     ## Any custom resource types should be greater than this to prevent collisions with standard types.
     UserType = 128
@@ -591,6 +593,7 @@ class Resources:
         ContainerStacks: "stacks",
         Plugins: "plugins",
         BundledPackages: "bundled_packages",
+        Texts: "texts",
     } #type: Dict[int, str]
     __types_storage = {
         Resources: "",
