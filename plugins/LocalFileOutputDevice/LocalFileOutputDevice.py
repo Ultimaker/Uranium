@@ -101,7 +101,7 @@ class LocalFileOutputDevice(OutputDevice):
                 if file_name:
                     file_name += "." + item["extension"]
 
-        # CURA-6411: This code was moved up here otherwise in macOS (for some reason) the setDirectory call doesn't work
+        # CURA-6411: This code needs to be before dialog.selectFile and the filters, because otherwise in macOS (for some reason) the setDirectory call doesn't work.
         stored_directory = Application.getInstance().getPreferences().getValue("local_file/dialog_save_path")
         dialog.setDirectory(stored_directory)
 
