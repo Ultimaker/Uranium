@@ -9,7 +9,7 @@ import zipfile
 import tempfile
 import urllib.parse  # For interpreting escape characters using unquote_plus.
 
-from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl
+from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty
 
 from UM import i18nCatalog
 from UM.Logger import Logger
@@ -66,12 +66,48 @@ class PackageManager(QObject):
         self._to_remove_package_set = set()  # type: Set[str] # A set of packages that need to be removed at the next start
         self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that need to be installed at the next start
 
+        # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
+        self._available_package_versions = {}  # Type: Dict[str, Set[Version]]
+
+        self._packages_with_update_available = set() # type: Set[str]
+
     installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
+    packagesWithUpdateChanged = pyqtSignal()
 
     def initialize(self) -> None:
         self._loadManagementData()
         self._removeAllScheduledPackages()
         self._installAllScheduledPackages()
+
+    # Notify the Package manager that there is an alternative version for a given package.
+    def addAvailablePackageVersion(self, package_id: str, version: Version):
+        if package_id not in self._available_package_versions:
+            self._available_package_versions[package_id] = set()
+        self._available_package_versions[package_id].add(version)
+
+        if self.checkIfPackageCanUpdate(package_id):
+            self._packages_with_update_available.add(package_id)
+            self.packagesWithUpdateChanged.emit()
+
+    @pyqtProperty("QStringList", notify = packagesWithUpdateChanged)
+    def packagesWithUpdate(self):
+        return self._packages_with_update_available
+
+    def checkIfPackageCanUpdate(self, package_id: str) -> bool:
+        available_versions = self._available_package_versions.get(package_id)
+
+        if available_versions is None:
+            return False
+
+        installed_package_dict = self._installed_package_dict.get(package_id)
+        if installed_package_dict is not None:
+            current_version = Version(installed_package_dict["package_info"]["package_version"])
+
+            for available_version in available_versions:
+                if current_version < available_version:
+                    # Stop looking, there is at least one version that is higher.
+                    return True
+        return False
 
     # (for initialize) Loads the package management file if exists
     def _loadManagementData(self) -> None:
