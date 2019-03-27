@@ -322,6 +322,7 @@ class PackageManager(QObject):
     @pyqtSlot(str)
     def installPackage(self, filename: str) -> None:
         has_changes = False
+        package_id = ""
         try:
             # Get package information
             package_info = self.getPackageInfo(filename)
@@ -359,6 +360,12 @@ class PackageManager(QObject):
             if has_changes:
                 self.installedPackagesChanged.emit()
 
+                if package_id in self._packages_with_update_available:
+                    if not self.checkIfPackageCanUpdate(package_id):
+                        # The install ensured that the package no longer has a valid update option.
+                        self._packages_with_update_available.remove(package_id)
+                        self.packagesWithUpdateChanged.emit()
+
     # Schedules the given package to be removed upon the next start.
     # \param package_id id of the package
     # \param force_add is used when updating. In that case you actually want to uninstall & install
@@ -382,6 +389,11 @@ class PackageManager(QObject):
                 del self._to_install_package_dict[package_id]
         self._saveManagementData()
         self.installedPackagesChanged.emit()
+
+        # It might be that a certain update is suddenly available again!
+        if self.checkIfPackageCanUpdate(package_id):
+            self._packages_with_update_available.add(package_id)
+            self.packagesWithUpdateChanged.emit()
 
     ##  Is the package an user installed package?
     def isUserInstalledPackage(self, package_id: str) -> bool:
