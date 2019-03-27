@@ -191,9 +191,6 @@ class Application:
         UM.Settings.InstanceContainer.setContainerRegistry(self._container_registry)
         UM.Settings.ContainerStack.setContainerRegistry(self._container_registry)
 
-        # Initialize the package manager to remove and install scheduled packages.
-        self._package_manager = self._package_manager_class(self)
-
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
