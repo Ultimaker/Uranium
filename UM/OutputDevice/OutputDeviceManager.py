@@ -289,7 +289,7 @@ class OutputDeviceManager:
         plugin.removeManualDeviceSignal.connect(self._onManualDeviceRemoved)
         plugin.addManualDevice(address)
 
-    def removeManualDevice(self, key: str, address: str) -> None:
+    def removeManualDevice(self, key: str, address: Optional[str] = None) -> None:
         for plugin_id, plugin in self._plugins.items():
             plugin.removeManualDeviceSignal.connect(self._onManualDeviceRemoved)
             plugin.removeManualDevice(key, address = address)
