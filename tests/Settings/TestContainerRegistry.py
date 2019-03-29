@@ -286,6 +286,9 @@ def test_findContainerStacks(container_registry, data):
 
     _verifyMetaDataMatches(results, data["result"])
 
+    metadata_results = container_registry.findContainerStacksMetadata(**data["filter"])
+    assert metadata_results == metadata_results
+
 
 ##  Tests the loading of containers into the registry.
 #
