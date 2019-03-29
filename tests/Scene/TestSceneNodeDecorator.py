@@ -51,6 +51,7 @@ def test_SceneNodeDecorator():
     test_node.addDecorator(test_decorator)
     assert len(test_node.getDecorators()) == 1
     assert test_node.decoratorsChanged.emit.call_count == 1
+    assert test_node.getDecorator(type(test_decorator)) == test_decorator
 
     # Remove the decorator again!
     test_node.removeDecorator(SceneNodeDecorator)
@@ -85,4 +86,5 @@ def test_SceneNodeDecorator():
     assert not_amazing_decorator.clear.call_count == 1
     assert len(test_node.getDecorators()) == 0
     assert test_node.decoratorsChanged.emit.call_count == 7
+    assert test_node.getDecorator(type(test_decorator)) is None
 
