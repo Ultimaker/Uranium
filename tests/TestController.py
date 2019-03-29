@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 from UM.Controller import Controller
 from UM.Event import ViewEvent, Event
+from UM.InputDevice import InputDevice
 from UM.Stage import Stage
 from UM.Tool import Tool
 from UM.View.View import View
@@ -73,6 +74,51 @@ def test_setActiveView(application):
     # Ensure that the view was notified that it got deactivated again
     assert view_1.event.call_args_list[1][0][0].type == Event.ViewDeactivateEvent
 
+
+def test_addRemoveInputDevice(application):
+    controller = Controller(application)
+
+    input_device = InputDevice()
+    input_device.setPluginId("input_device")
+
+    controller.addInputDevice(input_device)
+    controller.addInputDevice(input_device) # Doing it twice shouldn't cause issues.
+
+    assert controller.getInputDevice("input_device") == input_device
+    assert controller.getInputDevice("OMGZOMG") is None  # This device isn't added
+
+    controller.removeInputDevice("input_device")
+    assert controller.getInputDevice("input_device") is None
+
+    controller.removeInputDevice("input_device") #Removing it again shouldn't cause issues.
+
+
+def test_setCameraTool(application):
+    controller = Controller(application)
+
+    camera_tool = Tool()
+    camera_tool.setPluginId("camera_tool")
+
+    controller.addTool(camera_tool)
+
+    controller.setCameraTool(camera_tool)
+    assert controller.getCameraTool() == camera_tool
+
+    controller.setCameraTool("")
+    assert controller.getCameraTool() is None
+
+    controller.setCameraTool("camera_tool")
+    assert controller.getCameraTool() == camera_tool
+
+
+def test_getSetToolsEnabled(application):
+    controller = Controller(application)
+
+    controller.setToolsEnabled(True)
+    assert controller.getToolsEnabled()
+
+    controller.setToolsEnabled(False)
+    assert not controller.getToolsEnabled()
 
 def test_addStage(application):
     controller = Controller(application)
