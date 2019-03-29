@@ -49,6 +49,16 @@ def test_readWrite():
     assert preferences.getValue("test/more_test") == new_preferences.getValue("test/more_test")
 
 
+def test_deserialize():
+    preferences = Preferences()
+    path = Resources.getPath(Resources.Preferences, "preferences_test.cfg")
+
+    with open(path, "r", encoding="utf-8") as f:
+        preferences.deserialize(f.read())
+    assert preferences.getValue("general/foo") == "omgzomg"
+    assert preferences.getValue("general/derp") == True
+
+
 def test_malformattedKey():
     preferences = Preferences()
     with pytest.raises(Exception):
