@@ -176,6 +176,34 @@ def test_deserialize(filename, expected):
     assert instance_container.getNumInstances() == 0
 
 
+def test__readAndValidateSerialisedWithInvalidData():
+    with pytest.raises(UM.Settings.InstanceContainer.InvalidInstanceError):
+        UM.Settings.InstanceContainer.InstanceContainer._readAndValidateSerialized("")
+
+
+def test_getConfigurationTypeFromSerializedWithInvalidData():
+    with pytest.raises(UM.Settings.InstanceContainer.InvalidInstanceError):
+        UM.Settings.InstanceContainer.InstanceContainer.getConfigurationTypeFromSerialized("")
+    assert UM.Settings.InstanceContainer.InstanceContainer.getConfigurationTypeFromSerialized("[general]\n definition = nope\n version=12") is None
+
+
+def test_deserializeWithInvalidData():
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("")
+
+    # Version is not an integer
+    with pytest.raises(UM.Settings.InstanceContainer.IncorrectInstanceVersionError):
+        instance_container.deserialize("[general]\n definition = nope\n version=Turtles")
+
+    # Version is not the correct one (but does have the correct format
+    with pytest.raises(UM.Settings.InstanceContainer.IncorrectInstanceVersionError):
+        instance_container.deserialize("[general]\n definition = nope\n version=9001")
+
+
+def test_deserializeMetadataInvalid():
+    with pytest.raises(UM.Settings.InstanceContainer.InvalidInstanceError):
+        UM.Settings.InstanceContainer.InstanceContainer.deserializeMetadata("", "whatever")
+
+
 @pytest.mark.parametrize("filename,expected", test_deserialize_data)
 def test_deserialiseMetadata(filename, expected):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer(filename)
@@ -243,3 +271,32 @@ def test_setMetadata():
     # Setting the entire metadata to the same value should also not trigger an update.
     container.setMetaData(container.getMetaData())
     assert container.metaDataChanged.emit.call_count == 2
+
+
+def test_getSetPath():
+    container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    container.setPath("WHATEVERRRR")
+    assert container.getPath() == "WHATEVERRRR"
+
+
+def test_addInstance():
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+
+    definition1 = UM.Settings.SettingDefinition.SettingDefinition("test_0", None)
+    definition1.deserialize({
+        "label": "Test 0",
+        "type": "float",
+        "description": "A Test Setting",
+        "default_value": 10.0,
+        "minimum_value": "test_1 / 10",
+    })
+    def1_instance = UM.Settings.SettingInstance.SettingInstance(definition1, instance_container)
+    def1_instance.propertyChanged = unittest.mock.MagicMock()
+
+    instance_container.addInstance(def1_instance)
+    assert def1_instance.propertyChanged.emit.call_count == 1
+    assert instance_container.getInstance("test_0") == def1_instance
+
+    # Adding it again shouldn't have an impact.
+    instance_container.addInstance(def1_instance)
+    assert def1_instance.propertyChanged.emit.call_count == 1
