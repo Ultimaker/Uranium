@@ -54,7 +54,7 @@ class TestActiveToolProxy(TestCase):
         self.tool.derp = MagicMock()
 
         self.proxy.triggerAction("derp")
-        self.tool.derp.assert_called_once()
+        assert self.tool.derp.call_count == 1
 
     def test_triggerActionWithData(self):
         # There is no active tool, so this is just a check to see if nothing breaks.
