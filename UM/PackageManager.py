@@ -360,7 +360,7 @@ class PackageManager(QObject):
                 self.installedPackagesChanged.emit()
 
                 if package_id in self._packages_with_update_available:
-                    if not self.checkIfPackageCanUpdate(package_id):
+                    if self.checkIfPackageCanUpdate(package_id):
                         # The install ensured that the package no longer has a valid update option.
                         self._packages_with_update_available.remove(package_id)
                         self.packagesWithUpdateChanged.emit()
