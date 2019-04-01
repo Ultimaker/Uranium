@@ -155,7 +155,7 @@ class MainWindow(QQuickWindow):
         self._mouse_x = event.x()
         self._mouse_y = event.y()
 
-        if self._mouse_pressed and self._app.getController().isModelRenderingEnabled():
+        if self._mouse_pressed:
             self.mousePositionChanged.emit()
 
         super().mouseMoveEvent(event)

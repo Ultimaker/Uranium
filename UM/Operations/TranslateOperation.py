@@ -57,4 +57,4 @@ class TranslateOperation(Operation.Operation):
     #
     #   \return A programmer-readable representation of this operation.
     def __repr__(self):
-        return "TranslateOperation(node = {0}, translation={1})".format(self._node, self._translation)
+        return "TranslateOp.(node={0},trans.={1})".format(self._node, self._translation)

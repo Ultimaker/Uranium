@@ -63,4 +63,4 @@ class MirrorOperation(Operation.Operation):
     #
     #   \return A programmer-readable representation of this operation.
     def __repr__(self):
-        return "MirrorOperation(node = {0}, mirror={1})".format(self._node, self._mirror)
+        return "MirrorOp.(node={0},mirror={1})".format(self._node, self._mirror)

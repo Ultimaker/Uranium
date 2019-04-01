@@ -117,3 +117,6 @@ class TestContainerProvider(ContainerProvider):
 
     def loadMetadata(self, container_id, *args, **kwargs):
         return self._metadata[container_id]
+
+    def saveContainer(self, *args, **kwargs):
+        return None

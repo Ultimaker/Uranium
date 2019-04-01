@@ -32,7 +32,6 @@ class Controller:
 
         self._scene = Scene()
         self._application = application
-        self._is_model_rendering_enabled = True
 
         self._active_view = None  # type: Optional[View]
         self._views = {}  # type: Dict[str, View]
@@ -104,15 +103,6 @@ class Controller:
             Logger.log("e", "No view named %s found", name)
         except Exception as e:
             Logger.logException("e", "An exception occurred while switching views: %s", str(e))
-
-    def enableModelRendering(self) -> None:
-        self._is_model_rendering_enabled = True
-
-    def disableModelRendering(self) -> None:
-        self._is_model_rendering_enabled = False
-
-    def isModelRenderingEnabled(self) -> bool:
-        return self._is_model_rendering_enabled
 
     ##  Emitted when the list of views changes.
     viewsChanged = Signal()

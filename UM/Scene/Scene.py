@@ -62,22 +62,6 @@ class Scene:
             else:
                 self._connectSignalsRoot()
 
-    ##  Acquire the global scene lock.
-    #
-    #   This will prevent any read or write actions on the scene from other threads,
-    #   assuming those threads also properly acquire the lock. Most notably, this
-    #   prevents the rendering thread from rendering the scene while it is changing.
-    #   Deprecated, use getSceneLock() instead.
-    @deprecated("Please use the getSceneLock instead", "3.3")
-    def acquireLock(self) -> None:
-        self._lock.acquire()
-
-    ##  Release the global scene lock.
-    #   Deprecated, use getSceneLock() instead.
-    @deprecated("Please use the getSceneLock instead", "3.3")
-    def releaseLock(self) -> None:
-        self._lock.release()
-
     ##  Gets the global scene lock.
     #
     #   Use this lock to prevent any read or write actions on the scene from other threads,

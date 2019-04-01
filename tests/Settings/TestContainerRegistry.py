@@ -248,6 +248,9 @@ def test_findDefinitionContainers(container_registry, data):
 
     _verifyMetaDataMatches(results, data["result"])
 
+    metadata_results = container_registry.findDefinitionContainersMetadata(**data["filter"])
+    assert metadata_results == metadata_results
+
 ##  Tests the findInstanceContainers function.
 #
 #   \param container_registry A new container registry from a fixture.
@@ -267,6 +270,9 @@ def test_findInstanceContainers(container_registry, data):
 
     _verifyMetaDataMatches(results, data["result"])
 
+    metadata_results = container_registry.findInstanceContainersMetadata(**data["filter"])
+    assert metadata_results == metadata_results
+
 ##  Tests the findContainerStacks function.
 #
 #   \param container_registry A new container registry from a fixture.
@@ -285,6 +291,37 @@ def test_findContainerStacks(container_registry, data):
     results = container_registry.findContainerStacks(**data["filter"]) # The actual function call we're testing.
 
     _verifyMetaDataMatches(results, data["result"])
+
+    metadata_results = container_registry.findContainerStacksMetadata(**data["filter"])
+    assert metadata_results == metadata_results
+
+def test_addGetResourceType(container_registry):
+    container_registry.addResourceType(12, "zomg")
+
+    assert container_registry.getResourceTypes()["zomg"] == 12
+
+def test_getMimeTypeForContainer(container_registry):
+    # We shouldn't get a mimetype if it's unknown
+    assert container_registry.getMimeTypeForContainer(type(None)) is None
+
+    mimetype = container_registry.getMimeTypeForContainer(InstanceContainer)
+    assert mimetype is not None
+    assert mimetype.name == "application/x-uranium-instancecontainer"
+
+    # Check if the reverse also works
+    assert container_registry.getContainerForMimeType(mimetype) == InstanceContainer
+
+
+def test_saveContainer(container_registry):
+    mocked_provider = MagicMock()
+    mocked_container = MagicMock()
+    container_registry.saveContainer(mocked_container, mocked_provider)
+    mocked_provider.saveContainer.assert_called_once_with(mocked_container)
+
+    container_registry.getDefaultSaveProvider().saveContainer = MagicMock()
+
+    container_registry.saveContainer(mocked_container)
+    container_registry.getDefaultSaveProvider().saveContainer.assert_called_once_with(mocked_container)
 
 
 ##  Tests the loading of containers into the registry.

@@ -341,8 +341,9 @@ class Signal:
     #     return "Signal<{}> {{ __functions={{ {} }}, __methods={{ {} }}, __signals={{ {} }} }}".format(id(self), function_str, method_str, signal_str)
 
 
-def strMethodSet(method_set):
-    return "{" + ", ".join([str(m) for m in method_set]) + "}"
+#def strMethodSet(method_set):
+#    return "{" + ", ".join([str(m) for m in method_set]) + "}"
+
 
 class CompressTechnique(enum.Enum):
     NoCompression = 0
@@ -399,6 +400,7 @@ def postponeSignals(*signals, compress: CompressTechnique = CompressTechnique.No
         signal._postpone_thread = None
         signal._compress_postpone = False
 
+
 ##  Class decorator that ensures a class has unique instances of signals.
 #
 #   Since signals need to be instance variables, normally you would need to create all
@@ -428,6 +430,7 @@ def signalemitter(cls):
 
     cls.__new__ = new_new
     return cls
+
 
 T = TypeVar('T')
 
@@ -556,4 +559,4 @@ class WeakImmutablePairListIterator:
             left = pair[0]()
             right = pair[1]()
 
-        return (left, right)
+        return left, right

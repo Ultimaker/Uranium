@@ -96,4 +96,4 @@ class SetTransformOperation(Operation.Operation):
     #
     #   A programmer-readable representation of this operation.
     def __repr__(self):
-        return "SetTransformOperation(node = {0})".format(self._node)
+        return "SetTransformOp.(node={0})".format(self._node)
