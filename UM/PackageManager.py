@@ -15,9 +15,8 @@ from UM import i18nCatalog
 from UM.Logger import Logger
 from UM.Message import Message
 from UM.MimeTypeDatabase import MimeTypeDatabase  # To get the type of container we're loading.
-
 from UM.Resources import Resources
-import UM.Version
+from UM.Version import Version
 
 catalog = i18nCatalog("uranium")
 
@@ -67,7 +66,7 @@ class PackageManager(QObject):
         self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that need to be installed at the next start
 
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
-        self._available_package_versions = {}  # type: Dict[str, Set[UM.Version.Version]]
+        self._available_package_versions = {}  # type: Dict[str, Set[Version]]
 
         self._packages_with_update_available = set()  # type: Set[str]
 
@@ -80,7 +79,7 @@ class PackageManager(QObject):
         self._installAllScheduledPackages()
 
     # Notify the Package manager that there is an alternative version for a given package.
-    def addAvailablePackageVersion(self, package_id: str, version: UM.Version.Version):
+    def addAvailablePackageVersion(self, package_id: str, version: Version) -> None:
         if package_id not in self._available_package_versions:
             self._available_package_versions[package_id] = set()
         self._available_package_versions[package_id].add(version)
@@ -90,7 +89,7 @@ class PackageManager(QObject):
             self.packagesWithUpdateChanged.emit()
 
     @pyqtProperty("QStringList", notify = packagesWithUpdateChanged)
-    def packagesWithUpdate(self):
+    def packagesWithUpdate(self) -> Set[str]:
         return self._packages_with_update_available
 
     def checkIfPackageCanUpdate(self, package_id: str) -> bool:
@@ -101,7 +100,7 @@ class PackageManager(QObject):
 
         installed_package_dict = self._installed_package_dict.get(package_id)
         if installed_package_dict is not None:
-            current_version = UM.Version.Version(installed_package_dict["package_info"]["package_version"])
+            current_version = Version(installed_package_dict["package_info"]["package_version"])
 
             for available_version in available_versions:
                 if current_version < available_version:
@@ -179,14 +178,14 @@ class PackageManager(QObject):
     #  - if the bundled package version is greater than or equal to the given package, -1 is returned. Otherwise, 1.
     def _comparePackageVersions(self, info_dict1: Dict[str, Any], info_dict2: Dict[str, Any]) -> int:
         # If the bundled version has a higher SDK version, use the bundled version by removing the installed one.
-        sdk_version1 = UM.Version.Version(info_dict1["sdk_version"])
-        sdk_version2 = UM.Version.Version(info_dict2["sdk_version"])
+        sdk_version1 = Version(info_dict1["sdk_version"])
+        sdk_version2 = Version(info_dict2["sdk_version"])
         if sdk_version1 < sdk_version2:
             return -1
 
         # Remove the package with the old version to favour the newer bundled version.
-        version1 = UM.Version.Version(info_dict1["package_version"])
-        version2 = UM.Version.Version(info_dict2["package_version"])
+        version1 = Version(info_dict1["package_version"])
+        version2 = Version(info_dict2["package_version"])
         if version1 < version2:
             return -1
 
