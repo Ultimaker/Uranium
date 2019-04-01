@@ -118,6 +118,8 @@ class QtApplication(QApplication, Application):
 
     def initialize(self) -> None:
         super().initialize()
+        # Initialize the package manager to remove and install scheduled packages.
+        self._package_manager = self._package_manager_class(self, parent = self)
 
         self._mesh_file_handler = MeshFileHandler(self) #type: MeshFileHandler
         self._workspace_file_handler = WorkspaceFileHandler(self) #type: WorkspaceFileHandler
