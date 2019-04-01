@@ -236,6 +236,23 @@ class SceneNodeTest(unittest.TestCase):
 
         assert not node1.hasChildren()
 
+    def test_getAllChildren(self):
+        parent_node = SceneNode()
+        child_node_1 = SceneNode()
+        child_node_2 = SceneNode()
+        parent_node.addChild(child_node_1)
+        parent_node.addChild(child_node_2)
+
+        child_1_of_child_node_1 = SceneNode()
+        child_2_of_child_node_1 = SceneNode()
+        child_node_1.addChild(child_1_of_child_node_1)
+        child_node_1.addChild(child_2_of_child_node_1)
+
+        child_1_of_child_node_2 = SceneNode()
+        child_node_2.addChild(child_1_of_child_node_2)
+
+        assert parent_node.getAllChildren() == [child_node_1, child_node_2, child_1_of_child_node_1, child_2_of_child_node_1, child_1_of_child_node_2]
+
     def test_rotateWorld(self):
         pass
 

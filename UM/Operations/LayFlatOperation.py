@@ -162,4 +162,4 @@ class LayFlatOperation(Operation.Operation):
 
     ##  Makes a programmer-readable representation of this operation.
     def __repr__(self):
-        return "LayFlatOperation(node = {0})".format(self._node)
+        return "LayFlatOp.(node={0})".format(self._node)

@@ -93,14 +93,22 @@ class TranslateTool(Tool):
         parsed_x = self._parseInt(x)
         bounding_box = Selection.getBoundingBox()
 
-        op = GroupedOperation()
         if not Float.fuzzyCompare(parsed_x, float(bounding_box.center.x), DIMENSION_TOLERANCE):
-            for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
-                world_position = selected_node.getWorldPosition()
-                new_position = world_position.set(x = parsed_x + (world_position.x - bounding_box.center.x))
-                node_op = TranslateOperation(selected_node, new_position, set_position = True)
-                op.addOperation(node_op)
-            op.push()
+            selected_nodes = self._getSelectedObjectsWithoutSelectedAncestors()
+            if len(selected_nodes) > 1:
+                op = GroupedOperation()
+                for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
+                    world_position = selected_node.getWorldPosition()
+                    new_position = world_position.set(x = parsed_x + (world_position.x - bounding_box.center.x))
+                    node_op = TranslateOperation(selected_node, new_position, set_position = True)
+                    op.addOperation(node_op)
+                op.push()
+            else:
+                for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
+                    world_position = selected_node.getWorldPosition()
+                    new_position = world_position.set(x = parsed_x + (world_position.x - bounding_box.center.x))
+                    TranslateOperation(selected_node, new_position, set_position = True).push()
+
         self._controller.toolOperationStopped.emit(self)
 
     ##  Set the y-location of the selected object(s) by translating relative to
@@ -110,17 +118,24 @@ class TranslateTool(Tool):
         parsed_y = self._parseInt(y)
         bounding_box = Selection.getBoundingBox()
 
-        op = GroupedOperation()
         if not Float.fuzzyCompare(parsed_y, float(bounding_box.center.z), DIMENSION_TOLERANCE):
-            for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
-                # Note; The switching of z & y is intentional. We display z as up for the user,
-                # But store the data in openGL space.
-                world_position = selected_node.getWorldPosition()
-                new_position = world_position.set(z = parsed_y + (world_position.z - bounding_box.center.z))
+            selected_nodes = self._getSelectedObjectsWithoutSelectedAncestors()
+            if len(selected_nodes) > 1:
+                op = GroupedOperation()
+                for selected_node in selected_nodes:
+                    # Note; The switching of z & y is intentional. We display z as up for the user,
+                    # But store the data in openGL space.
+                    world_position = selected_node.getWorldPosition()
+                    new_position = world_position.set(z = parsed_y + (world_position.z - bounding_box.center.z))
+                    node_op = TranslateOperation(selected_node, new_position, set_position = True)
+                    op.addOperation(node_op)
+                op.push()
+            else:
+                for selected_node in selected_nodes:
+                    world_position = selected_node.getWorldPosition()
+                    new_position = world_position.set(z = parsed_y + (world_position.z - bounding_box.center.z))
+                    TranslateOperation(selected_node, new_position, set_position = True).push()
 
-                node_op = TranslateOperation(selected_node, new_position, set_position = True)
-                op.addOperation(node_op)
-            op.push()
         self._controller.toolOperationStopped.emit(self)
 
     ##  Set the y-location of the selected object(s) by translating relative to
@@ -130,16 +145,23 @@ class TranslateTool(Tool):
         parsed_z = self._parseInt(z)
         bounding_box = Selection.getBoundingBox()
 
-        op = GroupedOperation()
         if not Float.fuzzyCompare(parsed_z, float(bounding_box.bottom), DIMENSION_TOLERANCE):
-            for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
-                # Note: The switching of z & y is intentional. We display z as up for the user,
-                # But store the data in openGL space.
-                world_position = selected_node.getWorldPosition()
-                new_position = world_position.set(y = parsed_z + (world_position.y - bounding_box.bottom))
-                node_op = TranslateOperation(selected_node, new_position, set_position = True)
-                op.addOperation(node_op)
-            op.push()
+            selected_nodes = self._getSelectedObjectsWithoutSelectedAncestors()
+            if len(selected_nodes) > 1:
+                op = GroupedOperation()
+                for selected_node in selected_nodes:
+                    # Note: The switching of z & y is intentional. We display z as up for the user,
+                    # But store the data in openGL space.
+                    world_position = selected_node.getWorldPosition()
+                    new_position = world_position.set(y = parsed_z + (world_position.y - bounding_box.bottom))
+                    node_op = TranslateOperation(selected_node, new_position, set_position = True)
+                    op.addOperation(node_op)
+                op.push()
+            else:
+                for selected_node in selected_nodes:
+                    world_position = selected_node.getWorldPosition()
+                    new_position = world_position.set(y=parsed_z + (world_position.y - bounding_box.bottom))
+                    TranslateOperation(selected_node, new_position, set_position=True).push()
         self._controller.toolOperationStopped.emit(self)
 
     ##  Set which axis/axes are enabled for the current translate operation
@@ -272,12 +294,17 @@ class TranslateTool(Tool):
                     self._distance = Vector(0, 0, 0)
                     self.operationStarted.emit(self)
 
-                op = GroupedOperation()
-                for node in self._getSelectedObjectsWithoutSelectedAncestors():
-                    if node.getSetting(SceneNodeSettings.LockPosition, "False") == "False":
-                        op.addOperation(TranslateOperation(node, drag))
-
-                op.push()
+                selected_nodes = self._getSelectedObjectsWithoutSelectedAncestors()
+                if len(selected_nodes) > 1:
+                    op = GroupedOperation()
+                    for node in selected_nodes:
+                        if node.getSetting(SceneNodeSettings.LockPosition, "False") == "False":
+                            op.addOperation(TranslateOperation(node, drag))
+                    op.push()
+                else:
+                    for node in selected_nodes:
+                        if node.getSetting(SceneNodeSettings.LockPosition, "False") == "False":
+                            TranslateOperation(node, drag).push()
 
                 if not self._distance:
                     self._distance = Vector(0, 0, 0)

@@ -439,8 +439,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         parser.read_string(serialized)
 
         has_general = "general" in parser
-        has_version = "version" in parser["general"]
-        has_definition = "definition" in parser["general"]
+        has_version = has_general and "version" in parser["general"]
+        has_definition = has_general and "definition" in parser["general"]
 
         if not has_general or not has_version or not has_definition:
             exception_string = "Missing the required"

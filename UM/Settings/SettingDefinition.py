@@ -51,6 +51,14 @@ def _toFloatConversion(value: str) -> float:
     except:
         return 0
 
+##  Conversion from string to integer.
+#
+#   \param value The string representation of an integer.
+def _toIntConversion(value):
+    try:
+        return ast.literal_eval(value)
+    except SyntaxError:
+        return 0
 
 ##  Defines a single Setting with its properties.
 #
@@ -626,34 +634,6 @@ class SettingDefinition:
         # Optional comments that apply to the setting. Will be ignored.
         "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None}
     }   # type: Dict[str, Dict[str, Any]]
-
-    ##  Conversion from string to integer.
-    #
-    #   \param value The string representation of an integer.
-    def _toIntConversion(value):
-        try:
-            return ast.literal_eval(value)
-        except SyntaxError:
-            return 0
-
-    ## Conversion of string to float.
-    def _toFloatConversion(value):
-        ## Ensure that all , are replaced with . (so they are seen as floats)
-        value = value.replace(",", ".")
-
-        def stripLeading0(matchobj):
-            return matchobj.group(0).lstrip("0")
-
-        ## Literal eval does not like "02" as a value, but users see this as "2".
-        ## We therefore look numbers with leading "0", provided they are not used in variable names
-        ## example: "test02 * 20" should not be changed, but "test * 02 * 20" should be changed (into "test * 2 * 20")
-        regex_pattern = '(?<!\.|\w|\d)0+(\d+)'
-        value = re.sub(regex_pattern, stripLeading0 ,value)
-
-        try:
-            return ast.literal_eval(value)
-        except:
-            return 0
 
     __type_definitions = {
         # An integer value
