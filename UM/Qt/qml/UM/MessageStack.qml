@@ -258,8 +258,6 @@ ListView
         ProgressBar
         {
             id: totalProgressBar
-            minimumValue: 0
-            maximumValue: model.max_progress
             value: 0
 
             // Doing this in an explicit binding since the implicit binding breaks on occasion.
@@ -267,16 +265,11 @@ ListView
             {
                 target: totalProgressBar
                 property: "value"
-                value: model.progress
+                value: model.progress / model.max_progress
             }
 
             visible: model.progress == null ? false: true // If the progress is null (for example with the loaded message) -> hide the progressbar
             indeterminate: model.progress == -1 ? true: false //If the progress is unknown (-1) -> the progressbar is indeterminate
-            style: UM.Theme.styles.progressbar
-
-
-            property string backgroundColor: UM.Theme.getColor("message_progressbar_background")
-            property string controlColor: UM.Theme.getColor("message_progressbar_control")
 
             anchors
             {
