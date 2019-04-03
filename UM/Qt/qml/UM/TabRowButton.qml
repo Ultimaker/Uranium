@@ -48,4 +48,13 @@ TabButton
             }
         }
     }
+    contentItem: Label
+    {
+        anchors.centerIn: parent
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        text: parent.text
+        font: parent.checked ? UM.Theme.getFont("default_bold") : UM.Theme.getFont("default")
+        renderType: Text.NativeRendering
+    }
 }
