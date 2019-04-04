@@ -2,7 +2,8 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Dict
-from PyQt5.QtGui import QOpenGLContext, QSurfaceFormat
+from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat
+from PyQt5.QtWidgets import QOpenGLWidget
 
 from UM.Logger import Logger
 
@@ -111,7 +112,41 @@ class OpenGLContext(object):
                 Logger.log("d",
                     "Yay, we got at least OpenGL 4.1 core: %s",
                     cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
-                return 4, 1, QSurfaceFormat.CoreProfile
+
+                # CURA-6092: Check if we're not using software backed 4.1 context; A software 4.1 context
+                # is much slower than a hardware backed 2.0 context
+                gl_widget = QOpenGLWidget()
+                gl_format = QSurfaceFormat()
+                gl_format.setVersion(fmt.majorVersion(), fmt.minorVersion())
+                gl_format.setProfile(profile)
+                gl_widget.setFormat(gl_format)
+                gl_widget.showMinimized()
+
+                gl_profile = QOpenGLVersionProfile()
+                gl_profile.setVersion(fmt.majorVersion(), fmt.minorVersion())
+                gl_profile.setProfile(profile)
+
+                gl = QOpenGLContext.currentContext().versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the implementation of your graphics card.
+
+                gpu_type = "Unknown" #type: str
+
+                result = gl.initializeOpenGLFunctions()
+                if not result:
+                    Logger.log("e", "Could not initialize OpenGL to get gpu type")
+                else:
+                    # WORKAROUND: Cura/#1117 Cura-packaging/12
+                    # Some Intel GPU chipsets return a string, which is not undecodable via PyQt5.
+                    # This workaround makes the code fall back to a "Unknown" renderer in these cases.
+                    try:
+                        gpu_type = gl.glGetString(gl.GL_RENDERER) #type: str
+                    except UnicodeDecodeError:
+                        Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
+
+                Logger.log("d", "OpenGL renderer type for this OpenGL version: %s", gpu_type)
+                if "software" in gpu_type.lower():
+                    Logger.log("w", "Unfortunately OpenGL 4.1 uses software rendering")
+                else:
+                    return 4, 1, QSurfaceFormat.CoreProfile
         else:
             Logger.log("d", "Failed to create OpenGL context 4.1.")
 

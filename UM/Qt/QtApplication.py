@@ -9,8 +9,8 @@ from typing import Any, cast, Dict, Optional
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
-from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon, QOpenGLWidget
-from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat, QOpenGLContext
+from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
+from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics
 from PyQt5.QtCore import QTimer
 
 from UM.Backend.Backend import Backend #For typing.
@@ -140,39 +140,6 @@ class QtApplication(QApplication, Application):
         Logger.log("d", "Detected most suitable OpenGL context version: %s", opengl_version_str)
 
         if not self.getIsHeadLess():
-            # CURA-6092: Check if we're not using software backed 4.1 context; A software 4.1 context
-            # is much slower than a hardware backed 2.0 context
-            if major_version > 2:
-                gl_widget = QOpenGLWidget()
-                gl_format = QSurfaceFormat()
-                gl_format.setVersion(major_version, minor_version)
-                gl_format.setProfile(profile)
-                gl_widget.setFormat(gl_format)
-                gl_widget.showMinimized()
-                gl = QOpenGLContext.currentContext().versionFunctions()
-
-                gpu_type = "Unknown" #type: str
-
-                result = gl.initializeOpenGLFunctions()
-                if not result:
-                    Logger.log("e", "Could not initialize OpenGL to get gpu type")
-                else:
-                    # WORKAROUND: Cura/#1117 Cura-packaging/12
-                    # Some Intel GPU chipsets return a string, which is not undecodable via PyQt5.
-                    # This workaround makes the code fall back to a "Unknown" renderer in these cases.
-                    try:
-                        gpu_type = gl.glGetString(gl.GL_RENDERER) #type: str
-                    except UnicodeDecodeError:
-                        Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
-
-                Logger.log("d", "OpenGL renderer type for this OpenGL version: %s", gpu_type)
-                if "software" in gpu_type.lower():
-                    Logger.log("w", "Opting to use OpenGL 2.0 instead of software rendered OpenGL %d.%d" % (major_version, minor_version))
-
-                    major_version = 2
-                    minor_version = 0
-                    profile = QSurfaceFormat.NoProfile
-
             OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
 
         self._qml_import_paths.append(os.path.join(os.path.dirname(sys.executable), "qml"))
