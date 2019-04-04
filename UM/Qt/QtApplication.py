@@ -135,10 +135,9 @@ class QtApplication(QApplication, Application):
             QMessageBox.critical(None, "Failed to probe OpenGL",
                                  "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
-
-        opengl_version_str = OpenGLContext.versionAsText(major_version, minor_version, profile)
-        Logger.log("d", "Detected most suitable OpenGL context version: %s", opengl_version_str)
-
+        else:
+            opengl_version_str = OpenGLContext.versionAsText(major_version, minor_version, profile)
+            Logger.log("d", "Detected most suitable OpenGL context version: %s", opengl_version_str)
         if not self.getIsHeadLess():
             OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
 
