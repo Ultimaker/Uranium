@@ -123,7 +123,10 @@ class OpenGLContext(object):
                 gl_widget.showMinimized()
 
                 gl_profile = QOpenGLVersionProfile()
-                gl_profile.setVersion(fmt.majorVersion(), fmt.minorVersion())
+                # https://riverbankcomputing.com/pipermail/pyqt/2017-January/038640.html
+                # PyQt currently only implements 2.0, 2.1 and 4.1Core
+                # If eg 4.5Core would be detected and used here, PyQt would not be able to handle it.
+                gl_profile.setVersion(4, 1)
                 gl_profile.setProfile(profile)
 
                 gl = QOpenGLContext.currentContext().versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the implementation of your graphics card.
