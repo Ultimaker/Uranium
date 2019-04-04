@@ -113,20 +113,19 @@ class OpenGLContext(object):
                     "Yay, we got at least OpenGL 4.1 core: %s",
                     cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
 
-                # CURA-6092: Check if we're not using software backed 4.1 context; A software 4.1 context
-                # is much slower than a hardware backed 2.0 context
-                gl_widget = QOpenGLWidget()
-                gl_format = QSurfaceFormat()
-                gl_format.setVersion(fmt.majorVersion(), fmt.minorVersion())
-                gl_format.setProfile(profile)
-                gl_widget.setFormat(gl_format)
-                gl_widget.showMinimized()
-
-                gl_profile = QOpenGLVersionProfile()
                 # https://riverbankcomputing.com/pipermail/pyqt/2017-January/038640.html
                 # PyQt currently only implements 2.0, 2.1 and 4.1Core
                 # If eg 4.5Core would be detected and used here, PyQt would not be able to handle it.
-                gl_profile.setVersion(4, 1)
+                major_version = 4
+                minor_version = 1
+
+                # CURA-6092: Check if we're not using software backed 4.1 context; A software 4.1 context
+                # is much slower than a hardware backed 2.0 context
+                gl_widget = QOpenGLWidget()
+                gl_widget.showMinimized()
+
+                gl_profile = QOpenGLVersionProfile()
+                gl_profile.setVersion(major_version, minor_version)
                 gl_profile.setProfile(profile)
 
                 gl = QOpenGLContext.currentContext().versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the implementation of your graphics card.
@@ -149,7 +148,7 @@ class OpenGLContext(object):
                 if "software" in gpu_type.lower():
                     Logger.log("w", "Unfortunately OpenGL 4.1 uses software rendering")
                 else:
-                    return 4, 1, QSurfaceFormat.CoreProfile
+                    return major_version, minor_version, QSurfaceFormat.CoreProfile
         else:
             Logger.log("d", "Failed to create OpenGL context 4.1.")
 
