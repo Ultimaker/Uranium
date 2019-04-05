@@ -14,7 +14,6 @@ class TestActiveToolProxy(TestCase):
     def setUp(self):
         # These objects only need to be set / created once.
         if TestActiveToolProxy.proxy is None:
-            print("CREATIINGG!")
             TestActiveToolProxy.proxy = ActiveToolProxy()
 
         self.tool = Tool()
