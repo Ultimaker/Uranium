@@ -285,5 +285,20 @@ class SceneNodeTest(unittest.TestCase):
         # Ensure that the decorator also got copied
         assert copied_node.callDecoration("isGroup")
 
+    def test_addRemoveDouble(self):
+        # Adding a child that's already a child of a node should not cause issues. Same for trying to remove one that isn't a child
+
+        node_1 = SceneNode()
+        node_2 = SceneNode()
+        # Should work
+        node_1.addChild(node_2)
+        # Should still work!
+        node_1.addChild(node_2)
+
+        # This has already been tested somewhere else, so no problems are expected
+        node_1.removeChild(node_2)
+        # Doing it again shouldn't break.
+        node_1.removeChild(node_2)
+
 if __name__ == "__main__":
     unittest.main()
