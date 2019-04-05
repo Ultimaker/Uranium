@@ -28,5 +28,12 @@ class SelectionProxy(QObject):
     def _onSelectionChanged(self):
         self.selectionChanged.emit()
 
+    @pyqtProperty(bool, notify=selectionChanged)
+    def isGroupSelected(self):
+        for node in Selection.getAllSelectedObjects():
+            if node.callDecoration("isGroup"):
+                return True
+        return False
+
 def createSelectionProxy(engine, script_engine):
     return SelectionProxy()

@@ -12,7 +12,6 @@ from . import ToolModel
 from . import ApplicationProxy
 from . import ControllerProxy
 from . import BackendProxy
-from . import SceneProxy
 from . import ResourcesProxy
 from . import OperationStackProxy
 from UM.Mesh.MeshFileHandler import MeshFileHandler
@@ -54,10 +53,6 @@ class Bindings:
         return BackendProxy.BackendProxy()
 
     @classmethod
-    def createSceneProxy(self, engine, script_engine):
-        return SceneProxy.SceneProxy()
-
-    @classmethod
     def createResourcesProxy(cls, engine, script_engine):
         return ResourcesProxy.ResourcesProxy()
 
@@ -82,7 +77,6 @@ class Bindings:
         qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
         qmlRegisterSingletonType(ApplicationProxy.ApplicationProxy, "UM", 1, 0, "Application", Bindings.createApplicationProxy)
         qmlRegisterSingletonType(BackendProxy.BackendProxy, "UM", 1, 0, "Backend", Bindings.createBackendProxy)
-        qmlRegisterSingletonType(SceneProxy.SceneProxy, "UM", 1, 0, "Scene", Bindings.createSceneProxy)
         qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
         qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, "OperationStack", Bindings.createOperationStackProxy)
         qmlRegisterSingletonType(MeshFileHandler, "UM", 1, 0, "MeshFileHandler", MeshFileHandler.getInstance)
