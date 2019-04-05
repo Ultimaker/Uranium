@@ -11,20 +11,8 @@ class ApplicationProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._application = Application.getInstance()
-        self._application.mainWindowChanged.connect(self._onMainWindowChanged)
-
-    @pyqtSlot(str, str)
-    def log(self, type, message):
-        Logger.log(type, message)
 
     @pyqtProperty(str, constant = True)
     def version(self):
         return self._application.getVersion()
 
-    mainWindowChanged = pyqtSignal()
-    @pyqtProperty(QObject, notify = mainWindowChanged)
-    def mainWindow(self):
-        return self._application.getMainWindow()
-
-    def _onMainWindowChanged(self):
-        self.mainWindowChanged.emit()
