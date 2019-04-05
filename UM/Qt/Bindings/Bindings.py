@@ -27,7 +27,6 @@ from . import SelectionProxy
 from . import OutputDeviceManagerProxy
 from . import i18nCatalogProxy
 from . import ExtensionModel
-from . import PluginsModel
 from . import VisibleMessagesModel
 
 from . import MeshListModel
@@ -77,7 +76,6 @@ class Bindings:
         qmlRegisterType(ToolModel.ToolModel, "UM", 1, 0, "ToolModel")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
         qmlRegisterType(ExtensionModel.ExtensionModel, "UM", 1, 0, "ExtensionModel")
-        qmlRegisterType(PluginsModel.PluginsModel, "UM", 1, 0, "PluginsModel")
         qmlRegisterType(VisibleMessagesModel.VisibleMessagesModel, "UM", 1, 0, "VisibleMessagesModel")
 
         # Singleton proxy objects
