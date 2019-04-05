@@ -124,5 +124,11 @@ def test_compare(setting_definition, instance_container):
     instance2.setProperty("maximum_value", 2000.0)
 
     # The direction should not matter (Before adding this test it did, so best to leave it in!)
+    # In this case, we are testing instance 2 having the max_value property, but instance doesn't have it.
+    assert instance2 != instance
+    assert instance != instance2
+
+    instance.setProperty("maximum_value", 9001)
+    # In this case, we are testing instance 2 having the max_value property, but instance doesn't have it.
     assert instance2 != instance
     assert instance != instance2

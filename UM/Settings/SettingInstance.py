@@ -71,9 +71,6 @@ class SettingInstance:
     #   \param definition The SettingDefinition object this is an instance of.
     #   \param container The container of this instance. Needed for relation handling.
     def __init__(self, definition: SettingDefinition, container: ContainerInterface, *args: Any, **kwargs: Any) -> None:
-        if container is None:
-            raise ValueError("Cannot create a setting instance without a container")
-
         super().__init__()
 
         self._definition = definition  # type: SettingDefinition
