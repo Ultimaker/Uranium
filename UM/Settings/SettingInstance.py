@@ -118,6 +118,11 @@ class SettingInstance:
                     return False  # Property values don't match
             except AttributeError:
                 return False  # Other does not have the property
+
+        # Check if the other has properties that self doesn't have.
+        for property_name in other.getPropertyNames():
+            if property_name not in self.__property_values:
+                return False
         return True
 
     def __ne__(self, other: object) -> bool:

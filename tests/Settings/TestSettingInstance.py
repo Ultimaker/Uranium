@@ -8,6 +8,7 @@ import UM.Settings.SettingFunction
 import UM.Settings.SettingDefinition
 import UM.Settings.SettingInstance
 
+from copy import deepcopy
 
 ##  A very basic copy of the instance container.
 #
@@ -110,3 +111,18 @@ def test_getNonExistingAttribute(setting_definition, instance_container):
 
     with pytest.raises(AttributeError):
         instance.blarg
+
+
+def test_compare(setting_definition, instance_container):
+    instance = UM.Settings.SettingInstance.SettingInstance(setting_definition, instance_container)
+    instance_container.addInstance(instance)
+    assert instance != 12
+
+    instance2 = deepcopy(instance)
+    assert instance == instance2
+    instance_container.addInstance(instance2)
+    instance2.setProperty("maximum_value", 2000.0)
+
+    # The direction should not matter (Before adding this test it did, so best to leave it in!)
+    assert instance2 != instance
+    assert instance != instance2
