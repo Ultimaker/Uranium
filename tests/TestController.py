@@ -271,3 +271,45 @@ def test_addTools(application):
     assert controller.getTool("ZOMG") is None
     assert controller.getTool("test_tool_1") == test_tool_1
     assert controller.getTool("test_tool_2") == test_tool_2
+
+
+def test_eventHandling(application):
+    controller = Controller(application)
+
+    selection_tool = Tool()
+    selection_tool.setPluginId("selection_tool")
+    selection_tool.event = MagicMock(return_value = True)
+
+    camera_tool = Tool()
+    camera_tool.setPluginId("camera_tool")
+    camera_tool.event = MagicMock(return_value=True)
+
+    random_tool = Tool()
+    random_tool.setPluginId("random_tool")
+    random_tool.event = MagicMock(return_value=True)
+
+    event = Event(1)
+
+
+    controller.setCameraTool(camera_tool)
+    controller.event(event)
+    # Only the camera tool should be called now.
+    camera_tool.event.assert_called_once_with(event)
+
+    controller.setActiveTool(random_tool)
+    random_tool.event.reset_mock() #  We don't care about activation events.
+    controller.event(event)
+    # The camera tool should not get an extra call
+    camera_tool.event.assert_called_once_with(event)
+    # But the active tool should have gotten one
+    random_tool.event.assert_called_once_with(event)
+
+    controller.setSelectionTool(selection_tool)
+    controller.event(event)
+    # The camera tool should not get an extra call
+    camera_tool.event.assert_called_once_with(event)
+    # The active tool should not get an extra call
+    random_tool.event.assert_called_once_with(event)
+    # But the selection tool should have gotten one
+    selection_tool.event.assert_called_once_with(event)
+
