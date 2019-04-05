@@ -103,3 +103,10 @@ def test_validationState(data, instance_container):
     instance.setProperty("value", data["value"])
 
     assert instance.validationState(instance_container) == data["state"]
+
+
+def test_getNonExistingAttribute(setting_definition, instance_container):
+    instance = UM.Settings.SettingInstance.SettingInstance(setting_definition, instance_container)
+
+    with pytest.raises(AttributeError):
+        instance.blarg

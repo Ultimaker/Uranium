@@ -183,21 +183,6 @@ class SettingInstance:
             else:
                 raise AttributeError("No property {0} defined".format(name))
 
-    @call_if_enabled(_traceUpdateProperty, _isTraceEnabled())
-    def updateProperty(self, name: str, container: Optional[ContainerInterface] = None) -> None:
-        if not SettingDefinition.hasProperty(name):
-            Logger.log("e", "Trying to update unknown property %s", name)
-            return
-
-        if name == "value" and self._state == InstanceState.User:
-            Logger.log("d", "Ignoring update of value for setting %s since it has been set by the user.", self._definition.key)
-            return
-
-        if self._validator:
-            self.propertyChanged.emit(self._definition.key, "validationState")
-
-        self.propertyChanged.emit(self._definition.key, name)
-
     ##  Emitted whenever a property of this instance changes.
     #
     #   \param instance The instance that reported the property change (usually self).
