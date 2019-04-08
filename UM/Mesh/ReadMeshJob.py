@@ -36,6 +36,9 @@ class ReadMeshJob(ReadFileJob):
                 node._resetAABB()
                 build_bounds = node.getBoundingBox()
 
+                if build_bounds is None or max_bounds is None:
+                    continue
+
                 if self._application.getInstance().getPreferences().getValue("mesh/scale_to_fit") == True or self._application.getInstance().getPreferences().getValue("mesh/scale_tiny_meshes") == True:
                     scale_factor_width = max_bounds.width / build_bounds.width
                     scale_factor_height = max_bounds.height / build_bounds.height
