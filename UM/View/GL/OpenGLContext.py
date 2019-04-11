@@ -1,9 +1,8 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Dict
-from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat
-from PyQt5.QtWidgets import QOpenGLWidget
+from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat, QWindow
 
 from UM.Logger import Logger
 
@@ -95,10 +94,12 @@ class OpenGLContext(object):
             return True
         return False
 
-    ##  Return "best" OpenGL to use, 4.1 core or 2.1.
+    ##  Return "best" OpenGL to use, 4.1 core or 2.0.
     #   result is <major_version>, <minor_version>, <profile>
     #   The version depends on what versions are supported in Qt (4.1 and 2.0) and what
     #   the GPU supports. If creating a context fails at all, (None, None, None) is returned
+    #   Note that PyQt only supports 4.1, 2.1 and 2.0. Cura omits support for 2.1, so the
+    #   only returned options are 4.1 and 2.0.
     @classmethod
     def detectBestOpenGLVersion(cls):
         Logger.log("d", "Trying OpenGL context 4.1...")
@@ -121,18 +122,32 @@ class OpenGLContext(object):
 
                 # CURA-6092: Check if we're not using software backed 4.1 context; A software 4.1 context
                 # is much slower than a hardware backed 2.0 context
-                gl_widget = QOpenGLWidget()
-                gl_widget.showMinimized()
+                gl_window = QWindow()
+                gl_window.setSurfaceType(QWindow.OpenGLSurface)
+                gl_window.showMinimized()
+
+                gl_format = QSurfaceFormat()
+                gl_format.setMajorVersion(major_version)
+                gl_format.setMinorVersion(minor_version)
+                gl_format.setProfile(profile)
+
+                gl_context = QOpenGLContext()
+                gl_context.setFormat(gl_format)
+                gl_context.create()
+                gl_context.makeCurrent(gl_window)
 
                 gl_profile = QOpenGLVersionProfile()
                 gl_profile.setVersion(major_version, minor_version)
                 gl_profile.setProfile(profile)
 
-                gl = QOpenGLContext.currentContext().versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the implementation of your graphics card.
+                gl = gl_context.versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the requested profile and the implementation of your graphics card.
 
                 gpu_type = "Unknown" #type: str
 
-                result = gl.initializeOpenGLFunctions()
+                result = None
+                if gl:
+                    result = gl.initializeOpenGLFunctions()
+
                 if not result:
                     Logger.log("e", "Could not initialize OpenGL to get gpu type")
                 else:
