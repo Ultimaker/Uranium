@@ -28,9 +28,10 @@ class ConsoleLogger(LogOutput):
         stream_handler = logging.StreamHandler() # Log to stream
         stream_handler.setFormatter(logging_formatter)
         self._logger.addHandler(stream_handler)
+        self._show_once = set()
     
     ##  Log the message to console
-    #   \param log_type "e" (error) , "i"(info), "d"(debug) or "w"(warning)
+    #   \param log_type "e" (error), "i"(info), "d"(debug), "w"(warning) or "c"(critical) (can postfix with "_once")
     #   \param message String containing message to be logged
     def log(self, log_type: str, message: str) -> None:
         if log_type == "w":  # Warning
@@ -43,5 +44,9 @@ class ConsoleLogger(LogOutput):
             self._logger.debug(message)
         elif log_type == "c":
             self._logger.critical(message)
+        elif log_type.endswith("_once"):
+            if message not in self._show_once:
+                self._show_once.add(message)
+                self.log(log_type[0], message)
         else:
             print("Unable to log. Received unknown type %s" % log_type)
