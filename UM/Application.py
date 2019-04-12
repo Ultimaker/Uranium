@@ -62,6 +62,8 @@ class Application:
         self._is_headless = False #type: bool
         self._use_external_backend = False #type: bool
 
+        self._just_updated_from_old_version = False
+
         self._config_lock_filename = "{name}.lock".format(name = self._app_name) # type: str
 
         self._cli_args = None #type: argparse.Namespace
@@ -199,6 +201,10 @@ class Application:
 
     def startPostSplashWindowPhase(self) -> None:
         pass
+
+    # Indicates if we have just updated from an older application version.
+    def hasJustUpdatedFromOldVersion(self) -> bool:
+        return self._just_updated_from_old_version
 
     ##  Run the main event loop.
     #   This method should be re-implemented by subclasses to start the main event loop.
