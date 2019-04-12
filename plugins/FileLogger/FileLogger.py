@@ -4,6 +4,7 @@
 from UM.Logger import LogOutput
 from UM.Resources import Resources
 from UM.VersionUpgradeManager import VersionUpgradeManager
+from typing import Set
 
 import logging
 
@@ -13,7 +14,7 @@ class FileLogger(LogOutput):
         super().__init__()
         self._logger = logging.getLogger(self._name)  # Create python logger
         self._logger.setLevel(logging.DEBUG)
-        self._show_once = set()
+        self._show_once = set()  # type: Set[str]
 
         # Do not try to save to the app dir as it may not be writeable or may not be the right
         # location to save the log file. Instead, try and save in the settings location since

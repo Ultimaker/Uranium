@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Logger import LogOutput
+from typing import Set
 
 import logging
 
@@ -28,7 +29,7 @@ class ConsoleLogger(LogOutput):
         stream_handler = logging.StreamHandler() # Log to stream
         stream_handler.setFormatter(logging_formatter)
         self._logger.addHandler(stream_handler)
-        self._show_once = set()
+        self._show_once = set()  # type: Set[str]
     
     ##  Log the message to console
     #   \param log_type "e" (error), "i"(info), "d"(debug), "w"(warning) or "c"(critical) (can postfix with "_once")
