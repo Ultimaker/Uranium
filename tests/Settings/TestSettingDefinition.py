@@ -11,7 +11,7 @@ def test_create():
     definition = UM.Settings.SettingDefinition.SettingDefinition("test", None)
 
     assert definition is not None
-    assert definition.key is "test"
+    assert definition.key == "test"
     assert definition.container is None
 
 

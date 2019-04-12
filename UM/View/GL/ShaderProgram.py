@@ -202,15 +202,15 @@ class ShaderProgram:
         if attribute == -1:
             return
 
-        if type is "int":
+        if type == "int":
             self._shader_program.setAttributeBuffer(attribute, 0x1404, offset, 1, stride) #GL_INT
-        elif type is "float":
+        elif type == "float":
             self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 1, stride) #GL_FLOAT
-        elif type is "vector2f":
+        elif type == "vector2f":
             self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 2, stride) #GL_FLOAT
-        elif type is "vector3f":
+        elif type == "vector3f":
             self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 3, stride) #GL_FLOAT
-        elif type is "vector4f":
+        elif type == "vector4f":
             self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 4, stride) #GL_FLOAT
 
         self._shader_program.enableAttributeArray(attribute)
