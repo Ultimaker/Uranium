@@ -9,9 +9,12 @@ import math
 
 ##  Provides the circular toolhandles for each axis for the rotate tool
 
+
 class RotateToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)
+
+        self._name = "RotateToolHandle"
         self._inner_radius = 40
         self._outer_radius = 40.5
         self._line_width = 0.5

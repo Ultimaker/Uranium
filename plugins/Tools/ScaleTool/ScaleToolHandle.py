@@ -7,10 +7,11 @@ from UM.Math.Vector import Vector
 
 ##  Provides the two block-shaped toolhandles connected with a line for each axis for the scale tool
 
+
 class ScaleToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)
-
+        self._handle = "ScaleToolHandle"
         self._line_width = 0.5
         self._line_length= 40
         self._handle_position = 40

@@ -7,10 +7,11 @@ from UM.Math.Vector import Vector
 
 ##  Provides the two block-shaped toolhandles connected with a line for each axis for the translate tool
 
+
 class TranslateToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)
-
+        self._name = "TranslateToolHandle"
         self._enabled_axis = [self.XAxis, self.YAxis, self.ZAxis]
         self._line_width = 0.5
         self._line_length = 40

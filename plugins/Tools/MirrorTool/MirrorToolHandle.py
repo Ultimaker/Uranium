@@ -11,6 +11,7 @@ from UM.Math.Vector import Vector
 
 class MirrorToolHandle(ToolHandle):
     def __init__(self, parent = None):
+        self._name = "MirrorToolHandle"
         super().__init__(parent)
         self._handle_width = 8
         self._handle_height = 14
