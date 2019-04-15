@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
@@ -14,8 +14,6 @@ from UM.Mesh.MeshData import MeshData
 from UM.Signal import Signal, signalemitter
 from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
-
-from UM.Decorators import timeit
 
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 
@@ -82,10 +80,9 @@ class SceneNode:
         self._decorators = []  # type: List[SceneNodeDecorator]
 
         # Store custom settings to be compatible with Savitar SceneNode
-        self._settings = {} #type: Dict[str, Any]
+        self._settings = {}  # type: Dict[str, Any]
 
         ## Signals
-        self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
         self.parentChanged.connect(self._onParentChanged)
 
         if parent:
@@ -131,6 +128,8 @@ class SceneNode:
     ##  Get the MeshData of the bounding box
     #   \returns \type{MeshData} Bounding box mesh.
     def getBoundingBoxMesh(self) -> Optional[MeshData]:
+        if self._bounding_box_mesh is None:
+            self.calculateBoundingBoxMesh()
         return self._bounding_box_mesh
 
     ##  (re)Calculate the bounding box mesh.
@@ -692,6 +691,7 @@ class SceneNode:
         if not self._calculate_aabb:
             return
         self._aabb = None
+        self._bounding_box_mesh = None
         if self._parent:
             self._parent._resetAABB()
         self.boundingBoxChanged.emit()
