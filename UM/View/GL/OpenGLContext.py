@@ -1,8 +1,8 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Dict
-from PyQt5.QtGui import QOpenGLContext, QSurfaceFormat
+from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat, QWindow
 
 from UM.Logger import Logger
 
@@ -94,10 +94,12 @@ class OpenGLContext(object):
             return True
         return False
 
-    ##  Return "best" OpenGL to use, 4.1 core or 2.1.
+    ##  Return "best" OpenGL to use, 4.1 core or 2.0.
     #   result is <major_version>, <minor_version>, <profile>
     #   The version depends on what versions are supported in Qt (4.1 and 2.0) and what
     #   the GPU supports. If creating a context fails at all, (None, None, None) is returned
+    #   Note that PyQt only supports 4.1, 2.1 and 2.0. Cura omits support for 2.1, so the
+    #   only returned options are 4.1 and 2.0.
     @classmethod
     def detectBestOpenGLVersion(cls):
         Logger.log("d", "Trying OpenGL context 4.1...")
@@ -111,7 +113,57 @@ class OpenGLContext(object):
                 Logger.log("d",
                     "Yay, we got at least OpenGL 4.1 core: %s",
                     cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
-                return 4, 1, QSurfaceFormat.CoreProfile
+
+                # https://riverbankcomputing.com/pipermail/pyqt/2017-January/038640.html
+                # PyQt currently only implements 2.0, 2.1 and 4.1Core
+                # If eg 4.5Core would be detected and used here, PyQt would not be able to handle it.
+                major_version = 4
+                minor_version = 1
+
+                # CURA-6092: Check if we're not using software backed 4.1 context; A software 4.1 context
+                # is much slower than a hardware backed 2.0 context
+                gl_window = QWindow()
+                gl_window.setSurfaceType(QWindow.OpenGLSurface)
+                gl_window.showMinimized()
+
+                gl_format = QSurfaceFormat()
+                gl_format.setMajorVersion(major_version)
+                gl_format.setMinorVersion(minor_version)
+                gl_format.setProfile(profile)
+
+                gl_context = QOpenGLContext()
+                gl_context.setFormat(gl_format)
+                gl_context.create()
+                gl_context.makeCurrent(gl_window)
+
+                gl_profile = QOpenGLVersionProfile()
+                gl_profile.setVersion(major_version, minor_version)
+                gl_profile.setProfile(profile)
+
+                gl = gl_context.versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the requested profile and the implementation of your graphics card.
+
+                gpu_type = "Unknown" #type: str
+
+                result = None
+                if gl:
+                    result = gl.initializeOpenGLFunctions()
+
+                if not result:
+                    Logger.log("e", "Could not initialize OpenGL to get gpu type")
+                else:
+                    # WORKAROUND: Cura/#1117 Cura-packaging/12
+                    # Some Intel GPU chipsets return a string, which is not undecodable via PyQt5.
+                    # This workaround makes the code fall back to a "Unknown" renderer in these cases.
+                    try:
+                        gpu_type = gl.glGetString(gl.GL_RENDERER) #type: str
+                    except UnicodeDecodeError:
+                        Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
+
+                Logger.log("d", "OpenGL renderer type for this OpenGL version: %s", gpu_type)
+                if "software" in gpu_type.lower():
+                    Logger.log("w", "Unfortunately OpenGL 4.1 uses software rendering")
+                else:
+                    return major_version, minor_version, QSurfaceFormat.CoreProfile
         else:
             Logger.log("d", "Failed to create OpenGL context 4.1.")
 
