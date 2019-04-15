@@ -130,12 +130,20 @@ class TestResources(TestCase):
         assert Resources._getPossibleDataStorageRootPathList() == ['/tmp/test']
 
     def test_factoryReset(self):
+        # FIXME: This is a temporary workaround. A proper fix should be to make the home directory configurable so a
+        #        unique temporary directory can be used for each test and it can removed afterwards.
+        # HACK: Record the number of files and directories in the data storage directory before the factory reset,
+        # so after the reset, we can compare if there's a new ZIP file being created. Note that this will not always
+        # work, especially when there are multiple tests running on the same host at the same time.
+        original_filenames = os.listdir(os.path.dirname(Resources.getDataStoragePath()))
+
         Resources.factoryReset()
         # Check if the data is deleted!
         assert len(os.listdir(Resources.getDataStoragePath())) == 0
 
         # The data folder should still be there, but it should also have created a zip with the data it deleted.
-        assert len(os.listdir(os.path.dirname(Resources.getDataStoragePath()))) == 2
+        new_filenames = os.listdir(os.path.dirname(Resources.getDataStoragePath()))
+        assert len(new_filenames) - len(original_filenames) == 1
 
         # Clean up after our ass.
         folder = os.path.dirname(Resources.getDataStoragePath())
@@ -145,7 +153,7 @@ class TestResources(TestCase):
                 os.unlink(file_path)
             except:
                 pass
-        folder =  os.path.dirname(Resources.getDataStoragePath())
+        folder = os.path.dirname(Resources.getDataStoragePath())
         for file in os.listdir(folder):
             file_path = os.path.join(folder, file)
             try:
