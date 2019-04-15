@@ -679,7 +679,7 @@ class SceneNode:
         self._orientation = orientation
 
         if self._parent:
-            self._world_transformation = self._parent.getWorldTransformation().multiply(self._transformation, copy = True)
+            self._world_transformation = self._parent.getWorldTransformation().multiply(self._transformation)
         else:
             self._world_transformation = self._transformation
 
