@@ -55,6 +55,8 @@ class ToolHandle(SceneNode.SceneNode):
         self._active_axis = None
         self._auto_scale = True
 
+        self._enabled = False
+
         self.setCalculateBoundingBox(False)
 
         Selection.selectionCenterChanged.connect(self._onSelectionCenterChanged)
@@ -120,7 +122,13 @@ class ToolHandle(SceneNode.SceneNode):
         pass
 
     def _onSelectionCenterChanged(self):
-        self.setPosition(Selection.getSelectionCenter())
+        if self._enabled:
+            self.setPosition(Selection.getSelectionCenter())
+
+    def setEnabled(self, enable: bool):
+        super().setEnabled(enable)
+        # Force an update
+        self._onSelectionCenterChanged()
 
     def _onEngineCreated(self):
         theme = Application.getInstance().getTheme()

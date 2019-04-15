@@ -73,6 +73,7 @@ class Tool(PluginObject):
         if event.type == Event.ToolActivateEvent:
             if Selection.hasSelection() and self._handle:
                 self._handle.setParent(self.getController().getScene().getRoot())
+                self._handle.setEnabled(True)
 
         if event.type == Event.MouseMoveEvent and self._handle:
             event = cast(MouseEvent, event)
@@ -88,7 +89,7 @@ class Tool(PluginObject):
 
         if event.type == Event.ToolDeactivateEvent and self._handle:
             self._handle.setParent(None)
-
+            self._handle.setEnabled(False)
         return False
 
     ##  Convenience function
