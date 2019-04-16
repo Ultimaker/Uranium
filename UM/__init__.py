@@ -16,3 +16,6 @@ _ = i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt. 
 _ = i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt.")
 _ = i18n_catalog.i18nc("@info:title", "Configuration errors")
 _ = i18n_catalog.i18nc("@info:button", "Reset your configuration to factory defaults.")
+
+import warnings
+warnings.simplefilter("once", DeprecationWarning)
