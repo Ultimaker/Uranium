@@ -54,51 +54,51 @@ class Application:
 
         self._api_version = Version(api_version)  # type: Version
 
-        self._app_name = name #type: str
+        self._app_name = name  # type: str
         self._app_display_name = app_display_name if app_display_name else name  # type: str
-        self._version = version #type: str
-        self._build_type = build_type #type: str
-        self._is_debug_mode = is_debug_mode #type: bool
-        self._is_headless = False #type: bool
-        self._use_external_backend = False #type: bool
+        self._version = version  # type: str
+        self._build_type = build_type  # type: str
+        self._is_debug_mode = is_debug_mode  # type: bool
+        self._is_headless = False  # type: bool
+        self._use_external_backend = False  # type: bool
 
-        self._just_updated_from_old_version = False
+        self._just_updated_from_old_version = False  # type: bool
 
-        self._config_lock_filename = "{name}.lock".format(name = self._app_name) # type: str
+        self._config_lock_filename = "{name}.lock".format(name = self._app_name)  # type: str
 
-        self._cli_args = None #type: argparse.Namespace
-        self._cli_parser = argparse.ArgumentParser(prog = self._app_name, add_help = False) #type: argparse.ArgumentParser
+        self._cli_args = None  # type: argparse.Namespace
+        self._cli_parser = argparse.ArgumentParser(prog = self._app_name, add_help = False)  # type: argparse.ArgumentParser
 
-        self._main_thread = threading.current_thread() #type: threading.Thread
+        self._main_thread = threading.current_thread()  # type: threading.Thread
 
-        self.default_theme = self._app_name  #type: str # Default theme is the application name
-        self._default_language = "en_US" #type: str
+        self.default_theme = self._app_name  # type: str # Default theme is the application name
+        self._default_language = "en_US"  # type: str
 
-        self.change_log_url = "https://github.com/Ultimaker/Uranium" # Where to find a more detailed description of the recent updates.
+        self.change_log_url = "https://github.com/Ultimaker/Uranium"  # Where to find a more detailed description of the recent updates.
 
-        self._preferences_filename = None #type: str
-        self._preferences = None #type: Preferences
+        self._preferences_filename = None  # type: str
+        self._preferences = None  # type: Preferences
 
-        self._extensions = [] #type: List[Extension]
-        self._required_plugins = [] #type: List[str]
+        self._extensions = []  # type: List[Extension]
+        self._required_plugins = []  # type: List[str]
 
         self._package_manager_class = PackageManager  # type: type
         self._package_manager = None  # type: PackageManager
 
-        self._plugin_registry = None #type: PluginRegistry
-        self._container_registry_class = ContainerRegistry #type: type
-        self._container_registry = None #type: ContainerRegistry
-        self._global_container_stack = None #type: ContainerStack
+        self._plugin_registry = None  # type: PluginRegistry
+        self._container_registry_class = ContainerRegistry  # type: type
+        self._container_registry = None  # type: ContainerRegistry
+        self._global_container_stack = None  # type: ContainerStack
 
-        self._controller = None #type: Controller
-        self._backend = None #type: Backend
-        self._output_device_manager = None #type: OutputDeviceManager
-        self._operation_stack = None #type: OperationStack
+        self._controller = None  # type: Controller
+        self._backend = None  # type: Backend
+        self._output_device_manager = None  # type: OutputDeviceManager
+        self._operation_stack = None  # type: OperationStack
 
-        self._visible_messages = [] #type: List[Message]
-        self._message_lock = threading.Lock() #type: threading.Lock
+        self._visible_messages = []  # type: List[Message]
+        self._message_lock = threading.Lock()  # type: threading.Lock
 
-        self._app_install_dir = self.getInstallPrefix() #type: str
+        self._app_install_dir = self.getInstallPrefix()  # type: str
 
     def getAPIVersion(self) -> "Version":
         return self._api_version
