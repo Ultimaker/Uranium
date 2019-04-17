@@ -10,7 +10,6 @@ from UM.Math.Vector import Vector
 from typing import cast, Dict, List, Optional, Tuple, TYPE_CHECKING, Union
 
 numpy.seterr(divide="ignore")
-from UM.Decorators import timeit
 
 if TYPE_CHECKING:
     from UM.Math.Quaternion import Quaternion

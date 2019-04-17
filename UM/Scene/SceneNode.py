@@ -16,7 +16,6 @@ from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
 
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
-
 ##  A scene node object.
 #
 #   These objects can hold a mesh and multiple children. Each node has a transformation matrix
@@ -473,7 +472,7 @@ class SceneNode:
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldOrientation() == orientation:
                 return
-            new_orientation = orientation * (self.getWorldOrientation() * self._orientation.getInverse()).getInverse()
+            new_orientation = orientation * (self.getWorldOrientation() * self._orientation.getInverse()).invert()
             orientation_matrix = new_orientation.toMatrix()
         else:  # Local
             orientation_matrix = orientation.toMatrix()
