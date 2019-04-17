@@ -194,7 +194,7 @@ class RenderBatch():
 
         self._view_matrix = camera.getWorldTransformation().getInverse()
         self._projection_matrix = camera.getProjectionMatrix()
-        self._view_projection_matrix = camera.getProjectionMatrix().multiply(self._view_matrix)
+        self._view_projection_matrix = self._projection_matrix .multiply(self._view_matrix, copy = True)
 
         self._shader.updateBindings(
             view_matrix = self._view_matrix,

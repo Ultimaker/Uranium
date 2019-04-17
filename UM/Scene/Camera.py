@@ -54,7 +54,7 @@ class Camera(SceneNode.SceneNode):
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self) -> Matrix:
-        return Matrix(self._projection_matrix.getData())
+        return self._projection_matrix
     
     def getViewportWidth(self) -> int:
         return self._viewport_width
