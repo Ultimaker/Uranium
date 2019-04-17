@@ -95,6 +95,7 @@ class Camera(SceneNode.SceneNode):
     #   \param matrix The projection matrix to use for this camera.
     def setProjectionMatrix(self, matrix: Matrix) -> None:
         self._projection_matrix = matrix
+        self._cached_view_projection_matrix = None
 
     def isPerspective(self) -> bool:
         return self._perspective
