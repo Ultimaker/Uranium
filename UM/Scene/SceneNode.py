@@ -468,7 +468,7 @@ class SceneNode:
         if not self._enabled or orientation == self._orientation:
             return
 
-        new_transform_matrix = Matrix()
+
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldOrientation() == orientation:
                 return
@@ -478,7 +478,7 @@ class SceneNode:
             orientation_matrix = orientation.toMatrix()
 
         euler_angles = orientation_matrix.getEuler()
-
+        new_transform_matrix = Matrix()
         new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = self._position, shear = self._shear)
         self._transformation = new_transform_matrix
         self._transformChanged()
