@@ -33,6 +33,7 @@ class Camera(SceneNode.SceneNode):
         self._window_height = 0  # type: int
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
+        self._cached_view_projection_matrix = None # type: Optional[Matrix]
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "Camera":
         copy = cast(Camera, super().__deepcopy__(memo))
@@ -68,6 +69,17 @@ class Camera(SceneNode.SceneNode):
     def setViewportSize(self, width: int, height: int) -> None:
         self._viewport_width = width
         self._viewport_height = height
+
+    def getViewProjectionMatrix(self):
+        if self._cached_view_projection_matrix is None:
+            inverted_transformation = self.getWorldTransformation()
+            inverted_transformation.invert()
+            self._cached_view_projection_matrix = self._projection_matrix.multiply(inverted_transformation, copy = True)
+        return self._cached_view_projection_matrix
+
+    def _updateWorldTransformation(self):
+        self._cached_view_projection_matrix = None
+        super()._updateWorldTransformation()
     
     def getViewportHeight(self) -> int:
         return self._viewport_height
