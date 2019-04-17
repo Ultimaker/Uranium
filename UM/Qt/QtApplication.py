@@ -34,6 +34,7 @@ from UM.Job import Job #For typing.
 from UM.JobQueue import JobQueue
 from UM.VersionUpgradeManager import VersionUpgradeManager
 from UM.View.GL.OpenGLContext import OpenGLContext
+from UM.Version import Version
 
 from UM.Operations.GroupedOperation import GroupedOperation #To clear the scene.
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation #To clear the scene.
@@ -214,6 +215,18 @@ class QtApplication(QApplication, Application):
         # but the PluginRegistry will still import data from the Preferences files if present, such as disabled plugins,
         # so we need to reset those values AFTER the Preferences file is loaded.
         self._plugin_registry.initializeAfterPluginsAreLoaded()
+
+        # Check if we have just updated from an older version
+        self._preferences.addPreference("general/last_run_version", "")
+        last_run_version_str = self._preferences.getValue("general/last_run_version")
+        if not last_run_version_str:
+            last_run_version_str = self._version
+        last_run_version = Version(last_run_version_str)
+        current_version = Version(self._version)
+        if last_run_version < current_version:
+            self._just_updated_from_old_version = True
+        self._preferences.setValue("general/last_run_version", str(current_version))
+        self._preferences.writeToFile(self._preferences_filename)
 
         # Preferences: recent files
         self._preferences.addPreference("%s/recent_files" % self._app_name, "")
