@@ -23,7 +23,7 @@ class Quaternion(object):
 
     def __init__(self, x=0.0, y=0.0, z=0.0, w=1.0):
         # Components are stored as XYZW
-        self._data = numpy.array([x, y, z, w], dtype=numpy.float32)
+        self._data = numpy.array([x, y, z, w], dtype=numpy.float64)
 
     def getData(self):
         return self._data
@@ -182,7 +182,7 @@ class Quaternion(object):
         self.normalize()
 
     def toMatrix(self):
-        m = numpy.zeros((4, 4), dtype=numpy.float32)
+        m = numpy.zeros((4, 4), dtype=numpy.float64)
 
         s = 2.0 / (self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2)
 
