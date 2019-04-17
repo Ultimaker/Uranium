@@ -128,7 +128,7 @@ class Camera(SceneNode.SceneNode):
     ##  Project a 3D position onto the 2D view plane.
     def project(self, position: Vector) -> Tuple[float, float]:
         projection = self._projection_matrix
-        view = self.getWorldTransformation().getInverse()
+        view = self.getWorldTransformation().invert()
 
         position = position.preMultiply(view)
         position = position.preMultiply(projection)

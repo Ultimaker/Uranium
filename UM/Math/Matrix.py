@@ -62,6 +62,9 @@ class Matrix:
         # Note that actually using Matrix(self._data) (without the deepcopy) is another factor 3 faster.
         return Matrix(self._data)
 
+    def copy(self) -> "Matrix":
+        return Matrix(self._data)
+
     def __eq__(self, other: object) -> bool:
         if self is other:
             return True
