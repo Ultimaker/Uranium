@@ -418,7 +418,7 @@ class SceneNode:
     #   \returns 4x4 transformation matrix
     def getWorldTransformation(self) -> Matrix:
         if self._world_transformation is None:
-            self._updateTransformation()
+            self._updateWorldTransformation()
 
         return Matrix(self._world_transformation.getData())
 
@@ -426,7 +426,7 @@ class SceneNode:
     #   \retuns transformation 4x4 (homogenous) matrix
     def getLocalTransformation(self) -> Matrix:
         if self._transformation is None:
-            self._updateTransformation()
+            self._updateLocalTransformation()
 
         return Matrix(self._transformation.getData())
 
@@ -667,7 +667,7 @@ class SceneNode:
         for child in self._children:
             child._transformChanged()
 
-    def _updateTransformation(self) -> None:
+    def _updateLocalTransformation(self):
         translation, euler_angle_matrix, scale, shear = self._transformation.decompose()
 
         self._position = translation
@@ -677,6 +677,7 @@ class SceneNode:
         orientation.setByMatrix(euler_angle_matrix)
         self._orientation = orientation
 
+    def _updateWorldTransformation(self):
         if self._parent:
             self._world_transformation = self._parent.getWorldTransformation().multiply(self._transformation)
         else:
@@ -686,6 +687,10 @@ class SceneNode:
         self._derived_position = world_translation
         self._derived_scale = world_scale
         self._derived_orientation.setByMatrix(world_euler_angle_matrix)
+
+    def _updateTransformation(self) -> None:
+        self._updateLocalTransformation()
+        self._updateWorldTransformation()
 
     def _resetAABB(self) -> None:
         if not self._calculate_aabb:
