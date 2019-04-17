@@ -55,6 +55,7 @@ TabButton
         verticalAlignment: Text.AlignVCenter
         text: parent.text
         font: parent.checked ? UM.Theme.getFont("default_bold") : UM.Theme.getFont("default")
+        color: UM.Theme.getColor("text")
         renderType: Text.NativeRendering
     }
 }

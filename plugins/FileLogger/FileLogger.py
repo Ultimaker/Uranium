@@ -4,6 +4,7 @@
 from UM.Logger import LogOutput
 from UM.Resources import Resources
 from UM.VersionUpgradeManager import VersionUpgradeManager
+from typing import Set
 
 import logging
 
@@ -13,6 +14,7 @@ class FileLogger(LogOutput):
         super().__init__()
         self._logger = logging.getLogger(self._name)  # Create python logger
         self._logger.setLevel(logging.DEBUG)
+        self._show_once = set()  # type: Set[str]
 
         # Do not try to save to the app dir as it may not be writeable or may not be the right
         # location to save the log file. Instead, try and save in the settings location since
@@ -30,7 +32,7 @@ class FileLogger(LogOutput):
             pass  # TODO, add handling
     
     ##  Log message to file. 
-    #   \param log_type "e" (error) , "i"(info), "d"(debug) or "w"(warning)
+    #   \param log_type "e" (error), "i"(info), "d"(debug), "w"(warning) or "c"(critical) (can postfix with "_once")
     #   \param message String containing message to be logged
     def log(self, log_type: str, message: str) -> None:
         if log_type == "w":  # Warning
@@ -43,5 +45,9 @@ class FileLogger(LogOutput):
             self._logger.debug(message)
         elif log_type == "c":  # Critical
             self._logger.critical(message)
+        elif log_type.endswith("_once"):
+            if message not in self._show_once:
+                self._show_once.add(message)
+                self.log(log_type[0], message)
         else:
             print("Unable to log. Received unknown type %s" % log_type)
