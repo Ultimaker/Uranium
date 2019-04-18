@@ -192,9 +192,10 @@ class RenderBatch():
         if self._state_setup_callback:
             self._state_setup_callback(self._gl)
 
-        self._view_matrix = camera.getWorldTransformation().getInverse()
+        self._view_matrix = camera.getWorldTransformation()
+        self._view_matrix.invert()
         self._projection_matrix = camera.getProjectionMatrix()
-        self._view_projection_matrix = self._projection_matrix .multiply(self._view_matrix, copy = True)
+        self._view_projection_matrix = camera.getViewProjectionMatrix()
 
         self._shader.updateBindings(
             view_matrix = self._view_matrix,

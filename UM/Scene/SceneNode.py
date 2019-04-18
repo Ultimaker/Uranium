@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
@@ -16,7 +16,6 @@ from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
 
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
-
 ##  A scene node object.
 #
 #   These objects can hold a mesh and multiple children. Each node has a transformation matrix
@@ -80,10 +79,9 @@ class SceneNode:
         self._decorators = []  # type: List[SceneNodeDecorator]
 
         # Store custom settings to be compatible with Savitar SceneNode
-        self._settings = {} #type: Dict[str, Any]
+        self._settings = {}  # type: Dict[str, Any]
 
         ## Signals
-        self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
         self.parentChanged.connect(self._onParentChanged)
 
         if parent:
@@ -129,6 +127,8 @@ class SceneNode:
     ##  Get the MeshData of the bounding box
     #   \returns \type{MeshData} Bounding box mesh.
     def getBoundingBoxMesh(self) -> Optional[MeshData]:
+        if self._bounding_box_mesh is None:
+            self.calculateBoundingBoxMesh()
         return self._bounding_box_mesh
 
     ##  (re)Calculate the bounding box mesh.
@@ -417,20 +417,20 @@ class SceneNode:
     #   \returns 4x4 transformation matrix
     def getWorldTransformation(self) -> Matrix:
         if self._world_transformation is None:
-            self._updateTransformation()
+            self._updateWorldTransformation()
 
-        return Matrix(self._world_transformation.getData())
+        return self._world_transformation.copy()
 
     ##  \brief Returns the local transformation with respect to its parent. (from parent to local)
     #   \retuns transformation 4x4 (homogenous) matrix
     def getLocalTransformation(self) -> Matrix:
         if self._transformation is None:
-            self._updateTransformation()
+            self._updateLocalTransformation()
 
-        return Matrix(self._transformation.getData())
+        return self._transformation.copy()
 
     def setTransformation(self, transformation: Matrix):
-        self._transformation = Matrix(transformation.getData()) # Make a copy to ensure we never change the given transformation
+        self._transformation = transformation.copy() # Make a copy to ensure we never change the given transformation
         self._transformChanged()
 
     ##  Get the local orientation value.
@@ -468,17 +468,17 @@ class SceneNode:
         if not self._enabled or orientation == self._orientation:
             return
 
-        new_transform_matrix = Matrix()
+
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldOrientation() == orientation:
                 return
-            new_orientation = orientation * (self.getWorldOrientation() * self._orientation.getInverse()).getInverse()
+            new_orientation = orientation * (self.getWorldOrientation() * self._orientation.getInverse()).invert()
             orientation_matrix = new_orientation.toMatrix()
         else:  # Local
             orientation_matrix = orientation.toMatrix()
 
         euler_angles = orientation_matrix.getEuler()
-
+        new_transform_matrix = Matrix()
         new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = self._position, shear = self._shear)
         self._transformation = new_transform_matrix
         self._transformChanged()
@@ -549,7 +549,7 @@ class SceneNode:
         elif transform_space == SceneNode.TransformSpace.Parent:
             self._transformation.preMultiply(translation_matrix)
         elif transform_space == SceneNode.TransformSpace.World:
-            world_transformation = Matrix(self._world_transformation.getData())
+            world_transformation = self._world_transformation.copy()
             self._transformation.multiply(self._world_transformation.getInverse())
             self._transformation.multiply(translation_matrix)
             self._transformation.multiply(world_transformation)
@@ -666,34 +666,36 @@ class SceneNode:
         for child in self._children:
             child._transformChanged()
 
-    def _updateTransformation(self) -> None:
-        scale, shear, euler_angles, translation, mirror = self._transformation.decompose()
+    def _updateLocalTransformation(self):
+        translation, euler_angle_matrix, scale, shear = self._transformation.decompose()
+
         self._position = translation
         self._scale = scale
         self._shear = shear
-        self._mirror = mirror
         orientation = Quaternion()
-        euler_angle_matrix = Matrix()
-        euler_angle_matrix.setByEuler(euler_angles.x, euler_angles.y, euler_angles.z)
         orientation.setByMatrix(euler_angle_matrix)
         self._orientation = orientation
+
+    def _updateWorldTransformation(self):
         if self._parent:
-            self._world_transformation = self._parent.getWorldTransformation().multiply(self._transformation, copy = True)
+            self._world_transformation = self._parent.getWorldTransformation().multiply(self._transformation)
         else:
             self._world_transformation = self._transformation
 
-        world_scale, world_shear, world_euler_angles, world_translation, world_mirror = self._world_transformation.decompose()
+        world_translation, world_euler_angle_matrix, world_scale, world_shear = self._world_transformation.decompose()
         self._derived_position = world_translation
         self._derived_scale = world_scale
-
-        world_euler_angle_matrix = Matrix()
-        world_euler_angle_matrix.setByEuler(world_euler_angles.x, world_euler_angles.y, world_euler_angles.z)
         self._derived_orientation.setByMatrix(world_euler_angle_matrix)
+
+    def _updateTransformation(self) -> None:
+        self._updateLocalTransformation()
+        self._updateWorldTransformation()
 
     def _resetAABB(self) -> None:
         if not self._calculate_aabb:
             return
         self._aabb = None
+        self._bounding_box_mesh = None
         if self._parent:
             self._parent._resetAABB()
         self.boundingBoxChanged.emit()

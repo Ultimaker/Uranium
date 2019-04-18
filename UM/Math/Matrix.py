@@ -11,7 +11,6 @@ from typing import cast, Dict, List, Optional, Tuple, TYPE_CHECKING, Union
 
 numpy.seterr(divide="ignore")
 
-
 if TYPE_CHECKING:
     from UM.Math.Quaternion import Quaternion
 
@@ -60,6 +59,9 @@ class Matrix:
         # So, you must be asking yourself, why not let python handle this simple case on it's own? Well, that's because
         # we found out that this is about 3x faster.
         # Note that actually using Matrix(self._data) (without the deepcopy) is another factor 3 faster.
+        return Matrix(self._data)
+
+    def copy(self) -> "Matrix":
         return Matrix(self._data)
 
     def __eq__(self, other: object) -> bool:
@@ -402,64 +404,70 @@ class Matrix:
         self._data[2, 3] = -1.
         self._data[3, 2] = (2. * far * near) / (near - far)
 
-    ##  Return sequence of transformations from transformation matrix.
-    #   @return Tuple containing scale (vector), shear (vector), angles (vector), translation (vector) and mirror (vector)
-    #   It will raise a ValueError if matrix is of wrong type or degenerative.
-    def decompose(self) -> Tuple[Vector, Vector, Vector, Vector, Vector]:
-        M = numpy.array(self._data, dtype = numpy.float64, copy = True).T
-        if abs(M[3, 3]) < self._EPS:
-            raise ValueError("M[3, 3] is zero")
-        M /= M[3, 3]
-        P = M.copy()
-        P[:, 3] = 0.0, 0.0, 0.0, 1.0
-        if not numpy.linalg.det(P):
-            raise ValueError("matrix is singular")
+    def decompose(self):
+        '''
+        SOURCE: https://github.com/matthew-brett/transforms3d/blob/e402e56686648d9a88aa048068333b41daa69d1a/transforms3d/affines.py
+        Decompose 4x4 homogenous affine matrix into parts.
+        The parts are translations, rotations, zooms, shears.
+        This is the same as :func:`decompose` but specialized for 4x4 affines.
+        Decomposes `A44` into ``T, R, Z, S``, such that::
+           Smat = np.array([[1, S[0], S[1]],
+                            [0,    1, S[2]],
+                            [0,    0,    1]])
+           RZS = np.dot(R, np.dot(np.diag(Z), Smat))
+           A44 = np.eye(4)
+           A44[:3,:3] = RZS
+           A44[:-1,-1] = T
+        The order of transformations is therefore shears, followed by
+        zooms, followed by rotations, followed by translations.
+        This routine only works for shape (4,4) matrices
+        Parameters
+        ----------
+        A44 : array shape (4,4)
+        Returns
+        -------
+        T : array, shape (3,)
+           Translation vector
+        R : array shape (3,3)
+            rotation matrix
+        Z : array, shape (3,)
+           Zoom vector.  May have one negative zoom to prevent need for negative
+           determinant R matrix above
+        S : array, shape (3,)
+           Shear vector, such that shears fill upper triangle above
+           diagonal to form shear matrix (type ``striu``).
+        '''
+        A44 = numpy.asarray(self._data, dtype = numpy.float64)
+        T = A44[:-1, -1]
+        RZS = A44[:-1, :-1]
+        # compute scales and shears
+        M0, M1, M2 = numpy.array(RZS).T
+        # extract x scale and normalize
+        sx = math.sqrt(numpy.sum(M0 ** 2))
+        M0 /= sx
+        # orthogonalize M1 with respect to M0
+        sx_sxy = numpy.dot(M0, M1)
+        M1 -= sx_sxy * M0
+        # extract y scale and normalize
+        sy = math.sqrt(numpy.sum(M1 ** 2))
+        M1 /= sy
+        sxy = sx_sxy / sx
+        # orthogonalize M2 with respect to M0 and M1
+        sx_sxz = numpy.dot(M0, M2)
+        sy_syz = numpy.dot(M1, M2)
+        M2 -= (sx_sxz * M0 + sy_syz * M1)
+        # extract z scale and normalize
+        sz = math.sqrt(numpy.sum(M2 ** 2))
+        M2 /= sz
+        sxz = sx_sxz / sx
+        syz = sy_syz / sy
+        # Reconstruct rotation matrix, ensure positive determinant
+        Rmat = numpy.array([M0, M1, M2]).T
+        if numpy.linalg.det(Rmat) < 0:
+            sx *= -1
+            Rmat[:, 0] *= -1
 
-        scale = numpy.zeros((3, ))
-        shear = [0.0, 0.0, 0.0]
-        angles = [0.0, 0.0, 0.0]
-        mirror = [1, 1, 1]
-
-        translate = M[3, :3].copy()
-        M[3, :3] = 0.0
-
-        row = M[:3, :3].copy()
-        scale[0] = math.sqrt(numpy.dot(row[0], row[0]))
-        row[0] /= scale[0]
-        shear[0] = numpy.dot(row[0], row[1])
-        row[1] -= row[0] * shear[0]
-        scale[1] = math.sqrt(numpy.dot(row[1], row[1]))
-        row[1] /= scale[1]
-        shear[0] /= scale[1]
-        shear[1] = numpy.dot(row[0], row[2])
-        row[2] -= row[0] * shear[1]
-        shear[2] = numpy.dot(row[1], row[2])
-        row[2] -= row[1] * shear[2]
-        scale[2] = math.sqrt(numpy.dot(row[2], row[2]))
-        row[2] /= scale[2]
-        shear[1:] /= scale[2]
-
-        if numpy.dot(row[0], numpy.cross(row[1], row[2])) < 0:
-            numpy.negative(scale, scale)
-            numpy.negative(row, row)
-
-        # If the scale was negative, we give back a seperate mirror vector to indicate this.
-        if M[0, 0] < 0:
-            mirror[0] = -1
-        if M[1, 1] < 0:
-            mirror[1] = -1
-        if M[2, 2] < 0:
-            mirror[2] = -1
-
-        angles[1] = math.asin(-row[0, 2])
-        if math.cos(angles[1]):
-            angles[0] = math.atan2(row[1, 2], row[2, 2])
-            angles[2] = math.atan2(row[0, 1], row[0, 0])
-        else:
-            angles[0] = math.atan2(-row[2, 1], row[1, 1])
-            angles[2] = 0.0
-
-        return Vector(data = scale), Vector(data = shear), Vector(data = angles), Vector(data = translate), Vector(data = mirror)
+        return Vector(data = T), Matrix(data=Rmat), Vector(data = numpy.array([sx, sy, sz])), Vector(data=numpy.array([sxy, sxz, syz]))
 
     def _unitVector(self, data: numpy.array, axis: Optional[int] = None, out: Optional[numpy.array] = None) -> numpy.array:
         """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
