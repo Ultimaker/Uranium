@@ -3,7 +3,7 @@
 
 from copy import deepcopy
 import numpy
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
@@ -91,14 +91,14 @@ class SceneNode:
         copy = self.__class__()
         copy.setTransformation(self.getLocalTransformation())
         copy.setMeshData(self._mesh_data)
-        copy.setVisible(deepcopy(self._visible, memo))
-        copy._selectable = deepcopy(self._selectable, memo)
-        copy._name = deepcopy(self._name, memo)
+        copy._visible = cast(bool, deepcopy(self._visible, memo))
+        copy._selectable = cast(bool, deepcopy(self._selectable, memo))
+        copy._name = cast(str, deepcopy(self._name, memo))
         for decorator in self._decorators:
-            copy.addDecorator(deepcopy(decorator, memo))
+            copy.addDecorator(cast(SceneNodeDecorator, deepcopy(decorator, memo)))
 
         for child in self._children:
-            copy.addChild(deepcopy(child, memo))
+            copy.addChild(cast(SceneNode, deepcopy(child, memo)))
         self.calculateBoundingBoxMesh()
         return copy
 

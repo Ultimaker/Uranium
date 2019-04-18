@@ -77,15 +77,15 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "InstanceContainer":
         new_container = self.__class__(self.getId())
-        new_container._metadata = copy.deepcopy(self._metadata, memo)
+        new_container._metadata = cast(Dict[str, Any], copy.deepcopy(self._metadata, memo))
         new_container._instances = cast(Dict[str, SettingInstance], copy.deepcopy(self._instances, memo))
         for instance in new_container._instances.values(): #Set the back-links of the new instances correctly to the copied container.
             instance._container = new_container
             instance.propertyChanged.connect(new_container.propertyChanged)
         new_container._read_only = self._read_only
         new_container._dirty = self._dirty
-        new_container._path = copy.deepcopy(self._path, memo)
-        new_container._cached_values = copy.deepcopy(self._cached_values, memo)
+        new_container._path = cast(str, copy.deepcopy(self._path, memo))
+        new_container._cached_values = cast(Optional[Dict[str, Any]], copy.deepcopy(self._cached_values, memo))
         return new_container
 
     def __eq__(self, other: object) -> bool:
