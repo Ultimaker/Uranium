@@ -81,6 +81,10 @@ class Camera(SceneNode.SceneNode):
 
     def getWindowSize(self) -> Tuple[int, int]:
         return self._window_width, self._window_height
+
+    def render(self, renderer) -> bool:
+        # It's a camera. It doesn't need rendering.
+        return True
     
     ##  Set the projection matrix of this camera.
     #   \param matrix The projection matrix to use for this camera.

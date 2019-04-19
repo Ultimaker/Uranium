@@ -188,13 +188,10 @@ class MeshData:
         if self._vertices is None:
             return None
 
-        data = numpy.pad(self.getConvexHullVertices(), ((0, 0), (0, 1)), "constant", constant_values=(0.0, 1.0))
-
         if matrix is not None:
-            transposed = matrix.getTransposed().getData()
-            data = data.dot(transposed)
-            data += transposed[:, 3]
-            data = data[:, 0:3]
+            data = self.getConvexHullTransformedVertices(matrix)
+        else:
+            data = self.getConvexHullVertices()
 
         min = data.min(axis=0)
         max = data.max(axis=0)
