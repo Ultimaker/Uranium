@@ -92,7 +92,7 @@ class Camera(SceneNode.SceneNode):
         return self._window_width, self._window_height
 
     def render(self, renderer) -> bool:
-        # It's a camera. It doesn't need rendering. 
+        # It's a camera. It doesn't need rendering.
         return True
     
     ##  Set the projection matrix of this camera.

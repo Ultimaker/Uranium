@@ -111,18 +111,14 @@ class Matrix:
             self._data = numpy.dot(self._data, other.getData())
             return self
         else:
-            new_matrix = Matrix(data = self._data)
-            new_matrix.multiply(other)
-            return new_matrix
+            return Matrix(data = numpy.dot(self._data, other.getData()))
 
     def preMultiply(self, other: Union[Vector, "Matrix"], copy: bool = False) -> "Matrix":
         if not copy:
             self._data = numpy.dot(other.getData(), self._data)
             return self
         else:
-            new_matrix = Matrix(data = self._data)
-            new_matrix.preMultiply(other)
-            return new_matrix
+            return Matrix(data = numpy.dot(other.getData(), self._data))
 
     ##  Get raw data.
     #   \returns 4x4 numpy array
