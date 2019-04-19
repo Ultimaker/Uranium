@@ -145,8 +145,8 @@ class Quaternion(object):
 
     ## Set quaternion by providing a homogenous (4x4) rotation matrix.
     # \param matrix 4x4 Matrix object
-    # \param is_precise
-    def setByMatrix(self, matrix, is_precise = False):
+    # \param ensure_unit_length
+    def setByMatrix(self, matrix, ensure_unit_length = False):
         trace = matrix.at(0, 0) + matrix.at(1, 1) + matrix.at(2, 2)
         if trace > 0.0:
             self._data[0] = matrix.at(2, 1) - matrix.at(1, 2)
@@ -178,8 +178,8 @@ class Quaternion(object):
                 self._data[1] = matrix.at(2, 1) + matrix.at(1, 2)
                 self._data[1] = matrix.at(2, 2) - matrix.at(0, 0) - matrix.at(1, 1) + 1.0
                 self._data[3] = matrix.at(1, 0) - matrix.at(0, 1)
-
-        self.normalize()
+        if ensure_unit_length:
+            self.normalize()
 
     def toMatrix(self):
         m = numpy.zeros((4, 4), dtype=numpy.float64)
@@ -202,19 +202,19 @@ class Quaternion(object):
         yz = self.y * zs
         zz = self.z * zs
 
-        m[0,0] = 1.0 - (yy + zz)
-        m[0,1] = xy - wz
-        m[0,2] = xz + wy
+        m[0, 0] = 1.0 - (yy + zz)
+        m[0, 1] = xy - wz
+        m[0, 2] = xz + wy
 
-        m[1,0] = xy + wz
-        m[1,1] = 1.0 - (xx + zz)
-        m[1,2] = yz - wx
+        m[1, 0] = xy + wz
+        m[1, 1] = 1.0 - (xx + zz)
+        m[1, 2] = yz - wx
 
-        m[2,0] = xz - wy
-        m[2,1] = yz + wx
-        m[2,2] = 1.0 - (xx + yy)
+        m[2, 0] = xz - wy
+        m[2, 1] = yz + wx
+        m[2, 2] = 1.0 - (xx + yy)
 
-        m[3,3] = 1.0
+        m[3, 3] = 1.0
 
         return Matrix(m)
 
