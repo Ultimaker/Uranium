@@ -86,7 +86,6 @@ class RenderBatch():
 
         self._view_matrix = None
         self._projection_matrix = None
-        self._view_projection_matrix = None
 
         self._gl = OpenGL.getInstance().getBindingsObject()
 
@@ -195,12 +194,10 @@ class RenderBatch():
         self._view_matrix = camera.getWorldTransformation()
         self._view_matrix.invert()
         self._projection_matrix = camera.getProjectionMatrix()
-        self._view_projection_matrix = camera.getViewProjectionMatrix()
 
         self._shader.updateBindings(
             view_matrix = self._view_matrix,
             projection_matrix = self._projection_matrix,
-            view_projection_matrix = self._view_projection_matrix,
             view_position = camera.getWorldPosition(),
             light_0_position = camera.getWorldPosition() + Vector(0, 50, 0)
         )
@@ -239,14 +236,9 @@ class RenderBatch():
             normal_matrix.invert()
             normal_matrix.transpose()
 
-        model_view_matrix = transformation.preMultiply(self._view_matrix, copy = True)
-        model_view_projection_matrix = transformation.preMultiply(self._view_projection_matrix, copy = True)
-
         self._shader.updateBindings(
             model_matrix = transformation,
-            normal_matrix = normal_matrix,
-            model_view_matrix = model_view_matrix,
-            model_view_projection_matrix = model_view_projection_matrix
+            normal_matrix = normal_matrix
         )
 
         if item["uniforms"] is not None:
