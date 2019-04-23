@@ -193,6 +193,9 @@ class MeshData:
         else:
             data = self.getConvexHullVertices()
 
+        if data is None:
+            return None
+
         min = data.min(axis=0)
         max = data.max(axis=0)
 
