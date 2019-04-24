@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import unittest
@@ -106,6 +106,7 @@ class TestQuaternion(unittest.TestCase):
         m.setByRotationAxis(math.pi / 2, Vector.Unit_Z)
 
         q1 = Quaternion.fromMatrix(m)
+        q1.normalize()
 
         q2 = Quaternion()
         q2.setByAngleAxis(math.pi / 2, Vector.Unit_Z)
