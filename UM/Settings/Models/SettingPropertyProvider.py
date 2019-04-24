@@ -319,8 +319,14 @@ class SettingPropertyProvider(QObject):
                 continue
 
             has_values_changed = True
-
-            self._property_map.insert(property_name, self._getPropertyValue(property_name))
+            try:
+                self._property_map.insert(property_name, self._getPropertyValue(property_name))
+            except RuntimeError:
+                # QtObject has been destroyed, no need to handle the signals anymore.
+                # This can happen when the QtObject in C++ has been destroyed, but the python object hasn't quite
+                # caught on yet. Once we call any signals, it will cause a runtimeError since all the underlying
+                # logic to emit pyqtSignals is gone.
+                return
 
         self._updateStackLevels()
         if has_values_changed:
