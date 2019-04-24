@@ -51,6 +51,7 @@ TabButton
     contentItem: Label
     {
         anchors.centerIn: parent
+        anchors.alignWhenCentered: false
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         text: parent.text
