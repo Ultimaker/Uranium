@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
@@ -143,7 +143,7 @@ class Quaternion(object):
     def normalize(self):
         self._data /= numpy.linalg.norm(self._data)
 
-    ## Set quaternion by providing a homogenous (4x4) rotation matrix.
+    ## Set quaternion by providing a homogeneous (4x4) rotation matrix.
     # \param matrix 4x4 Matrix object
     # \param ensure_unit_length
     def setByMatrix(self, matrix, ensure_unit_length = False):
