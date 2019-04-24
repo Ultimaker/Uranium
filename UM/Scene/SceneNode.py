@@ -634,6 +634,8 @@ class SceneNode:
 
     ##  Get the bounding box of this node and its children.
     def getBoundingBox(self) -> Optional[AxisAlignedBox]:
+        if not self._calculate_aabb:
+            return None
         if self._aabb is None:
             self._calculateAABB()
         return self._aabb
@@ -690,6 +692,8 @@ class SceneNode:
         self._updateWorldTransformation()
 
     def _resetAABB(self) -> None:
+        if not self._calculate_aabb:
+            return
         self._aabb = None
         self._bounding_box_mesh = None
         if self._parent:
