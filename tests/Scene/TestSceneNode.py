@@ -1,5 +1,6 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 from UM.Mesh.MeshData import MeshData
 from UM.Scene.GroupDecorator import GroupDecorator
 from UM.Scene.SceneNode import SceneNode
@@ -54,11 +55,15 @@ class SceneNodeTest(unittest.TestCase):
 
         node.setOrientation(Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
 
-        self.assertEqual(node.getOrientation(), Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
+        node_orientation = deepcopy(node.getOrientation())
+        node_orientation.normalize() #For fair comparison.
+        self.assertEqual(node_orientation, Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
 
         node.setOrientation(Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
 
-        self.assertEqual(node.getOrientation(), Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
+        node_orientation = deepcopy(node.getOrientation())
+        node_orientation.normalize() #For fair comparison.
+        self.assertEqual(node_orientation, Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
 
     def test_rotate(self):
         node = SceneNode()
@@ -67,11 +72,15 @@ class SceneNodeTest(unittest.TestCase):
 
         node.rotate(Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
 
-        self.assertEqual(node.getOrientation(), Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
+        node_orientation = deepcopy(node.getOrientation())
+        node_orientation.normalize() #For fair comparison.
+        self.assertEqual(node_orientation, Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
 
         node.rotate(Quaternion.fromAngleAxis(math.pi / 4, Vector.Unit_Z))
 
-        self.assertEqual(node.getOrientation(), Quaternion.fromAngleAxis(math.pi / 2, Vector.Unit_Z))
+        node_orientation = deepcopy(node.getOrientation())
+        node_orientation.normalize()
+        self.assertEqual(node_orientation, Quaternion.fromAngleAxis(math.pi / 2, Vector.Unit_Z))
 
     def test_setScale(self):
         node = SceneNode()
