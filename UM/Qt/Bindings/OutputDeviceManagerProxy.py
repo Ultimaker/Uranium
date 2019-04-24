@@ -2,8 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
-from PyQt5.QtQml import QQmlEngine, QJSEngine #For typing.
-from typing import Dict, List, Mapping, Optional, TYPE_CHECKING
+from typing import List, Mapping, Optional, TYPE_CHECKING
 
 from UM.Application import Application
 from UM.i18n import i18nCatalog
@@ -15,10 +14,12 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Selection import Selection
 
 if TYPE_CHECKING:
+    from PyQt5.QtQml import QQmlEngine, QJSEngine
     from UM.FileHandler.FileHandler import FileHandler
     from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 
 catalog = i18nCatalog("uranium")
+
 
 class OutputDeviceManagerProxy(QObject):
     def __init__(self, parent = None) -> None:
@@ -27,10 +28,7 @@ class OutputDeviceManagerProxy(QObject):
         self._device_manager.activeDeviceChanged.connect(self._onActiveDeviceChanged)
         self._onActiveDeviceChanged()
 
-        self._manualDeviceInfo = {}  # type: Dict[str, str]
-
     activeDeviceChanged = pyqtSignal()
-    manualDeviceChanged = pyqtSignal()
     
     @pyqtProperty(str, notify = activeDeviceChanged)
     def activeDevice(self) -> str:
@@ -55,29 +53,6 @@ class OutputDeviceManagerProxy(QObject):
     @pyqtProperty(str, notify = activeDeviceChanged)
     def activeDeviceDescription(self) -> str:
         return self._device_manager.getActiveDevice().getDescription()
-
-    @pyqtProperty(bool)
-    def hasManualDevice(self) -> bool:
-        return len(self._manualDeviceInfo.keys()) > 0
-
-    @pyqtSlot(str)
-    def addManualDevice(self, address: str) -> None:
-        self._device_manager.manualDeviceAdded.connect(self._onManualDeviceAdded)
-        self._device_manager.manualDeviceRemoved.connect(self._onManualDeviceRemoved)
-        self._device_manager.addManualDevice(address)
-
-    @pyqtSlot(str)
-    @pyqtSlot(str, str)
-    def removeManualDevice(self, key: str, address: Optional[str] = None) -> None:
-        self._device_manager.manualDeviceRemoved.connect(self._onManualDeviceRemoved)
-        self._device_manager.removeManualDevice(key, address)
-
-    @pyqtSlot(str, result = str)
-    def manualDeviceProperty(self, key: str) -> str:
-        if key in self._manualDeviceInfo:
-            return self._manualDeviceInfo[key]
-        else:
-            return catalog.i18nc("@label used when a printer-property (like its name) isn't found", "unknown")
 
     @pyqtSlot()
     def startDiscovery(self) -> None:
@@ -168,31 +143,6 @@ class OutputDeviceManagerProxy(QObject):
         except Exception as e:
             Logger.logException("e", "Unable to write to file %s: %s", file_name, e)
 
-    def _onManualDeviceAdded(self, device_id: str, address: str, properties: Dict[bytes, bytes]) -> None:
-        self._device_manager.manualDeviceAdded.disconnect(self._onManualDeviceAdded)
 
-        self._manualDeviceInfo.clear()
-
-        for key in properties:  # NOTE: .items() flattens the 'bytes' objects to int for some reason.
-            value = properties[key]
-            if isinstance(key, bytes) and isinstance(value, bytes):
-                self._manualDeviceInfo[bytes.decode(key, "utf-8")] = bytes.decode(value, "utf-8")
-            elif isinstance(key, bytes) and isinstance(value, int):
-                self._manualDeviceInfo[bytes.decode(key, "utf-8")] = str(value)
-            else:
-                Logger.log("i", "Can't decode value of key '{0}' from device properties.".format(repr(key)))
-
-        self._manualDeviceInfo["device_id"] = device_id
-        if "address" not in self._manualDeviceInfo:
-            self._manualDeviceInfo["address"] = address
-
-        self.manualDeviceChanged.emit()
-
-    # Note that this can also signify that the addition of the device failed. In that case 'device_id' is empty.
-    def _onManualDeviceRemoved(self, device_id: str, address: str) -> None:
-        self._device_manager.manualDeviceRemoved.disconnect(self._onManualDeviceRemoved)
-        self._manualDeviceInfo.clear()
-        self.manualDeviceChanged.emit()
-
-def createOutputDeviceManagerProxy(engine: QQmlEngine, script_engine: QJSEngine) -> OutputDeviceManagerProxy:
+def createOutputDeviceManagerProxy(engine: "QQmlEngine", script_engine: "QJSEngine") -> OutputDeviceManagerProxy:
     return OutputDeviceManagerProxy()

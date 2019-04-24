@@ -1,7 +1,7 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from enum import Enum
-from typing import List, Dict, Optional, TYPE_CHECKING
+from typing import Dict, Optional, TYPE_CHECKING
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
@@ -257,6 +257,9 @@ class OutputDeviceManager:
 
         del self._plugins[plugin_id]
 
+    def getAllOutputDevicePlugins(self) -> Dict[str, "OutputDevicePlugin"]:
+        return self._plugins
+
     ##  Get an OutputDevicePlugin by plugin ID
     #
     #   \param plugin_id The ID of the plugin to retrieve
@@ -265,48 +268,7 @@ class OutputDeviceManager:
     def getOutputDevicePlugin(self, plugin_id: str) -> Optional["OutputDevicePlugin"]:
         return self._plugins.get(plugin_id, None)
 
-    ##  Sometimes automatic discovery doesn't or can't work, and a device has to be added 'manually' by some address.
-    #   This will loop through all plugins to find one that accepts the address.
-    #   Note that a plugin can claim priority for certain addresses, but this should be used with great care!
-    #   \param address The address of this device, often an IP or similar.
-    #   \param plugin_types Limit the search to these plugins (or empty list for 'accept all', which is the default).
-    def addManualDevice(self, address: str, plugin_types: Optional[List[str]] = None) -> None:
-        priority_order = [
-                ManualDeviceAdditionAttempt.PRIORITY,
-                ManualDeviceAdditionAttempt.POSSIBLE
-            ]  # type: List[ManualDeviceAdditionAttempt]
-
-        accepted_plugins = [item[1] for item in
-                            filter(lambda plugin_item: (not plugin_types or plugin_item[0] in plugin_types) and
-                            plugin_item[1].canAddManualDevice(address) in priority_order, self._plugins.items())
-                            ]
-
-        if not accepted_plugins:
-            Logger.log("d", "Could not find a plugin to accept adding %s manually via address.", address)
-
-        plugin = max(accepted_plugins, key = lambda p: priority_order.index(p.canAddManualDevice(address)))
-        plugin.addManualDeviceSignal.connect(self._onManualDeviceAdded)
-        plugin.removeManualDeviceSignal.connect(self._onManualDeviceRemoved)
-        plugin.addManualDevice(address)
-
-    def removeManualDevice(self, key: str, address: Optional[str] = None) -> None:
-        for plugin_id, plugin in self._plugins.items():
-            plugin.removeManualDeviceSignal.connect(self._onManualDeviceRemoved)
-            plugin.removeManualDevice(key, address = address)
-
     ##  private:
-
-    def _onManualDeviceAdded(self, plugin_id: str, device_id: str, address: str, properties: Dict[bytes, bytes]) -> None:
-        plugin = self._plugins[plugin_id]
-        if plugin:
-            plugin.addManualDeviceSignal.disconnect(self._onManualDeviceAdded)
-            self.manualDeviceAdded.emit(device_id, address, properties)
-
-    def _onManualDeviceRemoved(self, plugin_id: str, key: str, address: str) -> None:
-        plugin = self._plugins[plugin_id]
-        if plugin:
-            plugin.removeManualDeviceSignal.disconnect(self._onManualDeviceRemoved)
-            self.manualDeviceRemoved.emit(key, address)
 
     def _findHighestPriorityDevice(self) -> Optional["OutputDevice"]:
         device = None
