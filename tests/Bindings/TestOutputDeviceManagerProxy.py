@@ -22,18 +22,6 @@ class TestOutputDeviceManagerProxy(TestCase):
     def tearDown(self):
         pass
 
-    def test_addManualDevice(self):
-        self.mocked_device_manager.addManualDevice.reset_mock()
-        self.proxy.addManualDevice("whatever")
-        # It's a simple pass through, so we just need to check if that happend.
-        self.mocked_device_manager.addManualDevice.assert_called_once_with("whatever")
-
-    def test_removeManualDevice(self):
-        self.mocked_device_manager.removeManualDevice.reset_mock()
-        self.proxy.removeManualDevice("whatever", "more whatever")
-        # It's a simple pass through, so we just need to check if that happend.
-        self.mocked_device_manager.removeManualDevice.assert_called_once_with("whatever", "more whatever")
-
     def test_startAndRefreshDiscovery(self):
         self.proxy.startDiscovery()
         assert self.mocked_device_manager.startDiscovery.call_count == 1
