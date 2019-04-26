@@ -1,12 +1,11 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Optional
+from typing import Optional, Callable
 
 from UM.OutputDevice.OutputDeviceManager import ManualDeviceAdditionAttempt
 from UM.PluginObject import PluginObject
 from UM.Application import Application
-from UM.Signal import Signal
 
 
 ##  Base class for output device plugins.
@@ -22,16 +21,6 @@ from UM.Signal import Signal
 #
 #   \sa OutputDeviceManager
 class OutputDevicePlugin(PluginObject):
-
-    # Emitted when a device was added manually.
-    # With arguments: plugin-id(str), device-id(str), address(str), (optional) properties(Dict[bytes, bytes])
-    # Named ...Signal to avoid confusion with the function-names.
-    addManualDeviceSignal = Signal()
-
-    # Emitted when a manually added device was failed to add, or was removed, when failed to add, device-id is empty.
-    # With arguments: plugin-id(str), device-id(str), address(str)
-    # Named ...Signal to avoid confusion with the function-names.
-    removeManualDeviceSignal = Signal()
 
     def __init__(self):
         super().__init__()
@@ -56,9 +45,10 @@ class OutputDevicePlugin(PluginObject):
         return ManualDeviceAdditionAttempt.NO
 
     ## Add a manual device by the specified address (for example, an IP).
-    #  Since this may be asynchronous, use the 'addDeviceSignal' when the machine actually has been added.
-    #  (Note that the 'removeManualDeviceSignal' can be used to signal a failed addition attempt as well.
-    def addManualDevice(self, address: str) -> None:
+    #  The optional callback is a function with signature func(success: bool, address: str) -> None, where
+    #    - success is a bool that indicates if the manual device's information was successfully retrieved.
+    #    - address is the address of the manual device.
+    def addManualDevice(self, address: str, callback: Optional[Callable[[bool, str], None]] = None) -> None:
         pass
 
     ## Remove a manual device by either the name and/or the specified address.
