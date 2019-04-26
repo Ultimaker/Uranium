@@ -459,18 +459,15 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
             relation = SettingRelation(other, definition, RelationType.RequiredByTarget, property_name)
             other.relations.append(relation)
-
+            
     def _getDefinition(self, key: str) -> Optional[SettingDefinition]:
-        definition = None
         if key in self._definition_cache:
-            definition = self._definition_cache[key]
+            return self._definition_cache[key]
         else:
             definitions = self.findDefinitions(key = key)
             if definitions:
-                definition = definitions[0]
-                self._definition_cache[key] = definition
-
-        return definition
+                self._definition_cache[key] = definitions[0]
+                return definitions[0]
 
     ##  Simple short string representation for debugging purposes.
     def __str__(self) -> str:
