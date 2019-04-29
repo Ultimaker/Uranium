@@ -227,14 +227,13 @@ class MainWindow(QQuickWindow):
 
     @pyqtSlot()
     def _onWindowGeometryChanged(self):
-        if self.windowState() == Qt.WindowNoState:
-            self._preferences.setValue("general/window_width", self.width())
-            self._preferences.setValue("general/window_height", self.height())
-            self._preferences.setValue("general/window_left", self.x())
-            self._preferences.setValue("general/window_top", self.y())
-            self._preferences.setValue("general/window_state", Qt.WindowNoState)
-        elif self.windowState() == Qt.WindowMaximized:
-            self._preferences.setValue("general/window_state", Qt.WindowMaximized)
+        self._preferences.setValue("general/window_width", self.width())
+        self._preferences.setValue("general/window_height", self.height())
+        self._preferences.setValue("general/window_left", self.x())
+        self._preferences.setValue("general/window_top", self.y())
+        # This is a workaround for QTBUG-30085
+        if self.windowState() in (Qt.WindowNoState, Qt.WindowMaximized):
+            self._preferences.setValue("general/window_state", self.windowState())
 
     def _updateViewportGeometry(self, width: int, height: int):
         view_width = width * self._viewport_rect.width()
