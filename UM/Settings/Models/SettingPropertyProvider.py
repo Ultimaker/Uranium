@@ -43,7 +43,7 @@ class SettingPropertyProvider(QObject):
         self._remove_unused_value = True
         self._validator = None  # type: Optional[Validator]
 
-        self._update_timer = QTimer()
+        self._update_timer = QTimer(self)
         self._update_timer.setInterval(100)
         self._update_timer.setSingleShot(True)
         self._update_timer.timeout.connect(self._update)
