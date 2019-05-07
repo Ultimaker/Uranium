@@ -50,11 +50,15 @@ class MimeType:
         return self.__comment
 
     ##  The list of file name suffixes for the MIME type.
+    #
+    #   Example: ["cfg", "tar.gz"]
     @property
     def suffixes(self) -> List[str]:
         return self.__suffixes
 
     ##  The preferred file name suffix for the MIME type.
+    #
+    #   Example: "cfg" or "tar.gz".
     @property
     def preferredSuffix(self) -> str:
         return self.__preferred_suffix
