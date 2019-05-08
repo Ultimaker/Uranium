@@ -61,8 +61,6 @@ def test_getAndSet(data):
     # Ensure that the value got set
     assert getattr(model, data["attribute"]) == data["value"]
 
-    # Check properties via function calls
-
 
 def test_getCount():
     model = createModel()
