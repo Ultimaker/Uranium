@@ -1,11 +1,12 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections
 import os.path
-from typing import List
+from typing import Dict, List
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
+
 from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
@@ -13,7 +14,7 @@ from UM.Settings import SettingRelation
 from UM.i18n import i18nCatalog
 from UM.Application import Application
 
-from UM.Settings.ContainerRegistry import ContainerRegistry
+from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.SettingDefinition import SettingDefinition
 
 
@@ -34,10 +35,12 @@ class SettingDefinitionsModel(QAbstractListModel):
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)
 
-        self._container_id = None
-        self._container = None
+        self._stack = None
         self._i18n_catalog = None
 
+        # A map of key -> SettingDefinition for fast lookup
+        self._definition_dict = {}  # type: Dict[str, SettingDefinition]
+        # A list of SettingDefinitions for accessing via QAbstractListModel.data()
         self._definition_list = []
         self._row_index_list = []
 
@@ -88,27 +91,18 @@ class SettingDefinitionsModel(QAbstractListModel):
     def showAncestors(self) -> bool:
         return self._show_ancestors
 
-    ##  Set the containerId property.
-    def setContainerId(self, container_id: str) -> None:
-        if container_id != self._container_id:
-            self._container_id = container_id
+    # Emitted whenever the containerStack property changes.
+    containerStackChanged = pyqtSignal()
 
-            containers = ContainerRegistry.getInstance().findDefinitionContainers(id = self._container_id)
-            if containers:
-                self._container = containers[0]
-            else:
-                self._container = None
-
+    def setContainerStack(self, stack: "ContainerStack") -> None:
+        if stack != self._stack:
+            self._stack = stack
             self._update()
-            self.containerIdChanged.emit()
+            self.containerStackChanged.emit()
 
-    ##  Emitted whenever the containerId property changes.
-    containerIdChanged = pyqtSignal()
-
-    ##  The ID of the DefinitionContainer object this model exposes.
-    @pyqtProperty(str, fset = setContainerId, notify = containerIdChanged)
-    def containerId(self) -> str:
-        return self._container_id
+    @pyqtProperty(QObject, fset = setContainerStack, notify = containerStackChanged)
+    def containerStack(self) -> "QObject":
+        return self._stack
 
     ##  Set the showAll property.
     def setShowAll(self, show: bool) -> None:
@@ -236,33 +230,34 @@ class SettingDefinitionsModel(QAbstractListModel):
     ##  Show the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
     def expandRecursive(self, key: str) -> None:
-        if not self._container:
+        if not self._stack:
             return
 
-        definitions = self._container.findDefinitions(key = key)
-        if not definitions:
+        definition = self._definition_dict.get(key)
+        if definition is None:
             return
+
         self.expand(key)
 
-        for child in definitions[0].children:
+        for child in definition.children:
             self.expandRecursive(child.key)
 
     ##  Hide the children of a specified SettingDefinition.
     @pyqtSlot(str)
     def collapse(self, key: str) -> None:
-        if not self._container:
+        if not self._stack:
             return
 
         if key not in self._expanded:
             return
 
-        definitions = self._container.findDefinitions(key = key)
-        if not definitions:
+        definition = self._definition_dict.get(key)
+        if definition is None:
             return
 
         self._expanded.remove(key)
 
-        for child in definitions[0].children:
+        for child in definition.children:
             self.collapse(child.key)
 
         self.expandedChanged.emit()
@@ -316,9 +311,8 @@ class SettingDefinitionsModel(QAbstractListModel):
             # Ignore already hidden settings that need to be hidden.
             return
 
-        definitions = self._container.findDefinitions(key = key)
-        if not definitions:
-            Logger.log("e", "Tried to change visiblity of a non-existant SettingDefinition")
+        if key not in self._definition_dict:
+            Logger.log("e", "Tried to change visibility of a non-existant SettingDefinition")
             return
 
         if visible:
@@ -336,13 +330,14 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     @pyqtSlot(str, result = int)
     def getIndex(self, key: str) -> int:
-        if not self._container:
-            return -1
-        definitions = self._container.findDefinitions(key = key)
-        if not definitions:
+        if not self._stack:
             return -1
 
-        index = self._definition_list.index(definitions[0])
+        definition = self._definition_dict.get(key)
+        if definition is None:
+            return -1
+
+        index = self._definition_list.index(definition)
 
         # Make sure self._row_index_list is populated
         if self._update_visible_row_scheduled:
@@ -356,15 +351,15 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     @pyqtSlot(str, str, result = "QVariantList")
     def getRequires(self, key, role = None):
-        if not self._container:
+        if not self._stack:
             return []
 
-        definitions = self._container.findDefinitions(key = key)
-        if not definitions:
+        definition = self._definition_dict.get(key)
+        if definition is None:
             return []
 
         result = []
-        for relation in definitions[0].relations:
+        for relation in definition.relations:
             if relation.type is not SettingRelation.RelationType.RequiresTarget:
                 continue
 
@@ -381,15 +376,15 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     @pyqtSlot(str, str, result = "QVariantList")
     def getRequiredBy(self, key, role = None):
-        if not self._container:
+        if not self._stack:
             return []
 
-        definitions = self._container.findDefinitions(key = key)
-        if not definitions:
+        definition = self._definition_dict.get(key)
+        if definition is None:
             return []
 
         result = []
-        for relation in definitions[0].relations:
+        for relation in definition.relations:
             if relation.type is not SettingRelation.RelationType.RequiredByTarget:
                 continue
 
@@ -416,7 +411,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     #   TODO: fix the pointer when actually using this parameter.
     @pyqtProperty(int, notify = itemsChanged)
     def count(self):
-        if not self._container:
+        if not self._stack:
             return 0
 
         return len(self._row_index_list)
@@ -433,7 +428,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Reimplemented from QAbstractListModel
     def data(self, index, role):
-        if not self._container:
+        if not self._stack:
             return QVariant()
 
         if not index.isValid():
@@ -470,6 +465,7 @@ class SettingDefinitionsModel(QAbstractListModel):
                     value = self._i18n_catalog.i18nc(definition.key + " option " + key, value)
 
                 result.append({"key": key, "value": value})
+
             return result
 
         if isinstance(data, str) and self._i18n_catalog:
@@ -505,16 +501,33 @@ class SettingDefinitionsModel(QAbstractListModel):
     # Note that this triggers a model reset and should only be called when the
     # underlying data needs to be updated. Otherwise call _updateVisibleRows.
     def _update(self) -> None:
-        if not self._container:
+        if not self._stack:
+            self._definition_dict.clear()
+            self._definition_list.clear()
             return
 
         # Try and find a translation catalog for the definition
-        for file_name in self._container.getInheritedFiles():
+        for file_name in self._stack.getBottom().getInheritedFiles():
             catalog = i18nCatalog(os.path.basename(file_name))
             if catalog.hasTranslationLoaded():
                 self._i18n_catalog = catalog
 
-        new_definitions = self._container.findDefinitions()
+        # Terminology: if <my_def> inherits <base_def>, <base_def> is called the base definition and <my_def> is called
+        # the sub-definition.
+        # Get all definitions grouped by key recursively from bottom up, so if a same definition key is found in a
+        # sub-definition and a base definition, the one from the sub-definition will be used.
+        all_definitions_dict = {}
+        def createStackList(definition_dict, s):
+            if s is None:
+                return
+            createStackList(definition_dict, s.getNextStack())
+            definitions = s.getBottom().findDefinitions()
+            for d in definitions:
+                definition_dict[d.key] = d
+        createStackList(all_definitions_dict, self._stack)
+        new_definitions = list(all_definitions_dict.values())
+
+        self._definition_dict = all_definitions_dict
 
         # Check if a full reset is required
         if len(new_definitions) != len(self._definition_list):
@@ -586,7 +599,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             return False
 
         # If its parent is not expanded we should not show the setting.
-        if definition.parent and not definition.parent.key in self._expanded:
+        if definition.parent and definition.parent.key not in self._expanded:
             return False
 
         # If it is not marked as visible we do not have to show it.
@@ -620,7 +633,6 @@ class SettingDefinitionsModel(QAbstractListModel):
                 return True
         return False
 
-
     # Determines if any child of a definition is visible.
     def _isAnyDescendantVisible(self, definition):
         if self._show_all:
@@ -636,7 +648,7 @@ class SettingDefinitionsModel(QAbstractListModel):
                 continue
 
             if child.key in self._visible:
-                if self._container.getProperty(child.key, "enabled"):
+                if self._stack.getProperty(child.key, "enabled"):
                     return True
 
             if self._isAnyDescendantVisible(child):

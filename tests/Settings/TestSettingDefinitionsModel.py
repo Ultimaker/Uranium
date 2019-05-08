@@ -1,12 +1,15 @@
 from unittest.mock import MagicMock
 
-import pytest
 import os
 import uuid
 
+import pytest
+
+from PyQt5.QtCore import QVariant, QModelIndex, Qt
+
+from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
-from PyQt5.QtCore import QVariant, QModelIndex, Qt
 
 
 def createModel(definition = "multiple_settings.def.json"):
@@ -15,12 +18,17 @@ def createModel(definition = "multiple_settings.def.json"):
     # Get a basic definition container
     uid = str(uuid.uuid4())
     definition_container = DefinitionContainer(uid)
+
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", definition),
               encoding="utf-8") as data:
         json = data.read()
 
     definition_container.deserialize(json)
-    model._container = definition_container
+
+    stack = ContainerStack(str(uuid.uuid4()))
+    stack.addContainer(definition_container)
+
+    model._stack = stack
     model.setShowAll(True)
     model.forceUpdate()
     model._updateVisibleRows()
@@ -30,7 +38,6 @@ def createModel(definition = "multiple_settings.def.json"):
 
 test_validate_data = [
     {"attribute": "showAncestors", "value": True},
-    {"attribute": "containerId", "value": "omg"},
     {"attribute": "showAll", "value": True},
     {"attribute": "visibilityHandler", "value": MagicMock()},
     {"attribute": "exclude", "value": ["yay"]},
@@ -53,6 +60,8 @@ def test_getAndSet(data):
 
     # Ensure that the value got set
     assert getattr(model, data["attribute"]) == data["value"]
+
+    # Check properties via function calls
 
 
 def test_getCount():
