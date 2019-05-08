@@ -516,7 +516,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         # the sub-definition.
         # Get all definitions grouped by key recursively from bottom up, so if a same definition key is found in a
         # sub-definition and a base definition, the one from the sub-definition will be used.
-        all_definitions_dict = {}
+        all_definitions_dict = {}  # type: Dict[str, SettingDefinition]
         def createStackList(definition_dict, s):
             if s is None:
                 return
