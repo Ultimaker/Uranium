@@ -94,7 +94,7 @@ def test_getIndex():
     model = createModel()
     # This setting doesn't exist
     assert model.getIndex("set_setting_0") == -1
-    assert model.getIndex("test_setting_0") == 0
+    assert model.getIndex("test_setting_0") > -1
 
 
 def test_getRequires():
