@@ -38,9 +38,6 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._container = None
         self._i18n_catalog = None
 
-        self._root_key = ""
-        self._root = None
-
         self._definition_list = []
         self._row_index_list = []
 
@@ -112,30 +109,6 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtProperty(str, fset = setContainerId, notify = containerIdChanged)
     def containerId(self) -> str:
         return self._container_id
-
-    ##  Set the rootKey property.
-    def setRootKey(self, key: str) -> None:
-        if key != self._root_key:
-            self._root_key = key
-
-            if self._container:
-                definitions = self._container.findDefinitions(key = key)
-                if not definitions:
-                    Logger.log("w", "Tried to set root of SettingDefinitionsModel to an unknown definition")
-                    return
-
-                self._root = definitions[0]
-                self._update()
-
-            self.rootKeyChanged.emit()
-
-    ##  Emitted when the rootKey property changes.
-    rootKeyChanged = pyqtSignal()
-
-    ##  The SettingDefinition to use as root for the list.
-    @pyqtProperty(str, fset = setRootKey, notify = rootKeyChanged)
-    def rootKey(self):
-        return self._root_key
 
     ##  Set the showAll property.
     def setShowAll(self, show: bool) -> None:
@@ -541,10 +514,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             if catalog.hasTranslationLoaded():
                 self._i18n_catalog = catalog
 
-        if self._root:
-            new_definitions = self._root.findDefinitions()
-        else:
-            new_definitions = self._container.findDefinitions()
+        new_definitions = self._container.findDefinitions()
 
         # Check if a full reset is required
         if len(new_definitions) != len(self._definition_list):

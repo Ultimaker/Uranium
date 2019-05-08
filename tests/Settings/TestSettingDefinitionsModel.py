@@ -36,7 +36,6 @@ test_validate_data = [
     {"attribute": "exclude", "value": ["yay"]},
     {"attribute": "expanded", "value": ["yay"]},
     {"attribute": "filter", "value": {}},
-    {"attribute": "rootKey", "value": "Whatevah"}
 ]
 
 
@@ -158,4 +157,3 @@ def test_dataUnhappy():
 
     empty_model = SettingDefinitionsModel()
     assert empty_model.data(model.index(0, 0), model.KeyRole) == QVariant()
-
