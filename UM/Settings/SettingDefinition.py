@@ -632,7 +632,9 @@ class SettingDefinition:
         # A dictionary of key-value pairs that provide the options for an enum type setting. The key is the actual value, the value is a translated display string.
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True, "default": {}, "depends_on" : None},
         # Optional comments that apply to the setting. Will be ignored.
-        "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None}
+        "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None},
+        # Indicates if this string setting is allowed to have empty value. This can only be used for string settings.
+        "allow_empty": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": True, "depends_on": None},
     }   # type: Dict[str, Dict[str, Any]]
 
     __type_definitions = {
@@ -643,7 +645,7 @@ class SettingDefinition:
         # Special case setting; Doesn't have a value. Display purposes only.
         "category": {"from": None, "to": None, "validator": None},
         # A string value
-        "str": {"from": None, "to": None, "validator": None},
+        "str": {"from": None, "to": None, "validator": Validator},
         # An enumeration
         "enum": {"from": None, "to": None, "validator": None},
         # A floating point value
