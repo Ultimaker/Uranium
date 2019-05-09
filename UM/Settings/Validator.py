@@ -61,7 +61,9 @@ class Validator(SettingFunction.SettingFunction):
             if value is None or value != value:
                 raise ValueError("Cannot validate None, NaN or similar values in setting {0}, actual value: {1}".format(self._key, value))
 
-            if not allow_empty and str(value) == "":
+            # "allow_empty is not None" is not necessary here because of "allow_empty is False", but it states
+            # explicitly that we should not do this check when "allow_empty is None".
+            if allow_empty is not None and allow_empty is False and str(value) == "":
                 state = ValidatorState.Invalid
             elif minimum is not None and value < minimum:
                 state = ValidatorState.MinimumError
