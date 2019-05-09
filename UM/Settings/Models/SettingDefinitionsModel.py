@@ -506,12 +506,6 @@ class SettingDefinitionsModel(QAbstractListModel):
             self._definition_list.clear()
             return
 
-        # Try and find a translation catalog for the definition
-        for file_name in self._stack.getBottom().getInheritedFiles():
-            catalog = i18nCatalog(os.path.basename(file_name))
-            if catalog.hasTranslationLoaded():
-                self._i18n_catalog = catalog
-
         # Get all stacks in the next_stack chain and put them in the reversed order. For example, if we have
         #     s1, next_stack -> s2, next_stack -> s3
         # The all_stacks list will be
@@ -525,7 +519,8 @@ class SettingDefinitionsModel(QAbstractListModel):
             current_stack = current_stack.getNextStack()
         all_stacks.reverse()
 
-        # Get all definitions from the whole stack chain.
+        # Get all definitions and catagory names for translations from the whole stack chain.
+        all_filename_list = []  # type: List[str]
         all_definitions_dict = {}  # type: Dict[str, SettingDefinition]
         for stack in all_stacks:
             definition_container = stack.getBottom()
@@ -533,7 +528,23 @@ class SettingDefinitionsModel(QAbstractListModel):
             definitions = definition_container.findDefinitions()
             for d in definitions:
                 all_definitions_dict[d.key] = d
+
+            for filename in definition_container.getInheritedFiles():
+                if filename not in all_filename_list:
+                    all_filename_list.append(os.path.basename(filename))
+
         new_definitions = list(all_definitions_dict.values())
+
+        # Try and find a translation catalog for the definition
+        if all_filename_list:
+            main_name = all_filename_list[0]
+            fallback_names = []
+            if len(all_filename_list) > 1:
+                fallback_names = all_filename_list[1:]
+
+            catalog = i18nCatalog(main_name, fallback_names = fallback_names)
+            if catalog.hasTranslationLoaded():
+                self._i18n_catalog = catalog
 
         self._definition_dict = all_definitions_dict
 

@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import gettext
-from typing import Any, Dict, Optional, cast
+from typing import Any, Dict, List, Optional, cast
 
 from UM.Resources import Resources
 
@@ -30,12 +30,15 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \param language The language to load. Valid values are language codes or
     #   "default". When "default" is specified, the language to load will be
     #   determined based on the system"s language settings.
+    #   \param fallback_names The fallback names of the catalog to load. If a translation is not found in the primary
+    #   name, it will try to find it in the next fallback.
     #
     #   \note When `language` is `default`, the language to load can be
     #   overridden using the "LANGUAGE" environment variable.
-    def __init__(self, name: str = None, language: str = "default") -> None: #pylint: disable=bad-whitespace
+    def __init__(self, name: str = None, language: str = "default", fallback_names: Optional[List[str]] = None) -> None: #pylint: disable=bad-whitespace
         self.__name = name
         self.__language = language
+        self.__fallback_names = fallback_names
         self.__translation = None   # type: Optional[gettext.NullTranslations]
 
         self._update() #Load the actual translation document now that the language is set.
@@ -190,11 +193,24 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__language == "default":
             self.__language = self.__application.getApplicationLanguage()
 
-        # Ask gettext for all the translations in the .mo files.
-        for path in Resources.getAllPathsForType(Resources.i18n):
-            if gettext.find(cast(str, self.__name), path, languages = [self.__language]):
-                self.__translation = gettext.translation(cast(str, self.__name), path, languages = [self.__language])
+        # Load all provided names for translations and chain them via fallback.
+        all_names = [self.__name]
+        if self.__fallback_names is not None:
+            all_names += self.__fallback_names
 
+        all_names.reverse()
+        previous_translation = None  # type: Optional[gettext.NullTranslations]
+
+        # Ask gettext for all the translations in the .mo files.
+        for name in all_names:
+            for path in Resources.getAllPathsForType(Resources.i18n):
+                if gettext.find(cast(str, name), path, languages = [self.__language]):
+                    translation = gettext.translation(cast(str, name), path, languages = [self.__language])
+                    if previous_translation is not None:
+                        translation.add_fallback(previous_translation)
+                    previous_translation = translation
+
+        self.__translation = previous_translation
         self.__require_update = False
 
     ##  Change the global tags that are replaced in every internationalised
