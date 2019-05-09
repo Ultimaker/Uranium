@@ -538,7 +538,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         # Try and find a translation catalog for the definition
         if all_filename_list:
             main_name = all_filename_list[0]
-            fallback_names = []
+            fallback_names = []  # type: List[str]
             if len(all_filename_list) > 1:
                 fallback_names = all_filename_list[1:]
 
