@@ -512,19 +512,27 @@ class SettingDefinitionsModel(QAbstractListModel):
             if catalog.hasTranslationLoaded():
                 self._i18n_catalog = catalog
 
-        # Terminology: if <my_def> inherits <base_def>, <base_def> is called the base definition and <my_def> is called
-        # the sub-definition.
-        # Get all definitions grouped by key recursively from bottom up, so if a same definition key is found in a
-        # sub-definition and a base definition, the one from the sub-definition will be used.
+        # Get all stacks in the next_stack chain and put them in the reversed order. For example, if we have
+        #     s1, next_stack -> s2, next_stack -> s3
+        # The all_stacks list will be
+        #     [s3, s2, s1]
+        # This ensures that the definition overrides can be processes correctly, that is, settings in s1 will override
+        # those in s2 and s3.
+        all_stacks = []
+        current_stack = self._stack
+        while current_stack is not None:
+            all_stacks.append(current_stack)
+            current_stack = current_stack.getNextStack()
+        all_stacks.reverse()
+
+        # Get all definitions from the whole stack chain.
         all_definitions_dict = {}  # type: Dict[str, SettingDefinition]
-        def createStackList(definition_dict, s):
-            if s is None:
-                return
-            createStackList(definition_dict, s.getNextStack())
-            definitions = s.getBottom().findDefinitions()
+        for stack in all_stacks:
+            definition_container = stack.getBottom()
+
+            definitions = definition_container.findDefinitions()
             for d in definitions:
-                definition_dict[d.key] = d
-        createStackList(all_definitions_dict, self._stack)
+                all_definitions_dict[d.key] = d
         new_definitions = list(all_definitions_dict.values())
 
         self._definition_dict = all_definitions_dict
