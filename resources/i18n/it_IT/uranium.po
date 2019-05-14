@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.0\n"
-"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2019-02-27 11:24+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-05-14 14:53+0200\n"
 "PO-Revision-Date: 2018-10-02 10:55+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Crea-3D <carmine.iacoviello@crea-3d.com>, Italian <info@bothof.nl>\n"
@@ -79,7 +79,7 @@ msgid "The version you are using does not support checking for updates."
 msgstr "La versione che stai utilizzando non supporta la verifica della disponibilità di aggiornamenti."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:57
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:187
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:188
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Avvertenza"
@@ -90,8 +90,8 @@ msgid "An error occurred while checking for updates."
 msgstr "Si è verificato un errore durante il controllo degli aggiornamenti."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:194
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:132
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:141
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Errore"
@@ -158,63 +158,63 @@ msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "Non ci sono tipi di file disponibili per la scrittura!"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:130
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Il file esiste già"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:130
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Il file <filename>{0}</filename> esiste già. Sei sicuro di volerlo sovrascrivere?"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:160
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Salvataggio su <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:160
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:161
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "Salvataggio in corso"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Autorizzazione negata quando si tenta di salvare <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:171
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:187
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:188
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Impossibile salvare <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Salvato su <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "File salvato"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:183
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Apri cartella"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:183
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Apri la cartella contenente il file"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:194
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
@@ -250,12 +250,12 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr "Modello Rotazione"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr "Disporre l’oggetto piatto sul piano di stampa..."
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr "Rotazione oggetto"
@@ -277,16 +277,19 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 "Would you like to reset to factory defaults?"
-msgstr "La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n- {profiles}\nRipristinare i valori predefiniti in fabbrica?"
+msgstr ""
+"La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n"
+"- {profiles}\n"
+"Ripristinare i valori predefiniti in fabbrica?"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:175
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "La configurazione sembra essere danneggiata."
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:173
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:177
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr "Errori di configurazione"
@@ -297,8 +300,7 @@ msgid "Reset your configuration to factory defaults."
 msgstr "Ripristinare la configurazione ai valori predefiniti in fabbrica."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:38
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:729
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:708
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -306,53 +308,57 @@ msgid "All Supported Types ({0})"
 msgstr "Tutti i tipi supportati ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:730
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:709
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Tutti i file (*)"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:182
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:221
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr "Si sono verificati alcuni errori durante la disinstallazione dei seguenti pacchetti:\n{packages}"
+msgstr ""
+"Si sono verificati alcuni errori durante la disinstallazione dei seguenti pacchetti:\n"
+"{packages}"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:223
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "Errori di disinstallazione"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:391
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:440
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr "Si è verificato un errore durante la disinstallazione del pacchetto {package} prima di installare la nuova versione:\n{error}.\nRiprovare ad effettuare l’aggiornamento più tardi."
+msgstr ""
+"Si è verificato un errore durante la disinstallazione del pacchetto {package} prima di installare la nuova versione:\n"
+"{error}.\n"
+"Riprovare ad effettuare l’aggiornamento più tardi."
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:443
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Errore di aggiornamento"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:112
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}g {1:0>2}h {2:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:114
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}h {1:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:116
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -360,8 +366,8 @@ msgid_plural "{0} days"
 msgstr[0] "{0} giorno"
 msgstr[1] "{0} giorni"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:116
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:118
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:119
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -369,9 +375,9 @@ msgid_plural "{0} hours"
 msgstr[0] "{0} ora"
 msgstr[1] "{0} ore"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:116
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:118
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:120
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:119
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:121
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -379,46 +385,50 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuto"
 msgstr[1] "{0} minuti"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:176
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Caricamento plugin in corso..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:183
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:187
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Aggiornamento configurazione in corso..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:201
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:205
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Caricamento preferenze in corso..."
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:64
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:68
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Ridimensionamento automatico dell'oggetto a {0}% della dimensione originale"
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:64
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:68
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Ridimensionamento Oggetto"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:311
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:288
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Il plugin è stato installato.\nRiavviare l'applicazione per attivare il plugin."
+msgstr ""
+"Il plugin è stato installato.\n"
+"Riavviare l'applicazione per attivare il plugin."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:414
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "Il plugin è stato rimosso.\nSi prega di riavviare {0} per completare la disinstallazione."
+msgstr ""
+"Il plugin è stato rimosso.\n"
+"Si prega di riavviare {0} per completare la disinstallazione."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
 #, python-brace-format
@@ -450,7 +460,10 @@ msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n- {profiles}\n Ripristinare i valori predefiniti in fabbrica? Il ripristino rimuove tutte le stampanti e i profili correnti."
+msgstr ""
+"La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n"
+"- {profiles}\n"
+" Ripristinare i valori predefiniti in fabbrica? Il ripristino rimuove tutte le stampanti e i profili correnti."
 
 #: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
 msgctxt "@title:window"
@@ -462,23 +475,23 @@ msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "Il ripristino rimuove tutte le stampanti e i profili correnti. Sei sicuro di voler effettuare il ripristino?"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:178
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:158
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Si desidera ricaricare {filename}?"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:179
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:159
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Il file è stato modificato"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:180
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:160
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Ricarica"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:180
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:160
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Attiva i file modificati per la ricarica dal disco."
@@ -533,68 +546,6 @@ msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Rotazione di aggancio (Snap)"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
-msgctxt "@title:tab"
-msgid "Plugins"
-msgstr "Plugin"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:28
-msgctxt "@action:button"
-msgid "Install new plugin"
-msgstr "Installa nuovo plugin"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:51
-msgctxt "@label"
-msgid "You will need to restart the application before changes in plugins have effect."
-msgstr "Riavviare l'applicazione per rendere effettive le modifiche ai plugin."
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:87
-msgctxt "@label"
-msgid "This plugin is required for the application to run."
-msgstr "Questo plugin è necessario per il funzionamento dell'applicazione."
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:104
-msgctxt "@label"
-msgid "Info..."
-msgstr "Informazioni..."
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:122
-msgctxt "@window:title"
-msgid "Install Plugin"
-msgstr "Installa plugin"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:131
-msgctxt "@title:window"
-msgid "Open file(s)"
-msgstr "Apri file"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:165
-msgctxt "@label"
-msgid "No text available"
-msgstr "Nessun testo disponibile"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
-msgctxt "@title:window"
-msgid "About %1"
-msgstr "Circa %1"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:203
-msgctxt "@label"
-msgid "Author:"
-msgstr "Autore:"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:225
-msgctxt "@label"
-msgid "Version:"
-msgstr "Versione:"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:243
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
-msgctxt "@action:button"
-msgid "Close"
-msgstr "Chiudi"
-
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
@@ -604,6 +555,11 @@ msgstr "Preferenze"
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr "Valori predefiniti"
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
+msgctxt "@action:button"
+msgid "Close"
+msgstr "Chiudi"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
 msgctxt "@title:tab"
@@ -883,6 +839,50 @@ msgctxt "name"
 msgid "Mirror Tool"
 msgstr "Strumento immagine speculare"
 
+#~ msgctxt "@title:tab"
+#~ msgid "Plugins"
+#~ msgstr "Plugin"
+
+#~ msgctxt "@action:button"
+#~ msgid "Install new plugin"
+#~ msgstr "Installa nuovo plugin"
+
+#~ msgctxt "@label"
+#~ msgid "You will need to restart the application before changes in plugins have effect."
+#~ msgstr "Riavviare l'applicazione per rendere effettive le modifiche ai plugin."
+
+#~ msgctxt "@label"
+#~ msgid "This plugin is required for the application to run."
+#~ msgstr "Questo plugin è necessario per il funzionamento dell'applicazione."
+
+#~ msgctxt "@label"
+#~ msgid "Info..."
+#~ msgstr "Informazioni..."
+
+#~ msgctxt "@window:title"
+#~ msgid "Install Plugin"
+#~ msgstr "Installa plugin"
+
+#~ msgctxt "@title:window"
+#~ msgid "Open file(s)"
+#~ msgstr "Apri file"
+
+#~ msgctxt "@label"
+#~ msgid "No text available"
+#~ msgstr "Nessun testo disponibile"
+
+#~ msgctxt "@title:window"
+#~ msgid "About %1"
+#~ msgstr "Circa %1"
+
+#~ msgctxt "@label"
+#~ msgid "Author:"
+#~ msgstr "Autore:"
+
+#~ msgctxt "@label"
+#~ msgid "Version:"
+#~ msgstr "Versione:"
+
 #~ msgctxt "@action:button"
 #~ msgid "Learn more about the new features"
 #~ msgstr "Per saperne di più sulle nuove funzionalità"
@@ -905,7 +905,6 @@ msgstr "Strumento immagine speculare"
 #~ "{error}.\n"
 #~ "Please try to upgrade again later."
 #~ msgstr ""
-
 #~ "Si è verificato un errore durante la disinstallazione del pacchetto {package} prima di installare la nuova versione:\n"
 #~ "{error}.\n"
 #~ "Riprovare ad effettuare l’aggiornamento più tardi."
@@ -916,7 +915,6 @@ msgstr "Strumento immagine speculare"
 #~ "- {profiles}\n"
 #~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 #~ msgstr ""
-
 #~ "La configurazione sembra essere danneggiata. Qualcosa sembra non funzionare con i seguenti profili:\n"
 #~ "- {profiles}\n"
 #~ "Ripristinare i valori predefiniti in fabbrica? Il ripristino rimuove tutte le stampanti e i profili correnti."
@@ -930,7 +928,6 @@ msgstr "Strumento immagine speculare"
 #~ "Failed to install plugin from <filename>{0}</filename>:\n"
 #~ "<message>{1}</message>"
 #~ msgstr ""
-
 #~ "Installazione plugin da <filename>{0}</filename>:\n"
 #~ "<message>{1} non riuscita</message>"
 
@@ -939,7 +936,6 @@ msgstr "Strumento immagine speculare"
 #~ "Failed to install the plugin;\n"
 #~ "<message>{0}</message>"
 #~ msgstr ""
-
 #~ "Installazione del plugin non riuscita;\n"
 #~ "<message>{0}</message>"
 
@@ -1208,7 +1204,6 @@ msgstr "Strumento immagine speculare"
 #~ "The plugin has been installed.\n"
 #~ " Please re-start the application to active the plugin."
 #~ msgstr ""
-
 #~ "Il plugin è stato installato.\n"
 #~ " Riavviare l'applicazione per attivare il plugin."
 

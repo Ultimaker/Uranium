@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.0\n"
-"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2019-02-27 11:24+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-05-14 14:53+0200\n"
 "PO-Revision-Date: 2019-03-14 14:54+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Brule <jason@brule.co.jp>, Japanese <info@bothof.nl>\n"
@@ -80,7 +80,7 @@ msgid "The version you are using does not support checking for updates."
 msgstr "ご使用のバージョンはアップデート更新通知をサポートしていません。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:57
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:187
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:188
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "警告"
@@ -91,8 +91,8 @@ msgid "An error occurred while checking for updates."
 msgstr "アップデート確認中にエラーが起こりました。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:194
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:132
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:141
 msgctxt "@info:title"
 msgid "Error"
 msgstr "エラー"
@@ -159,63 +159,63 @@ msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "書き出すために利用可能なファイルがありません！"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:130
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "すでに存在するファイルです"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:130
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:160
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "<filename>{0}</filename>に保存する"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:160
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:161
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "保存中"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "<filename>{0}</filename>保存中に却下されました"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:171
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:187
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:188
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "<filename>{0}</filename>に保存しました"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "ファイル保存"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:183
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "フォルダーを開く"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:183
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "ファイルが入ったフォルダーを開く"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:194
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
@@ -251,12 +251,12 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr "モデルを回転させる"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr "オブジェクトをビルドプレート上に平に並べる…"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr "オブジェクト回転"
@@ -284,13 +284,13 @@ msgstr ""
 "工場出荷状態にリセットしますか？"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:175
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "構成が破損している可能性があります。"
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:173
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:177
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr "構成エラー"
@@ -301,8 +301,7 @@ msgid "Reset your configuration to factory defaults."
 msgstr "構成を工場出荷状態にリセットします。"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:38
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:729
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:708
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -310,14 +309,13 @@ msgid "All Supported Types ({0})"
 msgstr "すべてのサポートのタイプ ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:730
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:709
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "全てのファイル"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:182
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:221
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -327,12 +325,12 @@ msgstr ""
 "次のパッケージのアンインストールでエラーが発生しました:\n"
 "{packages}"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:223
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "アンインストールエラー"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:391
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:440
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -344,25 +342,25 @@ msgstr ""
 "{error}.\n"
 "後からアップグレードをやり直してください。"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:443
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "アップデートエラー"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:112
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}日 {1:0>2}時間 {2:0>2}分"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:114
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}時間 {1:0>2}分"
 
 # can’t add japanese text
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:116
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -370,8 +368,8 @@ msgid_plural "{0} days"
 msgstr[0] "{0}日"
 
 # can’t add japanese texts
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:116
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:118
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:119
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -379,42 +377,42 @@ msgid_plural "{0} hours"
 msgstr[0] "{0}時間"
 
 # can’t add japanese text
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:116
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:118
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:120
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:119
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:121
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0}分"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:176
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "プラグインをロードする…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:183
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:187
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "コンフィグレーションをアップデートする…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:201
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:205
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "プレファレンスをロード中…"
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:64
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:68
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "自動的に造形物をオリジナルサイズの {0}%にスケールする。"
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:64
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:68
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "造形物をスケールする"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:311
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:288
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -423,7 +421,7 @@ msgstr ""
 "プラグインがインストールされました。\n"
 "アプリケーションを再起動して、プラグインをアクティベートしてください。"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:414
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -478,23 +476,23 @@ msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "リセットすると、現在のプリンターおよびプロファイルがすべて削除されます。本当にリセットしてよろしいですか？"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:178
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:158
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "{filename}を再ロードしますか？"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:179
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:159
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "ファイルが変更されました"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:180
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:160
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "再ロード"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:180
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:160
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "これにより変更したファイルをディスクから再ロードします。"
@@ -549,68 +547,6 @@ msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "スナップローテーション"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
-msgctxt "@title:tab"
-msgid "Plugins"
-msgstr "プラグイン"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:28
-msgctxt "@action:button"
-msgid "Install new plugin"
-msgstr "新しいプラグインをインストールする"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:51
-msgctxt "@label"
-msgid "You will need to restart the application before changes in plugins have effect."
-msgstr "プラグインへの変更を有効にするためにアプリケーション再起動する必要があります。"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:87
-msgctxt "@label"
-msgid "This plugin is required for the application to run."
-msgstr "アプリケーションを稼働させるためにプラグインが必要です。"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:104
-msgctxt "@label"
-msgid "Info..."
-msgstr "インフォメーション…"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:122
-msgctxt "@window:title"
-msgid "Install Plugin"
-msgstr "プラグインをインストール"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:131
-msgctxt "@title:window"
-msgid "Open file(s)"
-msgstr "ファイルを開く"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:165
-msgctxt "@label"
-msgid "No text available"
-msgstr "利用可能なテキストがありません"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
-msgctxt "@title:window"
-msgid "About %1"
-msgstr "アバウト%1"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:203
-msgctxt "@label"
-msgid "Author:"
-msgstr "著者:"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:225
-msgctxt "@label"
-msgid "Version:"
-msgstr "バージョン:"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:243
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
-msgctxt "@action:button"
-msgid "Close"
-msgstr "閉める"
-
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
@@ -620,6 +556,11 @@ msgstr "プレファレンス"
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr "デフォルト"
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
+msgctxt "@action:button"
+msgid "Close"
+msgstr "閉める"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
 msgctxt "@title:tab"
@@ -898,6 +839,50 @@ msgstr "ミラーツールを供給する。"
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "ミラーツール"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Plugins"
+#~ msgstr "プラグイン"
+
+#~ msgctxt "@action:button"
+#~ msgid "Install new plugin"
+#~ msgstr "新しいプラグインをインストールする"
+
+#~ msgctxt "@label"
+#~ msgid "You will need to restart the application before changes in plugins have effect."
+#~ msgstr "プラグインへの変更を有効にするためにアプリケーション再起動する必要があります。"
+
+#~ msgctxt "@label"
+#~ msgid "This plugin is required for the application to run."
+#~ msgstr "アプリケーションを稼働させるためにプラグインが必要です。"
+
+#~ msgctxt "@label"
+#~ msgid "Info..."
+#~ msgstr "インフォメーション…"
+
+#~ msgctxt "@window:title"
+#~ msgid "Install Plugin"
+#~ msgstr "プラグインをインストール"
+
+#~ msgctxt "@title:window"
+#~ msgid "Open file(s)"
+#~ msgstr "ファイルを開く"
+
+#~ msgctxt "@label"
+#~ msgid "No text available"
+#~ msgstr "利用可能なテキストがありません"
+
+#~ msgctxt "@title:window"
+#~ msgid "About %1"
+#~ msgstr "アバウト%1"
+
+#~ msgctxt "@label"
+#~ msgid "Author:"
+#~ msgstr "著者:"
+
+#~ msgctxt "@label"
+#~ msgid "Version:"
+#~ msgstr "バージョン:"
 
 #~ msgctxt "@action:button"
 #~ msgid "Learn more about the new features"
