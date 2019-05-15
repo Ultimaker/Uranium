@@ -245,6 +245,10 @@ class SettingPropertyProvider(QObject):
             return None
         return value
 
+    @pyqtSlot(str, result = str)
+    def getPropertyValueAsString(self, property_name: str) -> str:
+        return self._getPropertyValue(property_name)
+
     @pyqtSlot(int)
     def removeFromContainer(self, index: int) -> None:
         current_stack = self._stack
