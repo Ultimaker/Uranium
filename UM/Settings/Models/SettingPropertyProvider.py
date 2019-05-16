@@ -357,7 +357,12 @@ class SettingPropertyProvider(QObject):
         self.isValueUsedChanged.emit()
 
     def _updateDelayed(self, container = None):
-        self._update_timer.start()
+        try:
+            self._update_timer.start()
+        except RuntimeError:
+            # Sometimes the python object is not yet deleted, but the wrapped part is already gone.
+            # In that case there is nothing else to do but ignore this.
+            pass
 
     def _containersChanged(self, container = None):
         self._updateDelayed(container = container)
