@@ -1,11 +1,13 @@
 [shaders]
 vertex =
-    uniform highp mat4 u_modelViewProjectionMatrix;
+    uniform highp mat4 u_modelMatrix;
+    uniform highp mat4 u_viewMatrix;
+    uniform highp mat4 u_projectionMatrix;
 
     attribute highp vec4 a_vertex; //Vertex coordinate.
     void main()
     {
-        gl_Position = u_modelViewProjectionMatrix * a_vertex; //Transform the vertex coordinates with the model view projection.
+        gl_Position = u_projectionMatrix * u_viewMatrix * u_modelMatrix * a_vertex; //Transform the vertex coordinates with the model view projection.
     }
 
 fragment =
@@ -18,12 +20,14 @@ fragment =
 
 vertex41core =
     #version 410
-    uniform highp mat4 u_modelViewProjectionMatrix;
+    uniform highp mat4 u_modelMatrix;
+    uniform highp mat4 u_viewMatrix;
+    uniform highp mat4 u_projectionMatrix;
 
     in highp vec4 a_vertex; //Vertex coordinate.
     void main()
     {
-        gl_Position = u_modelViewProjectionMatrix * a_vertex; //Transform the vertex coordinates with the model view projection.
+        gl_Position = u_projectionMatrix * u_viewMatrix * u_modelMatrix * a_vertex; //Transform the vertex coordinates with the model view projection.
     }
 
 fragment41core =
@@ -44,7 +48,9 @@ u_color = [0.5, 0.5, 0.5, 1.0]
 u_z_bias = 0.0
 
 [bindings]
-u_modelViewProjectionMatrix = model_view_projection_matrix
+u_modelMatrix = model_matrix
+u_viewMatrix = view_matrix
+u_projectionMatrix = projection_matrix
 
 [attributes]
 a_vertex = vertex
