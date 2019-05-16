@@ -555,9 +555,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def _instantiateCachedValues(self) -> None:
         if not self._cached_values:
             return
-
+        definition = self.getDefinition()
         for key, value in self._cached_values.items():
-            self.setProperty(key, "value", value, self.getDefinition(), set_from_cache=True)
+            self.setProperty(key, "value", value, definition, set_from_cache=True)
 
         self._cached_values = None
 

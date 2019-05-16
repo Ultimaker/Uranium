@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
+import warnings
 
 warn = True
 
@@ -12,7 +13,7 @@ def pytest_ignore_collect(path, config):
     else:
         global warn
         if warn:
-            config.warn("", "Skipping benchmarks because pytest-benchmark plugin was not found.", "tests/benchmarks/conftest.py")
+            warnings.warn(pytest.PytestWarning("Skipping benchmarks because pytest-benchmark plugin was not found."))
             warn = False
 
         return True

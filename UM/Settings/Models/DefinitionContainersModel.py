@@ -98,7 +98,7 @@ class DefinitionContainersModel(ListModel):
             result.append(section_value)
 
         result.append(int(item.get("weight", 0)))
-        result.append(item["name"])
+        result.append(item["name"].lower())
 
         return result
 
