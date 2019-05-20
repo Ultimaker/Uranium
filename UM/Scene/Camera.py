@@ -41,7 +41,7 @@ class Camera(SceneNode.SceneNode):
         self.setCalculateBoundingBox(False)
 
         from UM.Application import Application
-        Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE)
+        Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE.value)
         Application.getInstance().getPreferences().preferenceChanged.connect(self._preferencesChanged)
         self._preferencesChanged("general/camera_perspective_mode")
 
@@ -176,10 +176,10 @@ class Camera(SceneNode.SceneNode):
         new_mode = str(Application.getInstance().getPreferences().getValue("general/camera_perspective_mode"))
 
         # Translate the selected mode to the camera state.
-        if new_mode == str(self.PerspectiveMode.ORTHOGONAL):
+        if new_mode == str(self.PerspectiveMode.ORTHOGONAL.value):
             Logger.log("d", "Changing perspective mode to orthogonal.")
             self.setPerspective(False)
-        elif new_mode == str(self.PerspectiveMode.PERSPECTIVE):
+        elif new_mode == str(self.PerspectiveMode.PERSPECTIVE.value):
             Logger.log("d", "Changing perspective mode to perspective.")
             self.setPerspective(True)
         else:
