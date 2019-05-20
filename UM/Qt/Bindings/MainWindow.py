@@ -244,13 +244,20 @@ class MainWindow(QQuickWindow):
 
             if camera.getAutoAdjustViewPort():
                 camera.setViewportSize(view_width, view_height)
-                projection_matrix = Matrix()
-                if camera.isPerspective():
-                    if view_width is not 0:
-                        projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
-                else:
-                    projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -500, 500)
-                camera.setProjectionMatrix(projection_matrix)
+
+        self._updatePerspective()
 
         self._app.getRenderer().setViewportSize(view_width, view_height)
         self._app.getRenderer().setWindowSize(width, height)
+
+    def _updatePerspective(self):
+        for camera in self._app.getController().getScene().getAllCameras():
+            view_width = camera.getViewportWidth()
+            view_height = camera.getViewportHeight()
+            projection_matrix = Matrix()
+            if camera.isPerspective():
+                if view_width != 0 and view_height != 0:
+                    projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
+            else:
+                projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -500, 500)
+            camera.setProjectionMatrix(projection_matrix)
