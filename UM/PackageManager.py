@@ -466,7 +466,10 @@ class PackageManager(QObject):
 
     def __installPackageFiles(self, package_id: str, src_dir: str, dst_dir: str) -> None:
         Logger.log("i", "Moving package {package_id} from {src_dir} to {dst_dir}".format(package_id=package_id, src_dir=src_dir, dst_dir=dst_dir))
-        shutil.move(src_dir, dst_dir)
+        try:
+            shutil.move(src_dir, dst_dir)
+        except FileExistsError:
+            Logger.log("w", "Not moving %s to %s as the destination already exists", src_dir, dst_dir)
 
     # Gets package information from the given file.
     def getPackageInfo(self, filename: str) -> Dict[str, Any]:
