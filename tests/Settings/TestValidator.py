@@ -80,15 +80,19 @@ test_validate_data = [
     ({"description": "Maximum < Minimum",    "minimum": 15,   "maximum": 10,           "min_warning": 1,            "max_warning": 9,    "current": 13,           "answer": ValidatorState.Exception}),
     # Mixed values
     ({"description": "Completely valid",     "minimum": 0,    "maximum": 10.0,         "min_warning": 1.0,          "max_warning": 9,    "current": 5.0,          "answer": ValidatorState.Valid}),
+    ({"description": "Empty string valid",        "allow_empty": True,   "current": "",   "answer": ValidatorState.Valid}),
+    ({"description": "Empty string is invalid",   "allow_empty": False,  "current": "",   "answer": ValidatorState.Invalid}),
 ]
 
 @pytest.mark.parametrize("data", test_validate_data)
 def test_validate(data):
     setting_instance = MockSettingInstance(data["current"])
-    setting_instance.minimum_value = data["minimum"]
-    setting_instance.maximum_value = data["maximum"]
-    setting_instance.minimum_value_warning = data["min_warning"]
-    setting_instance.maximum_value_warning = data["max_warning"]
+
+    setting_instance.minimum_value = data.get("minimum")
+    setting_instance.maximum_value = data.get("maximum")
+    setting_instance.minimum_value_warning = data.get("min_warning")
+    setting_instance.maximum_value_warning = data.get("max_warning")
+    setting_instance.allow_empty = data.get("allow_empty")
 
     validator = Validator("test")
     validation_state = validator(setting_instance) #Execute the test.

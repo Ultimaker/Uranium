@@ -677,7 +677,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                 if validator_type:
                     validator = validator_type(key)
                     validation_state = validator(self)
-            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError, ValidatorState.MinimumError):
+            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError, ValidatorState.MinimumError, ValidatorState.Invalid):
                 return True
         return False
 
@@ -696,7 +696,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                 if validator_type:
                     validator = validator_type(key)
                     validation_state = validator(self)
-            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError, ValidatorState.MinimumError):
+            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError, ValidatorState.MinimumError, ValidatorState.Invalid):
                 error_keys.append(key)
         return error_keys
 

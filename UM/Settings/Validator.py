@@ -15,6 +15,7 @@ class ValidatorState(Enum):
     Exception = "Exception"
     Unknown = "Unknown"
     Valid = "Valid"
+    Invalid = "Invalid"
     MinimumError = "MinimumError"
     MinimumWarning = "MinimumWarning"
     MaximumError = "MaximumError"
@@ -44,6 +45,7 @@ class Validator(SettingFunction.SettingFunction):
 
         state = ValidatorState.Unknown
         try:
+            allow_empty = value_provider.getProperty(self._key, "allow_empty")  # For string only
             minimum = value_provider.getProperty(self._key, "minimum_value")
             maximum = value_provider.getProperty(self._key, "maximum_value")
             minimum_warning = value_provider.getProperty(self._key, "minimum_value_warning")
@@ -59,7 +61,11 @@ class Validator(SettingFunction.SettingFunction):
             if value is None or value != value:
                 raise ValueError("Cannot validate None, NaN or similar values in setting {0}, actual value: {1}".format(self._key, value))
 
-            if minimum is not None and value < minimum:
+            # "allow_empty is not None" is not necessary here because of "allow_empty is False", but it states
+            # explicitly that we should not do this check when "allow_empty is None".
+            if allow_empty is not None and allow_empty is False and str(value) == "":
+                state = ValidatorState.Invalid
+            elif minimum is not None and value < minimum:
                 state = ValidatorState.MinimumError
             elif maximum is not None and value > maximum:
                 state = ValidatorState.MaximumError
