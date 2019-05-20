@@ -3,14 +3,16 @@
 
 from . import SceneNode
 
+from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
 from UM.Math.Ray import Ray
 from UM.Math.Vector import Vector
 
-import copy
+import enum
 import numpy
 import numpy.linalg
 from typing import cast, Dict, Optional, Tuple, TYPE_CHECKING
+from UM.Signal import Signal
 
 if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
@@ -21,6 +23,10 @@ if TYPE_CHECKING:
 #   The camera provides a projection matrix and its transformation matrix
 #   can be used as view matrix.
 class Camera(SceneNode.SceneNode):
+    class PerspectiveMode(enum.Enum):
+        PERSPECTIVE = "perspective"
+        ORTHOGONAL = "orthogonal"
+
     def __init__(self, name: str = "", parent: SceneNode.SceneNode = None) -> None:
         super().__init__(parent)
         self._name = name  # type: str
@@ -33,7 +39,13 @@ class Camera(SceneNode.SceneNode):
         self._window_height = 0  # type: int
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
-        self._cached_view_projection_matrix = None # type: Optional[Matrix]
+
+        from UM.Application import Application
+        Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE)
+        Application.getInstance().getPreferences().preferenceChanged.connect(self._preferencesChanged)
+        self._preferencesChanged("general/camera_perspective_mode")
+
+        self._cached_view_projection_matrix = None  # type: Optional[Matrix]
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "Camera":
         copy = cast(Camera, super().__deepcopy__(memo))
@@ -105,7 +117,11 @@ class Camera(SceneNode.SceneNode):
         return self._perspective
 
     def setPerspective(self, perspective: bool) -> None:
-        self._perspective = perspective
+        if self._perspective != perspective:
+            self._perspective = perspective
+            self.perspectiveChanged.emit()
+
+    perspectiveChanged = Signal()
 
     ##  Get a ray from the camera into the world.
     #
@@ -151,3 +167,20 @@ class Camera(SceneNode.SceneNode):
         position = position.preMultiply(view)
         position = position.preMultiply(projection)
         return position.x / position.z / 2.0, position.y / position.z / 2.0
+
+    ##  Updates the _perspective field if the preference was modified.
+    def _preferencesChanged(self, key):
+        if key != "general/camera_perspective_mode": #Only listen to camera_perspective_mode.
+            return
+        from UM.Application import Application
+        new_mode = str(Application.getInstance().getPreferences().getValue("general/camera_perspective_mode"))
+
+        # Translate the selected mode to the camera state.
+        if new_mode == str(self.PerspectiveMode.ORTHOGONAL):
+            Logger.log("d", "Changing perspective mode to orthogonal.")
+            self.setPerspective(False)
+        elif new_mode == str(self.PerspectiveMode.PERSPECTIVE):
+            Logger.log("d", "Changing perspective mode to perspective.")
+            self.setPerspective(True)
+        else:
+            Logger.log("w", "Unknown perspective mode {new_mode}".format(new_mode = new_mode))

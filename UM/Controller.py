@@ -377,12 +377,10 @@ class Controller:
         self._camera_tool.setOrigin(Vector(0, 100, 0)) #type: ignore
         if coordinate == "home":
             camera.setPosition(Vector(0, 0, 700))
-            camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
             self._camera_tool.rotateCam(0, 0) #type: ignore
         elif coordinate == "3d":
             camera.setPosition(Vector(-750, 600, 700))
-            camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
             self._camera_tool.rotateCam(0, 0) #type: ignore
 
@@ -390,7 +388,6 @@ class Controller:
             # for comparison is == used, because might not store them at the same location
             # https://stackoverflow.com/questions/1504717/why-does-comparing-strings-in-python-using-either-or-is-sometimes-produce
             camera.setPosition(Vector(0, 0, 700))
-            camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 0))
 
             if coordinate == "x":

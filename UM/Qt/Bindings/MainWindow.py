@@ -10,7 +10,7 @@ from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
 from UM.Signal import Signal, signalemitter
-
+from UM.Scene.Camera import Camera
 from typing import Optional
 
 
@@ -69,6 +69,7 @@ class MainWindow(QQuickWindow):
         self._mouse_pressed = False
 
         self._viewport_rect = QRectF(0, 0, 1.0, 1.0)
+        Camera.perspectiveChanged.connect(self._updatePerspective)
 
         self.closing.connect(self.preClosing)
 
