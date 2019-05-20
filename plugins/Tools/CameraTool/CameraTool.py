@@ -70,12 +70,14 @@ class CameraTool(Tool):
         camera = self._scene.getActiveCamera()
         if camera is None:
             return
-        distance = (camera.getWorldPosition() - self._origin).length()
-        direction = (camera.getWorldPosition() - self._origin).normalized()
-        if distance < self._min_zoom:
-            camera.setPosition(self._origin + direction * self._min_zoom)
-        if distance > self._max_zoom:
-            camera.setPosition(self._origin + direction * self._max_zoom)
+
+        if camera.isPerspective():
+            distance = (camera.getWorldPosition() - self._origin).length()
+            direction = (camera.getWorldPosition() - self._origin).normalized()
+            if distance < self._min_zoom:
+                camera.setPosition(self._origin + direction * self._min_zoom)
+            if distance > self._max_zoom:
+                camera.setPosition(self._origin + direction * self._max_zoom)
 
     ##  Set the point around which the camera rotates
     #
@@ -255,36 +257,59 @@ class CameraTool(Tool):
         self.clipToZoom()
 
         self._scene.getSceneLock().acquire()
+        if camera.isPerspective():
+            r = (camera.getWorldPosition() - self._origin).length()
+            delta = r * (zoom_range / 128 / 10.0)
+            r -= delta
 
-        r = (camera.getWorldPosition() - self._origin).length()
-        delta = r * (zoom_range / 128 / 10.0)
-        r -= delta
+            if self._invert_zoom:
+                delta *= -1
 
-        if self._invert_zoom:
-            delta *= -1
+            move_vector = Vector(0.0, 0.0, 1.0)
 
-        move_vector = Vector(0.0, 0.0, 1.0)
+            if event is not None and self._zoom_to_mouse:
+                viewport_center_x = QtApplication.getInstance().getRenderer().getViewportWidth() / 2
+                viewport_center_y = QtApplication.getInstance().getRenderer().getViewportHeight() / 2
+                main_window = cast(MainWindow, QtApplication.getInstance().getMainWindow())
+                mouse_diff_center_x = viewport_center_x - main_window.mouseX
+                mouse_diff_center_y = viewport_center_y - main_window.mouseY
 
-        if event is not None and self._zoom_to_mouse:
-            viewport_center_x = QtApplication.getInstance().getRenderer().getViewportWidth() / 2
-            viewport_center_y = QtApplication.getInstance().getRenderer().getViewportHeight() / 2
-            main_window = cast(MainWindow, QtApplication.getInstance().getMainWindow())
-            mouse_diff_center_x = viewport_center_x - main_window.mouseX
-            mouse_diff_center_y = viewport_center_y - main_window.mouseY
+                x_component = mouse_diff_center_x / QtApplication.getInstance().getRenderer().getViewportWidth()
+                y_component = mouse_diff_center_y / QtApplication.getInstance().getRenderer().getViewportHeight()
 
-            x_component = mouse_diff_center_x / QtApplication.getInstance().getRenderer().getViewportWidth()
-            y_component = mouse_diff_center_y / QtApplication.getInstance().getRenderer().getViewportHeight()
+                move_vector = Vector(x_component, -y_component, 1)
+                move_vector = move_vector.normalized()
 
-            move_vector = Vector(x_component, -y_component, 1)
-            move_vector = move_vector.normalized()
+            move_vector = -delta * move_vector
+            if delta != 0:
+                if self._min_zoom < r < self._max_zoom:
+                    camera.translate(move_vector)
+                    if self._zoom_to_mouse:
+                        # Set the origin of the camera to the new distance, right in front of the new camera position.
+                        self._origin = (r * Vector(0.0, 0.0, -1.0)).preMultiply(camera.getWorldTransformation())
+        else:
+            amount_of_zoom = zoom_range / 128 / 10.0 * -1
+            new_zoom_factor = camera.getZoomFactor() + amount_of_zoom
 
-        move_vector = -delta * move_vector
-        if delta != 0:
-            if self._min_zoom < r < self._max_zoom:
-                camera.translate(move_vector)
-                if self._zoom_to_mouse:
-                    # Set the origin of the camera to the new distance, right in front of the new camera position.
-                    self._origin = (r * Vector(0.0, 0.0, -1.0)).preMultiply(camera.getWorldTransformation())
+            if new_zoom_factor > 1:
+                camera.setZoomFactor(1)
+            elif new_zoom_factor < -0.45:
+                camera.setZoomFactor(-0.45)
+            else:
+                camera.setZoomFactor(new_zoom_factor)
+
+            zoom_factor = camera.getZoomFactor()
+
+            view_width = camera.getViewportWidth()
+            view_height = camera.getViewportHeight()
+
+            horizontal_zoom = view_width * zoom_factor
+            vertical_zoom = view_height * zoom_factor
+            projection_matrix = Matrix()
+            projection_matrix.setOrtho(-view_width / 2 - horizontal_zoom, view_width / 2 + horizontal_zoom,
+                                       -view_height / 2 - vertical_zoom, view_height / 2 + vertical_zoom, -9999999, 9999999)
+            camera.setProjectionMatrix(projection_matrix)
+
         self._scene.getSceneLock().release()
 
     ##  Rotate the camera in response to a mouse event.

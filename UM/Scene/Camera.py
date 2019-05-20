@@ -40,8 +40,10 @@ class Camera(SceneNode.SceneNode):
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
 
+        self._zoom_factor = 0.0
+
         from UM.Application import Application
-        Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE.value)
+        Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.ORTHOGONAL.value)
         Application.getInstance().getPreferences().preferenceChanged.connect(self._preferencesChanged)
         self._preferencesChanged("general/camera_perspective_mode")
 
@@ -55,6 +57,12 @@ class Camera(SceneNode.SceneNode):
         copy._viewport_height = self._viewport_height
         copy._viewport_width = self._viewport_width
         return copy
+
+    def getZoomFactor(self):
+        return self._zoom_factor
+
+    def setZoomFactor(self, zoom_factor):
+        self._zoom_factor = zoom_factor
 
     def setMeshData(self, mesh_data: Optional["MeshData"]) -> None:
         assert mesh_data is None, "Camera's can't have mesh data"
@@ -112,6 +120,7 @@ class Camera(SceneNode.SceneNode):
     def setProjectionMatrix(self, matrix: Matrix) -> None:
         self._projection_matrix = matrix
         self._cached_view_projection_matrix = None
+        self.transformationChanged.emit(self)  # TODO: HACK Need to find a better solution!
 
     def isPerspective(self) -> bool:
         return self._perspective
