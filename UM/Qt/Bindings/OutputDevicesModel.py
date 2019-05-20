@@ -61,7 +61,11 @@ class OutputDevicesModel(ListModel):
         return self.count
 
     def _update(self):
-        self.beginResetModel()
+        try:
+            self.beginResetModel()
+        except RuntimeError:
+            # Don't break if the object was garbage collected.
+            return
 
         self._items.clear()
         devices = self._device_manager.getOutputDevices()
