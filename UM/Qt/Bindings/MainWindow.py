@@ -259,5 +259,6 @@ class MainWindow(QQuickWindow):
                 if view_width != 0 and view_height != 0:
                     projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
             else:
-                projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -500, 500)
+                # Almost no near/far plane, please.
+                projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -9999999, 9999999)
             camera.setProjectionMatrix(projection_matrix)
