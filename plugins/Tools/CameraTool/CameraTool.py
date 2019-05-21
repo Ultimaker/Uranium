@@ -288,8 +288,8 @@ class CameraTool(Tool):
                         # Set the origin of the camera to the new distance, right in front of the new camera position.
                         self._origin = (r * Vector(0.0, 0.0, -1.0)).preMultiply(camera.getWorldTransformation())
         else:
-            amount_of_zoom = zoom_range / 128 / 10.0 * -1
-            new_zoom_factor = camera.getZoomFactor() + amount_of_zoom
+            amount_of_zoom = zoom_range / 1280 / 10.0
+            new_zoom_factor = camera.getZoomFactor() - amount_of_zoom
 
             if new_zoom_factor > 1:
                 camera.setZoomFactor(1)
