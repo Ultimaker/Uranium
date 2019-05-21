@@ -66,6 +66,7 @@ UM.Dialog
     rightButtons: [
         Button
         {
+            id: cancelButton
             text: catalog.i18nc("@action:button","Cancel")
             onClicked: base.reject()
         },

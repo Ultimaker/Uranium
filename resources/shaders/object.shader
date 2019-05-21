@@ -1,7 +1,9 @@
 [shaders]
 vertex =
     uniform highp mat4 u_modelMatrix;
-    uniform highp mat4 u_viewProjectionMatrix;
+    uniform highp mat4 u_viewMatrix;
+    uniform highp mat4 u_projectionMatrix;
+
     uniform highp mat4 u_normalMatrix;
 
     attribute highp vec4 a_vertex;
@@ -14,7 +16,7 @@ vertex =
     void main()
     {
         vec4 world_space_vert = u_modelMatrix * a_vertex;
-        gl_Position = u_viewProjectionMatrix * world_space_vert;
+        gl_Position = u_projectionMatrix * u_viewMatrix * world_space_vert;
 
         v_vertex = world_space_vert.xyz;
         v_normal = (u_normalMatrix * normalize(a_normal)).xyz;
@@ -59,7 +61,9 @@ fragment =
 vertex41core =
     #version 410
     uniform highp mat4 u_modelMatrix;
-    uniform highp mat4 u_viewProjectionMatrix;
+    uniform highp mat4 u_viewMatrix;
+    uniform highp mat4 u_projectionMatrix;
+
     uniform highp mat4 u_normalMatrix;
 
     attribute highp vec4 a_vertex;
@@ -72,7 +76,7 @@ vertex41core =
     void main()
     {
         vec4 world_space_vert = u_modelMatrix * a_vertex;
-        gl_Position = u_viewProjectionMatrix * world_space_vert;
+        gl_Position = u_projectionMatrix * u_viewMatrix * world_space_vert;
 
         v_vertex = world_space_vert.xyz;
         v_normal = (u_normalMatrix * normalize(a_normal)).xyz;
@@ -123,7 +127,8 @@ u_shininess = 20.0
 
 [bindings]
 u_modelMatrix = model_matrix
-u_viewProjectionMatrix = view_projection_matrix
+u_viewMatrix = view_matrix
+u_projectionMatrix = projection_matrix
 u_normalMatrix = normal_matrix
 u_viewPosition = view_position
 u_lightPosition = light_0_position

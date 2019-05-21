@@ -412,12 +412,8 @@ class SettingDefinition:
     #
     #   \return A list of all the names of supported properties.
     @classmethod
-    def getPropertyNames(cls, type: DefinitionPropertyType = None) -> List[str]:
-        result = []
-        for key, value in cls.__property_definitions.items():
-            if not type or value["type"] == type:
-                result.append(key)
-        return result
+    def getPropertyNames(cls, def_type: DefinitionPropertyType = None) -> List[str]:
+        return [key for key, value in cls.__property_definitions.items() if not def_type or value["type"] == def_type]
 
     ##  Check if a property with the specified name is defined as a supported property.
     #

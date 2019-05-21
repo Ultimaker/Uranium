@@ -1,15 +1,20 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import List, Dict, Union, Optional
 
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
 
 from UM.Math.Vector import Vector
+from UM.Mesh.MeshData import MeshData
+from UM.Scene.Camera import Camera
 
 from UM.View.GL.OpenGL import OpenGL
 from UM.View.GL.OpenGLContext import OpenGLContext
 
 from PyQt5.QtGui import QOpenGLVertexArrayObject
+
+from UM.View.GL.ShaderProgram import ShaderProgram
 
 vertexBufferProperty = "__gl_vertex_buffer"
 indexBufferProperty = "__gl_index_buffer"
@@ -28,7 +33,7 @@ indexBufferProperty = "__gl_index_buffer"
 #   RenderBatch-changes. Whenever (sets of) RenderBatches are managed throughout
 #   the lifetime of a session, crossing multiple frames, the usage of VAO's can
 #   improve performance by reusing them.
-class RenderBatch():
+class RenderBatch:
     ##  The type of render batch.
     #
     #   This determines some basic state values, like blending on/off and additionally
@@ -39,6 +44,7 @@ class RenderBatch():
         Transparent = 2 ## Depth testing is enabled, depth writing is disabled.
         Overlay = 3 ## Depth testing is disabled.
 
+
     ##  The mode to render objects in. These correspond to OpenGL render modes.
     class RenderMode:
         Points = 0x0000
@@ -48,6 +54,7 @@ class RenderBatch():
         Triangles = 0x0004
         TriangleStrip = 0x0005
         TriangleFan = 0x0006
+
 
     ##  Blending mode.
     class BlendMode:
@@ -70,23 +77,22 @@ class RenderBatch():
     #                                         This can be used to do additional alterations to the state that can not be done otherwise.
     #                                         The callback is passed the OpenGL bindings object as first and only parameter.
     #                 - state_teardown_callback: A callback similar to state_setup_callback, but called after everything was rendered, to handle cleaning up state changes made in state_setup_callback.
-    def __init__(self, shader, **kwargs):
+    def __init__(self, shader: ShaderProgram, **kwargs) -> None:
         self._shader = shader
-        self._render_type = kwargs.get("type", self.RenderType.Solid)
-        self._render_mode = kwargs.get("mode", self.RenderMode.Triangles)
-        self._backface_cull = kwargs.get("backface_cull", False)
+        self._render_type = kwargs.get("type", self.RenderType.Solid)  # type: int
+        self._render_mode = kwargs.get("mode", self.RenderMode.Triangles)  # type: int
+        self._backface_cull = kwargs.get("backface_cull", False)  # type: bool
         self._render_range = kwargs.get("range", None)
-        self._sort_weight = kwargs.get("sort", 0)
+        self._sort_weight = kwargs.get("sort", 0)  # type: int
         self._blend_mode = kwargs.get("blend_mode", None)
         if not self._blend_mode:
             self._blend_mode = self.BlendMode.NoBlending if self._render_type == self.RenderType.Solid else self.BlendMode.Normal
         self._state_setup_callback = kwargs.get("state_setup_callback", None)
         self._state_teardown_callback = kwargs.get("state_teardown_callback", None)
-        self._items = []
+        self._items = []  # type: List[Dict[str, Union[MeshData, Matrix, Dict]]]
 
-        self._view_matrix = None
-        self._projection_matrix = None
-        self._view_projection_matrix = None
+        self._view_matrix = None  # type: Optional[Matrix]
+        self._projection_matrix = None  # type: Optional[Matrix]
 
         self._gl = OpenGL.getInstance().getBindingsObject()
 
@@ -146,7 +152,7 @@ class RenderBatch():
     #   \param mesh The mesh to render with the transform matrix.
     #   \param uniforms A dict of additional uniform bindings to set when rendering the item.
     #                   Note these are set specifically for this item.
-    def addItem(self, transformation, mesh, uniforms = None):
+    def addItem(self, transformation: Optional[Matrix], mesh: Optional[MeshData], uniforms = None):
         if not transformation:
             Logger.log("w", "Tried to add an item to batch without transformation")
             return
@@ -159,7 +165,7 @@ class RenderBatch():
     ##  Render the batch.
     #
     #   \param camera The camera to render from.
-    def render(self, camera):
+    def render(self, camera: Optional[Camera]):
         if camera is None:
             Logger.log("e", "Unable to render batch without a camera.")
             return
@@ -195,12 +201,10 @@ class RenderBatch():
         self._view_matrix = camera.getWorldTransformation()
         self._view_matrix.invert()
         self._projection_matrix = camera.getProjectionMatrix()
-        self._view_projection_matrix = camera.getViewProjectionMatrix()
 
         self._shader.updateBindings(
             view_matrix = self._view_matrix,
             projection_matrix = self._projection_matrix,
-            view_projection_matrix = self._view_projection_matrix,
             view_position = camera.getWorldPosition(),
             light_0_position = camera.getWorldPosition() + Vector(0, 50, 0)
         )
@@ -223,7 +227,7 @@ class RenderBatch():
 
         self._shader.release()
 
-    def _renderItem(self, item):
+    def _renderItem(self, item: Dict):
         transformation = item["transformation"]
         mesh = item["mesh"]
 
@@ -239,14 +243,9 @@ class RenderBatch():
             normal_matrix.invert()
             normal_matrix.transpose()
 
-        model_view_matrix = transformation.preMultiply(self._view_matrix, copy = True)
-        model_view_projection_matrix = transformation.preMultiply(self._view_projection_matrix, copy = True)
-
         self._shader.updateBindings(
             model_matrix = transformation,
-            normal_matrix = normal_matrix,
-            model_view_matrix = model_view_matrix,
-            model_view_projection_matrix = model_view_projection_matrix
+            normal_matrix = normal_matrix
         )
 
         if item["uniforms"] is not None:

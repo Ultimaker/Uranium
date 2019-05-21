@@ -103,6 +103,7 @@ Dialog
 
     leftButtons: Button
     {
+        id: defaultsButton
         text: catalog.i18nc("@action:button", "Defaults");
         enabled: stackView.currentItem.resetEnabled;
         onClicked: stackView.currentItem.reset();
@@ -110,6 +111,7 @@ Dialog
 
     rightButtons: Button
     {
+        id: closeButton
         text: catalog.i18nc("@action:button", "Close");
         iconName: "dialog-close";
         onClicked: base.accept();

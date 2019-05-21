@@ -92,7 +92,8 @@ class i18nCatalogProxy(QObject): # [CodeStyle: Ultimaker code style requires cla
 
         # Get the function name and argument list.
         function_name = function.__name__
-        function_args = inspect.getargspec(function)[0]
+        function_args = inspect.getfullargspec(function)[0]
+
         if function_args[0] == "self":
             function_args = function_args[1:] # Drop "self" from argument list
 

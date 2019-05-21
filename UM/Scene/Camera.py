@@ -39,6 +39,7 @@ class Camera(SceneNode.SceneNode):
         self._window_height = 0  # type: int
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
+        self._cached_view_projection_matrix = None # type: Optional[Matrix]
 
         self._zoom_factor = 0.0
 
