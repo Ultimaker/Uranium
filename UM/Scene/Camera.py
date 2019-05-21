@@ -82,9 +82,11 @@ class Camera(SceneNode.SceneNode):
     
     def setViewportWidth(self, width: int) -> None:
         self._viewport_width = width
+        self._updatePerspectiveMatrix()
     
     def setViewportHeight(self, height: int) -> None:
         self._viewport_height = height
+        self._updatePerspectiveMatrix()
         
     def setViewportSize(self, width: int, height: int) -> None:
         self._viewport_width = width
@@ -193,7 +195,7 @@ class Camera(SceneNode.SceneNode):
 
     ##  Updates the _perspective field if the preference was modified.
     def _preferencesChanged(self, key):
-        if key != "general/camera_perspective_mode": #Only listen to camera_perspective_mode.
+        if key != "general/camera_perspective_mode":  # Only listen to camera_perspective_mode.
             return
         from UM.Application import Application
         new_mode = str(Application.getInstance().getPreferences().getValue("general/camera_perspective_mode"))
