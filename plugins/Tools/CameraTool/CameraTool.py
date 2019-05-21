@@ -289,6 +289,8 @@ class CameraTool(Tool):
                         self._origin = (r * Vector(0.0, 0.0, -1.0)).preMultiply(camera.getWorldTransformation())
         else:
             amount_of_zoom = zoom_range / 1280 / 10.0
+            if self._invert_zoom:
+                amount_of_zoom *= -1
             new_zoom_factor = camera.getZoomFactor() - amount_of_zoom
 
             if new_zoom_factor > 1:
