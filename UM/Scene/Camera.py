@@ -89,6 +89,19 @@ class Camera(SceneNode.SceneNode):
     def setViewportSize(self, width: int, height: int) -> None:
         self._viewport_width = width
         self._viewport_height = height
+        self._updatePerspectiveMatrix()
+
+    def _updatePerspectiveMatrix(self):
+        view_width = self._viewport_width
+        view_height = self._viewport_height
+        projection_matrix = Matrix()
+        if self.isPerspective():
+            if view_width != 0 and view_height != 0:
+                projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
+        else:
+            # Almost no near/far plane, please.
+            projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -9999999, 9999999)
+        self.setProjectionMatrix(projection_matrix)
 
     def getViewProjectionMatrix(self):
         if self._cached_view_projection_matrix is None:
@@ -128,6 +141,7 @@ class Camera(SceneNode.SceneNode):
     def setPerspective(self, perspective: bool) -> None:
         if self._perspective != perspective:
             self._perspective = perspective
+            self._updatePerspectiveMatrix()
             self.perspectiveChanged.emit()
 
     perspectiveChanged = Signal()

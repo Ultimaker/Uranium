@@ -69,7 +69,6 @@ class MainWindow(QQuickWindow):
         self._mouse_pressed = False
 
         self._viewport_rect = QRectF(0, 0, 1.0, 1.0)
-        Camera.perspectiveChanged.connect(self._updatePerspective)
 
         self.closing.connect(self.preClosing)
 
@@ -246,20 +245,7 @@ class MainWindow(QQuickWindow):
             if camera.getAutoAdjustViewPort():
                 camera.setViewportSize(view_width, view_height)
 
-        self._updatePerspective()
-
         self._app.getRenderer().setViewportSize(view_width, view_height)
         self._app.getRenderer().setWindowSize(width, height)
 
-    def _updatePerspective(self):
-        for camera in self._app.getController().getScene().getAllCameras():
-            view_width = camera.getViewportWidth()
-            view_height = camera.getViewportHeight()
-            projection_matrix = Matrix()
-            if camera.isPerspective():
-                if view_width != 0 and view_height != 0:
-                    projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
-            else:
-                # Almost no near/far plane, please.
-                projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -9999999, 9999999)
-            camera.setProjectionMatrix(projection_matrix)
+
