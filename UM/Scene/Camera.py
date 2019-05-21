@@ -114,6 +114,7 @@ class Camera(SceneNode.SceneNode):
                                            -view_height / 2 - vertical_zoom, view_height / 2 + vertical_zoom,
                                            -9999999, 9999999)
         self.setProjectionMatrix(projection_matrix)
+        self.perspectiveChanged.emit(self)
 
     def getViewProjectionMatrix(self):
         if self._cached_view_projection_matrix is None:
@@ -145,7 +146,6 @@ class Camera(SceneNode.SceneNode):
     def setProjectionMatrix(self, matrix: Matrix) -> None:
         self._projection_matrix = matrix
         self._cached_view_projection_matrix = None
-        self.transformationChanged.emit(self)  # TODO: HACK Need to find a better solution!
 
     def isPerspective(self) -> bool:
         return self._perspective
@@ -154,7 +154,6 @@ class Camera(SceneNode.SceneNode):
         if self._perspective != perspective:
             self._perspective = perspective
             self._updatePerspectiveMatrix()
-            self.perspectiveChanged.emit()
 
     perspectiveChanged = Signal()
 
