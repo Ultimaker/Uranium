@@ -113,8 +113,6 @@ class Camera(SceneNode.SceneNode):
                 projection_matrix.setOrtho(-view_width / 2 - horizontal_zoom, view_width / 2 + horizontal_zoom,
                                            -view_height / 2 - vertical_zoom, view_height / 2 + vertical_zoom,
                                            -9999999, 9999999)
-                #self.setProjectionMatrix(projection_matrix)
-                #projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -9999999, 9999999)
         self.setProjectionMatrix(projection_matrix)
 
     def getViewProjectionMatrix(self):
