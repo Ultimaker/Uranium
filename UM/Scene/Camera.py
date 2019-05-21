@@ -43,7 +43,7 @@ class Camera(SceneNode.SceneNode):
         self._zoom_factor = 0.0
 
         from UM.Application import Application
-        Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.ORTHOGONAL.value)
+        Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE.value)
         Application.getInstance().getPreferences().preferenceChanged.connect(self._preferencesChanged)
         self._preferencesChanged("general/camera_perspective_mode")
 
