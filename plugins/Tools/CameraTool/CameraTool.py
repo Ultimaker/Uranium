@@ -298,18 +298,6 @@ class CameraTool(Tool):
             else:
                 camera.setZoomFactor(new_zoom_factor)
 
-            zoom_factor = camera.getZoomFactor()
-
-            view_width = camera.getViewportWidth()
-            view_height = camera.getViewportHeight()
-
-            horizontal_zoom = view_width * zoom_factor
-            vertical_zoom = view_height * zoom_factor
-            projection_matrix = Matrix()
-            projection_matrix.setOrtho(-view_width / 2 - horizontal_zoom, view_width / 2 + horizontal_zoom,
-                                       -view_height / 2 - vertical_zoom, view_height / 2 + vertical_zoom, -9999999, 9999999)
-            camera.setProjectionMatrix(projection_matrix)
-
         self._scene.getSceneLock().release()
 
     ##  Rotate the camera in response to a mouse event.

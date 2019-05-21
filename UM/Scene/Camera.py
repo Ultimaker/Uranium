@@ -61,8 +61,19 @@ class Camera(SceneNode.SceneNode):
     def getZoomFactor(self):
         return self._zoom_factor
 
-    def setZoomFactor(self, zoom_factor):
-        self._zoom_factor = zoom_factor
+    def setZoomFactor(self, zoom_factor: float) -> None:
+        # Only an orthogonal camera has a zoom at the moment.
+        if not self.isPerspective():
+            if self._zoom_factor != zoom_factor:
+
+                self._zoom_factor = zoom_factor
+                horizontal_zoom = self._viewport_width * zoom_factor
+                vertical_zoom = self._viewport_height * zoom_factor
+                projection_matrix = Matrix()
+                projection_matrix.setOrtho(-self._viewport_width / 2 - horizontal_zoom, self._viewport_width / 2 + horizontal_zoom,
+                                           -self._viewport_height / 2 - vertical_zoom, self._viewport_height / 2 + vertical_zoom, -9999999,
+                                           9999999)
+                self.setProjectionMatrix(projection_matrix)
 
     def setMeshData(self, mesh_data: Optional["MeshData"]) -> None:
         assert mesh_data is None, "Camera's can't have mesh data"
@@ -102,7 +113,8 @@ class Camera(SceneNode.SceneNode):
                 projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
         else:
             # Almost no near/far plane, please.
-            projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -9999999, 9999999)
+            if view_width != 0 and view_height != 0:
+                projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -9999999, 9999999)
         self.setProjectionMatrix(projection_matrix)
 
     def getViewProjectionMatrix(self):
