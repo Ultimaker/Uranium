@@ -198,8 +198,8 @@ class QtApplication(QApplication, Application):
             self._preferences.deserialize(serialized)
             self._preferences.setValue("general/plugins_to_remove", "")
             self._preferences.writeToFile(preferences_filename)
-        except FileNotFoundError:
-            Logger.log("i", "The preferences file cannot be found, will use default values")
+        except (FileNotFoundError, UnicodeDecodeError):
+            Logger.log("i", "The preferences file cannot be found or it is corrupted, so we will use default values")
 
         # Force the configuration file to be written again since the list of plugins to remove maybe changed
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
