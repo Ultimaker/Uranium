@@ -112,7 +112,7 @@ class Camera(SceneNode.SceneNode):
                 vertical_zoom = view_height * self._zoom_factor
                 projection_matrix.setOrtho(-view_width / 2 - horizontal_zoom, view_width / 2 + horizontal_zoom,
                                            -view_height / 2 - vertical_zoom, view_height / 2 + vertical_zoom,
-                                           -9999999, 9999999)
+                                           -9001, 9001)
         self.setProjectionMatrix(projection_matrix)
         self.perspectiveChanged.emit(self)
 
