@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import SceneNode
@@ -15,7 +15,7 @@ from UM.View.RenderBatch import RenderBatch
 
 
 ##    A tool handle is a object in the scene that gives queues for what the tool it is
-#     'paired' with can do. ToolHandles are used for translation, rotation & scale handles.
+#     'paired' with can do. ToolHandles are, for example, used for translation, rotation & scale handles.
 #     They can also be used as actual objects to interact with (in the case of translation,
 #     pressing one arrow of the toolhandle locks the translation in that direction)
 class ToolHandle(SceneNode.SceneNode):
@@ -53,6 +53,9 @@ class ToolHandle(SceneNode.SceneNode):
 
         self._previous_dist = None
         self._active_axis = None
+
+        # Auto scale is used to ensure that the tool handle will end up the same size on the camera no matter the zoom
+        # This should be used to ensure that the tool handles are still usable even if the camera is zoomed in all the way.
         self._auto_scale = True
 
         self._enabled = False
@@ -88,9 +91,16 @@ class ToolHandle(SceneNode.SceneNode):
             self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "toolhandle.shader"))
 
         if self._auto_scale:
-            camera_position = self._scene.getActiveCamera().getWorldPosition()
-            dist = (camera_position - self.getWorldPosition()).length()
-            scale = dist / 400
+            active_camera = self._scene.getActiveCamera()
+            if active_camera.isPerspective():
+                camera_position = active_camera.getWorldPosition()
+                dist = (camera_position - self.getWorldPosition()).length()
+                scale = dist / 400
+            else:
+                view_width = active_camera.getViewportWidth()
+                current_size = view_width + (2 * active_camera.getZoomFactor() * view_width)
+                scale = current_size / view_width * 5
+
             self.setScale(Vector(scale, scale, scale))
 
         if self._line_mesh:
