@@ -182,15 +182,23 @@ class Camera(SceneNode.SceneNode):
         near = numpy.dot(transformation, near)
         near = near[0:3] / near[3]
 
-        far = numpy.array([view_x, -view_y, 1.0, 1.0], dtype = numpy.float32)
-        far = numpy.dot(inverted_projection, far)
-        far = numpy.dot(transformation, far)
-        far = far[0:3] / far[3]
+        if self.isPerspective():
+            origin = self.getWorldPosition()
 
-        direction = far - near
-        direction /= numpy.linalg.norm(direction)
+            far = numpy.array([view_x, -view_y, 1.0, 1.0], dtype=numpy.float32)
+            far = numpy.dot(inverted_projection, far)
+            far = numpy.dot(transformation, far)
+            far = far[0:3] / far[3]
 
-        return Ray(self.getWorldPosition(), Vector(-direction[0], -direction[1], -direction[2]))
+            direction = far - near
+            direction /= numpy.linalg.norm(direction)
+        else:
+            # In orthogonal mode, the origin is the clicking point on the near plane, and the direction of the ray
+            # is the direction of the camera.
+            origin = Vector(data = near)
+            direction = self.getPosition().normalized().getData()
+
+        return Ray(origin, Vector(-direction[0], -direction[1], -direction[2]))
 
     ##  Project a 3D position onto the 2D view plane.
     def project(self, position: Vector) -> Tuple[float, float]:
