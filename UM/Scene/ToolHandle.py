@@ -4,7 +4,6 @@ from typing import Optional
 
 from UM.Logger import Logger
 from UM.Mesh.MeshData import MeshData
-from UM.Qt.QtApplication import QtApplication
 from . import SceneNode
 
 from UM.Resources import Resources
@@ -144,6 +143,7 @@ class ToolHandle(SceneNode.SceneNode):
         self._onSelectionCenterChanged()
 
     def _onEngineCreated(self) -> None:
+        from UM.Qt.QtApplication import QtApplication
         theme = QtApplication.getInstance().getTheme()
         if theme is None:
             Logger.log("w", "Could not get theme, so unable to create tool handle meshes.")
