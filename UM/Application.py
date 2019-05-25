@@ -211,11 +211,14 @@ class Application:
     #   \exception NotImplementedError
     def run(self):
         self.addCommandLineOptions()
-        self.parseCliOptions()
         self.initialize()
 
         self.startSplashWindowPhase()
         self.startPostSplashWindowPhase()
+
+        # Parse commandline options at the very end.
+        # This should allow plugins to register their own command line options.
+        self.parseCliOptions()
 
     def getContainerRegistry(self):
         return self._container_registry
