@@ -19,7 +19,7 @@ i18n_catalog = i18nCatalog("uranium")
 #  The plugin is currently only usable for applications maintained by Ultimaker. But it should be relatively easy
 #  to change it to work for other applications.
 class UpdateChecker(Extension):
-    url = "http://software.ultimaker.com/latest.json"
+    url = "https://software.ultimaker.com/latest.json"
 
     def __init__(self):
         super().__init__()
