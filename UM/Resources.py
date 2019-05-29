@@ -511,8 +511,8 @@ class Resources:
 
     @classmethod
     def _findLatestDirInPaths(cls, search_path_list: List[str], dir_type: str = "config") -> Optional[str]:
-        # version dir name must match: <digit(s)>.<digit(s)><whatever>
-        version_regex = re.compile(r"^[0-9]+\.[0-9]+.*$")
+        # version dir name must match: <digit(s)>.<digit(s)>
+        version_regex = re.compile(r"^[0-9]+\.[0-9]+$")
         check_dir_type_func_dict = {
             "data": Resources._isNonVersionedDataDir,
             "config": Resources._isNonVersionedConfigDir
