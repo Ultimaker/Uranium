@@ -193,9 +193,14 @@ class Camera(SceneNode.SceneNode):
             direction = far - near
             direction /= numpy.linalg.norm(direction)
         else:
-            # In orthogonal mode, the origin is the clicking point on the near plane, and the direction of the ray
-            # is the direction of the camera.
-            origin = Vector(data = near)
+            # In orthogonal mode, the origin is the click position on the plane where the camera resides, and that
+            # plane is parallel to the near and the far planes.
+            projection = numpy.array([view_x, -view_y, 0.0, 1.0], dtype = numpy.float32)
+            projection = numpy.dot(inverted_projection, projection)
+            projection = numpy.dot(transformation, projection)
+            projection = projection[0:3] / projection[3]
+
+            origin = Vector(data = projection)
             direction = self.getPosition().normalized().getData()
 
         return Ray(origin, Vector(-direction[0], -direction[1], -direction[2]))
