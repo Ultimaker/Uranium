@@ -163,7 +163,6 @@ class Resources:
         if cls.__config_storage_path is None or cls.__data_storage_path is None:
             cls.__initializeStoragePaths()
 
-        path = None
         # Special casing for Linux, since configuration should be stored in ~/.config but data should be stored in ~/.local/share
         if resource_type == cls.Preferences:
             path = cls.__config_storage_path
@@ -464,8 +463,8 @@ class Resources:
 
         Logger.log("d", "Found config: %s and data: %s", config_root_path_list, data_root_path_list)
 
-        latest_config_path = Resources._findLatestDirInPaths(config_root_path_list, dir_type="config")
-        latest_data_path = Resources._findLatestDirInPaths(data_root_path_list, dir_type="data")
+        latest_config_path = Resources._findLatestDirInPaths(config_root_path_list, dir_type = "config")
+        latest_data_path = Resources._findLatestDirInPaths(data_root_path_list, dir_type = "data")
         Logger.log("d", "Latest config path: %s and latest data path: %s", latest_config_path, latest_data_path)
         if not latest_config_path:
             # No earlier storage dirs found, do nothing
@@ -513,7 +512,7 @@ class Resources:
     @classmethod
     def _findLatestDirInPaths(cls, search_path_list: List[str], dir_type: str = "config") -> Optional[str]:
         # version dir name must match: <digit(s)>.<digit(s)><whatever>
-        version_regex = re.compile(r'^[0-9]+\.[0-9]+.*$')
+        version_regex = re.compile(r"^[0-9]+\.[0-9]+.*$")
         check_dir_type_func_dict = {
             "data": Resources._isNonVersionedDataDir,
             "config": Resources._isNonVersionedConfigDir
@@ -528,7 +527,7 @@ class Resources:
             # Give priority to a folder with files with version number in it
             storage_dir_name_list = next(os.walk(search_path))[1]
             if storage_dir_name_list:
-                storage_dir_name_list = sorted(storage_dir_name_list, reverse=True)
+                storage_dir_name_list = sorted(storage_dir_name_list, reverse = True)
                 # for now we use alphabetically ordering to determine the latest version (excluding master)
                 for dir_name in storage_dir_name_list:
                     if dir_name.endswith("master"):
@@ -538,7 +537,7 @@ class Resources:
 
                     # make sure that the version we found is not newer than the current version
                     if version_regex.match(cls.ApplicationVersion):
-                        later_version = sorted([cls.ApplicationVersion, dir_name], reverse=True)[0]
+                        later_version = sorted([cls.ApplicationVersion, dir_name], reverse = True)[0]
                         if cls.ApplicationVersion != later_version:
                             continue
 
