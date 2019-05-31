@@ -146,6 +146,9 @@ class RotateTool(Tool):
             else:
                 direction = -1
 
+            # CURA-5395: For some reason this works for both perspective and orthographic views. Don't know why.
+            direction = -direction
+
             # Rate-limit the angle change notification
             # This is done to prevent the UI from being flooded with property change notifications,
             # which in turn would trigger constant repaints.
