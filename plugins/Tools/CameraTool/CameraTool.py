@@ -168,7 +168,7 @@ class CameraTool(Tool):
     #
     #   \param x Angle by which the camera should be rotated horizontally.
     #   \param y Angle by which the camera should be rotated vertically.
-    def rotateCam(self, x: float, y: float) -> None:
+    def rotateCamera(self, x: float, y: float) -> None:
         temp_x = x / 180
         temp_y = y / 180
         self._rotateCamera(temp_x, temp_y)

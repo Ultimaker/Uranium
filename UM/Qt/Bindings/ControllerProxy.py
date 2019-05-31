@@ -63,8 +63,8 @@ class ControllerProxy(QObject):
         Selection.clear()
 
     @pyqtSlot(str, int)
-    def rotateView(self,coordinate, angle):
-        self._controller.rotateView(coordinate, angle)
+    def setCameraRotation(self, coordinate: str, angle: int) -> None:
+        self._controller.setCameraRotation(coordinate, angle)
 
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 
