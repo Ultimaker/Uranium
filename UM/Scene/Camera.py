@@ -200,8 +200,11 @@ class Camera(SceneNode.SceneNode):
             projection = numpy.dot(transformation, projection)
             projection = projection[0:3] / projection[3]
 
-            origin = Vector(data = projection)
+            # CURA-5395: This makes Rotate Tool work. Don't know why.
+            camera_to_origin_distant = self.getWorldPosition().length()
+
             direction = self.getPosition().normalized().getData()
+            origin = Vector(data = projection + camera_to_origin_distant * direction)
 
         return Ray(origin, Vector(-direction[0], -direction[1], -direction[2]))
 
