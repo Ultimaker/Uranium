@@ -98,10 +98,17 @@ class PackageManager(QObject):
         if available_versions is None:
             return False
 
+        current_version = None
+
+        bundled_package_dict = self._bundled_package_dict.get(package_id)
+        if bundled_package_dict is not None:
+            current_version = UMVersion(bundled_package_dict["package_info"]["package_version"])
+
         installed_package_dict = self._installed_package_dict.get(package_id)
         if installed_package_dict is not None:
             current_version = UMVersion(installed_package_dict["package_info"]["package_version"])
 
+        if current_version is not None:
             for available_version in available_versions:
                 if current_version < available_version:
                     # Stop looking, there is at least one version that is higher.
