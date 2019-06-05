@@ -182,16 +182,17 @@ class Camera(SceneNode.SceneNode):
         near = numpy.dot(transformation, near)
         near = near[0:3] / near[3]
 
+        far = numpy.array([view_x, -view_y, 1.0, 1.0], dtype = numpy.float32)
+        far = numpy.dot(inverted_projection, far)
+        far = numpy.dot(transformation, far)
+        far = far[0:3] / far[3]
+
+        direction = far - near
+        direction /= numpy.linalg.norm(direction)
+
         if self.isPerspective():
             origin = self.getWorldPosition()
-
-            far = numpy.array([view_x, -view_y, 1.0, 1.0], dtype=numpy.float32)
-            far = numpy.dot(inverted_projection, far)
-            far = numpy.dot(transformation, far)
-            far = far[0:3] / far[3]
-
-            direction = far - near
-            direction /= numpy.linalg.norm(direction)
+            direction = -direction
         else:
             # In orthogonal mode, the origin is the click position on the plane where the camera resides, and that
             # plane is parallel to the near and the far planes.
@@ -200,13 +201,9 @@ class Camera(SceneNode.SceneNode):
             projection = numpy.dot(transformation, projection)
             projection = projection[0:3] / projection[3]
 
-            # CURA-5395: This makes Rotate Tool work. Don't know why.
-            camera_to_origin_distant = self.getWorldPosition().length()
+            origin = Vector(data = projection)
 
-            direction = self.getPosition().normalized().getData()
-            origin = Vector(data = projection + camera_to_origin_distant * direction)
-
-        return Ray(origin, Vector(-direction[0], -direction[1], -direction[2]))
+        return Ray(origin, Vector(direction[0], direction[1], direction[2]))
 
     ##  Project a 3D position onto the 2D view plane.
     def project(self, position: Vector) -> Tuple[float, float]:
