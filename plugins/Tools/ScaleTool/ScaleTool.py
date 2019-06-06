@@ -129,6 +129,13 @@ class ScaleTool(Tool):
 
             drag_position = self.getDragPosition(event.x, event.y)
             if drag_position:
+                if self.getLockedAxis() == ToolHandle.XAxis:
+                    drag_position = drag_position.set(y = 0, z = 0)
+                elif self.getLockedAxis() == ToolHandle.YAxis:
+                    drag_position = drag_position.set(x = 0, z = 0)
+                elif self.getLockedAxis() == ToolHandle.ZAxis:
+                    drag_position = drag_position.set(x = 0, y = 0)
+
                 drag_length = (drag_position - self._saved_handle_position).length()
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed

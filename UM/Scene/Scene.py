@@ -101,8 +101,11 @@ class Scene:
     #   \param name The name of the camera to use.
     def setActiveCamera(self, name: str) -> None:
         camera = self.findCamera(name)
-        if camera:
+        if camera and camera != self._active_camera:
+            if self._active_camera:
+                self._active_camera.perspectiveChanged.disconnect(self.sceneChanged)
             self._active_camera = camera
+            self._active_camera.perspectiveChanged.connect(self.sceneChanged)
         else:
             Logger.log("w", "Couldn't find camera with name [%s] to activate!" % name)
 
