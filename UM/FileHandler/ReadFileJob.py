@@ -53,6 +53,7 @@ class ReadFileJob(Job):
 
         self._loading_message = Message(self._filename,
                                         lifetime=0,
+                                        progress=0,
                                         dismissable=False,
                                         title = i18n_catalog.i18nc("@info:title", "Loading"))
         self._loading_message.setProgress(-1)
