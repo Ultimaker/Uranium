@@ -254,9 +254,18 @@ class VersionUpgradeManager:
     #   the specified directory).
     #
     #   \param directory The directory to read the files from.
-    #   \return The filename of each file relative to the specified directory.
+    #   \return The filename of each file relative to the specified directory. Note that without an * in the path, it
+    #           will not look at sub directories.
     def _getFilesInDirectory(self, directory: str) -> Iterator[str]:
-        for (path, directory_names, file_names) in os.walk(directory, topdown = True):
+        include_sub_dirs = directory.endswith("*")
+        directory_to_search = directory
+        if include_sub_dirs:
+            # Remove the * from the directory to search.
+            directory_to_search = directory[:-1]
+        for path, directory_names, file_names in os.walk(directory_to_search, topdown = True):
+            if not include_sub_dirs:
+                # Delete the list of sub dirs.
+                directory_names.clear()
             for filename in file_names:
                 relative_path = os.path.relpath(path, directory)
                 yield os.path.join(relative_path, filename)
