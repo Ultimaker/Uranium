@@ -177,6 +177,15 @@ class SceneNode:
 
             self._bounding_box_mesh = bounding_box_mesh.build()
 
+    ##  Return if the provided bbox collides with the bbox of this SceneNode
+    def collidesWithBbox(self, check_bbox: AxisAlignedBox) -> bool:
+        bbox = self.getBoundingBox()
+        if bbox is not None:
+            if check_bbox.intersectsBox(bbox) != AxisAlignedBox.IntersectionResult.FullIntersection:
+                return True
+
+        return False
+
     ##  Handler for the ParentChanged signal
     #   \param node Node from which this event was triggered.
     def _onParentChanged(self, node: Optional["SceneNode"]) -> None:
