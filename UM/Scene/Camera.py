@@ -41,7 +41,7 @@ class Camera(SceneNode.SceneNode):
         self.setCalculateBoundingBox(False)
         self._cached_view_projection_matrix = None # type: Optional[Matrix]
 
-        self._zoom_factor = 0.0
+        self._zoom_factor = -0.3334
 
         from UM.Application import Application
         Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE.value)

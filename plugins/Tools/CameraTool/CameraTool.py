@@ -295,8 +295,8 @@ class CameraTool(Tool):
 
             if new_zoom_factor > 1:
                 camera.setZoomFactor(1)
-            elif new_zoom_factor < -0.45:
-                camera.setZoomFactor(-0.45)
+            elif new_zoom_factor < -0.495:
+                camera.setZoomFactor(-0.495)
             else:
                 camera.setZoomFactor(new_zoom_factor)
 
