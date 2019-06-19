@@ -37,7 +37,16 @@ class SettingPropertyProvider(QObject):
         self._key = ""
         self._relations = set()  # type: Set[str]
         self._watched_properties = []  # type: List[str]
+
+        # Which container in the stack to store the settings
         self._store_index = 0
+
+        # Optionally you can use a different container from fetch settings from. By default the settings will be
+        # fetched from the container specified in self._store_index. If you set self._use_fetch_index to True, it
+        # will fetch values starting from the container index specified by self._fetch_index
+        self._fetch_index = 0
+        self._use_fetch_index = False
+
         self._value_used = None  # type: Optional[bool]
         self._stack_levels = []  # type: List[int]
         self._remove_unused_value = True
@@ -49,6 +58,8 @@ class SettingPropertyProvider(QObject):
         self._update_timer.timeout.connect(self._update)
 
         self.storeIndexChanged.connect(self._storeIndexChanged)
+        self.fetchIndexChanged.connect(self._fetchIndexChanged)
+        self.useFetchIndexChanged.connect(self._fetchIndexChanged)
 
     def setContainerStack(self, stack: Optional[ContainerStack]) -> None:
         if self._stack == stack:
@@ -158,6 +169,28 @@ class SettingPropertyProvider(QObject):
     @pyqtProperty(int, fset = setStoreIndex, notify = storeIndexChanged)
     def storeIndex(self):
         return self._store_index
+
+    fetchIndexChanged = pyqtSignal()
+
+    def setFetchIndex(self, idx: int) -> None:
+        if idx != self._fetch_index:
+            self._fetch_index = idx
+            self.fetchIndexChanged.emit()
+
+    @pyqtProperty(int, fset = setFetchIndex, notify = fetchIndexChanged)
+    def fetchIndex(self) -> int:
+        return self._fetch_index
+
+    useFetchIndexChanged = pyqtSignal()
+
+    def setUseFetchIndex(self, value: bool) -> None:
+        if value != self._use_fetch_index:
+            self._use_fetch_index = value
+            self.useFetchIndexChanged.emit()
+
+    @pyqtProperty(bool, fset = setUseFetchIndex, notify = useFetchIndexChanged)
+    def useFetchIndex(self) -> bool:
+        return self._use_fetch_index
 
     stackLevelChanged = pyqtSignal()
 
@@ -374,6 +407,9 @@ class SettingPropertyProvider(QObject):
     def _storeIndexChanged(self, container = None):
         self._updateDelayed(container = container)
 
+    def _fetchIndexChanged(self, container = None):
+        self._updateDelayed(container = container)
+
     ##  Updates the self._stack_levels field, which indicates at which levels in
     #   the stack the property is set.
     def _updateStackLevels(self) -> None:
@@ -400,6 +436,8 @@ class SettingPropertyProvider(QObject):
         # Use the evaluation context to skip certain containers
         context = PropertyEvaluationContext(self._stack)
         context.context["evaluate_from_container_index"] = self._store_index
+        if self._use_fetch_index:
+            context.context["evaluate_from_container_index"] = self._fetch_index
 
         property_value = self._stack.getProperty(self._key, property_name, context = context)
         if isinstance(property_value, SettingFunction):
