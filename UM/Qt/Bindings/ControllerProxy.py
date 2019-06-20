@@ -4,6 +4,7 @@
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty
 
 from UM.Application import Application
+from UM.Decorators import deprecated
 from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Operations.GroupedOperation import GroupedOperation
@@ -61,6 +62,11 @@ class ControllerProxy(QObject):
             op.addOperation(RemoveSceneNodeOperation(node))
         op.push()
         Selection.clear()
+
+    @pyqtSlot(str, int)
+    @deprecated("Please use ControllerProxy.setCameraRotation instead.", "4.2")
+    def rotateView(self, coordinate: str, angle: int) -> None:
+        self.setCameraRotation(coordinate, angle)
 
     @pyqtSlot(str, int)
     def setCameraRotation(self, coordinate: str, angle: int) -> None:
