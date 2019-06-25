@@ -631,13 +631,17 @@ class SettingDefinition:
         "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None},
         # Indicates if this string setting is allowed to have empty value. This can only be used for string settings.
         "allow_empty": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": True, "depends_on": None},
+        # For bool type: if the value is the same as the warning value, the setting will be in the warning state.
+        "warning_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": None, "depends_on": None},
+        # For bool type: if the value is the same as the error value, the setting will be in the error state.
+        "error_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": None, "depends_on": None},
     }   # type: Dict[str, Dict[str, Any]]
 
     __type_definitions = {
         # An integer value
         "int": {"from": lambda v: str(v) if v is not None else "", "to": _toIntConversion, "validator": Validator},
         # A boolean value
-        "bool": {"from": str, "to": ast.literal_eval, "validator": None},
+        "bool": {"from": str, "to": ast.literal_eval, "validator": Validator},
         # Special case setting; Doesn't have a value. Display purposes only.
         "category": {"from": None, "to": None, "validator": None},
         # A string value
