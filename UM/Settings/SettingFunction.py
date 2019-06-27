@@ -2,8 +2,11 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
-import builtins #To check against functions that are built-in in Python.
-import math # Imported here so it can be used easily by the setting functions.
+import builtins  # To check against functions that are built-in in Python.
+import math  # Imported here so it can be used easily by the setting functions.
+import uuid  # Imported here so it can be used easily by the setting functions.
+import base64  # Imported here so it can be used easily by the setting functions.
+import hashlib  # Imported here so it can be used easily by the setting functions.
 from types import CodeType
 from typing import Any, Callable, Dict, FrozenSet, NamedTuple, Optional, Set, TYPE_CHECKING
 
@@ -187,7 +190,10 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "min",
         "debug",
         "sum",
-        "len"
+        "len",
+        "uuid",
+        "hashlib",
+        "base64"
     }  # type: Set[str]
 
     _blacklist = {
