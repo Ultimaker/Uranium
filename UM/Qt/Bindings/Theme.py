@@ -174,9 +174,10 @@ class Theme(QObject):
 
         fonts_dir = os.path.join(path, "fonts")
         if os.path.isdir(fonts_dir):
-            for file in os.listdir(fonts_dir):
-                if "ttf" in file:
-                    QFontDatabase.addApplicationFont(os.path.join(fonts_dir, file))
+            for root, dirnames, filenames in os.walk(fonts_dir):
+                for filename in filenames:
+                    if filename.lower().endswith(".ttf"):
+                        QFontDatabase.addApplicationFont(os.path.join(root, filename))
 
         if "fonts" in data:
             system_font_size = QCoreApplication.instance().font().pointSize()
