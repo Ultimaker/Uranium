@@ -377,21 +377,32 @@ class Controller:
         camera.setZoomFactor(camera.getDefaultZoomFactor())
         self._camera_tool.setOrigin(Vector(0, 100, 0))  # type: ignore
         if coordinate == "home":
-            camera.setPosition(Vector(0, 0, 700))
-            camera.lookAt(Vector(0, 100, 100))
+            camera.setPosition(Vector(0, 100, 700))
+            camera.lookAt(Vector(0, 100, 0))
             self._camera_tool.rotateCamera(0, 0)  # type: ignore
         elif coordinate == "3d":
             camera.setPosition(Vector(-750, 600, 700))
             camera.lookAt(Vector(0, 100, 100))
             self._camera_tool.rotateCamera(0, 0)  # type: ignore
-
         else:
             # for comparison is == used, because might not store them at the same location
             # https://stackoverflow.com/questions/1504717/why-does-comparing-strings-in-python-using-either-or-is-sometimes-produce
-            camera.setPosition(Vector(0, 0, 700))
-            camera.lookAt(Vector(0, 100, 0))
 
             if coordinate == "x":
+                camera.setPosition(Vector(0, 100, 700))
+                camera.lookAt(Vector(0, 100, 0))
                 self._camera_tool.rotateCamera(angle, 0)  # type: ignore
             elif coordinate == "y":
-                self._camera_tool.rotateCamera(0, angle)  # type: ignore
+                if angle == 90:
+                    # Prepare the camera for top view, so no rotation has to be applied after setting the top view.
+                    camera.setPosition(Vector(0, 100, 100))
+                    camera.lookAt(Vector(0, 100, 0))
+                    self._camera_tool.rotateCamera(90, 0)  # type: ignore
+                    # Actually set the top view.
+                    camera.setPosition(Vector(0, 800, 1))
+                    camera.lookAt(Vector(0, 100, 1))
+                    # Note the absence of rotation at the end!
+                else:
+                    camera.setPosition(Vector(0, 100, 700))
+                    camera.lookAt(Vector(0, 100, 0))
+                    self._camera_tool.rotateCamera(0, angle)  # type: ignore
