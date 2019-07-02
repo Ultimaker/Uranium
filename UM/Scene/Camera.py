@@ -17,7 +17,6 @@ from UM.Signal import Signal
 if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
 
-
 ##  A SceneNode subclass that provides a camera object.
 #
 #   The camera provides a projection matrix and its transformation matrix
@@ -26,6 +25,10 @@ class Camera(SceneNode.SceneNode):
     class PerspectiveMode(enum.Enum):
         PERSPECTIVE = "perspective"
         ORTHOGONAL = "orthogonal"
+
+    @staticmethod
+    def getDefaultZoomFactor():
+        return -0.3334
 
     def __init__(self, name: str = "", parent: SceneNode.SceneNode = None) -> None:
         super().__init__(parent)
@@ -41,7 +44,7 @@ class Camera(SceneNode.SceneNode):
         self.setCalculateBoundingBox(False)
         self._cached_view_projection_matrix = None # type: Optional[Matrix]
 
-        self._zoom_factor = -0.3334
+        self._zoom_factor = Camera.getDefaultZoomFactor()
 
         from UM.Application import Application
         Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE.value)

@@ -374,7 +374,7 @@ class Controller:
         camera = self._scene.getActiveCamera()
         if not camera:
             return
-        camera.setZoomFactor(0)
+        camera.setZoomFactor(camera.getDefaultZoomFactor())
         self._camera_tool.setOrigin(Vector(0, 100, 0))  # type: ignore
         if coordinate == "home":
             camera.setPosition(Vector(0, 0, 700))
