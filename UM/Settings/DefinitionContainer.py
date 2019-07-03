@@ -452,7 +452,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
             other = self._getDefinition(setting)
             if not other:
-                continue
+                other = SettingDefinition(setting)
 
             relation = SettingRelation(definition, other, RelationType.RequiresTarget, property_name)
             definition.relations.append(relation)
