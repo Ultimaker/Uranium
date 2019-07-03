@@ -104,6 +104,11 @@ class MainWindow(QQuickWindow):
             self.setVisibility(QQuickWindow.FullScreen)  # Go to fullscreen
         self._fullscreen = not self._fullscreen
 
+    @pyqtSlot()
+    def exitFullscreen(self):
+        self.setVisibility(QQuickWindow.Windowed)
+        self._fullscreen = False
+
     def getBackgroundColor(self):
         return self._background_color
 
