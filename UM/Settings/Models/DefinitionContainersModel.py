@@ -95,7 +95,7 @@ class DefinitionContainersModel(ListModel):
             section_value = item.get(self._section_property, "")
             if self._preferred_section_value:
                 result.append(section_value != self._preferred_section_value)
-            result.append(section_value)
+            result.append(section_value.lower())
 
         result.append(int(item.get("weight", 0)))
         result.append(item["name"].lower())
