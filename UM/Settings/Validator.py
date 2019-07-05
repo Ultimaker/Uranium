@@ -3,6 +3,7 @@
 
 from enum import Enum
 from typing import Optional
+import uuid
 
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
@@ -46,6 +47,7 @@ class Validator(SettingFunction.SettingFunction):
         state = ValidatorState.Unknown
         try:
             allow_empty = value_provider.getProperty(self._key, "allow_empty", context = context)  # For string only
+            is_uuid = value_provider.getProperty(self._key, "is_uuid", context = context)  # For string only
             minimum = value_provider.getProperty(self._key, "minimum_value", context = context)
             maximum = value_provider.getProperty(self._key, "maximum_value", context = context)
             minimum_warning = value_provider.getProperty(self._key, "minimum_value_warning", context = context)
@@ -71,6 +73,12 @@ class Validator(SettingFunction.SettingFunction):
             # explicitly that we should not do this check when "allow_empty is None".
             if allow_empty is not None and allow_empty is False and str(value) == "":
                 state = ValidatorState.Invalid
+            elif is_uuid is not None and is_uuid is True:
+                # Try to parse the UUID string with uuid.UUID(). It will raise a ValueError if it's not valid.
+                try:
+                    uuid.UUID(str(value))
+                except ValueError:
+                    state = ValidatorState.Invalid
 
             elif setting_type == "bool":
                 state = ValidatorState.Valid

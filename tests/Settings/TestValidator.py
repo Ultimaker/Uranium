@@ -86,6 +86,9 @@ test_validate_data = [
     # String values
     ({"description": "Empty string valid",       "type": "str", "allow_empty": True,   "current": "",   "answer": ValidatorState.Valid}),
     ({"description": "Empty string is invalid",  "type": "str", "allow_empty": False,  "current": "",   "answer": ValidatorState.Invalid}),
+    ({"description": "String is not UUID, OK",   "type": "str", "is_uuid": False,      "current": "Blorf",   "answer": ValidatorState.Valid}),
+    ({"description": "String is not UUID, :-(",  "type": "str", "is_uuid": True,       "current": "Blorf",   "answer": ValidatorState.Invalid}),
+    ({"description": "UUID is UUID",             "type": "str", "is_uuid": True,       "current": "123456AF-ab9d-43E6-ABcd-AB8D43e6abCD", "answer": ValidatorState.Valid}),
     # Bool values
     ({"description": "No warning or error states", "type": "bool",                         "current": True,   "answer": ValidatorState.Valid}),
     ({"description": "Warning state",              "type": "bool", "warning_value": True,  "current": True,   "answer": ValidatorState.MaximumWarning}),
@@ -104,6 +107,7 @@ def test_validate(data):
     setting_instance.warning_value = data.get("warning_value")
     setting_instance.error_value = data.get("error_value")
     setting_instance.allow_empty = data.get("allow_empty")
+    setting_instance.is_uuid = data.get("is_uuid")
 
     validator = Validator("test")
     validation_state = validator(setting_instance) #Execute the test.
