@@ -3,6 +3,7 @@
 
 from enum import Enum
 from typing import Optional
+import re
 
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
@@ -10,6 +11,7 @@ from UM.Logger import Logger
 
 from . import SettingFunction
 
+UUID_PATTERN = re.compile("[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}")
 
 class ValidatorState(Enum):
     Exception = "Exception"
@@ -46,6 +48,7 @@ class Validator(SettingFunction.SettingFunction):
         state = ValidatorState.Unknown
         try:
             allow_empty = value_provider.getProperty(self._key, "allow_empty", context = context)  # For string only
+            is_uuid = value_provider.getProperty(self._key, "is_uuid", context = context)  # For string only
             minimum = value_provider.getProperty(self._key, "minimum_value", context = context)
             maximum = value_provider.getProperty(self._key, "maximum_value", context = context)
             minimum_warning = value_provider.getProperty(self._key, "minimum_value_warning", context = context)
@@ -70,6 +73,8 @@ class Validator(SettingFunction.SettingFunction):
             # "allow_empty is not None" is not necessary here because of "allow_empty is False", but it states
             # explicitly that we should not do this check when "allow_empty is None".
             if allow_empty is not None and allow_empty is False and str(value) == "":
+                state = ValidatorState.Invalid
+            elif is_uuid is not None and is_uuid is True and not re.match(UUID_PATTERN, str(value)):
                 state = ValidatorState.Invalid
 
             elif setting_type == "bool":
