@@ -3,6 +3,7 @@
 
 import unittest
 import numpy
+import pytest
 
 from UM.Math.Vector import Vector
 
@@ -30,7 +31,7 @@ class TestVector(unittest.TestCase):
 
     def test_normalize(self):
         vector = Vector(10, 10, 10)
-        assert vector.normalized().length() == 1
+        assert vector.normalized().length() == pytest.approx(1)
 
     def test_setValues(self):
         x = 10
