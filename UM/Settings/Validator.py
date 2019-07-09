@@ -77,8 +77,10 @@ class Validator(SettingFunction.SettingFunction):
                 # Try to parse the UUID string with uuid.UUID(). It will raise a ValueError if it's not valid.
                 try:
                     uuid.UUID(str(value))
+                    state = ValidatorState.Valid
                 except ValueError:
                     state = ValidatorState.Invalid
+                return state
 
             elif setting_type == "bool":
                 state = ValidatorState.Valid
