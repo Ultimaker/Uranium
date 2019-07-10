@@ -52,7 +52,7 @@ MimeTypeDatabase.addMimeType(
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
 class ContainerStack(QObject, ContainerInterface, PluginObject):
-    Version = 4 # type: int
+    Version = 5 # type: int
 
     ##  Constructor
     #
