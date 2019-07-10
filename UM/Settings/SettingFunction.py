@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
@@ -180,9 +180,17 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
             self.values.add(node.id)
             self.keys.add(node.id)
 
+    ##  This one is used before Python 3.8 to visit string types.
+    #
+    #   visit_Str will be marked as deprecated from Python 3.8 and onwards.
     def visit_Str(self, node: ast.AST) -> None:
         if node.s not in self._knownNames and node.s not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.s.
             self.keys.add(node.s)  # type: ignore
+
+    ##  This one is used on Python 3.8+ to visit string types.
+    def visit_Constant(self, node: ast.AST) -> None:
+        if isinstance(node.value, str) and node.value not in self._knownNames and node.value not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.value.
+            self.keys.add(node.value)  # type: ignore
 
     _knownNames = {
         "math",
