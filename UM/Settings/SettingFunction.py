@@ -108,6 +108,9 @@ class SettingFunction:
 
         return self._code == other._code
 
+    def __hash__(self) -> int:
+        return hash(self._code)
+
     ##  Returns whether the function is ready to be executed.
     #
     #   \return True if the function is valid, or False if it's not.
