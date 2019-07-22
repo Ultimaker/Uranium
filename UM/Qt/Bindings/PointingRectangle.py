@@ -162,8 +162,9 @@ class PointingRectangle(QQuickItem):
 
         if self._border_width > 0:
             if paint_node.childCount() == 0:
-                paint_node.appendChildNode(QSGGeometryNode())
-            border_node = paint_node.firstChild()
+                border_node = QSGGeometryNode()
+            else:
+                border_node = paint_node.firstChild()
 
             border_vertices = []
             border_vertices.append((0, 0))
@@ -204,6 +205,9 @@ class PointingRectangle(QQuickItem):
             border_material.setColor(self._border_color)
 
             border_node.setMaterial(border_material)
+
+            if paint_node.childCount() == 0:
+                paint_node.appendChildNode(border_node)
         else:
             border_node = None
             border_geometry = None
