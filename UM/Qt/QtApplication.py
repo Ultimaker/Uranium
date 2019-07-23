@@ -545,7 +545,7 @@ class QtApplication(QApplication, Application):
             return
 
         nodes = []
-        for node in DepthFirstIterator(self.getController().getScene().getRoot()): #type: ignore #Ignore type error because iter() should get called automatically by Python syntax.
+        for node in DepthFirstIterator(self.getController().getScene().getRoot()):
             if not isinstance(node, SceneNode):
                 continue
             if (not node.getMeshData() and not node.callDecoration("getLayerData")) and not node.callDecoration("isGroup"):

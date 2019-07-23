@@ -92,7 +92,7 @@ class Scene:
 
     def getAllCameras(self) -> List[Camera]:
         cameras = []
-        for node in BreadthFirstIterator(self._root):  # type: ignore
+        for node in BreadthFirstIterator(self._root):
             if isinstance(node, Camera):
                 cameras.append(node)
         return cameras
@@ -119,13 +119,13 @@ class Scene:
     #
     #   \return The object if found, or None if not.
     def findObject(self, object_id: int) -> Optional["SceneNode"]:
-        for node in BreadthFirstIterator(self._root):  # type: ignore
+        for node in BreadthFirstIterator(self._root):
             if id(node) == object_id:
                 return node
         return None
 
     def findCamera(self, name: str) -> Optional[Camera]:
-        for node in BreadthFirstIterator(self._root):  # type: ignore
+        for node in BreadthFirstIterator(self._root):
             if isinstance(node, Camera) and node.getName() == name:
                 return node
         return None
