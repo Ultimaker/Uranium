@@ -42,7 +42,7 @@ class Camera(SceneNode.SceneNode):
         self._window_height = 0  # type: int
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
-        self._cached_view_projection_matrix = None # type: Optional[Matrix]
+        self._cached_view_projection_matrix = None  # type: Optional[Matrix]
 
         self._zoom_factor = Camera.getDefaultZoomFactor()
 
@@ -50,8 +50,6 @@ class Camera(SceneNode.SceneNode):
         Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE.value)
         Application.getInstance().getPreferences().preferenceChanged.connect(self._preferencesChanged)
         self._preferencesChanged("general/camera_perspective_mode")
-
-        self._cached_view_projection_matrix = None  # type: Optional[Matrix]
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "Camera":
         copy = cast(Camera, super().__deepcopy__(memo))

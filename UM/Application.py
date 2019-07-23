@@ -166,9 +166,9 @@ class Application:
         self._controller = Controller(self)
         self._output_device_manager = OutputDeviceManager()
 
-        self._operation_stack = OperationStack(self._controller) # type: OperationStack
+        self._operation_stack = OperationStack(self._controller)
 
-        self._plugin_registry = PluginRegistry(self)  #type: PluginRegistry
+        self._plugin_registry = PluginRegistry(self)
 
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib", "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib64", "uranium"))
