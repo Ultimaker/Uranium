@@ -157,16 +157,6 @@ class InstanceContainersModel(ListModel):
     def filterList(self) -> List[Dict[str, str]]:
         return self._filter_dicts
 
-    @pyqtSlot(str, str)
-    def rename(self, instance_id: str, new_name: str):
-        if new_name == self.getName():
-            return #Don't need to do anything.
-
-        containers = ContainerRegistry.getInstance().findInstanceContainers(id = instance_id)
-        if containers:
-            containers[0].setName(new_name)
-            self._container_change_timer.start()
-
     ##  Gets a list of the possible file filters that the plugins have
     #   registered they can read or write. The convenience meta-filters
     #   "All Supported Types" and "All Files" are added when listing
