@@ -1,7 +1,9 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Scene.Scene import Scene
 from UM.Event import Event, KeyEvent, MouseEvent, ToolEvent, ViewEvent
+from UM.Scene.SceneNode import SceneNode
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
@@ -368,6 +370,41 @@ class Controller:
 
     def setToolsEnabled(self, enabled: bool) -> None:
         self._tools_enabled = enabled
+
+    def deleteAllNodesWithMeshData(self, only_selectable:bool = True) -> None:
+        Logger.log("i", "Clearing scene")
+        if not self.getToolsEnabled():
+            return
+
+        nodes = []
+        for node in DepthFirstIterator(self.getScene().getRoot()):
+            if not isinstance(node, SceneNode):
+                continue
+            if (not node.getMeshData() and not node.callDecoration("getLayerData")) and not node.callDecoration(
+                    "isGroup"):
+                continue  # Node that doesnt have a mesh and is not a group.
+            if only_selectable and not node.isSelectable():
+                continue
+            if not node.callDecoration("isSliceable") and not node.callDecoration(
+                    "getLayerData") and not node.callDecoration("isGroup"):
+                continue  # Only remove nodes that are selectable.
+            if node.getParent() and cast(SceneNode, node.getParent()).callDecoration("isGroup"):
+                continue  # Grouped nodes don't need resetting as their parent (the group) is resetted)
+            nodes.append(node)
+        if nodes:
+            from UM.Operations.GroupedOperation import GroupedOperation
+            op = GroupedOperation()
+
+            for node in nodes:
+                from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
+                op.addOperation(RemoveSceneNodeOperation(node))
+
+                # Reset the print information
+                self.getController().getScene().sceneChanged.emit(node)
+
+            op.push()
+            from UM.Scene.Selection import Selection
+            Selection.clear()
 
     # Rotate camera view according defined angle
     def setCameraRotation(self, coordinate: str = "x", angle: int = 0) -> None:

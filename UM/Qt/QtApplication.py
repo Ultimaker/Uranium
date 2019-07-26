@@ -540,34 +540,7 @@ class QtApplication(QApplication, Application):
     #   \param only_selectable. Set this to False to delete objects from all build plates
     @pyqtSlot()
     def deleteAll(self, only_selectable = True) -> None:
-        Logger.log("i", "Clearing scene")
-        if not self.getController().getToolsEnabled():
-            return
-
-        nodes = []
-        for node in DepthFirstIterator(self.getController().getScene().getRoot()):
-            if not isinstance(node, SceneNode):
-                continue
-            if (not node.getMeshData() and not node.callDecoration("getLayerData")) and not node.callDecoration("isGroup"):
-                continue  # Node that doesnt have a mesh and is not a group.
-            if only_selectable and not node.isSelectable():
-                continue
-            if not node.callDecoration("isSliceable") and not node.callDecoration("getLayerData") and not node.callDecoration("isGroup"):
-                continue  # Only remove nodes that are selectable.
-            if node.getParent() and cast(SceneNode, node.getParent()).callDecoration("isGroup"):
-                continue  # Grouped nodes don't need resetting as their parent (the group) is resetted)
-            nodes.append(node)
-        if nodes:
-            op = GroupedOperation()
-
-            for node in nodes:
-                op.addOperation(RemoveSceneNodeOperation(node))
-
-                # Reset the print information
-                self.getController().getScene().sceneChanged.emit(node)
-
-            op.push()
-            Selection.clear()
+        self.getController().deleteAllNodesWithMeshData(only_selectable)
 
     ##  Get the MeshFileHandler of this application.
     def getMeshFileHandler(self) -> MeshFileHandler:
