@@ -2,6 +2,8 @@ from UM.Backend.Backend import Backend
 import pytest
 from unittest.mock import patch, MagicMock
 
+
+
 @pytest.fixture
 def backend():
     with patch("UM.Application.Application.getInstance"):
@@ -70,3 +72,18 @@ def test_runEngineProcessException(backend, exception):
     with patch('subprocess.Popen', side_effect = exception):
         assert backend._runEngineProcess([""]) is None
 
+
+def test_createSocket(backend):
+    # We're not testing the signal socket here, so mock it
+    mocked_signal_socket = MagicMock()
+    with patch("UM.Backend.Backend.SignalSocket", MagicMock(return_value = mocked_signal_socket)):
+        with patch("UM.Application.Application.getInstance"):
+            backend._createSocket("beep")
+            mocked_signal_socket.registerAllMessageTypes.assert_called_once_with("beep")
+
+            # Try to create it again.
+            backend._createSocket("beep")
+            mocked_signal_socket.close.assert_called_once_with()
+
+            backend.close()
+            assert mocked_signal_socket.close.call_count == 2
