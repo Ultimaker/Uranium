@@ -400,7 +400,7 @@ class Controller:
                 op.addOperation(RemoveSceneNodeOperation(node))
 
                 # Reset the print information
-                self.getController().getScene().sceneChanged.emit(node)
+                self.getScene().sceneChanged.emit(node)
 
             op.push()
             from UM.Scene.Selection import Selection
