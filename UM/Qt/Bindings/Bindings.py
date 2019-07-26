@@ -28,8 +28,6 @@ from . import i18nCatalogProxy
 from . import ExtensionModel
 from . import VisibleMessagesModel
 
-from . import MeshListModel
-
 from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
 from UM.Settings.Models.DefinitionContainersModel import DefinitionContainersModel
 from UM.Settings.Models.InstanceContainersModel import InstanceContainersModel
@@ -102,7 +100,6 @@ class Bindings:
         qmlRegisterType(SettingPropertyProvider, "UM", 1, 2, "SettingPropertyProvider")
         qmlRegisterType(SettingPreferenceVisibilityHandler, "UM", 1, 2, "SettingPreferenceVisibilityHandler")
         qmlRegisterType(ContainerPropertyProvider, "UM", 1, 2, "ContainerPropertyProvider")
-        qmlRegisterType(MeshListModel.MeshListModel, "UM", 1, 2, "MeshListModel")
 
         # Additions after 2.3;
         qmlRegisterSingletonType(WorkspaceFileHandler, "UM", 1, 3, "WorkspaceFileHandler", WorkspaceFileHandler.getInstance)
