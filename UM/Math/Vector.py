@@ -138,6 +138,7 @@ class Vector(object):
     #   \param epsilon optional tolerance value for the comparision.
     #   \returns True if the two vectors are the same.
     def equals(self, other, epsilon = 1e-6):
+        print( self.x, self.y, self.z)
         return Float.fuzzyCompare(self.x, other.x, epsilon) and \
                Float.fuzzyCompare(self.y, other.y, epsilon) and \
                Float.fuzzyCompare(self.z, other.z, epsilon)
