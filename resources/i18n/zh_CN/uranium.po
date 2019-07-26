@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.1\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2019-05-14 14:53+0200\n"
+"POT-Creation-Date: 2019-07-16 14:10+0200\n"
 "PO-Revision-Date: 2018-11-06 15:52+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: PCDotFan <pc@edu.ax>, Chinese <info@bothof.nl>\n"
@@ -69,7 +69,7 @@ msgstr "无法获取更新信息。"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:45
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:155
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "版本升级"
@@ -316,7 +316,7 @@ msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:221
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:233
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -326,12 +326,12 @@ msgstr ""
 "卸载以下程序包时出现了一些错误：\n"
 "{packages}"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:223
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:235
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "卸载错误"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:440
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:454
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -343,7 +343,7 @@ msgstr ""
 "{error}。\n"
 "请稍后再次尝试升级。"
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:443
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:457
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "正在更新错误"
@@ -429,18 +429,19 @@ msgstr ""
 "插件已移除。\n"
 "请重启 {0} 完成卸载。"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:155
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "已导入旧版本 {0} 所使用的配置。"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:57
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:62
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "无法初始化 OpenGL"
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:67
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:72
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "关键 OpenGL 拓展文件缺失。该程序需要对 Framebuffer Objects 的支持。请检查您的显卡驱动是否正常。"
@@ -474,23 +475,23 @@ msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "重置将移除当前所有的打印机和配置文件！您确定要重置吗？"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:158
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:161
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "是否要重新加载 {filename}？"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:159
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:162
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "文件已修改"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:160
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "重新加载"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:160
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "这将触发修改后的文件从磁盘重新加载。"
@@ -503,19 +504,19 @@ msgstr "无法打开文件类型 <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:35
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:50
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:72
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:73
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "无效文件"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:48
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:72
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:73
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "无法加载 <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:57
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "加载"
@@ -550,22 +551,22 @@ msgctxt "@title:window"
 msgid "Preferences"
 msgstr "偏好设置"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:106
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:107
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr "默认"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:115
 msgctxt "@action:button"
 msgid "Close"
 msgstr "关闭"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "General"
 msgstr "基本"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:147
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:149
 msgctxt "@title:tab"
 msgid "Settings"
 msgstr "设置"
@@ -580,13 +581,13 @@ msgctxt "@info"
 msgid "Please provide a new name."
 msgstr "请提供新名称。"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
 msgstr "取消"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:74
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
 msgctxt "@action:button"
 msgid "OK"
 msgstr "确定"
