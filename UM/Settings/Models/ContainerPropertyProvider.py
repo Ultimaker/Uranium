@@ -120,7 +120,6 @@ class ContainerPropertyProvider(QObject):
 
         if property_name not in self._watched_properties:
             return
-
         value = self._getPropertyValue(property_name)
 
         if self._property_values.get(property_name, None) != value:
