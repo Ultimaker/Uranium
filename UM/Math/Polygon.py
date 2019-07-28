@@ -175,8 +175,10 @@ class Polygon:
 
         polygon_me = ShapelyUtil.polygon2ShapelyPolygon(self)
         polygon_other = ShapelyUtil.polygon2ShapelyPolygon(other)
-
-        if not (polygon_me.is_valid and polygon_other.is_valid):
+        if (not polygon_other._is_empty and not polygon_me._is_empty):
+            if not (polygon_me.is_valid and polygon_other.is_valid): #if not valid
+                return None
+        else:
             return None
 
         polygon_intersection = polygon_me.intersection(polygon_other)
