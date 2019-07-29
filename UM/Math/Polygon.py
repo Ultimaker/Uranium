@@ -175,8 +175,8 @@ class Polygon:
 
         polygon_me = ShapelyUtil.polygon2ShapelyPolygon(self)
         polygon_other = ShapelyUtil.polygon2ShapelyPolygon(other)
-        if (not polygon_other._is_empty and not polygon_me._is_empty):
-            if not (polygon_me.is_valid and polygon_other.is_valid): #if not valid
+        if not polygon_other.is_empty and not polygon_me.is_empty:
+            if not polygon_me.is_valid and polygon_other.is_valid:  # If not valid
                 return None
         else:
             return None
