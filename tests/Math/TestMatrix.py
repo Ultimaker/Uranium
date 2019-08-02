@@ -3,6 +3,8 @@
 
 import unittest
 import numpy
+import pytest
+
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 import copy
@@ -26,6 +28,15 @@ class TestMatrix(unittest.TestCase):
         temp_matrix2.setByScaleFactor(0.5)
         temp_matrix.multiply(temp_matrix2)
         numpy.testing.assert_array_almost_equal(temp_matrix.getData(), numpy.array([[0.5,0,0,10],[0,0.5,0,10],[0,0,0.5,10],[0,0,0,1]]))
+
+    def test_multiplyCopy(self):
+        temp_matrix = Matrix()
+        temp_matrix.setByTranslation(Vector(10, 10, 10))
+        temp_matrix2 = Matrix()
+        temp_matrix2.setByScaleFactor(0.5)
+        result = temp_matrix.multiply(temp_matrix2, copy=True)
+        assert temp_matrix != result 
+        numpy.testing.assert_array_almost_equal(result.getData(), numpy.array([[0.5, 0, 0, 10], [0, 0.5, 0, 10], [0, 0, 0.5, 10], [0, 0, 0, 1]]))
     
     def test_preMultiply(self):
         temp_matrix = Matrix()
@@ -34,6 +45,15 @@ class TestMatrix(unittest.TestCase):
         temp_matrix2.setByScaleFactor(0.5)
         temp_matrix.preMultiply(temp_matrix2)
         numpy.testing.assert_array_almost_equal(temp_matrix.getData(), numpy.array([[0.5,0,0,5],[0,0.5,0,5],[0,0,0.5,5],[0,0,0,1]]))
+
+    def test_preMultiplyCopy(self):
+        temp_matrix = Matrix()
+        temp_matrix.setByTranslation(Vector(10,10,10))
+        temp_matrix2 = Matrix()
+        temp_matrix2.setByScaleFactor(0.5)
+        result = temp_matrix.preMultiply(temp_matrix2, copy = True)
+        assert result != temp_matrix
+        numpy.testing.assert_array_almost_equal(result.getData(), numpy.array([[0.5,0,0,5],[0,0.5,0,5],[0,0,0.5,5],[0,0,0,1]]))
 
     def test_setByScaleFactor(self):
         matrix = Matrix()
@@ -97,3 +117,20 @@ class TestMatrix(unittest.TestCase):
 
     def test_dot(self):
         pass
+
+    def test_invalidAt(self):
+        matrix = Matrix()
+        with pytest.raises(IndexError):
+            matrix.at(12, 13)
+
+    def test_invalidSetRow(self):
+        matrix = Matrix()
+        with pytest.raises(IndexError):
+            matrix.setRow(12, [1., 2., 3.])
+            matrix.setRow(-1, [2., 3., 4.])
+
+    def test_invalidSetColumn(self):
+        matrix = Matrix()
+        with pytest.raises(IndexError):
+            matrix.setColumn(12, [1., 2., 3.])
+            matrix.setColumn(-1, [2., 3., 4.])
