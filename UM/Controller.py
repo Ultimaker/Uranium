@@ -438,7 +438,7 @@ class Controller:
                     # Actually set the top view.
                     camera.setPosition(Vector(0, 800, 1))
                     camera.lookAt(Vector(0, 100, 1))
-                    # Note the absence of rotation at the end!
+                    self._camera_tool.rotateCamera(0, 0)  # type: ignore
                 else:
                     camera.setPosition(Vector(0, 100, 700))
                     camera.lookAt(Vector(0, 100, 0))
