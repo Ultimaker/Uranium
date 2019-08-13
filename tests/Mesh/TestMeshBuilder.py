@@ -3,6 +3,7 @@ import numpy
 from UM.Math.Color import Color
 from UM.Math.Vector import Vector
 from UM.Mesh.MeshBuilder import MeshBuilder
+from UM.Mesh.MeshData import MeshType
 
 
 def test_addVertexWithNormal():
@@ -123,8 +124,74 @@ def test_reserveFaceAndVertexCount():
 
 def test_reserveVertexCount():
     builder = MeshBuilder()
+    assert builder.getVertices() is None
     builder.addVertex(1, 2, 3)
 
     builder.reserveVertexCount(10)
     # Reserving face count should reset the verts
     assert builder.getVertexCount() == 0
+
+
+def test_getSetCenterPosition():
+    builder = MeshBuilder()
+    builder.setCenterPosition(Vector(100, 200, 300))
+    assert builder.getCenterPosition() == Vector(100, 200, 300)
+
+
+def test_getSetType():
+    builder = MeshBuilder()
+    builder.setType(MeshType.faces)
+    assert builder.getType() == MeshType.faces
+
+    # Should have no effect
+    builder.setType("ZOMG")
+    assert builder.getType() == MeshType.faces
+
+
+def test_setVertices():
+    builder = MeshBuilder()
+    builder.setVertices(numpy.zeros(3))
+    assert builder.getVertexCount() == 1
+    assert builder.getVertices()[0] == 0
+
+
+def test_setIndices():
+    builder = MeshBuilder()
+    builder.setIndices(numpy.zeros(3))
+    assert builder.getFaceCount() == 1
+    assert builder.getIndices()[0] == 0
+
+
+def test_addIndices():
+    builder = MeshBuilder()
+    builder.addIndices(numpy.zeros(3))
+    assert builder.getFaceCount() == 3
+    assert builder.getIndices()[0] == 0
+
+    builder.addIndices(numpy.zeros(3))
+    assert builder.getFaceCount() == 6
+
+
+def test_addVertices():
+    builder = MeshBuilder()
+    builder.addVertices(numpy.zeros(3))
+    assert builder.getVertexCount() == 3
+
+    builder.addVertices(numpy.zeros(3))
+    assert builder.getVertexCount() == 6
+
+
+def test_setUVCoordinates():
+    builder = MeshBuilder()
+    builder.setVertices(numpy.zeros((10 * 3, 3), dtype=numpy.float32))
+    builder.setVertexUVCoordinates(5, 20, 22)
+    assert builder.hasUVCoordinates()
+    assert builder.getUVCoordinates()[5, 0] == 20
+    assert builder.getUVCoordinates()[5, 1] == 22
+
+
+def test_getSetFilename():
+    builder = MeshBuilder()
+    builder.setFileName("HERPDERP")
+
+    assert builder.getFileName() == "HERPDERP"

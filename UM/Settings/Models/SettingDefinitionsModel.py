@@ -345,7 +345,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         definitions = self._container.findDefinitions(key = key)
         if not definitions:
-            Logger.log("e", "Tried to change visiblity of a non-existant SettingDefinition")
+            Logger.log("e", "Tried to change visibility of a non-existent SettingDefinition")
             return
 
         if visible:

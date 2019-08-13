@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
@@ -43,7 +43,7 @@ def _toFloatConversion(value: str) -> float:
     ## Literal eval does not like "02" as a value, but users see this as "2".
     ## We therefore look numbers with leading "0", provided they are not used in variable names
     ## example: "test02 * 20" should not be changed, but "test * 02 * 20" should be changed (into "test * 2 * 20")
-    regex_pattern = '(?<!\.|\w|\d)0+(\d+)'
+    regex_pattern = r"(?<!\.|\w|\d)0+(\d+)"
     value = re.sub(regex_pattern, stripLeading0, value)
 
     try:

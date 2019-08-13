@@ -6,6 +6,7 @@ import unittest.mock
 from unittest.mock import MagicMock, patch
 
 from UM.PackageManager import PackageManager
+from UM.Version import Version
 
 test_package_path = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/UnitTestPackage.package")
 
@@ -119,3 +120,87 @@ def test_emptyInit():
 
     assert manager.getPackageContainerIds("packageThatDoesNotExist") == []
 
+
+class TestAddAvailablePackageVersion:
+    def test_addNewVersionThatCanUpdate(self):
+        manager = PackageManager(MagicMock())
+        manager.checkIfPackageCanUpdate = MagicMock(return_value = True)
+        manager.addAvailablePackageVersion("beep", Version("1.0.0"))
+
+        assert manager.packagesWithUpdate == {"beep"}
+
+    def test_addNewVersionThatCantUpdate(self):
+        manager = PackageManager(MagicMock())
+        manager.checkIfPackageCanUpdate = MagicMock(return_value=False)
+        manager.addAvailablePackageVersion("beep", Version("1.0.0"))
+
+        assert manager.packagesWithUpdate == set()
+
+    def test_addMultipleVersions(self):
+        manager = PackageManager(MagicMock())
+        manager.checkIfPackageCanUpdate = MagicMock(return_value=True)
+        manager.addAvailablePackageVersion("beep", Version("1.2.0"))
+        manager.addAvailablePackageVersion("beep", Version("1.0.0"))
+
+        assert manager.packagesWithUpdate == {"beep"}
+
+
+class TestCheckIfPackageCanUpdate:
+    def test_noAvailableVersions(self):
+        manager = PackageManager(MagicMock())
+        assert manager.checkIfPackageCanUpdate("beep") is False
+
+    def test_availableVersionNotInstalledOrBundled(self):
+        manager = PackageManager(MagicMock())
+        manager.addAvailablePackageVersion("beep", Version("1.0.0"))
+
+        # Even though we have a known package version, it's not installed / bundled, so we cant update
+        assert manager.checkIfPackageCanUpdate("beep") is False
+
+    def test_olderVersionIsBundled(self):
+        manager = PackageManager(MagicMock())
+        manager.addAvailablePackageVersion("beep", Version("1.0.0"))
+        manager._bundled_package_dict = {"beep": {"package_info": {"package_version": "0.9.0"}}}
+
+        assert manager.checkIfPackageCanUpdate("beep") is True
+
+    def test_newerVersionIsBundled(self):
+        manager = PackageManager(MagicMock())
+        manager.addAvailablePackageVersion("beep", Version("1.0.0"))
+        manager._bundled_package_dict = {"beep": {"package_info": {"package_version": "1.9.0"}}}
+
+        assert manager.checkIfPackageCanUpdate("beep") is False
+
+    def test_olderVersionIsInstalled(self):
+        manager = PackageManager(MagicMock())
+        manager.addAvailablePackageVersion("beep", Version("1.0.0"))
+        manager._installed_package_dict = {"beep": {"package_info": {"package_version": "0.9.0"}}}
+
+        assert manager.checkIfPackageCanUpdate("beep") is True
+
+    def test_newerVersionIsInstalled(self):
+        manager = PackageManager(MagicMock())
+        manager.addAvailablePackageVersion("beep", Version("1.0.0"))
+        manager._installed_package_dict = {"beep": {"package_info": {"package_version": "1.9.1"}}}
+
+        assert manager.checkIfPackageCanUpdate("beep") is False
+
+
+def test_removeAllScheduledPackages():
+    manager = PackageManager(MagicMock())
+    manager._purgePackage = MagicMock()
+
+    manager._to_remove_package_set = {"beep"}
+    manager._installed_package_dict = {"beep": {}}
+    manager._removeAllScheduledPackages()
+    assert manager._to_remove_package_set == set()
+
+
+def test_removeAllScheduledPackagesWithException():
+    manager = PackageManager(MagicMock())
+    manager._purgePackage = MagicMock(side_effect = Exception)
+    manager._installed_package_dict = {"beep": {}}
+    manager._to_remove_package_set = {"beep"}
+
+    manager._removeAllScheduledPackages()
+    assert manager._to_remove_package_set == {"beep"}

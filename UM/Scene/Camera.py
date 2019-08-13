@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 class Camera(SceneNode.SceneNode):
     class PerspectiveMode(enum.Enum):
         PERSPECTIVE = "perspective"
-        ORTHOGONAL = "orthogonal"
+        ORTHOGRAPHIC = "orthographic"
 
     @staticmethod
     def getDefaultZoomFactor():
@@ -42,7 +42,7 @@ class Camera(SceneNode.SceneNode):
         self._window_height = 0  # type: int
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
-        self._cached_view_projection_matrix = None # type: Optional[Matrix]
+        self._cached_view_projection_matrix = None  # type: Optional[Matrix]
 
         self._zoom_factor = Camera.getDefaultZoomFactor()
 
@@ -50,8 +50,6 @@ class Camera(SceneNode.SceneNode):
         Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE.value)
         Application.getInstance().getPreferences().preferenceChanged.connect(self._preferencesChanged)
         self._preferencesChanged("general/camera_perspective_mode")
-
-        self._cached_view_projection_matrix = None  # type: Optional[Matrix]
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "Camera":
         copy = cast(Camera, super().__deepcopy__(memo))
@@ -66,7 +64,7 @@ class Camera(SceneNode.SceneNode):
         return self._zoom_factor
 
     def setZoomFactor(self, zoom_factor: float) -> None:
-        # Only an orthogonal camera has a zoom at the moment.
+        # Only an orthographic camera has a zoom at the moment.
         if not self.isPerspective():
             if self._zoom_factor != zoom_factor:
                 self._zoom_factor = zoom_factor
@@ -197,7 +195,7 @@ class Camera(SceneNode.SceneNode):
             origin = self.getWorldPosition()
             direction = -direction
         else:
-            # In orthogonal mode, the origin is the click position on the plane where the camera resides, and that
+            # In orthographic mode, the origin is the click position on the plane where the camera resides, and that
             # plane is parallel to the near and the far planes.
             projection = numpy.array([view_x, -view_y, 0.0, 1.0], dtype = numpy.float32)
             projection = numpy.dot(inverted_projection, projection)
@@ -226,8 +224,8 @@ class Camera(SceneNode.SceneNode):
         new_mode = str(Application.getInstance().getPreferences().getValue("general/camera_perspective_mode"))
 
         # Translate the selected mode to the camera state.
-        if new_mode == str(self.PerspectiveMode.ORTHOGONAL.value):
-            Logger.log("d", "Changing perspective mode to orthogonal.")
+        if new_mode == str(self.PerspectiveMode.ORTHOGRAPHIC.value):
+            Logger.log("d", "Changing perspective mode to orthographic.")
             self.setPerspective(False)
         elif new_mode == str(self.PerspectiveMode.PERSPECTIVE.value):
             Logger.log("d", "Changing perspective mode to perspective.")

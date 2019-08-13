@@ -37,7 +37,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         self.__name = name
         self.__language = language
         self.__translation = None   # type: Optional[gettext.NullTranslations]
-
+        self.__require_update = True
         self._update() #Load the actual translation document now that the language is set.
 
     ##  Whether the translated texts are loaded into this catalogue.
