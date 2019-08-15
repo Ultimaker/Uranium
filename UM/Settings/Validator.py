@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from enum import Enum
+import re
 from typing import Optional
 import uuid
 
@@ -48,6 +49,7 @@ class Validator(SettingFunction.SettingFunction):
         try:
             allow_empty = value_provider.getProperty(self._key, "allow_empty", context = context)  # For string only
             is_uuid = value_provider.getProperty(self._key, "is_uuid", context = context)  # For string only
+            regex_blacklist_pattern = value_provider.getProperty(self._key, "regex_blacklist_pattern", context = context)  # For string only
             minimum = value_provider.getProperty(self._key, "minimum_value", context = context)
             maximum = value_provider.getProperty(self._key, "maximum_value", context = context)
             minimum_warning = value_provider.getProperty(self._key, "minimum_value_warning", context = context)
@@ -69,17 +71,31 @@ class Validator(SettingFunction.SettingFunction):
 
             setting_type = value_provider.getProperty(self._key, "type", context = context)
 
-            # "allow_empty is not None" is not necessary here because of "allow_empty is False", but it states
-            # explicitly that we should not do this check when "allow_empty is None".
-            if allow_empty is not None and allow_empty is False and str(value) == "":
-                state = ValidatorState.Invalid
-            elif is_uuid is not None and is_uuid is True:
-                # Try to parse the UUID string with uuid.UUID(). It will raise a ValueError if it's not valid.
-                try:
-                    uuid.UUID(str(value))
-                    state = ValidatorState.Valid
-                except ValueError:
+            if setting_type == "str":
+                # "allow_empty is not None" is not necessary here because of "allow_empty is False", but it states
+                # explicitly that we should not do this check when "allow_empty is None".
+                if allow_empty is not None and allow_empty is False and str(value) == "":
                     state = ValidatorState.Invalid
+                    return state
+
+                if is_uuid is not None and is_uuid is True:
+                    # Try to parse the UUID string with uuid.UUID(). It will raise a ValueError if it's not valid.
+                    try:
+                        uuid.UUID(str(value))
+                        state = ValidatorState.Valid
+                    except ValueError:
+                        state = ValidatorState.Invalid
+                    return state
+
+                # If "regex_blacklist_pattern" is set, it will be used to validate the value string. If the value string
+                # matches the blacklist pattern, the value will be invalid.
+                if regex_blacklist_pattern is not None and len(regex_blacklist_pattern) > 0:
+                    regex = re.compile(regex_blacklist_pattern)
+                    is_valid = regex.fullmatch(str(value).lower()) is None
+                    state = ValidatorState.Valid if is_valid else ValidatorState.Invalid
+                    return state
+
+                state = ValidatorState.Valid
                 return state
 
             elif setting_type == "bool":
