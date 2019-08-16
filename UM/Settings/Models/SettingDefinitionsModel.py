@@ -260,13 +260,16 @@ class SettingDefinitionsModel(QAbstractListModel):
             self.expandedChanged.emit()
             self._scheduleUpdateVisibleRows()
 
+    def _getDefinitionsByKey(self, key: str) -> List["SettingDefinition"]:
+        if not self._container:
+            return []
+
+        return self._container.findDefinitions(key = key)
+
     ##  Show the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
     def expandRecursive(self, key: str) -> None:
-        if not self._container:
-            return
-
-        definitions = self._container.findDefinitions(key = key)
+        definitions = self._getDefinitionsByKey(key)
         if not definitions:
             return
         self.expand(key)
@@ -277,14 +280,11 @@ class SettingDefinitionsModel(QAbstractListModel):
     ##  Hide the children of a specified SettingDefinition.
     @pyqtSlot(str)
     def collapse(self, key: str) -> None:
-        if not self._container:
+        definitions = self._getDefinitionsByKey(key)
+        if not definitions:
             return
 
         if key not in self._expanded:
-            return
-
-        definitions = self._container.findDefinitions(key = key)
-        if not definitions:
             return
 
         self._expanded.remove(key)
@@ -343,7 +343,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             # Ignore already hidden settings that need to be hidden.
             return
 
-        definitions = self._container.findDefinitions(key = key)
+        definitions = self._getDefinitionsByKey(key)
         if not definitions:
             Logger.log("e", "Tried to change visibility of a non-existent SettingDefinition")
             return
@@ -363,9 +363,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     @pyqtSlot(str, result = int)
     def getIndex(self, key: str) -> int:
-        if not self._container:
-            return -1
-        definitions = self._container.findDefinitions(key = key)
+        definitions = self._getDefinitionsByKey(key)
         if not definitions:
             return -1
 
@@ -383,10 +381,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     @pyqtSlot(str, str, result = "QVariantList")
     def getRequires(self, key, role = None):
-        if not self._container:
-            return []
-
-        definitions = self._container.findDefinitions(key = key)
+        definitions = self._getDefinitionsByKey(key)
         if not definitions:
             return []
 
@@ -408,10 +403,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     @pyqtSlot(str, str, result = "QVariantList")
     def getRequiredBy(self, key, role = None):
-        if not self._container:
-            return []
-
-        definitions = self._container.findDefinitions(key = key)
+        definitions = self._getDefinitionsByKey(key)
         if not definitions:
             return []
 
