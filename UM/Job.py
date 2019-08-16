@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import time
-from typing import Any
+from typing import Any, Optional
 
 from UM.JobQueue import JobQueue
 from UM.Signal import Signal, signalemitter
@@ -16,17 +16,17 @@ from UM.Signal import Signal, signalemitter
 #   \sa JobQueue
 @signalemitter
 class Job:
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._running = False   # type: bool
         self._finished = False  # type: bool
         self._result = None     # type: Any
         self._message = ""      # type: str
-        self._error = None
+        self._error = None      # type: Optional[Exception]
 
     ##  Perform the actual task of this job. Should be reimplemented by subclasses.
     #   \exception NotImplementedError
-    def run(self):
+    def run(self) -> None:
         raise NotImplementedError()
 
     # Get optional message
@@ -46,7 +46,7 @@ class Job:
     ##  Set the result of this job.
     #
     #   This should be called by run() to set the actual result of the Job.
-    def setResult(self, result: Any):
+    def setResult(self, result: Any) -> None:
         self._result = result
 
     ##  Set an exception that was thrown while the job was being executed.
@@ -94,7 +94,7 @@ class Job:
     ##  Get the error that was encountered during execution.
     #
     #   \return \type{Exception} The error encountered during execution or None if there was no error.
-    def getError(self) -> Exception:
+    def getError(self) -> Optional[Exception]:
         return self._error
 
     ##  Emitted when the job has finished processing.
