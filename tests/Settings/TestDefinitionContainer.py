@@ -33,7 +33,8 @@ test_deserialize_data = [
         "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting" },
         "test_setting_2": { "label": "Test 2", "default_value": 10, "description": "A Test Setting" },
         "test_setting_3": { "label": "Test 3", "default_value": 10, "description": "A Test Setting" },
-        "test_setting_4": { "label": "Test 4", "default_value": 10, "description": "A Test Setting" }
+        "test_setting_4": { "label": "Test 4", "default_value": 10, "description": "A Test Setting" },
+        "test_setting_5": { "label": "Test 5 (category)", "description": "A Test Category", "type": "category" }
     }}),
     ("children.def.json", { "name": "Test", "metadata": {}, "settings": {
         "test_setting": { "label": "Test", "default_value": 10, "description": "A Test Setting"},

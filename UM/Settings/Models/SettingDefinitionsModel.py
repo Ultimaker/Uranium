@@ -32,7 +32,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     ExpandedRole = Qt.UserRole + 4
 
     def __init__(self, parent = None, *args, **kwargs):
-        super().__init__(parent = parent, *args, **kwargs)
+        super().__init__(parent = parent)
 
         self._container_id = None
         self._container = None

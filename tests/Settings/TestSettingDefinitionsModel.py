@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 import os
@@ -18,10 +18,11 @@ def createModel(definition = "multiple_settings.def.json"):
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", definition),
               encoding="utf-8") as data:
         json = data.read()
-
+    definition_container._updateSerialized = MagicMock(return_value = json)
     definition_container.deserialize(json)
     model._container = definition_container
-    model.setShowAll(True)
+    with patch("UM.Application.Application.getInstance"):
+        model.setShowAll(True)
     model.forceUpdate()
     model._updateVisibleRows()
 
@@ -35,14 +36,14 @@ test_validate_data = [
     {"attribute": "visibilityHandler", "value": MagicMock()},
     {"attribute": "exclude", "value": ["yay"]},
     {"attribute": "expanded", "value": ["yay"]},
-    {"attribute": "filter", "value": {}},
+    {"attribute": "filter", "value": {"zomg": "zomg"}},
     {"attribute": "rootKey", "value": "Whatevah"}
 ]
-
 
 @pytest.mark.parametrize("data", test_validate_data)
 def test_getAndSet(data):
     model = SettingDefinitionsModel()
+    model._scheduleUpdateVisibleRows = MagicMock()
     model._container = MagicMock()
     # Convert the first letter into a capital
     attribute = list(data["attribute"])
@@ -50,17 +51,27 @@ def test_getAndSet(data):
     attribute = "".join(attribute)
 
     # Attempt to set the value
-    getattr(model, "set" + attribute)(data["value"])
+    with patch("UM.Settings.ContainerRegistry.ContainerRegistry.getInstance"):
+        getattr(model, "set" + attribute)(data["value"])
 
     # Ensure that the value got set
     assert getattr(model, data["attribute"]) == data["value"]
 
 
+def test_setRootKeyUnknownDefinition():
+    model = SettingDefinitionsModel()
+    model._container = MagicMock()
+    model._container.findDefinitions = MagicMock(return_value = [])
+    model.rootKeyChanged = MagicMock()
+    model.setRootKey("Blorp")
+    assert model.rootKeyChanged.emit.call_count == 0
+
+
 def test_getCount():
     model = createModel()
 
-    assert model.count == 5
-    assert model.categoryCount == 0
+    assert model.count == 6
+    assert model.categoryCount == 1
 
 
 def test_setVisible():
@@ -80,6 +91,18 @@ def test_setVisible():
     # Ensure that the visibility handler got notified that things were changed.
 
     assert mocked_visibility_handler.setVisible.call_count == 1
+
+
+def test_disconnectVisibilityHandler():
+    model = SettingDefinitionsModel()
+    visibility_handler = MagicMock()
+    visibility_handler_2 = MagicMock()
+    model.setVisibilityHandler(visibility_handler)
+    assert visibility_handler.visibilityChanged.disconnect.call_count == 0
+
+    model.setVisibilityHandler(visibility_handler_2)
+
+    assert visibility_handler.visibilityChanged.disconnect.call_count > 0
 
 
 def test_getIndex():
@@ -102,7 +125,9 @@ def test_getRequiredBy():
     requires = model.getRequiredBy("test_setting_0", "value")
     assert requires[0]["key"] == "test_setting_1"
 
-def test_collapseExpand():
+
+@patch("UM.Application.Application.getInstance")
+def test_collapseExpand(application):
     model = createModel("children.def.json")
 
     model.expand("test_setting")
@@ -126,7 +151,8 @@ def test_collapseExpand():
     assert "test_child_1" not in model.expanded
 
 
-def test_setAllExpandedVisible():
+@patch("UM.Application.Application.getInstance")
+def test_setAllExpandedVisible(application):
     model = createModel("children.def.json")
     mocked_visibility_handler = MagicMock()
     model.setVisibilityHandler(mocked_visibility_handler)
