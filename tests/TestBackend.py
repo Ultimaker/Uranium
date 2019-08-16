@@ -1,7 +1,7 @@
 from UM.Backend.Backend import Backend
 import pytest
 from unittest.mock import patch, MagicMock
-
+import Arcus
 
 
 @pytest.fixture
@@ -51,6 +51,42 @@ def test_startEngineWithoutCommand(backend):
 
     backend.startEngine()
     backend._createSocket.assert_called_once_with()
+
+
+def test__onSocketStateChanged_listening(backend):
+    backend.startEngine = MagicMock()
+    with patch("UM.Application.Application.getInstance"):
+        backend._onSocketStateChanged(Arcus.SocketState.Listening)
+    assert backend.startEngine.called_once_with()
+
+
+def test_onSocketStateChanged_connected(backend):
+    backend.backendConnected = MagicMock()
+    backend._onSocketStateChanged(Arcus.SocketState.Connected)
+    assert backend.backendConnected.emit.called_once_with()
+
+
+def test_handleKnownMessage(backend):
+    handler = MagicMock()
+    backend._message_handlers = {"beep": handler}
+    socket = MagicMock()
+    message = MagicMock()
+    message.getTypeName = MagicMock(return_value = "beep")
+    socket.takeNextMessage = MagicMock(return_value = message)
+    backend._socket = socket
+    backend._onMessageReceived()
+
+    handler.assert_called_once_with(message)
+
+
+def test_onSocketBindFailed(backend):
+    port = backend._port
+    backend._createSocket = MagicMock()
+    bind_failed_error = MagicMock()
+    bind_failed_error.getErrorCode = MagicMock(return_value=Arcus.ErrorCode.BindFailedError)
+    backend._onSocketError(bind_failed_error)
+    assert backend._createSocket.call_count == 1
+    assert port + 1 == backend._port
 
 
 def test_getLog(backend):
