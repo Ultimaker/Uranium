@@ -1,8 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Cura is released under the terms of the LGPLv3 or higher.
 
+import collections
 import sys
-import collections 
 
 ##  Convenience class to simplify OS checking and similar platform-specific handling.
 class Platform:
@@ -14,6 +14,11 @@ class Platform:
                 }
 
     __platform_type = platforms[sys.platform]
+
+    ##  Get the platform type.
+    @classmethod
+    def getType(cls) -> int:
+        return cls.__platform_type
 
     ##  Check to see if we are currently running on OSX.
     @classmethod
@@ -29,8 +34,3 @@ class Platform:
     @classmethod
     def isLinux(cls) -> bool:
         return cls.__platform_type == cls.platforms['linux']
-
-    ##  Get the platform type.
-    @classmethod
-    def getType(cls) -> int:
-        return cls.__platform_type
