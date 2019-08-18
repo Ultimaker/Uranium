@@ -14,7 +14,7 @@ class PluginObject:
         self._version = None  # type: Optional[str]
 
     def getPluginId(self) -> str:
-        if self._plugin_id is None:
+        if not self._plugin_id:
             raise Exception("The plugin ID needs to be set before the plugin can be used")
         return self._plugin_id
 
@@ -25,6 +25,6 @@ class PluginObject:
         self._version = version
 
     def getVersion(self) -> str:
-        if self._version is None:
+        if not self._version:
             raise Exception("The plugin version needs to be set before the plugin can be used")
         return self._version
