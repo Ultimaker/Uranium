@@ -12,7 +12,7 @@ Dependencies
 ------------
 - [Qt 5](https://doc.qt.io/qt-5/) with [QtQuick 2](https://doc.qt.io/archives/qt-5.11/qtquickcontrols2-index.html), [QtQuick Controls](https://doc.qt.io/qt-5/qtquickcontrols-index.html)
 - Python 3, with the following modules
-  - [PyQt5](https://github.com/baoboa/pyqt5)
+  - [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5)
   - [Numpy](https://github.com/numpy/numpy)
   - [Arcus](https://github.com/Ultimaker/libArcus)
   - [Shapely](https://github.com/Toblerity/Shapely)
