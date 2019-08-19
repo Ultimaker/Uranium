@@ -11,20 +11,14 @@ class PluginError(Exception):
 
 
 ##  Raised when a plugin could not be found.
-class PluginNotFoundError(Exception):
-    def __init__(self, name):
-        super().__init__()
-        self._name = name
-
+class PluginNotFoundError(PluginError):
     def __str__(self):
-        return "Could not find plugin " + self._name
+        name = self.args[0]
+        return "Could not find plugin " + name
 
 
 ##  Raised when a plugin provides incorrect metadata.
-class InvalidMetaDataError(Exception):
-    def __init__(self, name):
-        super().__init__()
-        self._name = name
-
-    def __str__(self):
-        return "Invalid metadata for plugin " + self._name
+class InvalidMetaDataError(PluginError):
+   def __str__(self):
+        name = self.args[0]
+        return "Invalid metadata for plugin " + name
