@@ -13,12 +13,12 @@ class PluginError(Exception):
 ##  Raised when a plugin could not be found.
 class PluginNotFoundError(PluginError):
     def __str__(self):
-        name = self.args[0]
+        name = self.args[0]     # pylint: disable=unsubscriptable-object
         return "Could not find plugin " + name
 
 
 ##  Raised when a plugin provides incorrect metadata.
 class InvalidMetaDataError(PluginError):
    def __str__(self):
-        name = self.args[0]
+        name = self.args[0]     # pylint: disable=unsubscriptable-object
         return "Invalid metadata for plugin " + name
