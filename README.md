@@ -14,6 +14,6 @@ Dependencies
 - Python 3, with the following modules
   - [PyQt5](https://github.com/baoboa/pyqt5)
   - [Numpy](https://github.com/numpy/numpy)
-  - [Arcus](https://github.com/cuenca-mx/arcus-python)
+  - [Arcus](https://github.com/Ultimaker/libArcus)
   - [Shapely](https://github.com/Toblerity/Shapely)
   - [Scipy](https://github.com/scipy/scipy)
