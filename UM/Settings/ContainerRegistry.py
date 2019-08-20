@@ -222,7 +222,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                     Logger.log("w", "Metadata of container {container_id} is missing even though the container is added during run-time.")
                     return []
                 metadata = provider.loadMetadata(kwargs["id"])
-                if metadata is None or metadata.get("id", "") in self._wrong_container_ids:
+                if metadata is None or metadata.get("id", "") in self._wrong_container_ids or "id" not in metadata:
                     return []
                 self.metadata[metadata["id"]] = metadata
                 self.source_provider[metadata["id"]] = provider
@@ -384,7 +384,6 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_id not in self.source_provider:
             self.source_provider[container_id] = None #Added during runtime.
         self._clearQueryCacheByContainer(container)
-        Logger.log("d", "Container [%s] added.", container_id)
 
         # containerAdded is a custom signal and can trigger direct calls to its subscribers. This should be avoided
         # because with the direct calls, the subscribers need to know everything about what it tries to do to avoid

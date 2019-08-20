@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Optional
 
@@ -53,6 +53,7 @@ class ReadFileJob(Job):
 
         self._loading_message = Message(self._filename,
                                         lifetime=0,
+                                        progress=0,
                                         dismissable=False,
                                         title = i18n_catalog.i18nc("@info:title", "Loading"))
         self._loading_message.setProgress(-1)
@@ -69,7 +70,7 @@ class ReadFileJob(Job):
             Logger.log("d", "Loading file took %0.1f seconds", end_time - begin_time)
             if self._result is None:
                 self._loading_message.hide()
-                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>", self._filename), lifetime=0, title = i18n_catalog.i18nc("@info:title", "Invalid File"))
+                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>", self._filename), lifetime = 0, title = i18n_catalog.i18nc("@info:title", "Invalid File"))
                 result_message.show()
                 return
             self._loading_message.hide()

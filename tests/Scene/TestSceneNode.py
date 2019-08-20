@@ -1,6 +1,6 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
+from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Mesh.MeshData import MeshData
 from UM.Scene.GroupDecorator import GroupDecorator
 from UM.Scene.SceneNode import SceneNode
@@ -14,6 +14,7 @@ import unittest
 import math
 
 from copy import deepcopy
+from unittest.mock import MagicMock
 
 class SceneNodeTest(unittest.TestCase):
     def setUp(self):
@@ -308,6 +309,67 @@ class SceneNodeTest(unittest.TestCase):
         node_1.removeChild(node_2)
         # Doing it again shouldn't break.
         node_1.removeChild(node_2)
+
+    def test_getSetMeshdata(self):
+        node = SceneNode()
+        test_mesh = MeshData()
+        node.setMeshData(test_mesh)
+        assert node.getMeshData() == test_mesh
+
+    def test_getTransformedMeshdata(self):
+        node = SceneNode()
+        node.translate(Vector(10, 0 , 0))
+        builder = MeshBuilder()
+        builder.addVertex(10, 20, 20)
+        node.setMeshData(builder.build())
+        
+        transformed_mesh = node.getMeshDataTransformed()
+
+        transformed_vertex = transformed_mesh.getVertices()[0]
+        assert transformed_vertex[0] == 20
+        assert transformed_vertex[1] == 20
+        assert transformed_vertex[2] == 20
+
+    def test_getSetSetting(self):
+        node = SceneNode()
+        node.setSetting("ZOMG", "BEEP")
+        assert node.getSetting("ZOMG") == "BEEP"
+        assert node.getSetting("unknown") == ""
+        assert node.getSetting("unknown", "zomg") == "zomg"
+
+    def test_getSetSelectable(self):
+        node = SceneNode()
+        node.setSelectable(True)
+        assert node.isSelectable()
+        node.setEnabled(False)
+        assert not node.isSelectable() # Node is disabled, can't select it anymore
+
+    def test_getSetMirror(self):
+        node = SceneNode()
+        node.setMirror(Vector(-1, 1, 1))
+        assert node.getMirror() == Vector(-1, 1, 1)
+
+    def test_setCenterPosition(self):
+        node = SceneNode()
+        child_node = SceneNode()
+        node.addChild(child_node)
+        child_node.setCenterPosition = MagicMock()
+
+        builder = MeshBuilder()
+        builder.addVertex(10, 20, 20)
+        node.setMeshData(builder.build())
+
+        node.setCenterPosition(Vector(-10, 0, 0))
+
+        transformed_mesh = node.getMeshData()
+
+        transformed_vertex = transformed_mesh.getVertices()[0]
+        assert transformed_vertex[0] == 20
+        assert transformed_vertex[1] == 20
+        assert transformed_vertex[2] == 20
+
+        child_node.setCenterPosition.assert_called_once_with(Vector(-10, 0, 0))
+
 
 if __name__ == "__main__":
     unittest.main()

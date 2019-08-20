@@ -98,10 +98,22 @@ class PackageManager(QObject):
         if available_versions is None:
             return False
 
+        current_version = None
+
+        bundled_package_dict = self._bundled_package_dict.get(package_id)
+        if bundled_package_dict is not None:
+            current_version = UMVersion(bundled_package_dict["package_info"]["package_version"])
+
         installed_package_dict = self._installed_package_dict.get(package_id)
         if installed_package_dict is not None:
             current_version = UMVersion(installed_package_dict["package_info"]["package_version"])
 
+            # One way to check if the package has been updated in looking at the to_install information in the packages.json
+            to_install_package_dict = self._to_install_package_dict.get(package_id)
+            if to_install_package_dict is not None: # If it's marked as to_install, that means package will be installed upon restarting
+                    return False
+
+        if current_version is not None:
             for available_version in available_versions:
                 if current_version < available_version:
                     # Stop looking, there is at least one version that is higher.
@@ -360,7 +372,9 @@ class PackageManager(QObject):
                 self.installedPackagesChanged.emit()
 
                 if package_id in self._packages_with_update_available:
-                    if self.checkIfPackageCanUpdate(package_id):
+                    # After installing the update, the check will return that not other updates are available.
+                    # In that case we remove it from the list. This is actually a safe check (could be removed)
+                    if not self.checkIfPackageCanUpdate(package_id):
                         # The install ensured that the package no longer has a valid update option.
                         self._packages_with_update_available.remove(package_id)
                         self.packagesWithUpdateChanged.emit()
@@ -466,7 +480,10 @@ class PackageManager(QObject):
 
     def __installPackageFiles(self, package_id: str, src_dir: str, dst_dir: str) -> None:
         Logger.log("i", "Moving package {package_id} from {src_dir} to {dst_dir}".format(package_id=package_id, src_dir=src_dir, dst_dir=dst_dir))
-        shutil.move(src_dir, dst_dir)
+        try:
+            shutil.move(src_dir, dst_dir)
+        except FileExistsError:
+            Logger.log("w", "Not moving %s to %s as the destination already exists", src_dir, dst_dir)
 
     # Gets package information from the given file.
     def getPackageInfo(self, filename: str) -> Dict[str, Any]:

@@ -35,6 +35,9 @@ class FixtureApplication(Application):
     def getRenderer(self):
         return MagicMock()
 
+    def showMessage(self, message):
+        pass
+
 @pytest.fixture()
 def application():
     # Since we need to use it more that once, we create the application the first time and use its instance the second

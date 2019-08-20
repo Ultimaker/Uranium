@@ -267,7 +267,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             for key, value in parsed["overrides"].items():
                 setting = self._findInDict(parsed["settings"], key)
                 if setting is None:
-                    Logger.log("w","Unable to override setting %s", key)
+                    Logger.log("w", "Unable to override setting %s", key)
                     is_valid = False
                 else:
                     setting.update(value)
@@ -452,7 +452,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
             other = self._getDefinition(setting)
             if not other:
-                continue
+                other = SettingDefinition(setting)
 
             relation = SettingRelation(definition, other, RelationType.RequiresTarget, property_name)
             definition.relations.append(relation)

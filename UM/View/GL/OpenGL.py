@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import sys
@@ -51,7 +51,12 @@ class OpenGL:
         profile.setVersion(OpenGLContext.major_version, OpenGLContext.minor_version)
         profile.setProfile(OpenGLContext.profile)
 
-        self._gl = QOpenGLContext.currentContext().versionFunctions(profile) # type: Any #It's actually a protected class in PyQt that depends on the implementation of your graphics card.
+        context = QOpenGLContext.currentContext()
+        if not context:
+            Logger.log("e", "Startup failed due to OpenGL context creation failing")
+            QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize an OpenGL context. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
+            sys.exit(1)
+        self._gl = context.versionFunctions(profile) # type: Any #It's actually a protected class in PyQt that depends on the implementation of your graphics card.
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
             QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
@@ -82,14 +87,14 @@ class OpenGL:
         elif "intel" in vendor_string:
             self._gpu_vendor = OpenGL.Vendor.Intel
 
+        self._gpu_type = "Unknown"  # type: str
         # WORKAROUND: Cura/#1117 Cura-packaging/12
         # Some Intel GPU chipsets return a string, which is not undecodable via PyQt5.
         # This workaround makes the code fall back to a "Unknown" renderer in these cases.
         try:
-            self._gpu_type = self._gl.glGetString(self._gl.GL_RENDERER) #type: str
+            self._gpu_type = self._gl.glGetString(self._gl.GL_RENDERER)
         except UnicodeDecodeError:
             Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
-            self._gpu_type = "Unknown" #type: str
 
         self._opengl_version = self._gl.glGetString(self._gl.GL_VERSION) #type: str
 

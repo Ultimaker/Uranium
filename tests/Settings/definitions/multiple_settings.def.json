@@ -33,6 +33,12 @@
             "description": "A Test Setting",
             "default_value": 10,
             "type": "int"
+        },
+        "test_setting_5":
+        {
+            "label": "Test 5 (category)",
+            "description": "A Test Category",
+            "type": "category"
         }
     }
 }

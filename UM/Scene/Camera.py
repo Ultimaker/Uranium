@@ -3,29 +3,38 @@
 
 from . import SceneNode
 
+from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
 from UM.Math.Ray import Ray
 from UM.Math.Vector import Vector
 
-import copy
+import enum
 import numpy
 import numpy.linalg
 from typing import cast, Dict, Optional, Tuple, TYPE_CHECKING
+from UM.Signal import Signal
 
 if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
-
 
 ##  A SceneNode subclass that provides a camera object.
 #
 #   The camera provides a projection matrix and its transformation matrix
 #   can be used as view matrix.
 class Camera(SceneNode.SceneNode):
+    class PerspectiveMode(enum.Enum):
+        PERSPECTIVE = "perspective"
+        ORTHOGRAPHIC = "orthographic"
+
+    @staticmethod
+    def getDefaultZoomFactor():
+        return -0.3334
+
     def __init__(self, name: str = "", parent: SceneNode.SceneNode = None) -> None:
         super().__init__(parent)
         self._name = name  # type: str
         self._projection_matrix = Matrix()  # type: Matrix
-        self._projection_matrix.setOrtho(-5, 5, 5, -5, -100, 100)
+        self._projection_matrix.setOrtho(-5, 5, -5, 5, -100, 100)
         self._perspective = True  # type: bool
         self._viewport_width = 0  # type: int
         self._viewport_height = 0  # type: int
@@ -33,7 +42,14 @@ class Camera(SceneNode.SceneNode):
         self._window_height = 0  # type: int
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
-        self._cached_view_projection_matrix = None # type: Optional[Matrix]
+        self._cached_view_projection_matrix = None  # type: Optional[Matrix]
+
+        self._zoom_factor = Camera.getDefaultZoomFactor()
+
+        from UM.Application import Application
+        Application.getInstance().getPreferences().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.PERSPECTIVE.value)
+        Application.getInstance().getPreferences().preferenceChanged.connect(self._preferencesChanged)
+        self._preferencesChanged("general/camera_perspective_mode")
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "Camera":
         copy = cast(Camera, super().__deepcopy__(memo))
@@ -43,6 +59,16 @@ class Camera(SceneNode.SceneNode):
         copy._viewport_height = self._viewport_height
         copy._viewport_width = self._viewport_width
         return copy
+
+    def getZoomFactor(self):
+        return self._zoom_factor
+
+    def setZoomFactor(self, zoom_factor: float) -> None:
+        # Only an orthographic camera has a zoom at the moment.
+        if not self.isPerspective():
+            if self._zoom_factor != zoom_factor:
+                self._zoom_factor = zoom_factor
+                self._updatePerspectiveMatrix()
 
     def setMeshData(self, mesh_data: Optional["MeshData"]) -> None:
         assert mesh_data is None, "Camera's can't have mesh data"
@@ -62,13 +88,34 @@ class Camera(SceneNode.SceneNode):
     
     def setViewportWidth(self, width: int) -> None:
         self._viewport_width = width
+        self._updatePerspectiveMatrix()
     
     def setViewportHeight(self, height: int) -> None:
         self._viewport_height = height
+        self._updatePerspectiveMatrix()
         
     def setViewportSize(self, width: int, height: int) -> None:
         self._viewport_width = width
         self._viewport_height = height
+        self._updatePerspectiveMatrix()
+
+    def _updatePerspectiveMatrix(self):
+        view_width = self._viewport_width
+        view_height = self._viewport_height
+        projection_matrix = Matrix()
+        if self.isPerspective():
+            if view_width != 0 and view_height != 0:
+                projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
+        else:
+            # Almost no near/far plane, please.
+            if view_width != 0 and view_height != 0:
+                horizontal_zoom = view_width * self._zoom_factor
+                vertical_zoom = view_height * self._zoom_factor
+                projection_matrix.setOrtho(-view_width / 2 - horizontal_zoom, view_width / 2 + horizontal_zoom,
+                                           -view_height / 2 - vertical_zoom, view_height / 2 + vertical_zoom,
+                                           -9001, 9001)
+        self.setProjectionMatrix(projection_matrix)
+        self.perspectiveChanged.emit(self)
 
     def getViewProjectionMatrix(self):
         if self._cached_view_projection_matrix is None:
@@ -105,7 +152,11 @@ class Camera(SceneNode.SceneNode):
         return self._perspective
 
     def setPerspective(self, perspective: bool) -> None:
-        self._perspective = perspective
+        if self._perspective != perspective:
+            self._perspective = perspective
+            self._updatePerspectiveMatrix()
+
+    perspectiveChanged = Signal()
 
     ##  Get a ray from the camera into the world.
     #
@@ -140,7 +191,20 @@ class Camera(SceneNode.SceneNode):
         direction = far - near
         direction /= numpy.linalg.norm(direction)
 
-        return Ray(self.getWorldPosition(), Vector(-direction[0], -direction[1], -direction[2]))
+        if self.isPerspective():
+            origin = self.getWorldPosition()
+            direction = -direction
+        else:
+            # In orthographic mode, the origin is the click position on the plane where the camera resides, and that
+            # plane is parallel to the near and the far planes.
+            projection = numpy.array([view_x, -view_y, 0.0, 1.0], dtype = numpy.float32)
+            projection = numpy.dot(inverted_projection, projection)
+            projection = numpy.dot(transformation, projection)
+            projection = projection[0:3] / projection[3]
+
+            origin = Vector(data = projection)
+
+        return Ray(origin, Vector(direction[0], direction[1], direction[2]))
 
     ##  Project a 3D position onto the 2D view plane.
     def project(self, position: Vector) -> Tuple[float, float]:
@@ -151,3 +215,20 @@ class Camera(SceneNode.SceneNode):
         position = position.preMultiply(view)
         position = position.preMultiply(projection)
         return position.x / position.z / 2.0, position.y / position.z / 2.0
+
+    ##  Updates the _perspective field if the preference was modified.
+    def _preferencesChanged(self, key):
+        if key != "general/camera_perspective_mode":  # Only listen to camera_perspective_mode.
+            return
+        from UM.Application import Application
+        new_mode = str(Application.getInstance().getPreferences().getValue("general/camera_perspective_mode"))
+
+        # Translate the selected mode to the camera state.
+        if new_mode == str(self.PerspectiveMode.ORTHOGRAPHIC.value):
+            Logger.log("d", "Changing perspective mode to orthographic.")
+            self.setPerspective(False)
+        elif new_mode == str(self.PerspectiveMode.PERSPECTIVE.value):
+            Logger.log("d", "Changing perspective mode to perspective.")
+            self.setPerspective(True)
+        else:
+            Logger.log("w", "Unknown perspective mode {new_mode}".format(new_mode = new_mode))

@@ -1,9 +1,12 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
-import builtins #To check against functions that are built-in in Python.
-import math # Imported here so it can be used easily by the setting functions.
+import builtins  # To check against functions that are built-in in Python.
+import math  # Imported here so it can be used easily by the setting functions.
+import uuid  # Imported here so it can be used easily by the setting functions.
+import base64  # Imported here so it can be used easily by the setting functions.
+import hashlib  # Imported here so it can be used easily by the setting functions.
 from types import CodeType
 from typing import Any, Callable, Dict, FrozenSet, NamedTuple, Optional, Set, TYPE_CHECKING
 
@@ -105,6 +108,9 @@ class SettingFunction:
 
         return self._code == other._code
 
+    def __hash__(self) -> int:
+        return hash(self._code)
+
     ##  Returns whether the function is ready to be executed.
     #
     #   \return True if the function is valid, or False if it's not.
@@ -177,9 +183,17 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
             self.values.add(node.id)
             self.keys.add(node.id)
 
+    ##  This one is used before Python 3.8 to visit string types.
+    #
+    #   visit_Str will be marked as deprecated from Python 3.8 and onwards.
     def visit_Str(self, node: ast.AST) -> None:
         if node.s not in self._knownNames and node.s not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.s.
             self.keys.add(node.s)  # type: ignore
+
+    ##  This one is used on Python 3.8+ to visit string types.
+    def visit_Constant(self, node: ast.AST) -> None:
+        if isinstance(node.value, str) and node.value not in self._knownNames and node.value not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.value.
+            self.keys.add(node.value)  # type: ignore
 
     _knownNames = {
         "math",
@@ -187,7 +201,10 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "min",
         "debug",
         "sum",
-        "len"
+        "len",
+        "uuid",
+        "hashlib",
+        "base64"
     }  # type: Set[str]
 
     _blacklist = {

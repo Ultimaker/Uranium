@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
@@ -43,7 +43,7 @@ def _toFloatConversion(value: str) -> float:
     ## Literal eval does not like "02" as a value, but users see this as "2".
     ## We therefore look numbers with leading "0", provided they are not used in variable names
     ## example: "test02 * 20" should not be changed, but "test * 02 * 20" should be changed (into "test * 2 * 20")
-    regex_pattern = '(?<!\.|\w|\d)0+(\d+)'
+    regex_pattern = r"(?<!\.|\w|\d)0+(\d+)"
     value = re.sub(regex_pattern, stripLeading0, value)
 
     try:
@@ -628,18 +628,26 @@ class SettingDefinition:
         # A dictionary of key-value pairs that provide the options for an enum type setting. The key is the actual value, the value is a translated display string.
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True, "default": {}, "depends_on" : None},
         # Optional comments that apply to the setting. Will be ignored.
-        "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None}
+        "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None},
+        # Indicates if this string setting is allowed to have empty value. This can only be used for string settings.
+        "allow_empty": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": True, "depends_on": None},
+        # Indicates that this string setting should be an UUID. This can only be used for string settings.
+        "is_uuid": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": False, "depends_on": None},
+        # For bool type: if the value is the same as the warning value, the setting will be in the warning state.
+        "warning_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": None, "depends_on": None},
+        # For bool type: if the value is the same as the error value, the setting will be in the error state.
+        "error_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": None, "depends_on": None},
     }   # type: Dict[str, Dict[str, Any]]
 
     __type_definitions = {
         # An integer value
         "int": {"from": lambda v: str(v) if v is not None else "", "to": _toIntConversion, "validator": Validator},
         # A boolean value
-        "bool": {"from": str, "to": ast.literal_eval, "validator": None},
+        "bool": {"from": str, "to": ast.literal_eval, "validator": Validator},
         # Special case setting; Doesn't have a value. Display purposes only.
         "category": {"from": None, "to": None, "validator": None},
         # A string value
-        "str": {"from": None, "to": None, "validator": None},
+        "str": {"from": None, "to": None, "validator": Validator},
         # An enumeration
         "enum": {"from": None, "to": None, "validator": None},
         # A floating point value

@@ -1,0 +1,22 @@
+{
+    "metadata": {
+        "name": "Ultimaker"
+    },
+    "fonts": {
+        "test_font": {
+            "weight": 40,
+            "family": "Felidae"
+        }
+    },
+    "colors": {
+        "test_color": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "sizes": {
+        "test_size": [42, 1337]
+    }
+}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-27 11:24+0100\n"
+"POT-Creation-Date: 2019-07-16 14:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,7 +68,7 @@ msgstr ""
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:45
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:155
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr ""
@@ -80,7 +80,7 @@ msgid "The version you are using does not support checking for updates."
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:57
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:187
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:188
 msgctxt "@info:title"
 msgid "Warning"
 msgstr ""
@@ -91,8 +91,8 @@ msgid "An error occurred while checking for updates."
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:194
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:132
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:141
 msgctxt "@info:title"
 msgid "Error"
 msgstr ""
@@ -161,12 +161,12 @@ msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:130
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:130
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid ""
@@ -174,52 +174,52 @@ msgid ""
 "overwrite it?"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:160
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:160
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:161
 msgctxt "@info:title"
 msgid "Saving"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:171
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:187
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:188
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:183
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:183
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:194
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -257,12 +257,12 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:225
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr ""
@@ -288,13 +288,13 @@ msgid ""
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:16
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:171
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:175
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/__init__.py:17
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:173
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:177
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr ""
@@ -305,8 +305,7 @@ msgid "Reset your configuration to factory defaults."
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:38
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:729
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:708
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -314,14 +313,13 @@ msgid "All Supported Types ({0})"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:730
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:709
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:182
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:233
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -329,12 +327,12 @@ msgid ""
 "{packages}"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:184
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:235
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:391
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:454
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -344,12 +342,12 @@ msgid ""
 "Please try to upgrade again later."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PackageManager.py:394
+#: /home/ruben/Projects/Uranium/UM/PackageManager.py:457
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:112
 #, python-brace-format
 msgctxt ""
 "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
@@ -357,13 +355,13 @@ msgctxt ""
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:114
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:116
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -371,8 +369,8 @@ msgid_plural "{0} days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:116
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:118
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:119
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -380,9 +378,9 @@ msgid_plural "{0} hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:116
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:118
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:120
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:119
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:121
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -390,40 +388,40 @@ msgid_plural "{0} minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:176
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:183
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:187
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:201
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:205
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:64
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:68
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:64
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:68
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:311
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:288
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:445
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:414
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -431,18 +429,19 @@ msgid ""
 "Please restart {0} to finish uninstall."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:153
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:155
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:57
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:62
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:67
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:72
 msgctxt "Critical OpenGL Extensions Missing"
 msgid ""
 "Critical OpenGL extensions are missing. This program requires support for "
@@ -479,23 +478,23 @@ msgid ""
 "want to reset?"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:178
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:161
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:179
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:162
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:180
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
 msgctxt "@action:button"
 msgid "Reload"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:180
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr ""
@@ -508,19 +507,19 @@ msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:35
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:50
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:72
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:73
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:48
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:72
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:73
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:57
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
 msgctxt "@info:title"
 msgid "Loading"
 msgstr ""
@@ -550,86 +549,27 @@ msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
-msgctxt "@title:tab"
-msgid "Plugins"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:28
-msgctxt "@action:button"
-msgid "Install new plugin"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:51
-msgctxt "@label"
-msgid ""
-"You will need to restart the application before changes in plugins have "
-"effect."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:87
-msgctxt "@label"
-msgid "This plugin is required for the application to run."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:104
-msgctxt "@label"
-msgid "Info..."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:122
-msgctxt "@window:title"
-msgid "Install Plugin"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:131
-msgctxt "@title:window"
-msgid "Open file(s)"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:165
-msgctxt "@label"
-msgid "No text available"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
-msgctxt "@title:window"
-msgid "About %1"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:203
-msgctxt "@label"
-msgid "Author:"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:225
-msgctxt "@label"
-msgid "Version:"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:243
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
-msgctxt "@action:button"
-msgid "Close"
-msgstr ""
-
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:106
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:107
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:115
+msgctxt "@action:button"
+msgid "Close"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "General"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:147
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:149
 msgctxt "@title:tab"
 msgid "Settings"
 msgstr ""
@@ -644,13 +584,13 @@ msgctxt "@info"
 msgid "Please provide a new name."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:69
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:74
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
 msgctxt "@action:button"
 msgid "OK"
 msgstr ""

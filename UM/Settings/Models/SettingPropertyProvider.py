@@ -43,7 +43,7 @@ class SettingPropertyProvider(QObject):
         self._remove_unused_value = True
         self._validator = None  # type: Optional[Validator]
 
-        self._update_timer = QTimer()
+        self._update_timer = QTimer(self)
         self._update_timer.setInterval(100)
         self._update_timer.setSingleShot(True)
         self._update_timer.timeout.connect(self._update)
@@ -245,6 +245,10 @@ class SettingPropertyProvider(QObject):
             return None
         return value
 
+    @pyqtSlot(str, result = str)
+    def getPropertyValueAsString(self, property_name: str) -> str:
+        return self._getPropertyValue(property_name)
+
     @pyqtSlot(int)
     def removeFromContainer(self, index: int) -> None:
         current_stack = self._stack
@@ -357,7 +361,12 @@ class SettingPropertyProvider(QObject):
         self.isValueUsedChanged.emit()
 
     def _updateDelayed(self, container = None):
-        self._update_timer.start()
+        try:
+            self._update_timer.start()
+        except RuntimeError:
+            # Sometimes the python object is not yet deleted, but the wrapped part is already gone.
+            # In that case there is nothing else to do but ignore this.
+            pass
 
     def _containersChanged(self, container = None):
         self._updateDelayed(container = container)

@@ -10,7 +10,7 @@ from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
 from UM.Signal import Signal, signalemitter
-
+from UM.Scene.Camera import Camera
 from typing import Optional
 
 
@@ -103,6 +103,11 @@ class MainWindow(QQuickWindow):
         else:
             self.setVisibility(QQuickWindow.FullScreen)  # Go to fullscreen
         self._fullscreen = not self._fullscreen
+
+    @pyqtSlot()
+    def exitFullscreen(self):
+        self.setVisibility(QQuickWindow.Windowed)
+        self._fullscreen = False
 
     def getBackgroundColor(self):
         return self._background_color
@@ -244,13 +249,8 @@ class MainWindow(QQuickWindow):
 
             if camera.getAutoAdjustViewPort():
                 camera.setViewportSize(view_width, view_height)
-                projection_matrix = Matrix()
-                if camera.isPerspective():
-                    if view_width is not 0:
-                        projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
-                else:
-                    projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -500, 500)
-                camera.setProjectionMatrix(projection_matrix)
 
         self._app.getRenderer().setViewportSize(view_width, view_height)
         self._app.getRenderer().setWindowSize(width, height)
+
+

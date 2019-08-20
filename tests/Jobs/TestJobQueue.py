@@ -51,23 +51,6 @@ class TestJobQueue:
         assert job.isFinished()
         assert job.getResult() == "TestJob"
 
-    def test_addLong(self, job_queue):
-        job = LongTestJob()
-        job.start()
-
-        assert job in job_queue._jobs
-
-        time.sleep(1)
-
-        assert not job.isFinished()
-        assert job.getResult() == None
-
-        time.sleep(1)
-
-        assert job.isFinished()
-        assert job.getResult() == "LongTestJob"
-
-
     test_addMultiple_data = [2, 5, 10]
     @pytest.mark.parametrize("count", test_addMultiple_data)
     def test_addMultiple(self, job_queue, count):

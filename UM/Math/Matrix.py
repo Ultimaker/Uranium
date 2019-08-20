@@ -467,29 +467,28 @@ class Matrix:
 
     def _unitVector(self, data: numpy.array, axis: Optional[int] = None, out: Optional[numpy.array] = None) -> numpy.array:
         """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
-
+        >>> matrix = Matrix()
         >>> v0 = numpy.random.random(3)
-        >>> v1 = unit_vector(v0)
+        >>> v1 = matrix._unitVector(v0)
         >>> numpy.allclose(v1, v0 / numpy.linalg.norm(v0))
         True
         >>> v0 = numpy.random.rand(5, 4, 3)
-        >>> v1 = unit_vector(v0, axis=-1)
-        >>> v2 = v0 / numpy.expand_dims(numpy.sqrt(numpy.sum(v0*v0, axis=2)), 2)
+        >>> v1 = matrix._unitVector(v0, axis=-1)
+        >>> v2 = v0 / numpy.expand_dims(numpy.sqrt(numpy.sum(v0 * v0, axis=2)), 2)
         >>> numpy.allclose(v1, v2)
         True
-        >>> v1 = unit_vector(v0, axis=1)
-        >>> v2 = v0 / numpy.expand_dims(numpy.sqrt(numpy.sum(v0*v0, axis=1)), 1)
+        >>> v1 = matrix._unitVector(v0, axis=1)
+        >>> v2 = v0 / numpy.expand_dims(numpy.sqrt(numpy.sum(v0 * v0, axis=1)), 1)
         >>> numpy.allclose(v1, v2)
         True
         >>> v1 = numpy.empty((5, 4, 3))
-        >>> unit_vector(v0, axis=1, out=v1)
+        >>> matrix._unitVector(v0, axis=1, out=v1)
         >>> numpy.allclose(v1, v2)
         True
-        >>> list(unit_vector([]))
+        >>> list(matrix._unitVector([]))
         []
-        >>> list(unit_vector([1]))
+        >>> list(matrix._unitVector([1]))
         [1.0]
-
         """
         if out is None:
             data = numpy.array(data, dtype = numpy.float64, copy = True)
