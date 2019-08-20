@@ -1,8 +1,11 @@
-from UM.Backend.Backend import Backend
-import pytest
+import sys
 from unittest.mock import patch, MagicMock
+
+import pytest
+
 import Arcus
 
+from UM.Backend.Backend import Backend
 
 @pytest.fixture
 def backend():
@@ -115,7 +118,11 @@ def test_createSocket(backend):
     with patch("UM.Backend.Backend.SignalSocket", MagicMock(return_value = mocked_signal_socket)):
         with patch("UM.Application.Application.getInstance"):
             backend._createSocket("beep")
-            mocked_signal_socket.registerAllMessageTypes.assert_called_once_with(b"beep")
+
+            if sys.platform == "win32":
+                mocked_signal_socket.registerAllMessageTypes.assert_called_once_with(b"beep")
+            else:
+                mocked_signal_socket.registerAllMessageTypes.assert_called_once_with("beep")
 
             # Try to create it again.
             backend._createSocket("beep")
