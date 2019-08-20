@@ -93,8 +93,8 @@ class Polygon:
     #   \param axis_direction The direction vector of the axis to mirror across.
     def mirror(self, point_on_axis, axis_direction) -> "Polygon":
         #Input checking.
-        if axis_direction == [0, 0, 0]:
-            Logger.log("w", "Tried to mirror a polygon over an axis with direction [0, 0, 0].")
+        if axis_direction == [0, 0]:
+            Logger.log("w", "Tried to mirror a polygon over an axis with direction [0, 0].")
             return self  # Axis has no direction. Can't expect us to mirror anything!
         axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
         if not self.isValid(): # Not a valid polygon, so don't do anything.
@@ -168,9 +168,7 @@ class Polygon:
     #   \param other \type{Polygon} The polygon to check for intersection.
     #   \return A tuple of the x and y distance of intersection, or None if no intersection occured.
     def intersectsPolygon(self, other: "Polygon") -> Optional[Tuple[float, float]]:
-        if other is None:
-            return None
-        if len(self._points) < 2 or len(other.getPoints()) < 2:  # Polygon has not enough points, so it cant intersect.
+        if not self.isValid() or not other.isValid():
             return None
 
         polygon_me = ShapelyUtil.polygon2ShapelyPolygon(self)

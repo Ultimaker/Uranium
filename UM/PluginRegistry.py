@@ -49,7 +49,6 @@ class PluginRegistry(QObject):
         self._all_plugins = []        # type: List[str]
         self._metadata = {}           # type: Dict[str, Dict[str, Any]]
 
-        self._plugins_available = []  # type: List[str]
         self._plugins_installed = []  # type: List[str]
 
         # NOTE: The disabled_plugins and plugins_to_remove is explicitly set to None.
@@ -59,9 +58,6 @@ class PluginRegistry(QObject):
         self._outdated_plugins = []  # type: List[str]
         self._plugins_to_install = dict()  # type: Dict[str, dict]
         self._plugins_to_remove = []  # type: List[str]
-
-        # Keep track of which plugins are 3rd-party
-        self._plugins_external = []   # type: List[str]
 
         self._plugins = {}            # type: Dict[str, types.ModuleType]
         self._plugin_objects = {}     # type: Dict[str, PluginObject]
@@ -199,10 +195,6 @@ class PluginRegistry(QObject):
                 plugin_list.append(plugin_id)
         return plugin_list
 
-    #   Get a list of available plugins (ones which are not yet installed):
-    def getAvailablePlugins(self) -> List[str]:
-        return self._plugins_available
-
     #   Get a list of all metadata matching a certain subset of metadata:
     #   \param kwargs Keyword arguments.
     #       Possible keywords:
@@ -224,9 +216,6 @@ class PluginRegistry(QObject):
     #   Get a list of disabled plugins:
     def getDisabledPlugins(self) -> List[str]:
         return self._disabled_plugins
-
-    def getExternalPlugins(self) -> List[str]:
-        return self._plugins_external
 
     #   Get a list of installed plugins:
     #   NOTE: These are plugins which have already been registered. This list is
@@ -627,7 +616,6 @@ class PluginRegistry(QObject):
 
         try:
             meta_data = plugin.getMetaData() #type: ignore #We catch the AttributeError that this would raise if the module has no getMetaData function.
-
             metadata_file = os.path.join(location, "plugin.json")
             try:
                 with open(metadata_file, "r", encoding = "utf-8") as file_stream:

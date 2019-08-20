@@ -18,14 +18,46 @@ class TestPolygon:
     def teardown_method(self, method):
         # Called after the last testfunction was executed
         pass
-    
+
+    def test_equalitySamePolygon(self):
+        polygon = Polygon.approximatedCircle(2)
+        assert polygon == polygon
+
+    def test_equalityString(self):
+        polygon = Polygon.approximatedCircle(42)
+        assert polygon != "42"  # Not the answer after all!
+
+    def test_equality(self):
+        polygon_1 = Polygon.approximatedCircle(2)
+        polygon_2 = Polygon.approximatedCircle(2)
+        assert polygon_1 == polygon_2
+
+    def test_inequality(self):
+        # This case should short cirquit because the length of points are not the same
+        polygon_1 = Polygon.approximatedCircle(2)
+        polygon_2 = Polygon()
+        assert polygon_1 != polygon_2
+
+    def test_translate(self):
+        polygon = Polygon(numpy.array([[0.0, 0.0], [2.0, 0.0], [1.0, 2.0]], numpy.float32))
+        translated_poly = polygon.translate(2, 3)
+
+        result = Polygon(numpy.array([[2.0, 3.0], [4.0, 3.0], [3.0, 5.0]], numpy.float32))
+        assert result == translated_poly
+
+    def test_translateInvalidPoly(self):
+        polygon = Polygon()
+
+        assert polygon == polygon.translate(2, 3)
+
     ##  The individual test cases for mirroring polygons.
     test_mirror_data = [
         ({ "points": [[0.0, 0.0], [2.0, 0.0], [1.0, 2.0]], "axis_point": [0, 0], "axis_direction": [0, 1], "answer": [[-1.0, 2.0], [-2.0, 0.0], [0.0, 0.0]], "label": "Mirror Horizontal", "description": "Test mirroring a polygon horizontally." }),
         ({ "points": [[0.0, 0.0], [2.0, 0.0], [1.0, 2.0]], "axis_point": [0, 0], "axis_direction": [1, 0], "answer": [[1.0, -2.0], [2.0, 0.0], [0.0, 0.0]], "label": "Mirror Vertical", "description": "Test mirroring a polygon vertically." }),
         ({ "points": [[0.0, 0.0], [2.0, 0.0], [1.0, 2.0]], "axis_point": [10, 0], "axis_direction": [0, 1], "answer": [[19.0, 2.0], [18.0, 0.0], [20.0, 0.0]], "label": "Mirror Horizontal Far", "description": "Test mirrorring a polygon horizontally on an axis that is not through the origin." }),
         ({ "points": [[0.0, 0.0], [2.0, 0.0], [1.0, 2.0]], "axis_point": [0, 4], "axis_direction": [1, 1], "answer": [[-2.0, 5.0], [-4.0, 6.0], [-4.0, 4.0]], "label": "Mirror Diagonal", "description": "Test mirroring a polygon diagonally." }),
-        ({ "points": [], "axis_point": [0, 0], "axis_direction": [1, 0], "answer": [], "label": "Mirror Empty", "description": "Test mirroring an empty polygon." })
+        ({ "points": [], "axis_point": [0, 0], "axis_direction": [1, 0], "answer": [], "label": "Mirror Empty", "description": "Test mirroring an empty polygon." }),
+        ({ "points": [[0.0, 0.0], [2.0, 0.0], [1.0, 2.0]], "axis_point": [0, 4], "axis_direction": [0, 0], "answer": [[0.0, 0.0], [2.0, 0.0], [1.0, 2.0]], "label": "Mirror Diagonal", "description": "Test mirroring with wrong axis"}),
     ]
 
     ##  Tests the mirror function.
@@ -70,12 +102,13 @@ class TestPolygon:
 
     ##  The individual test cases for the intersection tests.
     test_intersect_data = [
-        ({ "polygon": [[ 5.0,  0.0], [15.0,  0.0], [15.0, 10.0], [ 5.0, 10.0]], "answer": [-5.0,  0.0], "label": "Intersect Simple", "description": "Intersect with a polygon that fully intersects." }),
-        ({ "polygon": [[-5.0,  0.0], [ 5.0,  0.0], [ 5.0, 10.0], [-5.0, 10.0]], "answer": [ 5.0,  0.0], "label": "Intersect Left", "description": "Intersect with a polygon on the negative x-axis side that fully intersects." }),
-        ({ "polygon": [[ 0.0,  5.0], [10.0,  5.0], [10.0, 15.0], [ 0.0, 15.0]], "answer": [ 0.0, -5.0], "label": "Intersect Straight Above", "description": "Intersect with a polygon that is exactly above the base polygon (edge case)." }),
-        ({ "polygon": [[ 0.0, -5.0], [10.0, -5.0], [10.0,  5.0], [ 0.0,  5.0]], "answer": [ 0.0,  5.0], "label": "Intersect Straight Left", "description": "Intersect with a polygon that is exactly left of the base polygon (edge case)." }),
-        ({ "polygon": [[ 5.0,  5.0], [15.0, -5.0], [30.0,  5.0], [15.0, 15.0]], "answer": [-5.0,  0.0], "label": "Intersect Rotated", "description": "Intersect with a rotated square." }),
-        ({ "polygon": [[15.0,  0.0], [25.0,  0.0], [25.0, 10.0], [15.0, 10.0]], "answer": None,         "label": "Intersect Miss", "description": "Intersect with a polygon that doesn't intersect at all." })
+        ({ "polygon": [[ 5.0,  0.0], [15.0,  0.0], [15.0, 10.0], [ 5.0, 10.0]], "answer": [ 5.0,  10], "label": "Intersect Simple", "description": "Intersect with a polygon that fully intersects." }),
+        ({ "polygon": [[-5.0,  0.0], [ 5.0,  0.0], [ 5.0, 10.0], [-5.0, 10.0]], "answer": [ 5.0,  10.0], "label": "Intersect Left", "description": "Intersect with a polygon on the negative x-axis side that fully intersects." }),
+        ({ "polygon": [[ 0.0,  5.0], [10.0,  5.0], [10.0, 15.0], [ 0.0, 15.0]], "answer": [ 10.0, 5.0], "label": "Intersect Straight Above", "description": "Intersect with a polygon that is exactly above the base polygon (edge case)." }),
+        ({ "polygon": [[ 0.0, -5.0], [10.0, -5.0], [10.0,  5.0], [ 0.0,  5.0]], "answer": [ 10.0,  5.0], "label": "Intersect Straight Left", "description": "Intersect with a polygon that is exactly left of the base polygon (edge case)." }),
+        ({ "polygon": [[15.0,  0.0], [25.0,  0.0], [25.0, 10.0], [15.0, 10.0]], "answer": None,         "label": "Intersect Miss", "description": "Intersect with a polygon that doesn't intersect at all." }),
+        ({"polygon": [[15.0, 0.0]], "answer": None, "label": "Intersect invalid", "description": "Intersect with a polygon that is a single point"})
+
     ]
 
     ##  Tests the polygon intersect function.
@@ -86,7 +119,6 @@ class TestPolygon:
     #   \param data The data of the test. Must include a polygon to intersect
     #   with and a required answer.
     @pytest.mark.parametrize("data", test_intersect_data)
-    @pytest.mark.skip(reason = "Incomplete tests")
     def test_intersectsPolygon(self, data):
         p1 = Polygon(numpy.array([  # The base polygon to intersect with.
             [ 0,  0],
@@ -105,6 +137,7 @@ class TestPolygon:
                 else:
                     assert result is not None
                     for i in range(0, len(data["answer"])):
+                        print(result[i], data["answer"][i])
                         assert Float.fuzzyCompare(result[i], data["answer"][i])
                 p2 = Polygon(numpy.roll(p2.getPoints(), 1, axis = 0)) #Shift p2.
             p1 = Polygon(numpy.roll(p1.getPoints(), 1, axis = 0)) #Shift p1.
@@ -172,3 +205,9 @@ class TestPolygon:
                 break
             result = Polygon(numpy.roll(result.getPoints(), 1, axis = 0)) #Perform the rotation for the next check.
         assert isCorrect
+
+    def test_isInside(self):
+        polygon = Polygon.approximatedCircle(5)
+        assert polygon.isInside((0, 0))
+
+        assert not polygon.isInside((9001, 9001))

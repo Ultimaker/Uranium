@@ -1,6 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from unittest.mock import patch, mock_open
+from unittest.mock import patch, mock_open, MagicMock
 
 import pytest
 import os
@@ -140,12 +140,14 @@ class TestPluginRegistry():
 
         metadata = registry.getMetaData("TestPlugin")
         assert metadata == expected_metadata
-
+        registry.loadPlugins()
         all_metadata = registry.getAllMetaData()
-
+        test_plugin_found = False
         for plugin_metadata in all_metadata:
             if plugin_metadata.get("id") == "TestPlugin":
+                test_plugin_found = True
                 assert plugin_metadata == metadata
+        assert test_plugin_found
 
     def test_getPluginLocation(self, registry):
         # Plugin is not loaded yet, so it should raise a KeyError
@@ -163,6 +165,33 @@ class TestPluginRegistry():
     def test_invalidPluginJson(self, plugin_data, registry):
         with pytest.raises(InvalidMetaDataError):
             registry._parsePluginInfo("beep", plugin_data, {})
+
+
+    def test_populateMetadata_unknownPlugin(self, registry):
+        assert not registry._populateMetaData("TheGreatUnknown")
+
+
+    def test_populateMetadata_locationNotFound(self, registry):
+        registry._findPlugin = MagicMock(return_value = True)
+        registry._locatePlugin = MagicMock(return_value = None)
+        assert not registry._populateMetaData("Waldo")
+
+    def test_populateMetadata_PluginWitIdentityCrisis(self, registry):
+        registry._findPlugin = MagicMock(return_value="Not a plugin, but i was found!")
+        registry._locatePlugin = MagicMock(return_value="yaaay")
+
+        with pytest.raises(InvalidMetaDataError):
+            registry._populateMetaData("Whatever")
+
+    def test_populateMetadata_PluginWithNoMetadata(self, registry):
+        plugin = MagicMock(name = "plugin")
+        plugin.getMetaData = MagicMock(return_value = None)
+        registry._findPlugin = MagicMock(return_value= plugin)
+        registry._locatePlugin = MagicMock(return_value="yaaay")
+        registry._parsePluginInfo = MagicMock(return_value = None)
+        with pytest.raises(InvalidMetaDataError):
+            with patch("builtins.open", mock_open()) as mock_file:
+                registry._populateMetaData("Whatever")
 
     def test_getInstalledPlugins(self, registry):
         assert registry.getInstalledPlugins() == []  # Should be empty by default
@@ -202,7 +231,14 @@ class TestPluginRegistry():
         assert registry.getTestPlugin().getPluginId() == "TestPlugin"
 
         assert registry.getPluginObject("TestPlugin") == registry.getTestPlugin()
-    
+
+    def test_loadTwice(self, registry):
+        registry.loadPlugin("TestPlugin")
+
+        registry._findPlugin = MagicMock()
+        registry.loadPlugin("TestPlugin")
+        assert registry._findPlugin.call_count == 0
+
     def test_loadNested(self, registry):
         registry.loadPlugin("TestPlugin2")
 
@@ -224,6 +260,7 @@ class TestPluginRegistry():
         registry._disabled_plugins = ["TestPlugin"]
         registry.loadPlugin("TestPlugin")
         assert registry.getTestPlugin() is None
+        assert registry.getDisabledPlugins() == ["TestPlugin"]
 
         # Other plugins should load.
         registry.loadPlugin("TestPlugin2")
