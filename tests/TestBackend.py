@@ -115,7 +115,7 @@ def test_createSocket(backend):
     with patch("UM.Backend.Backend.SignalSocket", MagicMock(return_value = mocked_signal_socket)):
         with patch("UM.Application.Application.getInstance"):
             backend._createSocket("beep")
-            mocked_signal_socket.registerAllMessageTypes.assert_called_once_with("beep")
+            mocked_signal_socket.registerAllMessageTypes.assert_called_once_with(b"beep")
 
             # Try to create it again.
             backend._createSocket("beep")
