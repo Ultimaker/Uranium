@@ -324,6 +324,7 @@ def test_setSelectionTool(application):
 
     controller.getTool.assert_called_once_with("beep")
 
+
 def test_deleteAllNodesWithMeshData(application):
     controller = Controller(application)
 
