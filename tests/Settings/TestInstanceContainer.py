@@ -342,3 +342,31 @@ def test_dirty_instance_container():
     instance_container.setDirty(False)
     assert instance_container.isDirty()  # Changing it is no longer possible
 
+
+def test_getAllKeys():
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    definition1 = UM.Settings.SettingDefinition.SettingDefinition("test_0", None)
+    definition1.deserialize({
+        "label": "Test 0",
+        "type": "float",
+        "description": "A Test Setting",
+        "default_value": 10.0
+    })
+    def1_instance = UM.Settings.SettingInstance.SettingInstance(definition1, instance_container)
+    def1_instance.propertyChanged = unittest.mock.MagicMock()
+
+    instance_container.addInstance(def1_instance)
+
+
+def test_getAllKeys_cached():
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    instance_container.setCachedValues({"beep": "yay"})
+
+    assert instance_container.getAllKeys() == {"beep"}
+
+
+def test_hasPropertyValueCached():
+    # We special cased the value property if it's in the cache.
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    instance_container.setCachedValues({"beep": "yay"})
+    assert instance_container.hasProperty("beep", "value")
