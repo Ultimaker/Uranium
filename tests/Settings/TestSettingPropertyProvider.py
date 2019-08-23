@@ -20,6 +20,7 @@ def test_setContainerStack(container_registry):
     # Should not do anything (since its' the same stack)
     setting_property_provider.setContainerStack(container_stack)
     assert setting_property_provider.containerStackChanged.emit.call_count == 1
+    assert setting_property_provider.containerStack == container_stack
 
     with patch("UM.Settings.ContainerRegistry.ContainerRegistry.getInstance", MagicMock(return_value = container_registry)):
         setting_property_provider.setContainerStackId("test")
@@ -35,6 +36,7 @@ def test_setContainerStack(container_registry):
 
 def test_valueChanges(container_registry):
     setting_property_provider = SettingPropertyProvider()
+
     # First create the basics; A container stack that will hold 2 instance containers and a single definition container
     container_stack = ContainerStack("test!")
     instance_container = InstanceContainer("data")
@@ -63,10 +65,12 @@ def test_valueChanges(container_registry):
 
     setting_property_provider.setContainerStack(container_stack)
     setting_property_provider.setKey("test_setting")
+    assert setting_property_provider.key == "test_setting"
 
     assert setting_property_provider.getPropertyValue("value", 0) == 20
 
     setting_property_provider.setWatchedProperties(["enabled", "value", "validationState"])
+    assert setting_property_provider.watchedProperties == ["enabled", "value", "validationState"]
     assert setting_property_provider.properties.value("enabled") == "False"
     assert setting_property_provider.properties.value("value") == "20"
 
@@ -114,5 +118,28 @@ def test_valueChanges(container_registry):
     setting_property_provider.removeFromContainer(90001)
 
 
+def test_stackLevelsNoStack():
+    setting_property_provider = SettingPropertyProvider()
+    assert setting_property_provider.stackLevels == [-1]
 
 
+def test_isValueUsedNoStack():
+    setting_property_provider = SettingPropertyProvider()
+    assert setting_property_provider.isValueUsed == False
+
+
+def test_containerStackIdNoStack():
+    setting_property_provider = SettingPropertyProvider()
+    assert setting_property_provider.containerStackId == ""
+
+
+def test_getSetRemoveUnusedValue():
+    setting_property_provider = SettingPropertyProvider()
+    setting_property_provider.removeUnusedValueChanged = MagicMock()
+
+    setting_property_provider.setRemoveUnusedValue(False)
+    assert setting_property_provider.removeUnusedValue == False
+    assert setting_property_provider.removeUnusedValueChanged.emit.call_count == 1
+
+    setting_property_provider.setRemoveUnusedValue(False)
+    assert setting_property_provider.removeUnusedValueChanged.emit.call_count == 1
