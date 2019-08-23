@@ -11,6 +11,7 @@ import UM.Settings.SettingDefinition
 import UM.Settings.SettingRelation
 from UM.Resources import Resources
 import copy
+from unittest.mock import MagicMock
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -176,6 +177,11 @@ def test_deserialize(filename, expected):
     assert instance_container.getNumInstances() == 0
 
 
+def test_serialize_withoutDefinition():
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("beep")
+    assert instance_container.serialize() == ""
+
+
 def test__readAndValidateSerialisedWithInvalidData():
     with pytest.raises(UM.Settings.InstanceContainer.InvalidInstanceError):
         UM.Settings.InstanceContainer.InstanceContainer._readAndValidateSerialized("")
@@ -300,3 +306,39 @@ def test_addInstance():
     # Adding it again shouldn't have an impact.
     instance_container.addInstance(def1_instance)
     assert def1_instance.propertyChanged.emit.call_count == 1
+
+
+def test_getUnknownInstance():
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    assert instance_container.getInstance("HERP DERP") is None
+
+
+def test_lt_compare():
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    instance_container.setMetaDataEntry("weight", 12)
+
+    instance_container2 = UM.Settings.InstanceContainer.InstanceContainer("test2")
+    instance_container2.setMetaDataEntry("weight", 2)
+
+    assert instance_container2 < instance_container
+
+    assert instance_container2 < None
+
+    instance_container2.setMetaDataEntry("weight", 0)
+    instance_container.setMetaDataEntry("weight", 0)
+    instance_container2.setName("b")
+    instance_container.setName("a")
+    assert instance_container < instance_container2
+
+
+def test_dirty_instance_container():
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    assert not instance_container.isDirty()
+    instance_container.setDirty(True)
+    assert instance_container.isDirty()
+
+    # Make the instance container think it's read only.
+    instance_container._read_only = True
+    instance_container.setDirty(False)
+    assert instance_container.isDirty()  # Changing it is no longer possible
+
