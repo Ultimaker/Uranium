@@ -472,6 +472,9 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         return definition
 
+    def isDirty(self) -> bool:
+        return False
+
     ##  Simple short string representation for debugging purposes.
     def __str__(self) -> str:
         return "<DefinitionContainer '{definition_id}' ('{name}')>".format(definition_id = self.getId(), name = self.getName())

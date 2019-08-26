@@ -164,6 +164,9 @@ class ContainerInterface:
     def setPath(self, path: str) -> None:
         pass
 
+    def isDirty(self) -> bool:
+        pass
+
     propertyChanged = None   # type: Signal
 
     metaDataChanged = None  # type: Signal

@@ -280,7 +280,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             if metadata["id"] not in self._containers:  # Not yet loaded, so it can't be dirty.
                 continue
             candidate = self._containers[metadata["id"]]
-            if hasattr(candidate, "isDirty") and candidate.isDirty():  # type: ignore #Check for hasattr because only InstanceContainers and Stacks have this method.
+            if candidate.isDirty():
                 result.append(self._containers[metadata["id"]])
         return result
 
@@ -558,7 +558,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def saveContainer(self, container: "ContainerInterface", provider: Optional["ContainerProvider"] = None) -> None:
         if not hasattr(provider, "saveContainer"):
             provider = self.getDefaultSaveProvider()
-        if not hasattr(container, "isDirty") or not container.isDirty(): #type: ignore
+        if container.isDirty():
             return
 
         provider.saveContainer(container) #type: ignore
