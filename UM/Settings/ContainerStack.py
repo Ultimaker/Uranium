@@ -584,6 +584,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         container.propertyChanged.connect(self._collectPropertyChanges)
         self._containers.insert(index, container)
         self.containersChanged.emit(container)
+        self._dirty = True
 
     ##  Replace a container in the stack.
     #
@@ -602,6 +603,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._containers[index].propertyChanged.disconnect(self._collectPropertyChanges)
         container.propertyChanged.connect(self._collectPropertyChanges)
         self._containers[index] = container
+        self._dirty = True
         if postpone_emit:
             # send it using sendPostponedEmits
             self._postponed_emits.append((self.containersChanged, container))
@@ -618,6 +620,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             raise IndexError
         try:
             container = self._containers[index]
+            self._dirty = True
             container.propertyChanged.disconnect(self._collectPropertyChanges)
             del self._containers[index]
             self.containersChanged.emit(container)

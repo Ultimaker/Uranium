@@ -558,7 +558,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def saveContainer(self, container: "ContainerInterface", provider: Optional["ContainerProvider"] = None) -> None:
         if not hasattr(provider, "saveContainer"):
             provider = self.getDefaultSaveProvider()
-        if container.isDirty():
+        if not container.isDirty():
             return
 
         provider.saveContainer(container) #type: ignore
