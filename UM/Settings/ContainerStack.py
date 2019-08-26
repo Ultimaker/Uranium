@@ -70,11 +70,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._containers = []  # type: List[ContainerInterface]
         self._next_stack = None  # type: Optional[ContainerStack]
         self._read_only = False  # type: bool
-        self._dirty = True  # type: bool
+        self._dirty = False  # type: bool
         self._path = ""  # type: str
-        self._postponed_emits = [] #type: List[Tuple[Signal, ContainerInterface]] # gets filled with 2-tuples: signal, signal_argument(s)
+        self._postponed_emits = []  # type: List[Tuple[Signal, ContainerInterface]] # gets filled with 2-tuples: signal, signal_argument(s)
 
-        self._property_changes = {} #type: Dict[str, Set[str]]
+        self._property_changes = {}  # type: Dict[str, Set[str]]
         self._emit_property_changed_queued = False  # type: bool
 
     ##  For pickle support
