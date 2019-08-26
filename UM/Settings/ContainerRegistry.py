@@ -204,10 +204,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
     def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[Dict[str, Any]]:
-        # Create the query object.
-        query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         candidates = None
-
         if "id" in kwargs and kwargs["id"] is not None and "*" not in kwargs["id"] and not ignore_case:
             if kwargs["id"] not in self.metadata:  # If we're looking for an unknown ID, try to lazy-load that one.
                 if kwargs["id"] not in self.source_provider:
@@ -232,6 +229,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 return []  # No result, so return an empty list.
             candidates = [self.metadata[kwargs["id"]]]
 
+        query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         if query.isHashable() and query in self._query_cache:
             # If the exact same query is in the cache, we can re-use the query result.
             self._query_cache.move_to_end(query) #Query was used, so make sure to update its position so that it doesn't get pushed off as a rarely-used query.
