@@ -227,6 +227,8 @@ class ContainerRegistry(ContainerRegistryInterface):
             # Since IDs are the primary key and unique we can now simply request the candidate and check if it matches all requirements.
             if kwargs["id"] not in self.metadata:
                 return []  # No result, so return an empty list.
+            if len(kwargs) == 1:
+                return [self.metadata[kwargs["id"]]]
             candidates = [self.metadata[kwargs["id"]]]
 
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
