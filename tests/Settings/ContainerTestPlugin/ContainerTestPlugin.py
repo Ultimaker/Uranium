@@ -101,4 +101,7 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     def getVersionFromSerialized(cls, serialized):
         raise NotImplementedError()
 
+    def isDirty(self):
+        return True
+
     metaDataChanged = None  # type: Signal
