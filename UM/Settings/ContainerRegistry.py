@@ -240,9 +240,12 @@ class ContainerRegistry(ContainerRegistryInterface):
         query.execute(candidates = candidates)
 
         # Only cache query result when it is hashable
-        if query.isHashable():
+        try:
             self._query_cache[query] = query
-
+        except TypeError:
+            # Unhashable, so can't cache this result.
+            pass
+        else:
             if len(self._query_cache) > MaxQueryCacheSize:
                 # Since we use an OrderedDict, we can use a simple FIFO scheme
                 # to discard queries. As long as we properly update queries
