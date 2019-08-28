@@ -26,12 +26,37 @@ Controls.ProgressBar
     {
         anchors.fill: parent
 
+        // The progress block for showing determinate progress value
         Rectangle
         {
+            id: progressBlockDeterminate
             width: progressBar.visualPosition * parent.width
             height: parent.height
             radius: UM.Theme.getSize("progressbar_radius").width
             color: UM.Theme.getColor("progressbar_control")
+            visible: !progressBar.indeterminate
+        }
+
+        // The progress block for showing indeterminate progress value
+        Rectangle
+        {
+            id: progressBlockIndeterminate
+            x: progressBar.visualPosition * parent.width
+            width: parent.width * 0.1
+            height: parent.height
+            radius: UM.Theme.getSize("progressbar_radius").width
+            color: UM.Theme.getColor("progressbar_control")
+            visible: progressBar.indeterminate
+        }
+
+        PropertyAnimation {
+            target: progressBar
+            property: "value"
+            from: 0.2
+            to: 0.8
+            duration: 3000
+            running: progressBar.indeterminate
+            loops: Animation.Infinite
         }
     }
 }
