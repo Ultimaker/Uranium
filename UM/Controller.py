@@ -14,7 +14,6 @@ from UM.Stage import Stage
 from UM.InputDevice import InputDevice
 from typing import cast, Optional, Dict, Union
 from UM.Math.Vector import Vector
-
 MYPY = False
 if MYPY:
     from UM.Application import Application
@@ -378,6 +377,8 @@ class Controller:
 
         nodes = []
         for node in DepthFirstIterator(self.getScene().getRoot()):
+            if not node.isEnabled():
+                continue
             if not node.getMeshData() and not node.callDecoration("isGroup"):
                 continue  # Node that doesnt have a mesh and is not a group.
             if only_selectable and not node.isSelectable():
