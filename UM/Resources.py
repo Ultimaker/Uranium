@@ -11,6 +11,8 @@ from typing import Dict, Generator, List, Optional, cast
 
 from UM.Logger import Logger
 from UM.Platform import Platform
+from UM.Version import Version
+
 
 class ResourceTypeError(Exception):
     pass
@@ -417,7 +419,6 @@ class Resources:
         if cls.ApplicationVersion == "master" or cls.ApplicationVersion == "unknown":
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
         else:
-            from UM.Version import Version
             version = Version(cls.ApplicationVersion)
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, "%s.%s" % (version.getMajor(), version.getMinor()))
 
@@ -519,30 +520,33 @@ class Resources:
         }
         check_dir_type_func = check_dir_type_func_dict[dir_type]
 
-        latest_config_path = None
+        # CURA-6744
+        # If the application version matches "<major>.<minor>", create a Version object for it for comparison, so we
+        # can find the directory with the highest version that's below the application version.
+        # An application version that doesn't match "<major>.<minor>", e.g. "master", probably indicates a temporary
+        # version, and in this case, this temporary version is treated as the latest version. It will ONLY upgrade from
+        # a highest "<major>.<minor>" version if it's present.
+        app_version = None  # type: Optional[Version]
+        if version_regex.match(cls.ApplicationVersion):
+            app_version = Version(cls.ApplicationVersion)
+
+        latest_config_path = None  # type: Optional[str]
         for search_path in search_path_list:
             if not os.path.exists(search_path):
                 continue
 
             # Give priority to a folder with files with version number in it
             storage_dir_name_list = next(os.walk(search_path))[1]
-            if storage_dir_name_list:
-                storage_dir_name_list = sorted(storage_dir_name_list, reverse = True)
-                # for now we use alphabetically ordering to determine the latest version (excluding master)
-                for dir_name in storage_dir_name_list:
-                    if dir_name.endswith("master"):
-                        continue
-                    if version_regex.match(dir_name) is None:
-                        continue
 
-                    # make sure that the version we found is not newer than the current version
-                    if version_regex.match(cls.ApplicationVersion):
-                        later_version = sorted([cls.ApplicationVersion, dir_name], reverse = True)[0]
-                        if cls.ApplicationVersion != later_version:
-                            continue
+            match_dir_name_list = [n for n in storage_dir_name_list if version_regex.match(n) is not None]
+            match_dir_version_list = [{"dir_name": n, "version": Version(n)} for n in match_dir_name_list]
+            match_dir_version_list = sorted(match_dir_version_list, key = lambda x: x["version"], reverse = True)
+            if app_version is not None:
+                match_dir_version_list = list(filter(lambda x: x["version"] < app_version, match_dir_version_list))
 
-                    latest_config_path = os.path.join(search_path, dir_name)
-                    break
+            if len(match_dir_version_list) > 0:
+                latest_config_path = os.path.join(search_path, match_dir_version_list[0]["dir_name"])
+
             if latest_config_path is not None:
                 break
 
