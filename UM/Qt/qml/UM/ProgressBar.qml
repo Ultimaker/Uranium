@@ -36,16 +36,27 @@ Controls.ProgressBar
             radius: UM.Theme.getSize("progressbar_radius").width
             color: UM.Theme.getColor("progressbar_control")
         }
-
-        PropertyAnimation
+        SequentialAnimation
         {
-            target: progressBar
-            property: "value"
-            from: 0
-            to: 0.9 // The block is not centered, so let it go to 90% (since it's 10% long)
-            duration: 3000
-            running: progressBar.indeterminate
+            PropertyAnimation
+            {
+                target: progressBar
+                property: "value"
+                from: 0
+                to: 0.9 // The block is not centered, so let it go to 90% (since it's 10% long)
+                duration: 3000
+            }
+            PropertyAnimation
+            {
+                target: progressBar
+                property: "value"
+                from: 0.9 // The block is not centered, so let it go to 90% (since it's 10% long)
+                to: 0
+                duration: 3000
+            }
+
             loops: Animation.Infinite
+            running: progressBar.indeterminate
         }
     }
 }
