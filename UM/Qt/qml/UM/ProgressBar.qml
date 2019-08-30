@@ -26,34 +26,23 @@ Controls.ProgressBar
     {
         anchors.fill: parent
 
-        // The progress block for showing determinate progress value
+        // The progress block for showing progress value
         Rectangle
         {
             id: progressBlockDeterminate
-            width: progressBar.visualPosition * parent.width
+            x: progressBar.indeterminate ? progressBar.visualPosition * parent.width : 0
+            width: progressBar.indeterminate ? parent.width * 0.1 : progressBar.visualPosition * parent.width
             height: parent.height
             radius: UM.Theme.getSize("progressbar_radius").width
             color: UM.Theme.getColor("progressbar_control")
-            visible: !progressBar.indeterminate
         }
 
-        // The progress block for showing indeterminate progress value
-        Rectangle
+        PropertyAnimation
         {
-            id: progressBlockIndeterminate
-            x: progressBar.visualPosition * parent.width
-            width: parent.width * 0.1
-            height: parent.height
-            radius: UM.Theme.getSize("progressbar_radius").width
-            color: UM.Theme.getColor("progressbar_control")
-            visible: progressBar.indeterminate
-        }
-
-        PropertyAnimation {
             target: progressBar
             property: "value"
-            from: 0.2
-            to: 0.8
+            from: 0
+            to: 0.9 // The block is not centered, so let it go to 90% (since it's 10% long)
             duration: 3000
             running: progressBar.indeterminate
             loops: Animation.Infinite
