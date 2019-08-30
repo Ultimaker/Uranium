@@ -298,7 +298,8 @@ class LocalContainerProvider(ContainerProvider):
     ##  Converts a file path to the MIME type of the container it represents.
     #
     #   \return The MIME type or None if it's not a container.
-    def _pathToMime(self, path: str) -> Optional[MimeType]:
+    @staticmethod
+    def _pathToMime(path: str) -> Optional[MimeType]:
         try:
             mime = MimeTypeDatabase.getMimeTypeForFile(path)
         except MimeTypeDatabase.MimeTypeNotFoundError:
@@ -309,9 +310,10 @@ class LocalContainerProvider(ContainerProvider):
         return mime
 
     ##  Converts a file path to the ID of the container it represents.
-    def _pathToId(self, path: str) -> Optional[str]:
+    @staticmethod
+    def _pathToId(path: str) -> Optional[str]:
         result = None
-        mime = self._pathToMime(path)
+        mime = LocalContainerProvider._pathToMime(path)
         if mime:
             result = urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(path)))
         return result
