@@ -7,7 +7,7 @@ import os.path
 import re
 import shutil
 import tempfile
-from typing import Dict, Generator, List, Optional, cast
+from typing import Dict, Generator, List, Optional, Union, cast
 
 from UM.Logger import Logger
 from UM.Platform import Platform
@@ -539,13 +539,14 @@ class Resources:
             storage_dir_name_list = next(os.walk(search_path))[1]
 
             match_dir_name_list = [n for n in storage_dir_name_list if version_regex.match(n) is not None]
-            match_dir_version_list = [{"dir_name": n, "version": Version(n)} for n in match_dir_name_list]
+            match_dir_version_list = [{"dir_name": n, "version": Version(n)} for n in match_dir_name_list]  # type: List[Dict[str, Union[str, Version]]]
             match_dir_version_list = sorted(match_dir_version_list, key = lambda x: x["version"], reverse = True)
             if app_version is not None:
-                match_dir_version_list = list(filter(lambda x: x["version"] < app_version, match_dir_version_list))
+                match_dir_version_list = list(x for x in match_dir_version_list if x["version"] < app_version)
 
             if len(match_dir_version_list) > 0:
-                latest_config_path = os.path.join(search_path, match_dir_version_list[0]["dir_name"])
+                if isinstance(match_dir_version_list[0]["dir_name"], str):
+                    latest_config_path = os.path.join(search_path, match_dir_version_list[0]["dir_name"])  # type: ignore
 
             if latest_config_path is not None:
                 break
