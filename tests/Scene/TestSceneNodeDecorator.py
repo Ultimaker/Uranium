@@ -2,7 +2,7 @@ import pytest
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 from unittest.mock import MagicMock
-
+import copy
 
 class TheAmazingTestDecorator(SceneNodeDecorator):
     def __init__(self, *args, **kwargs):
@@ -29,6 +29,19 @@ class TheNotSoAmazingTestDecorator(SceneNodeDecorator):
 
     def theOkayDecoration(self):
         return "okayish"
+
+
+def test_getNode():
+    decorator = SceneNodeDecorator()
+    scene_node = SceneNode()
+    decorator.setNode(scene_node)
+    assert decorator.getNode() == scene_node
+
+
+def test_deepcopy():
+    decorator = SceneNodeDecorator()
+    with pytest.raises(NotImplementedError):
+        copy.deepcopy(decorator)
 
 
 def test_SceneNodeDecorator():

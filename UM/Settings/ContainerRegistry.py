@@ -204,10 +204,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
     def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[Dict[str, Any]]:
-        # Create the query object.
-        query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         candidates = None
-
         if "id" in kwargs and kwargs["id"] is not None and "*" not in kwargs["id"] and not ignore_case:
             if kwargs["id"] not in self.metadata:  # If we're looking for an unknown ID, try to lazy-load that one.
                 if kwargs["id"] not in self.source_provider:
@@ -230,8 +227,11 @@ class ContainerRegistry(ContainerRegistryInterface):
             # Since IDs are the primary key and unique we can now simply request the candidate and check if it matches all requirements.
             if kwargs["id"] not in self.metadata:
                 return []  # No result, so return an empty list.
+            if len(kwargs) == 1:
+                return [self.metadata[kwargs["id"]]]
             candidates = [self.metadata[kwargs["id"]]]
 
+        query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         if query.isHashable() and query in self._query_cache:
             # If the exact same query is in the cache, we can re-use the query result.
             self._query_cache.move_to_end(query) #Query was used, so make sure to update its position so that it doesn't get pushed off as a rarely-used query.
@@ -240,9 +240,12 @@ class ContainerRegistry(ContainerRegistryInterface):
         query.execute(candidates = candidates)
 
         # Only cache query result when it is hashable
-        if query.isHashable():
+        try:
             self._query_cache[query] = query
-
+        except TypeError:
+            # Unhashable, so can't cache this result.
+            pass
+        else:
             if len(self._query_cache) > MaxQueryCacheSize:
                 # Since we use an OrderedDict, we can use a simple FIFO scheme
                 # to discard queries. As long as we properly update queries
@@ -282,7 +285,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             if metadata["id"] not in self._containers:  # Not yet loaded, so it can't be dirty.
                 continue
             candidate = self._containers[metadata["id"]]
-            if hasattr(candidate, "isDirty") and candidate.isDirty():  # type: ignore #Check for hasattr because only InstanceContainers and Stacks have this method.
+            if candidate.isDirty():
                 result.append(self._containers[metadata["id"]])
         return result
 
@@ -560,7 +563,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def saveContainer(self, container: "ContainerInterface", provider: Optional["ContainerProvider"] = None) -> None:
         if not hasattr(provider, "saveContainer"):
             provider = self.getDefaultSaveProvider()
-        if not hasattr(container, "isDirty") or not container.isDirty(): #type: ignore
+        if not container.isDirty():
             return
 
         provider.saveContainer(container) #type: ignore
@@ -570,13 +573,6 @@ class ContainerRegistry(ContainerRegistryInterface):
     def saveDirtyContainers(self) -> None:
         # Lock file for "more" atomically loading and saving to/from config dir.
         with self.lockFile():
-            # Save base files first
-            for instance in self.findDirtyContainers(container_type = InstanceContainer):
-                if instance.getMetaDataEntry("removed"):
-                    continue
-                if instance.getId() == instance.getMetaData().get("base_file"):
-                    self.saveContainer(instance)
-
             for instance in self.findDirtyContainers(container_type = InstanceContainer):
                 self.saveContainer(instance)
 

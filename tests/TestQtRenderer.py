@@ -18,3 +18,4 @@ def test_getAndSetWindowSize():
     renderer = QtRenderer()
     renderer.setWindowSize(300, 400)
     assert (300, 400) == renderer.getWindowSize()
+

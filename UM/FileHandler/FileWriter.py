@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from UM.PluginObject import PluginObject
 
@@ -9,7 +9,7 @@ class FileWriter(PluginObject):
         TextMode = 1
         BinaryMode = 2
 
-    def __init__(self, add_to_recent_files = True, *args, **kwargs):
+    def __init__(self, add_to_recent_files: bool = True, *args, **kwargs) -> None:
         super().__init__()
         self._information = ""  # type: str
 
