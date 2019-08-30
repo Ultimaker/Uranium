@@ -17,6 +17,5 @@ for p in path.glob('**/*'):
 for path in all_paths:
 	args.append(path)
 args.append(".")
-
 pytest.main(args)
 
