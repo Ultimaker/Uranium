@@ -128,7 +128,7 @@ class LocalContainerProvider(ContainerProvider):
         if container_id in registry.metadata:
             return registry.metadata[container_id]
 
-        filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
+        filename = self._id_to_path[container_id]  # Raises KeyError if container ID does not exist in the (cache of the) files!
         clazz = ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name]
 
         requested_metadata = {}  # type: Dict[str, Any]
@@ -150,10 +150,10 @@ class LocalContainerProvider(ContainerProvider):
                 continue
             if metadata["id"] == container_id:
                 requested_metadata = metadata
-            #Side-load the metadata into the registry if we get multiple containers.
-            if metadata["id"] not in registry.metadata: #This wouldn't get loaded normally.
+            # Side-load the metadata into the registry if we get multiple containers.
+            if metadata["id"] not in registry.metadata:  # This wouldn't get loaded normally.
                 self._id_to_path[metadata["id"]] = filename
-                self._id_to_mime[metadata["id"]] = self._id_to_mime[container_id] #Assume that they only return one MIME type.
+                self._id_to_mime[metadata["id"]] = self._id_to_mime[container_id]  # Assume that they only return one MIME type.
                 registry.metadata[metadata["id"]] = metadata
                 registry.source_provider[metadata["id"]] = self
         return requested_metadata
@@ -216,9 +216,9 @@ class LocalContainerProvider(ContainerProvider):
             cache_path = Resources.getPath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition_id)
             cache_mtime = os.path.getmtime(cache_path)
             definition_mtime = os.path.getmtime(definition_path)
-        except FileNotFoundError: #Cache doesn't exist yet.
+        except FileNotFoundError:  # Cache doesn't exist yet.
             return None
-        except PermissionError: #No read permission.
+        except PermissionError:  # No read permission.
             return None
 
         if definition_mtime > cache_mtime:
@@ -238,7 +238,7 @@ class LocalContainerProvider(ContainerProvider):
                 if os.path.getmtime(file_path) > cache_mtime:
                     return None
         except FileNotFoundError:
-            return None #Cache for parent doesn't exist yet.
+            return None  # Cache for parent doesn't exist yet.
 
         return definition
 
