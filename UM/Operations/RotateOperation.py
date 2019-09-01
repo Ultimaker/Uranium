@@ -11,7 +11,7 @@ class RotateOperation(Operation.Operation):
     ##  Initialises the operation.
     #
     #   \param node The node to rotate.
-    #   \param rotation A transformation matrix that rotates a space. This
+    #   \param rotation A transformation quaternion that rotates a space. This
     #   rotation is applied on the node.
     #   \param kwargs Key-word arguments, including:
     #     - rotate_around_point: A point around which to rotate the node.

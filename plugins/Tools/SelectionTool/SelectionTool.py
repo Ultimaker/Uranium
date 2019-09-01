@@ -31,7 +31,7 @@ class SelectionTool(Tool):
 
         self._selection_mode = self.PixelSelectionMode
         self._ctrl_is_active = None  # Ctrl modifier key is used for sub-selection
-        self._alt_is_active = None
+        self._alt_is_active = None   # Alt modifier key is used for face-selection
         self._shift_is_active = None  # Shift modifier key is used for multi-selection
 
     ##  Prepare modifier-key variables on each event
@@ -140,7 +140,7 @@ class SelectionTool(Tool):
                         else:
                             Selection.add(self._findTopGroupNode(node))
                         return True
-            else:
+            elif not self._alt_is_active:  # keep everything as previous unless _only_ alt is active
                 if not is_selected or Selection.getCount() > 1:
                     # Select only the SceneNode and its siblings in a group
                     Selection.clear()
@@ -154,6 +154,8 @@ class SelectionTool(Tool):
                     Selection.clear()
                     Selection.add(node)
                     return True
+            else:
+                Selection.toggleFace(node, self._selection_pass.getFaceIdAtPosition(event.x, event.y))
 
         return False
 

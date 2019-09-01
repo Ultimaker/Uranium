@@ -1,6 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from UM.Signal import Signal
 from UM.Math.Vector import Vector
@@ -29,9 +29,30 @@ class Selection:
     def remove(cls, object: SceneNode) -> None:
         if object in cls.__selection:
             cls.__selection.remove(object)
+            cls.unsetFace(object)
             object.transformationChanged.disconnect(cls._onTransformationChanged)
             cls._onTransformationChanged(object)
             cls.selectionChanged.emit()
+
+    @classmethod
+    def setFace(cls, object: SceneNode, face_id: int) -> None:
+        # Don't force-add the object, as the parent may be the 'actual' selected one.
+        cls.__selected_face = (object, face_id)
+        cls.selectedFaceChanged.emit()
+
+    @classmethod
+    def unsetFace(cls, object: SceneNode = None) -> None:
+        if not object or not cls.__selected_face or object is cls.__selected_face[0]:
+            cls.__selected_face = None
+            cls.selectedFaceChanged.emit()
+
+    @classmethod
+    def toggleFace(cls, object: SceneNode, face_id: int) -> None:
+        current_face = cls.__selected_face
+        if not current_face or object != current_face[0] or face_id != current_face[1]:
+            cls.setFace(object, face_id)
+        else:
+            cls.unsetFace(object)
 
     @classmethod
     ##  Get number of selected objects
@@ -41,6 +62,10 @@ class Selection:
     @classmethod
     def getAllSelectedObjects(cls) -> List[SceneNode]:
         return cls.__selection
+
+    @classmethod
+    def getSelectedFace(cls) -> Optional[Tuple[SceneNode, int]]:
+        return cls.__selected_face
 
     @classmethod
     def getBoundingBox(cls) -> AxisAlignedBox:
@@ -83,6 +108,8 @@ class Selection:
     selectionChanged = Signal()
 
     selectionCenterChanged = Signal()
+
+    selectedFaceChanged = Signal()
 
     @classmethod
     def getSelectionCenter(cls) -> Vector:
@@ -129,3 +156,4 @@ class Selection:
 
     __selection = []    # type: List[SceneNode]
     __selection_center = Vector(0, 0, 0)
+    __selected_face = None    # type: Optional[Tuple[SceneNode, int]]
