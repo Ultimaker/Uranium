@@ -160,3 +160,7 @@ class ContainerQuery:
     # Private helper function for __hash__ and __eq__
     def __key(self):
         return type(self), self._ignore_case, tuple(self._kwargs.items())
+
+
+    __slots__ = ("_ignore_case", "_kwargs", "_result", "_registry")
+
