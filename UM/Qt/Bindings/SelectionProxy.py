@@ -10,12 +10,26 @@ class SelectionProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
         Selection.selectionChanged.connect(self._onSelectionChanged)
+        Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
 
     selectionChanged = pyqtSignal()
+    selectedFaceChanged = pyqtSignal()
 
     @pyqtProperty(bool, notify = selectionChanged)
     def hasSelection(self):
         return Selection.hasSelection()
+
+    @pyqtProperty(bool, notify = selectedFaceChanged)
+    def faceSelectMode(self):
+        return Selection.getFaceSelectMode()
+
+    @pyqtSlot(bool)
+    def setFaceSelectMode(self, select: bool) -> None:
+        Selection.setFaceSelectMode(select)
+
+    @pyqtProperty(bool, notify = selectedFaceChanged)
+    def hasFaceSelected(self):
+        return Selection.getSelectedFace() is not None
 
     @pyqtProperty(int, notify = selectionChanged)
     def selectionCount(self):
@@ -27,6 +41,9 @@ class SelectionProxy(QObject):
 
     def _onSelectionChanged(self):
         self.selectionChanged.emit()
+
+    def _onSelectedFaceChanged(self):
+        self.selectedFaceChanged.emit()
 
     @pyqtProperty(bool, notify=selectionChanged)
     def isGroupSelected(self):

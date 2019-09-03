@@ -36,16 +36,16 @@ class SelectionPass(RenderPass):
 
         self._selection_map = {}
         self._toolhandle_selection_map = {
-            self._dropAlpha(ToolHandle.DisabledSelectionColor): ToolHandle.NoAxis,
-            self._dropAlpha(ToolHandle.XAxisSelectionColor): ToolHandle.XAxis,
-            self._dropAlpha(ToolHandle.YAxisSelectionColor): ToolHandle.YAxis,
-            self._dropAlpha(ToolHandle.ZAxisSelectionColor): ToolHandle.ZAxis,
-            self._dropAlpha(ToolHandle.AllAxisSelectionColor): ToolHandle.AllAxis,
-            ToolHandle.DisabledSelectionColor: ToolHandle.NoAxis,
-            ToolHandle.XAxisSelectionColor: ToolHandle.XAxis,
-            ToolHandle.YAxisSelectionColor: ToolHandle.YAxis,
-            ToolHandle.ZAxisSelectionColor: ToolHandle.ZAxis,
-            ToolHandle.AllAxisSelectionColor: ToolHandle.AllAxis
+            Color.dropLowBits(self._dropAlpha(ToolHandle.DisabledSelectionColor)): ToolHandle.NoAxis,
+            Color.dropLowBits(self._dropAlpha(ToolHandle.XAxisSelectionColor)): ToolHandle.XAxis,
+            Color.dropLowBits(self._dropAlpha(ToolHandle.YAxisSelectionColor)): ToolHandle.YAxis,
+            Color.dropLowBits(self._dropAlpha(ToolHandle.ZAxisSelectionColor)): ToolHandle.ZAxis,
+            Color.dropLowBits(self._dropAlpha(ToolHandle.AllAxisSelectionColor)): ToolHandle.AllAxis,
+            Color.dropLowBits(ToolHandle.DisabledSelectionColor): ToolHandle.NoAxis,
+            Color.dropLowBits(ToolHandle.XAxisSelectionColor): ToolHandle.XAxis,
+            Color.dropLowBits(ToolHandle.YAxisSelectionColor): ToolHandle.YAxis,
+            Color.dropLowBits(ToolHandle.ZAxisSelectionColor): ToolHandle.ZAxis,
+            Color.dropLowBits(ToolHandle.AllAxisSelectionColor): ToolHandle.AllAxis
         }
 
         self._output = None
@@ -93,8 +93,27 @@ class SelectionPass(RenderPass):
             return None
 
         pixel = output.pixel(px, py)
-        return self._selection_map.get(Color.fromARGB(pixel), None)
+        return self._selection_map.get(Color.fromARGBHighBits(pixel), None)
 
+    ## Get an unique identifier to the face of the polygon at a certain pixel-coordinate.
+    def getFaceIdAtPosition(self, x, y):
+        output = self.getOutput()
+
+        window_size = self._renderer.getWindowSize()
+
+        px = (0.5 + x / 2.0) * window_size[0]
+        py = (0.5 + y / 2.0) * window_size[1]
+
+        if px < 0 or px > (output.width() - 1) or py < 0 or py > (output.height() - 1):
+            return -1
+
+        face_color = Color.fromARGBLowBits(output.pixel(px, py))
+        return (
+            (int(face_color.a * 255.) << 12) |
+            (int(face_color.b * 255.) << 8) |
+            (int(face_color.g * 255.) << 4) |
+            int(face_color.r * 255.)
+        )
 
     def _getNodeColor(self, node):
         while True:
@@ -102,7 +121,7 @@ class SelectionPass(RenderPass):
             g = random.randint(0, 255)
             b = random.randint(0, 255)
             a = 255 if Selection.isSelected(node) or self._isInSelectedGroup(node) else 0
-            color = Color(r, g, b, a)
+            color = Color(r & 0xf0, g & 0xf0, b & 0xf0, a & 0xf0)
 
             if color not in self._selection_map:
                 break

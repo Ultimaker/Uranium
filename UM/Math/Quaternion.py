@@ -246,7 +246,7 @@ class Quaternion(object):
             if Float.fuzzyCompare(axis.length(), 0.0):
                 axis = Vector.Unit_Y.cross(v1)
 
-            axis.normalize()
+            axis = axis.normalized()
             q = Quaternion()
             q.setByAngleAxis(math.pi, axis)
         else:

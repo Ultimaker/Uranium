@@ -109,6 +109,7 @@ class SelectionTool(Tool):
 
         if not item_id and not self._shift_is_active:
             if Selection.hasSelection():
+                Selection.clearFace()
                 Selection.clear()
                 return True
             return False  # Nothing was selected before and the user didn't click on an object.
@@ -141,6 +142,8 @@ class SelectionTool(Tool):
                             Selection.add(self._findTopGroupNode(node))
                         return True
             else:
+                if Selection.getFaceSelectMode():
+                    Selection.toggleFace(node, self._selection_pass.getFaceIdAtPosition(event.x, event.y))
                 if not is_selected or Selection.getCount() > 1:
                     # Select only the SceneNode and its siblings in a group
                     Selection.clear()

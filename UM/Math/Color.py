@@ -48,6 +48,14 @@ class Color:
         self._b = b if type(b) is float else b / 255
         self._a = a if type(a) is float else a / 255
 
+    def get32BitValue(self):
+        return(
+            (int(self._a * 255.) << 24) |
+            (int(self._r * 255.) << 16) |
+            (int(self._g * 255.) << 8) |
+            int(self._b * 255.)
+        )
+
     def __eq__(self, other):
         return self._r == other._r and self._g == other._g and self._b == other._b and self._a == other._a
 
@@ -69,6 +77,32 @@ class Color:
             (value & 0x000000ff) >> 0,
             (value & 0xff000000) >> 24
         )
+
+    @staticmethod
+    def fromARGBLowBits(value):
+        return Color(
+            (value & 0x000f0000) >> 16,
+            (value & 0x00000f00) >> 8,
+            (value & 0x0000000f) >> 0,
+            (value & 0x0f000000) >> 24
+        )
+
+    @staticmethod
+    def fromARGBHighBits(value):
+        return Color(
+            (value & 0x00f00000) >> 16,
+            (value & 0x0000f000) >> 8,
+            (value & 0x000000f0) >> 0,
+            (value & 0xf0000000) >> 24
+        )
+
+    @staticmethod
+    def dropLowBits(color):
+        return Color.fromARGBHighBits(color.get32BitValue())
+
+    @staticmethod
+    def dropHightBits(color):
+        return Color.fromARGBLowBits(color.get32BitValue())
 
     ##  Returns a new Color constructed from a 7- or 9-character string "#RRGGBB" or "#AARRGGBB" format.
     #
