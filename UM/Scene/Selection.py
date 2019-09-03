@@ -53,6 +53,7 @@ class Selection:
             cls.setFace(object, face_id)
         else:
             cls.unsetFace(object)
+        cls.selectedFaceChanged.emit()
 
     @classmethod
     ##  Get number of selected objects
@@ -99,6 +100,11 @@ class Selection:
     def clear(cls):
         cls.__selection.clear()
         cls.selectionChanged.emit()
+
+    @classmethod
+    def clearFace(cls):
+        cls.__selected_face = None
+        cls.selectedFaceChanged.emit()
 
     @classmethod
     ##  Check if anything is selected at all.
