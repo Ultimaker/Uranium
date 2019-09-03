@@ -526,9 +526,17 @@ class Resources:
         # An application version that doesn't match "<major>.<minor>", e.g. "master", probably indicates a temporary
         # version, and in this case, this temporary version is treated as the latest version. It will ONLY upgrade from
         # a highest "<major>.<minor>" version if it's present.
+        # For app version, there can be extra version strings at the end. For comparison, we only want to semantic
+        # version part. Here we use a regex to find the semantic version part in the app version string.
+        semantic_version_regex = re.compile(r"(^[0-9]+\.([0-9]+)*).*$")
         app_version = None  # type: Optional[Version]
-        if version_regex.match(cls.ApplicationVersion):
-            app_version = Version(cls.ApplicationVersion)
+        app_version_str = cls.ApplicationVersion
+        if app_version_str is not None:
+            result = semantic_version_regex.match(app_version_str)
+            if result is not None:
+                app_version_str = result.group(0)
+                app_version = Version(app_version_str)
+                app_version._revision = 0  # ignore the patch version.
 
         latest_config_path = None  # type: Optional[str]
         for search_path in search_path_list:
