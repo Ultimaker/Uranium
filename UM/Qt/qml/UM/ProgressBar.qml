@@ -56,7 +56,7 @@ Controls.ProgressBar
             }
 
             loops: Animation.Infinite
-            running: progressBar.indeterminate
+            running: progressBar.visible && progressBar.indeterminate
         }
     }
 }
