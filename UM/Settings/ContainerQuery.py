@@ -4,6 +4,7 @@
 import re
 from typing import Any, cast, Dict, Iterable, List, Optional, Type, TYPE_CHECKING
 from UM.Logger import Logger
+import functools
 
 if TYPE_CHECKING:
     from UM.Settings.ContainerRegistry import ContainerRegistry
@@ -73,13 +74,13 @@ class ContainerQuery:
             if isinstance(value, str):
                 if value.startswith("[") and value.endswith("]"):
                     # With [token1|token2|token3|...], we try to find if any of the given tokens is present in the value
-                    key_filter = lambda candidate, key = key, value = value: self._matchRegMultipleTokens(candidate, key, value)
+                    key_filter = functools.partial(self._matchRegMultipleTokens, property_name = key, value = value)
                 elif ("*" or "|") in value:
-                    key_filter = lambda candidate, key = key, value = value: self._matchRegExp(candidate, key, value)
+                    key_filter = functools.partial(self._matchRegExp, property_name = key, value = value)
                 else:
-                    key_filter = lambda candidate, key = key, value = value: self._matchString(candidate, key, value)
+                    key_filter = functools.partial(self._matchString, property_name = key, value=value)
             else:
-                key_filter = lambda candidate, key = key, value = value: self._matchType(candidate, key, value)
+                key_filter = functools.partial(self._matchType, property_name = key, value=value)
             filtered_candidates = filter(key_filter, filtered_candidates)
 
         # Execute all filters.
