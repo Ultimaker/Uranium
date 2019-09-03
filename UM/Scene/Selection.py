@@ -64,9 +64,9 @@ class Selection:
             cls.unsetFace(object)
 
     @classmethod
-    # Is certain to be greater than the largest ID.
-    def endFaceSelectionId(cls):
-        return 0x10001
+    # The largest ID a face can have (faces are counted per model, so each model has a face 0,1,...).
+    def maxFaceSelectionId(cls):
+        return 0xffff
 
     @classmethod
     ##  Get number of selected objects
