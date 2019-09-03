@@ -35,6 +35,15 @@ class Selection:
             cls.selectionChanged.emit()
 
     @classmethod
+    def getFaceSelectMode(cls) -> bool:
+        return cls.__face_select_mode
+
+    @classmethod
+    def setFaceSelectMode(cls, select: bool) -> None:
+        cls.__face_select_mode = select
+        cls.selectedFaceChanged.emit()
+
+    @classmethod
     def setFace(cls, object: SceneNode, face_id: int) -> None:
         # Don't force-add the object, as the parent may be the 'actual' selected one.
         cls.__selected_face = (object, face_id)
@@ -53,6 +62,11 @@ class Selection:
             cls.setFace(object, face_id)
         else:
             cls.unsetFace(object)
+
+    @classmethod
+    # Is certain to be greater than the largest ID.
+    def endFaceSelectionId(cls):
+        return 0x10001
 
     @classmethod
     ##  Get number of selected objects
@@ -99,6 +113,11 @@ class Selection:
     def clear(cls):
         cls.__selection.clear()
         cls.selectionChanged.emit()
+
+    @classmethod
+    def clearFace(cls):
+        cls.__selected_face = None
+        cls.selectedFaceChanged.emit()
 
     @classmethod
     ##  Check if anything is selected at all.
@@ -157,3 +176,4 @@ class Selection:
     __selection = []    # type: List[SceneNode]
     __selection_center = Vector(0, 0, 0)
     __selected_face = None    # type: Optional[Tuple[SceneNode, int]]
+    __face_select_mode = False
