@@ -4,6 +4,7 @@
 import re
 from typing import Any, cast, Dict, Iterable, List, Optional, Type, TYPE_CHECKING
 from UM.Logger import Logger
+import functools
 
 if TYPE_CHECKING:
     from UM.Settings.ContainerRegistry import ContainerRegistry
@@ -76,16 +77,19 @@ class ContainerQuery:
 
         # Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
-            if isinstance(value, str):
+            if isinstance(value, type):
+                key_filter = functools.partial(self._matchType, property_name=key, value=value)
+            elif isinstance(value, str):
+                # It's a string.
                 if ContainerQuery.OPTIONS_REGEX.fullmatch(value) is not None:
                     # With [token1|token2|token3|...], we try to find if any of the given tokens is present in the value
-                    key_filter = lambda candidate, key = key, value = value: self._matchRegMultipleTokens(candidate, key, value)
+                    key_filter = functools.partial(self._matchRegMultipleTokens, property_name = key, value = value)
                 elif ("*" or "|") in value:
-                    key_filter = lambda candidate, key = key, value = value: self._matchRegExp(candidate, key, value)
+                    key_filter = functools.partial(self._matchRegExp, property_name = key, value = value)
                 else:
-                    key_filter = lambda candidate, key = key, value = value: self._matchString(candidate, key, value)
+                    key_filter = functools.partial(self._matchString, property_name = key, value=value)
             else:
-                key_filter = lambda candidate, key = key, value = value: self._matchType(candidate, key, value)
+                key_filter = functools.partial(self._matchDirect, property_name=key, value=value)
             filtered_candidates = filter(key_filter, filtered_candidates)
 
         # Execute all filters.
@@ -102,6 +106,12 @@ class ContainerQuery:
         return str(self._kwargs)
 
     # protected:
+
+    def _matchDirect(self, metadata: Dict[str, Any], property_name: str, value: str):
+        if property_name not in metadata:
+            return False
+
+        return value == metadata[property_name]
 
     # Check to see if a container matches with a regular expression
     def _matchRegExp(self, metadata: Dict[str, Any], property_name: str, value: str):
@@ -133,35 +143,32 @@ class ContainerQuery:
     def _matchString(self, metadata: Dict[str, Any], property_name: str, value: str) -> bool:
         if property_name not in metadata:
             return False
-        value = self._maybeLowercase(value)
-        return value == self._maybeLowercase(str(metadata[property_name]))
+        if self._ignore_case:
+            return value.lower() == str(metadata[property_name]).lower()
+        else:
+            return value == str(metadata[property_name])
 
     # Check to see if a container matches with a specific typed property
     def _matchType(self, metadata: Dict[str, Any], property_name: str, value: Type):
         if property_name == "container_type":
-            container_type = metadata.get(property_name)
-            if isinstance(container_type, type):
+            if "container_type" in metadata:
                 try:
-                    return issubclass(container_type, value)  # Also allow subclasses.
+                    return issubclass(metadata["container_type"], value)  # Also allow subclasses.
                 except TypeError:
                     # Since the type error that we got is extremely not helpful, we re-raise it with more info.
                     raise TypeError("The value {value} of the property {property} is not a type but a {type}: {metadata}"
                                     .format(value = value, property = property_name, type = type(value), metadata = metadata))
             else:
-                # We attempted to match something that isn't a type.
-                Logger.log("w", "Container type {container_type} is not a type but a {type}: {metadata}"
-                           .format(container_type=container_type, type=type(container_type), metadata=metadata))
                 return False
 
-        return value == metadata.get(property_name)  # If the metadata entry doesn't exist, match on None.
+        if property_name not in metadata:
+            return False
 
-    # Helper function to simplify ignore case handling
-    def _maybeLowercase(self, value: str) -> str:
-        if self._ignore_case:
-            return value.lower()
-
-        return value
+        return value == metadata[property_name]
 
     # Private helper function for __hash__ and __eq__
     def __key(self):
         return type(self), self._ignore_case, tuple(self._kwargs.items())
+
+    __slots__ = ("_ignore_case", "_kwargs", "_result", "_registry")
+
