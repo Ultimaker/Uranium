@@ -6,7 +6,7 @@ from UM.FileHandler.FileHandler import FileHandler
 from UM.Job import Job
 from UM.Message import Message
 from UM.Logger import Logger
-from UM.Mesh.MeshReader import MeshReader
+
 
 import time
 
@@ -27,6 +27,7 @@ class ReadFileJob(Job):
         return self._filename
 
     def run(self) -> None:
+        from UM.Mesh.MeshReader import MeshReader
         if self._handler is None:
             Logger.log("e", "FileHandler was not set.")
             return None

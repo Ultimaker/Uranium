@@ -6,8 +6,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 
-import UM 1.0 as UM
-import "."
+import UM 1.3 as UM
 
 ListView
 {
@@ -225,7 +224,6 @@ ListView
             renderType: Text.NativeRendering
         }
 
-
         CheckBox
         {
             id: optionToggle
@@ -255,7 +253,7 @@ ListView
             }
         }
 
-        ProgressBar
+        UM.ProgressBar
         {
             id: totalProgressBar
             value: 0

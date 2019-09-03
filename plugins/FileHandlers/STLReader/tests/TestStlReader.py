@@ -2,16 +2,18 @@ import os.path
 
 import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-
+from unittest.mock import patch
 import STLReader
 from UM.Mesh.MeshBuilder import MeshBuilder
 
 test_path = os.path.join(os.path.dirname(STLReader.__file__), "tests")
 
-def test_readASCII(application):
+
+def test_readASCII():
     reader = STLReader.STLReader()
     ascii_path = os.path.join(test_path, "simpleTestCubeASCII.stl")
-    result = reader.read(ascii_path)
+    with patch("UM.Application.Application.getInstance"):
+        result = reader.read(ascii_path)
     assert result
 
     if STLReader.use_numpystl:
@@ -23,10 +25,12 @@ def test_readASCII(application):
 
         assert mesh_builder.getVertexCount() != 0
 
-def test_readBinary(application):
+
+def test_readBinary():
     reader = STLReader.STLReader()
     binary_path = os.path.join(test_path, "simpleTestCubeBinary.stl")
-    result = reader.read(binary_path)
+    with patch("UM.Application.Application.getInstance"):
+        result = reader.read(binary_path)
 
     if STLReader.use_numpystl:
         # If the system the test runs on supporst numpy stl, we should also check the non numpy stl option.
