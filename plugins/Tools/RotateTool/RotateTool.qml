@@ -23,7 +23,7 @@ Item
         property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;
-        z: 1
+        z: 2
 
         onClicked: UM.ActiveTool.triggerAction("resetRotation");
     }
@@ -41,6 +41,7 @@ Item
         property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;
+        z: 1
 
         onClicked: UM.ActiveTool.triggerAction("layFlat");
     }
