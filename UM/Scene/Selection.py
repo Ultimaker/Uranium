@@ -65,7 +65,7 @@ class Selection:
 
     @classmethod
     # Is certain to be greater than the largest ID.
-    def endFaceSelectionId(cls):
+    def getEndFaceSelectionId(cls) -> int:
         return 0x10001
 
     @classmethod
