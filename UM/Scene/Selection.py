@@ -65,7 +65,7 @@ class Selection:
 
     @classmethod
     # The largest ID a face can have (faces are counted per model, so each model has a face 0,1,...).
-    def maxFaceSelectionId(cls):
+    def getMaxFaceSelectionId(cls):
         return 0xffff
 
     @classmethod
