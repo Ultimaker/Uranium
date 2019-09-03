@@ -272,6 +272,8 @@ class Controller:
                 Logger.log("w", "Controller does not have an active tool and could not default to Translate tool.")
 
         if tool_changed:
+            Selection.setFaceSelectMode(False)
+            Selection.clearFace()
             self.activeToolChanged.emit()
 
     ##  Emitted when the list of tools changes.
