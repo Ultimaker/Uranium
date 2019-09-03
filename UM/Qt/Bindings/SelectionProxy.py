@@ -20,6 +20,14 @@ class SelectionProxy(QObject):
         return Selection.hasSelection()
 
     @pyqtProperty(bool, notify = selectedFaceChanged)
+    def faceSelectMode(self):
+        return Selection.getFaceSelectMode()
+
+    @pyqtSlot(bool)
+    def setFaceSelectMode(self, select: bool) -> None:
+        Selection.setFaceSelectMode(select)
+
+    @pyqtProperty(bool, notify = selectedFaceChanged)
     def hasFaceSelected(self):
         return Selection.getSelectedFace() is not None
 

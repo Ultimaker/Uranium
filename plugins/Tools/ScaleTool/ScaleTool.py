@@ -60,6 +60,9 @@ class ScaleTool(Tool):
             "ScaleZ"
         )
 
+        # Make sure to render whenever objects get selected/deselected.
+        Selection.selectionChanged.connect(self.propertyChanged)
+
     ##  Handle mouse and keyboard events
     #
     #   \param event type(Event)

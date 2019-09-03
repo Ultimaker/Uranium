@@ -45,6 +45,23 @@ Item
         onClicked: UM.ActiveTool.triggerAction("layFlat");
     }
 
+    Button
+    {
+        id: alignFaceButton
+
+        anchors.left: layFlatButton.right;
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+
+        text: catalog.i18nc("@action:button","Align selected face with bottom")
+        iconSource: UM.Theme.getIcon("rotate_layflat");  // TODO!
+        property bool needBorder: true
+
+        style: UM.Theme.styles.tool_button;
+
+        enabled: UM.Selection.hasFaceSelected;
+        onClicked: CuraActions.bottomFaceSelection();
+    }
+
     CheckBox
     {
         id: snapRotationCheckbox
@@ -61,10 +78,32 @@ Item
         onClicked: UM.ActiveTool.setProperty("RotationSnap", checked);
     }
 
+    CheckBox
+    {
+        id: selectFaceCheckbox
+        anchors.left: parent.left
+        anchors.top: snapRotationCheckbox.bottom;
+        anchors.topMargin: UM.Theme.getSize("default_margin").width;
+
+        text: catalog.i18nc("@action:checkbox","Select face on click");
+
+        style: UM.Theme.styles.checkbox;
+
+        checked: UM.Selection.faceSelectMode
+        onClicked: UM.Selection.setFaceSelectMode(checked)
+    }
+
     Binding
     {
         target: snapRotationCheckbox
         property: "checked"
         value: UM.ActiveTool.properties.getValue("RotationSnap")
+    }
+
+    Binding
+    {
+        target: selectFaceCheckbox
+        property: "checked"
+        value: UM.Selection.faceSelectMode
     }
 }
