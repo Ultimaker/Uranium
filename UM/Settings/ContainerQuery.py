@@ -17,6 +17,12 @@ if TYPE_CHECKING:
 #   \note Instances of this class will ignore the query results when
 #   comparing. This is done to simplify the caching code in ContainerRegistry.
 class ContainerQuery:
+
+    # If a field is provided in the format "[t1|t2|t3|...]", try to find if any of the given tokens is present in the
+    # value. Use regex to do matching because certain fields such as name can be filled by a user and it can be string
+    # like "[my_printer][something]".
+    OPTIONS_REGEX = re.compile("^\\[[a-zA-Z0-9-_\\+\\. ]+(\\|[a-zA-Z0-9-_\\+\\. ]+)*\\]$")
+
     ##  Constructor
     #
     #   \param registry The ContainerRegistry instance this query operates on.
@@ -71,7 +77,7 @@ class ContainerQuery:
         # Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
             if isinstance(value, str):
-                if value.startswith("[") and value.endswith("]"):
+                if ContainerQuery.OPTIONS_REGEX.fullmatch(value) is not None:
                     # With [token1|token2|token3|...], we try to find if any of the given tokens is present in the value
                     key_filter = lambda candidate, key = key, value = value: self._matchRegMultipleTokens(candidate, key, value)
                 elif ("*" or "|") in value:
