@@ -19,6 +19,8 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
 
+from UM.View.GL.OpenGL import OpenGL
+
 from . import RotateToolHandle
 
 import math
@@ -48,8 +50,9 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         self._rotating = False
-        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
+        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported")
         self._saved_node_positions = []
+        #self._select_face_supported = OpenGL.getInstance().getOpenGLShadingLanguageVersion() >= 1.5
 
     ##  Handle mouse and keyboard events
     #
@@ -184,6 +187,12 @@ class RotateTool(Tool):
     #   \return type(String) fully formatted string showing the angle by which the mesh(es) are rotated
     def getToolHint(self):
         return "%d°" % round(math.degrees(self._angle)) if self._angle else None
+
+    ##  Get whether the select face feature is supported
+    #
+    #   \return type(Boolean)
+    def getSelectFaceSupported(self):
+        return OpenGL.getInstance().getOpenGLShadingLanguageVersion() >= 1.5
 
     ##  Get the state of the "snap rotation to N-degree increments" option
     #

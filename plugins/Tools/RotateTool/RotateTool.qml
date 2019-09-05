@@ -61,6 +61,8 @@ Item
 
         enabled: UM.Selection.hasFaceSelected;
         onClicked: CuraActions.bottomFaceSelection();
+
+        visible: UM.ActiveTool.properties.getValue("SelectFaceSupported");
     }
 
     CheckBox
@@ -92,6 +94,8 @@ Item
 
         checked: UM.Selection.faceSelectMode
         onClicked: UM.Selection.setFaceSelectMode(checked)
+
+        visible: UM.ActiveTool.properties.getValue("SelectFaceSupported");
     }
 
     Binding
