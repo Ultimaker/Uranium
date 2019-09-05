@@ -52,7 +52,6 @@ class RotateTool(Tool):
         self._rotating = False
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported")
         self._saved_node_positions = []
-        #self._select_face_supported = OpenGL.getInstance().getOpenGLShadingLanguageVersion() >= 1.5
 
     ##  Handle mouse and keyboard events
     #
