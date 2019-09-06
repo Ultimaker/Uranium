@@ -79,7 +79,8 @@ class TranslateTool(Tool):
             return float(Selection.getBoundingBox().bottom)
         return 0.0
 
-    def _parseInt(self, str_value: str) -> float:
+    @staticmethod
+    def _parseInt(str_value: str) -> float:
         try:
             parsed_value = float(str_value)
         except ValueError:
