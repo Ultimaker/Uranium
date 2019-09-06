@@ -88,7 +88,7 @@ class LocalContainerProvider(ContainerProvider):
 
         mime_type = ContainerRegistry.getMimeTypeForContainer(type(container))
         if mime_type is None:
-            Logger.log("e", "Failed to get MIME type for container type [%s]", type(container))
+            Logger.log("w", "Failed to get MIME type for container type [%s]", type(container))
             return
         file_name = urllib.parse.quote_plus(container.getId()) + "." + mime_type.preferredSuffix
         container_type = container.getMetaDataEntry("type")
