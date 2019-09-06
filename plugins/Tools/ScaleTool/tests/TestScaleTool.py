@@ -3,7 +3,6 @@ from unittest.mock import patch, MagicMock
 import sys
 import os
 
-from UM.Event import MouseEvent
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
