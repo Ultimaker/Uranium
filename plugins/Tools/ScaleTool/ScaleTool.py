@@ -18,7 +18,7 @@ from UM.Operations.SetTransformOperation import SetTransformOperation
 from PyQt5.QtCore import Qt
 try:
     from . import ScaleToolHandle
-except ImportError:
+except (ImportError, SystemError):
     import ScaleToolHandle  # type: ignore  # This fixes the tests not being able to import.
 
 import scipy
