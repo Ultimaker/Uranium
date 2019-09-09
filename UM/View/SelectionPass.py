@@ -1,6 +1,7 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import enum
 import random
 
 from UM.Resources import Resources
@@ -24,10 +25,15 @@ from UM.View.GL.OpenGL import OpenGL
 #   information about what objects are actually selected is rendered into the alpha channel
 #   of this render pass so it can be used later on in the composite pass.
 class SelectionPass(RenderPass):
+    class SelectionMode(enum.Enum):
+        OBJECTS = "objects"
+        FACES = "faces"
+
     def __init__(self, width, height):
         super().__init__("selection", width, height, -999)
 
         self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "selection.shader"))
+        self._face_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "select_face.shader"))
         self._tool_handle_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
         self._gl = OpenGL.getInstance().getBindingsObject()
         self._scene = Application.getInstance().getController().getScene()
@@ -36,22 +42,32 @@ class SelectionPass(RenderPass):
 
         self._selection_map = {}
         self._toolhandle_selection_map = {
-            Color.dropLowBits(self._dropAlpha(ToolHandle.DisabledSelectionColor)): ToolHandle.NoAxis,
-            Color.dropLowBits(self._dropAlpha(ToolHandle.XAxisSelectionColor)): ToolHandle.XAxis,
-            Color.dropLowBits(self._dropAlpha(ToolHandle.YAxisSelectionColor)): ToolHandle.YAxis,
-            Color.dropLowBits(self._dropAlpha(ToolHandle.ZAxisSelectionColor)): ToolHandle.ZAxis,
-            Color.dropLowBits(self._dropAlpha(ToolHandle.AllAxisSelectionColor)): ToolHandle.AllAxis,
-            Color.dropLowBits(ToolHandle.DisabledSelectionColor): ToolHandle.NoAxis,
-            Color.dropLowBits(ToolHandle.XAxisSelectionColor): ToolHandle.XAxis,
-            Color.dropLowBits(ToolHandle.YAxisSelectionColor): ToolHandle.YAxis,
-            Color.dropLowBits(ToolHandle.ZAxisSelectionColor): ToolHandle.ZAxis,
-            Color.dropLowBits(ToolHandle.AllAxisSelectionColor): ToolHandle.AllAxis
+            self._dropAlpha(ToolHandle.DisabledSelectionColor): ToolHandle.NoAxis,
+            self._dropAlpha(ToolHandle.XAxisSelectionColor): ToolHandle.XAxis,
+            self._dropAlpha(ToolHandle.YAxisSelectionColor): ToolHandle.YAxis,
+            self._dropAlpha(ToolHandle.ZAxisSelectionColor): ToolHandle.ZAxis,
+            self._dropAlpha(ToolHandle.AllAxisSelectionColor): ToolHandle.AllAxis,
+            ToolHandle.DisabledSelectionColor: ToolHandle.NoAxis,
+            ToolHandle.XAxisSelectionColor: ToolHandle.XAxis,
+            ToolHandle.YAxisSelectionColor: ToolHandle.YAxis,
+            ToolHandle.ZAxisSelectionColor: ToolHandle.ZAxis,
+            ToolHandle.AllAxisSelectionColor: ToolHandle.AllAxis
         }
+        self._mode = SelectionPass.SelectionMode.OBJECTS
 
         self._output = None
 
+    def setMode(self, selection_mode: SelectionMode):
+        self._mode = selection_mode
+
     ##  Perform the actual rendering.
     def render(self):
+        if self._mode == SelectionPass.SelectionMode.OBJECTS:
+            self.renderObjectsMode()
+        elif self._mode == SelectionPass.SelectionMode.FACES:
+            self.renderFaceMode()
+
+    def renderObjectsMode(self):
         self._selection_map = self._toolhandle_selection_map.copy()
 
         batch = RenderBatch(self._shader)
@@ -80,6 +96,24 @@ class SelectionPass(RenderPass):
 
         self.release()
 
+    def renderFacesMode(self):
+        batch = RenderBatch(self._face_shader)
+
+        selectable_objects = False
+        for node in DepthFirstIterator(self._scene.getRoot()):
+            if isinstance(node, ToolHandle):
+                continue  # Ignore tool-handles in this mode.
+
+            if node.isSelectable() and node.getMeshData():
+                selectable_objects = True
+                batch.addItem(transformation = node.getWorldTransformation(), mesh = node.getMeshData())
+
+        self.bind()
+        if selectable_objects:
+            batch.render(self._scene.getActiveCamera())
+
+        self.release()
+
     ##  Get the object id at a certain pixel coordinate.
     def getIdAtPosition(self, x, y):
         output = self.getOutput()
@@ -93,7 +127,7 @@ class SelectionPass(RenderPass):
             return None
 
         pixel = output.pixel(px, py)
-        return self._selection_map.get(Color.fromARGBHighBits(pixel), None)
+        return self._selection_map.get(Color.fromARGB(pixel), None)
 
     ## Get an unique identifier to the face of the polygon at a certain pixel-coordinate.
     def getFaceIdAtPosition(self, x, y):
@@ -107,11 +141,12 @@ class SelectionPass(RenderPass):
         if px < 0 or px > (output.width() - 1) or py < 0 or py > (output.height() - 1):
             return -1
 
-        face_color = Color.fromARGBLowBits(output.pixel(px, py))
+        face_color = Color.fromARGB(output.pixel(px, py))
+        if int(face_color.b * 255) % 2 == 0:
+            return -1
         return (
-            (int(face_color.a * 255.) << 12) |
-            (int(face_color.b * 255.) << 8) |
-            (int(face_color.g * 255.) << 4) |
+            ((int(face_color.b * 255.) - 1) << 15) |
+            (int(face_color.g * 255.) << 8) |
             int(face_color.r * 255.)
         )
 
@@ -121,7 +156,7 @@ class SelectionPass(RenderPass):
             g = random.randint(0, 255)
             b = random.randint(0, 255)
             a = 255 if Selection.isSelected(node) or self._isInSelectedGroup(node) else 0
-            color = Color(r & 0xf0, g & 0xf0, b & 0xf0, a & 0xf0)
+            color = Color(r, g, b, a)
 
             if color not in self._selection_map:
                 break

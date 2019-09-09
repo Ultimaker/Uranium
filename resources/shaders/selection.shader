@@ -17,13 +17,6 @@ fragment =
     void main()
     {
         gl_FragColor = u_color;
-
- #if __VERSION__ >= 150
-        gl_FragColor.r += ( gl_PrimitiveID           % 0x10) / 255.;
-        gl_FragColor.g += ((gl_PrimitiveID /   0x10) % 0x10) / 255.;
-        gl_FragColor.b += ((gl_PrimitiveID /  0x100) % 0x10) / 255.;
-        gl_FragColor.a += ((gl_PrimitiveID / 0x1000) % 0x10) / 255.;
- #endif
     }
 
 vertex41core =
@@ -47,11 +40,6 @@ fragment41core =
     void main()
     {
         frag_color = u_color;
-
-        frag_color.r += ( gl_PrimitiveID           % 0x10) / 255.;
-        frag_color.g += ((gl_PrimitiveID /   0x10) % 0x10) / 255.;
-        frag_color.b += ((gl_PrimitiveID /  0x100) % 0x10) / 255.;
-        frag_color.a += ((gl_PrimitiveID / 0x1000) % 0x10) / 255.;
     }
 
 [defaults]
