@@ -99,7 +99,7 @@ class OpenGL:
         self._opengl_version = self._gl.glGetString(self._gl.GL_VERSION) #type: str
 
         try:
-            self._opengl_shading_language_version = float(self._gl.glGetString(self._gl.GL_SHADING_LANGUAGE_VERSION))
+            self._opengl_shading_language_version = float(self._gl.glGetString(self._gl.GL_SHADING_LANGUAGE_VERSION)[0:3])
         except:
             self._opengl_shading_language_version = 1.0
 

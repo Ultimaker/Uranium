@@ -53,21 +53,23 @@ class SelectionPass(RenderPass):
             ToolHandle.ZAxisSelectionColor: ToolHandle.ZAxis,
             ToolHandle.AllAxisSelectionColor: ToolHandle.AllAxis
         }
+
         self._mode = SelectionPass.SelectionMode.OBJECTS
+        Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
 
         self._output = None
 
-    def setMode(self, selection_mode: SelectionMode):
-        self._mode = selection_mode
+    def _onSelectedFaceChanged(self):
+        self._mode = SelectionPass.SelectionMode.FACES if Selection.getFaceSelectMode() else SelectionPass.SelectionMode.OBJECTS
 
     ##  Perform the actual rendering.
     def render(self):
         if self._mode == SelectionPass.SelectionMode.OBJECTS:
-            self.renderObjectsMode()
+            self._renderObjectsMode()
         elif self._mode == SelectionPass.SelectionMode.FACES:
-            self.renderFaceMode()
+            self._renderFacesMode()
 
-    def renderObjectsMode(self):
+    def _renderObjectsMode(self):
         self._selection_map = self._toolhandle_selection_map.copy()
 
         batch = RenderBatch(self._shader)
@@ -96,7 +98,7 @@ class SelectionPass(RenderPass):
 
         self.release()
 
-    def renderFacesMode(self):
+    def _renderFacesMode(self):
         batch = RenderBatch(self._face_shader)
 
         selectable_objects = False
