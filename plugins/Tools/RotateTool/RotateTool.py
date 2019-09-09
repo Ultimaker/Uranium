@@ -184,6 +184,8 @@ class RotateTool(Tool):
                 return True
 
     def _onSelectedFaceChanged(self):
+        self._handle.setEnabled(not Selection.getFaceSelectMode())
+
         selected_face = Selection.getSelectedFace()
         if not Selection.getSelectedFace() or not (Selection.hasSelection() and Selection.getFaceSelectMode()):
             return
