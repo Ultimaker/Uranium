@@ -102,7 +102,10 @@ class SelectionTool(Tool):
     def _pixelSelection(self, event):
         # Find a node id by looking at a pixel value at the requested location
         if self._selection_pass:
-            item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
+            if Selection.getFaceSelectMode():
+                item_id = id(Selection.getSelectedObject(0))
+            else:
+                item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
         else:
             Logger.log("w", "Selection pass is None. getRenderPass('selection') returned None")
             return False
