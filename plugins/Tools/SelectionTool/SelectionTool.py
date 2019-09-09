@@ -146,7 +146,12 @@ class SelectionTool(Tool):
                         return True
             else:
                 if Selection.getFaceSelectMode():
-                    Selection.toggleFace(node, self._selection_pass.getFaceIdAtPosition(event.x, event.y))
+                    face_id = self._selection_pass.getFaceIdAtPosition(event.x, event.y)
+                    if face_id >= 0:
+                        Selection.toggleFace(node, face_id)
+                    else:
+                        Selection.clear()
+                        Selection.clearFace()
                 if not is_selected or Selection.getCount() > 1:
                     # Select only the SceneNode and its siblings in a group
                     Selection.clear()

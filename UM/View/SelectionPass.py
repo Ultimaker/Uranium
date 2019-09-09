@@ -102,7 +102,7 @@ class SelectionPass(RenderPass):
         batch = RenderBatch(self._face_shader)
 
         selectable_objects = False
-        for node in DepthFirstIterator(self._scene.getRoot()):
+        for node in Selection.getAllSelectedObjects():
             if isinstance(node, ToolHandle):
                 continue  # Ignore tool-handles in this mode.
 
