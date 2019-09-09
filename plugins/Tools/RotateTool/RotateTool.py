@@ -53,6 +53,8 @@ class RotateTool(Tool):
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported")
         self._saved_node_positions = []
 
+        Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
+
     ##  Handle mouse and keyboard events
     #
     #   \param event type(Event)
@@ -180,6 +182,36 @@ class RotateTool(Tool):
                 if self._rotating:
                     self.operationStopped.emit(self)
                 return True
+
+    def _onSelectedFaceChanged(self):
+        selected_face = Selection.getSelectedFace()
+        if not Selection.getSelectedFace() or not (Selection.hasSelection() and Selection.getFaceSelectMode()):
+            return
+
+        original_node, face_id = selected_face
+        meshdata = original_node.getMeshDataTransformed()
+        if not meshdata or face_id < 0 or face_id > Selection.getMaxFaceSelectionId():
+            return
+
+        rotation_point, face_normal = meshdata.getFacePlane(face_id)
+        rotation_point_vector = Vector(rotation_point[0], rotation_point[1], rotation_point[2])
+        face_normal_vector = Vector(face_normal[0], face_normal[1], face_normal[2])
+        rotation_quaternion = Quaternion.rotationTo(face_normal_vector.normalized(), Vector(0.0, -1.0, 0.0))
+
+        operation = GroupedOperation()
+        current_node = None  # type: Optional[SceneNode]
+        for node in Selection.getAllSelectedObjects():
+            current_node = node
+            parent_node = current_node.getParent()
+            while parent_node and parent_node.callDecoration("isGroup"):
+                current_node = parent_node
+                parent_node = current_node.getParent()
+        if current_node is None:
+            return
+
+        rotate_operation = RotateOperation(current_node, rotation_quaternion, rotation_point_vector)
+        operation.addOperation(rotate_operation)
+        operation.push()
 
     ##  Return a formatted angle of the current rotate operation
     #
