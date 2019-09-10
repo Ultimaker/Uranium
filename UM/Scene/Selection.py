@@ -49,7 +49,7 @@ class Selection:
         cls.selectedFaceChanged.emit()
 
     @classmethod
-    def unsetFace(cls, object: SceneNode = None) -> None:
+    def unsetFace(cls, object: Optional["SceneNode"] = None) -> None:
         if not object or not cls.__selected_face or object is cls.__selected_face[0]:
             cls.__selected_face = None
             cls.selectedFaceChanged.emit()
@@ -69,7 +69,7 @@ class Selection:
         cls.hoverFaceChanged.emit()
 
     @classmethod
-    def unhoverFace(cls, object: SceneNode = None) -> None:
+    def unhoverFace(cls, object: Optional["SceneNode"] = None) -> None:
         if not object or not cls.__hover_face or object is cls.__hover_face[0]:
             cls.__hover_face = None
             cls.hoverFaceChanged.emit()

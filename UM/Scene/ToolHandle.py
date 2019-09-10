@@ -88,7 +88,7 @@ class ToolHandle(SceneNode.SceneNode):
         self._selection_mesh = mesh
         self.meshDataChanged.emit(self)
 
-    def render(self, renderer):
+    def render(self, renderer) -> bool:
         if not self._enabled:
             return True
 
