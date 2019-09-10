@@ -60,6 +60,8 @@ class SelectionTool(Tool):
             self._selection_pass = self._renderer.getRenderPass("selection")
 
         self.checkModifierKeys(event)
+        #if event.type == MouseEvent.MouseMoveEvent and Selection.getFaceSelectMode():
+        #    return self._pixelHover(event)
         if event.type == MouseEvent.MousePressEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
             # Perform a selection operation
             if self._selection_mode == self.PixelSelectionMode:
@@ -102,7 +104,10 @@ class SelectionTool(Tool):
     def _pixelSelection(self, event):
         # Find a node id by looking at a pixel value at the requested location
         if self._selection_pass:
-            item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
+            if Selection.getFaceSelectMode():
+                item_id = id(Selection.getSelectedObject(0))
+            else:
+                item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
         else:
             Logger.log("w", "Selection pass is None. getRenderPass('selection') returned None")
             return False
@@ -143,7 +148,12 @@ class SelectionTool(Tool):
                         return True
             else:
                 if Selection.getFaceSelectMode():
-                    Selection.toggleFace(node, self._selection_pass.getFaceIdAtPosition(event.x, event.y))
+                    face_id = self._selection_pass.getFaceIdAtPosition(event.x, event.y)
+                    if face_id >= 0:
+                        Selection.toggleFace(node, face_id)
+                    else:
+                        Selection.clear()
+                        Selection.clearFace()
                 if not is_selected or Selection.getCount() > 1:
                     # Select only the SceneNode and its siblings in a group
                     Selection.clear()
@@ -158,6 +168,16 @@ class SelectionTool(Tool):
                     Selection.add(node)
                     return True
 
+        return False
+
+    def _pixelHover(self, event):
+        if Selection.getFaceSelectMode():
+            face_id = self._selection_pass.getFaceIdAtPosition(event.x, event.y)
+            if face_id >= 0:
+                Selection.hoverFace(Selection.getSelectedObject(0), face_id)
+            else:
+                Selection.clearFace()
+            return True
         return False
 
     ##  Check whether a node is in a group

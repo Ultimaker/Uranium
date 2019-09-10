@@ -19,6 +19,10 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
 
+from UM.Version import Version
+
+from UM.View.GL.OpenGL import OpenGL
+
 from . import RotateToolHandle
 
 import math
@@ -48,8 +52,10 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         self._rotating = False
-        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
+        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported")
         self._saved_node_positions = []
+
+        Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
 
     ##  Handle mouse and keyboard events
     #
@@ -179,11 +185,51 @@ class RotateTool(Tool):
                     self.operationStopped.emit(self)
                 return True
 
+    def _onSelectedFaceChanged(self):
+        self._handle.setEnabled(not Selection.getFaceSelectMode())
+
+        selected_face = Selection.getSelectedFace()
+        if not Selection.getSelectedFace() or not (Selection.hasSelection() and Selection.getFaceSelectMode()):
+            return
+
+        original_node, face_id = selected_face
+        meshdata = original_node.getMeshDataTransformed()
+        if not meshdata or face_id < 0:
+            return
+
+        rotation_point, face_normal = meshdata.getFacePlane(face_id)
+        rotation_point_vector = Vector(rotation_point[0], rotation_point[1], rotation_point[2])
+        face_normal_vector = Vector(face_normal[0], face_normal[1], face_normal[2])
+        rotation_quaternion = Quaternion.rotationTo(face_normal_vector.normalized(), Vector(0.0, -1.0, 0.0))
+
+        operation = GroupedOperation()
+        current_node = None  # type: Optional[SceneNode]
+        for node in Selection.getAllSelectedObjects():
+            current_node = node
+            parent_node = current_node.getParent()
+            while parent_node and parent_node.callDecoration("isGroup"):
+                current_node = parent_node
+                parent_node = current_node.getParent()
+        if current_node is None:
+            return
+
+        rotate_operation = RotateOperation(current_node, rotation_quaternion, rotation_point_vector)
+        operation.addOperation(rotate_operation)
+        operation.push()
+
+        # NOTE: We might want to consider unchecking the select-face button afterthe operation is done.
+
     ##  Return a formatted angle of the current rotate operation
     #
     #   \return type(String) fully formatted string showing the angle by which the mesh(es) are rotated
     def getToolHint(self):
         return "%d°" % round(math.degrees(self._angle)) if self._angle else None
+
+    ##  Get whether the select face feature is supported
+    #
+    #   \return type(Boolean)
+    def getSelectFaceSupported(self):
+        return OpenGL.getInstance().getOpenGLShadingLanguageVersion() >= Version("1.5")
 
     ##  Get the state of the "snap rotation to N-degree increments" option
     #
