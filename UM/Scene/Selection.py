@@ -1,5 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 from typing import List, Optional, Tuple
 
 from UM.Signal import Signal
@@ -8,8 +9,6 @@ from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Scene.SceneNode import SceneNode
 
 from UM.Operations.GroupedOperation import GroupedOperation
-
-import copy
 
 
 ##    This class is responsible for keeping track of what objects are selected
@@ -50,7 +49,7 @@ class Selection:
         cls.selectedFaceChanged.emit()
 
     @classmethod
-    def unsetFace(cls, object: SceneNode = None) -> None:
+    def unsetFace(cls, object: Optional["SceneNode"] = None) -> None:
         if not object or not cls.__selected_face or object is cls.__selected_face[0]:
             cls.__selected_face = None
             cls.selectedFaceChanged.emit()
@@ -70,7 +69,7 @@ class Selection:
         cls.hoverFaceChanged.emit()
 
     @classmethod
-    def unhoverFace(cls, object: SceneNode = None) -> None:
+    def unhoverFace(cls, object: Optional["SceneNode"] = None) -> None:
         if not object or not cls.__hover_face or object is cls.__hover_face[0]:
             cls.__hover_face = None
             cls.hoverFaceChanged.emit()
