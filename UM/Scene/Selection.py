@@ -1,5 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 from typing import List, Optional, Tuple
 
 from UM.Signal import Signal
@@ -8,8 +9,6 @@ from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Scene.SceneNode import SceneNode
 
 from UM.Operations.GroupedOperation import GroupedOperation
-
-import copy
 
 
 ##    This class is responsible for keeping track of what objects are selected
@@ -50,7 +49,7 @@ class Selection:
         cls.selectedFaceChanged.emit()
 
     @classmethod
-    def unsetFace(cls, object: SceneNode = None) -> None:
+    def unsetFace(cls, object: Optional["SceneNode"] = None) -> None:
         if not object or not cls.__selected_face or object is cls.__selected_face[0]:
             cls.__selected_face = None
             cls.selectedFaceChanged.emit()
@@ -64,9 +63,16 @@ class Selection:
             cls.unsetFace(object)
 
     @classmethod
-    # The largest ID a face can have (faces are counted per model, so each model has a face 0,1,...).
-    def getMaxFaceSelectionId(cls):
-        return 0xffff
+    def hoverFace(cls, object: SceneNode, face_id: int) -> None:
+        # Don't force-add the object, as the parent may be the 'actual' selected one.
+        cls.__hover_face = (object, face_id)
+        cls.hoverFaceChanged.emit()
+
+    @classmethod
+    def unhoverFace(cls, object: Optional["SceneNode"] = None) -> None:
+        if not object or not cls.__hover_face or object is cls.__hover_face[0]:
+            cls.__hover_face = None
+            cls.hoverFaceChanged.emit()
 
     @classmethod
     ##  Get number of selected objects
@@ -80,6 +86,10 @@ class Selection:
     @classmethod
     def getSelectedFace(cls) -> Optional[Tuple[SceneNode, int]]:
         return cls.__selected_face
+
+    @classmethod
+    def getHoverFace(cls) -> Optional[Tuple[SceneNode, int]]:
+        return cls.__hover_face
 
     @classmethod
     def getBoundingBox(cls) -> AxisAlignedBox:
@@ -117,7 +127,9 @@ class Selection:
     @classmethod
     def clearFace(cls):
         cls.__selected_face = None
+        cls.__hover_face = None
         cls.selectedFaceChanged.emit()
+        cls.hoverFaceChanged.emit()
 
     @classmethod
     ##  Check if anything is selected at all.
@@ -129,6 +141,8 @@ class Selection:
     selectionCenterChanged = Signal()
 
     selectedFaceChanged = Signal()
+
+    hoverFaceChanged = Signal()
 
     @classmethod
     def getSelectionCenter(cls) -> Vector:
@@ -176,4 +190,5 @@ class Selection:
     __selection = []    # type: List[SceneNode]
     __selection_center = Vector(0, 0, 0)
     __selected_face = None    # type: Optional[Tuple[SceneNode, int]]
+    __hover_face = None    # type: Optional[Tuple[SceneNode, int]]
     __face_select_mode = False

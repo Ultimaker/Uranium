@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2019 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
@@ -44,23 +44,29 @@ Item
         z: 1
 
         onClicked: UM.ActiveTool.triggerAction("layFlat");
+
+        // (Not yet:) Alternative 'lay flat' when legacy OpenGL makes selection of a face in an indexed model impossible.
+        // visible: ! UM.ActiveTool.properties.getValue("SelectFaceSupported");
     }
 
     Button
     {
         id: alignFaceButton
 
-        anchors.left: layFlatButton.right;
+        anchors.left: layFlatButton.visible ? layFlatButton.right : resetRotationButton.right;
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
 
-        text: catalog.i18nc("@action:button","Align selected face with bottom")
-        iconSource: UM.Theme.getIcon("rotate_layflat");  // TODO!
+        text: catalog.i18nc("@action:button","Toggle 'click on a face to align it with the build-plate' mode.")
+        iconSource: UM.Theme.getIcon("rotate_face_layflat")
         property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;
 
-        enabled: UM.Selection.hasFaceSelected;
-        onClicked: CuraActions.bottomFaceSelection();
+        enabled: UM.Selection.selectionCount == 1
+        checked: UM.Selection.faceSelectMode
+        onClicked: UM.Selection.setFaceSelectMode(!checked);
+
+        visible: UM.ActiveTool.properties.getValue("SelectFaceSupported");
     }
 
     CheckBox
@@ -79,21 +85,6 @@ Item
         onClicked: UM.ActiveTool.setProperty("RotationSnap", checked);
     }
 
-    CheckBox
-    {
-        id: selectFaceCheckbox
-        anchors.left: parent.left
-        anchors.top: snapRotationCheckbox.bottom;
-        anchors.topMargin: UM.Theme.getSize("default_margin").width;
-
-        text: catalog.i18nc("@action:checkbox","Select face on click");
-
-        style: UM.Theme.styles.checkbox;
-
-        checked: UM.Selection.faceSelectMode
-        onClicked: UM.Selection.setFaceSelectMode(checked)
-    }
-
     Binding
     {
         target: snapRotationCheckbox
@@ -103,7 +94,7 @@ Item
 
     Binding
     {
-        target: selectFaceCheckbox
+        target: alignFaceButton
         property: "checked"
         value: UM.Selection.faceSelectMode
     }
