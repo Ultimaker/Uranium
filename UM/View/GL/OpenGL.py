@@ -112,7 +112,7 @@ class OpenGL:
         Logger.log("d", "OpenGL Version:  %s", self._opengl_version)
         Logger.log("d", "OpenGL Vendor:   %s", self._gl.glGetString(self._gl.GL_VENDOR))
         Logger.log("d", "OpenGL Renderer: %s", self._gpu_type)
-        Logger.log("d", "GLSL Version:    %f", self._opengl_shading_language_version)
+        Logger.log("d", "GLSL Version:    %s", self._opengl_shading_language_version)
 
     ##  Check if the current OpenGL implementation supports FrameBuffer Objects.
     #
