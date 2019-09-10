@@ -99,7 +99,7 @@ class OpenGL:
 
         self._opengl_version = self._gl.glGetString(self._gl.GL_VERSION) #type: str
 
-        self._opengl_shading_language_version = Version("0.0")
+        self._opengl_shading_language_version = Version("0.0")  # type: Version
         try:
             self._opengl_shading_language_version = Version(self._gl.glGetString(self._gl.GL_SHADING_LANGUAGE_VERSION))
         except:
@@ -129,7 +129,7 @@ class OpenGL:
     ##  Get the current OpenGL shading language version.
     #
     #   \return Shading language version of OpenGL
-    def getOpenGLShadingLanguageVersion(self) -> Version:
+    def getOpenGLShadingLanguageVersion(self) -> "Version":
         return self._opengl_shading_language_version
 
     ##  Get the current GPU vendor name.
