@@ -60,6 +60,8 @@ class SelectionTool(Tool):
             self._selection_pass = self._renderer.getRenderPass("selection")
 
         self.checkModifierKeys(event)
+        #if event.type == MouseEvent.MouseMoveEvent and Selection.getFaceSelectMode():
+        #    return self._pixelHover(event)
         if event.type == MouseEvent.MousePressEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
             # Perform a selection operation
             if self._selection_mode == self.PixelSelectionMode:
@@ -166,6 +168,16 @@ class SelectionTool(Tool):
                     Selection.add(node)
                     return True
 
+        return False
+
+    def _pixelHover(self, event):
+        if Selection.getFaceSelectMode():
+            face_id = self._selection_pass.getFaceIdAtPosition(event.x, event.y)
+            if face_id >= 0:
+                Selection.hoverFace(Selection.getSelectedObject(0), face_id)
+            else:
+                Selection.clearFace()
+            return True
         return False
 
     ##  Check whether a node is in a group

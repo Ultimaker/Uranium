@@ -45,19 +45,19 @@ Item
 
         onClicked: UM.ActiveTool.triggerAction("layFlat");
 
-        // Alternative 'lay flat' when legacy OpenGL makes selection of a face in an indexed model impossible.
-        visible: ! UM.ActiveTool.properties.getValue("SelectFaceSupported");
+        // (Not yet:) Alternative 'lay flat' when legacy OpenGL makes selection of a face in an indexed model impossible.
+        // visible: ! UM.ActiveTool.properties.getValue("SelectFaceSupported");
     }
 
     Button
     {
         id: alignFaceButton
 
-        anchors.left: resetRotationButton.right;
+        anchors.left: layFlatButton.visible ? layFlatButton.right : resetRotationButton.right;
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
 
         text: catalog.i18nc("@action:button","Toggle 'click on a face to align it with the build-plate' mode.")
-        iconSource: checked ? UM.Theme.getIcon("rotate_layflat") : UM.Theme.getIcon("rotate_reset");  // TODO!
+        iconSource: UM.Theme.getIcon("rotate_face_layflat")
         property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;

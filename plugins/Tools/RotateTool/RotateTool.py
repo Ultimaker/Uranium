@@ -192,7 +192,7 @@ class RotateTool(Tool):
 
         original_node, face_id = selected_face
         meshdata = original_node.getMeshDataTransformed()
-        if not meshdata or face_id < 0 or face_id > Selection.getMaxFaceSelectionId():
+        if not meshdata or face_id < 0:
             return
 
         rotation_point, face_normal = meshdata.getFacePlane(face_id)
@@ -214,6 +214,8 @@ class RotateTool(Tool):
         rotate_operation = RotateOperation(current_node, rotation_quaternion, rotation_point_vector)
         operation.addOperation(rotate_operation)
         operation.push()
+
+        # NOTE: We might want to consider unchecking the select-face button afterthe operation is done.
 
     ##  Return a formatted angle of the current rotate operation
     #
