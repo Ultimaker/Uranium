@@ -53,7 +53,7 @@ class MeshFileHandler(FileHandler):
                 return results
 
         except OSError as e:
-            Logger.log("e", str(e))
+            Logger.logException("e", str(e))
 
         Logger.log("w", "Unable to read file %s", file_name)
         return None  # unable to read

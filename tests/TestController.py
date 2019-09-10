@@ -3,6 +3,8 @@ from unittest.mock import MagicMock
 from UM.Controller import Controller
 from UM.Event import ViewEvent, Event
 from UM.InputDevice import InputDevice
+from UM.Mesh.MeshData import MeshData
+from UM.Scene.SceneNode import SceneNode
 from UM.Stage import Stage
 from UM.Tool import Tool
 from UM.View.View import View
@@ -313,3 +315,51 @@ def test_eventHandling(application):
     # But the selection tool should have gotten one
     selection_tool.event.assert_called_once_with(event)
 
+
+def test_setSelectionTool(application):
+    controller = Controller(application)
+    controller.getTool = MagicMock()
+
+    controller.setSelectionTool("beep")
+
+    controller.getTool.assert_called_once_with("beep")
+
+
+def test_deleteAllNodesWithMeshData(application):
+    controller = Controller(application)
+
+    node_1 = SceneNode()
+    node_1.setMeshData(MeshData())
+    node_1.setSelectable(True)
+
+    node_2 = SceneNode()
+
+    node_3 = SceneNode()
+    node_3.setMeshData(MeshData())
+
+    controller.getScene().getRoot().addChild(node_1)
+    controller.getScene().getRoot().addChild(node_2)
+    controller.getScene().getRoot().addChild(node_3)
+
+    controller.deleteAllNodesWithMeshData()
+
+    children = controller.getScene().getRoot().getAllChildren()
+    assert node_1 not in children  # Should be removed because it's selectable and has a mesh.
+    assert node_2 in children  # Has no mesh.
+    assert node_3 in children  # Has a mesh, but isn't selectable.
+
+
+def test_deleteAllNodesWithMeshData_toolsDisabled(application):
+    controller = Controller(application)
+
+    node_1 = SceneNode()
+    node_1.setMeshData(MeshData())
+    node_1.setSelectable(True)
+
+    controller.getScene().getRoot().addChild(node_1)
+    controller.getToolsEnabled = MagicMock(return_value = False)
+
+    controller.deleteAllNodesWithMeshData()
+
+    children = controller.getScene().getRoot().getAllChildren()
+    assert node_1 in children  # Should still be in there, because the tools are not active.

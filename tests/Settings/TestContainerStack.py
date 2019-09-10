@@ -794,9 +794,9 @@ def test_getSetReadOnly(container_stack):
 
 
 def test_isSetDirty(container_stack):
-    assert container_stack.isDirty()
-    container_stack.setDirty(False)
     assert not container_stack.isDirty()
+    container_stack.setDirty(True)
+    assert container_stack.isDirty()
 
 
 def test_getSetPath(container_stack):

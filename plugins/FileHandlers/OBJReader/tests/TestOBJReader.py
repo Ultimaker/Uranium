@@ -2,16 +2,17 @@ import os.path
 
 import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-
+from unittest.mock import patch
 import OBJReader
 
 test_path = os.path.join(os.path.dirname(OBJReader.__file__), "tests")
 
 
-def test_readOBJ(application):
+def test_readOBJ():
     reader = OBJReader.OBJReader()
     sphere_file = os.path.join(test_path, "sphere.obj")
-    result = reader.read(sphere_file)
+    with patch("UM.Application.Application.getInstance"):
+        result = reader.read(sphere_file)
 
     assert result  # It must return a node
     assert result.getMeshData()  # It should have mesh data

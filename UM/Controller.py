@@ -14,7 +14,6 @@ from UM.Stage import Stage
 from UM.InputDevice import InputDevice
 from typing import cast, Optional, Dict, Union
 from UM.Math.Vector import Vector
-
 MYPY = False
 if MYPY:
     from UM.Application import Application
@@ -273,6 +272,8 @@ class Controller:
                 Logger.log("w", "Controller does not have an active tool and could not default to Translate tool.")
 
         if tool_changed:
+            Selection.setFaceSelectMode(False)
+            Selection.clearFace()
             self.activeToolChanged.emit()
 
     ##  Emitted when the list of tools changes.
@@ -378,15 +379,11 @@ class Controller:
 
         nodes = []
         for node in DepthFirstIterator(self.getScene().getRoot()):
-            if not isinstance(node, SceneNode):
+            if not node.isEnabled():
                 continue
-            if (not node.getMeshData() and not node.callDecoration("getLayerData")) and not node.callDecoration(
-                    "isGroup"):
+            if not node.getMeshData() and not node.callDecoration("isGroup"):
                 continue  # Node that doesnt have a mesh and is not a group.
             if only_selectable and not node.isSelectable():
-                continue
-            if not node.callDecoration("isSliceable") and not node.callDecoration(
-                    "getLayerData") and not node.callDecoration("isGroup"):
                 continue  # Only remove nodes that are selectable.
             if node.getParent() and cast(SceneNode, node.getParent()).callDecoration("isGroup"):
                 continue  # Grouped nodes don't need resetting as their parent (the group) is resetted)

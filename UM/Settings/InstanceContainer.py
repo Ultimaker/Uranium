@@ -62,12 +62,13 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             "container_type": InstanceContainer
         }                               # type: Dict[str, Any]
         self._instances = {}            # type: Dict[str, SettingInstance]
-        self._read_only = False #type: bool
-        self._dirty = False #type: bool
-        self._path = "" #type: str
-        self._postponed_emits = [] #type: List[Tuple[Signal, Tuple[str, str]]]
+        self._read_only = False  # type: bool
+        self._dirty = False  # type: bool
+        self._path = ""  # type: str
+        self._postponed_emits = []  # type: List[Tuple[Signal, Tuple[str, str]]]
+        self._definition = None  # type: Optional[DefinitionContainerInterface]
 
-        self._cached_values = None #type: Optional[Dict[str, Any]]
+        self._cached_values = None  # type: Optional[Dict[str, Any]]
 
     def __hash__(self) -> int:
         # We need to re-implement the hash, because we defined the __eq__ operator.
@@ -277,9 +278,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         # **WITHOUT** applying the cached values. This way there won't be any property changed signals when we are
         # just checking if a property exists.
         #
-        self._instantiateMissingSettingInstancesInCache()
         if self._cached_values and key in self._cached_values and property_name == "value":
             return True
+        self._instantiateMissingSettingInstancesInCache()
         return key in self._instances and hasattr(self._instances[key], property_name)
 
     ##  Creates SettingInstances that are missing in this InstanceContainer from the cache if any.
@@ -323,12 +324,14 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                 "Tried to setProperty [%s] with value [%s] with key [%s] on read-only object [%s]" % (
                     property_name, property_value, key, self.id))
             return
-        if key not in self._instances:
-            if not self.getDefinition():
-                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and the container has no definition", key, self.getName())
-                return
 
-            setting_definition = self.getDefinition().findDefinitions(key = key)
+        if key not in self._instances:
+            try:
+                definition = self.getDefinition()
+            except DefinitionNotFoundError:
+                Logger.log("w", "Tried to set value of setting when the container has no definition")
+                return
+            setting_definition = definition.findDefinitions(key = key)
             if not setting_definition:
                 Logger.log("w", "Tried to set value of setting %s that has no instance in container %s or its definition %s", key, self.getName(), self.getDefinition().getName())
                 return
@@ -401,7 +404,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         self._instantiateCachedValues()
         parser = configparser.ConfigParser(interpolation = None)
 
-        if not self.getDefinition():
+        try:
+            self.getDefinition()
+        except DefinitionNotFoundError:
             Logger.log("w", "Tried to serialize an instance container without definition, this is not supported")
             return ""
 
@@ -640,10 +645,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self) -> DefinitionContainerInterface:
-        definitions = _containerRegistry.findDefinitionContainers(id = self._metadata["definition"])
-        if not definitions:
-            raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(self._metadata["definition"], self.getId()))
-        return definitions[0]
+        if self._definition is None:
+            definitions = _containerRegistry.findDefinitionContainers(id = self._metadata.get("definition", ""))
+            if not definitions:
+                raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(self._metadata.get("definition", ""), self.getId()))
+            self._definition = definitions[0]
+        return self._definition
 
     ##  Set the DefinitionContainer to use for new instance creation.
     #
@@ -651,6 +658,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #   way of figuring out what SettingDefinition to use when creating a new SettingInstance.
     def setDefinition(self, definition_id: str) -> None:
         self._metadata["definition"] = definition_id
+        self._definition = None
 
     def __lt__(self, other: object) -> bool:
         if type(other) != type(self):
@@ -658,7 +666,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         other = cast(InstanceContainer, other)
         own_weight = int(self.getMetaDataEntry("weight", 0))
         other_weight = int(other.getMetaDataEntry("weight", 0))
-
+        print(own_weight, other_weight)
         if own_weight and other_weight:
             return own_weight < other_weight
 
