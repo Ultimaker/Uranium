@@ -18,7 +18,7 @@ Item
         anchors.left: parent.left;
 
         //: Reset Rotation tool button
-        text: catalog.i18nc("@action:button","Reset")
+        text: catalog.i18nc("@action:button", "Reset")
         iconSource: UM.Theme.getIcon("rotate_reset");
         property bool needBorder: true
 
@@ -36,7 +36,7 @@ Item
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
 
         //: Lay Flat tool button
-        text: catalog.i18nc("@action:button","Lay flat")
+        text: catalog.i18nc("@action:button", "Lay flat")
         iconSource: UM.Theme.getIcon("rotate_layflat");
         property bool needBorder: true
 
@@ -56,7 +56,7 @@ Item
         anchors.left: layFlatButton.visible ? layFlatButton.right : resetRotationButton.right;
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
 
-        text: catalog.i18nc("@action:button","Toggle 'click on a face to align it with the build-plate' mode.")
+        text: catalog.i18nc("@action:button", "Select face to align to the build plate")
         iconSource: UM.Theme.getIcon("rotate_face_layflat")
         property bool needBorder: true
 
