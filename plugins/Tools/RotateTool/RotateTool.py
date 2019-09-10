@@ -19,6 +19,8 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
 
+from UM.Version import Version
+
 from UM.View.GL.OpenGL import OpenGL
 
 from . import RotateToolHandle
@@ -227,7 +229,7 @@ class RotateTool(Tool):
     #
     #   \return type(Boolean)
     def getSelectFaceSupported(self):
-        return OpenGL.getInstance().getOpenGLShadingLanguageVersion() >= 1.5
+        return OpenGL.getInstance().getOpenGLShadingLanguageVersion() >= Version("1.5")
 
     ##  Get the state of the "snap rotation to N-degree increments" option
     #
