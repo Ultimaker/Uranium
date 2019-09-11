@@ -63,8 +63,8 @@ Item
         style: UM.Theme.styles.tool_button;
 
         enabled: UM.Selection.selectionCount == 1
-        checked: UM.Selection.faceSelectMode
-        onClicked: UM.Selection.setFaceSelectMode(!checked);
+        checkable: true
+        onClicked: UM.Selection.setFaceSelectMode(!UM.Selection.faceSelectMode);
 
         visible: UM.ActiveTool.properties.getValue("SelectFaceSupported");
     }
