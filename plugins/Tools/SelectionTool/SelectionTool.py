@@ -153,7 +153,10 @@ class SelectionTool(Tool):
                         Selection.toggleFace(node, face_id)
                     else:
                         Selection.clear()
-                        Selection.clearFace()
+
+                    # This will only allow to use the tool once. To use it again, the user has to enable the tool again.
+                    Selection.clearFace()
+                    Selection.setFaceSelectMode(False)
                 if not is_selected or Selection.getCount() > 1:
                     # Select only the SceneNode and its siblings in a group
                     Selection.clear()
