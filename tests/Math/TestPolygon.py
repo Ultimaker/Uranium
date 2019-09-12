@@ -137,7 +137,6 @@ class TestPolygon:
                 else:
                     assert result is not None
                     for i in range(0, len(data["answer"])):
-                        print(result[i], data["answer"][i])
                         assert Float.fuzzyCompare(result[i], data["answer"][i])
                 p2 = Polygon(numpy.roll(p2.getPoints(), 1, axis = 0)) #Shift p2.
             p1 = Polygon(numpy.roll(p1.getPoints(), 1, axis = 0)) #Shift p1.
