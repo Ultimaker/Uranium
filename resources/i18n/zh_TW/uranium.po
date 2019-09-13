@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.1\n"
+"Project-Id-Version: Uranium 4.3\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2019-07-16 14:10+0200\n"
+"POT-Creation-Date: 2019-09-10 16:56+0200\n"
 "PO-Revision-Date: 2019-02-28 19:45+0800\n"
 "Last-Translator: Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language-Team: Zhang Heh Ji <dinowchang@gmail.com>\n"
@@ -62,66 +62,66 @@ msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
 msgstr "不支援的輸出模式將 STL 寫入串流。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:44
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:50
 msgctxt "@info"
 msgid "Could not access update information."
 msgstr "無法獲取更新資訊。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:45
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:51
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:97
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:155
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "版本升級"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:57
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "你正在使用的軟體版本不支援檢查更新。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:57
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:188
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "警告"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:93
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
 msgstr "檢查更新時發生錯誤。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:93
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:141
 msgctxt "@info:title"
 msgid "Error"
 msgstr "錯誤"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:97
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "軟體版本已是最新。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:102
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "{application_name} {version_number} 已可下載！"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:98
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:104
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} 提供更好、更可靠的列印體驗。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
 msgctxt "@action:button"
 msgid "Download"
 msgstr "下載"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:109
 msgctxt "@action:button"
 msgid "Learn more"
 msgstr "瞭解更多"
@@ -253,12 +253,12 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr "旋轉模型"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:275
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr "將物件平放在列印平台上..."
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:275
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr "物件旋轉"
@@ -302,16 +302,16 @@ msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
 msgstr "將你的設定重置為出廠預設值。"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:708
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:181
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:696
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "所有支援的檔案類型 ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:709
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:184
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:697
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -411,7 +411,7 @@ msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "縮放物件"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:288
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:277
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -420,7 +420,7 @@ msgstr ""
 "外掛已安裝。\n"
 "請重新啟動應用程式以啟動外掛。"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:414
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:403
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -436,13 +436,13 @@ msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "已匯入舊版本 {0} 所使用的設定。"
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:57
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:62
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:58
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:63
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "無法初始化 OpenGL"
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:72
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:73
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "關鍵的 OpenGL 擴充功能遺失。此程式需要 Framebuffer 物件支援，請檢查您的顯示卡驅動程式是否正常。"
@@ -476,48 +476,48 @@ msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "重置將移除你目前所有的印表機和列印參數！你確定要重置嗎？"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:161
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:162
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "你要重新載入 {filename} 嗎？"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:162
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "檔案已被修改"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:164
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "重新載入"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:164
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "將修改過的檔案從碟機內重新載入。"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:35
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "無法開啟的檔案類型 <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:35
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:50
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:73
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "無效的檔案"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:48
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:73
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "無法載入 <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "載入中"
@@ -542,7 +542,12 @@ msgctxt "@action:button"
 msgid "Lay flat"
 msgstr "平放"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:56
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:59
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:80
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "等距旋轉（Snap Rotation）"
