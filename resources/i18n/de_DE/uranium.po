@@ -405,7 +405,7 @@ msgstr "Einstellungen werden geladen..."
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "Automatische Skalierung des Objekts auf {0} % der Originalgröße"
+msgstr "Automatische Skalierung des Objekts auf {0}% der Originalgröße"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:68
 msgctxt "@info:title"

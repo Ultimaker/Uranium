@@ -229,7 +229,7 @@ class RotateTool(Tool):
     #
     #   \return type(Boolean)
     def getSelectFaceSupported(self):
-        return OpenGL.getInstance().getOpenGLShadingLanguageVersion() >= Version("1.5")
+        return OpenGL.getInstance().getOpenGLShadingLanguageVersion() >= Version("1.50")
 
     ##  Get the state of the "snap rotation to N-degree increments" option
     #
