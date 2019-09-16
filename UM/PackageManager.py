@@ -514,20 +514,21 @@ class PackageManager(QObject):
     # Returns None if there is no license file found.
     def getPackageLicense(self, filename: str) -> Optional[str]:
         license_string = None
+        def is_license(zipinfo: zipfile.ZipInfo) -> bool:
+            return os.path.basename(zipinfo.filename).startswith("LICENSE")
         with zipfile.ZipFile(filename) as archive:
             # Go through all the files and use the first successful read as the result
-            for file_info in archive.infolist():
-                if file_info.filename.endswith("LICENSE"):
-                    Logger.log("d", "Found potential license file '%s'", file_info.filename)
-                    try:
-                        with archive.open(file_info.filename, "r") as f:
-                            data = f.read()
-                        license_string = data.decode("utf-8")
-                        break
-                    except:
-                        Logger.logException("e", "Failed to load potential license file '%s' as text file.",
-                                            file_info.filename)
-                        license_string = None
+            license_files = sorted(filter(is_license, archive.infolist()), key = lambda x: len(x.filename))  # Find the one with the shortest path.
+            for file_info in license_files:
+                Logger.log("d", "Found potential license file '{filename}'".format(filename = file_info.filename))
+                try:
+                    with archive.open(file_info.filename, "r") as f:
+                        data = f.read()
+                    license_string = data.decode("utf-8")
+                    break
+                except:
+                    Logger.logException("e", "Failed to load potential license file '%s' as text file.", file_info.filename)
+                    license_string = None
         return license_string
 
     ##  Find the package files by package_id by looking at the installed folder
