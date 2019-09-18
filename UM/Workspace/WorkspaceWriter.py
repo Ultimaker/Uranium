@@ -5,8 +5,8 @@ from UM.FileHandler.FileWriter import FileWriter
 
 
 class WorkspaceWriter(FileWriter):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, add_to_recent_files: bool = True) -> None:
+        super().__init__(add_to_recent_files)
 
     def write(self, stream, node):
         raise NotImplementedError("WorkspaceWriter plugin was not correctly implemented, no write was specified")
