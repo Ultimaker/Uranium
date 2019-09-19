@@ -197,8 +197,9 @@ class RotateTool(Tool):
         if not meshdata or face_id < 0:
             return
 
-        rotation_point, face_normal = meshdata.getFacePlane(face_id)
-        rotation_point_vector = Vector(rotation_point[0], rotation_point[1], rotation_point[2])
+        face_mid, face_normal = meshdata.getFacePlane(face_id)
+        object_mid = original_node.getBoundingBox().center
+        rotation_point_vector = Vector(object_mid.x, object_mid.y, face_mid[2])
         face_normal_vector = Vector(face_normal[0], face_normal[1], face_normal[2])
         rotation_quaternion = Quaternion.rotationTo(face_normal_vector.normalized(), Vector(0.0, -1.0, 0.0))
 
