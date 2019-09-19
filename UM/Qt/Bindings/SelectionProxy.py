@@ -26,6 +26,8 @@ class SelectionProxy(QObject):
     @pyqtSlot(bool)
     def setFaceSelectMode(self, select: bool) -> None:
         Selection.setFaceSelectMode(select)
+        if not select:
+            Selection.clearFace()
 
     @pyqtProperty(bool, notify = selectedFaceChanged)
     def hasFaceSelected(self):
