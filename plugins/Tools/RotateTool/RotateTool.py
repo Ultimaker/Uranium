@@ -24,8 +24,10 @@ from UM.Operations.LayFlatOperation import LayFlatOperation
 from UM.Version import Version
 
 from UM.View.GL.OpenGL import OpenGL
-
-from . import RotateToolHandle
+try:
+    from . import RotateToolHandle
+except (ImportError, SystemError):
+    import RotateToolHandle  # type: ignore  # This fixes the tests not being able to import.
 
 import math
 import time
@@ -33,10 +35,10 @@ import time
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
+
 ##  Provides the tool to rotate meshes and groups
 #
 #   The tool exposes a ToolHint to show the rotation angle of the current operation
-
 class RotateTool(Tool):
     def __init__(self):
         super().__init__()
@@ -263,7 +265,6 @@ class RotateTool(Tool):
 
     ##  Reset the orientation of the mesh(es) to their original orientation(s)
     def resetRotation(self):
-
         for node in self._getSelectedObjectsWithoutSelectedAncestors():
             node.setMirror(Vector(1, 1, 1))
 
