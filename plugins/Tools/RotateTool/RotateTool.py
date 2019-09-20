@@ -1,6 +1,8 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import Optional
 
+from UM.Scene.SceneNode import SceneNode
 from UM.Tool import Tool
 from UM.Job import Job
 from UM.Event import Event, MouseEvent, KeyEvent
