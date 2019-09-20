@@ -7,12 +7,12 @@ from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat, Q
 from UM.Logger import Logger
 
 
-class OpenGLContext(object):
+class OpenGLContext:
 
     ##  Set OpenGL context, given major, minor version + core using QOpenGLContext
     #   Unfortunately, what you get back does not have to be the requested version.
     @classmethod
-    def setContext(cls, major_version, minor_version, core = False, profile = None):
+    def setContext(cls, major_version: int, minor_version: int, core = False, profile = None):
         new_format = QSurfaceFormat()
         new_format.setMajorVersion(major_version)
         new_format.setMinorVersion(minor_version)
@@ -40,7 +40,7 @@ class OpenGLContext(object):
     #
     #   \return True if the extension is available, False if not.
     @classmethod
-    def hasExtension(cls, extension_name, ctx = None):
+    def hasExtension(cls, extension_name: str, ctx = None) -> bool:
         if ctx is None:
             ctx = QOpenGLContext.currentContext()
         return ctx.hasExtension(bytearray(extension_name, "utf-8"))
@@ -49,7 +49,7 @@ class OpenGLContext(object):
     #
     #   \param ctx (optional) context.
     @classmethod
-    def supportsVertexArrayObjects(cls, ctx = None):
+    def supportsVertexArrayObjects(cls, ctx = None) -> bool:
         if ctx is None:
             ctx = QOpenGLContext.currentContext()
         result = False
@@ -68,7 +68,7 @@ class OpenGLContext(object):
     #   \param core (optional) True for QSurfaceFormat.CoreProfile, False for CompatibilityProfile
     #   \param profile (optional) QSurfaceFormat.CoreProfile, CompatibilityProfile or NoProfile, overrules option core
     @classmethod
-    def setDefaultFormat(cls, major_version, minor_version, core = False, profile = None):
+    def setDefaultFormat(cls, major_version: int, minor_version: int, core = False, profile = None) -> None:
         new_format = QSurfaceFormat()
         new_format.setMajorVersion(major_version)
         new_format.setMinorVersion(minor_version)
@@ -87,7 +87,7 @@ class OpenGLContext(object):
 
     ##  Return if the OpenGL context version we ASKED for is legacy or not
     @classmethod
-    def isLegacyOpenGL(cls):
+    def isLegacyOpenGL(cls) -> bool:
         if cls.major_version < 4:
             return True
         if cls.major_version == 4 and cls.minor_version < 1:
@@ -142,7 +142,7 @@ class OpenGLContext(object):
 
                 gl = gl_context.versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the requested profile and the implementation of your graphics card.
 
-                gpu_type = "Unknown" #type: str
+                gpu_type = "Unknown"  # type: str
 
                 result = None
                 if gl:
@@ -190,7 +190,7 @@ class OpenGLContext(object):
 
     ##  Return OpenGL version number and profile as a nice formatted string
     @classmethod
-    def versionAsText(cls, major_version, minor_version, profile):
+    def versionAsText(cls, major_version: int, minor_version: int, profile) -> str:
         if profile == QSurfaceFormat.CompatibilityProfile:
             xtra = "Compatibility profile"
         elif profile == QSurfaceFormat.CoreProfile:
@@ -206,5 +206,5 @@ class OpenGLContext(object):
     minor_version = 0
     profile = None  # type: QSurfaceFormat
 
-    # to be filled by helper functions
-    properties = {} # type: Dict[str, bool]
+    # To be filled by helper functions
+    properties = {}  # type: Dict[str, bool]
