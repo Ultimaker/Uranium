@@ -47,6 +47,13 @@ class MainWindow(QQuickWindow):
         self._preferences.addPreference("general/window_left", 50)
         self._preferences.addPreference("general/window_top", 50)
         self._preferences.addPreference("general/window_state", Qt.WindowNoState)
+        self._preferences.addPreference("general/restore_window_geometry", True)
+
+        if not self._preferences.getValue("general/restore_window_geometry"):
+            self._preferences.resetPreference("general/window_width")
+            self._preferences.resetPreference("general/window_height")
+            self._preferences.resetPreference("general/window_left")
+            self._preferences.resetPreference("general/window_top")
 
         # Restore window geometry
         self.setWidth(int(self._preferences.getValue("general/window_width")))
