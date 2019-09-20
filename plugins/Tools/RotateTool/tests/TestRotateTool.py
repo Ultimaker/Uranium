@@ -21,7 +21,6 @@ def rotate_tool():
         return RotateTool.RotateTool()
 
 
-
 @pytest.mark.parametrize("data", [
     {"attribute": "rotationSnapAngle", "value": 32},
     {"attribute": "rotationSnap", "value": False},
