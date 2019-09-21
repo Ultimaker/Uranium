@@ -230,7 +230,8 @@ class RotateTool(Tool):
     #
     #   \return type(Boolean)
     def getSelectFaceSupported(self):
-        return OpenGL.getInstance().getOpenGLShadingLanguageVersion() >= Version("1.50")
+        # Use a dummy postfix, since an equal version with a postfix is considered smaller normally.
+        return Version(OpenGL.getInstance().getOpenGLVersion()) >= Version("4.1 dummy-postfix")
 
     ##  Get the state of the "snap rotation to N-degree increments" option
     #
