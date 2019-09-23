@@ -226,10 +226,9 @@ class RotateTool(Tool):
     def getToolHint(self):
         return "%d°" % round(math.degrees(self._angle)) if self._angle else None
 
-    ##  Get whether the select face feature is supported
-    #
-    #   \return type(Boolean)
-    def getSelectFaceSupported(self):
+    ##  Get whether the select face feature is supported.
+    #   \return True if it is supported, or False otherwise.
+    def getSelectFaceSupported(self) -> bool:
         # Use a dummy postfix, since an equal version with a postfix is considered smaller normally.
         return Version(OpenGL.getInstance().getOpenGLVersion()) >= Version("4.1 dummy-postfix")
 
