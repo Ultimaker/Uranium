@@ -15,14 +15,9 @@ fragment =
     void main()
     {
         gl_FragColor = vec4(0., 0., 0., 1.);
-
- #if __VERSION__ >= 150
-        gl_FragColor.r = (gl_PrimitiveID % 0x100) / 255.;
-        gl_FragColor.g = ((gl_PrimitiveID / 0x100) % 0x100) / 255.;
-        gl_FragColor.b = (0x1 + 2 * ((gl_PrimitiveID / 0x10000) % 0x80)) / 255.;
-        // Don't use alpha for anything, as some faces may be behind others, an only the front one's value is desired.
-        // There isn't any control over the background color, so a signal-bit is put into the blue byte.
- #endif
+        // NOTE: Select face can't be used in compatibility-mode;
+        //       the __VERSION__ macro may give back the max the graphics driver supports,
+        //       rather than the one supported by the selected OpenGL version.
     }
 
 vertex41core =
