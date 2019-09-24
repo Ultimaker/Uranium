@@ -546,7 +546,7 @@ msgstr "Flach"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:59
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
-msgstr ""
+msgstr "Wählen Sie die Fläche aus, die an der Bauplatte ausgerichtet werden soll"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:80
 msgctxt "@action:checkbox"

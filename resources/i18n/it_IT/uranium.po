@@ -545,7 +545,7 @@ msgstr "Posiziona in piano"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:59
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
-msgstr ""
+msgstr "Selezionare la superficie da allineare al piano di stampa"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:80
 msgctxt "@action:checkbox"
