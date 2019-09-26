@@ -43,11 +43,18 @@ class Logger:
     #   \param **kwargs \type{dict} List of placeholder replacements that will be passed to str.format().
     @classmethod
     def log(cls, log_type: str, message: str, *args, **kwargs):
-        current_frame = inspect.currentframe()
-        if current_frame is None:   # Avoid crash if the inspect module returns None (it should never happen)
-            return
-        caller_frame = current_frame.f_back
-        frame_info = inspect.getframeinfo(caller_frame)
+        caller_frame = inspect.currentframe()
+        frame_info = None
+
+        while caller_frame is not None:  # Avoid crash if the inspect module returns None
+            caller_frame = caller_frame.f_back
+            if caller_frame is None:
+                return
+            frame_info = inspect.getframeinfo(caller_frame)
+
+            if frame_info.filename != __file__:  # Backtrack the stack until we found the entry point into this file
+                break
+
         try:
             if args or kwargs: # Only format the message if there are args
                 new_message = message.format(*args, **kwargs)
@@ -86,6 +93,31 @@ class Logger:
         # traceback.format_exc only gives back a single string, but we can properly split that. It does add an extra newline at the end, so strip that.
         for line in traceback.format_exc().rstrip().split("\n"):
             cls.log(log_type, line)
+
+    ## Logs a (d)ebug message (just a convenience method for log())
+    @classmethod
+    def d(cls, message: str, *args, **kwargs):
+        cls.log("d", message, *args, **kwargs)
+
+    ## Logs a (i)nfo message (just a convenience method for log())
+    @classmethod
+    def i(cls, message: str, *args, **kwargs):
+        cls.log("i", message, *args, **kwargs)
+
+    ## Logs a (w)arning message (just a convenience method for log())
+    @classmethod
+    def w(cls, message: str, *args, **kwargs):
+        cls.log("w", message, *args, **kwargs)
+
+    ## Logs a (e)xception message (just a convenience method for log())
+    @classmethod
+    def e(cls, message: str, *args, **kwargs):
+        cls.log("e", message, *args, **kwargs)
+
+    ## Logs a (c)ritical message (just a convenience method for log())
+    @classmethod
+    def c(cls, message: str, *args, **kwargs):
+        cls.log("c", message, *args, **kwargs)
 
 
 ##  Abstract base class for log output classes.
