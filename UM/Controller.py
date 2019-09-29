@@ -38,6 +38,7 @@ class Controller:
         self._views = {}  # type: Dict[str, View]
 
         self._active_tool = None  # type: Optional[Tool]
+        self._fallback_tool = "TranslateTool"  # type: str
         self._tool_operation_active = False
         self._tools = {}  # type: Dict[str, Tool]
         self._camera_tool = None #type: Optional[Tool]
@@ -265,7 +266,7 @@ class Controller:
         from UM.Scene.Selection import Selection  # Imported here to prevent a circular dependency.
         if not self._active_tool and Selection.getCount() > 0:  # If something is selected, a tool must always be active.
             if "TranslateTool" in self._tools:
-                self._active_tool = self._tools["TranslateTool"]  # Then default to the translation tool.
+                self._active_tool = self._tools[self._fallback_tool]  # Then default to the translation tool.
                 self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
                 tool_changed = True
             else:
