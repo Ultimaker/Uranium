@@ -207,10 +207,10 @@ class MeshBuilder:
     #   \param z z coordinate of vertex.
     def addVertex(self, x, y, z):
         if self._vertices is None:
-            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
+            self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3))
+            self._vertices.resize((self._vertex_count * 2, 3), refcheck = False)
 
         self._vertices[self._vertex_count, 0] = x
         self._vertices[self._vertex_count, 1] = y
@@ -226,18 +226,18 @@ class MeshBuilder:
     #   \param nz z part of normal.
     def addVertexWithNormal(self, x, y, z, nx, ny, nz):
         if self._vertices is None:
-            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
-        if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
-            self._normals = numpy.zeros((10, 3), dtype=numpy.float32)
+            self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
+        if self._normals is None: #Specific case, reserve vert count does not reserve size for normals
+            self._normals = numpy.zeros((10, 3), dtype = numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3))
+            self._vertices.resize((self._vertex_count * 2, 3), refcheck = False)
 
         if self._normals is None:
-            self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
+            self._normals = numpy.zeros((self._vertex_count, 3), dtype = numpy.float32)
 
         if len(self._normals) == self._vertex_count:
-            self._normals.resize((self._vertex_count * 2, 3))
+            self._normals.resize((self._vertex_count * 2, 3), refcheck = False)
 
         self._vertices[self._vertex_count, 0] = x
         self._vertices[self._vertex_count, 1] = y
@@ -259,10 +259,10 @@ class MeshBuilder:
     #   \param z2 z coordinate of third vertex.
     def addFaceByPoints(self, x0, y0, z0, x1, y1, z1, x2, y2, z2):
         if self._indices is None:
-            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
+            self._indices = numpy.zeros((10, 3), dtype = numpy.int32)
 
         if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3))
+            self._indices.resize((self._face_count * 2, 3), refcheck = False)
 
         self._indices[self._face_count, 0] = self._vertex_count
         self._indices[self._face_count, 1] = self._vertex_count + 1
@@ -297,10 +297,10 @@ class MeshBuilder:
     #   \param nz2 The Z coordinate of the normal of the third vertex.
     def addFaceWithNormals(self,x0, y0, z0, nx0, ny0, nz0, x1, y1, z1, nx1, ny1, nz1, x2, y2, z2, nx2, ny2, nz2):
         if self._indices is None:
-            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
+            self._indices = numpy.zeros((10, 3), dtype = numpy.int32)
 
         if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3))
+            self._indices.resize((self._face_count * 2, 3), refcheck = False)
 
         self._indices[self._face_count, 0] = self._vertex_count
         self._indices[self._face_count, 1] = self._vertex_count + 1
@@ -317,10 +317,10 @@ class MeshBuilder:
     #   \param color \type{UM.Math.Color} the color of the vertex.
     def setVertexColor(self, index, color):
         if self._colors is None:
-            self._colors = numpy.zeros((10, 4), dtype=numpy.float32)
+            self._colors = numpy.zeros((10, 4), dtype = numpy.float32)
 
         if len(self._colors) < len(self._vertices):
-            self._colors.resize((len(self._vertices), 4))
+            self._colors.resize((len(self._vertices), 4), refcheck = False)
 
         self._colors[index, 0] = color.r
         self._colors[index, 1] = color.g
@@ -329,10 +329,10 @@ class MeshBuilder:
 
     def setVertexUVCoordinates(self, index, u, v):
         if self._uvs is None:
-            self._uvs = numpy.zeros((10, 2), dtype=numpy.float32)
+            self._uvs = numpy.zeros((10, 2), dtype = numpy.float32)
 
         if len(self._uvs) < len(self._vertices):
-            self._uvs.resize((len(self._vertices), 2))
+            self._uvs.resize((len(self._vertices), 2), refcheck = False)
 
         self._uvs[index, 0] = u
         self._uvs[index, 1] = v
@@ -343,7 +343,7 @@ class MeshBuilder:
             self._vertex_count = len(vertices)
         else:
             self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
-            self._vertex_count  += len(vertices)
+            self._vertex_count += len(vertices)
 
     def addIndices(self, indices):
         if self._indices is None:
