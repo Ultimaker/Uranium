@@ -94,29 +94,29 @@ class Logger:
         for line in traceback.format_exc().rstrip().split("\n"):
             cls.log(log_type, line)
 
-    ## Logs a (d)ebug message (just a convenience method for log())
+    ## Logs a debug message (just a convenience method for log())
     @classmethod
-    def d(cls, message: str, *args, **kwargs):
+    def debug(cls, message: str, *args, **kwargs):
         cls.log("d", message, *args, **kwargs)
 
-    ## Logs a (i)nfo message (just a convenience method for log())
+    ## Logs an info message (just a convenience method for log())
     @classmethod
-    def i(cls, message: str, *args, **kwargs):
+    def info(cls, message: str, *args, **kwargs):
         cls.log("i", message, *args, **kwargs)
 
-    ## Logs a (w)arning message (just a convenience method for log())
+    ## Logs a warning message (just a convenience method for log())
     @classmethod
-    def w(cls, message: str, *args, **kwargs):
+    def warning(cls, message: str, *args, **kwargs):
         cls.log("w", message, *args, **kwargs)
 
-    ## Logs a (e)xception message (just a convenience method for log())
+    ## Logs an error message (just a convenience method for log())
     @classmethod
-    def e(cls, message: str, *args, **kwargs):
+    def error(cls, message: str, *args, **kwargs):
         cls.log("e", message, *args, **kwargs)
 
-    ## Logs a (c)ritical message (just a convenience method for log())
+    ## Logs a critical message (just a convenience method for log())
     @classmethod
-    def c(cls, message: str, *args, **kwargs):
+    def critical(cls, message: str, *args, **kwargs):
         cls.log("c", message, *args, **kwargs)
 
 
