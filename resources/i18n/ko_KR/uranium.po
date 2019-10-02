@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.3\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2019-09-10 16:56+0200\n"
-"PO-Revision-Date: 2019-03-14 14:54+0100\n"
+"PO-Revision-Date: 2019-09-23 13:25+0200\n"
 "Last-Translator: Jinbuhm Kim <Jinbuhm.Kim@gmail.com>\n"
 "Language-Team: Jinbuhm Kim, <Jinbuhm.Kim@gmail.com>, Korean <info@bothof.nl>\n"
 "Language: ko_KR\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
@@ -543,7 +543,7 @@ msgstr "바닥에 놓기"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:59
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
-msgstr ""
+msgstr "빌드 플레이어에 정렬할 면을 선택하십시오"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:80
 msgctxt "@action:checkbox"

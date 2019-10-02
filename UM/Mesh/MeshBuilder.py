@@ -227,6 +227,7 @@ class MeshBuilder:
     def addVertexWithNormal(self, x, y, z, nx, ny, nz):
         if self._vertices is None:
             self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
+
         if self._normals is None:  # Specific case, reserve vert count does not reserve size for normals
             self._normals = numpy.zeros((10, 3), dtype = numpy.float32)
 
