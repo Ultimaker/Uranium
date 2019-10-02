@@ -75,7 +75,7 @@ class RotateTool(Tool):
             # Snap is "toggled back" when releasing the shift button
             self.setRotationSnap(not self._snap_rotation)
 
-        if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
+        if event.type == Event.MousePressEvent and self.getEnabled():
             # Start a rotate operation
             if MouseEvent.LeftButton not in event.buttons:
                 return False
