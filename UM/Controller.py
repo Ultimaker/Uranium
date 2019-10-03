@@ -206,7 +206,7 @@ class Controller:
         if self._fallback_tool is not tool:
             self._fallback_tool = tool
 
-    ##  Request tool by name. Returns None if no view is found.
+    ##  Request tool by name. Returns None if no tool is found.
     #   \param name \type{string} Unique identifier of tool (usually the plugin name)
     #   \return tool \type{Tool} if name was found, None otherwise.
     def getTool(self, name: str) -> Optional["Tool"]:
