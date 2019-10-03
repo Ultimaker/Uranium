@@ -195,6 +195,17 @@ class Controller:
             self._input_devices[name].event.disconnect(self.event)
             del self._input_devices[name]
 
+    ##  Request the current fallbacl tool.
+    #   \return Id of the fallback tool
+    def getFallbackTool(self) -> str:
+        return self._fallback_tool
+
+    ##  Set the current active tool. The tool must be set by name.
+    #   \param tool The tools name which shall be used as fallback
+    def setFallbackTool(self, tool: str):
+        if self._fallback_tool is not tool:
+            self._fallback_tool = tool
+
     ##  Request tool by name. Returns None if no view is found.
     #   \param name \type{string} Unique identifier of tool (usually the plugin name)
     #   \return tool \type{Tool} if name was found, None otherwise.
