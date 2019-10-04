@@ -202,7 +202,7 @@ class Controller:
 
     ##  Set the current active tool. The tool must be set by name.
     #   \param tool The tools name which shall be used as fallback
-    def setFallbackTool(self, tool: str):
+    def setFallbackTool(self, tool: str) -> None:
         if self._fallback_tool is not tool:
             self._fallback_tool = tool
 
