@@ -76,6 +76,14 @@ class ControllerProxy(QObject):
     def setCameraRotation(self, coordinate: str, angle: int) -> None:
         self._controller.setCameraRotation(coordinate, angle)
 
+    ##  Changes the position of the origin of the camera.
+    #   \param coordinate The new origin of the camera. Use either:
+    #     "home": The centre of the build plate.
+    #     "3d": The centre of the build volume.
+    @pyqtSlot(str)
+    def setCameraOrigin(self, coordinate: str) -> None:
+        self._controller.setCameraOrigin(coordinate)
+
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 
     def _onContextMenuRequested(self, x, y):

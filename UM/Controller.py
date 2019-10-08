@@ -410,13 +410,12 @@ class Controller:
             return
         camera.setZoomFactor(camera.getDefaultZoomFactor())
         self._camera_tool.setOrigin(Vector(0, 100, 0))  # type: ignore
+        self.setCameraOrigin(coordinate)
         if coordinate == "home":
             camera.setPosition(Vector(0, 100, 700))
-            camera.lookAt(Vector(0, 100, 0))
             self._camera_tool.rotateCamera(0, 0)  # type: ignore
         elif coordinate == "3d":
             camera.setPosition(Vector(-750, 600, 700))
-            camera.lookAt(Vector(0, 100, 100))
             self._camera_tool.rotateCamera(0, 0)  # type: ignore
         else:
             # for comparison is == used, because might not store them at the same location
@@ -424,19 +423,36 @@ class Controller:
 
             if coordinate == "x":
                 camera.setPosition(Vector(0, 100, 700))
-                camera.lookAt(Vector(0, 100, 0))
                 self._camera_tool.rotateCamera(angle, 0)  # type: ignore
             elif coordinate == "y":
                 if angle == 90:
                     # Prepare the camera for top view, so no rotation has to be applied after setting the top view.
                     camera.setPosition(Vector(0, 100, 100))
-                    camera.lookAt(Vector(0, 100, 0))
                     self._camera_tool.rotateCamera(90, 0)  # type: ignore
                     # Actually set the top view.
                     camera.setPosition(Vector(0, 800, 1))
+                    self.setCameraOrigin("z")
                     camera.lookAt(Vector(0, 100, 1))
                     self._camera_tool.rotateCamera(0, 0)  # type: ignore
                 else:
                     camera.setPosition(Vector(0, 100, 700))
-                    camera.lookAt(Vector(0, 100, 0))
                     self._camera_tool.rotateCamera(0, angle)  # type: ignore
+
+    ##  Changes the origin of the camera, i.e. where it looks at.
+    #   \param coordinate One of the following options:
+    #    - "home": The centre of the build plate.
+    #    - "3d": The centre of the build volume.
+    #    - "x", "y" and "z": Also the centre of the build plate. These are just
+    #      aliases for the setCameraRotation function.
+    def setCameraOrigin(self, coordinate: str = "home"):
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+        coordinates = {
+            "home": Vector(0, 100, 0),
+            "3d": Vector(0, 100, 100),
+            "x": Vector(0, 100, 0),
+            "y": Vector(0, 100, 0),
+            "z": Vector(0, 100, 1)
+        }
+        camera.lookAt(coordinates[coordinate])
