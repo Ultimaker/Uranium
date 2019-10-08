@@ -55,6 +55,7 @@ Item
 
         anchors.left: layFlatButton.visible ? layFlatButton.right : resetRotationButton.right;
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+        width: visible ? UM.Theme.getIcon("rotate_face_layflat").width : 0;
 
         text: catalog.i18nc("@action:button", "Select face to align to the build plate")
         iconSource: UM.Theme.getIcon("rotate_face_layflat")
