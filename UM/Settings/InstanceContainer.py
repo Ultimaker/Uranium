@@ -666,7 +666,6 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         other = cast(InstanceContainer, other)
         own_weight = int(self.getMetaDataEntry("weight", 0))
         other_weight = int(other.getMetaDataEntry("weight", 0))
-        print(own_weight, other_weight)
         if own_weight and other_weight:
             return own_weight < other_weight
 

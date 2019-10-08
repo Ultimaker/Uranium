@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Mesh.MeshData import MeshData
@@ -38,9 +38,9 @@ class MeshBuilder:
     #
     #   \return A Mesh data.
     def build(self):
-        return MeshData(vertices=self.getVertices(), normals=self.getNormals(), indices=self.getIndices(),
-                        colors=self.getColors(), uvs=self.getUVCoordinates(), file_name=self.getFileName(),
-                        center_position=self.getCenterPosition())
+        return MeshData(vertices = self.getVertices(), normals = self.getNormals(), indices = self.getIndices(),
+                        colors = self.getColors(), uvs = self.getUVCoordinates(), file_name = self.getFileName(),
+                        center_position = self.getCenterPosition())
 
     def setCenterPosition(self, position):
         self._center_position = position
@@ -103,7 +103,7 @@ class MeshBuilder:
         if self._normals is None:
             return None
 
-        return self._normals[0:self._vertex_count]
+        return self._normals[0 : self._vertex_count]
 
     ##  Return whether this mesh has indices.
     def hasIndices(self):
@@ -128,7 +128,7 @@ class MeshBuilder:
         if self._colors is None:
             return None
 
-        return self._colors[0:self._vertex_count]
+        return self._colors[0 : self._vertex_count]
 
     def hasUVCoordinates(self):
         return self._uvs is not None
@@ -194,9 +194,9 @@ class MeshBuilder:
             Logger.log("w", "Had to convert %s 'num_vertices' with int(): %s -> %s ", type(num_vertices), num_vertices, int(num_vertices))
             num_vertices = int(num_vertices)
 
-        self._vertices = numpy.zeros((num_vertices, 3), dtype=numpy.float32)
-        self._colors = numpy.zeros((num_vertices, 4), dtype=numpy.float32)
-        self._indices = numpy.zeros((num_faces, 3), dtype=numpy.int32)
+        self._vertices = numpy.zeros((num_vertices, 3), dtype = numpy.float32)
+        self._colors = numpy.zeros((num_vertices, 4), dtype = numpy.float32)
+        self._indices = numpy.zeros((num_faces, 3), dtype = numpy.int32)
 
         self._vertex_count = 0
         self._face_count = 0
@@ -210,7 +210,7 @@ class MeshBuilder:
             self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3), refcheck = False)
+            self._vertices.resize((self._vertex_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         self._vertices[self._vertex_count, 0] = x
         self._vertices[self._vertex_count, 1] = y
@@ -227,17 +227,18 @@ class MeshBuilder:
     def addVertexWithNormal(self, x, y, z, nx, ny, nz):
         if self._vertices is None:
             self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
-        if self._normals is None: #Specific case, reserve vert count does not reserve size for normals
+
+        if self._normals is None:  # Specific case, reserve vert count does not reserve size for normals
             self._normals = numpy.zeros((10, 3), dtype = numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3), refcheck = False)
+            self._vertices.resize((self._vertex_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         if self._normals is None:
             self._normals = numpy.zeros((self._vertex_count, 3), dtype = numpy.float32)
 
         if len(self._normals) == self._vertex_count:
-            self._normals.resize((self._vertex_count * 2, 3), refcheck = False)
+            self._normals.resize((self._vertex_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         self._vertices[self._vertex_count, 0] = x
         self._vertices[self._vertex_count, 1] = y
@@ -262,7 +263,7 @@ class MeshBuilder:
             self._indices = numpy.zeros((10, 3), dtype = numpy.int32)
 
         if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3), refcheck = False)
+            self._indices.resize((self._face_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         self._indices[self._face_count, 0] = self._vertex_count
         self._indices[self._face_count, 1] = self._vertex_count + 1
@@ -300,7 +301,7 @@ class MeshBuilder:
             self._indices = numpy.zeros((10, 3), dtype = numpy.int32)
 
         if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3), refcheck = False)
+            self._indices.resize((self._face_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         self._indices[self._face_count, 0] = self._vertex_count
         self._indices[self._face_count, 1] = self._vertex_count + 1
@@ -320,7 +321,7 @@ class MeshBuilder:
             self._colors = numpy.zeros((10, 4), dtype = numpy.float32)
 
         if len(self._colors) < len(self._vertices):
-            self._colors.resize((len(self._vertices), 4), refcheck = False)
+            self._colors.resize((len(self._vertices), 4), refcheck = False)  # Disabling refcheck enables PyCharm's debugger to use this array.
 
         self._colors[index, 0] = color.r
         self._colors[index, 1] = color.g
@@ -332,7 +333,7 @@ class MeshBuilder:
             self._uvs = numpy.zeros((10, 2), dtype = numpy.float32)
 
         if len(self._uvs) < len(self._vertices):
-            self._uvs.resize((len(self._vertices), 2), refcheck = False)
+            self._uvs.resize((len(self._vertices), 2), refcheck = False)  # Disabling refcheck enables PyCharm's debugger to use this array.
 
         self._uvs[index, 0] = u
         self._uvs[index, 1] = v
@@ -366,8 +367,8 @@ class MeshBuilder:
     # \param indices consists of row triplet indices into the input \p vertices to build up the triangular faces.
     # \param colors defines the color of each vertex in \p vertices.
     def addFacesWithColor(self, vertices, indices, colors):
-        if len(self._indices) <  self._face_count + len(indices) or len(self._colors) < self._vertex_count + len(colors) or len(self._vertices) < self._vertex_count + len(vertices):
-            Logger.log( "w", "Insufficient size of mesh_data: f_c: %s, v_c: %s, _in_l: %s, in_l: %s, _co_l: %s, co_l: %s, _ve_l: %s, ve_l: %s", self._face_count, self._vertex_count, len(self._indices), len(indices), len(self._colors), len(colors),len(self._vertices), len(vertices))
+        if len(self._indices) < self._face_count + len(indices) or len(self._colors) < self._vertex_count + len(colors) or len(self._vertices) < self._vertex_count + len(vertices):
+            Logger.log("w", "Insufficient size of mesh_data: f_c: %s, v_c: %s, _in_l: %s, in_l: %s, _co_l: %s, co_l: %s, _ve_l: %s, ve_l: %s", self._face_count, self._vertex_count, len(self._indices), len(indices), len(self._colors), len(colors),len(self._vertices), len(vertices))
             return
 
         self._indices[self._face_count:(self._face_count + len(indices)), :] = self._vertex_count + indices 
@@ -376,7 +377,7 @@ class MeshBuilder:
         end_index = self._vertex_count + len(vertices)    
         self._colors[self._vertex_count:end_index, :] = colors
         self._vertices[self._vertex_count:end_index, :] = vertices
-        self._vertex_count  += len(vertices)
+        self._vertex_count += len(vertices)
 
     ##
     # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
@@ -676,7 +677,7 @@ class MeshBuilder:
             [minW, 0, minD],
             [maxW, 0, minD],
             [0, height, 0]
-        ], dtype=numpy.float32)
+        ], dtype = numpy.float32)
         verts = verts.dot(matrix.getData()[0:3,0:3]) #Rotate the pyramid around the axis.
         verts[:] += center.getData()
         self.addVertices(verts)
@@ -688,7 +689,7 @@ class MeshBuilder:
             [start + 2, start, start + 4],
             [start, start + 3, start + 1], #The base of the pyramid.
             [start, start + 2, start + 3]
-        ], dtype=numpy.int32)
+        ], dtype = numpy.int32)
         self.addIndices(indices)
 
         if color: #If we have a colour, add the colour to each of the vertices.
@@ -752,6 +753,6 @@ class MeshBuilder:
 
         normal = (v1 - v0).cross(v2 - v0)
 
-        self.addQuad(v0, v1, v2, v3, color=color, normal = normal)
+        self.addQuad(v0, v1, v2, v3, color = color, normal = normal)
 
         return True
