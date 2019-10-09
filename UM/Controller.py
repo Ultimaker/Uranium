@@ -205,9 +205,14 @@ class Controller:
             return None
 
     ##  Get all tools
-    #   \return tools \type{dict}
+    #   \return tools \type{dict} All tools collected in a dictionary via tool name and it's instance
     def getAllTools(self) -> Dict[str, "Tool"]:
         return self._tools
+
+    ##  Set all tools
+    #   \param tools \type{dict} All tools collected in a dictionary via tool name and it's instance
+    def setAllTools(self, tools) -> None:
+        self._tools = tools
 
     ##  Add a Tool (transform object, translate object) if its not already added.
     #   \param tool \type{Tool} Tool to be added
