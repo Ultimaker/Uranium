@@ -211,7 +211,7 @@ class Controller:
 
     ##  Set all tools
     #   \param tools \type{dict} All tools collected in a dictionary via tool name and it's instance
-    def setAllTools(self, tools) -> None:
+    def setAllTools(self, tools: dict) -> None:
         self._tools = tools
 
     ##  Add a Tool (transform object, translate object) if its not already added.
