@@ -487,6 +487,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   a number behind it to make it unique.
     @UM.FlameProfiler.profile
     def uniqueName(self, original: str) -> str:
+        original = original.replace("*", "")  # Filter out wildcards, since this confuses the ContainerQuery.
         name = original.strip()
 
         num_check = re.compile(r"(.*?)\s*#\d+$").match(name)
