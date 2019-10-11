@@ -7,7 +7,8 @@ import signal
 from typing import List
 from typing import Any, cast, Dict, Optional
 
-from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+from UM.FlameProfiler import pyqtSlot
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
 from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics
