@@ -78,7 +78,7 @@ class ContainerQuery:
         # Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
             if isinstance(value, type):
-                key_filter = functools.partial(self._matchType, property_name=key, value=value)
+                key_filter = functools.partial(self._matchType, property_name = key, value = value)
             elif isinstance(value, str):
                 # It's a string.
                 if ContainerQuery.OPTIONS_REGEX.fullmatch(value) is not None:
@@ -87,9 +87,9 @@ class ContainerQuery:
                 elif ("*" or "|") in value:
                     key_filter = functools.partial(self._matchRegExp, property_name = key, value = value)
                 else:
-                    key_filter = functools.partial(self._matchString, property_name = key, value=value)
+                    key_filter = functools.partial(self._matchString, property_name = key, value = value)
             else:
-                key_filter = functools.partial(self._matchDirect, property_name=key, value=value)
+                key_filter = functools.partial(self._matchDirect, property_name = key, value = value)
             filtered_candidates = filter(key_filter, filtered_candidates)
 
         # Execute all filters.

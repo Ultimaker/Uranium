@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
 
 # The maximum amount of query results we should cache
-MaxQueryCacheSize = 1000
+MaxQueryCacheSize = 10000
 
 
 ##  Central class to manage all setting providers.
