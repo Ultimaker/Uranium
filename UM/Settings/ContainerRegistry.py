@@ -612,20 +612,16 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   This is a slightly smarter way of clearing the cache. Only queries that are of the same type (or without one)
     #   are cleared.
     def _clearQueryCacheByContainer(self, container: ContainerInterface) -> None:
-        # Use the base classes to clear the
-        if isinstance(container, DefinitionContainer):
-            container_type = DefinitionContainer #type: type
-        elif isinstance(container, InstanceContainer):
-            container_type = InstanceContainer
-        elif isinstance(container, ContainerStack):
-            container_type = ContainerStack
-        else:
-            Logger.log("w", "While clearing query cache, we got an unrecognised base type (%s). Clearing entire cache instead", type(container))
-            self._clearQueryCache()
-            return
+        # Remove all case-insensitive matches since we won't find those with the below "<=" subset check.
+        # TODO: Properly check case-insensitively in the dict's values.
+        for key in list(ContainerQuery.ContainerQuery.cache):
+            if not key[0]:
+                del ContainerQuery.ContainerQuery.cache[key]
 
-        for key in list(ContainerQuery.ContainerQuery.cache.keys()):
-            if ContainerQuery.ContainerQuery.cache[key].getContainerType() == container_type or ContainerQuery.ContainerQuery.cache[key].getContainerType() is None:
+        # Remove all cache items that this container could fall in.
+        for key in list(ContainerQuery.ContainerQuery.cache):
+            query_metadata = dict(zip(key[1::2], key[2::2]))
+            if query_metadata.items() <= container.getMetaData().items():
                 del ContainerQuery.ContainerQuery.cache[key]
 
     ##  Called when any container's metadata changed.
