@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
@@ -349,16 +349,17 @@ def test_load(container_registry):
     assert "inherits" in ids_found
 
 
-##  Test that uses the lazy loading part of the registry. Instead of loading eveyrthing, we load the metadata
-#   so that the containers can be loaded just in time.
+##  Test that uses the lazy loading part of the registry. Instead of loading
+#   everything, we load the metadata so that the containers can be loaded just
+#   in time.
 def test_loadAllMetada(container_registry):
     # Before we start, the container should not even be there.
-    instances_before = container_registry.findInstanceContainersMetadata(author="Ultimaker")
+    instances_before = container_registry.findInstanceContainersMetadata(author = "Ultimaker")
     assert len(instances_before) == 0
 
     container_registry.loadAllMetadata()
 
-    instances = container_registry.findInstanceContainersMetadata(author="Ultimaker")
+    instances = container_registry.findInstanceContainersMetadata(author = "Ultimaker")
     assert len(instances) == 1
 
     # Since we only loaded the metadata, the actual container should not be loaded just yet.

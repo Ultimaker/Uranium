@@ -3,7 +3,7 @@
 
 import collections  # To cache queries.
 import re
-from typing import Any, Dict, List, Optional, Type, TYPE_CHECKING
+from typing import Any, cast, Dict, List, Optional, Tuple, Type, TYPE_CHECKING
 import functools
 
 if TYPE_CHECKING:
@@ -21,7 +21,7 @@ MaxQueryCacheSize = 10000
 #   \note Instances of this class will ignore the query results when
 #   comparing. This is done to simplify the caching code in ContainerRegistry.
 class ContainerQuery:
-    cache = collections.OrderedDict()  # To speed things up, we're keeping a cache of the container queries we've executed before. Maps from ContainerQuery instances to lists of metadatas.
+    cache = collections.OrderedDict()  # type: collections.OrderedDict # To speed things up, we're keeping a cache of the container queries we've executed before.
 
     # If a field is provided in the format "[t1|t2|t3|...]", try to find if any of the given tokens is present in the
     # value. Use regex to do matching because certain fields such as name can be filled by a user and it can be string
@@ -66,7 +66,7 @@ class ContainerQuery:
     #   on the arguments provided to this class' constructor. After it is done,
     #   the result can be retrieved with getResult().
     def execute(self, candidates: Optional[List[Any]] = None) -> None:
-        key_so_far = (self._ignore_case, )
+        key_so_far = (self._ignore_case, )  # type: Tuple[Any, ...]
         if candidates is None:
             filtered_candidates = list(self._registry.metadata.values())
         else:
@@ -76,7 +76,7 @@ class ContainerQuery:
         for key, value in self._kwargs.items():
             key_so_far += (key, value)
             if candidates is None and key_so_far in self.cache:
-                filtered_candidates = self.cache[key_so_far]._result
+                filtered_candidates = cast(List[Dict[str, Any]], self.cache[key_so_far].getResult())
                 self.cache.move_to_end(key_so_far)  # The cache entry was used, so make sure it doesn't fall off as an infrequently-used cache entry.
                 continue
 
