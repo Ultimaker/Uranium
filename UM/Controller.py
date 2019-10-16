@@ -38,6 +38,7 @@ class Controller:
         self._views = {}  # type: Dict[str, View]
 
         self._active_tool = None  # type: Optional[Tool]
+        self._fallback_tool = "TranslateTool"  # type: str
         self._tool_operation_active = False
         self._tools = {}  # type: Dict[str, Tool]
         self._camera_tool = None #type: Optional[Tool]
@@ -194,7 +195,18 @@ class Controller:
             self._input_devices[name].event.disconnect(self.event)
             del self._input_devices[name]
 
-    ##  Request tool by name. Returns None if no view is found.
+    ##  Request the current fallbacl tool.
+    #   \return Id of the fallback tool
+    def getFallbackTool(self) -> str:
+        return self._fallback_tool
+
+    ##  Set the current active tool. The tool must be set by name.
+    #   \param tool The tools name which shall be used as fallback
+    def setFallbackTool(self, tool: str) -> None:
+        if self._fallback_tool is not tool:
+            self._fallback_tool = tool
+
+    ##  Request tool by name. Returns None if no tool is found.
     #   \param name \type{string} Unique identifier of tool (usually the plugin name)
     #   \return tool \type{Tool} if name was found, None otherwise.
     def getTool(self, name: str) -> Optional["Tool"]:
@@ -264,8 +276,8 @@ class Controller:
 
         from UM.Scene.Selection import Selection  # Imported here to prevent a circular dependency.
         if not self._active_tool and Selection.getCount() > 0:  # If something is selected, a tool must always be active.
-            if "TranslateTool" in self._tools:
-                self._active_tool = self._tools["TranslateTool"]  # Then default to the translation tool.
+            if self._fallback_tool in self._tools:
+                self._active_tool = self._tools[self._fallback_tool]  # Then default to the translation tool.
                 self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
                 tool_changed = True
             else:
