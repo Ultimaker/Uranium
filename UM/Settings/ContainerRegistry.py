@@ -570,7 +570,6 @@ class ContainerRegistry(ContainerRegistryInterface):
                 Logger.log("d", "Definition file %s is newer than cache, ignoring cached version", path)
                 return None
 
-            definition = None
             with open(cache_path, "rb") as f:
                 definition = pickle.load(f)
 
@@ -583,7 +582,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             return None
         except Exception as e:
             # We could not load a cached version for some reason. Ignore it.
-            Logger.logException("d", "Could not load cached definition for %s", path)
+            Logger.logException("d", "Could not load cached definition for {path}: {err}".format(path = path, err = str(e)))
             return None
 
     # Store a cached version of a DefinitionContainer
@@ -591,7 +590,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self._application.getVersion(), definition.id)
 
         # Ensure the cache path exists
-        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        os.makedirs(os.path.dirname(cache_path), exist_ok = True)
 
         try:
             with open(cache_path, "wb") as f:
