@@ -1,13 +1,16 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import collections  # To cache queries.
 import re
-from typing import Any, cast, Dict, Iterable, List, Optional, Type, TYPE_CHECKING
-from UM.Logger import Logger
+from typing import Any, Dict, List, Optional, Type, TYPE_CHECKING
 import functools
 
 if TYPE_CHECKING:
     from UM.Settings.ContainerRegistry import ContainerRegistry
+
+# The maximum amount of query results we should cache
+MaxQueryCacheSize = 10000
 
 ##  Wrapper class to perform a search for a certain set of containers.
 #
@@ -18,6 +21,7 @@ if TYPE_CHECKING:
 #   \note Instances of this class will ignore the query results when
 #   comparing. This is done to simplify the caching code in ContainerRegistry.
 class ContainerQuery:
+    cache = collections.OrderedDict()  # To speed things up, we're keeping a cache of the container queries we've executed before. Maps from ContainerQuery instances to lists of metadatas.
 
     # If a field is provided in the format "[t1|t2|t3|...]", try to find if any of the given tokens is present in the
     # value. Use regex to do matching because certain fields such as name can be filled by a user and it can be string
@@ -56,33 +60,31 @@ class ContainerQuery:
     def isIdOnly(self) -> bool:
         return len(self._kwargs) == 1 and not self._ignore_case and "id" in self._kwargs
 
-    ##  Check to see if any of the kwargs is a Dict, which is not hashable for query caching.
-    #
-    #   \return True if this query is hashable.
-    def isHashable(self) -> bool:
-        for kwarg in self._kwargs.values():
-            if isinstance(kwarg, dict):
-                return False
-        return True
-
     ##  Execute the actual query.
     #
     #   This will search the container metadata of the ContainerRegistry based
     #   on the arguments provided to this class' constructor. After it is done,
     #   the result can be retrieved with getResult().
     def execute(self, candidates: Optional[List[Any]] = None) -> None:
+        key_so_far = (self._ignore_case, )
         if candidates is None:
-            candidates = list(self._registry.metadata.values())
-        filtered_candidates = cast(Iterable, candidates)
+            filtered_candidates = list(self._registry.metadata.values())
+        else:
+            filtered_candidates = candidates
 
         # Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
+            key_so_far += (key, value)
+            if candidates is None and key_so_far in self.cache:
+                filtered_candidates = self.cache[key_so_far]._result
+                self.cache.move_to_end(key_so_far)  # The cache entry was used, so make sure it doesn't fall off as an infrequently-used cache entry.
+                continue
+
             if isinstance(value, type):
                 key_filter = functools.partial(self._matchType, property_name = key, value = value)
             elif isinstance(value, str):
-                # It's a string.
                 if ContainerQuery.OPTIONS_REGEX.fullmatch(value) is not None:
-                    # With [token1|token2|token3|...], we try to find if any of the given tokens is present in the value
+                    # With [token1|token2|token3|...], we try to find if any of the given tokens is present in the value.
                     key_filter = functools.partial(self._matchRegMultipleTokens, property_name = key, value = value)
                 elif ("*" or "|") in value:
                     key_filter = functools.partial(self._matchRegExp, property_name = key, value = value)
@@ -90,16 +92,18 @@ class ContainerQuery:
                     key_filter = functools.partial(self._matchString, property_name = key, value = value)
             else:
                 key_filter = functools.partial(self._matchDirect, property_name = key, value = value)
-            filtered_candidates = filter(key_filter, filtered_candidates)
+            filtered_candidates = list(filter(key_filter, filtered_candidates))  # Execute this filter.
+
+            if candidates is None:  # Only cache if we didn't pre-filter candidates.
+                cached_arguments = dict(zip(key_so_far[1::2], key_so_far[2::2]))
+                self.cache[key_so_far] = ContainerQuery(self._registry, ignore_case = self._ignore_case, **cached_arguments)  # Cache this query for the next time.
+                self.cache[key_so_far]._result = filtered_candidates
+                if len(self.cache) > MaxQueryCacheSize:
+                    # Use LIFO to invalidate queries. Queries that are infrequently used are discarded to save memory.
+                    self.cache.popitem(last = False)
 
         # Execute all filters.
-        self._result = list(filtered_candidates)
-
-    def __hash__(self) -> int:
-        return hash(self.__key())
-
-    def __eq__(self, other):
-        return isinstance(other, ContainerQuery) and self.__key() == other.__key()
+        self._result = filtered_candidates
 
     ##  Human-readable string representation for debugging.
     def __str__(self):
@@ -165,10 +169,6 @@ class ContainerQuery:
             return False
 
         return value == metadata[property_name]
-
-    # Private helper function for __hash__ and __eq__
-    def __key(self):
-        return self._ignore_case, tuple(self._kwargs.items())
 
     __slots__ = ("_ignore_case", "_kwargs", "_result", "_registry")
 

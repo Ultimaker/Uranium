@@ -30,9 +30,6 @@ if TYPE_CHECKING:
     from UM.PluginObject import PluginObject
     from UM.Qt.QtApplication import QtApplication
 
-# The maximum amount of query results we should cache
-MaxQueryCacheSize = 10000
-
 
 ##  Central class to manage all setting providers.
 #
@@ -66,7 +63,6 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._containers["empty"] = self._emptyInstanceContainer
         self.source_provider["empty"] = None
         self._resource_types = {"definition": Resources.DefinitionContainers}  # type: Dict[str, int]
-        self._query_cache = collections.OrderedDict()  # type: collections.OrderedDict # This should really be an ordered set but that does not exist...
 
         #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
@@ -226,32 +222,14 @@ class ContainerRegistry(ContainerRegistryInterface):
 
             # Since IDs are the primary key and unique we can now simply request the candidate and check if it matches all requirements.
             if kwargs["id"] not in self.metadata:
-                return []  # No result, so return an empty list.
+                return []  # Still no result, so return an empty list.
             if len(kwargs) == 1:
                 return [self.metadata[kwargs["id"]]]
             candidates = [self.metadata[kwargs["id"]]]
+            del kwargs["id"]  # No need to check for the ID again.
 
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
-        if query.isHashable() and query in self._query_cache:
-            # If the exact same query is in the cache, we can re-use the query result.
-            self._query_cache.move_to_end(query) #Query was used, so make sure to update its position so that it doesn't get pushed off as a rarely-used query.
-            return self._query_cache[query].getResult()
-
         query.execute(candidates = candidates)
-
-        # Only cache query result when it is hashable
-        try:
-            self._query_cache[query] = query
-        except TypeError:
-            # Unhashable, so can't cache this result.
-            pass
-        else:
-            if len(self._query_cache) > MaxQueryCacheSize:
-                # Since we use an OrderedDict, we can use a simple FIFO scheme
-                # to discard queries. As long as we properly update queries
-                # that are being used, this results in the least used queries
-                # to be discarded.
-                self._query_cache.popitem(last = False)
 
         return cast(List[Dict[str, Any]], query.getResult())  # As the execute of the query is done, result won't be none.
 
@@ -629,7 +607,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     # Clear the internal query cache
     def _clearQueryCache(self, *args: Any, **kwargs: Any) -> None:
-        self._query_cache.clear()
+        ContainerQuery.ContainerQuery.cache.clear()
 
     ##  Clear the query cache by using container type.
     #   This is a slightly smarter way of clearing the cache. Only queries that are of the same type (or without one)
@@ -647,9 +625,9 @@ class ContainerRegistry(ContainerRegistryInterface):
             self._clearQueryCache()
             return
 
-        for key in list(self._query_cache.keys()):
-            if self._query_cache[key].getContainerType() == container_type or self._query_cache[key].getContainerType() is None:
-                del self._query_cache[key]
+        for key in list(ContainerQuery.ContainerQuery.cache.keys()):
+            if ContainerQuery.ContainerQuery.cache[key].getContainerType() == container_type or ContainerQuery.ContainerQuery.cache[key].getContainerType() is None:
+                del ContainerQuery.ContainerQuery.cache[key]
 
     ##  Called when any container's metadata changed.
     #
