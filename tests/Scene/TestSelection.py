@@ -82,7 +82,7 @@ class TestSelection(TestCase):
         assert node_2.getPosition() == Vector(10, 20, 30)
 
     def test_faceSelectMode(self):
-        Selection.hoverFaceChanged = MagicMock()
+        Selection.selectedFaceChanged = MagicMock()
 
         Selection.setFaceSelectMode(True)
         assert Selection.getFaceSelectMode()
@@ -90,7 +90,7 @@ class TestSelection(TestCase):
         Selection.setFaceSelectMode(True)
         Selection.setFaceSelectMode(False)
         assert not Selection.getFaceSelectMode()
-        assert Selection.hoverFaceChanged.emit.call_count == 2
+        assert Selection.selectedFaceChanged.emit.call_count == 2
 
     def test_toggleFace(self):
         Selection.selectedFaceChanged = MagicMock()
@@ -100,15 +100,15 @@ class TestSelection(TestCase):
         assert Selection.getSelectedFace() is None
 
         Selection.toggleFace(node_1, 91)
-        assert Selection.getSelectedFace() is (node_1, 91)
+        assert Selection.getSelectedFace() == (node_1, 91)
         Selection.toggleFace(node_2, 92)
-        assert Selection.getSelectedFace() is (node_2, 92)
+        assert Selection.getSelectedFace() == (node_2, 92)
         Selection.toggleFace(node_2, 93)
-        assert Selection.getSelectedFace() is (node_2, 93)
+        assert Selection.getSelectedFace() == (node_2, 93)
         Selection.toggleFace(node_2, 93)
         assert Selection.getSelectedFace() is None
         Selection.toggleFace(node_2, 93)
-        assert Selection.getSelectedFace() is (node_2, 93)
+        assert Selection.getSelectedFace() == (node_2, 93)
 
         Selection.clearFace()
         assert Selection.getSelectedFace() is None
@@ -123,7 +123,7 @@ class TestSelection(TestCase):
 
         Selection.hoverFace(node_1, 81)
         Selection.hoverFace(node_1, 81)
-        assert Selection.getHoverFace() is (node_1, 81)
+        assert Selection.getHoverFace() == (node_1, 81)
         assert Selection.selectedFaceChanged.emit.call_count == 1
 
         Selection.unhoverFace()
