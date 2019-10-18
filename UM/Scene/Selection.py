@@ -39,8 +39,9 @@ class Selection:
 
     @classmethod
     def setFaceSelectMode(cls, select: bool) -> None:
-        cls.__face_select_mode = select
-        cls.selectedFaceChanged.emit()
+        if select != cls.__face_select_mode:
+            cls.__face_select_mode = select
+            cls.selectedFaceChanged.emit()
 
     @classmethod
     def setFace(cls, object: SceneNode, face_id: int) -> None:
@@ -64,9 +65,11 @@ class Selection:
 
     @classmethod
     def hoverFace(cls, object: SceneNode, face_id: int) -> None:
-        # Don't force-add the object, as the parent may be the 'actual' selected one.
-        cls.__hover_face = (object, face_id)
-        cls.hoverFaceChanged.emit()
+        current_hover = cls.__hover_face
+        if current_hover is None or object != current_hover[0] or face_id != current_hover[1]:
+            # Don't force-add the object, as the parent may be the 'actual' selected one.
+            cls.__hover_face = (object, face_id)
+            cls.hoverFaceChanged.emit()
 
     @classmethod
     def unhoverFace(cls, object: Optional["SceneNode"] = None) -> None:
