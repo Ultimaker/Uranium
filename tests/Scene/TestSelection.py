@@ -113,7 +113,7 @@ class TestSelection(TestCase):
         Selection.clearFace()
         assert Selection.getSelectedFace() is None
 
-        assert Selection.selectedFaceChanged.emit.call_count == 5
+        assert Selection.selectedFaceChanged.emit.call_count == 6
 
     def test_hoverFace(self):
         Selection.hoverFaceChanged = MagicMock()
