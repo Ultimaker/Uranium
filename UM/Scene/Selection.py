@@ -51,14 +51,14 @@ class Selection:
 
     @classmethod
     def unsetFace(cls, object: Optional["SceneNode"] = None) -> None:
-        if not object or not cls.__selected_face or object is cls.__selected_face[0]:
+        if object is None or cls.__selected_face is None or object == cls.__selected_face[0]:
             cls.__selected_face = None
             cls.selectedFaceChanged.emit()
 
     @classmethod
     def toggleFace(cls, object: SceneNode, face_id: int) -> None:
         current_face = cls.__selected_face
-        if not current_face or object != current_face[0] or face_id != current_face[1]:
+        if current_face is None or object != current_face[0] or face_id != current_face[1]:
             cls.setFace(object, face_id)
         else:
             cls.unsetFace(object)
@@ -73,7 +73,7 @@ class Selection:
 
     @classmethod
     def unhoverFace(cls, object: Optional["SceneNode"] = None) -> None:
-        if not object or not cls.__hover_face or object is cls.__hover_face[0]:
+        if object is None or not cls.__hover_face or object == cls.__hover_face[0]:
             cls.__hover_face = None
             cls.hoverFaceChanged.emit()
 

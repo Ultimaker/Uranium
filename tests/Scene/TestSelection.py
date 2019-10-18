@@ -124,15 +124,15 @@ class TestSelection(TestCase):
         Selection.hoverFace(node_1, 81)
         Selection.hoverFace(node_1, 81)
         assert Selection.getHoverFace() == (node_1, 81)
-        assert Selection.selectedFaceChanged.emit.call_count == 1
+        assert Selection.hoverFaceChanged.emit.call_count == 1
 
         Selection.unhoverFace()
         assert Selection.getHoverFace() is None
 
         Selection.hoverFace(node_1, 82)
         Selection.hoverFace(node_1, 83)
-        assert Selection.selectedFaceChanged.emit.call_count == 4
+        assert Selection.hoverFaceChanged.emit.call_count == 4
 
         Selection.clearFace()
         assert Selection.getHoverFace() is None
-        assert Selection.selectedFaceChanged.emit.call_count == 5
+        assert Selection.hoverFaceChanged.emit.call_count == 5
