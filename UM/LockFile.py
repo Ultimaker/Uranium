@@ -82,8 +82,8 @@ class LockFile:
                                                             FILE_FLAG_DELETE_ON_CLOSE | FILE_ATTRIBUTE_NORMAL, None)
                 if self._pidfile is not None and self._pidfile != -1: # -1 is the INVALID_HANDLE
                     break
-            except:
-                pass
+            except Exception:
+                Logger.logException("w", "An exception occured while attempting to create the lock file.")
             time.sleep(0.1)
 
     ##  Close and delete the lock file from the file system once the current thread finish what it was doing.
@@ -103,8 +103,8 @@ class LockFile:
         from ctypes import windll  # type: ignore
         try:
             windll.kernel32.CloseHandle(self._pidfile)
-        except:
-            pass
+        except Exception:
+            Logger.logException("w", "Failed to remove the lockfile [%s]", self._filename)
 
     ##  Attempt to grab the lock file for personal use.
     def __enter__(self) -> None:
