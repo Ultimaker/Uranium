@@ -306,6 +306,26 @@ class MeshData:
         result.sort()
         return result
 
+    def invertNormals(self) -> None:
+        if self._normals is not None:
+            mirror = Matrix()
+            mirror.setToIdentity()
+            mirror.scaleByFactor(-1.0)
+            self._normals = transformNormals(self._normals, mirror)
+        if self._indices is not None:
+            new_indices = []
+            for face in self._indices:
+                new_indices.append([face[1], face[0], face[2]])
+            self._indices = NumPyUtil.immutableNDArray(new_indices)
+        else:
+            new_vertices = []
+            num_vertices = len(self._vertices)
+            for i in range(0, num_vertices, 3):
+                new_vertices.append(self._vertices[i + 1])
+                new_vertices.append(self._vertices[i])
+                new_vertices.append(self._vertices[i + 2])
+            self._vertices = NumPyUtil.immutableNDArray(new_vertices)
+
     def toString(self) -> str:
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
                str(self._indices) + ", _colors=" + str(self._colors) + ", _uvs=" + str(self._uvs) + ", _attributes=" + \

@@ -666,6 +666,12 @@ class SceneNode:
     def setSetting(self, key: str, value: str) -> None:
         self._settings[key] = value
 
+    def invertNormals(self) -> None:
+        for child in self._children:
+            child.invertNormals()
+        if self._mesh_data:
+            self._mesh_data.invertNormals()
+
     ##  private:
     def _transformChanged(self) -> None:
         self._updateTransformation()

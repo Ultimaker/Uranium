@@ -36,6 +36,7 @@ class MirrorOperation(Operation.Operation):
             center = self._node.getPosition()
             self._node.setPosition(-center)
         self._node.scale(self._mirror, SceneNode.TransformSpace.World) #Then mirror around the origin.
+        self._node.invertNormals()  # Because the mirror is done via a scale operation, the normals where inverted.
         if self._mirror_around_center: #If we moved the centre, move it back.
             self._node.setPosition(center)
 
