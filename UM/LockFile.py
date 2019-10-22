@@ -65,7 +65,7 @@ class LockFile:
     #   current thread releases the lock file.
     def _createLockFileWindows(self) -> None:
         from ctypes import windll  # type: ignore
-
+        start_wait = time.time()
         # Define attributes and flags for the file
         GENERIC_READ_WRITE = 0x40000000 | 0x80000000 #Read and write rights.
         NO_SHARE = 0
@@ -75,6 +75,8 @@ class LockFile:
 
         self._pidfile = None
         while True:
+            if time.time() - start_wait > self._timeout:  # Timeout expired. Overwrite the lock file.
+                self._deleteLockFileWindows()
             try:
                 # Try to create the lock file with the Windows API. For more information visit:
                 # https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-createfilew
