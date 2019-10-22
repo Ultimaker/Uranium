@@ -9,9 +9,6 @@ import functools
 if TYPE_CHECKING:
     from UM.Settings.ContainerRegistry import ContainerRegistry
 
-# The maximum amount of query results we should cache
-MaxQueryCacheSize = 10000
-
 ##  Wrapper class to perform a search for a certain set of containers.
 #
 #   This class is primarily intended to be used internally by
@@ -21,7 +18,7 @@ MaxQueryCacheSize = 10000
 #   \note Instances of this class will ignore the query results when
 #   comparing. This is done to simplify the caching code in ContainerRegistry.
 class ContainerQuery:
-    cache = collections.OrderedDict()  # type: collections.OrderedDict # To speed things up, we're keeping a cache of the container queries we've executed before.
+    cache = {}  # type: Dict[Tuple[Any, ...], ContainerQuery]  # To speed things up, we're keeping a cache of the container queries we've executed before.
 
     # If a field is provided in the format "[t1|t2|t3|...]", try to find if any of the given tokens is present in the
     # value. Use regex to do matching because certain fields such as name can be filled by a user and it can be string
@@ -77,7 +74,6 @@ class ContainerQuery:
             key_so_far += (key, value)
             if candidates is None and key_so_far in self.cache:
                 filtered_candidates = cast(List[Dict[str, Any]], self.cache[key_so_far].getResult())
-                self.cache.move_to_end(key_so_far)  # The cache entry was used, so make sure it doesn't fall off as an infrequently-used cache entry.
                 continue
 
             if isinstance(value, type):
@@ -98,9 +94,6 @@ class ContainerQuery:
                 cached_arguments = dict(zip(key_so_far[1::2], key_so_far[2::2]))
                 self.cache[key_so_far] = ContainerQuery(self._registry, ignore_case = self._ignore_case, **cached_arguments)  # Cache this query for the next time.
                 self.cache[key_so_far]._result = filtered_candidates
-                if len(self.cache) > MaxQueryCacheSize:
-                    # Use LIFO to invalidate queries. Queries that are infrequently used are discarded to save memory.
-                    self.cache.popitem(last = False)
 
         # Execute all filters.
         self._result = filtered_candidates
