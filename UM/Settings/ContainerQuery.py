@@ -63,19 +63,30 @@ class ContainerQuery:
     #   on the arguments provided to this class' constructor. After it is done,
     #   the result can be retrieved with getResult().
     def execute(self, candidates: Optional[List[Any]] = None) -> None:
+        # If we filter on multiple metadata entries, we can filter on each entry
+        # separately. We then cache the sub-filters so that subsequent filters
+        # with a similar-but-different query can be sped up. For instance, if we
+        # are looking for all materials for UM3+AA0.4 and later for UM3+AA0.8,
+        # then for UM3+AA0.4 we'll first filter on UM3 and then for AA0.4, so
+        # that we can re-use the cached query for UM3 when we look for
+        # UM3+AA0.8.
+        # To this end we'll track the filter so far and progressively refine our
+        # filter. At every step we check the cache and store the query in the
+        # cache if it's not there yet.
         key_so_far = (self._ignore_case, )  # type: Tuple[Any, ...]
         if candidates is None:
             filtered_candidates = list(self._registry.metadata.values())
         else:
             filtered_candidates = candidates
 
-        # Filter on all the key-word arguments.
-        for key, value in self._kwargs.items():
+        # Filter on all the key-word arguments one by one.
+        for key, value in self._kwargs.items():  # For each progressive filter...
             key_so_far += (key, value)
             if candidates is None and key_so_far in self.cache:
                 filtered_candidates = cast(List[Dict[str, Any]], self.cache[key_so_far].getResult())
                 continue
 
+            # Find the filter to execute.
             if isinstance(value, type):
                 key_filter = functools.partial(self._matchType, property_name = key, value = value)
             elif isinstance(value, str):
@@ -88,14 +99,16 @@ class ContainerQuery:
                     key_filter = functools.partial(self._matchString, property_name = key, value = value)
             else:
                 key_filter = functools.partial(self._matchDirect, property_name = key, value = value)
-            filtered_candidates = list(filter(key_filter, filtered_candidates))  # Execute this filter.
 
+            # Execute this filter.
+            filtered_candidates = list(filter(key_filter, filtered_candidates))
+
+            # Store the result in the cache.
             if candidates is None:  # Only cache if we didn't pre-filter candidates.
                 cached_arguments = dict(zip(key_so_far[1::2], key_so_far[2::2]))
                 self.cache[key_so_far] = ContainerQuery(self._registry, ignore_case = self._ignore_case, **cached_arguments)  # Cache this query for the next time.
                 self.cache[key_so_far]._result = filtered_candidates
 
-        # Execute all filters.
         self._result = filtered_candidates
 
     ##  Human-readable string representation for debugging.
