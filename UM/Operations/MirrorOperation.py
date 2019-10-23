@@ -28,6 +28,7 @@ class MirrorOperation(Operation.Operation):
 
     ##  Undo the operation.
     def undo(self):
+        self._node.invertNormals()
         self._node.setTransformation(self._old_transformation) #We stored the old transformation, so we can just restore that.
 
     ##  Re-apply the operation after undoing it.
