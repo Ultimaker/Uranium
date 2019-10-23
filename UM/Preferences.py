@@ -227,13 +227,6 @@ class Preferences:
             Logger.logException("d", "An exception occurred while trying to update the preferences.")
         return serialized
 
-    ##  This method is still used by some external plugins and it needs to be kept as deprecated
-    @classmethod
-    @deprecated("Please use Application.getInstance().getPreferences() instead", "3.3")
-    def getInstance(cls) -> "Preferences":
-        from UM.Application import Application
-        return Application.getInstance().getPreferences()
-
 
 class _Preference:
     def __init__(self, name: str, default: Any = None, value: Any = None) -> None:

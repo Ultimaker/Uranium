@@ -64,15 +64,6 @@ class ControllerProxy(QObject):
         Selection.clear()
 
     @pyqtSlot(str, int)
-    def rotateView(self, coordinate: str, angle: int) -> None:
-        self._rotateView(coordinate, angle)
-
-    # Workaround for the deprecation and pyqtSlot not playing well together
-    @deprecated("Please use ControllerProxy.setCameraRotation instead.", "4.2")
-    def _rotateView(self, coordinate: str, angle: int) -> None:
-        self.setCameraRotation(coordinate, angle)
-
-    @pyqtSlot(str, int)
     def setCameraRotation(self, coordinate: str, angle: int) -> None:
         self._controller.setCameraRotation(coordinate, angle)
 
