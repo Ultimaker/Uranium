@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import imp
@@ -18,6 +18,7 @@ from UM.Platform import Platform
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.PluginObject import PluginObject  # For type hinting
 from UM.Resources import Resources
+from UM.Trust import Trust
 from UM.Version import Version
 
 i18n_catalog = i18nCatalog("uranium")
@@ -25,6 +26,7 @@ i18n_catalog = i18nCatalog("uranium")
 if TYPE_CHECKING:
     from UM.Application import Application
 
+PLUGIN_SIGNATURE_FILENAME = "signature.json"
 
 ##  A central object to dynamically load modules as plugins.
 #
@@ -68,6 +70,16 @@ class PluginRegistry(QObject):
         self._bundled_plugin_cache = {}  # type: Dict[str, bool]
 
         self._supported_file_types = {"umplugin": "Uranium Plugin"} # type: Dict[str, str]
+
+        self._check_if_trusted = True
+        self._checked_plugin_ids = []     # type: List[str]
+        self._distrusted_plugin_ids = []  # type: List[str]
+
+    def setCheckIfTrusted(self, check_if_trusted: bool) -> None:
+        self._check_if_trusted = check_if_trusted
+
+    def getCheckIfTrusted(self) -> bool:
+        return self._check_if_trusted
 
     def initializeBeforePluginsAreLoaded(self) -> None:
         config_path = Resources.getConfigStoragePath()
@@ -298,7 +310,14 @@ class PluginRegistry(QObject):
             except ValueError:
                 is_in_installation_path = False
             if not is_in_installation_path:
-                continue
+                # To prevent the situation in a 'trusted' env. that the user-folder has a supposedly 'bundled' plugin:
+                if self._check_if_trusted:
+                    result = self._locatePlugin(plugin_id, plugin_dir)
+                    if result:
+                        is_bundled = False
+                        break
+                else:
+                    continue
 
             result = self._locatePlugin(plugin_id, plugin_dir)
             if result:
@@ -342,7 +361,7 @@ class PluginRegistry(QObject):
             Logger.log("w", "Plugin %s was already loaded", plugin_id)
             return
 
-        # Find the actual plugin on drive:
+        # Find the actual plugin on drive, do security checks if necessary:
         plugin = self._findPlugin(plugin_id)
 
         # If not found, raise error:
@@ -507,7 +526,7 @@ class PluginRegistry(QObject):
 
     ##  Try to find a module implementing a plugin
     #   \param plugin_id The name of the plugin to find
-    #   \returns module if it was found None otherwise
+    #   \returns module if it was found (and, if 'self._check_if_trusted' is set, also secure), None otherwise
     def _findPlugin(self, plugin_id: str) -> Optional[types.ModuleType]:
         location = None
         for folder in self._plugin_locations:
@@ -523,6 +542,35 @@ class PluginRegistry(QObject):
         except Exception:
             Logger.logException("e", "Import error when importing %s", plugin_id)
             return None
+
+        # In a large company, the user might not be trusted by default: Check if the plugin can be trusted.
+        # Define a trusted plugin as either: already checked, correctly signed, or bundled with the application.
+        if self._check_if_trusted and plugin_id not in self._checked_plugin_ids and not self.isBundledPlugin(plugin_id):
+            # TODO: __pychache__'s (subfolders too!) problem! -> 4 options, either:
+            #        - precompile, sign pyc files too
+            #        - verify cache & sign during 1st run
+            #        - force python to cache in the install folder, even for external plugins
+            #        - delete caches on startup _before_ load module  <-  do this for now
+            try:
+                cache_folders_to_empty = []  # List[str]
+                for root, dirnames, filenames in os.walk(path):
+                    for dirname in dirnames:
+                        if dirname == "__pycache__":
+                            cache_folders_to_empty.append(os.path.join(root, dirname))
+                for cache_folder in cache_folders_to_empty:
+                    for root, dirnames, filenames in os.walk(cache_folder):
+                        for filename in filenames:
+                            os.remove(os.path.join(root, filename))
+            except:  # Yes, we  do really want this on _every_ exception that might occur.
+                Logger.logException("e", "Removal of pycache for unbundled plugin '{0}' failed.".format(plugin_id))
+                self._distrusted_plugin_ids.append(plugin_id)
+                return None
+
+            if Trust.SignedFolderCheck(PLUGIN_SIGNATURE_FILENAME, path):
+                self._checked_plugin_ids.append(plugin_id)
+            else:
+                self._distrusted_plugin_ids.append(plugin_id)
+                return None
 
         try:
             module = imp.load_module(plugin_id, file, path, desc) #type: ignore #MyPy gets the wrong output type from imp.find_module for some reason.
