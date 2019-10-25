@@ -1,5 +1,5 @@
-from unittest import TestCase
 from unittest.mock import MagicMock
+import pytest
 
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Math.Vector import Vector
@@ -8,12 +8,10 @@ from UM.Scene.Selection import Selection
 from UM.Operations.TranslateOperation import TranslateOperation
 
 
-class TestSelection(TestCase):
-    def setUp(self):
-        Selection.clearFace()
-        Selection.clear()
+class TestSelection:
 
-    def tearDown(self):
+    @pytest.fixture(autouse=True)
+    def clearAll(self):
         Selection.clearFace()
         Selection.clear()
 
