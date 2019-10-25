@@ -65,7 +65,7 @@ class SettingPropertyProvider(QObject):
             self._stack.containersChanged.connect(self._containersChanged)
 
         self._validator = None
-        self._update()
+        self._updateDelayed()
         self.containerStackChanged.emit()
 
     ##  Set the containerStackId property.
@@ -115,7 +115,7 @@ class SettingPropertyProvider(QObject):
     def setWatchedProperties(self, properties: List[str]) -> None:
         if properties != self._watched_properties:
             self._watched_properties = properties
-            self._update()
+            self._updateDelayed()
             self.watchedPropertiesChanged.emit()
 
     ##  Emitted when the watchedProperties property changes.
@@ -130,7 +130,7 @@ class SettingPropertyProvider(QObject):
         if key != self._key:
             self._key = key
             self._validator = None
-            self._update()
+            self._updateDelayed()
             self.keyChanged.emit()
 
     ##  Emitted when the key property changes.
