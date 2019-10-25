@@ -566,7 +566,7 @@ class PluginRegistry(QObject):
                 self._distrusted_plugin_ids.append(plugin_id)
                 return None
 
-            if Trust.SignedFolderCheck(PLUGIN_SIGNATURE_FILENAME, path):
+            if Trust.signedFolderCheck(path):
                 self._checked_plugin_ids.append(plugin_id)
             else:
                 self._distrusted_plugin_ids.append(plugin_id)
