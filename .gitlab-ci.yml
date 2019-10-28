@@ -5,7 +5,6 @@ build and test linux:
   stage: build
   image:
     name: registry.gitlab.com/ultimaker/cura/cura-build-environment:centos7
-    pull: always
   tags:
     - cura
     - docker
