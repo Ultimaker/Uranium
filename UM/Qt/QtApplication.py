@@ -155,7 +155,8 @@ class QtApplication(QApplication, Application):
 
     def startSplashWindowPhase(self) -> None:
         super().startSplashWindowPhase()
-
+        i18n_catalog = i18nCatalog("uranium")
+        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Initializing package manager..."))
         self._package_manager.initialize()
 
         # Read preferences here (upgrade won't work) to get the language in use, so the splash window can be shown in
@@ -169,8 +170,6 @@ class QtApplication(QApplication, Application):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
         # these checks need to be done in your <framework>Application.py class __init__().
-
-        i18n_catalog = i18nCatalog("uranium")
 
         self._configuration_error_message = ConfigurationErrorMessage(self,
               i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt."),
