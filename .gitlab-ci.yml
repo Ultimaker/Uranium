@@ -4,7 +4,7 @@ stages:
 build and test linux:
   stage: build
   image:
-    name: registry.gitlab.com/ultimaker/cura/cura-build-environment:centos7-WIP_win_docker-54
+    name: registry.gitlab.com/ultimaker/cura/cura-build-environment:centos7
   tags:
     - cura
     - docker
