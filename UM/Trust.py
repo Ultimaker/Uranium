@@ -5,6 +5,8 @@ import json
 import os
 import base64
 
+from typing import Optional
+
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
@@ -27,7 +29,7 @@ class Trust:
     # Methods for file/signature verifcation:
 
     @classmethod
-    def _loadPublicKey(cls) -> RSAPublicKey:
+    def _loadPublicKey(cls) -> Optional[RSAPublicKey]:
         try:
             with open(cls._public_key_filename, "rb") as file:
                 return load_pem_public_key(file.read(), default_backend())
@@ -83,7 +85,7 @@ class Trust:
     def _signFile(cls, filename: str, private_key: RSAPrivateKey) -> str:
         file_hash = cls._getFileHash(filename)
         if file_hash == "":
-            return False
+            return ""
         try:
             file_hash_bytes = base64.b64decode(file_hash)
             signature_bytes = private_key.sign(

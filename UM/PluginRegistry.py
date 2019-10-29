@@ -71,7 +71,7 @@ class PluginRegistry(QObject):
 
         self._supported_file_types = {"umplugin": "Uranium Plugin"} # type: Dict[str, str]
 
-        self._check_if_trusted = True
+        self._check_if_trusted = True  # type: bool
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
 
