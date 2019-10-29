@@ -26,7 +26,6 @@ i18n_catalog = i18nCatalog("uranium")
 if TYPE_CHECKING:
     from UM.Application import Application
 
-PLUGIN_SIGNATURE_FILENAME = "signature.json"
 
 ##  A central object to dynamically load modules as plugins.
 #
@@ -74,7 +73,7 @@ class PluginRegistry(QObject):
         self._check_if_trusted = True  # type: bool
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
-        self._trust_checker = Trust(os.path.abspath(os.path.join(application.getInstallPrefix(), "public_key.pem")))
+        self._trust_checker = Trust.getInstance()
 
     def setCheckIfTrusted(self, check_if_trusted: bool) -> None:
         self._check_if_trusted = check_if_trusted

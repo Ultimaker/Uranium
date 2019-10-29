@@ -16,10 +16,19 @@ from cryptography.hazmat.primitives.serialization import load_pem_public_key, lo
 from UM.Logger import Logger
 
 class Trust:
+    __instance = None
+
+    @classmethod
+    def getInstance(cls):
+        from UM.Application import Application
+        if not cls.__instance:
+            cls.__instance = Trust(os.path.abspath(os.path.join(Application.getInstallPrefix(), "public_key.pem")))
+        return cls.__instance
 
     def __init__(self, public_key_filename: str) -> bool:
         self._hash_algorithm = hashes.SHA3_384()
-        self._signatures_relative_filename = "signature.json"
+        self._signatures_relative_filename = "signature.json"  # <- For directories (plugins for example).
+        self._signature_filename_extension = ".signature"      # <- For(/next to) single files.
 
         self._public_key_filename = public_key_filename
         self._public_key = None  #type: Optional[RSAPublicKey]
@@ -119,6 +128,13 @@ class Trust:
             Logger.logException("e", "Couldn't sign '{0}', no signature generated.".format(filename))
         return ""
 
+    # Only used for single files, there's another mechanism for folders.
+    def _getSignatureFilenameFor(self, filename: str):
+        return os.path.join(
+            os.path.dirname(filename),
+            os.path.basename(filename).split(".")[0] + self._signature_filename_extension
+        )
+
     # Public methods (not to be confused with public keys):
 
     def signedFolderCheck(self, path: str) -> bool:
@@ -157,6 +173,28 @@ class Trust:
             Logger.logException("e", "Can't find or parse signatures for unbundled folder '{0}'.".format(path))
         return False
 
+    def signedFileCheck(self, filename: str) -> bool:
+        try:
+            signature_filename = self._getSignatureFilenameFor(filename)
+
+            with open(signature_filename, "r", encoding = "utf-8") as data_file:
+                signature = data_file.read()
+
+                if signature is None:
+                    Logger.logException("e", "Signature file '{0}' is not present.".format(signature_filename))
+                    return False
+
+                if not self._verifyFile(filename, signature):
+                    Logger.logException("e", "File '{0}' didn't match with checksum.".format(filename))
+                    return False
+
+            Logger.log("i", "Verified unbundled file '{0}'.".format(filename))
+            return True
+
+        except:  # Yes, we  do really want this on _every_ exception that might occur.
+            Logger.logException("e", "Can't find or parse signatures for unbundled file '{0}'.".format(filename))
+        return False
+
     def signFolder(self, private_key: RSAPrivateKey, path: str, ignore_folders: List[str] = []) -> bool:
         try:
             signatures = {}  # Dict[str, str]
@@ -170,7 +208,11 @@ class Trust:
 
                     name_on_disk = os.path.join(root, filename)
                     name_in_data = name_on_disk.replace(path, "").replace("\\", "/")
-                    signatures[name_in_data] = self._signFile(name_on_disk, private_key)
+                    signature = self._signFile(name_on_disk, private_key)
+                    if signature == "":
+                        Logger.logException("e", "Couldn't sign file '{0}'.".format(name_on_disk))
+                        return False
+                    signatures[name_in_data] = signature
 
             json_filename = os.path.join(path, self._signatures_relative_filename)
             with open(json_filename, "w", encoding = "utf-8") as data_file:
@@ -181,4 +223,22 @@ class Trust:
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Couldn't sign folder '{0}'.".format(path))
+        return False
+
+    def signFile(self, private_key: RSAPrivateKey, filename: str) -> bool:
+        try:
+            signature = self._signFile(filename, private_key)
+            if signature == "":
+                Logger.logException("e", "Couldn't sign file '{0}'.".format(filename))
+                return False
+
+            signature_filename = self._getSignatureFilenameFor(filename)
+            with open(signature_filename, "w", encoding = "utf-8") as data_file:
+                data_file.write(signature)
+
+            Logger.log("i", "Signed file '{0}'.".format(filename))
+            return True
+
+        except:  # Yes, we  do really want this on _every_ exception that might occur.
+            Logger.logException("e", "Couldn't sign file '{0}'.".format(filename))
         return False
