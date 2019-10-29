@@ -15,31 +15,24 @@ from cryptography.hazmat.primitives.serialization import load_pem_public_key, lo
 
 from UM.Logger import Logger
 
-
 class Trust:
 
-    # TODO: Shift from classmethods to live object (so a Trust object may have a different pubkey/sigs-filename)
+    def __init__(self, public_key_filename: str) -> bool:
+        self._hash_algorithm = hashes.SHA3_384()
+        self._signatures_relative_filename = "signature.json"
 
-    _hash_algorithm = hashes.SHA3_384()
-    _public_key = None  # type: Optional[RSAPublicKey]
-    _public_key_filename = "public_key.pem"  # TODO -> relative location of public key file w.r.t. application
-    _signatures_relative_filename = "signature.json"
+        self._public_key_filename = public_key_filename
+        self._public_key = None
 
-    # Methods for file/signature verifcation:
+        if self._public_key_filename is not None:
+            try:
+                with open(self._public_key_filename, "rb") as file:
+                    self._public_key = load_pem_public_key(file.read(), backend = default_backend())
+            except:  # Yes, we  do really want this on _every_ exception that might occur.
+                Logger.logException("e", "Couldn't load public-key.")
 
-    @classmethod
-    def _loadPublicKey(cls) -> bool:
-        try:
-            with open(cls._public_key_filename, "rb") as file:
-                cls._public_key = load_pem_public_key(file.read(), backend = default_backend())
-            return True
-        except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Couldn't load public-key.")
-        return False
-
-    @classmethod
-    def _getFileHash(cls, filename: str) -> str:
-        hasher = hashes.Hash(cls._hash_algorithm, backend = default_backend())
+    def _getFileHash(self, filename: str) -> str:
+        hasher = hashes.Hash(self._hash_algorithm, backend = default_backend())
         try:
             with open(filename, "rb") as file:
                 hasher.update(file.read())
@@ -48,22 +41,20 @@ class Trust:
             Logger.logException("e", "Couldn't read '{0}' for plain hash generation.".format(filename))
         return ""
 
-    @classmethod
-    def _verifyFile(cls, filename: str, signature: str) -> bool:
-        if cls._public_key is None:
-            if not cls._loadPublicKey():
-                return False
-        file_hash = cls._getFileHash(filename)
+    def _verifyFile(self, filename: str, signature: str) -> bool:
+        if self._public_key is None:
+            return False
+        file_hash = self._getFileHash(filename)
         if file_hash == "":
             return False
         try:
             signature_bytes = base64.b64decode(signature)
             file_hash_bytes = base64.b64decode(file_hash)
-            cls._public_key.verify(
+            self._public_key.verify(
                 signature_bytes,
                 file_hash_bytes,
-                padding.PSS(mgf = padding.MGF1(cls._hash_algorithm), salt_length = padding.PSS.MAX_LENGTH),
-                Prehashed(cls._hash_algorithm)
+                padding.PSS(mgf = padding.MGF1(self._hash_algorithm), salt_length = padding.PSS.MAX_LENGTH),
+                Prehashed(self._hash_algorithm)
             )
             return True
         except:  # Yes, we  do really want this on _every_ exception that might occur.
@@ -74,15 +65,13 @@ class Trust:
     # NOTE: Private keys should not be present or have to be generated during any normal run!
 
     # returns private key, stores public key in this Trust object
-    @classmethod
-    def _generateNewKeys(cls) -> RSAPrivateKey:
+    def _generateNewKeys(self) -> RSAPrivateKey:
         private_key = rsa.generate_private_key(public_exponent = 65537, key_size = 4096, backend = default_backend())
-        cls._public_key = private_key.public_key()
+        self._public_key = private_key.public_key()
         return private_key
 
     # returns private key, stores public key in this Trust object
-    @classmethod
-    def _saveKeys(cls, private_key: RSAPrivateKey, private_filename: str) -> bool:
+    def _saveKeys(self, private_key: RSAPrivateKey, private_filename: str) -> bool:
         try:
             private_pem = private_key.private_bytes(
                 encoding = serialization.Encoding.PEM,
@@ -92,21 +81,20 @@ class Trust:
             with open(private_filename, "wb") as private_file:
                 private_file.write(private_pem)
 
-            public_pem = cls._public_key.public_bytes(
+            public_pem = self._public_key.public_bytes(
                 encoding = serialization.Encoding.PEM,
                 format = serialization.PublicFormat.PKCS1
             )
-            with open(cls._public_key_filename, "wb") as public_file:
+            with open(self._public_key_filename, "wb") as public_file:
                 public_file.write(public_pem)
 
             return True
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Saving private-public key-tuple (to '{0}' and '{1}' respectively) failed.".format(private_filename, cls._public_key_filename))
+            Logger.logException("e", "Saving private-public key-tuple (to '{0}' and '{1}' respectively) failed.".format(private_filename, self._public_key_filename))
         return False
 
-    @classmethod
-    def _loadPrivateKey(cls, private_filename: str) -> RSAPrivateKey:
+    def _loadPrivateKey(self, private_filename: str) -> RSAPrivateKey:
         try:
             with open(private_filename, "rb") as file:
                 return load_pem_private_key(file.read(), backend = default_backend(), password = None)
@@ -114,17 +102,16 @@ class Trust:
             Logger.logException("e", "Couldn't load private-key.")
         return None
 
-    @classmethod
-    def _signFile(cls, filename: str, private_key: RSAPrivateKey) -> str:
-        file_hash = cls._getFileHash(filename)
+    def _signFile(self, filename: str, private_key: RSAPrivateKey) -> str:
+        file_hash = self._getFileHash(filename)
         if file_hash == "":
             return False
         try:
             file_hash_bytes = base64.b64decode(file_hash)
             signature_bytes = private_key.sign(
                 file_hash_bytes,
-                padding.PSS(mgf = padding.MGF1(cls._hash_algorithm), salt_length = padding.PSS.MAX_LENGTH),
-                Prehashed(cls._hash_algorithm)
+                padding.PSS(mgf = padding.MGF1(self._hash_algorithm), salt_length = padding.PSS.MAX_LENGTH),
+                Prehashed(self._hash_algorithm)
             )
             return base64.b64encode(signature_bytes).decode("utf-8")
         except:
@@ -133,10 +120,9 @@ class Trust:
 
     # Public methods (not to be confused with public keys):
 
-    @classmethod
-    def signedFolderCheck(cls, path: str) -> bool:
+    def signedFolderCheck(self, path: str) -> bool:
         try:
-            json_filename = os.path.join(path, cls._signatures_relative_filename)
+            json_filename = os.path.join(path, self._signatures_relative_filename)
 
             with open(json_filename, "r", encoding = "utf-8") as data_file:
                 signatures_json = json.load(data_file)
@@ -144,7 +130,7 @@ class Trust:
                 file_count = 0
                 for root, dirnames, filenames in os.walk(path):
                     for filename in filenames:
-                        if filename == cls._signatures_relative_filename and root == path:
+                        if filename == self._signatures_relative_filename and root == path:
                             continue
                         file_count += 1
                         name_on_disk = os.path.join(root, filename)
@@ -155,7 +141,7 @@ class Trust:
                             Logger.logException("e", "File '{0}' was not signed with a checksum.".format(name_on_disk))
                             return False
 
-                        if not cls._verifyFile(name_on_disk, signature):
+                        if not self._verifyFile(name_on_disk, signature):
                             Logger.logException("e", "File '{0}' didn't match with checksum.".format(name_on_disk))
                             return False
 
@@ -170,8 +156,7 @@ class Trust:
             Logger.logException("e", "Can't find or parse signatures for unbundled folder '{0}'.".format(path))
         return False
 
-    @classmethod
-    def signFolder(cls, private_key: RSAPrivateKey, path: str, ignore_folders: List[str] = []) -> bool:
+    def signFolder(self, private_key: RSAPrivateKey, path: str, ignore_folders: List[str] = []) -> bool:
         try:
             signatures = {}  # Dict[str, str]
 
@@ -179,14 +164,14 @@ class Trust:
                 if os.path.basename(root) in ignore_folders:
                     continue
                 for filename in filenames:
-                    if filename == cls._signatures_relative_filename and root == path:
+                    if filename == self._signatures_relative_filename and root == path:
                         continue
 
                     name_on_disk = os.path.join(root, filename)
                     name_in_data = name_on_disk.replace(path, "").replace("\\", "/")
-                    signatures[name_in_data] = cls._signFile(name_on_disk, private_key)
+                    signatures[name_in_data] = self._signFile(name_on_disk, private_key)
 
-            json_filename = os.path.join(path, cls._signatures_relative_filename)
+            json_filename = os.path.join(path, self._signatures_relative_filename)
             with open(json_filename, "w", encoding = "utf-8") as data_file:
                 json.dump(signatures, data_file, indent = 2)
 
@@ -196,41 +181,3 @@ class Trust:
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Couldn't sign folder '{0}'.".format(path))
         return False
-
-    # TEMPORARY METHODS  / move to or rebuild as unit-tests later:
-
-    @classmethod
-    def _smoketestA(cls) -> None:
-        test_filename = "C:/tmp/testsign.txt"
-        private_key_filename = "C:/tmp/private_key.pem"
-
-        private_key = cls._generateNewKeys()
-        signature = cls._signFile(test_filename, private_key)
-        trusted = cls._verifyFile(test_filename, signature)
-
-        print("SIGNTURE BEFORE: {0} #### {1}".format(signature, trusted))
-
-        cls._saveKeys(private_key, private_key_filename)
-        private_key = cls._loadPrivateKey(private_key_filename)
-        cls._loadPublicKey()
-        #private_key = cls._generateNewKeys()
-
-        signature = cls._signFile(test_filename, private_key)
-        #trusted = cls._verifyFile(test_filename, signature)
-
-        print("SIGNTURE AFTER: {0} #### {1}".format(signature, trusted))
-
-    @classmethod
-    def _smoketestB(cls):
-        private_key = cls._generateNewKeys()
-        cls._saveKeys(private_key, "C:/tmp/private_key.pem")
-
-        if cls.signFolder(private_key, "C:/tmp/SuperMirrorTool", ["__pycache__"]):
-            print("****** SIGNED SUPERMIRRORTOOL ******")
-        else:
-            print("****** NOOOOOOOOOOOOOOOOOOOOO ******")
-
-        if cls.signedFolderCheck("C:/tmp/SuperMirrorTool"):
-            print("!!!!!! CHECKD SUPERMIRRORTOOL !!!!!!")
-        else:
-            print("!!!!!! NOOOOOOOOOOOOOOOOOOOOO !!!!!!")

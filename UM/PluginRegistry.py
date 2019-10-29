@@ -74,6 +74,7 @@ class PluginRegistry(QObject):
         self._check_if_trusted = True
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
+        self._trust_checker = Trust(os.path.abspath(os.path.join(application.getInstallPrefix(), "public_key.pem")))
 
     def setCheckIfTrusted(self, check_if_trusted: bool) -> None:
         self._check_if_trusted = check_if_trusted
@@ -546,11 +547,8 @@ class PluginRegistry(QObject):
         # In a large company, the user might not be trusted by default: Check if the plugin can be trusted.
         # Define a trusted plugin as either: already checked, correctly signed, or bundled with the application.
         if self._check_if_trusted and plugin_id not in self._checked_plugin_ids and not self.isBundledPlugin(plugin_id):
-            # TODO: __pychache__'s (subfolders too!) problem! -> 4 options, either:
-            #        - precompile, sign pyc files too
-            #        - verify cache & sign during 1st run
-            #        - force python to cache in the install folder, even for external plugins
-            #        - delete caches on startup _before_ load module  <-  do this for now
+
+            # NOTE: '__pychache__'s (+ subfolders) are deleted on startup _before_ load module:
             try:
                 cache_folders_to_empty = []  # List[str]
                 for root, dirnames, filenames in os.walk(path):
@@ -566,7 +564,8 @@ class PluginRegistry(QObject):
                 self._distrusted_plugin_ids.append(plugin_id)
                 return None
 
-            if Trust.signedFolderCheck(path):
+            # Do the actual check:
+            if self._trust_checker.signedFolderCheck(path):
                 self._checked_plugin_ids.append(plugin_id)
             else:
                 self._distrusted_plugin_ids.append(plugin_id)
