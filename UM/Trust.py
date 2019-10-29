@@ -43,7 +43,7 @@ class Trust:
         try:
             with open(filename, "rb") as file:
                 hasher.update(file.read())
-                return base64.b64encode(hasher.finalize())
+                return base64.b64encode(hasher.finalize()).decode("utf-8")
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Couldn't read '{0}' for plain hash generation.".format(filename))
         return ""
@@ -93,7 +93,7 @@ class Trust:
                 padding.PSS(mgf = padding.MGF1(cls._hash_algorithm), salt_length = padding.PSS.MAX_LENGTH),
                 Prehashed(cls._hash_algorithm)
             )
-            return base64.b64encode(signature_bytes)
+            return base64.b64encode(signature_bytes).decode("utf-8")
         except:
             Logger.logException("e", "Couldn't sign '{0}', no signature generated.".format(filename))
         return ""
