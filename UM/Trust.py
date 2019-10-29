@@ -4,7 +4,7 @@
 import json
 import os
 import base64
-from typing import List
+from typing import List, Optional
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
@@ -22,7 +22,7 @@ class Trust:
         self._signatures_relative_filename = "signature.json"
 
         self._public_key_filename = public_key_filename
-        self._public_key = None
+        self._public_key = None  #type: Optional[RSAPublicKey]
 
         if self._public_key_filename is not None:
             try:
@@ -30,6 +30,7 @@ class Trust:
                     self._public_key = load_pem_public_key(file.read(), backend = default_backend())
             except:  # Yes, we  do really want this on _every_ exception that might occur.
                 Logger.logException("e", "Couldn't load public-key.")
+                self._public_key = None
 
     def _getFileHash(self, filename: str) -> str:
         hasher = hashes.Hash(self._hash_algorithm, backend = default_backend())
@@ -105,7 +106,7 @@ class Trust:
     def _signFile(self, filename: str, private_key: RSAPrivateKey) -> str:
         file_hash = self._getFileHash(filename)
         if file_hash == "":
-            return False
+            return ""
         try:
             file_hash_bytes = base64.b64decode(file_hash)
             signature_bytes = private_key.sign(
