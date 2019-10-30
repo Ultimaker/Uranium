@@ -61,6 +61,7 @@ class PluginRegistry(QObject):
         self._plugins_to_remove = []  # type: List[str]
 
         self._plugins = {}            # type: Dict[str, types.ModuleType]
+        self._found_plugins = {}      # type: Dict[str, types.ModuleType]  # Cache to speed up _findPlugin
         self._plugin_objects = {}     # type: Dict[str, PluginObject]
 
         self._plugin_locations = []  # type: List[str]
@@ -512,6 +513,8 @@ class PluginRegistry(QObject):
     #   \param plugin_id The name of the plugin to find
     #   \returns module if it was found None otherwise
     def _findPlugin(self, plugin_id: str) -> Optional[types.ModuleType]:
+        if plugin_id in self._found_plugins:
+            return self._found_plugins[plugin_id]
         location = None
         for folder in self._plugin_locations:
             location = self._locatePlugin(plugin_id, folder)
@@ -535,7 +538,7 @@ class PluginRegistry(QObject):
         finally:
             if file:
                 os.close(file) #type: ignore #MyPy gets the wrong output type from imp.find_module for some reason.
-
+        self._found_plugins[plugin_id] = module
         return module
 
     def _locatePlugin(self, plugin_id: str, folder: str) -> Optional[str]:
