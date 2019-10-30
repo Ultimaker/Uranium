@@ -56,6 +56,13 @@ class Logger:
                 break
 
         try:
+            assert caller_frame is not None
+            assert frame_info is not None
+        except AssertionError:
+            print("FAILED TO LOG (Frame not found): ", log_type, message)
+            return
+
+        try:
             if args or kwargs: # Only format the message if there are args
                 new_message = message.format(*args, **kwargs)
 
