@@ -19,6 +19,7 @@ from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.PluginObject import PluginObject  # For type hinting
 from UM.Resources import Resources
 from UM.Version import Version
+import time
 
 i18n_catalog = i18nCatalog("uranium")
 
@@ -312,6 +313,7 @@ class PluginRegistry(QObject):
     #   \sa loadPlugin
     #   NOTE: This is the method which kicks everything off at app launch.
     def loadPlugins(self, metadata: Optional[Dict[str, Any]] = None) -> None:
+        start_time = time.time()
         # Get a list of all installed plugins:
         plugin_ids = self._findInstalledPlugins()
         for plugin_id in plugin_ids:
@@ -329,6 +331,7 @@ class PluginRegistry(QObject):
                     self._plugins_installed.append(plugin_id)
                 except PluginNotFoundError:
                     pass
+        Logger.log("d", "Loading all plugins took %s seconds", time.time() - start_time)
 
     # Checks if the given plugin API version is compatible with the current version.
     def isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
