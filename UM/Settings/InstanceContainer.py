@@ -4,11 +4,14 @@
 import configparser
 import io
 import copy
+import os
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlEngine #To take ownership of this class ourselves.
 
+from UM.Trust import Trust
+from UM.Decorators import override
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For typing.
 from UM.Signal import Signal, signalemitter
@@ -486,6 +489,22 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             #Logger.log("d", "Could not get version from serialized: %s", e)
             pass
         return version
+
+    @override(ContainerInterface)
+    def trustHook(self, file_name: Optional[str]) -> bool:
+        # NOTE: In an enterprise environment, if there _is_ a signature file for an unbundled package, verify it.
+        #       (Note that this is a different behaviour w.r.t. the plugins, where the check is not just verification!)
+        #       (Note that there shouldn't be a check if trust has to be here, since it'll continue on 'no signature'.)
+        if Trust.getInstance():
+            from UM.Application import Application
+            install_prefix = os.path.abspath(Application.getInstallPrefix())
+            common_path = os.path.commonpath([install_prefix, file_name])
+            if common_path is None or not common_path.startswith(install_prefix):
+                if Trust.getInstance().signatureFileExistsFor(file_name):
+                    #_containerRegistry.setReadOnlyExplicitly(self.getId())  # TODO???: self._read_only = True
+                    if not Trust.getInstance().signedFileCheck(file_name):
+                        raise Exception("Can't validate file {0}".format(file_name))
+        return True
 
     ##  \copydoc ContainerInterface::deserialize
     #
