@@ -73,7 +73,11 @@ class PluginRegistry(QObject):
         self._check_if_trusted = True  # type: bool
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
-        self._trust_checker = Trust.getInstance()
+        self._trust_checker = None  # type Optional[Trust]
+        if self._check_if_trusted:
+            self._trust_checker = Trust.getInstance()
+            if not self._trust_checker:
+                raise Exception("Aborting! Couldn't find root public key '{0}'!".format(Trust.getPublicRootKeyPath()))
 
     def setCheckIfTrusted(self, check_if_trusted: bool) -> None:
         self._check_if_trusted = check_if_trusted

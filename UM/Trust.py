@@ -19,11 +19,15 @@ class Trust:
     __instance = None
 
     @classmethod
-    def getInstance(cls):
+    def getPublicRootKeyPath(cls):
         from UM.Application import Application
+        return os.path.abspath(os.path.join(Application.getInstallPrefix(), "public_key.pem"))
+
+    @classmethod
+    def getInstance(cls):
         if not cls.__instance:
-            cls.__instance = Trust(os.path.abspath(os.path.join(Application.getInstallPrefix(), "public_key.pem")))
-        return cls.__instance
+            cls.__instance = Trust(cls.getPublicRootKeyPath())
+        return cls.__instance if cls.__instance._public_key else None
 
     def __init__(self, public_key_filename: str) -> bool:
         self._hash_algorithm = hashes.SHA3_384()
