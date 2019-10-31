@@ -178,6 +178,8 @@ class LocalContainerProvider(ContainerProvider):
                 result = True
         else:
             result = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
+
+        result |= ContainerRegistry.getInstance().isExplicitReadOnly(container_id)
         self._is_read_only_cache[container_id] = result
         return result
 

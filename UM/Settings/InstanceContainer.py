@@ -195,7 +195,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     name = pyqtProperty(str, fget = getName, fset = setName, notify = pyqtNameChanged)
 
     def getReadOnly(self) -> bool:
-        return _containerRegistry.isReadOnly(self.getId())
+        return _containerRegistry.isReadOnly(self.getId())  # TODO???: Why not also take self._read_only into account?
     readOnly = pyqtProperty(bool, fget = getReadOnly)
 
     def getNumInstances(self) -> int:
@@ -501,7 +501,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             common_path = os.path.commonpath([install_prefix, file_name])
             if common_path is None or not common_path.startswith(install_prefix):
                 if Trust.getInstance().signatureFileExistsFor(file_name):
-                    #_containerRegistry.setReadOnlyExplicitly(self.getId())  # TODO???: self._read_only = True
+                    _containerRegistry.setReadOnlyExplicitly(self.getId())  # TODO???: self._read_only = True
                     if not Trust.getInstance().signedFileCheck(file_name):
                         raise Exception("Can't validate file {0}".format(file_name))
         return True
