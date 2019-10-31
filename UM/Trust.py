@@ -195,6 +195,9 @@ class Trust:
             Logger.logException("e", "Can't find or parse signatures for unbundled file '{0}'.".format(filename))
         return False
 
+    def signatureFileExistsFor(self, filename: str) -> bool:
+        return os.path.exists(self._getSignatureFilenameFor(filename))
+
     def signFolder(self, private_key: RSAPrivateKey, path: str, ignore_folders: List[str] = []) -> bool:
         try:
             signatures = {}  # Dict[str, str]
