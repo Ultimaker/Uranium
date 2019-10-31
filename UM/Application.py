@@ -399,12 +399,16 @@ class Application:
         return self._extensions
 
     @staticmethod
-    def getInstallPrefix() -> str:
+    def getAppFolderPrefix() -> str:
         if "python" in os.path.basename(sys.executable):
             executable = sys.argv[0]
         else:
             executable = sys.executable
-        return os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(executable)), ".."))
+        return os.path.dirname(os.path.realpath(executable))
+
+    @staticmethod
+    def getInstallPrefix() -> str:
+        return os.path.abspath(os.path.join(Application.getAppFolderPrefix(), ".."))
 
     __instance = None   # type: Application
 

@@ -18,15 +18,15 @@ from UM.Logger import Logger
 class Trust:
     __instance = None
 
-    @classmethod
-    def getPublicRootKeyPath(cls):
+    @staticmethod
+    def getPublicRootKeyPath():
         from UM.Application import Application
-        return os.path.abspath(os.path.join(Application.getInstallPrefix(), "public_key.pem"))
+        return os.path.abspath(os.path.join(Application.getAppFolderPrefix(), "public_key.pem"))
 
     @classmethod
     def getInstance(cls):
         if not cls.__instance:
-            cls.__instance = Trust(cls.getPublicRootKeyPath())
+            cls.__instance = Trust(Trust.getPublicRootKeyPath())
         return cls.__instance if cls.__instance._public_key else None
 
     def __init__(self, public_key_filename: str) -> bool:
