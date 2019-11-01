@@ -59,7 +59,7 @@ class Controller:
     #   \param name \type{string} Unique identifier of view (usually the plugin name)
     #   \param view \type{View} The view to be added
     def addView(self, view: View) -> None:
-        name = view.getPluginId()
+        name = view.getName()
         if name not in self._views:
             self._views[name] = view
             view.setRenderer(self._application.getRenderer())
@@ -116,7 +116,7 @@ class Controller:
     #   \param name \type{string} Unique identifier of stage (usually the plugin name)
     #   \param stage \type{Stage} The stage to be added
     def addStage(self, stage: Stage) -> None:
-        name = stage.getPluginId()
+        name = stage.getName()
         if name not in self._stages:
             self._stages[name] = stage
             self.stagesChanged.emit()
@@ -170,7 +170,7 @@ class Controller:
     ##  Add an input device (e.g. mouse, keyboard, etc) if it's not already added.
     #   \param device The input device to be added
     def addInputDevice(self, device: InputDevice) -> None:
-        name = device.getPluginId()
+        name = device.getName()
         if name not in self._input_devices:
             self._input_devices[name] = device
             device.event.connect(self.event)
@@ -224,7 +224,7 @@ class Controller:
     ##  Add a Tool (transform object, translate object) if its not already added.
     #   \param tool \type{Tool} Tool to be added
     def addTool(self, tool: "Tool") -> None:
-        name = tool.getPluginId()
+        name = tool.getName()
         if name not in self._tools:
             self._tools[name] = tool
             tool.operationStarted.connect(self._onToolOperationStarted)
