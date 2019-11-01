@@ -70,17 +70,17 @@ class PluginRegistry(QObject):
 
         self._supported_file_types = {"umplugin": "Uranium Plugin"} # type: Dict[str, str]
 
-        self._check_if_trusted = True  # type: bool
+        self._check_if_trusted = False  # type: bool
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
-        self._trust_checker = None  # type Optional[Trust]
+        self._trust_checker = None  # type: Optional[Trust]
+
+    def setCheckIfTrusted(self, check_if_trusted: bool) -> None:
+        self._check_if_trusted = check_if_trusted
         if self._check_if_trusted:
             self._trust_checker = Trust.getInstance()
             if not self._trust_checker:
                 raise Exception("Aborting! Couldn't find root public key '{0}'!".format(Trust.getPublicRootKeyPath()))
-
-    def setCheckIfTrusted(self, check_if_trusted: bool) -> None:
-        self._check_if_trusted = check_if_trusted
 
     def getCheckIfTrusted(self) -> bool:
         return self._check_if_trusted
@@ -568,7 +568,7 @@ class PluginRegistry(QObject):
                 return None
 
             # Do the actual check:
-            if self._trust_checker.signedFolderCheck(path):
+            if self._trust_checker is not None and self._trust_checker.signedFolderCheck(path):
                 self._checked_plugin_ids.append(plugin_id)
             else:
                 self._distrusted_plugin_ids.append(plugin_id)

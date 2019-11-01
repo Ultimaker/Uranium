@@ -495,11 +495,16 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         # NOTE: In an enterprise environment, if there _is_ a signature file for an unbundled package, verify it.
         #       (Note that this is a different behaviour w.r.t. the plugins, where the check is not just verification!)
         #       (Note that there shouldn't be a check if trust has to be here, since it'll continue on 'no signature'.)
+        if file_name is None:
+            return True
         if Trust.getInstance():
             from UM.Application import Application
             install_prefix = os.path.abspath(Application.getInstallPrefix())
-            common_path = os.path.commonpath([install_prefix, file_name])
-            if common_path is None or not common_path.startswith(install_prefix):
+            try:
+                common_path = os.path.commonpath([install_prefix, file_name])
+            except ValueError:
+                common_path = ""
+            if common_path is "" or not common_path.startswith(install_prefix):
                 if Trust.getInstance().signatureFileExistsFor(file_name):
                     _containerRegistry.setReadOnlyExplicitly(self.getId())  # TODO???: self._read_only = True
                     if not Trust.getInstance().signedFileCheck(file_name):

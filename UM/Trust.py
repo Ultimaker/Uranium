@@ -15,7 +15,7 @@ from cryptography.hazmat.primitives.serialization import load_pem_public_key, lo
 
 from UM.Logger import Logger
 
-
+# Anything shared between the main code and the (keygen/signing) scripts, does not need state:
 class TrustBasics:
     __hash_algorithm = hashes.SHA3_384()
     __signatures_relative_filename = "signature.json"  # <- For directories (plugins for example).
@@ -107,6 +107,7 @@ class TrustBasics:
         return False
 
 
+# Trust as a singleton class for the main code, as opposed to the (keygen/signing) scripts:
 class Trust:
     __instance = None
 
