@@ -12,6 +12,8 @@ default_to_sign_file = "material.fdm_material.json"
 
 def signFile(private_key_filename: str, filename: str) -> bool:
     private_key = TrustBasics.loadPrivateKey(private_key_filename)
+    if private_key is None:
+        return False
 
     try:
         signature = TrustBasics.getFileSignature(filename, private_key)

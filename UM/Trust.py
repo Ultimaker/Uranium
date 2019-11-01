@@ -72,7 +72,7 @@ class TrustBasics:
         return private_key, private_key.public_key()
 
     @staticmethod
-    def loadPrivateKey(private_filename: str) -> RSAPrivateKey:
+    def loadPrivateKey(private_filename: str) -> Optional[RSAPrivateKey]:
         try:
             with open(private_filename, "rb") as file:
                 private_key = load_pem_private_key(file.read(), backend=default_backend(), password=None)

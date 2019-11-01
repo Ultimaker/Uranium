@@ -16,6 +16,8 @@ default_ignore_subfolders = ["__pycache__"]
 
 def signFolder(private_key_filename: str, path: str, ignore_folders: List[str]) -> bool:
     private_key = TrustBasics.loadPrivateKey(private_key_filename)
+    if private_key is None:
+        return False
 
     try:
         signatures = {}  # Dict[str, str]
