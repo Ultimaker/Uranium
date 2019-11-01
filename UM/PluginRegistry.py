@@ -27,6 +27,8 @@ if TYPE_CHECKING:
     from UM.Application import Application
 
 
+plugin_path_ignore_list = ["__pycache__", "tests", ".git"]
+
 ##  A central object to dynamically load modules as plugins.
 #
 #   The PluginRegistry class can load modules dynamically and use
@@ -549,6 +551,8 @@ class PluginRegistry(QObject):
             sub_folders = []
             for file in os.listdir(folder):
                 file_path = os.path.join(folder, file)
+                if file in plugin_path_ignore_list:
+                    continue
                 if os.path.isdir(file_path):
                     entry = (file, file_path)
                     sub_folders.append(entry)
