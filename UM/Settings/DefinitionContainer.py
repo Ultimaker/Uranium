@@ -362,6 +362,11 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         for definition in self._definitions:
             definitions.extend(definition.findDefinitions(**kwargs))
 
+        if len(kwargs) == 1 and "key" in kwargs:
+            # Ensure that next time round, the definition is in the cache!
+            if definitions:
+                self._definition_cache[kwargs["key"]] = definitions[0]
+
         return definitions
 
     @classmethod
