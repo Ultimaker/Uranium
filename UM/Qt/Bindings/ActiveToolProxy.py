@@ -33,9 +33,8 @@ class ActiveToolProxy(QObject):
     def activeToolPanel(self):
         if not self._active_tool:
             return QUrl()
-
         try:
-            panel_file = PluginRegistry.getInstance().getMetaData(self._active_tool.getPluginId())["tool"]["tool_panel"]
+            panel_file = self._active_tool.getMetaData()["tool_panel"]
         except KeyError:
             return QUrl()
 

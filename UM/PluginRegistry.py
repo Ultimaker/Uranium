@@ -382,11 +382,17 @@ class PluginRegistry(QObject):
                 return
             for plugin_type, plugin_object in to_register.items():
                 if type(plugin_object) == list:
-                    for nested_plugin_object in plugin_object:
+                    for metadata_index, nested_plugin_object in enumerate(plugin_object):
                         nested_plugin_object.setVersion(self._metadata[plugin_id].get("plugin", {}).get("version"))
+                        all_metadata = self._metadata[plugin_id].get(plugin_type, [])
+                        try:
+                            nested_plugin_object.setMetaData(all_metadata[metadata_index])
+                        except IndexError:
+                            nested_plugin_object.setMetaData({})
                         self._addPluginObject(nested_plugin_object, plugin_id, plugin_type)
                 else:
                     plugin_object.setVersion(self._metadata[plugin_id].get("plugin", {}).get("version"))
+                    plugin_object.setMetaData(self._metadata[plugin_id].get(plugin_type, {}))
                     self._addPluginObject(plugin_object, plugin_id, plugin_type)
 
             self._plugins[plugin_id] = plugin

@@ -12,9 +12,16 @@ class PluginObject:
     def __init__(self) -> None:
         self._plugin_id = None  # type: Optional[str]
         self._version = None  # type: Optional[str]
+        self._metadata = {}
 
     def setPluginId(self, plugin_id: str) -> None:
         self._plugin_id = plugin_id
+
+    def setMetaData(self, metadata):
+        self._metadata = metadata
+
+    def getMetaData(self):
+        return self._metadata
 
     def getPluginId(self) -> str:
         if not self._plugin_id:
