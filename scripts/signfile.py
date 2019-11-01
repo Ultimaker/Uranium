@@ -3,16 +3,32 @@
 import argparse
 import sys
 
-from UM.Trust import Trust
+from UM.Logger import Logger
+from UM.Trust import TrustBasics
 
 default_private_key_path = "private_key.pem"
 default_to_sign_file = "material.fdm_material.json"
 
 
-def signFile(private_key_filename: str, to_sign_file: str) -> None:
-    trust = Trust(None)
-    private_key = trust.loadPrivateKey(private_key_filename)
-    trust.signFile(private_key, to_sign_file)
+def signFile(private_key_filename: str, filename: str) -> bool:
+    private_key = TrustBasics.loadPrivateKey(private_key_filename)
+
+    try:
+        signature = TrustBasics.getFileSignature(filename, private_key)
+        if signature == "":
+            Logger.logException("e", "Couldn't sign file '{0}'.".format(filename))
+            return False
+
+        signature_filename = TrustBasics.getSignatureFilenameFor(filename)
+        with open(signature_filename, "w", encoding="utf-8") as data_file:
+            data_file.write(signature)
+
+        Logger.log("i", "Signed file '{0}'.".format(filename))
+        return True
+
+    except:  # Yes, we  do really want this on _every_ exception that might occur.
+        Logger.logException("e", "Couldn't sign file '{0}'.".format(filename))
+    return False
 
 
 def mainfunc():
