@@ -1,9 +1,9 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import base64
 import json
 import os
-import base64
 from typing import List, Optional
 
 from cryptography.hazmat.backends import default_backend
@@ -14,6 +14,7 @@ from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
 from cryptography.hazmat.primitives.serialization import load_pem_public_key, load_pem_private_key
 
 from UM.Logger import Logger
+
 
 class Trust:
     __instance = None
@@ -29,7 +30,7 @@ class Trust:
             cls.__instance = Trust(Trust.getPublicRootKeyPath())
         return cls.__instance if cls.__instance._public_key else None
 
-    def __init__(self, public_key_filename: str) -> bool:
+    def __init__(self, public_key_filename: Optional[str]) -> bool:
         self._hash_algorithm = hashes.SHA3_384()
         self._signatures_relative_filename = "signature.json"  # <- For directories (plugins for example).
         self._signature_filename_extension = ".signature"      # <- For(/next to) single files.
@@ -42,7 +43,7 @@ class Trust:
                 with open(self._public_key_filename, "rb") as file:
                     self._public_key = load_pem_public_key(file.read(), backend = default_backend())
             except:  # Yes, we  do really want this on _every_ exception that might occur.
-                Logger.logException("e", "Couldn't load public-key.")
+                Logger.logException("e", "Couldn't load public-key '{0}'.".format(self._public_key_filename))
                 self._public_key = None
 
     def _getFileHash(self, filename: str) -> str:
@@ -75,48 +76,51 @@ class Trust:
             Logger.logException("e", "Couldn't verify '{0}' with supplied signature.".format(filename))
         return False
 
-    # Methods for generation of & signing with keys (for inclusion in scripts, testing, and/or reference):
-    # NOTE: Private keys should not be present or have to be generated during any normal run!
-
     # returns private key, stores public key in this Trust object
-    def _generateNewKeys(self) -> RSAPrivateKey:
+    def generateNewKeyPair(self) -> RSAPrivateKey:
         private_key = rsa.generate_private_key(public_exponent = 65537, key_size = 4096, backend = default_backend())
         self._public_key = private_key.public_key()
         return private_key
 
-    # returns private key, stores public key in this Trust object
-    def _saveKeys(self, private_key: RSAPrivateKey, private_filename: str) -> bool:
+    # use internal public-key-filename if public_path isn't specified, otherwise, override that value
+    def saveKeyPair(self, private_key: RSAPrivateKey, private_path: str, public_path: Optional[str] = None) -> bool:
         try:
             private_pem = private_key.private_bytes(
                 encoding = serialization.Encoding.PEM,
                 format = serialization.PrivateFormat.PKCS8,
                 encryption_algorithm = serialization.NoEncryption()
             )
-            with open(private_filename, "wb") as private_file:
+            with open(private_path, "wb") as private_file:
                 private_file.write(private_pem)
 
             public_pem = self._public_key.public_bytes(
                 encoding = serialization.Encoding.PEM,
                 format = serialization.PublicFormat.PKCS1
             )
+            if public_path is not None:
+                self._public_key_filename = public_path
             with open(self._public_key_filename, "wb") as public_file:
                 public_file.write(public_pem)
 
+            Logger.log("i", "Private/public keys saved to '{0}','{1}'.".format(private_path, self._public_key_filename))
             return True
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Saving private-public key-tuple (to '{0}' and '{1}' respectively) failed.".format(private_filename, self._public_key_filename))
+            Logger.logException("e", "Save keys to '{0}','{1}' failed.".format(private_path, self._public_key_filename))
         return False
 
-    def _loadPrivateKey(self, private_filename: str) -> RSAPrivateKey:
+    # returns private key, stores public key in this Trust object
+    def loadPrivateKey(self, private_filename: str) -> RSAPrivateKey:
         try:
             with open(private_filename, "rb") as file:
-                return load_pem_private_key(file.read(), backend = default_backend(), password = None)
+                private_key = load_pem_private_key(file.read(), backend=default_backend(), password=None)
+                self._public_key = private_key.public_key
+                return private_key
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Couldn't load private-key.")
         return None
 
-    def _signFile(self, filename: str, private_key: RSAPrivateKey) -> str:
+    def _getFileSignature(self, filename: str, private_key: RSAPrivateKey) -> str:
         file_hash = self._getFileHash(filename)
         if file_hash == "":
             return ""
@@ -138,8 +142,6 @@ class Trust:
             os.path.dirname(filename),
             os.path.basename(filename).split(".")[0] + self._signature_filename_extension
         )
-
-    # Public methods (not to be confused with public keys):
 
     def signedFolderCheck(self, path: str) -> bool:
         try:
@@ -215,7 +217,7 @@ class Trust:
 
                     name_on_disk = os.path.join(root, filename)
                     name_in_data = name_on_disk.replace(path, "").replace("\\", "/")
-                    signature = self._signFile(name_on_disk, private_key)
+                    signature = self._getFileSignature(name_on_disk, private_key)
                     if signature == "":
                         Logger.logException("e", "Couldn't sign file '{0}'.".format(name_on_disk))
                         return False
@@ -234,7 +236,7 @@ class Trust:
 
     def signFile(self, private_key: RSAPrivateKey, filename: str) -> bool:
         try:
-            signature = self._signFile(filename, private_key)
+            signature = self._getFileSignature(filename, private_key)
             if signature == "":
                 Logger.logException("e", "Couldn't sign file '{0}'.".format(filename))
                 return False
