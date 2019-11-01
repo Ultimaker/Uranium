@@ -103,7 +103,7 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
         raise NotImplementedError()
 
     # Should return false (or even throw an exception) if trust (or other verification) is invalidated.
-    def trustHook(self, file_name: Optional[str]) -> bool:
+    def _trustHook(self, file_name: Optional[str]) -> bool:
         return True
 
     ##  Deserializes the container from a string representation.

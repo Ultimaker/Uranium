@@ -108,7 +108,7 @@ class ContainerInterface:
         pass
 
     # Should return false (or even throw an exception) if trust (or other verification) is invalidated.
-    def trustHook(self, file_name: Optional[str]) -> bool:
+    def _trustHook(self, file_name: Optional[str]) -> bool:
         return True
 
     ##  Deserialize the container from a string representation.
@@ -118,7 +118,7 @@ class ContainerInterface:
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
-        if not self.trustHook(file_name):
+        if not self._trustHook(file_name):
             return ""
         return self._updateSerialized(serialized, file_name = file_name)
 

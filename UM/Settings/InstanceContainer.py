@@ -491,7 +491,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return version
 
     @override(ContainerInterface)
-    def trustHook(self, file_name: Optional[str]) -> bool:
+    def _trustHook(self, file_name: Optional[str]) -> bool:
         # NOTE: In an enterprise environment, if there _is_ a signature file for an unbundled package, verify it.
         #       (Note that this is a different behaviour w.r.t. the plugins, where the check is not just verification!)
         #       (Note that there shouldn't be a check if trust has to be here, since it'll continue on 'no signature'.)
