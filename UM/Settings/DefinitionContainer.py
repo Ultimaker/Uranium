@@ -280,6 +280,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def addDefinition(self, definition: SettingDefinition) -> None:
         if definition.key not in [d.key for d in self._definitions]:
             self._definitions.append(definition)
+            self._definition_cache[definition.key] = definition
             self._updateRelations(definition)
 
     ##  \copydoc ContainerInterface::deserialize
@@ -300,6 +301,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         for key, value in parsed["settings"].items():
             definition = SettingDefinition(key, self, None, self._i18n_catalog)
+            self._definition_cache[key] = definition
             definition.deserialize(value)
             self._definitions.append(definition)
 
