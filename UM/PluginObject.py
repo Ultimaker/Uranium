@@ -15,10 +15,10 @@ class PluginObject:
         self._metadata = {}  # type: Dict[str, Any]
         self._name = None  # type: Optional[str]
 
-    #   This returns a globally unique name for this plugin object.
+    #   This returns a globally unique id for this plugin object.
     #   It prepends it's set name (which should be locally (eg; within the plugin) unique) with the plugin_id, making it
     #   globally unique.
-    def getName(self) -> str:
+    def getId(self) -> str:
         result = self.getPluginId()
         if self._name:
             result += "_%s" % self._name
