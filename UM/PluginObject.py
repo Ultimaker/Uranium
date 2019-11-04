@@ -12,7 +12,7 @@ class PluginObject:
     def __init__(self) -> None:
         self._plugin_id = None  # type: Optional[str]
         self._version = None  # type: Optional[str]
-        self._metadata = {}  # type: Dict[str: Any]
+        self._metadata = {}  # type: Dict[str, Any]
         self._name = None  # type: Optional[str]
 
     #   This returns a globally unique name for this plugin object.
@@ -28,10 +28,10 @@ class PluginObject:
         self._plugin_id = plugin_id
 
     #   The metadata of the plugin is set at the moment it is loaded.
-    def setMetaData(self, metadata: Dict[str: Any]) -> None:
+    def setMetaData(self, metadata: Dict[str, Any]) -> None:
         self._metadata = metadata
 
-    def getMetaData(self) -> Dict[str: Any]:
+    def getMetaData(self) -> Dict[str, Any]:
         return self._metadata
 
     def getPluginId(self) -> str:
