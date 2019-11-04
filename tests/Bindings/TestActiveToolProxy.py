@@ -31,7 +31,7 @@ class TestActiveToolProxy(TestCase):
         # There is no active tool, so it should be empty
         assert self.proxy.activeToolPanel == QUrl()
 
-        with patch("UM.PluginRegistry.PluginRegistry.getMetaData", MagicMock(return_value={"tool": {"tool_panel": "derp"}})):
+        with patch.object(self.tool, "getMetaData", MagicMock(return_value={"tool_panel": "derp"})):
             with patch("UM.PluginRegistry.PluginRegistry.getPluginPath", MagicMock(return_value = "OMG")):
                 Application.getInstance().getController().setActiveTool(self.tool)
                 assert self.proxy.activeToolPanel == QUrl.fromLocalFile("OMG/derp")
