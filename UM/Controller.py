@@ -56,7 +56,6 @@ class Controller:
         PluginRegistry.addType("input_device", self.addInputDevice)
 
     ##  Add a view by name if it"s not already added.
-    #   \param name \type{string} Unique identifier of view (usually the plugin name)
     #   \param view \type{View} The view to be added
     def addView(self, view: View) -> None:
         name = view.getName()
@@ -68,7 +67,6 @@ class Controller:
             Logger.log("w", "%s was already added to view list. Unable to add it again.", name)
 
     ##  Request view by name. Returns None if no view is found.
-    #   \param name \type{string} Unique identifier of view (usually the plugin name)
     #   \return View \type{View} if name was found, none otherwise.
     def getView(self, name: str) -> Optional[View]:
         try:
