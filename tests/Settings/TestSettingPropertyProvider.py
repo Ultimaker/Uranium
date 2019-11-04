@@ -70,6 +70,7 @@ def test_valueChanges(container_registry):
     assert setting_property_provider.getPropertyValue("value", 0) == 20
 
     setting_property_provider.setWatchedProperties(["enabled", "value", "validationState"])
+    setting_property_provider._update()
     assert setting_property_provider.watchedProperties == ["enabled", "value", "validationState"]
     assert setting_property_provider.properties.value("enabled") == "False"
     assert setting_property_provider.properties.value("value") == "20"
