@@ -302,10 +302,6 @@ class PackageManager(QObject):
         package_ids_and_versions = []  # type: List[Tuple[str, str]]
         all_installed_ids = self.getAllInstalledPackageIDs()
         for package_id in all_installed_ids:
-            if package_id in self._bundled_package_dict:
-                continue
-            if package_id in self._application.getRequiredPlugins():
-                continue
             package_info = self.getInstalledPackageInfo(package_id)
             if package_info is None:
                 continue
