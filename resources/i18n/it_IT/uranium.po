@@ -5,8 +5,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.3\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: Uranium 4.4\n"
+"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2019-11-05 13:40+0100\n"
 "PO-Revision-Date: 2018-10-02 10:55+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
