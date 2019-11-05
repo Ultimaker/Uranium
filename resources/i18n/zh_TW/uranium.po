@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.3\n"
-"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2019-09-10 16:56+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-11-05 13:40+0100\n"
 "PO-Revision-Date: 2019-09-23 11:55+0200\n"
 "Last-Translator: Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language-Team: Zhang Heh Ji <dinowchang@gmail.com>\n"
@@ -253,12 +253,12 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr "旋轉模型"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:275
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:279
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr "將物件平放在列印平台上..."
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:275
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:279
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr "物件旋轉"
@@ -303,7 +303,7 @@ msgid "Reset your configuration to factory defaults."
 msgstr "將你的設定重置為出廠預設值。"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:181
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:696
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:708
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -311,7 +311,7 @@ msgid "All Supported Types ({0})"
 msgstr "所有支援的檔案類型 ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:184
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:697
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:709
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -385,6 +385,11 @@ msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0} 分"
 
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:159
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr ""
+
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"
 msgid "Loading plugins..."
@@ -420,7 +425,7 @@ msgstr ""
 "外掛已安裝。\n"
 "請重新啟動應用程式以啟動外掛。"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:403
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:415
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -542,12 +547,12 @@ msgctxt "@action:button"
 msgid "Lay flat"
 msgstr "平放"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:59
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr "選擇要與列印平台對齊的面"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:80
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "等距旋轉（Snap Rotation）"
