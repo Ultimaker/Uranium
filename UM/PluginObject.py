@@ -1,6 +1,6 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import Optional
+from typing import Optional, Dict, Any
 
 
 ##  Base class for objects that can be provided by a plugin.
@@ -12,9 +12,27 @@ class PluginObject:
     def __init__(self) -> None:
         self._plugin_id = None  # type: Optional[str]
         self._version = None  # type: Optional[str]
+        self._metadata = {}  # type: Dict[str, Any]
+        self._name = None  # type: Optional[str]
+
+    #   This returns a globally unique id for this plugin object.
+    #   It prepends it's set name (which should be locally (eg; within the plugin) unique) with the plugin_id, making it
+    #   globally unique.
+    def getId(self) -> str:
+        result = self.getPluginId()
+        if self._name:
+            result += "_%s" % self._name
+        return result
 
     def setPluginId(self, plugin_id: str) -> None:
         self._plugin_id = plugin_id
+
+    #   The metadata of the plugin is set at the moment it is loaded.
+    def setMetaData(self, metadata: Dict[str, Any]) -> None:
+        self._metadata = metadata
+
+    def getMetaData(self) -> Dict[str, Any]:
+        return self._metadata
 
     def getPluginId(self) -> str:
         if not self._plugin_id:
