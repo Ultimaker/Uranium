@@ -4,16 +4,17 @@
 import base64
 import json
 import os
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
-from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey, RSAPrivateKey
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey, RSAPrivateKey, RSAPrivateKeyWithSerialization
 from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
 from cryptography.hazmat.primitives.serialization import load_pem_public_key, load_pem_private_key
 
 from UM.Logger import Logger
+
 
 # Anything shared between the main code and the (keygen/signing) scripts, does not need state:
 class TrustBasics:
@@ -67,7 +68,7 @@ class TrustBasics:
         return ""
 
     @staticmethod
-    def generateNewKeyPair() -> Tuple[RSAPrivateKey, RSAPublicKey]:
+    def generateNewKeyPair() -> Tuple[RSAPrivateKeyWithSerialization, RSAPublicKey]:
         private_key = rsa.generate_private_key(public_exponent = 65537, key_size = 4096, backend = default_backend())
         return private_key, private_key.public_key()
 
@@ -82,19 +83,19 @@ class TrustBasics:
         return None
 
     @staticmethod
-    def saveKeyPair(private_key: RSAPrivateKey, private_path: str, public_path: str) -> bool:
+    def saveKeyPair(private_key: "RSAPrivateKeyWithSerialization", private_path: str, public_path: str) -> bool:
         try:
             private_pem = private_key.private_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PrivateFormat.PKCS8,
-                encryption_algorithm=serialization.NoEncryption()
+                encoding = serialization.Encoding.PEM,
+                format = serialization.PrivateFormat.PKCS8,
+                encryption_algorithm = serialization.NoEncryption()
             )
             with open(private_path, "wb") as private_file:
                 private_file.write(private_pem)
 
             public_pem = private_key.public_key().public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.PKCS1
+                encoding = serialization.Encoding.PEM,
+                format = serialization.PublicFormat.PKCS1
             )
             with open(public_path, "wb") as public_file:
                 public_file.write(public_pem)
