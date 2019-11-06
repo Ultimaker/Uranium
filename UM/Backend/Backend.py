@@ -80,10 +80,10 @@ class Backend(PluginObject):
             return
         Logger.log("i", "Started engine process: %s", self.getEngineCommand()[0])
         self._backendLog(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
-        t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stdout,))
+        t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stdout,), name = "EngineOutputThread")
         t.daemon = True
         t.start()
-        t = threading.Thread(target = self._storeStderrToLogThread, args = (self._process.stderr,))
+        t = threading.Thread(target = self._storeStderrToLogThread, args = (self._process.stderr,), name = "EngineErrorThread")
         t.daemon = True
         t.start()
 
