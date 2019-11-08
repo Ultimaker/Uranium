@@ -110,7 +110,7 @@ class TrustBasics:
         try:
             encrypt_method = serialization.NoEncryption()  # type: ignore
             if optional_password is not None:
-                encrypt_method = serialization.BestAvailableEncryption(optional_password.encode())
+                encrypt_method = serialization.BestAvailableEncryption(optional_password.encode())  # type: ignore
             private_pem = private_key.private_bytes(
                 encoding = serialization.Encoding.PEM,
                 format = serialization.PrivateFormat.PKCS8,
