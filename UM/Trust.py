@@ -32,18 +32,28 @@ class TrustBasics:
     def getHashAlgorithm(cls):
         return cls.__hash_algorithm
 
-    # Only used for in folders, there's another mechanism for 'loose' files.
+    # Only used for in folders, there's another mechanism for 'loose' files:
     @classmethod
     def getSignaturesLocalFilename(cls) -> str:
         return cls.__signatures_relative_filename
 
-    # Only used for single files, there's another mechanism for folders.
+    # Only used for in folders, there's another mechanism for 'loose' files:
+    @classmethod
+    def getRootSignatureCategory(cls) -> str:
+        return cls.__root_signatures_category
+
+    # Only used for single files, there's another mechanism for folders:
     @classmethod
     def getSignaturePathForFile(cls, filename: str) -> str:
         return os.path.join(
             os.path.dirname(filename),
             os.path.basename(filename).split(".")[0] + cls.__signature_filename_extension
         )
+
+    # Only used for single files, there's another mechanism for folders:
+    @classmethod
+    def getRootSignatureEntry(cls) -> str:
+        return cls.__root_signature_entry
 
     @classmethod
     def getFileHash(cls, filename: str) -> Optional[str]:
@@ -168,7 +178,7 @@ class Trust:
 
             with open(json_filename, "r", encoding = "utf-8") as data_file:
                 json_data = json.load(data_file)
-                signatures_json = json_data.get(TrustBasics.__root_signatures_category, None)
+                signatures_json = json_data.get(TrustBasics.getRootSignatureCategory(), None)
                 if signatures_json is None:
                     Logger.logException("e", "Can't find file '{0}'.".format(data_file))
                     return False
@@ -208,7 +218,7 @@ class Trust:
 
             with open(signature_filename, "r", encoding = "utf-8") as data_file:
                 json_data = json.load(data_file)
-                signature = json_data.get(TrustBasics.__root_signature_entry, None)
+                signature = json_data.get(TrustBasics.getRootSignatureEntry(), None)
                 if signature is None:
                     Logger.logException("e", "Signature file '{0}' is not present.".format(signature_filename))
                     return False
