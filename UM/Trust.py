@@ -81,20 +81,24 @@ class TrustBasics:
     @staticmethod
     def loadPrivateKey(private_filename: str, optional_password: Optional[str]) -> Optional[RSAPrivateKey]:
         try:
+            password_bytes = None if optional_password is None else optional_password.encode()
             with open(private_filename, "rb") as file:
-                private_key = load_pem_private_key(file.read(), backend=default_backend(), password=optional_password)
+                private_key = load_pem_private_key(file.read(), backend=default_backend(), password=password_bytes)
                 return private_key
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Couldn't load private-key.")
         return None
 
     @staticmethod
-    def saveKeyPair(private_key: "RSAPrivateKeyWithSerialization", private_path: str, public_path: str) -> bool:
+    def saveKeyPair(private_key: "RSAPrivateKeyWithSerialization", private_path: str, public_path: str, optional_password: Optional[str]) -> bool:
         try:
+            encrypt_method = serialization.NoEncryption()
+            if optional_password is not None:
+                encrypt_method = serialization.BestAvailableEncryption(optional_password.encode())
             private_pem = private_key.private_bytes(
                 encoding = serialization.Encoding.PEM,
                 format = serialization.PrivateFormat.PKCS8,
-                encryption_algorithm = serialization.NoEncryption()
+                encryption_algorithm = encrypt_method
             )
             with open(private_path, "wb") as private_file:
                 private_file.write(private_pem)
