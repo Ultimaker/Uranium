@@ -562,7 +562,6 @@ class PluginRegistry(QObject):
             Logger.logException("e", "Import error when importing %s", plugin_id)
             return None
 
-        # In a large company, the user might not be trusted by default: Check if the plugin can be trusted.
         # Define a trusted plugin as either: already checked, correctly signed, or bundled with the application.
         if self._check_if_trusted and plugin_id not in self._checked_plugin_ids and not self.isBundledPlugin(plugin_id):
 

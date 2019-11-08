@@ -6,8 +6,8 @@ import sys
 from UM.Logger import Logger
 from UM.Trust import TrustBasics
 
-default_private_key_path = "private_key.pem"
-default_to_sign_file = "material.fdm_material.json"
+DEFAULT_PRIVATE_KEY_PATH = "private_key.pem"
+DEFAULT_TO_SIGN_FILE = "material.fdm_material.json"
 
 
 def signFile(private_key_filename: str, filename: str) -> bool:
@@ -17,12 +17,12 @@ def signFile(private_key_filename: str, filename: str) -> bool:
 
     try:
         signature = TrustBasics.getFileSignature(filename, private_key)
-        if signature == "":
+        if signature is None:
             Logger.logException("e", "Couldn't sign file '{0}'.".format(filename))
             return False
 
-        signature_filename = TrustBasics.getSignatureFilenameFor(filename)
-        with open(signature_filename, "w", encoding="utf-8") as data_file:
+        signature_filename = TrustBasics.getSignaturePathForFile(filename)
+        with open(signature_filename, "w", encoding = "utf-8") as data_file:
             data_file.write(signature)
 
         Logger.log("i", "Signed file '{0}'.".format(filename))
@@ -35,8 +35,8 @@ def signFile(private_key_filename: str, filename: str) -> bool:
 
 def mainfunc():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-k", "--private", type=str, default=default_private_key_path)
-    parser.add_argument("-f", "--file", type=str, default=default_to_sign_file)
+    parser.add_argument("-k", "--private", type = str, default = DEFAULT_PRIVATE_KEY_PATH)
+    parser.add_argument("-f", "--file", type = str, default = DEFAULT_TO_SIGN_FILE)
     args = parser.parse_args()
     signFile(args.private, args.file)
 

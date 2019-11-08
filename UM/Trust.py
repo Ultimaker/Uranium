@@ -33,14 +33,14 @@ class TrustBasics:
 
     # Only used for single files, there's another mechanism for folders.
     @classmethod
-    def getSignatureFilenameFor(cls, filename: str):
+    def getSignaturePathForFile(cls, filename: str) -> str:
         return os.path.join(
             os.path.dirname(filename),
             os.path.basename(filename).split(".")[0] + cls.__signature_filename_extension
         )
 
     @classmethod
-    def getFileHash(cls, filename: str) -> str:
+    def getFileHash(cls, filename: str) -> Optional[str]:
         hasher = hashes.Hash(cls.__hash_algorithm, backend = default_backend())
         try:
             with open(filename, "rb") as file:
@@ -48,13 +48,13 @@ class TrustBasics:
                 return base64.b64encode(hasher.finalize()).decode("utf-8")
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Couldn't read '{0}' for plain hash generation.".format(filename))
-        return ""
+        return None
 
     @classmethod
-    def getFileSignature(cls, filename: str, private_key: RSAPrivateKey) -> str:
+    def getFileSignature(cls, filename: str, private_key: RSAPrivateKey) -> Optional[str]:
         file_hash = cls.getFileHash(filename)
-        if file_hash == "":
-            return ""
+        if file_hash is None:
+            return None
         try:
             file_hash_bytes = base64.b64decode(file_hash)
             signature_bytes = private_key.sign(
@@ -65,7 +65,7 @@ class TrustBasics:
             return base64.b64encode(signature_bytes).decode("utf-8")
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Couldn't sign '{0}', no signature generated.".format(filename))
-        return ""
+        return None
 
     @staticmethod
     def generateNewKeyPair() -> Tuple[RSAPrivateKeyWithSerialization, RSAPublicKey]:
@@ -113,7 +113,7 @@ class Trust:
     __instance = None
 
     @staticmethod
-    def getPublicRootKeyPath():
+    def getPublicRootKeyPath() -> str:
         from UM.Application import Application
         return os.path.abspath(os.path.join(Application.getAppFolderPrefix(), "public_key.pem"))
 
@@ -136,7 +136,7 @@ class Trust:
         if self._public_key is None:
             return False
         file_hash = TrustBasics.getFileHash(filename)
-        if file_hash == "":
+        if file_hash is None:
             return False
         try:
             signature_bytes = base64.b64decode(signature)
@@ -190,7 +190,7 @@ class Trust:
 
     def signedFileCheck(self, filename: str) -> bool:
         try:
-            signature_filename = TrustBasics.getSignatureFilenameFor(filename)
+            signature_filename = TrustBasics.getSignaturePathForFile(filename)
 
             with open(signature_filename, "r", encoding = "utf-8") as data_file:
                 signature = data_file.read()
@@ -212,4 +212,4 @@ class Trust:
 
     @staticmethod
     def signatureFileExistsFor(filename: str) -> bool:
-        return os.path.exists(TrustBasics.getSignatureFilenameFor(filename))
+        return os.path.exists(TrustBasics.getSignaturePathForFile(filename))

@@ -5,8 +5,8 @@ import sys
 
 from UM.Trust import TrustBasics
 
-default_private_key_path = "./private_key.pem"
-default_public_key_path = "./public_key.pem"
+DEFAULT_PRIVATE_KEY_PATH = "./private_key.pem"
+DEFAULT_PUBLIC_KEY_PATH = "./public_key.pem"
 
 
 def createAndStoreNewKeyPair(private_filename: str, public_filename: str) -> None:
@@ -16,8 +16,8 @@ def createAndStoreNewKeyPair(private_filename: str, public_filename: str) -> Non
 
 def mainfunc():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-k", "--private", type=str, default=default_private_key_path)
-    parser.add_argument("-p", "--public", type=str, default=default_public_key_path)
+    parser.add_argument("-k", "--private", type = str, default = DEFAULT_PRIVATE_KEY_PATH)
+    parser.add_argument("-p", "--public", type = str, default = DEFAULT_PUBLIC_KEY_PATH)
     args = parser.parse_args()
     createAndStoreNewKeyPair(args.private, args.public)
 
