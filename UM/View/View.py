@@ -70,5 +70,5 @@ class View(QObject, PluginObject):
     ##  Handle an event.
     #   \param event \type{Event} The event to handle.
     #   \sa Event
-    def event(self, event: "Event") -> None:
+    def event(self, event: "Event") -> bool:
         pass
