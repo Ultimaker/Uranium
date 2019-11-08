@@ -56,6 +56,12 @@ class TrustBasics:
         return cls.__root_signature_entry
 
     @classmethod
+    def getFilePathInfo(cls, base_folder_path: str, current_full_path: str, local_filename: str) -> Tuple[str, str]:
+        name_on_disk = os.path.join(current_full_path, local_filename)
+        name_in_data = name_on_disk.replace(base_folder_path, "").replace("\\", "/")
+        return name_on_disk, name_in_data if not name_in_data.startswith("/") else name_in_data[1:]
+
+    @classmethod
     def getFileHash(cls, filename: str) -> Optional[str]:
         hasher = hashes.Hash(cls.__hash_algorithm, backend = default_backend())
         try:
@@ -189,8 +195,7 @@ class Trust:
                         if filename == TrustBasics.getSignaturesLocalFilename() and root == path:
                             continue
                         file_count += 1
-                        name_on_disk = os.path.join(root, filename)
-                        name_in_data = name_on_disk.replace(path, "").replace("\\", "/")
+                        name_on_disk, name_in_data = TrustBasics.getFilePathInfo(path, root, filename)
 
                         signature = signatures_json.get(name_in_data, None)
                         if signature is None:

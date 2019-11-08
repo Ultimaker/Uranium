@@ -31,8 +31,7 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
                 if filename == TrustBasics.getSignaturesLocalFilename() and root == path:
                     continue
 
-                name_on_disk = os.path.join(root, filename)
-                name_in_data = name_on_disk.replace(path, "").replace("\\", "/")
+                name_on_disk, name_in_data = TrustBasics.getFilePathInfo(path, root, filename)
                 signature = TrustBasics.getFileSignature(name_on_disk, private_key)
                 if signature is None:
                     Logger.logException("e", "Couldn't sign file '{0}'.".format(name_on_disk))
