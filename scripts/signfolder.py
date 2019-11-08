@@ -4,7 +4,7 @@ import argparse
 import json
 import os
 import sys
-from typing import List
+from typing import Optional, List
 
 from UM.Logger import Logger
 from UM.Trust import TrustBasics
@@ -12,10 +12,12 @@ from UM.Trust import TrustBasics
 DEFAULT_PRIVATE_KEY_PATH = "../private_key.pem"
 DEFAULT_TO_SIGN_FOLDER = "."
 DEFAULT_IGNORE_SUBFOLDERS = ["__pycache__"]
+DEFAULT_PASSWORD = ""
 
 
-def signFolder(private_key_filename: str, path: str, ignore_folders: List[str]) -> bool:
-    private_key = TrustBasics.loadPrivateKey(private_key_filename)
+def signFolder(private_key_path: str, path: str, ignore_folders: List[str], optional_password: Optional[str]) -> bool:
+    password = None if optional_password == "" else optional_password
+    private_key = TrustBasics.loadPrivateKey(private_key_path, password)
     if private_key is None:
         return False
 
@@ -54,8 +56,9 @@ def mainfunc():
     parser.add_argument("-k", "--private", type = str, default = DEFAULT_PRIVATE_KEY_PATH)
     parser.add_argument("-f", "--folder", type = str, default = DEFAULT_TO_SIGN_FOLDER)
     parser.add_argument("-i", "--ignore", type = str, nargs = '+', default = DEFAULT_IGNORE_SUBFOLDERS)
+    parser.add_argument("-w", "--password", type = str, default = DEFAULT_PASSWORD)
     args = parser.parse_args()
-    signFolder(args.private, args.folder, args.ignore)
+    signFolder(args.private, args.folder, args.ignore, args.password)
 
 
 if __name__ == "__main__":

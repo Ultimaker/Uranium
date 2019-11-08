@@ -73,10 +73,10 @@ class TrustBasics:
         return private_key, private_key.public_key()
 
     @staticmethod
-    def loadPrivateKey(private_filename: str) -> Optional[RSAPrivateKey]:
+    def loadPrivateKey(private_filename: str, optional_password: Optional[str]) -> Optional[RSAPrivateKey]:
         try:
             with open(private_filename, "rb") as file:
-                private_key = load_pem_private_key(file.read(), backend=default_backend(), password=None)
+                private_key = load_pem_private_key(file.read(), backend=default_backend(), password=optional_password)
                 return private_key
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Couldn't load private-key.")

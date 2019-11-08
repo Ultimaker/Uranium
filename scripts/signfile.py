@@ -2,16 +2,19 @@
 
 import argparse
 import sys
+from typing import Optional
 
 from UM.Logger import Logger
 from UM.Trust import TrustBasics
 
 DEFAULT_PRIVATE_KEY_PATH = "private_key.pem"
 DEFAULT_TO_SIGN_FILE = "material.fdm_material.json"
+DEFAULT_PASSWORD = ""
 
 
-def signFile(private_key_filename: str, filename: str) -> bool:
-    private_key = TrustBasics.loadPrivateKey(private_key_filename)
+def signFile(private_key_path: str, filename: str, optional_password: Optional[str]) -> bool:
+    password = None if optional_password == "" else optional_password
+    private_key = TrustBasics.loadPrivateKey(private_key_path, password)
     if private_key is None:
         return False
 
@@ -37,8 +40,9 @@ def mainfunc():
     parser = argparse.ArgumentParser()
     parser.add_argument("-k", "--private", type = str, default = DEFAULT_PRIVATE_KEY_PATH)
     parser.add_argument("-f", "--file", type = str, default = DEFAULT_TO_SIGN_FILE)
+    parser.add_argument("-w", "--password", type = str, default = DEFAULT_PASSWORD)
     args = parser.parse_args()
-    signFile(args.private, args.file)
+    signFile(args.private, args.file, args.password)
 
 
 if __name__ == "__main__":
