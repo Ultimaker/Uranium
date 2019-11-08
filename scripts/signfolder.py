@@ -39,9 +39,11 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
                     return False
                 signatures[name_in_data] = signature
 
+        wrapped_signatures = {TrustBasics.__root_signatures_category, signatures}
+
         json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
         with open(json_filename, "w", encoding = "utf-8") as data_file:
-            json.dump(signatures, data_file, indent = 2)
+            json.dump(wrapped_signatures, data_file, indent = 2)
 
         Logger.log("i", "Signed folder '{0}'.".format(path))
         return True

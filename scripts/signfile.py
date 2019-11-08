@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 import sys
 from typing import Optional
 
@@ -24,9 +25,11 @@ def signFile(private_key_path: str, filename: str, optional_password: Optional[s
             Logger.logException("e", "Couldn't sign file '{0}'.".format(filename))
             return False
 
+        wrapped_signature = {TrustBasics.__root_signature_entry, signature}
+
         signature_filename = TrustBasics.getSignaturePathForFile(filename)
         with open(signature_filename, "w", encoding = "utf-8") as data_file:
-            data_file.write(signature)
+            json.dump(wrapped_signature, data_file, indent = 2)
 
         Logger.log("i", "Signed file '{0}'.".format(filename))
         return True

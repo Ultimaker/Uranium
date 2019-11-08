@@ -19,8 +19,14 @@ from UM.Logger import Logger
 # Anything shared between the main code and the (keygen/signing) scripts, does not need state:
 class TrustBasics:
     __hash_algorithm = hashes.SHA3_384()
-    __signatures_relative_filename = "signature.json"  # <- For directories (plugins for example).
-    __signature_filename_extension = ".signature"  # <- For(/next to) single files.
+
+    # For directories (plugins for example):
+    __signatures_relative_filename = "signature.json"
+    __root_signatures_category = "root_signatures"
+
+    # For(/next to) single files:
+    __signature_filename_extension = ".signature"
+    __root_signature_entry = "root_signature"
 
     @classmethod
     def getHashAlgorithm(cls):
@@ -157,7 +163,11 @@ class Trust:
             json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
 
             with open(json_filename, "r", encoding = "utf-8") as data_file:
-                signatures_json = json.load(data_file)
+                json_data = json.load(data_file)
+                signatures_json = json_data.get(TrustBasics.__root_signatures_category, None)
+                if signatures_json is None:
+                    Logger.logException("e", "Can't find file '{0}'.".format(data_file))
+                    return False
 
                 file_count = 0
                 for root, dirnames, filenames in os.walk(path):
@@ -193,8 +203,8 @@ class Trust:
             signature_filename = TrustBasics.getSignaturePathForFile(filename)
 
             with open(signature_filename, "r", encoding = "utf-8") as data_file:
-                signature = data_file.read()
-
+                json_data = json.load(data_file)
+                signature = json_data.get(TrustBasics.__root_signature_entry, None)
                 if signature is None:
                     Logger.logException("e", "Signature file '{0}' is not present.".format(signature_filename))
                     return False
