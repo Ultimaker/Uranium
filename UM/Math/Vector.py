@@ -6,6 +6,8 @@ import numpy.linalg
 import math
 from UM.Math.Float import Float
 
+from typing import Optional, Any
+
 # Disable divide-by-zero warnings so that 1.0 / (1.0, 0.0, 0.0) returns (1.0, Inf, Inf) without complaining
 numpy.seterr(divide="ignore")
 
@@ -13,7 +15,7 @@ numpy.seterr(divide="ignore")
 ##  Simple 3D-vector class based on numpy arrays.
 #
 #   This class represents an immutable 3-dimensional vector.
-class Vector(object):
+class Vector:
     # These fields are filled in below. This is needed to help static analysis tools (read: PyCharm)
     Null = None     # type: Vector
     Unit_X = None   # type: Vector
@@ -24,7 +26,7 @@ class Vector(object):
     #   \param x X coordinate of vector.
     #   \param y Y coordinate of vector.
     #   \param z Z coordinate of vector.
-    def __init__(self, x = None, y = None, z = None, data = None, round_digits = None):
+    def __init__(self, x: Optional[float] = None, y: Optional[float] = None, z: Optional[float] = None, data: Optional[numpy.ndarray] = None, round_digits: Optional[int] = None) -> None:
         if x is not None and y is not None and z is not None:
             self._data = numpy.array([x, y, z], dtype = numpy.float64)
         elif data is not None:
@@ -35,10 +37,10 @@ class Vector(object):
 
     ##  Get numpy array with the data
     #   \returns numpy array of length 3 holding xyz data.
-    def getData(self):
+    def getData(self) -> numpy.ndarray:
         return self._data.astype(numpy.float64)
 
-    def setRoundDigits(self, digits):
+    def setRoundDigits(self, digits: int) -> None:
         self.round_digits = digits
 
     ##  Return the x component of this vector
@@ -56,21 +58,21 @@ class Vector(object):
     def z(self):
         return numpy.float64(self._data[2])
 
-    def set(self, x = None, y = None, z = None):
+    def set(self, x: Optional[float] = None, y: Optional[float] = None, z: Optional[float] = None) -> "Vector":
         new_x = self._data[0] if x is None else x
         new_y = self._data[1] if y is None else y
         new_z = self._data[2] if z is None else z
         return Vector(new_x, new_y, new_z)
 
     ##  Get the angle from this vector to another
-    def angleToVector(self, vector):
+    def angleToVector(self, vector: "Vector") -> float:
         v0 = numpy.array(self._data, dtype = numpy.float64, copy = False)
         v1 = numpy.array(vector.getData(), dtype = numpy.float64, copy = False)
         dot = numpy.sum(v0 * v1)
         dot /= self._normalizeVector(v0) * self._normalizeVector(v1)
         return numpy.arccos(numpy.fabs(dot))
     
-    def normalized(self):
+    def normalized(self) -> "Vector":
         l = self.length()
         if l != 0:
             new_data = self._data / l
@@ -79,7 +81,7 @@ class Vector(object):
             return self
 
     ##  Return length, i.e. Euclidean norm, of ndarray along axis.
-    def _normalizeVector(self, data):
+    def _normalizeVector(self, data: numpy.ndarray) -> numpy.ndarray:
         data = numpy.array(data, dtype = numpy.float64, copy = True)
         if data.ndim == 1:
             return math.sqrt(numpy.dot(data, data))
@@ -88,10 +90,10 @@ class Vector(object):
         numpy.sqrt(out, out)
         return out
 
-    def length(self):
+    def length(self) -> float:
         return numpy.linalg.norm(self._data)
 
-    def dot(self, other):
+    def dot(self, other) -> numpy.ndarray:
         return numpy.dot(self._data, other._data)
 
     def cross(self, other):
@@ -123,7 +125,7 @@ class Vector(object):
     ##  Scale a vector by another vector.
     #
     #   This will do a component-wise multiply of the two vectors.
-    def scale(self, other):
+    def scale(self, other: "Vector") -> "Vector":
         return Vector(self.x * other.x, self.y * other.y, self.z * other.z)
 
     def __eq__(self, other):
@@ -137,7 +139,7 @@ class Vector(object):
     #
     #   \param epsilon optional tolerance value for the comparision.
     #   \returns True if the two vectors are the same.
-    def equals(self, other, epsilon = 1e-6):
+    def equals(self, other: "Vector", epsilon: float = 1e-6) -> bool:
         return Float.fuzzyCompare(self.x, other.x, epsilon) and \
                Float.fuzzyCompare(self.y, other.y, epsilon) and \
                Float.fuzzyCompare(self.z, other.z, epsilon)
@@ -230,8 +232,9 @@ class Vector(object):
                 round(self._data[2], self.round_digits) >= round(other._data[2], self.round_digits))
 
 
-def isNumber(value):
+def isNumber(value: Any) -> bool:
     return type(value) in [float, int, numpy.float32, numpy.float64]
+
 
 Vector.Null = Vector()
 Vector.Unit_X = Vector(1, 0, 0)
