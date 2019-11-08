@@ -91,7 +91,7 @@ class ContainerInterface:
     #   it serializes the metadata.
     #
     #   \return A string representation of this container.
-    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         pass
 
     ##  Change a property of a container item.

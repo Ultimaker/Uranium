@@ -159,7 +159,7 @@ class ContainerQuery:
             return value == str(metadata[property_name])
 
     # Check to see if a container matches with a specific typed property
-    def _matchType(self, metadata: Dict[str, Any], property_name: str, value: Type):
+    def _matchType(self, metadata: Dict[str, Any], property_name: str, value: Type[Any]):
         if property_name == "container_type":
             if "container_type" in metadata:
                 try:

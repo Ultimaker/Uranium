@@ -204,7 +204,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   data about inheritance and overrides was lost when deserialising.
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         data = {}  # type: Dict[str, Any]  # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version

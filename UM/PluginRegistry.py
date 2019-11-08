@@ -8,7 +8,7 @@ import shutil  # For deleting plugin directories;
 import stat    # For setting file permissions correctly;
 import zipfile
 import types
-from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
+from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING, Union
 
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
@@ -57,7 +57,7 @@ class PluginRegistry(QObject):
         # difference between no list and an empty one.
         self._disabled_plugins = []  # type: List[str]
         self._outdated_plugins = []  # type: List[str]
-        self._plugins_to_install = dict()  # type: Dict[str, dict]
+        self._plugins_to_install = dict()  # type: Dict[str, Dict[str, str]]
         self._plugins_to_remove = []  # type: List[str]
 
         self._plugins = {}            # type: Dict[str, types.ModuleType]
@@ -119,7 +119,7 @@ class PluginRegistry(QObject):
         # Install the plugins that need to be installed (overwrite existing)
         for plugin_id, plugin_info in self._plugins_to_install.items():
             self._installPlugin(plugin_id, plugin_info["filename"])
-        self._plugins_to_install = dict()
+        self._plugins_to_install = {}
         self._savePluginData()
 
     def initializeAfterPluginsAreLoaded(self) -> None:
@@ -661,7 +661,7 @@ class PluginRegistry(QObject):
     #   Check if a certain dictionary contains a certain subset of key/value pairs
     #   \param dictionary \type{dict} The dictionary to search
     #   \param subset \type{dict} The subset to search for
-    def _subsetInDict(self, dictionary: Dict, subset: Dict) -> bool:
+    def _subsetInDict(self, dictionary: Dict[Any, Any], subset: Dict[Any, Any]) -> bool:
         for key in subset:
             if key not in dictionary:
                 return False

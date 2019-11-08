@@ -134,9 +134,9 @@ class Signal:
     #                 - type: The signal type. Defaults to Auto.
     def __init__(self, type: int = Auto) -> None:
         # These collections must be treated as immutable otherwise we lose thread safety.
-        self.__functions = WeakImmutableList()      # type: "WeakImmutableList"
-        self.__methods = WeakImmutablePairList()    # type: "WeakImmutablePairList"
-        self.__signals = WeakImmutableList()        # type: "WeakImmutableList"
+        self.__functions = WeakImmutableList()      # type: WeakImmutableList[Callable[[], None]]
+        self.__methods = WeakImmutablePairList()    # type: WeakImmutablePairList[Any, Callable[[], None]]
+        self.__signals = WeakImmutableList()        # type: WeakImmutableList[Signal]
 
         self.__lock = threading.Lock()  # Guards access to the fields above.
         self.__type = type
@@ -214,7 +214,7 @@ class Signal:
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
     @call_if_enabled(_traceConnect, _isTraceEnabled())
-    def connect(self, connector: Union['Signal', Callable[[],None]]) -> None:
+    def connect(self, connector: Union["Signal", Callable[[], None]]) -> None:
         if self._postpone_emit:
             Logger.log("w", "Tried to connect to signal %s that is currently being postponed, this is not possible", self.__name)
             return

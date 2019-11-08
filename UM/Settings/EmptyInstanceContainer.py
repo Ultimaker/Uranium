@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Cura is released under the terms of the LGPLv3 or higher.
 
-from typing import Optional, Any, TYPE_CHECKING
+from typing import Optional, Any, TYPE_CHECKING, Set
 
 from UM.Logger import Logger
 from UM.Settings.InstanceContainer import InstanceContainer
@@ -28,5 +28,5 @@ class EmptyInstanceContainer(InstanceContainer):
     def getConfigurationType(self) -> str:
         return ""  # FIXME: not sure if this is correct
 
-    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         return "[general]\n version = " + str(InstanceContainer.Version) + "\n name = empty\n definition = fdmprinter\n"
