@@ -132,10 +132,11 @@ class QtApplication(QApplication, Application):
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
 
-        if major_version is None and minor_version is None and profile is None and not self.getIsHeadLess():
+        if major_version is None or minor_version is None or profile is None:
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
-            QMessageBox.critical(None, "Failed to probe OpenGL",
-                                 "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
+            if not self.getIsHeadLess():
+                QMessageBox.critical(None, "Failed to probe OpenGL",
+                                     "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
         else:
             opengl_version_str = OpenGLContext.versionAsText(major_version, minor_version, profile)

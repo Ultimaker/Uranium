@@ -1,7 +1,7 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Dict
+from typing import Dict, Optional, Tuple, Any
 from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat, QWindow
 
 from UM.Logger import Logger
@@ -101,7 +101,7 @@ class OpenGLContext:
     #   Note that PyQt only supports 4.1, 2.1 and 2.0. Cura omits support for 2.1, so the
     #   only returned options are 4.1 and 2.0.
     @classmethod
-    def detectBestOpenGLVersion(cls):
+    def detectBestOpenGLVersion(cls) -> Tuple[Optional[int], Optional[int], Optional[int]]:
         Logger.log("d", "Trying OpenGL context 4.1...")
         ctx = cls.setContext(4, 1, core = True)
         if ctx is not None:
@@ -155,7 +155,7 @@ class OpenGLContext:
                     # Some Intel GPU chipsets return a string, which is not undecodable via PyQt5.
                     # This workaround makes the code fall back to a "Unknown" renderer in these cases.
                     try:
-                        gpu_type = gl.glGetString(gl.GL_RENDERER) #type: str
+                        gpu_type = gl.glGetString(gl.GL_RENDERER)
                     except UnicodeDecodeError:
                         Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
 
