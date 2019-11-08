@@ -118,14 +118,14 @@ class OutputDeviceManager:
     ##  Emitted whenever an output device is added or removed.
     outputDevicesChanged = Signal()
 
-    def start(self):
+    def start(self) -> None:
         for plugin_id, plugin in self._plugins.items():
             try:
                 plugin.start()
             except Exception:
                 Logger.logException("e", "Exception starting OutputDevicePlugin %s", plugin.getPluginId())
 
-    def stop(self):
+    def stop(self) -> None:
         for plugin_id, plugin in self._plugins.items():
             try:
                 plugin.stop()

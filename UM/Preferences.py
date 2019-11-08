@@ -4,7 +4,6 @@
 import configparser
 from typing import Any, Dict, IO, Optional, Tuple, Union
 
-from UM.Decorators import deprecated
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To register the MIME type of the preference file.
 from UM.SaveFile import SaveFile

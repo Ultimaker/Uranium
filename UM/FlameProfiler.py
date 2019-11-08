@@ -156,12 +156,14 @@ def profileCall(name):
     else:
         yield
 
+
 ##  Return whether we are recording profiling information.
 #
 #   \return \type{bool} True if we are recording.
-def isRecordingProfile():
+def isRecordingProfile() -> bool:
     global record_profile
     return record_profile and threading.main_thread() is threading.current_thread()
+
 
 def updateProfileConfig():
     global child_accu_stack

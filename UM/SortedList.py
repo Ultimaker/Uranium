@@ -1737,16 +1737,13 @@ class SortedKeyList(SortedList):
         if iterable is not None:
             self._update(iterable)
 
-
     def __new__(cls, iterable=None, key=identity):
         return object.__new__(cls)
-
 
     @property
     def key(self):
         "Function used to extract comparison key from values."
         return self._key
-
 
     def clear(self):
         """Remove all values from sorted-key list.
@@ -1762,8 +1759,7 @@ class SortedKeyList(SortedList):
 
     _clear = clear
 
-
-    def add(self, value):
+    def add(self, value: Any) -> None:
         """Add `value` to sorted-key list.
 
         Runtime complexity: `O(log(n))` -- approximate.
@@ -1984,8 +1980,7 @@ class SortedKeyList(SortedList):
                 len_sublist = len(_keys[pos])
                 idx = 0
 
-
-    def remove(self, value):
+    def remove(self, value: Any) -> None:
         """Remove `value` from sorted-key list; `value` must be a member.
 
         If `value` is not a member, raise ValueError.

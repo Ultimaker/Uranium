@@ -13,6 +13,9 @@ import numpy
 import math
 import numbers
 
+from typing import Optional, Union
+
+
 ##  Builds new meshes by adding primitives.
 #
 #   This class functions in much the same way as a normal StringBuilder would.
@@ -21,31 +24,31 @@ import numbers
 #   result can then be converted to a normal mesh.
 class MeshBuilder:
     ##  Creates a new MeshBuilder with an empty mesh.
-    def __init__(self):
-        self._vertices = None
-        self._normals = None
-        self._indices = None
-        self._colors = None
-        self._uvs = None
+    def __init__(self) -> None:
+        self._vertices = None  # type: Optional[numpy.ndarray]
+        self._normals = None  # type: Optional[numpy.ndarray]
+        self._indices = None  # type: Optional[numpy.ndarray]
+        self._colors = None  # type: Optional[numpy.ndarray]
+        self._uvs = None  # type: Optional[numpy.ndarray]
         self._vertex_count = 0
         self._face_count = 0
         self._type = MeshType.faces
-        self._file_name = None
+        self._file_name = None  # type: Optional[str]
         # original center position
-        self._center_position = None
+        self._center_position = None  # type: Optional[Vector]
 
     ##  Build a MeshData object.
     #
     #   \return A Mesh data.
-    def build(self):
+    def build(self) -> MeshData:
         return MeshData(vertices = self.getVertices(), normals = self.getNormals(), indices = self.getIndices(),
                         colors = self.getColors(), uvs = self.getUVCoordinates(), file_name = self.getFileName(),
                         center_position = self.getCenterPosition())
 
-    def setCenterPosition(self, position):
+    def setCenterPosition(self, position: Optional[Vector]) -> None:
         self._center_position = position
 
-    def getCenterPosition(self):
+    def getCenterPosition(self) -> Optional[Vector]:
         return self._center_position
 
     ##  Set the type of the mesh
@@ -57,15 +60,15 @@ class MeshBuilder:
     def getType(self):
         return self._type
 
-    def getFaceCount(self):
+    def getFaceCount(self) -> int:
         return self._face_count
 
     ##  Get the array of vertices
-    def getVertices(self):
+    def getVertices(self) -> Optional[numpy.ndarray]:
         if self._vertices is None:
             return None
 
-        return self._vertices[0 : self._vertex_count] #Only return up until point where data was filled
+        return self._vertices[0: self._vertex_count] #Only return up until point where data was filled
 
     def setVertices(self, vertices):
         self._vertices = vertices
@@ -99,11 +102,11 @@ class MeshBuilder:
         return self._normals is not None
 
     ##  Return the list of vertex normals.
-    def getNormals(self):
+    def getNormals(self) -> Optional[numpy.ndarray]:
         if self._normals is None:
             return None
 
-        return self._normals[0 : self._vertex_count]
+        return self._normals[0: self._vertex_count]
 
     ##  Return whether this mesh has indices.
     def hasIndices(self):
@@ -111,11 +114,11 @@ class MeshBuilder:
 
     ##  Get the array of indices
     #   \return \type{numpy.ndarray}
-    def getIndices(self):
+    def getIndices(self) -> Optional[numpy.ndarray]:
         if self._indices is None:
             return None
 
-        return self._indices[0:self._face_count]
+        return self._indices[0: self._face_count]
 
     def setIndices(self, indices):
         self._indices = indices
@@ -124,24 +127,24 @@ class MeshBuilder:
     def hasColors(self):
         return self._colors is not None
 
-    def getColors(self):
+    def getColors(self) -> Optional[numpy.ndarray]:
         if self._colors is None:
             return None
 
-        return self._colors[0 : self._vertex_count]
+        return self._colors[0: self._vertex_count]
 
     def hasUVCoordinates(self):
         return self._uvs is not None
 
-    def getUVCoordinates(self):
+    def getUVCoordinates(self) -> Optional[numpy.ndarray]:
         if self._uvs is None:
             return None
-        return self._uvs[0 : self._vertex_count]
+        return self._uvs[0: self._vertex_count]
 
-    def getFileName(self):
+    def getFileName(self) -> Optional[str]:
         return self._file_name
 
-    def setFileName(self, file_name):
+    def setFileName(self, file_name: Optional[str]) -> None:
         self._file_name = file_name
 
     ##  Set the amount of faces before loading data to the mesh.
@@ -151,7 +154,7 @@ class MeshBuilder:
     #   for normals and `num_faces` amount of space for indices.
     #
     #   \param num_faces Number of faces for which memory must be reserved.
-    def reserveFaceCount(self, num_faces):
+    def reserveFaceCount(self, num_faces: Union[int, float]) -> None:
         if type(num_faces) == float:
             Logger.log("w", "Had to convert 'num_faces' with int(): %s -> %s ", num_faces, int(num_faces))
             num_faces = int(num_faces)
@@ -205,7 +208,7 @@ class MeshBuilder:
     #   \param x x coordinate of vertex.
     #   \param y y coordinate of vertex.
     #   \param z z coordinate of vertex.
-    def addVertex(self, x, y, z):
+    def addVertex(self, x: float, y: float, z: float) -> None:
         if self._vertices is None:
             self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
 

@@ -217,7 +217,7 @@ class Application:
         self.startSplashWindowPhase()
         self.startPostSplashWindowPhase()
 
-    def getContainerRegistry(self):
+    def getContainerRegistry(self) -> ContainerRegistry:
         return self._container_registry
 
     ##  Get the lock filename

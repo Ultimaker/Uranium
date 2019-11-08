@@ -360,7 +360,7 @@ class SettingPropertyProvider(QObject):
         self._value_used = None
         self.isValueUsedChanged.emit()
 
-    def _updateDelayed(self, container = None):
+    def _updateDelayed(self, container = None) -> None:
         try:
             self._update_timer.start()
         except RuntimeError:

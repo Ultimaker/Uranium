@@ -73,7 +73,7 @@ class Duration(QObject):
     #   This will convert the given amount of seconds into an amount of days, hours, minutes and seconds.
     #   Note that this is mostly a workaround for issues with PyQt, as a value type this class should not
     #   really have a setter.
-    def setDuration(self, duration):
+    def setDuration(self, duration: int) -> None:
         if duration < 0:
             self._days = -1
             self._hours = -1

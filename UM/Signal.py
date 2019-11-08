@@ -71,7 +71,7 @@ class SignalQueue:
 # Integration with the Flame Profiler.
 
 
-def _recordSignalNames():
+def _recordSignalNames() -> bool:
     return FlameProfiler.enabled()
 
 
@@ -296,7 +296,7 @@ class Signal:
 
     # Private implementation of the actual emit.
     # This is done to make it possible to freely push function events without needing to maintain state.
-    def __performEmit(self, *args, **kwargs):
+    def __performEmit(self, *args, **kwargs) -> None:
         # Quickly make some private references to the collections we need to process.
         # Although the these fields are always safe to use read and use with regards to threading,
         # we want to operate on a consistent snapshot of the whole set of fields.
@@ -441,7 +441,7 @@ T = TypeVar('T')
 #   it, but no application code can. Also, this class doesn't implement the Python
 #   list API, only the handful of methods we actually need in the code above.
 class WeakImmutableList(Generic[T], Iterable):
-    def __init__(self):
+    def __init__(self) -> None:
         self.__list = []    # type: List[ReferenceType[Optional[T]]]
 
     ## Append an item and return a new list
@@ -500,8 +500,8 @@ U = TypeVar('U')
 
 
 ##  A variation of WeakImmutableList which holds a pair of values using weak refernces.
-class WeakImmutablePairList(Generic[T,U], Iterable):
-    def __init__(self):
+class WeakImmutablePairList(Generic[T, U], Iterable):
+    def __init__(self) -> None:
         self.__list = []    # type: List[Tuple[ReferenceType[T],ReferenceType[U]]]
 
     ## Append an item and return a new list

@@ -123,12 +123,12 @@ class Selection:
         return object in cls.__selection
 
     @classmethod
-    def clear(cls):
+    def clear(cls) -> None:
         cls.__selection.clear()
         cls.selectionChanged.emit()
 
     @classmethod
-    def clearFace(cls):
+    def clearFace(cls) -> None:
         cls.__selected_face = None
         cls.__hover_face = None
         cls.selectedFaceChanged.emit()
@@ -186,7 +186,7 @@ class Selection:
         return operations
 
     @classmethod
-    def _onTransformationChanged(cls, node):
+    def _onTransformationChanged(cls, _) -> None:
         cls.__selection_center = cls.getBoundingBox().center
         cls.selectionCenterChanged.emit()
 

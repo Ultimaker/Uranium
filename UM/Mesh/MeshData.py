@@ -8,7 +8,7 @@ from UM.Math import NumPyUtil
 from UM.Math.Matrix import Matrix
 
 from enum import Enum
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict, Any
 
 import threading
 import numpy
@@ -21,9 +21,11 @@ numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
 MAXIMUM_HULL_VERTICES_COUNT = 1024   # Maximum number of vertices to have in the convex hull.
 
+
 class MeshType(Enum):
     faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
     pointcloud = 2
+
 
 # This object is being used as a 'symbol' to identify parameters have not been explicitly supplied
 # to the set() method. We can't use the value None for this purpose because it is also a valid (new)
@@ -43,7 +45,7 @@ Reuse = object()
 #   attributes: a dict with {"value", "opengl_type", "opengl_name"} type in vector2f, vector3f, uniforms, ...
 class MeshData:
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
-                 center_position=None, zero_position=None, type = MeshType.faces, attributes=None):
+                 center_position=None, zero_position=None, type = MeshType.faces, attributes=None) -> None:
         self._application = None  # Initialize this later otherwise unit tests break
 
         self._vertices = NumPyUtil.immutableNDArray(vertices)
@@ -61,12 +63,12 @@ class MeshData:
         if zero_position is not None:
             self._zero_position = zero_position
         else:
-            self._zero_position = Vector(0, 0, 0) # type: Vector
+            self._zero_position = Vector(0, 0, 0)
         self._convex_hull = None    # type: Optional[scipy.spatial.ConvexHull]
         self._convex_hull_vertices = None  # type: Optional[numpy.ndarray]
         self._convex_hull_lock = threading.Lock()
 
-        self._attributes = {}
+        self._attributes = {}  # type: Dict[str, Any]
         if attributes is not None:
             for key, attribute in attributes.items():
                 new_value = {}
@@ -238,7 +240,7 @@ class MeshData:
     #######################################################################
     # Convex hull handling
     #######################################################################
-    def _computeConvexHull(self):
+    def _computeConvexHull(self) -> None:
         points = self.getVertices()
         if points is None:
             return

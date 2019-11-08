@@ -189,7 +189,7 @@ class ShaderProgram:
     #   \param stride The stride of the attribute.
     #
     #   \note If the shader is not bound, this will bind the shader.
-    def enableAttribute(self, name, type, offset, stride = 0):
+    def enableAttribute(self, name: str, type: str, offset: int, stride: int = 0) -> None:
         if not self._shader_program:
             return
 
@@ -218,7 +218,7 @@ class ShaderProgram:
     ##  Disable a vertex attribute so it is no longer used.
     #
     #   \param name The name of the attribute to use.
-    def disableAttribute(self, name):
+    def disableAttribute(self, name: str) -> None:
         if not self._shader_program:
             return
 
@@ -228,7 +228,7 @@ class ShaderProgram:
         self._shader_program.disableAttributeArray(self._attribute_indices[name])
 
     ##  Bind the shader to use it for rendering.
-    def bind(self):
+    def bind(self) -> None:
         if not self._shader_program or not self._shader_program.isLinked():
             return
 
@@ -245,7 +245,7 @@ class ShaderProgram:
             texture.bind(texture_unit)
 
     ##  Release the shader so it will no longer be used for rendering.
-    def release(self):
+    def release(self) -> None:
         if not self._shader_program or not self._bound:
             return
 
@@ -270,7 +270,7 @@ class ShaderProgram:
     ##  Remove a uniform value binding.
     #
     #   \param key The uniform to remove.
-    def removeBinding(self, key):
+    def removeBinding(self, key: str) -> None:
         if key not in self._bindings:
             return
 
@@ -284,7 +284,7 @@ class ShaderProgram:
     #
     #   \note By default, these values are not cached as they are expected to be continuously
     #         updated.
-    def updateBindings(self, **kwargs):
+    def updateBindings(self, **kwargs) -> None:
         for key, value in kwargs.items():
             if key in self._bindings and value is not None:
                 self.setUniformValue(self._bindings[key], value, cache = False)
@@ -306,7 +306,7 @@ class ShaderProgram:
     ##  Remove an attribute binding.
     #
     #   \param key The name of the attribute binding to remove.
-    def removeAttributeBinding(self, key):
+    def removeAttributeBinding(self, key: str) -> None:
         if key not in self._attribute_bindings:
             return
 

@@ -400,7 +400,7 @@ class Matrix:
         self._data[2, 3] = -1.
         self._data[3, 2] = (2. * far * near) / (near - far)
 
-    def decompose(self):
+    def decompose(self) -> Tuple[Vector, "Matrix", Vector, Vector]:
         '''
         SOURCE: https://github.com/matthew-brett/transforms3d/blob/e402e56686648d9a88aa048068333b41daa69d1a/transforms3d/affines.py
         Decompose 4x4 homogenous affine matrix into parts.

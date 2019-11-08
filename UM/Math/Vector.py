@@ -6,7 +6,10 @@ import numpy.linalg
 import math
 from UM.Math.Float import Float
 
-from typing import Optional, Any
+from typing import Optional, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from UM.Math.Matrix import Matrix
 
 # Disable divide-by-zero warnings so that 1.0 / (1.0, 0.0, 0.0) returns (1.0, Inf, Inf) without complaining
 numpy.seterr(divide="ignore")
@@ -96,11 +99,11 @@ class Vector:
     def dot(self, other) -> numpy.ndarray:
         return numpy.dot(self._data, other._data)
 
-    def cross(self, other):
+    def cross(self, other) -> "Vector":
         result = numpy.cross(self._data, other._data)
         return Vector(result[0], result[1], result[2])
 
-    def multiply(self, matrix):
+    def multiply(self, matrix: "Matrix") -> "Vector":
         d = numpy.empty(4, dtype = numpy.float64)
         d[0] = self._data[0]
         d[1] = self._data[1]
@@ -111,7 +114,7 @@ class Vector:
 
         return Vector(d[0], d[1], d[2])
 
-    def preMultiply(self, matrix):
+    def preMultiply(self, matrix: "Matrix") -> "Vector":
         d = numpy.empty(4, dtype = numpy.float64)
         d[0] = self._data[0]
         d[1] = self._data[1]
