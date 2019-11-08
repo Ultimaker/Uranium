@@ -17,7 +17,7 @@ if MYPY:
 
 ## Abstract base class for view objects.
 class View(QObject, PluginObject):
-    def __init__(self, parent = None):
+    def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self._renderer = None  # type: Optional[Renderer]
         self._controller = UM.Application.Application.getInstance().getController()  # type: Controller

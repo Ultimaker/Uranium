@@ -11,6 +11,7 @@ import math
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
+
 class DurationFormat(QObject):
     class Format:
         Seconds = 0
@@ -18,6 +19,7 @@ class DurationFormat(QObject):
         Long = 2
         ISO8601 = 3
     Q_ENUMS(Format)
+
 
 ##  A class representing a time duration.
 #
