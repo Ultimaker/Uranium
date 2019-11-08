@@ -9,7 +9,7 @@ from typing import Optional, Dict, Any
 #   by a plugin. Its only function is to serve as a mapping between
 #   the plugin and the object.
 class PluginObject:
-    def __init__(self) -> None:
+    def __init__(self, *args, **kwags) -> None:
         self._plugin_id = None  # type: Optional[str]
         self._version = None  # type: Optional[str]
         self._metadata = {}  # type: Dict[str, Any]
