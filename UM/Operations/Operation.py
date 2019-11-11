@@ -3,8 +3,6 @@
 
 import time
 
-import UM.Application
-
 
 ##  Base class for operations that should support undo and redo.
 class Operation:
@@ -47,4 +45,6 @@ class Operation:
     #   This is a convenience method that pushes this operation onto the Application's
     #   operation stack.
     def push(self) -> None:
-        UM.Application.Application.getInstance().getOperationStack().push(self)
+        # Because of circular dependency
+        from UM.Application import Application
+        Application.getInstance().getOperationStack().push(self)

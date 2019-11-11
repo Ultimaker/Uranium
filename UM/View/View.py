@@ -46,7 +46,7 @@ class View(QObject, PluginObject):
         return self._controller
 
     ##  Get the Renderer instance for this View.
-    def getRenderer(self) -> "Renderer":
+    def getRenderer(self) -> Optional["Renderer"]:
         return self._renderer
 
     ##  Set the renderer object to use with this View.
