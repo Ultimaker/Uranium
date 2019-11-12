@@ -497,7 +497,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         #       (Note that there shouldn't be a check if trust has to be here, since it'll continue on 'no signature'.)
         if file_name is None:
             return True
-        if Trust.getInstance():
+        trust_instance = Trust.getInstanceOrNone()
+        if trust_instance is not None:
             from UM.Application import Application
             install_prefix = os.path.abspath(Application.getInstallPrefix())
             try:
@@ -505,9 +506,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             except ValueError:
                 common_path = ""
             if common_path is "" or not common_path.startswith(install_prefix):
-                if Trust.getInstance().signatureFileExistsFor(file_name):
+                if trust_instance.signatureFileExistsFor(file_name):
                     _containerRegistry.setExplicitReadOnly(self.getId())  # TODO???: self._read_only = True
-                    if not Trust.getInstance().signedFileCheck(file_name):
+                    if not trust_instance.signedFileCheck(file_name):
                         raise Exception("Can't validate file {0}".format(file_name))
         return True
 

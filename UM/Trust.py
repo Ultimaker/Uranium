@@ -145,9 +145,16 @@ class Trust:
 
     @classmethod
     def getInstance(cls):
-        if not cls.__instance:
+        if cls.__instance is None:
             cls.__instance = Trust(Trust.getPublicRootKeyPath())
-        return cls.__instance if cls.__instance._public_key else None
+        return cls.__instance
+
+    @classmethod
+    def getInstanceOrNone(cls):
+        try:
+            return cls.getInstance()
+        except:  # Yes, we  do really want this on _every_ exception that might occur.
+            return None
 
     def __init__(self, public_key_filename: str) -> None:
         self._public_key = None  #type: Optional[RSAPublicKey]
@@ -155,8 +162,8 @@ class Trust:
             with open(public_key_filename, "rb") as file:
                 self._public_key = load_pem_public_key(file.read(), backend = default_backend())
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Couldn't load public-key '{0}'.".format(public_key_filename))
             self._public_key = None
+            raise Exception("e", "Couldn't load public-key '{0}'.".format(public_key_filename))
 
     def _verifyFile(self, filename: str, signature: str) -> bool:
         if self._public_key is None:

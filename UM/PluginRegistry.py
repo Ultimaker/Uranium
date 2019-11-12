@@ -80,8 +80,8 @@ class PluginRegistry(QObject):
         self._check_if_trusted = check_if_trusted
         if self._check_if_trusted:
             self._trust_checker = Trust.getInstance()
-            if not self._trust_checker:
-                raise Exception("Aborting! Couldn't find root public key '{0}'!".format(Trust.getPublicRootKeyPath()))
+            # 'Trust.getInstance()' will raise an exception if anything goes wrong (e.g.: 'unable to read public key').
+            # Any such exception is explicitly _not_ caught here, as the application should quit with a crash.
 
     def getCheckIfTrusted(self) -> bool:
         return self._check_if_trusted
