@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections
@@ -66,6 +66,8 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
+
+        self._explicit_read_only_container_ids = set()  # type: Set[str]
 
     containerAdded = Signal()
     containerRemoved = Signal()
@@ -271,6 +273,12 @@ class ContainerRegistry(ContainerRegistryInterface):
     def getEmptyInstanceContainer(self) -> InstanceContainer:
         return self._emptyInstanceContainer
 
+    def setExplicitReadOnly(self, container_id: str) -> None:
+        self._explicit_read_only_container_ids.add(container_id)
+
+    def isExplicitReadOnly(self, container_id: str) -> bool:
+        return container_id in self._explicit_read_only_container_ids
+
     ##  Returns whether a profile is read-only or not.
     #
     #   Whether it is read-only depends on the source where the container is
@@ -278,6 +286,8 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return True if the container is read-only, or False if it can be
     #   modified.
     def isReadOnly(self, container_id: str) -> bool:
+        if self.isExplicitReadOnly(container_id):
+            return True
         provider = self.source_provider.get(container_id)
         if not provider:
             return False  # If no provider had the container, that means that the container was only in memory. Then it's always modifiable.

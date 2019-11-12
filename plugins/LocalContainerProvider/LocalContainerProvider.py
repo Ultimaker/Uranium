@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os  # For getting the IDs from a filename.
@@ -65,7 +65,7 @@ class LocalContainerProvider(ContainerProvider):
         # Not cached, so load by deserialising.
         container = container_class(base_id)
         with open(file_path, "r", encoding = "utf-8") as f:
-            container.deserialize(f.read())
+            container.deserialize(f.read(), file_path)
         container.setPath(file_path)
 
         if isinstance(container, DefinitionContainer):
@@ -178,6 +178,8 @@ class LocalContainerProvider(ContainerProvider):
                 result = True
         else:
             result = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
+
+        result |= ContainerRegistry.getInstance().isExplicitReadOnly(container_id)
         self._is_read_only_cache[container_id] = result
         return result
 
