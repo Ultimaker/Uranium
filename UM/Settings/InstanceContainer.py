@@ -506,7 +506,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                 common_path = ""
             if common_path is "" or not common_path.startswith(install_prefix):
                 if Trust.getInstance().signatureFileExistsFor(file_name):
-                    _containerRegistry.setReadOnlyExplicitly(self.getId())  # TODO???: self._read_only = True
+                    _containerRegistry.setExplicitReadOnly(self.getId())  # TODO???: self._read_only = True
                     if not Trust.getInstance().signedFileCheck(file_name):
                         raise Exception("Can't validate file {0}".format(file_name))
         return True

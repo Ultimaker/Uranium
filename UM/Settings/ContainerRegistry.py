@@ -67,7 +67,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
 
-        self._is_explicit_read_only = set()  # type: Set[str]
+        self._explicit_read_only_container_ids = set()  # type: Set[str]
 
     containerAdded = Signal()
     containerRemoved = Signal()
@@ -273,11 +273,11 @@ class ContainerRegistry(ContainerRegistryInterface):
     def getEmptyInstanceContainer(self) -> InstanceContainer:
         return self._emptyInstanceContainer
 
-    def setReadOnlyExplicitly(self, container_id: str) -> None:
-        self._is_explicit_read_only.add(container_id)
+    def setExplicitReadOnly(self, container_id: str) -> None:
+        self._explicit_read_only_container_ids.add(container_id)
 
     def isExplicitReadOnly(self, container_id: str) -> bool:
-        return container_id in self._is_explicit_read_only
+        return container_id in self._explicit_read_only_container_ids
 
     ##  Returns whether a profile is read-only or not.
     #

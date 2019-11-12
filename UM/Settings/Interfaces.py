@@ -207,7 +207,7 @@ class ContainerRegistryInterface:
     def isReadOnly(self, container_id: str) -> bool:
         raise NotImplementedError()
 
-    def setReadOnlyExplicitly(self, container_id: str) -> None:
+    def setExplicitReadOnly(self, container_id: str) -> None:
         raise NotImplementedError()
 
     def isExplicitReadOnly(self, container_id: str) -> bool:

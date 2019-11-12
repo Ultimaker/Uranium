@@ -398,6 +398,7 @@ class Application:
     def getExtensions(self) -> List["Extension"]:
         return self._extensions
 
+    # Returns the path to the folder of the app itself, e.g.: '/root/blah/programs/Cura'.
     @staticmethod
     def getAppFolderPrefix() -> str:
         if "python" in os.path.basename(sys.executable):
@@ -406,6 +407,7 @@ class Application:
             executable = sys.executable
         return os.path.dirname(os.path.realpath(executable))
 
+    # Returns the path to the folder the app is installed _in_, e.g.: '/root/blah/programs'
     @staticmethod
     def getInstallPrefix() -> str:
         return os.path.abspath(os.path.join(Application.getAppFolderPrefix(), ".."))
