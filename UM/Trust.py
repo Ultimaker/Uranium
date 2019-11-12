@@ -18,7 +18,7 @@ from UM.Logger import Logger
 
 # Anything shared between the main code and the (keygen/signing) scripts, does not need state:
 class TrustBasics:
-    __hash_algorithm = hashes.SHA3_384()
+    __hash_algorithm = hashes.SHA384()
 
     # For directories (plugins for example):
     __signatures_relative_filename = "signature.json"
