@@ -386,7 +386,7 @@ msgstr[0] "{0} 분"
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:159
 msgctxt "@info:progress"
 msgid "Initializing package manager..."
-msgstr ""
+msgstr "패키지 관리자 초기화 중..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"

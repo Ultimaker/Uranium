@@ -388,7 +388,7 @@ msgstr[1] "{0} minuti"
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:159
 msgctxt "@info:progress"
 msgid "Initializing package manager..."
-msgstr ""
+msgstr "Inizializzazione gestione pacchetti..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"

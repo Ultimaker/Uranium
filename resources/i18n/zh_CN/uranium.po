@@ -387,7 +387,7 @@ msgstr[0] "{0} 分钟"
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:159
 msgctxt "@info:progress"
 msgid "Initializing package manager..."
-msgstr ""
+msgstr "正在初始化程序包管理器..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"

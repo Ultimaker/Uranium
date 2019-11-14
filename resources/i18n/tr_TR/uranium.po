@@ -389,7 +389,7 @@ msgstr[1] "{0} dakika"
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:159
 msgctxt "@info:progress"
 msgid "Initializing package manager..."
-msgstr ""
+msgstr "Paket yöneticisi başlatılıyor..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"
