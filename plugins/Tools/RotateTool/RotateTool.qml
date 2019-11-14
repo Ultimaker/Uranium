@@ -64,8 +64,8 @@ Item
         style: UM.Theme.styles.tool_button;
 
         enabled: UM.Selection.selectionCount == 1
-        checked: UM.Selection.faceSelectMode
-        onClicked: UM.Selection.setFaceSelectMode(!checked);
+        checked: UM.ActiveTool.properties.getValue("SelectFaceToLayFlatMode")
+        onClicked: UM.ActiveTool.setProperty("SelectFaceToLayFlatMode", !checked)
 
         visible: UM.ActiveTool.properties.getValue("SelectFaceSupported");
     }
@@ -97,6 +97,6 @@ Item
     {
         target: alignFaceButton
         property: "checked"
-        value: UM.Selection.faceSelectMode
+        value: UM.ActiveTool.properties.getValue("SelectFaceToLayFlatMode")
     }
 }
