@@ -282,6 +282,8 @@ class RotateTool(Tool):
     def setSelectFaceToLayFlatMode(self, select: bool) -> None:
         if select != self._select_face_mode or select != Selection.getFaceSelectMode():
             self._select_face_mode = select
+            if not select:
+                Selection.clearFace()
             Selection.setFaceSelectMode(self._select_face_mode)
             self.propertyChanged.emit()
 
