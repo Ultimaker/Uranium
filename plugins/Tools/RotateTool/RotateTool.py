@@ -56,9 +56,10 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         self._rotating = False
-        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported")
+        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported", "SelectFaceToLayFlatMode")
         self._saved_node_positions = []
 
+        self._select_face_mode = False
         Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
 
     ##  Handle mouse and keyboard events
@@ -190,6 +191,9 @@ class RotateTool(Tool):
                 return True
 
     def _onSelectedFaceChanged(self):
+        if not self._select_face_mode:
+            return
+
         self._handle.setEnabled(not Selection.getFaceSelectMode())
 
         selected_face = Selection.getSelectedFace()
@@ -262,6 +266,25 @@ class RotateTool(Tool):
     def setRotationSnapAngle(self, angle):
         if angle != self._snap_angle:
             self._snap_angle = angle
+            self.propertyChanged.emit()
+
+    ##  Wether the rotate tool is in 'Lay flat by face'-Mode.
+    #
+    #   \return (bool)
+    def getSelectFaceToLayFlatMode(self) -> bool:
+        if not Selection.getFaceSelectMode():
+            self._select_face_mode = False  # .. but not the other way around!
+        return self._select_face_mode
+
+    ##  Set the rotate tool to/from 'Lay flat by face'-Mode.
+    #
+    #   \param (bool)
+    def setSelectFaceToLayFlatMode(self, select: bool) -> None:
+        if select != self._select_face_mode or select != Selection.getFaceSelectMode():
+            self._select_face_mode = select
+            if not select:
+                Selection.clearFace()
+            Selection.setFaceSelectMode(self._select_face_mode)
             self.propertyChanged.emit()
 
     ##  Reset the orientation of the mesh(es) to their original orientation(s)
