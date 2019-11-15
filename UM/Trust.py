@@ -106,7 +106,7 @@ class TrustBasics:
         return None
 
     @staticmethod
-    def saveKeyPair(private_key: "RSAPrivateKeyWithSerialization", private_path: str, public_path: str, optional_password: Optional[str]) -> bool:
+    def saveKeyPair(private_key: "RSAPrivateKeyWithSerialization", private_path: str, public_path: str, optional_password: Optional[str] = None) -> bool:
         try:
             encrypt_method = serialization.NoEncryption()  # type: ignore
             if optional_password is not None:
