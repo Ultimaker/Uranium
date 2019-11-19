@@ -21,8 +21,8 @@ UM.Dialog
 
     title: dialogTitle
 
-    minimumWidth: 400 * screenScaleFactor
-    minimumHeight: 120 * screenScaleFactor
+    minimumWidth: UM.Theme.getSize("small_popup_dialog").width
+    minimumHeight: UM.Theme.getSize("small_popup_dialog").height
     width: minimumWidth
     height: minimumHeight
 
