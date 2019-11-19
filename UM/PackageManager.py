@@ -92,6 +92,11 @@ class PackageManager(QObject):
     def packagesWithUpdate(self) -> Set[str]:
         return self._packages_with_update_available
 
+    ## Alternative way of setting the available package updates without having to check all packages in the cloud.
+    def setPackagesWithUpdate(self, packages: Set[str]):
+        self._packages_with_update_available = packages
+        self.packagesWithUpdateChanged.emit()
+
     def checkIfPackageCanUpdate(self, package_id: str) -> bool:
         available_versions = self._available_package_versions.get(package_id)
 
@@ -290,6 +295,20 @@ class PackageManager(QObject):
             all_installed_ids = all_installed_ids.union(set(self._to_install_package_dict.keys()))
 
         return all_installed_ids
+
+    ## Get a list of tuples that contain the package ID and version.
+    #  Used by the Marketplace to check which packages have updates available.
+    def getAllInstalledPackageIdsAndVersions(self) -> List[Tuple[str, str]]:
+        package_ids_and_versions = []  # type: List[Tuple[str, str]]
+        all_installed_ids = self.getAllInstalledPackageIDs()
+        for package_id in all_installed_ids:
+            package_info = self.getInstalledPackageInfo(package_id)
+            if package_info is None:
+                continue
+            if "package_version" not in package_info:
+                continue
+            package_ids_and_versions.append((package_id, package_info["package_version"]))
+        return package_ids_and_versions
 
     def getAllInstalledPackagesInfo(self) -> Dict[str, List[Dict[str, Any]]]:
 
