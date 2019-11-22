@@ -279,7 +279,7 @@ class Controller:
                 self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
                 tool_changed = True
             else:
-                Logger.log("w", "Controller does not have an active tool and could not default to Translate tool.")
+                Logger.log("w", "Controller does not have an active tool and could not default to the tool, called \"{}\".".format(self._fallback_tool))
 
         if tool_changed:
             Selection.setFaceSelectMode(False)
