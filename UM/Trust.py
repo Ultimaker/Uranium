@@ -193,7 +193,7 @@ class Trust:
                 json_data = json.load(data_file)
                 signatures_json = json_data.get(TrustBasics.getRootSignatureCategory(), None)
                 if signatures_json is None:
-                    Logger.logException("e", "Can't find file '{0}'.".format(data_file))
+                    Logger.logException("e", "Can't parse (folder) signature file '{0}'.".format(data_file))
                     return False
 
                 file_count = 0
@@ -232,7 +232,7 @@ class Trust:
                 json_data = json.load(data_file)
                 signature = json_data.get(TrustBasics.getRootSignatureEntry(), None)
                 if signature is None:
-                    Logger.logException("e", "Signature file '{0}' is not present.".format(signature_filename))
+                    Logger.logException("e", "Can't parse signature file '{0}'.".format(signature_filename))
                     return False
 
                 if not self._verifyFile(filename, signature):
