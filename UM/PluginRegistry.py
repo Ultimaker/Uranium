@@ -604,22 +604,11 @@ class PluginRegistry(QObject):
             return None
 
         if folder not in self._folder_cache:
-            sub_folders = []
-            for file in os.listdir(folder):
-                file_path = os.path.join(folder, file)
-                if os.path.isdir(file_path):
-                    entry = (file, file_path)
-                    sub_folders.append(entry)
-            self._folder_cache[folder] = sub_folders
+            self._folder_cache[folder] = [(walked[0], os.path.basename(walked[0])) for walked in os.walk(folder) if "__init__.py" in walked[2]]
 
-        for file, file_path in self._folder_cache[folder]:
-            if file == plugin_id and os.path.exists(os.path.join(file_path, "__init__.py")):
-                return folder
-            else:
-                plugin_path = self._locatePlugin(plugin_id, file_path)
-                if plugin_path:
-                    return plugin_path
-
+        for folder_path, folder_name in self._folder_cache[folder]:
+            if folder_name == plugin_id:
+                return os.path.join(folder_path, "..")
         return None
 
     #   Load the plugin data from the stream and in-place update the metadata.
