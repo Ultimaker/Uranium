@@ -215,7 +215,8 @@ class RenderBatch:
             vao.create()
             if not vao.isCreated():
                 Logger.log("e", "VAO not created. Hell breaks loose")
-            vao.bind()
+            else:
+                vao.bind()
 
         for item in self._items:
             self._renderItem(item)
