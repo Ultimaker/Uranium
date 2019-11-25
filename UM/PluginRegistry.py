@@ -68,7 +68,7 @@ class PluginRegistry(QObject):
         self._plugin_objects = {}     # type: Dict[str, PluginObject]
 
         self._plugin_locations = []  # type: List[str]
-        self._folder_cache = {}      # type: Dict[str, List[Tuple[str, str]]] used to speed up _locatePlugin
+        self._plugin_folder_cache = {}  # type: Dict[str, List[Tuple[str, str]]]  # Cache to speed up _locatePlugin
 
         self._bundled_plugin_cache = {}  # type: Dict[str, bool]
 
@@ -608,14 +608,19 @@ class PluginRegistry(QObject):
         if not os.path.isdir(folder):
             return None
 
-        # self._folder_cache is a per-plugin-location list of all subfolders that contain a __init__.py file
-        # This uses os.walk which recurses into nested folders and returns a list of tuples for each walked subfolder,
-        # where tuple[0] is the absolute path to the recursed subfolder, tuple[2] is a list of all files in that folder
-        if folder not in self._folder_cache:
-            self._folder_cache[folder] = [(walked[0], os.path.basename(walked[0])) for walked in os.walk(folder) if "__init__.py" in walked[2]]
+        # self._plugin_folder_cache is a per-plugin-location list of all subfolders that contain a __init__.py file
+        if folder not in self._plugin_folder_cache:
+            plugin_folders = []
+            for root, dirs, files in os.walk(folder, topdown=True):
+                # modify dirs in place to ignore .git, pycache and test folders completely
+                dirs[:] = [d for d in dirs if d not in plugin_path_ignore_list]
 
+                if "plugin.json" in files:
+                    plugin_folders.append((root, os.path.basename(root)))
 
-        for folder_path, folder_name in self._folder_cache[folder]:
+            self._plugin_folder_cache[folder] = plugin_folders
+
+        for folder_path, folder_name in self._plugin_folder_cache[folder]:
             if folder_name == plugin_id:
                 return os.path.join(folder_path, "..")
 
