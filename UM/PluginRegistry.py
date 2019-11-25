@@ -28,6 +28,8 @@ if TYPE_CHECKING:
     from UM.Application import Application
 
 
+plugin_path_ignore_list = ["__pycache__", "tests", ".git"]
+
 ##  A central object to dynamically load modules as plugins.
 #
 #   The PluginRegistry class can load modules dynamically and use
@@ -62,6 +64,7 @@ class PluginRegistry(QObject):
         self._plugins_to_remove = []  # type: List[str]
 
         self._plugins = {}            # type: Dict[str, types.ModuleType]
+        self._found_plugins = {}      # type: Dict[str, types.ModuleType]  # Cache to speed up _findPlugin
         self._plugin_objects = {}     # type: Dict[str, PluginObject]
 
         self._plugin_locations = []  # type: List[str]
@@ -547,6 +550,8 @@ class PluginRegistry(QObject):
     #   \param plugin_id The name of the plugin to find
     #   \returns module if it was found (and, if 'self._check_if_trusted' is set, also secure), None otherwise
     def _findPlugin(self, plugin_id: str) -> Optional[types.ModuleType]:
+        if plugin_id in self._found_plugins:
+            return self._found_plugins[plugin_id]
         location = None
         for folder in self._plugin_locations:
             location = self._locatePlugin(plugin_id, folder)
@@ -596,7 +601,7 @@ class PluginRegistry(QObject):
         finally:
             if file:
                 os.close(file) #type: ignore #MyPy gets the wrong output type from imp.find_module for some reason.
-
+        self._found_plugins[plugin_id] = module
         return module
 
     def _locatePlugin(self, plugin_id: str, folder: str) -> Optional[str]:
@@ -608,6 +613,7 @@ class PluginRegistry(QObject):
         # where tuple[0] is the absolute path to the recursed subfolder, tuple[2] is a list of all files in that folder
         if folder not in self._folder_cache:
             self._folder_cache[folder] = [(walked[0], os.path.basename(walked[0])) for walked in os.walk(folder) if "__init__.py" in walked[2]]
+
 
         for folder_path, folder_name in self._folder_cache[folder]:
             if folder_name == plugin_id:
