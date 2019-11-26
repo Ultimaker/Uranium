@@ -28,6 +28,8 @@ if TYPE_CHECKING:
     from UM.Application import Application
 
 
+plugin_path_ignore_list = ["__pycache__", "tests", ".git"]
+
 ##  A central object to dynamically load modules as plugins.
 #
 #   The PluginRegistry class can load modules dynamically and use
@@ -62,10 +64,11 @@ class PluginRegistry(QObject):
         self._plugins_to_remove = []  # type: List[str]
 
         self._plugins = {}            # type: Dict[str, types.ModuleType]
+        self._found_plugins = {}      # type: Dict[str, types.ModuleType]  # Cache to speed up _findPlugin
         self._plugin_objects = {}     # type: Dict[str, PluginObject]
 
         self._plugin_locations = []  # type: List[str]
-        self._folder_cache = {}      # type: Dict[str, List[Tuple[str, str]]]
+        self._plugin_folder_cache = {}  # type: Dict[str, List[Tuple[str, str]]]  # Cache to speed up _locatePlugin
 
         self._bundled_plugin_cache = {}  # type: Dict[str, bool]
 
@@ -547,6 +550,8 @@ class PluginRegistry(QObject):
     #   \param plugin_id The name of the plugin to find
     #   \returns module if it was found (and, if 'self._check_if_trusted' is set, also secure), None otherwise
     def _findPlugin(self, plugin_id: str) -> Optional[types.ModuleType]:
+        if plugin_id in self._found_plugins:
+            return self._found_plugins[plugin_id]
         location = None
         for folder in self._plugin_locations:
             location = self._locatePlugin(plugin_id, folder)
@@ -596,29 +601,28 @@ class PluginRegistry(QObject):
         finally:
             if file:
                 os.close(file) #type: ignore #MyPy gets the wrong output type from imp.find_module for some reason.
-
+        self._found_plugins[plugin_id] = module
         return module
 
     def _locatePlugin(self, plugin_id: str, folder: str) -> Optional[str]:
         if not os.path.isdir(folder):
             return None
 
-        if folder not in self._folder_cache:
-            sub_folders = []
-            for file in os.listdir(folder):
-                file_path = os.path.join(folder, file)
-                if os.path.isdir(file_path):
-                    entry = (file, file_path)
-                    sub_folders.append(entry)
-            self._folder_cache[folder] = sub_folders
+        # self._plugin_folder_cache is a per-plugin-location list of all subfolders that contain a __init__.py file
+        if folder not in self._plugin_folder_cache:
+            plugin_folders = []
+            for root, dirs, files in os.walk(folder, topdown=True):
+                # modify dirs in place to ignore .git, pycache and test folders completely
+                dirs[:] = [d for d in dirs if d not in plugin_path_ignore_list]
 
-        for file, file_path in self._folder_cache[folder]:
-            if file == plugin_id and os.path.exists(os.path.join(file_path, "__init__.py")):
-                return folder
-            else:
-                plugin_path = self._locatePlugin(plugin_id, file_path)
-                if plugin_path:
-                    return plugin_path
+                if "plugin.json" in files:
+                    plugin_folders.append((root, os.path.basename(root)))
+
+            self._plugin_folder_cache[folder] = plugin_folders
+
+        for folder_path, folder_name in self._plugin_folder_cache[folder]:
+            if folder_name == plugin_id:
+                return os.path.join(folder_path, "..")
 
         return None
 
