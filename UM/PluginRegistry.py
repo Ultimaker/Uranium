@@ -622,7 +622,7 @@ class PluginRegistry(QObject):
 
         for folder_path, folder_name in self._plugin_folder_cache[folder]:
             if folder_name == plugin_id:
-                return os.path.join(folder_path, "..")
+                return os.path.abspath(os.path.join(folder_path, ".."))
 
         return None
 
