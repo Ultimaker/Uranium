@@ -577,6 +577,10 @@ class QtApplication(QApplication, Application):
             fontPixelRatio = int(fontPixelRatio * 4) / 4
             return fontPixelRatio
 
+    @pyqtProperty(str, constant=True)
+    def applicationDisplayName(self) -> str:
+        return self._app_display_name
+
 
 ##  Internal.
 #
