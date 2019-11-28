@@ -92,15 +92,16 @@ class LocalFileOutputDevice(OutputDevice):
                 preferred_mimetype = mime_type
                 break
 
+        extension_added = False
         for item in file_types:
             type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
             filters.append(type_filter)
             mime_types.append(item["mime_type"])
             if preferred_mimetype == item["mime_type"]:
                 selected_filter = type_filter
-                if file_name:
+                if file_name and not extension_added:
+                    extension_added = True
                     file_name += "." + item["extension"]
-                    break
 
         # CURA-6411: This code needs to be before dialog.selectFile and the filters, because otherwise in macOS (for some reason) the setDirectory call doesn't work.
         stored_directory = Application.getInstance().getPreferences().getValue("local_file/dialog_save_path")
