@@ -579,7 +579,7 @@ class QtApplication(QApplication, Application):
 
     @pyqtProperty(str, constant=True)
     def applicationDisplayName(self) -> str:
-        return self._app_display_name
+        return self.getApplicationDisplayName()
 
 
 ##  Internal.
