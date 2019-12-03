@@ -611,7 +611,7 @@ class PluginRegistry(QObject):
         # self._plugin_folder_cache is a per-plugin-location list of all subfolders that contain a __init__.py file
         if folder not in self._plugin_folder_cache:
             plugin_folders = []
-            for root, dirs, files in os.walk(folder, topdown=True):
+            for root, dirs, files in os.walk(folder, topdown=True, followlinks=True):
                 # modify dirs in place to ignore .git, pycache and test folders completely
                 dirs[:] = [d for d in dirs if d not in plugin_path_ignore_list]
 
