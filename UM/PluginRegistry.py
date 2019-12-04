@@ -573,12 +573,12 @@ class PluginRegistry(QObject):
             # NOTE: '__pychache__'s (+ subfolders) are deleted on startup _before_ load module:
             try:
                 cache_folders_to_empty = []  # List[str]
-                for root, dirnames, filenames in os.walk(path):
+                for root, dirnames, filenames in os.walk(path, followlinks = True):
                     for dirname in dirnames:
                         if dirname == "__pycache__":
                             cache_folders_to_empty.append(os.path.join(root, dirname))
                 for cache_folder in cache_folders_to_empty:
-                    for root, dirnames, filenames in os.walk(cache_folder):
+                    for root, dirnames, filenames in os.walk(cache_folder, followlinks = True):
                         for filename in filenames:
                             os.remove(os.path.join(root, filename))
             except:  # Yes, we  do really want this on _every_ exception that might occur.
@@ -611,7 +611,7 @@ class PluginRegistry(QObject):
         # self._plugin_folder_cache is a per-plugin-location list of all subfolders that contain a __init__.py file
         if folder not in self._plugin_folder_cache:
             plugin_folders = []
-            for root, dirs, files in os.walk(folder, topdown=True, followlinks=True):
+            for root, dirs, files in os.walk(folder, topdown = True, followlinks = True):
                 # modify dirs in place to ignore .git, pycache and test folders completely
                 dirs[:] = [d for d in dirs if d not in plugin_path_ignore_list]
 
