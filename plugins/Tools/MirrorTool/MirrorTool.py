@@ -18,6 +18,7 @@ from . import MirrorToolHandle
 
 ##  Provides the tool to mirror meshes and groups
 
+
 class MirrorTool(Tool):
     def __init__(self):
         super().__init__()

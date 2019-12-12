@@ -1,7 +1,7 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Optional, Union, Dict
+from typing import Optional, Union, Dict, TYPE_CHECKING
 
 from PyQt5.QtCore import QUrl, QObject, pyqtProperty
 
@@ -10,14 +10,15 @@ from UM.PluginObject import PluginObject
 
 import UM.Application
 
-MYPY = False
-if MYPY:
+if TYPE_CHECKING:
+    from UM.Event import Event
     from UM.Controller import Controller
+    from UM.Event import Event
 
 
 ## Abstract base class for view objects.
 class View(QObject, PluginObject):
-    def __init__(self, parent = None):
+    def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self._renderer = None  # type: Optional[Renderer]
         self._controller = UM.Application.Application.getInstance().getController()  # type: Controller
@@ -41,11 +42,11 @@ class View(QObject, PluginObject):
 
     ##  Get the controller object associated with this View.
     #   \sa Controller
-    def getController(self):
+    def getController(self) -> "Controller":
         return self._controller
 
     ##  Get the Renderer instance for this View.
-    def getRenderer(self):
+    def getRenderer(self) -> Optional["Renderer"]:
         return self._renderer
 
     ##  Set the renderer object to use with this View.
@@ -69,5 +70,5 @@ class View(QObject, PluginObject):
     ##  Handle an event.
     #   \param event \type{Event} The event to handle.
     #   \sa Event
-    def event(self, event):
-        pass
+    def event(self, event: "Event") -> bool:
+        return False

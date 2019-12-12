@@ -1,5 +1,7 @@
 from PyQt5.QtCore import QObject
 from UM.FlameProfiler import pyqtSlot
+from typing import Dict, Any, Optional
+
 
 # This class wraps a Python container and provides access to its elements
 #
@@ -11,23 +13,22 @@ from UM.FlameProfiler import pyqtSlot
 # contents of the container change, simply emit the notify signal, do not
 # recreate the proxy.
 class ContainerProxy(QObject):
-    def __init__(self, container, parent = None):
+    def __init__(self, container: Dict[str, Any], parent: Optional[QObject] = None) -> None:
         super().__init__(parent)
-
         self._container = container
 
     @pyqtSlot(str, result = "QVariant")
-    def getValue(self, value):
+    def getValue(self, value: str):
         return self._container.get(value, None)
 
     @pyqtSlot(str, result="QVariantList")
-    def getValueList(self, value):
+    def getValueList(self, value: str):
         return self._container.get(value, None)
 
     @pyqtSlot(str, "QVariant")
-    def setValue(self, key, value):
+    def setValue(self, key: str, value: Any) -> None:
         self._container[key] = value
 
     @pyqtSlot(result = int)
-    def getCount(self):
+    def getCount(self) -> int:
         return len(self._container)

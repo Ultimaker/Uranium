@@ -1,7 +1,7 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Application import Application
+import UM.Qt.QtApplication
 from UM.View.RenderPass import RenderPass
 
 
@@ -9,15 +9,15 @@ from UM.View.RenderPass import RenderPass
 #
 #   This class provides the basic rendering of the objects in the scene.
 class DefaultPass(RenderPass):
-    def __init__(self, width, height):
+    def __init__(self, width: int, height: int) -> None:
         super().__init__("default", width, height, 0)
 
-        self._renderer = Application.getInstance().getRenderer()
+        self._renderer = UM.Qt.QtApplication.QtApplication.getInstance().getRenderer()
 
-    def render(self):
+    def render(self) -> None:
         self.bind()
 
-        camera = Application.getInstance().getController().getScene().getActiveCamera()
+        camera = UM.Qt.QtApplication.QtApplication.getInstance().getController().getScene().getActiveCamera()
 
         for batch in self._renderer.getBatches():
             batch.render(camera)

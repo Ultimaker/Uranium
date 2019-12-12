@@ -29,10 +29,16 @@ class OBJReader(MeshReader):
 
             mesh_builder = MeshBuilder()
             mesh_builder.setFileName(file_name)
+            previous_line_parts = []
             f = open(file_name, "rt", encoding = "utf-8")
             for line in f:
-                parts = line.split()
+                parts = previous_line_parts + line.split()
+                previous_line_parts = []
                 if len(parts) < 1:
+                    continue
+                if parts[-1] == "\\":
+                    del parts[-1]
+                    previous_line_parts = parts
                     continue
                 if parts[0] == "v":
                     vertex_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])

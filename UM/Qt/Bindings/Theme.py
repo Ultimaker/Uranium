@@ -253,13 +253,13 @@ class Theme(QObject):
 
     ##  Get the singleton instance for this class.
     @classmethod
-    def getInstance(cls, engine = None):
+    def getInstance(cls, engine = None) -> "Theme":
         # Note: Explicit use of class name to prevent issues with inheritance.
         if Theme.__instance is None:
             Theme.__instance = cls(engine)
         return Theme.__instance
 
-    __instance = None   # type: 'Theme'
+    __instance = None   # type: "Theme"
 
 
 def createTheme(engine, script_engine = None):

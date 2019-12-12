@@ -156,7 +156,7 @@ class OpenGL:
     #   as methods and additionally defines all OpenGL constants. This object
     #   is used to make direct OpenGL calls so should match OpenGL as closely
     #   as possible.
-    def getBindingsObject(self):
+    def getBindingsObject(self) -> Any:
         return self._gl
 
     ##  Create a FrameBuffer Object.

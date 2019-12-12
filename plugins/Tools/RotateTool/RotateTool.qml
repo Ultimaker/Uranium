@@ -55,6 +55,7 @@ Item
 
         anchors.left: layFlatButton.visible ? layFlatButton.right : resetRotationButton.right;
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+        width: visible ? UM.Theme.getIcon("rotate_face_layflat").width : 0;
 
         text: catalog.i18nc("@action:button", "Select face to align to the build plate")
         iconSource: UM.Theme.getIcon("rotate_face_layflat")
@@ -63,8 +64,8 @@ Item
         style: UM.Theme.styles.tool_button;
 
         enabled: UM.Selection.selectionCount == 1
-        checked: UM.Selection.faceSelectMode
-        onClicked: UM.Selection.setFaceSelectMode(!checked);
+        checked: UM.ActiveTool.properties.getValue("SelectFaceToLayFlatMode")
+        onClicked: UM.ActiveTool.setProperty("SelectFaceToLayFlatMode", !checked)
 
         visible: UM.ActiveTool.properties.getValue("SelectFaceSupported");
     }
@@ -96,6 +97,6 @@ Item
     {
         target: alignFaceButton
         property: "checked"
-        value: UM.Selection.faceSelectMode
+        value: UM.ActiveTool.properties.getValue("SelectFaceToLayFlatMode")
     }
 }

@@ -5,6 +5,7 @@ from typing import Union, List
 import numpy
 from copy import deepcopy
 
+
 ##  Creates an immutable copy of the given narray
 #
 #   If the array is already immutable then it just returns it.

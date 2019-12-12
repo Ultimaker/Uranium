@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.3\n"
+"Project-Id-Version: Uranium 4.4\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2019-09-10 16:56+0200\n"
+"POT-Creation-Date: 2019-11-05 13:40+0100\n"
 "PO-Revision-Date: 2019-09-23 13:26+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Ultimaker <info@ultimaker.com>, Dutch <info@bothof.nl>\n"
@@ -251,12 +251,12 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr "Model Roteren"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:275
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:279
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr "Object plat op platform plaatsen..."
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:275
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:279
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr "Objectrotatie"
@@ -301,7 +301,7 @@ msgid "Reset your configuration to factory defaults."
 msgstr "Herstel uw configuratie naar de standaardinstellingen."
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:181
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:696
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:708
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -309,7 +309,7 @@ msgid "All Supported Types ({0})"
 msgstr "Alle Ondersteunde Typen ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:184
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:697
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:709
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -386,6 +386,11 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuut"
 msgstr[1] "{0} minuten"
 
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:159
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr "Pakketbeheer initialiseren..."
+
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"
 msgid "Loading plugins..."
@@ -421,7 +426,7 @@ msgstr ""
 "De invoegtoepassing is geïnstalleerd.\n"
 "Start de toepassing opnieuw om de invoegtoepassing te activeren."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:403
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:415
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -543,12 +548,12 @@ msgctxt "@action:button"
 msgid "Lay flat"
 msgstr "Plat neerleggen"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:59
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr "Selecteer de kant die u wilt uitlijnen met het platform"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:80
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Roteren in Stappen"

@@ -1,8 +1,8 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import Operation
-
+from typing import List
 
 ##  An operation that groups several other operations together.
 #
@@ -14,9 +14,9 @@ class GroupedOperation(Operation.Operation):
     ##  Creates a new grouped operation.
     #
     #   The grouped operation is empty after its initialisation.
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self._children = []
+        self._children = []  # type: List[Operation.Operation]
         self._finalised = False  # Indicates if this operation is ever used. After that, it may no longer be modified.
 
     def getNumChildrenOperations(self) -> int:
@@ -28,7 +28,7 @@ class GroupedOperation(Operation.Operation):
     #   this group.
     #   Note that when the order matters, the operations are undone in reverse
     #   order as the order in which they are added.
-    def addOperation(self, op):
+    def addOperation(self, op: Operation.Operation) -> None:
         if self._finalised:
             raise Exception("A grouped operation may not be modified after it is used.")
         self._children.append(op)
@@ -37,13 +37,13 @@ class GroupedOperation(Operation.Operation):
     #
     #   The operations are undone in reverse order as the order in which they
     #   were added.
-    def undo(self):
+    def undo(self) -> None:
         for op in reversed(self._children):
             op.undo()
         self._finalised = True
 
     ##  Redoes all operations in this group.
-    def redo(self):
+    def redo(self) -> None:
         for op in self._children:
             op.redo()
         self._finalised = True

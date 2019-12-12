@@ -65,7 +65,7 @@ class LockFile:
     #   current thread releases the lock file.
     def _createLockFileWindows(self) -> None:
         from ctypes import windll  # type: ignore
-
+        start_wait = time.time()
         # Define attributes and flags for the file
         GENERIC_READ_WRITE = 0x40000000 | 0x80000000 #Read and write rights.
         NO_SHARE = 0
@@ -75,6 +75,8 @@ class LockFile:
 
         self._pidfile = None
         while True:
+            if time.time() - start_wait > self._timeout:  # Timeout expired. Overwrite the lock file.
+                self._deleteLockFileWindows()
             try:
                 # Try to create the lock file with the Windows API. For more information visit:
                 # https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-createfilew
@@ -82,8 +84,8 @@ class LockFile:
                                                             FILE_FLAG_DELETE_ON_CLOSE | FILE_ATTRIBUTE_NORMAL, None)
                 if self._pidfile is not None and self._pidfile != -1: # -1 is the INVALID_HANDLE
                     break
-            except:
-                pass
+            except Exception:
+                Logger.logException("w", "An exception occured while attempting to create the lock file.")
             time.sleep(0.1)
 
     ##  Close and delete the lock file from the file system once the current thread finish what it was doing.
@@ -103,8 +105,8 @@ class LockFile:
         from ctypes import windll  # type: ignore
         try:
             windll.kernel32.CloseHandle(self._pidfile)
-        except:
-            pass
+        except Exception:
+            Logger.logException("w", "Failed to remove the lockfile [%s]", self._filename)
 
     ##  Attempt to grab the lock file for personal use.
     def __enter__(self) -> None:

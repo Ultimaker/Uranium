@@ -28,6 +28,7 @@ class MirrorOperation(Operation.Operation):
 
     ##  Undo the operation.
     def undo(self):
+        self._node.invertNormals()
         self._node.setTransformation(self._old_transformation) #We stored the old transformation, so we can just restore that.
 
     ##  Re-apply the operation after undoing it.
@@ -36,6 +37,7 @@ class MirrorOperation(Operation.Operation):
             center = self._node.getPosition()
             self._node.setPosition(-center)
         self._node.scale(self._mirror, SceneNode.TransformSpace.World) #Then mirror around the origin.
+        self._node.invertNormals()  # Because the mirror is done via a scale operation, the normals where inverted.
         if self._mirror_around_center: #If we moved the centre, move it back.
             self._node.setPosition(center)
 

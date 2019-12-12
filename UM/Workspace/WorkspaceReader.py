@@ -4,6 +4,7 @@
 from UM.FileHandler.FileReader import FileReader
 from typing import Optional
 
+
 class WorkspaceReader(FileReader):
     def __init__(self) -> None:
         super().__init__()

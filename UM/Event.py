@@ -50,13 +50,13 @@ class MouseEvent(Event):
     #   \param last_x The X coordinate of the previous mouse event. Can be None. It is used to calculate deltaX.
     #   \param last_y The Y coordinate of the previous mouse event. Cam be None. It is used to calculate deltaY.
     #   \param buttons The buttons that are associated with this event.
-    def __init__(self, event_type: int, x: int = 0, y: int = 0, last_x: int = None, last_y: int = None, buttons: List = None) -> None: #pylint: disable=bad-whitespace
+    def __init__(self, event_type: int, x: int = 0, y: int = 0, last_x: int = None, last_y: int = None, buttons: List[str] = None) -> None: #pylint: disable=bad-whitespace
         super().__init__(event_type)
         self._x = x
         self._y = y
         self._last_x = last_x
         self._last_y = last_y
-        self._buttons = []  # type: List
+        self._buttons = []  # type: List[str]
         if buttons:
             self._buttons = buttons
 
@@ -98,7 +98,7 @@ class MouseEvent(Event):
 
     ##  The list of buttons associated with this event.
     @property
-    def buttons(self) -> List:
+    def buttons(self) -> List[str]:
         return self._buttons
 
 
@@ -179,7 +179,7 @@ class ToolEvent(Event):
 
 ##  Event used to call a function.
 class CallFunctionEvent(Event):
-    def __init__(self, func: Callable, args: Any, kwargs: Any) -> None:
+    def __init__(self, func: Callable[..., Any], args: Any, kwargs: Any) -> None:
         super().__init__(Event.CallFunctionEvent)
         self._function = func
         self._args = args

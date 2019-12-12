@@ -4,13 +4,13 @@ import pytest
 
 def test_getId_unhappy():
     plugin = PluginObject()
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         plugin.getPluginId()  # We didn't set an id yet.
 
 
 def test_getVersion_unhappy():
     plugin = PluginObject()
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         plugin.getVersion()  # We didn't set a version yet.
 
 
