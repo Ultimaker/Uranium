@@ -10,6 +10,7 @@ import UM.Settings.SettingInstance
 
 from copy import deepcopy
 
+
 ##  A very basic copy of the instance container.
 #
 #   Since validator makes have use of this we need it to make validators work.
@@ -36,6 +37,9 @@ class MockContainer():
 
     def addInstance(self, instance):
         self._instances.append(instance)
+
+    def isDirty(self):
+        return True
 
 @pytest.fixture
 def setting_definition():

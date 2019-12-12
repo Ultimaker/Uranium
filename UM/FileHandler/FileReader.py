@@ -1,8 +1,8 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import os
 from enum import Enum
+from typing import List
 from UM.PluginObject import PluginObject
 
 
@@ -17,9 +17,9 @@ class FileReader(PluginObject):
         # preRead has failed and no further processing should happen.
         failed = 3
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self._supported_extensions = []
+        self._supported_extensions = []  # type: List[str]
 
     ##  Returns true if file_name can be processed by this plugin.
     #

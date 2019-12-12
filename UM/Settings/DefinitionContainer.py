@@ -204,7 +204,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   data about inheritance and overrides was lost when deserialising.
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         data = {}  # type: Dict[str, Any]  # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
@@ -280,6 +280,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def addDefinition(self, definition: SettingDefinition) -> None:
         if definition.key not in [d.key for d in self._definitions]:
             self._definitions.append(definition)
+            self._definition_cache[definition.key] = definition
             self._updateRelations(definition)
 
     ##  \copydoc ContainerInterface::deserialize
@@ -300,6 +301,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         for key, value in parsed["settings"].items():
             definition = SettingDefinition(key, self, None, self._i18n_catalog)
+            self._definition_cache[key] = definition
             definition.deserialize(value)
             self._definitions.append(definition)
 
@@ -361,6 +363,11 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         definitions = []
         for definition in self._definitions:
             definitions.extend(definition.findDefinitions(**kwargs))
+
+        if len(kwargs) == 1 and "key" in kwargs:
+            # Ensure that next time round, the definition is in the cache!
+            if definitions:
+                self._definition_cache[kwargs["key"]] = definitions[0]
 
         return definitions
 
@@ -471,6 +478,9 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 self._definition_cache[key] = definition
 
         return definition
+
+    def isDirty(self) -> bool:
+        return False
 
     ##  Simple short string representation for debugging purposes.
     def __str__(self) -> str:

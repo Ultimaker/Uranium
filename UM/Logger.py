@@ -93,7 +93,7 @@ class LogOutput(PluginObject):
     ##  Create the log output.
     #
     #   This is called during the plug-in loading stage.
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()  # Call super to make multiple inheritance work.
         self._name = type(self).__name__  # Set name of the logger to it's class name
 
@@ -109,5 +109,5 @@ class LogOutput(PluginObject):
     #   \param log_type \type{string} A value describing the type of message.
     #   \param message \type{string} The message to log.
     #   \exception NotImplementedError
-    def log(self, log_type: str, message: str):
+    def log(self, log_type: str, message: str) -> None:
         raise NotImplementedError("Logger was not correctly implemented")

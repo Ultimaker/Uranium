@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections
@@ -29,9 +29,6 @@ from UM.Signal import Signal, signalemitter
 if TYPE_CHECKING:
     from UM.PluginObject import PluginObject
     from UM.Qt.QtApplication import QtApplication
-
-# The maximum amount of query results we should cache
-MaxQueryCacheSize = 1000
 
 
 ##  Central class to manage all setting providers.
@@ -66,10 +63,11 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._containers["empty"] = self._emptyInstanceContainer
         self.source_provider["empty"] = None
         self._resource_types = {"definition": Resources.DefinitionContainers}  # type: Dict[str, int]
-        self._query_cache = collections.OrderedDict()  # type: collections.OrderedDict # This should really be an ordered set but that does not exist...
 
         #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
+
+        self._explicit_read_only_container_ids = set()  # type: Set[str]
 
     containerAdded = Signal()
     containerRemoved = Signal()
@@ -204,10 +202,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
     def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[Dict[str, Any]]:
-        # Create the query object.
-        query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         candidates = None
-
         if "id" in kwargs and kwargs["id"] is not None and "*" not in kwargs["id"] and not ignore_case:
             if kwargs["id"] not in self.metadata:  # If we're looking for an unknown ID, try to lazy-load that one.
                 if kwargs["id"] not in self.source_provider:
@@ -229,26 +224,14 @@ class ContainerRegistry(ContainerRegistryInterface):
 
             # Since IDs are the primary key and unique we can now simply request the candidate and check if it matches all requirements.
             if kwargs["id"] not in self.metadata:
-                return []  # No result, so return an empty list.
+                return []  # Still no result, so return an empty list.
+            if len(kwargs) == 1:
+                return [self.metadata[kwargs["id"]]]
             candidates = [self.metadata[kwargs["id"]]]
+            del kwargs["id"]  # No need to check for the ID again.
 
-        if query.isHashable() and query in self._query_cache:
-            # If the exact same query is in the cache, we can re-use the query result.
-            self._query_cache.move_to_end(query) #Query was used, so make sure to update its position so that it doesn't get pushed off as a rarely-used query.
-            return self._query_cache[query].getResult()
-
+        query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         query.execute(candidates = candidates)
-
-        # Only cache query result when it is hashable
-        if query.isHashable():
-            self._query_cache[query] = query
-
-            if len(self._query_cache) > MaxQueryCacheSize:
-                # Since we use an OrderedDict, we can use a simple FIFO scheme
-                # to discard queries. As long as we properly update queries
-                # that are being used, this results in the least used queries
-                # to be discarded.
-                self._query_cache.popitem(last = False)
 
         return cast(List[Dict[str, Any]], query.getResult())  # As the execute of the query is done, result won't be none.
 
@@ -282,13 +265,19 @@ class ContainerRegistry(ContainerRegistryInterface):
             if metadata["id"] not in self._containers:  # Not yet loaded, so it can't be dirty.
                 continue
             candidate = self._containers[metadata["id"]]
-            if hasattr(candidate, "isDirty") and candidate.isDirty():  # type: ignore #Check for hasattr because only InstanceContainers and Stacks have this method.
+            if candidate.isDirty():
                 result.append(self._containers[metadata["id"]])
         return result
 
     ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
     def getEmptyInstanceContainer(self) -> InstanceContainer:
         return self._emptyInstanceContainer
+
+    def setExplicitReadOnly(self, container_id: str) -> None:
+        self._explicit_read_only_container_ids.add(container_id)
+
+    def isExplicitReadOnly(self, container_id: str) -> bool:
+        return container_id in self._explicit_read_only_container_ids
 
     ##  Returns whether a profile is read-only or not.
     #
@@ -297,6 +286,8 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return True if the container is read-only, or False if it can be
     #   modified.
     def isReadOnly(self, container_id: str) -> bool:
+        if self.isExplicitReadOnly(container_id):
+            return True
         provider = self.source_provider.get(container_id)
         if not provider:
             return False  # If no provider had the container, that means that the container was only in memory. Then it's always modifiable.
@@ -373,7 +364,6 @@ class ContainerRegistry(ContainerRegistryInterface):
     def addContainer(self, container: ContainerInterface) -> None:
         container_id = container.getId()
         if container_id in self._containers:
-            Logger.log("w", "Container with ID %s was already added.", container_id)
             return
 
         if hasattr(container, "metaDataChanged"):
@@ -485,6 +475,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   a number behind it to make it unique.
     @UM.FlameProfiler.profile
     def uniqueName(self, original: str) -> str:
+        original = original.replace("*", "")  # Filter out wildcards, since this confuses the ContainerQuery.
         name = original.strip()
 
         num_check = re.compile(r"(.*?)\s*#\d+$").match(name)
@@ -560,7 +551,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def saveContainer(self, container: "ContainerInterface", provider: Optional["ContainerProvider"] = None) -> None:
         if not hasattr(provider, "saveContainer"):
             provider = self.getDefaultSaveProvider()
-        if not hasattr(container, "isDirty") or not container.isDirty(): #type: ignore
+        if not container.isDirty():
             return
 
         provider.saveContainer(container) #type: ignore
@@ -570,13 +561,6 @@ class ContainerRegistry(ContainerRegistryInterface):
     def saveDirtyContainers(self) -> None:
         # Lock file for "more" atomically loading and saving to/from config dir.
         with self.lockFile():
-            # Save base files first
-            for instance in self.findDirtyContainers(container_type = InstanceContainer):
-                if instance.getMetaDataEntry("removed"):
-                    continue
-                if instance.getId() == instance.getMetaData().get("base_file"):
-                    self.saveContainer(instance)
-
             for instance in self.findDirtyContainers(container_type = InstanceContainer):
                 self.saveContainer(instance)
 
@@ -596,7 +580,6 @@ class ContainerRegistry(ContainerRegistryInterface):
                 Logger.log("d", "Definition file %s is newer than cache, ignoring cached version", path)
                 return None
 
-            definition = None
             with open(cache_path, "rb") as f:
                 definition = pickle.load(f)
 
@@ -609,7 +592,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             return None
         except Exception as e:
             # We could not load a cached version for some reason. Ignore it.
-            Logger.logException("d", "Could not load cached definition for %s", path)
+            Logger.logException("d", "Could not load cached definition for {path}: {err}".format(path = path, err = str(e)))
             return None
 
     # Store a cached version of a DefinitionContainer
@@ -617,7 +600,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self._application.getVersion(), definition.id)
 
         # Ensure the cache path exists
-        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        os.makedirs(os.path.dirname(cache_path), exist_ok = True)
 
         try:
             with open(cache_path, "wb") as f:
@@ -633,27 +616,23 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     # Clear the internal query cache
     def _clearQueryCache(self, *args: Any, **kwargs: Any) -> None:
-        self._query_cache.clear()
+        ContainerQuery.ContainerQuery.cache.clear()
 
     ##  Clear the query cache by using container type.
     #   This is a slightly smarter way of clearing the cache. Only queries that are of the same type (or without one)
     #   are cleared.
     def _clearQueryCacheByContainer(self, container: ContainerInterface) -> None:
-        # Use the base classes to clear the
-        if isinstance(container, DefinitionContainer):
-            container_type = DefinitionContainer #type: type
-        elif isinstance(container, InstanceContainer):
-            container_type = InstanceContainer
-        elif isinstance(container, ContainerStack):
-            container_type = ContainerStack
-        else:
-            Logger.log("w", "While clearing query cache, we got an unrecognised base type (%s). Clearing entire cache instead", type(container))
-            self._clearQueryCache()
-            return
+        # Remove all case-insensitive matches since we won't find those with the below "<=" subset check.
+        # TODO: Properly check case-insensitively in the dict's values.
+        for key in list(ContainerQuery.ContainerQuery.cache):
+            if not key[0]:
+                del ContainerQuery.ContainerQuery.cache[key]
 
-        for key in list(self._query_cache.keys()):
-            if self._query_cache[key].getContainerType() == container_type or self._query_cache[key].getContainerType() is None:
-                del self._query_cache[key]
+        # Remove all cache items that this container could fall in.
+        for key in list(ContainerQuery.ContainerQuery.cache):
+            query_metadata = dict(zip(key[1::2], key[2::2]))
+            if query_metadata.items() <= container.getMetaData().items():
+                del ContainerQuery.ContainerQuery.cache[key]
 
     ##  Called when any container's metadata changed.
     #

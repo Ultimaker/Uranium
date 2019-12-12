@@ -413,6 +413,8 @@ class SettingDefinition:
     #   \return A list of all the names of supported properties.
     @classmethod
     def getPropertyNames(cls, def_type: DefinitionPropertyType = None) -> List[str]:
+        if def_type is None:
+            return list(cls.__property_definitions.keys())
         return [key for key, value in cls.__property_definitions.items() if not def_type or value["type"] == def_type]
 
     ##  Check if a property with the specified name is defined as a supported property.
@@ -629,10 +631,12 @@ class SettingDefinition:
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True, "default": {}, "depends_on" : None},
         # Optional comments that apply to the setting. Will be ignored.
         "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None},
-        # Indicates if this string setting is allowed to have empty value. This can only be used for string settings.
+        # For string type: Indicates if this string setting is allowed to have empty value. This can only be used for string settings.
         "allow_empty": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": True, "depends_on": None},
-        # Indicates that this string setting should be an UUID. This can only be used for string settings.
+        # For string type: Indicates that this string setting should be an UUID. This can only be used for string settings.
         "is_uuid": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": False, "depends_on": None},
+        # For string type: If a non-empty string is provided, it will be used as a regex pattern to validate the value string. The value will be invalid if the value string matches the pattern.
+        "regex_blacklist_pattern": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on": None},
         # For bool type: if the value is the same as the warning value, the setting will be in the warning state.
         "warning_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": None, "depends_on": None},
         # For bool type: if the value is the same as the error value, the setting will be in the error state.

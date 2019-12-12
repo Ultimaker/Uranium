@@ -24,5 +24,5 @@ class PropertyEvaluationContext:
     def pushContainer(self, container):
         self.stack_of_containers.append(container)
 
-    def popContainer(self):
+    def popContainer(self) -> None:
         return self.stack_of_containers.pop()

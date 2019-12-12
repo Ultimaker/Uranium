@@ -66,6 +66,7 @@ fragment =
         {
             gl_FragColor = mix(result, u_outline_color, abs(sum.a));
         }
+        gl_FragColor.a = gl_FragColor.a > 0.5 ? 1.0 : 0.0;
     }
 
 vertex41core =
@@ -131,6 +132,7 @@ fragment41core =
         {
             frag_color = mix(result, u_outline_color, abs(sum.a));
         }
+        frag_color.a = frag_color.a > 0.5 ? 1.0 : 0.0;
     }
 
 [defaults]

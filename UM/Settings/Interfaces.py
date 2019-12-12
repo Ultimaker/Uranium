@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Any, Dict, List, Optional, Set, TYPE_CHECKING
@@ -91,7 +91,7 @@ class ContainerInterface:
     #   it serializes the metadata.
     #
     #   \return A string representation of this container.
-    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         pass
 
     ##  Change a property of a container item.
@@ -107,6 +107,10 @@ class ContainerInterface:
     def setProperty(self, key: str, property_name: str, property_value: Any, container: "ContainerInterface" = None, set_from_cache: bool = False) -> None:
         pass
 
+    # Should return false (or even throw an exception) if trust (or other verification) is invalidated.
+    def _trustHook(self, file_name: Optional[str]) -> bool:
+        return True
+
     ##  Deserialize the container from a string representation.
     #
     #   This should replace the contents of this container with those in the serialized
@@ -114,6 +118,8 @@ class ContainerInterface:
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
+        if not self._trustHook(file_name):
+            return ""
         return self._updateSerialized(serialized, file_name = file_name)
 
     ##  Deserialize just the metadata from a string representation.
@@ -164,6 +170,9 @@ class ContainerInterface:
     def setPath(self, path: str) -> None:
         pass
 
+    def isDirty(self) -> bool:
+        pass
+
     propertyChanged = None   # type: Signal
 
     metaDataChanged = None  # type: Signal
@@ -196,4 +205,10 @@ class ContainerRegistryInterface:
         raise NotImplementedError()
 
     def isReadOnly(self, container_id: str) -> bool:
+        raise NotImplementedError()
+
+    def setExplicitReadOnly(self, container_id: str) -> None:
+        raise NotImplementedError()
+
+    def isExplicitReadOnly(self, container_id: str) -> bool:
         raise NotImplementedError()

@@ -81,6 +81,7 @@ def test_getController():
 def test_setLockedAxis():
     test_tool_1 = Tool()
     test_tool_handle_1 = ToolHandle()
+    test_tool_handle_1._enabled = True
     test_tool_handle_1._auto_scale = False
     # Pretend like the toolhandle actually got rendered at least once
     with patch("UM.View.GL.OpenGL.OpenGL.getInstance"):

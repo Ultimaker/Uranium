@@ -22,7 +22,7 @@ from UM.Application import Application
 #   \sa OutputDeviceManager
 class OutputDevicePlugin(PluginObject):
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self._output_device_manager = Application.getInstance().getOutputDeviceManager()
@@ -32,11 +32,11 @@ class OutputDevicePlugin(PluginObject):
         return self._output_device_manager
 
     ##  Called by OutputDeviceManager to indicate the plugin should start its device detection.
-    def start(self):
+    def start(self) -> None:
         raise NotImplementedError("Start should be implemented by subclasses")
 
     ##  Called by OutputDeviceManager to indicate the plugin should stop its device detection.
-    def stop(self):
+    def stop(self) -> None:
         raise NotImplementedError("Stop should be implemented by subclasses")
 
     ## Used to check if this adress makes sense to this plugin w.r.t. adding(/removing) a manual device.

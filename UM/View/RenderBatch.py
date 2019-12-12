@@ -1,6 +1,6 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import List, Dict, Union, Optional
+from typing import List, Dict, Union, Optional, Any
 
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
@@ -44,7 +44,6 @@ class RenderBatch:
         Transparent = 2 ## Depth testing is enabled, depth writing is disabled.
         Overlay = 3 ## Depth testing is disabled.
 
-
     ##  The mode to render objects in. These correspond to OpenGL render modes.
     class RenderMode:
         Points = 0x0000
@@ -54,7 +53,6 @@ class RenderBatch:
         Triangles = 0x0004
         TriangleStrip = 0x0005
         TriangleFan = 0x0006
-
 
     ##  Blending mode.
     class BlendMode:
@@ -89,7 +87,7 @@ class RenderBatch:
             self._blend_mode = self.BlendMode.NoBlending if self._render_type == self.RenderType.Solid else self.BlendMode.Normal
         self._state_setup_callback = kwargs.get("state_setup_callback", None)
         self._state_teardown_callback = kwargs.get("state_teardown_callback", None)
-        self._items = []  # type: List[Dict[str, Union[MeshData, Matrix, Dict]]]
+        self._items = []  # type: List[Dict[str, Union[MeshData, Matrix, Dict[str, Any]]]]
 
         self._view_matrix = None  # type: Optional[Matrix]
         self._projection_matrix = None  # type: Optional[Matrix]
@@ -217,7 +215,8 @@ class RenderBatch:
             vao.create()
             if not vao.isCreated():
                 Logger.log("e", "VAO not created. Hell breaks loose")
-            vao.bind()
+            else:
+                vao.bind()
 
         for item in self._items:
             self._renderItem(item)
@@ -227,7 +226,7 @@ class RenderBatch:
 
         self._shader.release()
 
-    def _renderItem(self, item: Dict):
+    def _renderItem(self, item: Dict[str, Any]):
         transformation = item["transformation"]
         mesh = item["mesh"]
 

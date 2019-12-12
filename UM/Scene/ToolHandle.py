@@ -88,7 +88,10 @@ class ToolHandle(SceneNode.SceneNode):
         self._selection_mesh = mesh
         self.meshDataChanged.emit(self)
 
-    def render(self, renderer):
+    def render(self, renderer) -> bool:
+        if not self._enabled:
+            return True
+
         if not self._shader:
             self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "toolhandle.shader"))
 

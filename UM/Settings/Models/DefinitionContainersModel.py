@@ -44,7 +44,7 @@ class DefinitionContainersModel(ListModel):
             self._update()
 
     ##  Private convenience function to reset & repopulate the model.
-    def _update(self):
+    def _update(self) -> None:
         items = []
         definition_containers = ContainerRegistry.getInstance().findDefinitionContainersMetadata(**self._filter_dict)
         definition_containers.sort(key = self._sortKey)

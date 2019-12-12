@@ -29,6 +29,8 @@ class Platform(SceneNode.SceneNode):
         self.setCalculateBoundingBox(False)
 
     def render(self, renderer):
+        if not self.isVisible():
+            return True
         if not self._shader:
             self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "platform.shader"))
             if self._texture:

@@ -87,6 +87,10 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     def serialize(self, ignored_metadata_keys=set()):
         raise NotImplementedError()
 
+    # Should return false (or even throw an exception) if trust (or other verification) is invalidated.
+    def _trustHook(self, file_name: Optional[str]) -> bool:
+        raise NotImplementedError()
+
     ##  Deserializes the container from a string representation.
     #
     #   This method is not implemented in the mock container.
@@ -100,5 +104,8 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     @classmethod
     def getVersionFromSerialized(cls, serialized):
         raise NotImplementedError()
+
+    def isDirty(self):
+        return True
 
     metaDataChanged = None  # type: Signal

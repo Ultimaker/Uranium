@@ -477,7 +477,6 @@ class SceneNode:
         if not self._enabled or orientation == self._orientation:
             return
 
-
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldOrientation() == orientation:
                 return
@@ -666,6 +665,12 @@ class SceneNode:
     def setSetting(self, key: str, value: str) -> None:
         self._settings[key] = value
 
+    def invertNormals(self) -> None:
+        for child in self._children:
+            child.invertNormals()
+        if self._mesh_data:
+            self._mesh_data.invertNormals()
+
     ##  private:
     def _transformChanged(self) -> None:
         self._updateTransformation()
@@ -675,7 +680,7 @@ class SceneNode:
         for child in self._children:
             child._transformChanged()
 
-    def _updateLocalTransformation(self):
+    def _updateLocalTransformation(self) -> None:
         translation, euler_angle_matrix, scale, shear = self._transformation.decompose()
 
         self._position = translation
@@ -685,7 +690,7 @@ class SceneNode:
         orientation.setByMatrix(euler_angle_matrix)
         self._orientation = orientation
 
-    def _updateWorldTransformation(self):
+    def _updateWorldTransformation(self) -> None:
         if self._parent:
             self._world_transformation = self._parent.getWorldTransformation().multiply(self._transformation)
         else:

@@ -3,12 +3,13 @@
 
 from PyQt5.QtGui import QImage, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat
 
+
 ##  An interface for OpenGL FrameBuffer Objects.
 #
 #   This class describes a minimal interface that is expected of FrameBuffer Object
 #   classes.
 class FrameBufferObject:
-    def __init__(self, width, height):
+    def __init__(self, width: int, height: int) -> None:
         super().__init__()
 
         buffer_format = QOpenGLFramebufferObjectFormat()

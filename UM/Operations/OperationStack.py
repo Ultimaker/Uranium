@@ -5,7 +5,10 @@ import threading
 import time
 
 from UM.Logger import Logger
+from UM.Operations.Operation import Operation
 from UM.Signal import Signal, signalemitter
+
+from typing import List
 
 ##  A stack of operations.
 #
@@ -13,8 +16,8 @@ from UM.Signal import Signal, signalemitter
 #   re-doing these operations.
 @signalemitter
 class OperationStack():
-    def __init__(self, controller):
-        self._operations = [] #List of operations.
+    def __init__(self, controller) -> None:
+        self._operations = [] # type: List[Operation]
         self._current_index = -1 #Index of the most recently executed operation.
         self._lock = threading.Lock() #Lock to make sure only one thread can modify the operation stack at a time.
 

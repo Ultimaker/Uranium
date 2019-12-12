@@ -102,6 +102,10 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     def serialize(self, ignored_metadata_keys = None):
         raise NotImplementedError()
 
+    # Should return false (or even throw an exception) if trust (or other verification) is invalidated.
+    def _trustHook(self, file_name: Optional[str]) -> bool:
+        return True
+
     ##  Deserializes the container from a string representation.
     #
     #   This method is not implemented in the mock container.
@@ -115,6 +119,9 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     @classmethod
     def getVersionFromSerialized(cls, serialized):
         raise NotImplementedError()
+
+    def isDirty(self):
+        return True
 
     metaDataChanged = Signal()
     propertyChanged = Signal()

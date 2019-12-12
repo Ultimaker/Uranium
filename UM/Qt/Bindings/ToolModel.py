@@ -43,8 +43,9 @@ class ToolModel(ListModel):
 
         tools = self._controller.getAllTools()
         for name in tools:
-            tool_meta_data = PluginRegistry.getInstance().getMetaData(name).get("tool", {})
-            location = PluginRegistry.getInstance().getMetaData(name).get("location", "")
+            plugin_id = tools[name].getPluginId()
+            tool_meta_data = tools[name].getMetaData()
+            location = PluginRegistry.getInstance().getMetaData(plugin_id).get("location", "")
 
             # Skip tools that are marked as not visible
             if "visible" in tool_meta_data and not tool_meta_data["visible"]:
