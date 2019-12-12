@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.1\n"
+"Project-Id-Version: Uranium 4.4\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2019-07-16 14:10+0200\n"
+"POT-Creation-Date: 2019-11-05 13:40+0100\n"
 "PO-Revision-Date: 2018-11-06 15:42+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: German <info@bothof.nl>\n"
@@ -60,66 +60,66 @@ msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
 msgstr "Nicht unterstützter Ausgangsmodus schreibt STL in Stream."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:44
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:50
 msgctxt "@info"
 msgid "Could not access update information."
 msgstr "Zugriff auf Update-Informationen nicht möglich."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:45
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:51
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:97
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:155
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Versions-Upgrade"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:57
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "Die Version, die Sie verwenden, unterstützt die Suche nach Updates nicht."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:57
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:188
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Warnhinweis"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:93
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
 msgstr "Bei der Suche nach Aktualisierungen ist ein Fehler aufgetreten."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:93
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:141
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Fehler"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:97
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Es wurde keine neue Version gefunden."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:102
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "{application_name} {version_number} ist verfügbar!"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:98
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:104
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} bietet eine bessere und zuverlässigere Druckerfahrung."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:101
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
 msgctxt "@action:button"
 msgid "Download"
 msgstr "Download"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:103
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:109
 msgctxt "@action:button"
 msgid "Learn more"
 msgstr "Mehr erfahren"
@@ -251,12 +251,12 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr "Modell drehen"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:279
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr "Objekt flach auf die Druckplatte leben..."
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:229
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:279
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr "Objektdrehung"
@@ -300,7 +300,7 @@ msgctxt "@info:button"
 msgid "Reset your configuration to factory defaults."
 msgstr "Setzen Sie Ihre Konfiguration auf die Werkseinstellungen zurück."
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:191
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:181
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:708
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
 #, python-brace-format
@@ -308,7 +308,7 @@ msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Alle unterstützten Typen ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:194
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:184
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:709
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
 msgctxt "@item:inlistbox"
@@ -386,6 +386,11 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} Minute"
 msgstr[1] "{0} Minuten"
 
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:159
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr "Paketmanager wird initialisiert ..."
+
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
 msgctxt "@info:progress"
 msgid "Loading plugins..."
@@ -405,14 +410,14 @@ msgstr "Einstellungen werden geladen..."
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "Automatische Skalierung des Objekts auf {0} % der Originalgröße"
+msgstr "Automatische Skalierung des Objekts auf {0}% der Originalgröße"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:68
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Objekt-Skalierung"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:288
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:277
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -421,7 +426,7 @@ msgstr ""
 "Das Plugin wurde installiert.\n"
 "Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:414
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:415
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -437,13 +442,13 @@ msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "Eine Konfiguration einer älteren Version von {0} wurde importiert."
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:57
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:62
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:58
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:63
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "OpenGL konnte nicht initialisiert werden"
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:72
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:73
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Wichtige OpenGL-Erweiterungen fehlen. Dieses Programm erfordert Support für Framebuffer-Objekte. Überprüfen Sie bitte Ihre Videokartentreiber."
@@ -477,48 +482,48 @@ msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "Durch das Zurücksetzen werden alle Ihre aktuellen Drucker und Profile entfernt! Möchten Sie wirklich zurücksetzen?"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:161
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:162
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Möchten Sie {filename} neu laden?"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:162
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Datei wurde geändert"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:164
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Neu laden"
 
-#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:163
+#: /home/ruben/Projects/Uranium/UM/Scene/Scene.py:164
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Damit werden die geänderten Dateien erneut von der Festplatte geladen."
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:35
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "Dateien des Typs <filename>{0}</filename> können nicht geöffnet werden"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:35
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:50
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:73
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "Ungültige Datei"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:48
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:73
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "Laden von <filename>{0}</filename> fehlgeschlagen"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "Wird geladen"
@@ -543,7 +548,12 @@ msgctxt "@action:button"
 msgid "Lay flat"
 msgstr "Flach"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:56
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "Wählen Sie die Fläche aus, die an der Bauplatte ausgerichtet werden soll"
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Snap-Drehung"

@@ -60,13 +60,13 @@ MACRO(TARGETS_FOR_MO_FILES language)
     foreach(po_file ${po_files})
         string(REGEX REPLACE ".*/(.*).po" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file ${po_file})
         add_custom_command(TARGET i18n-create-mo-${language} POST_BUILD
-                           COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/
+                           COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/
                            COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file} -f)
         if(TARGET i18n-copy-mo-${language})
              string(REGEX REPLACE ".*/(.*).po" "${CURA_BINARY_DATA_DIRECTORY}/${PROJECT_NAME}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file_binary_copy ${po_file})
              add_custom_command(TARGET i18n-copy-mo-${language} POST_BUILD
-                                COMMAND mkdir ARGS -p ${CURA_BINARY_DATA_DIRECTORY}/resources/i18n/${language}/LC_MESSAGES/
-                                COMMAND cp ARGS -fv ${mo_file} ${mo_file_binary_copy})
+                                COMMAND ${CMAKE_COMMAND} -E make_directory ${CURA_BINARY_DATA_DIRECTORY}/resources/i18n/${language}/LC_MESSAGES/
+                                COMMAND ${CMAKE_COMMAND} -E copy ${mo_file} ${mo_file_binary_copy})
              add_dependencies(i18n-copy-mo-${language} i18n-create-mo-${language})
         endif()
     endforeach()

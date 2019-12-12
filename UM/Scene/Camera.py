@@ -17,6 +17,7 @@ from UM.Signal import Signal
 if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
 
+
 ##  A SceneNode subclass that provides a camera object.
 #
 #   The camera provides a projection matrix and its transformation matrix
@@ -27,10 +28,10 @@ class Camera(SceneNode.SceneNode):
         ORTHOGRAPHIC = "orthographic"
 
     @staticmethod
-    def getDefaultZoomFactor():
+    def getDefaultZoomFactor() -> float:
         return -0.3334
 
-    def __init__(self, name: str = "", parent: SceneNode.SceneNode = None) -> None:
+    def __init__(self, name: str = "", parent: Optional[SceneNode.SceneNode] = None) -> None:
         super().__init__(parent)
         self._name = name  # type: str
         self._projection_matrix = Matrix()  # type: Matrix
@@ -99,7 +100,7 @@ class Camera(SceneNode.SceneNode):
         self._viewport_height = height
         self._updatePerspectiveMatrix()
 
-    def _updatePerspectiveMatrix(self):
+    def _updatePerspectiveMatrix(self) -> None:
         view_width = self._viewport_width
         view_height = self._viewport_height
         projection_matrix = Matrix()
@@ -117,14 +118,14 @@ class Camera(SceneNode.SceneNode):
         self.setProjectionMatrix(projection_matrix)
         self.perspectiveChanged.emit(self)
 
-    def getViewProjectionMatrix(self):
+    def getViewProjectionMatrix(self) -> Matrix:
         if self._cached_view_projection_matrix is None:
             inverted_transformation = self.getWorldTransformation()
             inverted_transformation.invert()
             self._cached_view_projection_matrix = self._projection_matrix.multiply(inverted_transformation, copy = True)
         return self._cached_view_projection_matrix
 
-    def _updateWorldTransformation(self):
+    def _updateWorldTransformation(self) -> None:
         self._cached_view_projection_matrix = None
         super()._updateWorldTransformation()
     
@@ -217,7 +218,7 @@ class Camera(SceneNode.SceneNode):
         return position.x / position.z / 2.0, position.y / position.z / 2.0
 
     ##  Updates the _perspective field if the preference was modified.
-    def _preferencesChanged(self, key):
+    def _preferencesChanged(self, key: str) -> None:
         if key != "general/camera_perspective_mode":  # Only listen to camera_perspective_mode.
             return
         from UM.Application import Application

@@ -139,6 +139,7 @@ class TestPluginRegistry():
                             }
 
         metadata = registry.getMetaData("TestPlugin")
+
         assert metadata == expected_metadata
         registry.loadPlugins()
         all_metadata = registry.getAllMetaData()
@@ -197,7 +198,7 @@ class TestPluginRegistry():
         assert registry.getInstalledPlugins() == []  # Should be empty by default
         registry.loadPlugins()
         # All the plugins in this test should be marked as installed.
-        assert registry.getInstalledPlugins() == sorted(['OldTestPlugin', 'PluginNoVersionNumber', 'EmptyPlugin', 'TestPlugin', 'TestPlugin2'])
+        assert sorted(registry.getInstalledPlugins()) == sorted(['PluginNoVersionNumber', 'EmptyPlugin', 'TestPlugin', 'TestPlugin2'])
 
     def test_isActivePlugin(self, registry):
         # The plugins shouldn't be active yet (because they aren't loaded)
@@ -276,8 +277,8 @@ class TestPluginRegistry():
         assert registry.getTestPlugin() is None
 
     def test_ignoreOldApi(self, registry):
-        registry.loadPlugin("OldTestPlugin")
-        assert registry.getTestPlugin() is None
+        with pytest.raises(PluginNotFoundError):
+            registry.loadPlugin("OldTestPlugin")
 
     def test_isPluginApiVersionCompatible(self, registry):
         # Same version is compatible

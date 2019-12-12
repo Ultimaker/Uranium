@@ -5,6 +5,7 @@ import tempfile
 import os
 import os.path
 import sys
+from typing import Union, IO
 
 if sys.platform != "win32":
     import fcntl
@@ -31,7 +32,7 @@ class SaveFile:
     # \param mode The file mode to use. See open() for details.
     # \param encoding The encoding to use while writing the file. Defaults to UTF-8.
     # \param kwargs Keyword arguments passed on to open().
-    def __init__(self, path, mode, encoding = "utf-8", **kwargs):
+    def __init__(self, path: Union[str, IO[str]], mode: str, encoding: str = "utf-8", **kwargs) -> None:
         self._path = path
         self._mode = mode
         self._encoding = encoding

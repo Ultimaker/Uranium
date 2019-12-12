@@ -21,6 +21,7 @@ class MockSettingInstance:
         self.error_value = None
         self.type = None
         self.value = value
+        self.regex_blacklist_pattern = ""
 
     def getProperty(self, key, property_name, context = None):
         return getattr(self, property_name)
@@ -84,11 +85,15 @@ test_validate_data = [
     # Mixed values
     ({"description": "Completely valid",     "type": "float", "minimum": 0,    "maximum": 10.0,         "min_warning": 1.0,          "max_warning": 9,    "current": 5.0,          "answer": ValidatorState.Valid}),
     # String values
-    ({"description": "Empty string valid",       "type": "str", "allow_empty": True,   "current": "",   "answer": ValidatorState.Valid}),
-    ({"description": "Empty string is invalid",  "type": "str", "allow_empty": False,  "current": "",   "answer": ValidatorState.Invalid}),
-    ({"description": "String is not UUID, OK",   "type": "str", "is_uuid": False,      "current": "Blorf",   "answer": ValidatorState.Valid}),
-    ({"description": "String is not UUID, :-(",  "type": "str", "is_uuid": True,       "current": "Blorf",   "answer": ValidatorState.Invalid}),
-    ({"description": "UUID is UUID",             "type": "str", "is_uuid": True,       "current": "123456AF-ab9d-43E6-ABcd-AB8D43e6abCD", "answer": ValidatorState.Valid}),
+    ({"description": "Empty string valid",        "type": "str", "allow_empty": True,   "current": "",   "answer": ValidatorState.Valid}),
+    ({"description": "Empty string is invalid",   "type": "str", "allow_empty": False,  "current": "",   "answer": ValidatorState.Invalid}),
+    ({"description": "String is not UUID, OK",    "type": "str", "is_uuid": False,      "current": "Blorf",   "answer": ValidatorState.Valid}),
+    ({"description": "String is not UUID, :-(",   "type": "str", "is_uuid": True,       "current": "Blorf",   "answer": ValidatorState.Invalid}),
+    ({"description": "UUID is UUID",              "type": "str", "is_uuid": True,       "current": "123456AF-ab9d-43E6-ABcd-AB8D43e6abCD", "answer": ValidatorState.Valid}),
+    ({"description": "Not match regex blacklist", "type": "str",
+      "regex_blacklist_pattern": "^blacklisted value$", "current": "valid value",       "answer": ValidatorState.Valid}),
+    ({"description": "Match regex blacklist",     "type": "str",
+      "regex_blacklist_pattern": "^blacklisted value$", "current": "blacklisted value", "answer": ValidatorState.Invalid}),
     # Bool values
     ({"description": "No warning or error states", "type": "bool",                         "current": True,   "answer": ValidatorState.Valid}),
     ({"description": "Warning state",              "type": "bool", "warning_value": True,  "current": True,   "answer": ValidatorState.MaximumWarning}),
@@ -108,6 +113,7 @@ def test_validate(data):
     setting_instance.error_value = data.get("error_value")
     setting_instance.allow_empty = data.get("allow_empty")
     setting_instance.is_uuid = data.get("is_uuid")
+    setting_instance.regex_blacklist_pattern = data.get("regex_blacklist_pattern", "")
 
     validator = Validator("test")
     validation_state = validator(setting_instance) #Execute the test.

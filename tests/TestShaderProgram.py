@@ -61,3 +61,37 @@ def test_bindAndRelease():
     # We left it unbound, so now binding should work.
     shader.bind()
     assert mocked_shader_program.bind.call_count == 2
+
+
+enable_attribute_data = [("int", 2, 3, 0x1404, 1),
+                         ("float", 5, 9, 0x1406, 1),
+                         ("vector2f", 2, 32, 0x1406, 2),
+                         ("vector3f", 2000, 90, 0x1406, 3),
+                         ("vector4f", 12, 1, 0x1406, 4)]
+
+
+@pytest.mark.parametrize("type, offset, stride, type_result, tuple_size", enable_attribute_data)
+def test_enableDisableAttribute(type, offset, stride, type_result, tuple_size):
+    shader = ShaderProgram()
+
+    mocked_shader_program = MagicMock()
+    shader._shader_program = mocked_shader_program
+
+    attribute_index = MagicMock()
+
+    mocked_shader_program.attributeLocation = MagicMock(return_value = attribute_index)
+
+    shader.enableAttribute("blorp", type, offset, stride)
+
+    # Validate
+    mocked_shader_program.setAttributeBuffer.assert_called_once_with(attribute_index, type_result, offset, tuple_size, stride)
+    mocked_shader_program.enableAttributeArray.assert_called_once_with(attribute_index)
+
+    # Disable it again
+    shader.disableAttribute("blorp")
+    mocked_shader_program.disableAttributeArray.assert_called_once_with(attribute_index)
+
+    # Disable unknown attribute
+    shader.disableAttribute("BEEP")
+    mocked_shader_program.disableAttributeArray.assert_called_once_with(attribute_index)
+

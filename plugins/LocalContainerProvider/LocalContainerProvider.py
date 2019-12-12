@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os  # For getting the IDs from a filename.
@@ -65,7 +65,7 @@ class LocalContainerProvider(ContainerProvider):
         # Not cached, so load by deserialising.
         container = container_class(base_id)
         with open(file_path, "r", encoding = "utf-8") as f:
-            container.deserialize(f.read())
+            container.deserialize(f.read(), file_path)
         container.setPath(file_path)
 
         if isinstance(container, DefinitionContainer):
@@ -88,7 +88,7 @@ class LocalContainerProvider(ContainerProvider):
 
         mime_type = ContainerRegistry.getMimeTypeForContainer(type(container))
         if mime_type is None:
-            Logger.log("e", "Failed to get MIME type for container type [%s]", type(container))
+            Logger.log("w", "Failed to get MIME type for container type [%s]", type(container))
             return
         file_name = urllib.parse.quote_plus(container.getId()) + "." + mime_type.preferredSuffix
         container_type = container.getMetaDataEntry("type")
@@ -128,7 +128,7 @@ class LocalContainerProvider(ContainerProvider):
         if container_id in registry.metadata:
             return registry.metadata[container_id]
 
-        filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
+        filename = self._id_to_path[container_id]  # Raises KeyError if container ID does not exist in the (cache of the) files!
         clazz = ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name]
 
         requested_metadata = {}  # type: Dict[str, Any]
@@ -150,10 +150,10 @@ class LocalContainerProvider(ContainerProvider):
                 continue
             if metadata["id"] == container_id:
                 requested_metadata = metadata
-            #Side-load the metadata into the registry if we get multiple containers.
-            if metadata["id"] not in registry.metadata: #This wouldn't get loaded normally.
+            # Side-load the metadata into the registry if we get multiple containers.
+            if metadata["id"] not in registry.metadata:  # This wouldn't get loaded normally.
                 self._id_to_path[metadata["id"]] = filename
-                self._id_to_mime[metadata["id"]] = self._id_to_mime[container_id] #Assume that they only return one MIME type.
+                self._id_to_mime[metadata["id"]] = self._id_to_mime[container_id]  # Assume that they only return one MIME type.
                 registry.metadata[metadata["id"]] = metadata
                 registry.source_provider[metadata["id"]] = self
         return requested_metadata
@@ -178,6 +178,8 @@ class LocalContainerProvider(ContainerProvider):
                 result = True
         else:
             result = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
+
+        result |= ContainerRegistry.getInstance().isExplicitReadOnly(container_id)
         self._is_read_only_cache[container_id] = result
         return result
 
@@ -216,9 +218,9 @@ class LocalContainerProvider(ContainerProvider):
             cache_path = Resources.getPath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition_id)
             cache_mtime = os.path.getmtime(cache_path)
             definition_mtime = os.path.getmtime(definition_path)
-        except FileNotFoundError: #Cache doesn't exist yet.
+        except FileNotFoundError:  # Cache doesn't exist yet.
             return None
-        except PermissionError: #No read permission.
+        except PermissionError:  # No read permission.
             return None
 
         if definition_mtime > cache_mtime:
@@ -238,7 +240,7 @@ class LocalContainerProvider(ContainerProvider):
                 if os.path.getmtime(file_path) > cache_mtime:
                     return None
         except FileNotFoundError:
-            return None #Cache for parent doesn't exist yet.
+            return None  # Cache for parent doesn't exist yet.
 
         return definition
 
@@ -298,7 +300,8 @@ class LocalContainerProvider(ContainerProvider):
     ##  Converts a file path to the MIME type of the container it represents.
     #
     #   \return The MIME type or None if it's not a container.
-    def _pathToMime(self, path: str) -> Optional[MimeType]:
+    @staticmethod
+    def _pathToMime(path: str) -> Optional[MimeType]:
         try:
             mime = MimeTypeDatabase.getMimeTypeForFile(path)
         except MimeTypeDatabase.MimeTypeNotFoundError:
@@ -309,9 +312,10 @@ class LocalContainerProvider(ContainerProvider):
         return mime
 
     ##  Converts a file path to the ID of the container it represents.
-    def _pathToId(self, path: str) -> Optional[str]:
+    @staticmethod
+    def _pathToId(path: str) -> Optional[str]:
         result = None
-        mime = self._pathToMime(path)
+        mime = LocalContainerProvider._pathToMime(path)
         if mime:
             result = urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(path)))
         return result

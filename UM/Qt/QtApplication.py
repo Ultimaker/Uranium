@@ -7,7 +7,8 @@ import signal
 from typing import List
 from typing import Any, cast, Dict, Optional
 
-from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+from UM.FlameProfiler import pyqtSlot
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
 from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics
@@ -131,10 +132,11 @@ class QtApplication(QApplication, Application):
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
 
-        if major_version is None and minor_version is None and profile is None and not self.getIsHeadLess():
+        if major_version is None or minor_version is None or profile is None:
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
-            QMessageBox.critical(None, "Failed to probe OpenGL",
-                                 "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
+            if not self.getIsHeadLess():
+                QMessageBox.critical(None, "Failed to probe OpenGL",
+                                     "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
         else:
             opengl_version_str = OpenGLContext.versionAsText(major_version, minor_version, profile)
@@ -154,7 +156,8 @@ class QtApplication(QApplication, Application):
 
     def startSplashWindowPhase(self) -> None:
         super().startSplashWindowPhase()
-
+        i18n_catalog = i18nCatalog("uranium")
+        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Initializing package manager..."))
         self._package_manager.initialize()
 
         # Read preferences here (upgrade won't work) to get the language in use, so the splash window can be shown in
@@ -168,8 +171,6 @@ class QtApplication(QApplication, Application):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
         # these checks need to be done in your <framework>Application.py class __init__().
-
-        i18n_catalog = i18nCatalog("uranium")
 
         self._configuration_error_message = ConfigurationErrorMessage(self,
               i18n_catalog.i18nc("@info:status", "Your configuration seems to be corrupt."),
@@ -575,6 +576,10 @@ class QtApplication(QApplication, Application):
             # round the font pixel ratio to quarters
             fontPixelRatio = int(fontPixelRatio * 4) / 4
             return fontPixelRatio
+
+    @pyqtProperty(str, constant=True)
+    def applicationDisplayName(self) -> str:
+        return self.getApplicationDisplayName()
 
 
 ##  Internal.

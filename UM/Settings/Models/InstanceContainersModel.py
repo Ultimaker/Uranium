@@ -147,7 +147,7 @@ class InstanceContainersModel(ListModel):
     #
     #   \param filter_list List of filter dicts to fetch multiple sets of
     #   containers. The final result is the union of these sets.
-    def setFilterList(self, filter_list: List[Dict]) -> None:
+    def setFilterList(self, filter_list: List[Dict[str, str]]) -> None:
         if filter_list != self._filter_dicts:
             self._filter_dicts = filter_list
             self.filterChanged.emit()

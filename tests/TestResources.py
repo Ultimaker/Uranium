@@ -5,6 +5,7 @@ import os
 import platform
 import unittest
 from unittest import TestCase
+from unittest.mock import patch, PropertyMock
 import tempfile
 import pytest
 
@@ -172,16 +173,48 @@ class TestResources(TestCase):
         # We put a temp file in the folder to copy, check if it arrived there.
         assert len(os.listdir(str(folder_to_move_to) + "/target")) == 1
 
-    def test_findLatestDirInPaths(self):
+    # The app version is "dev", and this is considered as the latest version possible. It will upgrade from the highest
+    # "<major>.<minor>" directory that's available.
+    def test_findLatestDirInPathsDevAppVersion(self):
         test_folder = tempfile.mkdtemp("test_folder")
-        os.mkdir(os.path.join(test_folder, "whatever"))
+        for folder in ("whatever", "2.1", "3.4", "4.2", "5.1", "10.2", "50.7"):
+            os.mkdir(os.path.join(test_folder, folder))
 
-        # There is no folder that matches what we're looking for!
-        assert Resources._findLatestDirInPaths([test_folder]) is None
+        with patch("UM.Resources.Resources.ApplicationVersion", new_callable = PropertyMock(return_value = "dev")):
+            # We should obviously find the folder that was created by means of the ApplicationVersion.
+            assert Resources._findLatestDirInPaths([test_folder]) == os.path.join(test_folder, "50.7")
 
-        os.mkdir(os.path.join(test_folder, Resources.ApplicationVersion))
-        # We should obviously find the folder that was created by means of the ApplicationVersion.
-        assert Resources._findLatestDirInPaths([test_folder]) == os.path.join(test_folder, Resources.ApplicationVersion)
+    # Tests _findLatestDirInPaths() with a normal application version, that is a version like "<major>.<minor>".
+    # In this case, it should get the highest available "<major>.<minor>" directory but no higher than the application
+    # version itself.
+    def test_findLatestDirInPathsNormalAppVersion(self):
+        test_folder = tempfile.mkdtemp("test_folder")
+        for folder in ("whatever", "2.1", "3.4", "4.2", "5.1", "10.2", "50.7"):
+            os.mkdir(os.path.join(test_folder, folder))
+
+        with patch("UM.Resources.Resources.ApplicationVersion", new_callable = PropertyMock(return_value = "4.3")):
+            # We should obviously find the folder that was created by means of the ApplicationVersion.
+            assert Resources._findLatestDirInPaths([test_folder]) == os.path.join(test_folder, "4.2")
+
+    # In this case, our app version is 4.3, but all the available directories do not have names "<major>.<minor>".
+    # _findLatestDirInPaths() should return None.
+    def test_findLatestDirInPathsNormalAppVersionNoValidUpgrade(self):
+        test_folder = tempfile.mkdtemp("test_folder")
+        for folder in ("whatever1", "whatever2", "foobar1", "dev", "master", "test"):
+            os.mkdir(os.path.join(test_folder, folder))
+
+        with patch("UM.Resources.Resources.ApplicationVersion", new_callable = PropertyMock(return_value = "4.3")):
+            # There is no folder that matches what we're looking for!
+            assert Resources._findLatestDirInPaths([test_folder]) is None
+
+    # In this case, our app version is 4.3, but all there's no available directory named as "<major>.<minor>".
+    # _findLatestDirInPaths() should return None.
+    def test_findLatestDirInPathsNormalAppVersionEmptySearchFolder(self):
+        test_folder = tempfile.mkdtemp("test_folder")
+
+        with patch("UM.Resources.Resources.ApplicationVersion", new_callable = PropertyMock(return_value = "4.3")):
+            # There is no folder that matches what we're looking for!
+            assert Resources._findLatestDirInPaths([test_folder]) is None
 
     def test_addRemoveStorageType(self):
         Resources.addStorageType(9901, "YAY")

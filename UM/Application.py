@@ -131,6 +131,10 @@ class Application:
 
     # Performs initialization that must be done before start.
     def initialize(self) -> None:
+        Logger.log("d", "Initializing %s", self._app_display_name)
+        Logger.log("d", "App Version %s", self._version)
+        Logger.log("d", "Api Version %s", self._api_version)
+        Logger.log("d", "Build type %s", self._build_type or "None")
         # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
         os.putenv("UBUNTU_MENUPROXY", "0")
 
@@ -217,7 +221,7 @@ class Application:
         self.startSplashWindowPhase()
         self.startPostSplashWindowPhase()
 
-    def getContainerRegistry(self):
+    def getContainerRegistry(self) -> ContainerRegistry:
         return self._container_registry
 
     ##  Get the lock filename
@@ -398,13 +402,19 @@ class Application:
     def getExtensions(self) -> List["Extension"]:
         return self._extensions
 
+    # Returns the path to the folder of the app itself, e.g.: '/root/blah/programs/Cura'.
     @staticmethod
-    def getInstallPrefix() -> str:
+    def getAppFolderPrefix() -> str:
         if "python" in os.path.basename(sys.executable):
             executable = sys.argv[0]
         else:
             executable = sys.executable
-        return os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(executable)), ".."))
+        return os.path.dirname(os.path.realpath(executable))
+
+    # Returns the path to the folder the app is installed _in_, e.g.: '/root/blah/programs'
+    @staticmethod
+    def getInstallPrefix() -> str:
+        return os.path.abspath(os.path.join(Application.getAppFolderPrefix(), ".."))
 
     __instance = None   # type: Application
 

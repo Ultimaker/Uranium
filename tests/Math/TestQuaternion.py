@@ -138,5 +138,14 @@ class TestQuaternion(unittest.TestCase):
         c = Quaternion(0.0, 0.0, 0.7071068286895752, 0.7071068286895752)
         self.assertEqual(c, Quaternion.slerp(q1, q2, 1.0))
 
+    def test_getData(self):
+        q = Quaternion(1,2,3,4)
+
+        data = q.getData()
+        assert data[0] == 1
+        assert data[1] == 2
+        assert data[2] == 3
+        assert data[3] == 4
+
 if __name__ == "__main__":
     unittest.main()

@@ -64,17 +64,16 @@ class ControllerProxy(QObject):
         Selection.clear()
 
     @pyqtSlot(str, int)
-    def rotateView(self, coordinate: str, angle: int) -> None:
-        self._rotateView(coordinate, angle)
-
-    # Workaround for the deprecation and pyqtSlot not playing well together
-    @deprecated("Please use ControllerProxy.setCameraRotation instead.", "4.2")
-    def _rotateView(self, coordinate: str, angle: int) -> None:
-        self.setCameraRotation(coordinate, angle)
-
-    @pyqtSlot(str, int)
     def setCameraRotation(self, coordinate: str, angle: int) -> None:
         self._controller.setCameraRotation(coordinate, angle)
+
+    ##  Changes the position of the origin of the camera.
+    #   \param coordinate The new origin of the camera. Use either:
+    #     "home": The centre of the build plate.
+    #     "3d": The centre of the build volume.
+    @pyqtSlot(str)
+    def setCameraOrigin(self, coordinate: str) -> None:
+        self._controller.setCameraOrigin(coordinate)
 
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 

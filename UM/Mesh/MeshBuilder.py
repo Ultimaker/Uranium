@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Mesh.MeshData import MeshData
@@ -13,6 +13,9 @@ import numpy
 import math
 import numbers
 
+from typing import Optional, Union
+
+
 ##  Builds new meshes by adding primitives.
 #
 #   This class functions in much the same way as a normal StringBuilder would.
@@ -21,31 +24,31 @@ import numbers
 #   result can then be converted to a normal mesh.
 class MeshBuilder:
     ##  Creates a new MeshBuilder with an empty mesh.
-    def __init__(self):
-        self._vertices = None
-        self._normals = None
-        self._indices = None
-        self._colors = None
-        self._uvs = None
+    def __init__(self) -> None:
+        self._vertices = None  # type: Optional[numpy.ndarray]
+        self._normals = None  # type: Optional[numpy.ndarray]
+        self._indices = None  # type: Optional[numpy.ndarray]
+        self._colors = None  # type: Optional[numpy.ndarray]
+        self._uvs = None  # type: Optional[numpy.ndarray]
         self._vertex_count = 0
         self._face_count = 0
         self._type = MeshType.faces
-        self._file_name = None
+        self._file_name = None  # type: Optional[str]
         # original center position
-        self._center_position = None
+        self._center_position = None  # type: Optional[Vector]
 
     ##  Build a MeshData object.
     #
     #   \return A Mesh data.
-    def build(self):
-        return MeshData(vertices=self.getVertices(), normals=self.getNormals(), indices=self.getIndices(),
-                        colors=self.getColors(), uvs=self.getUVCoordinates(), file_name=self.getFileName(),
-                        center_position=self.getCenterPosition())
+    def build(self) -> MeshData:
+        return MeshData(vertices = self.getVertices(), normals = self.getNormals(), indices = self.getIndices(),
+                        colors = self.getColors(), uvs = self.getUVCoordinates(), file_name = self.getFileName(),
+                        center_position = self.getCenterPosition())
 
-    def setCenterPosition(self, position):
+    def setCenterPosition(self, position: Optional[Vector]) -> None:
         self._center_position = position
 
-    def getCenterPosition(self):
+    def getCenterPosition(self) -> Optional[Vector]:
         return self._center_position
 
     ##  Set the type of the mesh
@@ -57,15 +60,15 @@ class MeshBuilder:
     def getType(self):
         return self._type
 
-    def getFaceCount(self):
+    def getFaceCount(self) -> int:
         return self._face_count
 
     ##  Get the array of vertices
-    def getVertices(self):
+    def getVertices(self) -> Optional[numpy.ndarray]:
         if self._vertices is None:
             return None
 
-        return self._vertices[0 : self._vertex_count] #Only return up until point where data was filled
+        return self._vertices[0: self._vertex_count] #Only return up until point where data was filled
 
     def setVertices(self, vertices):
         self._vertices = vertices
@@ -99,11 +102,11 @@ class MeshBuilder:
         return self._normals is not None
 
     ##  Return the list of vertex normals.
-    def getNormals(self):
+    def getNormals(self) -> Optional[numpy.ndarray]:
         if self._normals is None:
             return None
 
-        return self._normals[0:self._vertex_count]
+        return self._normals[0: self._vertex_count]
 
     ##  Return whether this mesh has indices.
     def hasIndices(self):
@@ -111,11 +114,11 @@ class MeshBuilder:
 
     ##  Get the array of indices
     #   \return \type{numpy.ndarray}
-    def getIndices(self):
+    def getIndices(self) -> Optional[numpy.ndarray]:
         if self._indices is None:
             return None
 
-        return self._indices[0:self._face_count]
+        return self._indices[0: self._face_count]
 
     def setIndices(self, indices):
         self._indices = indices
@@ -124,24 +127,24 @@ class MeshBuilder:
     def hasColors(self):
         return self._colors is not None
 
-    def getColors(self):
+    def getColors(self) -> Optional[numpy.ndarray]:
         if self._colors is None:
             return None
 
-        return self._colors[0:self._vertex_count]
+        return self._colors[0: self._vertex_count]
 
     def hasUVCoordinates(self):
         return self._uvs is not None
 
-    def getUVCoordinates(self):
+    def getUVCoordinates(self) -> Optional[numpy.ndarray]:
         if self._uvs is None:
             return None
-        return self._uvs[0 : self._vertex_count]
+        return self._uvs[0: self._vertex_count]
 
-    def getFileName(self):
+    def getFileName(self) -> Optional[str]:
         return self._file_name
 
-    def setFileName(self, file_name):
+    def setFileName(self, file_name: Optional[str]) -> None:
         self._file_name = file_name
 
     ##  Set the amount of faces before loading data to the mesh.
@@ -151,7 +154,7 @@ class MeshBuilder:
     #   for normals and `num_faces` amount of space for indices.
     #
     #   \param num_faces Number of faces for which memory must be reserved.
-    def reserveFaceCount(self, num_faces):
+    def reserveFaceCount(self, num_faces: Union[int, float]) -> None:
         if type(num_faces) == float:
             Logger.log("w", "Had to convert 'num_faces' with int(): %s -> %s ", num_faces, int(num_faces))
             num_faces = int(num_faces)
@@ -194,9 +197,9 @@ class MeshBuilder:
             Logger.log("w", "Had to convert %s 'num_vertices' with int(): %s -> %s ", type(num_vertices), num_vertices, int(num_vertices))
             num_vertices = int(num_vertices)
 
-        self._vertices = numpy.zeros((num_vertices, 3), dtype=numpy.float32)
-        self._colors = numpy.zeros((num_vertices, 4), dtype=numpy.float32)
-        self._indices = numpy.zeros((num_faces, 3), dtype=numpy.int32)
+        self._vertices = numpy.zeros((num_vertices, 3), dtype = numpy.float32)
+        self._colors = numpy.zeros((num_vertices, 4), dtype = numpy.float32)
+        self._indices = numpy.zeros((num_faces, 3), dtype = numpy.int32)
 
         self._vertex_count = 0
         self._face_count = 0
@@ -205,12 +208,12 @@ class MeshBuilder:
     #   \param x x coordinate of vertex.
     #   \param y y coordinate of vertex.
     #   \param z z coordinate of vertex.
-    def addVertex(self, x, y, z):
+    def addVertex(self, x: float, y: float, z: float) -> None:
         if self._vertices is None:
-            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
+            self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3))
+            self._vertices.resize((self._vertex_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         self._vertices[self._vertex_count, 0] = x
         self._vertices[self._vertex_count, 1] = y
@@ -226,18 +229,19 @@ class MeshBuilder:
     #   \param nz z part of normal.
     def addVertexWithNormal(self, x, y, z, nx, ny, nz):
         if self._vertices is None:
-            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
-        if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
-            self._normals = numpy.zeros((10, 3), dtype=numpy.float32)
+            self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
+
+        if self._normals is None:  # Specific case, reserve vert count does not reserve size for normals
+            self._normals = numpy.zeros((10, 3), dtype = numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3))
+            self._vertices.resize((self._vertex_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         if self._normals is None:
-            self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
+            self._normals = numpy.zeros((self._vertex_count, 3), dtype = numpy.float32)
 
         if len(self._normals) == self._vertex_count:
-            self._normals.resize((self._vertex_count * 2, 3))
+            self._normals.resize((self._vertex_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         self._vertices[self._vertex_count, 0] = x
         self._vertices[self._vertex_count, 1] = y
@@ -259,10 +263,10 @@ class MeshBuilder:
     #   \param z2 z coordinate of third vertex.
     def addFaceByPoints(self, x0, y0, z0, x1, y1, z1, x2, y2, z2):
         if self._indices is None:
-            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
+            self._indices = numpy.zeros((10, 3), dtype = numpy.int32)
 
         if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3))
+            self._indices.resize((self._face_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         self._indices[self._face_count, 0] = self._vertex_count
         self._indices[self._face_count, 1] = self._vertex_count + 1
@@ -297,10 +301,10 @@ class MeshBuilder:
     #   \param nz2 The Z coordinate of the normal of the third vertex.
     def addFaceWithNormals(self,x0, y0, z0, nx0, ny0, nz0, x1, y1, z1, nx1, ny1, nz1, x2, y2, z2, nx2, ny2, nz2):
         if self._indices is None:
-            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
+            self._indices = numpy.zeros((10, 3), dtype = numpy.int32)
 
         if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3))
+            self._indices.resize((self._face_count * 2, 3), refcheck = False)  # Disabling refcheck allows PyCharm's debugger to use this array.
 
         self._indices[self._face_count, 0] = self._vertex_count
         self._indices[self._face_count, 1] = self._vertex_count + 1
@@ -317,10 +321,10 @@ class MeshBuilder:
     #   \param color \type{UM.Math.Color} the color of the vertex.
     def setVertexColor(self, index, color):
         if self._colors is None:
-            self._colors = numpy.zeros((10, 4), dtype=numpy.float32)
+            self._colors = numpy.zeros((10, 4), dtype = numpy.float32)
 
         if len(self._colors) < len(self._vertices):
-            self._colors.resize((len(self._vertices), 4))
+            self._colors.resize((len(self._vertices), 4), refcheck = False)  # Disabling refcheck enables PyCharm's debugger to use this array.
 
         self._colors[index, 0] = color.r
         self._colors[index, 1] = color.g
@@ -329,10 +333,10 @@ class MeshBuilder:
 
     def setVertexUVCoordinates(self, index, u, v):
         if self._uvs is None:
-            self._uvs = numpy.zeros((10, 2), dtype=numpy.float32)
+            self._uvs = numpy.zeros((10, 2), dtype = numpy.float32)
 
         if len(self._uvs) < len(self._vertices):
-            self._uvs.resize((len(self._vertices), 2))
+            self._uvs.resize((len(self._vertices), 2), refcheck = False)  # Disabling refcheck enables PyCharm's debugger to use this array.
 
         self._uvs[index, 0] = u
         self._uvs[index, 1] = v
@@ -343,7 +347,7 @@ class MeshBuilder:
             self._vertex_count = len(vertices)
         else:
             self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
-            self._vertex_count  += len(vertices)
+            self._vertex_count += len(vertices)
 
     def addIndices(self, indices):
         if self._indices is None:
@@ -366,8 +370,8 @@ class MeshBuilder:
     # \param indices consists of row triplet indices into the input \p vertices to build up the triangular faces.
     # \param colors defines the color of each vertex in \p vertices.
     def addFacesWithColor(self, vertices, indices, colors):
-        if len(self._indices) <  self._face_count + len(indices) or len(self._colors) < self._vertex_count + len(colors) or len(self._vertices) < self._vertex_count + len(vertices):
-            Logger.log( "w", "Insufficient size of mesh_data: f_c: %s, v_c: %s, _in_l: %s, in_l: %s, _co_l: %s, co_l: %s, _ve_l: %s, ve_l: %s", self._face_count, self._vertex_count, len(self._indices), len(indices), len(self._colors), len(colors),len(self._vertices), len(vertices))
+        if len(self._indices) < self._face_count + len(indices) or len(self._colors) < self._vertex_count + len(colors) or len(self._vertices) < self._vertex_count + len(vertices):
+            Logger.log("w", "Insufficient size of mesh_data: f_c: %s, v_c: %s, _in_l: %s, in_l: %s, _co_l: %s, co_l: %s, _ve_l: %s, ve_l: %s", self._face_count, self._vertex_count, len(self._indices), len(indices), len(self._colors), len(colors),len(self._vertices), len(vertices))
             return
 
         self._indices[self._face_count:(self._face_count + len(indices)), :] = self._vertex_count + indices 
@@ -376,7 +380,7 @@ class MeshBuilder:
         end_index = self._vertex_count + len(vertices)    
         self._colors[self._vertex_count:end_index, :] = colors
         self._vertices[self._vertex_count:end_index, :] = vertices
-        self._vertex_count  += len(vertices)
+        self._vertex_count += len(vertices)
 
     ##
     # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
@@ -676,7 +680,7 @@ class MeshBuilder:
             [minW, 0, minD],
             [maxW, 0, minD],
             [0, height, 0]
-        ], dtype=numpy.float32)
+        ], dtype = numpy.float32)
         verts = verts.dot(matrix.getData()[0:3,0:3]) #Rotate the pyramid around the axis.
         verts[:] += center.getData()
         self.addVertices(verts)
@@ -688,7 +692,7 @@ class MeshBuilder:
             [start + 2, start, start + 4],
             [start, start + 3, start + 1], #The base of the pyramid.
             [start, start + 2, start + 3]
-        ], dtype=numpy.int32)
+        ], dtype = numpy.int32)
         self.addIndices(indices)
 
         if color: #If we have a colour, add the colour to each of the vertices.
@@ -752,6 +756,6 @@ class MeshBuilder:
 
         normal = (v1 - v0).cross(v2 - v0)
 
-        self.addQuad(v0, v1, v2, v3, color=color, normal = normal)
+        self.addQuad(v0, v1, v2, v3, color = color, normal = normal)
 
         return True

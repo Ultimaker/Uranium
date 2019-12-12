@@ -2,9 +2,12 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import gettext
-from typing import Any, Dict, Optional, cast
+from typing import Any, Dict, Optional, cast, TYPE_CHECKING
 
 from UM.Resources import Resources
+
+if TYPE_CHECKING:
+    from UM.Application import Application
 
 ##  Wraps a gettext translation catalog for simplified use.
 #
@@ -216,7 +219,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \param application The ``Application`` instance of the application that
     #   is running.
     @classmethod
-    def setApplication(cls, application):
+    def setApplication(cls, application: "Application") -> None:
         cls.__application = application
 
     @classmethod
@@ -234,4 +237,4 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         "filename": None,
         "message": None
     }   # type: Dict[str, Optional[str]]
-    __application = None
+    __application = None  # type: Optional[Application]

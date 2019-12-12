@@ -17,7 +17,7 @@ class Float:
     #
     #   \return True if the two numbers are considered equal, False if not.
     @staticmethod
-    def fuzzyCompare(f1, f2, tolerance = 1e-8):
+    def fuzzyCompare(f1: float, f2: float, tolerance: float = 1e-8) -> bool:
         if f1 == f2:
             return True
 
@@ -31,5 +31,5 @@ class Float:
     #
     #   \return \type{float} Minimum if f1 < minimum, maximum if f1 > maximum, else f1.
     @staticmethod
-    def clamp(f1, minimum, maximum):
+    def clamp(f1: float, minimum: float, maximum: float) -> float:
         return min(max(f1, minimum), maximum)

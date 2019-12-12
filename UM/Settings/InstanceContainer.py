@@ -1,14 +1,17 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
 import io
 import copy
+import os
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlEngine #To take ownership of this class ourselves.
 
+from UM.Trust import Trust
+from UM.Decorators import override
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For typing.
 from UM.Signal import Signal, signalemitter
@@ -62,12 +65,13 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             "container_type": InstanceContainer
         }                               # type: Dict[str, Any]
         self._instances = {}            # type: Dict[str, SettingInstance]
-        self._read_only = False #type: bool
-        self._dirty = False #type: bool
-        self._path = "" #type: str
-        self._postponed_emits = [] #type: List[Tuple[Signal, Tuple[str, str]]]
+        self._read_only = False  # type: bool
+        self._dirty = False  # type: bool
+        self._path = ""  # type: str
+        self._postponed_emits = []  # type: List[Tuple[Signal, Tuple[str, str]]]
+        self._definition = None  # type: Optional[DefinitionContainerInterface]
 
-        self._cached_values = None #type: Optional[Dict[str, Any]]
+        self._cached_values = None  # type: Optional[Dict[str, Any]]
 
     def __hash__(self) -> int:
         # We need to re-implement the hash, because we defined the __eq__ operator.
@@ -191,7 +195,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     name = pyqtProperty(str, fget = getName, fset = setName, notify = pyqtNameChanged)
 
     def getReadOnly(self) -> bool:
-        return _containerRegistry.isReadOnly(self.getId())
+        return _containerRegistry.isReadOnly(self.getId())  # TODO???: Why not also take self._read_only into account?
     readOnly = pyqtProperty(bool, fget = getReadOnly)
 
     def getNumInstances(self) -> int:
@@ -280,9 +284,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         # **WITHOUT** applying the cached values. This way there won't be any property changed signals when we are
         # just checking if a property exists.
         #
-        self._instantiateMissingSettingInstancesInCache()
         if self._cached_values and key in self._cached_values and property_name == "value":
             return True
+        self._instantiateMissingSettingInstancesInCache()
         return key in self._instances and hasattr(self._instances[key], property_name)
 
     ##  Creates SettingInstances that are missing in this InstanceContainer from the cache if any.
@@ -326,12 +330,14 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                 "Tried to setProperty [%s] with value [%s] with key [%s] on read-only object [%s]" % (
                     property_name, property_value, key, self.id))
             return
-        if key not in self._instances:
-            if not self.getDefinition():
-                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and the container has no definition", key, self.getName())
-                return
 
-            setting_definition = self.getDefinition().findDefinitions(key = key)
+        if key not in self._instances:
+            try:
+                definition = self.getDefinition()
+            except DefinitionNotFoundError:
+                Logger.log("w", "Tried to set value of setting when the container has no definition")
+                return
+            setting_definition = definition.findDefinitions(key = key)
             if not setting_definition:
                 Logger.log("w", "Tried to set value of setting %s that has no instance in container %s or its definition %s", key, self.getName(), self.getDefinition().getName())
                 return
@@ -400,11 +406,13 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         self._instantiateCachedValues()
         parser = configparser.ConfigParser(interpolation = None)
 
-        if not self.getDefinition():
+        try:
+            self.getDefinition()
+        except DefinitionNotFoundError:
             Logger.log("w", "Tried to serialize an instance container without definition, this is not supported")
             return ""
 
@@ -484,6 +492,28 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             #Logger.log("d", "Could not get version from serialized: %s", e)
             pass
         return version
+
+    @override(ContainerInterface)
+    def _trustHook(self, file_name: Optional[str]) -> bool:
+        # NOTE: In an enterprise environment, if there _is_ a signature file for an unbundled package, verify it.
+        #       (Note that this is a different behaviour w.r.t. the plugins, where the check is not just verification!)
+        #       (Note that there shouldn't be a check if trust has to be here, since it'll continue on 'no signature'.)
+        if file_name is None:
+            return True
+        trust_instance = Trust.getInstanceOrNone()
+        if trust_instance is not None:
+            from UM.Application import Application
+            install_prefix = os.path.abspath(Application.getInstallPrefix())
+            try:
+                common_path = os.path.commonpath([install_prefix, file_name])
+            except ValueError:
+                common_path = ""
+            if common_path is "" or not common_path.startswith(install_prefix):
+                if trust_instance.signatureFileExistsFor(file_name):
+                    _containerRegistry.setExplicitReadOnly(self.getId())  # TODO???: self._read_only = True
+                    if not trust_instance.signedFileCheck(file_name):
+                        raise Exception("Can't validate file {0}".format(file_name))
+        return True
 
     ##  \copydoc ContainerInterface::deserialize
     #
@@ -643,10 +673,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self) -> DefinitionContainerInterface:
-        definitions = _containerRegistry.findDefinitionContainers(id = self._metadata["definition"])
-        if not definitions:
-            raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(self._metadata["definition"], self.getId()))
-        return definitions[0]
+        if self._definition is None:
+            definitions = _containerRegistry.findDefinitionContainers(id = self._metadata.get("definition", ""))
+            if not definitions:
+                raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(self._metadata.get("definition", ""), self.getId()))
+            self._definition = definitions[0]
+        return self._definition
 
     ##  Set the DefinitionContainer to use for new instance creation.
     #
@@ -654,6 +686,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #   way of figuring out what SettingDefinition to use when creating a new SettingInstance.
     def setDefinition(self, definition_id: str) -> None:
         self._metadata["definition"] = definition_id
+        self._definition = None
 
     def __lt__(self, other: object) -> bool:
         if type(other) != type(self):
@@ -661,7 +694,6 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         other = cast(InstanceContainer, other)
         own_weight = int(self.getMetaDataEntry("weight", 0))
         other_weight = int(other.getMetaDataEntry("weight", 0))
-
         if own_weight and other_weight:
             return own_weight < other_weight
 
