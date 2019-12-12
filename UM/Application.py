@@ -131,6 +131,10 @@ class Application:
 
     # Performs initialization that must be done before start.
     def initialize(self) -> None:
+        Logger.log("d", "Initializing %s", self._app_display_name)
+        Logger.log("d", "App Version %s", self._version)
+        Logger.log("d", "Api Version %s", self._api_version)
+        Logger.log("d", "Build type %s", self._build_type or "None")
         # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
         os.putenv("UBUNTU_MENUPROXY", "0")
 
