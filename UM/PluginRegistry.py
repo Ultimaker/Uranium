@@ -81,6 +81,13 @@ class PluginRegistry(QObject):
 
     def setCheckIfTrusted(self, check_if_trusted: bool) -> None:
         self._check_if_trusted = check_if_trusted
+
+        # As part of CURA-7016, for now, we skip checking altogether if the public key is missing. That might not be as
+        #   bad as it sounds, as non-admin enterprise users shouldn't have access to that file's location anyway.
+        # TODO: DON'T FORGET TO REMOVE THESE (COMMENTS AND) NEXT 2 LINES WHEN WE _CAN_ START SIGNING THE PLUGINS.
+        if not os.path.exists(Trust.getPublicRootKeyPath()):
+            self._check_if_trusted = False
+
         if self._check_if_trusted:
             self._trust_checker = Trust.getInstance()
             # 'Trust.getInstance()' will raise an exception if anything goes wrong (e.g.: 'unable to read public key').
