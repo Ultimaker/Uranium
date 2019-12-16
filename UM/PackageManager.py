@@ -296,7 +296,7 @@ class PackageManager(QObject):
 
         return all_installed_ids
 
-    def getUserInstalledPackagesOnMarketplace(self) -> List[Tuple[str, str]]:
+    def getUserSubscribedPackagesAndVersions(self) -> List[Tuple[str, str]]:
         package_ids_and_version = []
         for package in self._installed_package_dict.keys():
             package_info = self.getInstalledPackageInfo(package)
