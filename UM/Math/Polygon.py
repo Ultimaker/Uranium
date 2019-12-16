@@ -183,7 +183,7 @@ class Polygon:
 
         polygon_intersection = polygon_me.intersection(polygon_other)
         ret_size = None
-        if polygon_intersection:
+        if polygon_intersection and polygon_intersection.area > 0:
             ret_size = (polygon_intersection.bounds[2] - polygon_intersection.bounds[0],
                         polygon_intersection.bounds[3] - polygon_intersection.bounds[1],
                         )
