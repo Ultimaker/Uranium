@@ -296,6 +296,17 @@ class PackageManager(QObject):
 
         return all_installed_ids
 
+    def getUserInstalledPackagesOnMarketplace(self) -> List[Tuple[str, str]]:
+        package_ids_and_version = []
+        for package in self._installed_package_dict.keys():
+            package_info = self.getInstalledPackageInfo(package)
+            if package_info is None:
+                continue
+            if 'package_version' not in package_info:
+                continue
+            package_ids_and_version.append((package, package_info['package_version']))
+        return package_ids_and_version
+
     ## Get a list of tuples that contain the package ID and version.
     #  Used by the Marketplace to check which packages have updates available.
     def getAllInstalledPackageIdsAndVersions(self) -> List[Tuple[str, str]]:
