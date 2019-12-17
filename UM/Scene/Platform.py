@@ -82,10 +82,13 @@ class Platform(SceneNode.SceneNode):
 
         self._texture = OpenGL.getInstance().createTexture()
 
-        container = self._global_container_stack.findContainer({"platform_texture":"*"})
+        container = self._global_container_stack.findContainer({"platform_texture": "*"})
         if container:
             texture_file = container.getMetaDataEntry("platform_texture")
-            self._texture.load(Resources.getPath(Resources.Images, texture_file))
+            try:
+                self._texture.load(Resources.getPath(Resources.Images, texture_file))
+            except FileNotFoundError:
+                Logger.log("w", "Unable to find platform texture [%s] as specified in the definition", texture_file)
         # Note: if no texture file is specified, a 1 x 1 pixel transparent image is created
         # by UM.GL.QtTexture to prevent rendering issues
 
