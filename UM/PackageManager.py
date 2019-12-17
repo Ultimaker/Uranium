@@ -302,9 +302,9 @@ class PackageManager(QObject):
             package_info = self.getInstalledPackageInfo(package)
             if package_info is None:
                 continue
-            if 'package_version' not in package_info:
+            if "package_version" not in package_info:
                 continue
-            package_ids_and_version.append((package, package_info['package_version']))
+            package_ids_and_version.append((package, package_info["package_version"]))
         return package_ids_and_version
 
     ## Get a list of tuples that contain the package ID and version.
