@@ -182,13 +182,9 @@ class Polygon:
             return None
 
         polygon_intersection = polygon_me.intersection(polygon_other)
-        if polygon_intersection.is_empty:
-            return None
-        if not polygon_intersection.is_valid:
-            return None
 
         ret_size = None
-        if polygon_intersection:
+        if polygon_intersection and not polygon_intersection.is_empty and polygon_intersection.is_valid:
             ret_size = (polygon_intersection.bounds[2] - polygon_intersection.bounds[0],
                         polygon_intersection.bounds[3] - polygon_intersection.bounds[1],
                         )
