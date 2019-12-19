@@ -322,13 +322,15 @@ class HttpRequestManager(QObject):
                         Logger.log("d", "%s aborted due to timeout [%s sec]", request, request.timeout)
                 else:
                     # Schedule the timeout Timer to the next most recent timeout as a checkpoint.
-                    next_check_time = request.getTimeToTimeout(now) + 1.0  # TODO: doc this, use 1 extra second margin.
-                    self._timeout_timer.stop()
-                    self._timeout_timer.setInterval(next_check_time * 1000)
-                    self._timeout_timer.start()
-                    has_timeout_timer_rescheduled = True
-                    Logger.log("d", "Timeout timer scheduled in [%s] sec for request", request)
-                    break
+                    seconds_to_timeout = request.getTimeToTimeout(now)
+                    if seconds_to_timeout is not None:  # Make type checking happy
+                        next_check_time = seconds_to_timeout + 0.5  # add a little margin
+                        self._timeout_timer.stop()
+                        self._timeout_timer.setInterval(next_check_time * 1000)
+                        self._timeout_timer.start()
+                        has_timeout_timer_rescheduled = True
+                        Logger.log("d", "Timeout timer scheduled in [%s] sec for request", request)
+                        break
 
         if not has_timeout_timer_rescheduled:
             self._timeout_timer.stop()
