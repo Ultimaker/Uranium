@@ -729,7 +729,7 @@ class PluginRegistry(QObject):
                 return False
         return True
 
-    ##  Get a speficic plugin object given an ID. If not loaded, load it.
+    ##  Get a specific plugin object given an ID. If not loaded, load it.
     #   \param plugin_id \type{string} The ID of the plugin object to get.
     def getPluginObject(self, plugin_id: str) -> PluginObject:
         if plugin_id not in self._plugins:
