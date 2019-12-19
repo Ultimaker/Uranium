@@ -426,7 +426,7 @@ class HttpRequestManager(QObject):
         #
         #  - Do nothing if the request was aborted by the user.
         #  - Call the timeout callback if the request was aborted due to timeout.
-        if request_data.reply is not None and  request_data.reply.error() == QNetworkReply.OperationCanceledError:
+        if request_data.reply is not None and request_data.reply.error() == QNetworkReply.OperationCanceledError:
             Logger.log("d", "%s was aborted, do nothing", request_data)
             return
 
