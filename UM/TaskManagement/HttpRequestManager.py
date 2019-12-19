@@ -55,16 +55,20 @@ class HttpRequestData:
     # is not available yet, and I'm not sure if disconnecting a lambda can potentially cause issues. For this reason,
     # I'm using the following facade callback functions to handle the lambda function cases.
     def onCallback(self, reply: "QNetworkReply") -> None:
-        self.callback(reply)
+        if self.callback is not None:
+            self.callback(reply)
 
     def onErrorCallback(self, reply: "QNetworkReply", error: "QNetworkReply.NetworkError") -> None:
-        self.error_callback(reply, error)
+        if self.error_callback is not None:
+            self.error_callback(reply, error)
 
     def onDownloadProgressCallback(self, bytes_received: int, bytes_total: int) -> None:
-        self.download_progress_callback(bytes_received, bytes_total)
+        if self.download_progress_callback is not None:
+            self.download_progress_callback(bytes_received, bytes_total)
 
     def onUploadProgressCallback(self, bytes_sent: int, bytes_total: int) -> None:
-        self.upload_progress_callback(bytes_sent, bytes_total)
+        if self.upload_progress_callback is not None:
+            self.upload_progress_callback(bytes_sent, bytes_total)
 
     def __str__(self) -> str:
         data = "no-data"
@@ -181,8 +185,9 @@ class HttpRequestManager(QObject):
 
             # If the request is currently in progress, abort it.
             if request in self._current_requests:
-                request.reply.abort()
-                Logger.log("d", "%s aborted", request)
+                if request.reply is not None:
+                    request.reply.abort()
+                    Logger.log("d", "%s aborted", request)
 
     # This function creates a HttpRequestData with the given data and puts it into the pending request queue.
     # If no request processing call has been scheduled, it will schedule it too.
@@ -207,11 +212,7 @@ class HttpRequestManager(QObject):
         # Set headers
         if headers_dict is not None:
             for key, value in headers_dict.items():
-                if isinstance(key, str):
-                    key = key.encode("utf-8")
-                if isinstance(value, str):
-                    value = value.encode("utf-8")
-                request.setRawHeader(key, value)
+                request.setRawHeader(key.encode("utf-8"), value.encode("utf-8"))
 
         # Generate a unique request ID
         request_id = uuid.uuid4().hex
@@ -286,7 +287,10 @@ class HttpRequestManager(QObject):
             self._current_requests.add(request_data)
 
     def _onRequestError(self, request_data: "HttpRequestData", error: "QNetworkReply.NetworkError") -> None:
-        Logger.log("d", "%s got an error %s, %s", request_data, error, request_data.reply.errorString())
+        error_string = None
+        if request_data.reply is not None:
+            error_string = request_data.reply.errorString()
+        Logger.log("d", "%s got an error %s, %s", request_data, error, error_string)
         with self._request_lock:
             # safeguard: make sure that we have the reply in the currently in-progress requests set
             if request_data not in self._current_requests:
@@ -313,7 +317,7 @@ class HttpRequestManager(QObject):
 
     def _onRequestFinished(self, request_data: "HttpRequestData") -> None:
         # Do nothing if a request was aborted.
-        if request_data.reply.error() == QNetworkReply.OperationCanceledError:
+        if request_data.reply is not None and request_data.reply.error() == QNetworkReply.OperationCanceledError:
             Logger.log("d", "%s was aborted, do nothing", request_data)
             return
 
