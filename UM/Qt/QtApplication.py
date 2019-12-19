@@ -37,6 +37,8 @@ from UM.VersionUpgradeManager import VersionUpgradeManager
 from UM.View.GL.OpenGLContext import OpenGLContext
 from UM.Version import Version
 
+from UM.TaskManagement.HttpRequestManager import HttpRequestManager
+
 from UM.Operations.GroupedOperation import GroupedOperation #To clear the scene.
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation #To clear the scene.
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator #To clear the scene.
@@ -111,6 +113,8 @@ class QtApplication(QApplication, Application):
         self._recent_files = [] #type: List[QUrl]
 
         self._configuration_error_message = None #type: Optional[ConfigurationErrorMessage]
+
+        self._http_network_request_manager = HttpRequestManager(parent = self)
 
     def addCommandLineOptions(self) -> None:
         super().addCommandLineOptions()
@@ -563,6 +567,9 @@ class QtApplication(QApplication, Application):
     @pyqtSlot(result = QObject)
     def getPackageManager(self) -> PackageManager:
         return self._package_manager
+
+    def getHttpRequestManager(self) -> "HttpRequestManager":
+        return self._http_network_request_manager
 
     ##  Gets the instance of this application.
     #
