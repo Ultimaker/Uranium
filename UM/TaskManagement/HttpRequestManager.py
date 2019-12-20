@@ -339,9 +339,9 @@ class HttpRequestManager(QObject):
         # We don't need to reschedule _processRequest() because abort() will trigger finished() which will
         # eventually try to schedule _processRequest().
 
-    # Processes the next request in the pending queue. Stops if there is no more pending requests. It also stops if
-    # the maximum number of concurrent requests has been reached.
-    def _processRequestsInQueue(self) -> None:
+    # Processes the next requests in the pending queue. This function will issue as many requests to the QNetworkManager
+    # as possible but limited by the value "_max_concurrent_requests". It stops if there is no more pending requests.
+    def _processNextRequestsInQueue(self) -> None:
         with self._request_lock:
             # do nothing if there's no more requests to process
             if not self._request_queue:
