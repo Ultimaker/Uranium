@@ -294,7 +294,7 @@ class HttpRequestManager(QObject):
 
             # Schedule a call to process pending requests in the queue
             if not self._process_requests_scheduled:
-                self._application.callLater(self._processRequestsInQueue)
+                self._application.callLater(self._processNextRequestsInQueue)
                 self._process_requests_scheduled = True
                 Logger.log("d", "process requests call has been scheduled")
 
@@ -417,7 +417,7 @@ class HttpRequestManager(QObject):
             self._application.callLater(request_data.error_callback, request_data.reply, error)
 
         # continue to process the next request
-        self._processRequestsInQueue()
+        self._processNextRequestsInQueue()
         self._checkRequetsForTimeouts()  # TODO: optimize this
 
     def _onRequestFinished(self, request_data: "HttpRequestData") -> None:
@@ -454,5 +454,5 @@ class HttpRequestManager(QObject):
             self._application.callLater(request_data.callback, request_data.reply)
 
         # continue to process the next request
-        self._processRequestsInQueue()
+        self._processNextRequestsInQueue()
         self._checkRequetsForTimeouts()  # TODO: optimize this
