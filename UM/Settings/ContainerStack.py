@@ -241,15 +241,20 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             if start_index >= len(self._containers):
                 return None
             containers = self._containers[start_index:]
-
-        for container in containers:
-            if skip_until_container and container.getId() != skip_until_container:
-                continue #Skip.
-            skip_until_container = None #When we find the container, stop skipping.
-
-            value = container.getProperty(key, property_name, context)
+        if property_name != "value":
+            # Definition containers are the only one that set something for non-value, so just skip to the def container.
+            value = containers[-1].getProperty(key, property_name, context)
             if value is not None:
                 return value
+        else:
+            for container in containers:
+                if skip_until_container and container.getId() != skip_until_container:
+                    continue #Skip.
+                skip_until_container = None #When we find the container, stop skipping.
+
+                value = container.getProperty(key, property_name, context)
+                if value is not None:
+                    return value
 
         if self._next_stack and use_next:
             return self._next_stack.getRawProperty(key, property_name, context = context,

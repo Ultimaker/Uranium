@@ -45,7 +45,7 @@ def test_valueChanges(container_registry):
 
     # Create a setting definition for our one and only setting!
     setting_definition = SettingDefinition("test_setting")
-    setting_definition._deserialize_dict({"value": 10, "label": "blorp", "type": "float", "description": "nah", "maximum_value": 23, "maximum_value_warning": 21})
+    setting_definition._deserialize_dict({"value": 10, "label": "blorp", "type": "float", "description": "nah", "maximum_value": 23, "maximum_value_warning": 21, "enabled": "test_setting != 20"})
     definition_container.addDefinition(setting_definition)
 
     # Make a single setting instance for our one and only setting.
