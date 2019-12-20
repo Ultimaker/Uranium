@@ -432,7 +432,7 @@ class HttpRequestManager(QObject):
 
         Logger.log("d", "%s finished", request_data)
         with self._request_lock:
-            # safeguard: ake sure that we have the reply in the currently in-progress requests set.
+            # safeguard: make sure that we have the reply in the currently in-progress requests set.
             if request_data not in self._current_requests:
                 # This can happen if a request has been aborted. The finished() signal will still be triggered at the
                 # end. In this case, do nothing with this request.
