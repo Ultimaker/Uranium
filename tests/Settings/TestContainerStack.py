@@ -816,7 +816,7 @@ def test_getHasErrors(container_stack):
     assert not container_stack.hasErrors()
 
     # Fake the property so it does return validation state
-    definition_container.getProperty = MagicMock(return_value = ValidatorState.MaximumError)
+    container_stack.getProperty = MagicMock(return_value = ValidatorState.MaximumError)
     assert container_stack.hasErrors() # Now the container stack has errors!
 
     assert container_stack.getErrorKeys() == ["test_key"]
