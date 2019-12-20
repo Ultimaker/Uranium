@@ -173,7 +173,7 @@ class HttpRequestManager(QObject):
         self._request_queue = deque()  # type: Deque[HttpRequestData]
 
         # A set of all currently in progress requests
-        self._current_requests = set()  # type: Set[HttpRequestData]
+        self._requests_in_progress = set()  # type: Set[HttpRequestData]
         self._request_lock = RLock()
         self._process_requests_scheduled = False
 
@@ -238,7 +238,7 @@ class HttpRequestManager(QObject):
                 self._request_queue.remove(request)
 
             # If the request is currently in progress, abort it.
-            if request in self._current_requests:
+            if request in self._requests_in_progress:
                 if request.reply is not None and request.reply.isRunning():
                     request.reply.abort()
                     Logger.log("d", "%s aborted", request)
@@ -311,7 +311,7 @@ class HttpRequestManager(QObject):
             # Sort all currently in progress requests by their remaining times to timeout.
             #  - Abort the requests that have exceeded the timeout limit.
             #  - Schedule the timeout Timer to the next most recent timeout as a checkpoint.
-            requests_with_timeout = filter(lambda r: r.timeout is not None, self._current_requests)
+            requests_with_timeout = filter(lambda r: r.timeout is not None, self._requests_in_progress)
             sorted_requests = sorted(requests_with_timeout, key = lambda r: r.getTimeToTimeout(now))
             for request in sorted_requests:
                 if request.hasExceededTimeout(now):
@@ -350,7 +350,7 @@ class HttpRequestManager(QObject):
                 return
 
             # do not exceed the max request limit
-            if len(self._current_requests) >= self._max_concurrent_requests:
+            if len(self._requests_in_progress) >= self._max_concurrent_requests:
                 self._process_requests_scheduled = False
                 Logger.log("d", "The in-progress requests has reached the limit %s, stop",
                            self._max_concurrent_requests)
@@ -385,7 +385,7 @@ class HttpRequestManager(QObject):
             reply.uploadProgress.connect(request_data.onUploadProgressCallback, type = Qt.QueuedConnection)
 
         with self._request_lock:
-            self._current_requests.add(request_data)
+            self._requests_in_progress.add(request_data)
             request_data.setStartTime(now)
             self._checkRequetsForTimeouts()
 
@@ -396,7 +396,7 @@ class HttpRequestManager(QObject):
         Logger.log("d", "%s got an error %s, %s", request_data, error, error_string)
         with self._request_lock:
             # safeguard: make sure that we have the reply in the currently in-progress requests set
-            if request_data not in self._current_requests:
+            if request_data not in self._requests_in_progress:
                 # TODO: ERROR, should not happen
                 Logger.log("e", "%s not found in the in-progress set", request_data)
                 pass
@@ -408,7 +408,7 @@ class HttpRequestManager(QObject):
                 if request_data.upload_progress_callback is not None:
                     request_data.reply.uploadProgress.disconnect(request_data.onUploadProgressCallback)
 
-            self._current_requests.remove(request_data)
+            self._requests_in_progress.remove(request_data)
 
         # schedule the error callback if there is one
         if request_data.error_callback is not None:
@@ -433,7 +433,7 @@ class HttpRequestManager(QObject):
         Logger.log("d", "%s finished", request_data)
         with self._request_lock:
             # safeguard: make sure that we have the reply in the currently in-progress requests set.
-            if request_data not in self._current_requests:
+            if request_data not in self._requests_in_progress:
                 # This can happen if a request has been aborted. The finished() signal will still be triggered at the
                 # end. In this case, do nothing with this request.
                 Logger.log("e", "%s not found in the in-progress set", request_data)
@@ -445,7 +445,7 @@ class HttpRequestManager(QObject):
                     if request_data.upload_progress_callback is not None:
                         request_data.reply.uploadProgress.disconnect(request_data.onUploadProgressCallback)
 
-                self._current_requests.remove(request_data)
+                self._requests_in_progress.remove(request_data)
 
         # schedule the callback if there is one
         if request_data.callback is not None:
