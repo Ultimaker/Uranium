@@ -241,8 +241,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             if start_index >= len(self._containers):
                 return None
             containers = self._containers[start_index:]
-        if property_name != "value":
-            # Definition containers are the only one that set something for non-value, so just skip to the def container.
+        if property_name not in ["value", "state", "validationState"]:
+            # Value, state & validationState can be changed by instanceContainer, the rest cant. Ask the definition
+            # right away
             value = containers[-1].getProperty(key, property_name, context)
             if value is not None:
                 return value
