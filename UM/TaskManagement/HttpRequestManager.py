@@ -166,7 +166,8 @@ class HttpRequestManager(QObject):
 
         self._network_manager = QNetworkAccessManager(self)
 
-        # Max number of concurrent requests that can be issued
+        # All the requests that have been issued to the QNetworkManager are considered as running concurrently. This
+        # number defines the max number of requests that will be issued to the QNetworkManager.
         self._max_concurrent_requests = max_concurrent_requests
 
         # A FIFO queue for the pending requests.
