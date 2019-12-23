@@ -263,6 +263,8 @@ class QtApplication(QApplication, Application):
         self.registerObjects(self._qml_engine)
 
         Bindings.register()
+
+        self.showSplashMessage(self._i18n_catalog.i18nc("@info:progress", "Building UI..."))
         self._qml_engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
 
@@ -396,7 +398,7 @@ class QtApplication(QApplication, Application):
             self._main_window = window
             if self._main_window is not None:
                 self._main_window.windowStateChanged.connect(self._onMainWindowStateChanged)
-
+            Logger.debug("main window change emit")
             self.mainWindowChanged.emit()
 
     def setVisible(self, visible: bool) -> None:
@@ -500,6 +502,7 @@ class QtApplication(QApplication, Application):
             self.createSplash()
         
         if QtApplication.splash:
+            self.processEvents()
             QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
         elif self.getIsHeadLess():
