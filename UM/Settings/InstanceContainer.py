@@ -477,6 +477,23 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return configuration_type
 
     @classmethod
+    def _getVersionAndConfigurationFromSerialized(cls, serialized: str) -> Tuple[Optional[int], Optional[str]]:
+        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
+        if configuration_type is None:
+            Logger.log("w", "Could not determine configuration type.")
+            return None, None
+        # get version
+        version = None
+        try:
+            import UM.VersionUpgradeManager
+            version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
+                                                                                                  serialized)
+        except Exception as e:
+            # Logger.log("d", "Could not get version from serialized: %s", e)
+            pass
+        return version, configuration_type
+
+    @classmethod
     def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
         configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
         if configuration_type is None:

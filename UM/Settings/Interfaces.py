@@ -1,7 +1,7 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict, List, Optional, Set, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Set, TYPE_CHECKING, Tuple
 
 import UM.Decorators
 from UM.Logger import Logger
@@ -137,8 +137,11 @@ class ContainerInterface:
     ##  Updates the given serialized data to the latest version.
     @classmethod
     def _updateSerialized(cls, serialized: str, file_name: Optional[str] = None) -> str:
-        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
-        version = cls.getVersionFromSerialized(serialized)
+        configuration_type, version = cls._getVersionAndConfigurationFromSerialized(serialized)
+        if configuration_type is None and version is None:
+            configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
+            version = cls.getVersionFromSerialized(serialized)
+
         if configuration_type is not None and version is not None:
             from UM.VersionUpgradeManager import VersionUpgradeManager
             result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version,
@@ -147,6 +150,10 @@ class ContainerInterface:
             if result is not None:
                 serialized = result.files_data[0]
         return serialized
+
+    @classmethod
+    def _getVersionAndConfigurationFromSerialized(cls, serialized: str) -> Tuple[Optional[int], Optional[str]]:
+        return None, None
 
     @classmethod
     def getLoadingPriority(cls) -> int:
