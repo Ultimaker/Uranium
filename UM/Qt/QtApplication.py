@@ -267,7 +267,7 @@ class QtApplication(QApplication, Application):
 
         Bindings.register()
 
-        self.showSplashMessage(self._i18n_catalog.i18nc("@info:progress", "Building UI..."))
+        self.showSplashMessage(self._i18n_catalog.i18nc("@info:progress", "Loading UI..."))
         self._qml_engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
 
