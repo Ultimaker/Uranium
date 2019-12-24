@@ -261,6 +261,9 @@ class QtApplication(QApplication, Application):
         self._qml_engine.rootContext().setContextProperty("screenScaleFactor", self._screenScaleFactor())
 
         self.registerObjects(self._qml_engine)
+        # Preload theme. The theme will be loaded on first use, which will incur a ~0.1s freeze the MainThread.
+        # Do it here, while the splash screen is shown, which also makes this freeze explicit and traceable.
+        self.getTheme()
 
         Bindings.register()
 
