@@ -142,7 +142,10 @@ class Polygon:
         if polygon_intersection.area == 0:
             return Polygon()
 
-        return Polygon(points = [list(p) for p in polygon_intersection.exterior.coords])
+        points = [list(p) for p in polygon_intersection.exterior.coords]
+        if points[0] == points[-1]:
+            points.pop()
+        return Polygon(points)
 
     #  Computes the convex hull of the union of the convex hulls of this and another polygon.
     #
