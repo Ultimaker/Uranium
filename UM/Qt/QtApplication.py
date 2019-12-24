@@ -261,8 +261,8 @@ class QtApplication(QApplication, Application):
         self._qml_engine.rootContext().setContextProperty("screenScaleFactor", self._screenScaleFactor())
 
         self.registerObjects(self._qml_engine)
-        # Preload theme. The theme will be loaded on first use, which will incur a ~0.1s freeze the MainThread.
-        # Do it here, while the splash screen is shown, which also makes this freeze explicit and traceable.
+        # Preload theme. The theme will be loaded on first use, which will incur a ~0.1s freeze on the MainThread.
+        # Do it here, while the splash screen is shown. Also makes this freeze explicit and traceable.
         self.getTheme()
 
         Bindings.register()
@@ -505,9 +505,9 @@ class QtApplication(QApplication, Application):
             self.createSplash()
         
         if QtApplication.splash:
-            self.processEvents()
-            QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)
-            self.processEvents()
+            self.processEvents()  # Process events from previous loading phase before updating the message
+            QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)  # Now update the message
+            self.processEvents()  # And make sure it is immediately visible
         elif self.getIsHeadLess():
             Logger.log("d", message)
 
