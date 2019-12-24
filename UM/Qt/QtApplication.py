@@ -191,6 +191,7 @@ class QtApplication(QApplication, Application):
 
         # Load preferences again because before we have loaded the plugins, we don't have the upgrade routine for
         # the preferences file. Now that we have, load the preferences file again so it can be upgraded and loaded.
+        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
             preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
             with open(preferences_filename, "r", encoding = "utf-8") as f:
@@ -202,8 +203,8 @@ class QtApplication(QApplication, Application):
         except (FileNotFoundError, UnicodeDecodeError):
             Logger.log("i", "The preferences file cannot be found or it is corrupted, so we will use default values")
 
+        self.processEvents()
         # Force the configuration file to be written again since the list of plugins to remove maybe changed
-        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
             self._preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
             self._preferences.readFromFile(self._preferences_filename)
@@ -248,6 +249,7 @@ class QtApplication(QApplication, Application):
     def initializeEngine(self) -> None:
         # TODO: Document native/qml import trickery
         self._qml_engine = QQmlApplicationEngine(self)
+        self.processEvents()
         self._qml_engine.setOutputWarningsToStandardError(False)
         self._qml_engine.warnings.connect(self.__onQmlWarning)
 
@@ -258,12 +260,14 @@ class QtApplication(QApplication, Application):
             self._qml_engine.addImportPath(os.path.join(os.path.dirname(__file__), "qml"))
 
         self._qml_engine.rootContext().setContextProperty("QT_VERSION_STR", QT_VERSION_STR)
+        self.processEvents()
         self._qml_engine.rootContext().setContextProperty("screenScaleFactor", self._screenScaleFactor())
 
         self.registerObjects(self._qml_engine)
         # Preload theme. The theme will be loaded on first use, which will incur a ~0.1s freeze on the MainThread.
         # Do it here, while the splash screen is shown. Also makes this freeze explicit and traceable.
         self.getTheme()
+        self.processEvents()
 
         Bindings.register()
 
