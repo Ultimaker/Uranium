@@ -401,7 +401,6 @@ class QtApplication(QApplication, Application):
             self._main_window = window
             if self._main_window is not None:
                 self._main_window.windowStateChanged.connect(self._onMainWindowStateChanged)
-            Logger.debug("main window change emit")
             self.mainWindowChanged.emit()
 
     def setVisible(self, visible: bool) -> None:
