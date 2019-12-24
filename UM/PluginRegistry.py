@@ -21,6 +21,7 @@ from UM.Resources import Resources
 from UM.Trust import Trust
 from UM.Version import Version
 import time
+from PyQt5.QtCore import QCoreApplication
 
 i18n_catalog = i18nCatalog("uranium")
 
@@ -359,6 +360,7 @@ class PluginRegistry(QObject):
                 #
                 try:
                     self.loadPlugin(plugin_id)
+                    QCoreApplication.processEvents()  # Ensure that the GUI does not freeze.
                     # Add the plugin to the list after actually load the plugin:
                     self._all_plugins.append(plugin_id)
                     self._plugins_installed.append(plugin_id)
