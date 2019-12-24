@@ -17,6 +17,8 @@ from UM.PluginObject import PluginObject
 from UM.PluginRegistry import PluginRegistry  # To find plug-ins.
 from UM.Resources import Resources  # To load old versions from.
 
+from PyQt5.QtCore import QCoreApplication
+
 catalogue = UM.i18n.i18nCatalog("uranium")
 
 ##  File that needs upgrading, with all the required info to upgrade it.
@@ -150,7 +152,7 @@ class VersionUpgradeManager:
         while self._upgrade_tasks:
             upgrade_task = self._upgrade_tasks.popleft()
             self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type)  # Upgrade this file.
-
+            QCoreApplication.processEvents()  # Ensure that the GUI does not freeze.
         if upgraded:
             message = UM.Message.Message(text = catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", Application.getInstance().getApplicationName()), title = catalogue.i18nc("@info:title", "Version Upgrade"))
             message.show()
