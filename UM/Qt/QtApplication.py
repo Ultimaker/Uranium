@@ -264,12 +264,13 @@ class QtApplication(QApplication, Application):
         self._qml_engine.rootContext().setContextProperty("screenScaleFactor", self._screenScaleFactor())
 
         self.registerObjects(self._qml_engine)
+
+        Bindings.register()
+
         # Preload theme. The theme will be loaded on first use, which will incur a ~0.1s freeze on the MainThread.
         # Do it here, while the splash screen is shown. Also makes this freeze explicit and traceable.
         self.getTheme()
         self.processEvents()
-
-        Bindings.register()
 
         self.showSplashMessage(self._i18n_catalog.i18nc("@info:progress", "Loading UI..."))
         self._qml_engine.load(self._main_qml)
