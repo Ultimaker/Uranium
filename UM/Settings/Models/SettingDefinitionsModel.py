@@ -277,9 +277,9 @@ class SettingDefinitionsModel(QAbstractListModel):
         for child in definitions[0].children:
             self.expandRecursive(child.key)
 
-    ##  Hide the children of a specified SettingDefinition.
+    ##  Hide the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
-    def collapse(self, key: str) -> None:
+    def collapseRecursive(self, key: str) -> None:
         definitions = self._getDefinitionsByKey(key)
         if not definitions:
             return
@@ -290,7 +290,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._expanded.remove(key)
 
         for child in definitions[0].children:
-            self.collapse(child.key)
+            self.collapseRecursive(child.key)
 
         self.expandedChanged.emit()
         self._scheduleUpdateVisibleRows()
