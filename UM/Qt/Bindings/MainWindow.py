@@ -40,6 +40,7 @@ class MainWindow(QQuickWindow):
         self._app.getController().addInputDevice(self._mouse_device)
         self._app.getController().addInputDevice(self._key_device)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
+        self._app.getController().activeViewChanged.connect(self._onActiveViewChanged)
         self._preferences = Application.getInstance().getPreferences()
 
         self._preferences.addPreference("general/window_width", 1280)
@@ -81,6 +82,8 @@ class MainWindow(QQuickWindow):
 
         Application.getInstance().setMainWindow(self)
         self._fullscreen = False
+
+        self._full_render_required = True
 
         self._allow_resize = True
 
@@ -224,17 +227,25 @@ class MainWindow(QQuickWindow):
     renderCompleted = Signal(type = Signal.Queued)
 
     def _render(self):
-        renderer = self._app.getRenderer()
-        view = self._app.getController().getActiveView()
-
-        renderer.beginRendering()
-        view.beginRendering()
-        renderer.render()
-        view.endRendering()
-        renderer.endRendering()
-        self.renderCompleted.emit()
+        if self._full_render_required:
+            renderer = self._app.getRenderer()
+            view = self._app.getController().getActiveView()
+            renderer.beginRendering()
+            view.beginRendering()
+            renderer.render()
+            view.endRendering()
+            renderer.endRendering()
+            self._full_render_required = False
+            self.renderCompleted.emit()
+        else:
+            self._app.getRenderer().reRenderLast()
 
     def _onSceneChanged(self, object):
+        self._full_render_required = True
+        self.update()
+
+    def _onActiveViewChanged(self):
+        self._full_render_required = True
         self.update()
 
     @pyqtSlot()
