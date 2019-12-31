@@ -146,6 +146,13 @@ class QtRenderer(Renderer):
             self._gl.glViewport(0, 0, width, height)
             render_pass.render()
 
+    ##  Sometimes not an *entire* new render is required (QML is updated, but the scene did not).
+    #   In that case we ask the composite pass (which must be the last render pass) to render (instead of re-rendering
+    #   all the passes & the views.
+    def reRenderLast(self):
+        self.beginRendering() # First ensure that the viewport is set correctly.
+        self.getRenderPasses()[-1].render()
+
     ##  Overrides Renderer::endRendering()
     def endRendering(self) -> None:
         self._batches.clear()
