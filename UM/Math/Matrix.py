@@ -144,7 +144,7 @@ class Matrix:
     ##  Return the transpose of the matrix.
     def getTransposed(self) -> "Matrix":
         try:
-            return Matrix(numpy.transpose(self._data))
+            return Matrix(self._data.transpose())
         except:
             return Matrix(self._data)
 
