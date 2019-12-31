@@ -70,6 +70,8 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self.destroyed.connect(self._onDestroyed)
 
+        self.expandedChanged.connect(self.onExpandedChanged)
+
     ##  Emitted whenever the showAncestors property changes.
     showAncestorsChanged = pyqtSignal()
 
@@ -209,7 +211,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             self.expandedChanged.emit()
             self._scheduleUpdateVisibleRows()
 
-    ##  Emitted whenever the exclude property changes
+    ##  Emitted whenever the expanded property changes
     expandedChanged = pyqtSignal()
 
     ##  This property indicates which settings should never be visibile.
@@ -294,6 +296,10 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self.expandedChanged.emit()
         self._scheduleUpdateVisibleRows()
+
+    @pyqtSlot()
+    def collapseAllCategories(self) -> None:
+        self.setExpanded([])
 
     ##  Show a single SettingDefinition.
     @pyqtSlot(str)
@@ -518,6 +524,10 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtSlot()
     def forceUpdate(self) -> None:
         self._update()
+
+    def onExpandedChanged(self):
+        for row in range(len(self._row_index_list)):
+            self.dataChanged.emit(self.index(row, 0), self.index(row, 0), [self.ExpandedRole])
 
     # Update the internal list of definitions and the visibility mapping.
     #
