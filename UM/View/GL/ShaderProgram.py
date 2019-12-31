@@ -170,6 +170,7 @@ class ShaderProgram:
 
         if self._bound:
             self._setUniformValueDirect(uniform, value)
+
     ##  Set a texture that should be bound to a specified texture unit when this shader is bound.
     #
     #   \param texture_unit \type{int} The texture unit to bind the texture to.

@@ -196,15 +196,15 @@ class RenderBatch:
         if self._state_setup_callback:
             self._state_setup_callback(self._gl)
 
-        self._view_matrix = camera.getWorldTransformation()
-        self._view_matrix.invert()
+        self._view_matrix = camera.getInverseWorldTransformation()
+
         self._projection_matrix = camera.getProjectionMatrix()
 
         self._shader.updateBindings(
             view_matrix = self._view_matrix,
             projection_matrix = self._projection_matrix,
             view_position = camera.getWorldPosition(),
-            light_0_position = camera.getWorldPosition() + Vector(0, 50, 0)
+            light_0_position = camera.getCameraLightPosition()
         )
 
         # The VertexArrayObject (VAO) works like a VCR, recording buffer activities in the GPU.

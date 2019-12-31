@@ -44,7 +44,8 @@ class Camera(SceneNode.SceneNode):
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
         self._cached_view_projection_matrix = None  # type: Optional[Matrix]
-
+        self._camera_light_position = None
+        self._cached_inversed_world_transformation = None
         self._zoom_factor = Camera.getDefaultZoomFactor()
 
         from UM.Application import Application
@@ -127,6 +128,8 @@ class Camera(SceneNode.SceneNode):
 
     def _updateWorldTransformation(self) -> None:
         self._cached_view_projection_matrix = None
+        self._cached_inversed_world_transformation = None
+        self._camera_light_position = None
         super()._updateWorldTransformation()
     
     def getViewportHeight(self) -> int:
@@ -142,12 +145,23 @@ class Camera(SceneNode.SceneNode):
     def render(self, renderer) -> bool:
         # It's a camera. It doesn't need rendering.
         return True
-    
+
     ##  Set the projection matrix of this camera.
     #   \param matrix The projection matrix to use for this camera.
     def setProjectionMatrix(self, matrix: Matrix) -> None:
         self._projection_matrix = matrix
         self._cached_view_projection_matrix = None
+
+    def getInverseWorldTransformation(self):
+        if self._cached_inversed_world_transformation is None:
+            self._cached_inversed_world_transformation = self.getWorldTransformation()
+            self._cached_inversed_world_transformation.invert()
+        return self._cached_inversed_world_transformation
+
+    def getCameraLightPosition(self):
+        if self._camera_light_position is None:
+            self._camera_light_position = self.getWorldPosition() + Vector(0, 50, 0)
+        return self._camera_light_position
 
     def isPerspective(self) -> bool:
         return self._perspective
