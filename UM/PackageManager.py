@@ -296,6 +296,10 @@ class PackageManager(QObject):
 
         return all_installed_ids
 
+    # Get a list of packages that the user has installed on the Cura Marketplace
+    def getUserInstalledPackages(self) -> List[str]:
+        return [package for package in self._installed_package_dict]
+
     ## Get a list of tuples that contain the package ID and version.
     #  Used by the Marketplace to check which packages have updates available.
     def getAllInstalledPackageIdsAndVersions(self) -> List[Tuple[str, str]]:
