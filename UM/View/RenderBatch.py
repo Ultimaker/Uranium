@@ -259,7 +259,7 @@ class RenderBatch:
             # glDrawRangeElements does not work as expected and did not get the indices field working..
             # Now we're just uploading a clipped part of the array and the start index always becomes 0.
             index_buffer = OpenGL.getInstance().createIndexBuffer(
-                mesh, force_recreate = True, index_start = self._render_range[0], index_stop = self._render_range[1])
+                mesh, index_start = self._render_range[0], index_stop = self._render_range[1])
         if index_buffer is not None:
             index_buffer.bind()
 
