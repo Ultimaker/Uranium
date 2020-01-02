@@ -222,7 +222,7 @@ def test_collapseExpand(application):
     assert "test_child_0" not in model.expanded
     assert "test_child_1" in model.expanded
 
-    model.collapseREcursive("test_setting")
+    model.collapseRecursive("test_setting")
     assert "test_setting" not in model.expanded
     assert "test_child_0" not in model.expanded
     assert "test_child_1" not in model.expanded
