@@ -217,12 +217,12 @@ def test_collapseExpand(application):
     assert "test_child_0" in model.expanded
     assert "test_child_1" in model.expanded
 
-    model.collapse("test_child_0")
+    model.collapseRecursive("test_child_0")
     assert "test_setting" in model.expanded
     assert "test_child_0" not in model.expanded
     assert "test_child_1" in model.expanded
 
-    model.collapse("test_setting")
+    model.collapseRecursive("test_setting")
     assert "test_setting" not in model.expanded
     assert "test_child_0" not in model.expanded
     assert "test_child_1" not in model.expanded
@@ -251,7 +251,7 @@ def test_expandRecursive_noDefinition():
 
 def test_collapse_no_container():
     model = SettingDefinitionsModel()
-    model.collapse("whatever")
+    model.collapseRecursive("whatever")
 
     assert model.expanded == []
 

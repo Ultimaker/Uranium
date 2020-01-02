@@ -776,7 +776,7 @@ class PluginRegistry(QObject):
 
     ##  Get the path to a plugin.
     #
-    #   \param plugin_id \type{string} The ID of the plugin.
+    #   \param plugin_id \type{string} The PluginObject.getPluginId() of the plugin.
     #   \return \type{string} The absolute path to the plugin or an empty string if the plugin could not be found.
     def getPluginPath(self, plugin_id: str) -> Optional[str]:
         if plugin_id in self._plugins:
