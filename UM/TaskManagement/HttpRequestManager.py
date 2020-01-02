@@ -1,5 +1,5 @@
-# Copyright (c) 2019 Ultimaker B.V.
-# Cura is released under the terms of the LGPLv3 or higher.
+# Copyright (c) 2020 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from collections import deque
 from threading import RLock
@@ -12,8 +12,37 @@ from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkRepl
 
 from UM.Logger import Logger
 
+from .TaskManager import TaskManager
+
 
 __all__ = ["HttpRequestData", "HttpRequestManager"]
+
+#
+# Summary:
+#
+# HttpRequestManager is a wrapper for Qt's QNetworkAccessManager and make it more convenient to do the following things:
+#  (1) Keep track of the HTTP requests one has issued. This is done via the HttpRequestData object. Each HttpRequestData
+#      object represents an issued HTTP request.
+#  (2) A request can be aborted if it hasn't been issued to QNetworkAccessManager or if it's still running by
+#      QNetworkAccessManager.
+#  (3) Updates on each request is done via user-specified callback functions. So, for each request, you can give
+#      optional callbacks:
+#       - A successful callback, invoked when the request has been finished successfully.
+#       - An error callback, invoked when an error has occurred, including when a request was aborted by the user or
+#         timed out.
+#       - A download progress callback, invoked when there's an update on the download progress.
+#       - An upload progress callback, invoked when there's an update on the upload progress.
+#  (4) An optional timeout can be specified for an HTTP request. Note that this timeout is the max wait time between
+#      each time the request gets a response from the server. This is handled via the download and upload progress
+#      callbacks. A QTimer is used for each request to track its timeout if set. If the timer gets triggered and there
+#      is indeed a timeout, the request will be aborted. All requests that are aborted due to a timeout will result in
+#      invoking its error callback with an error code QNetworkReply::OperationCanceledError, but the HttpRequestData
+#      will have its "is_aborted_due_to_timeout" property set to True.
+#     Because of
+#
+# All requests are handled by QNetworkAccessManager. We consider that all the requests that are being handled by
+# QNetworkAccessManager at a certain point are running concurrently.
+#
 
 
 #
@@ -29,7 +58,14 @@ __all__ = ["HttpRequestData", "HttpRequestManager"]
 #  - timeout (optional): The timeout in seconds for this request. Must be a positive number if present.
 #  - reply: The QNetworkReply for this request. It will only present after this request gets processed.
 #
-class HttpRequestData:
+class HttpRequestData(QObject):
+
+    # Add some tolerance for scheduling the QTimer to check for timeouts, because the QTimer may trigger the event a
+    # little earlier. For example, with a 5000ms interval, the timer event can be triggered after 4752ms, so a request
+    # may never timeout if we don't add some tolerance.
+    # 4752ms (actual) and 5000ms (expected) has about 6% difference, so here I use 15% to be safer.
+    TIMEOUT_CHECK_TOLERANCE = 0.15
+
     def __init__(self, request_id: str,
                  http_method: str, request: "QNetworkRequest",
                  data: Optional[Union[bytes, bytearray]] = None,
@@ -38,7 +74,15 @@ class HttpRequestData:
                  download_progress_callback: Optional[Callable[[int, int], None]] = None,
                  upload_progress_callback: Optional[Callable[[int, int], None]] = None,
                  timeout: Optional[float] = None,
-                 reply: Optional["QNetworkReply"] = None) -> None:
+                 reply: Optional["QNetworkReply"] = None,
+                 manager_timeout_callback: Optional[Callable[["HttpRequestData"], None]] = None,
+                 parent: Optional["QObject"] = None) -> None:
+        super().__init__(parent = parent)
+
+        # Sanity checks
+        if timeout is not None and timeout <= 0:
+            raise ValueError("Timeout must be a positive value, but got [%s] instead." % timeout)
+
         self._request_id = request_id
         self.http_method = http_method.lower()
         self.request = request
@@ -53,8 +97,19 @@ class HttpRequestData:
         # The timestamp when this request was initially issued to the QNetworkManager. This field to used to track and
         # manage timeouts (if set) for the requests.
         self._start_time = None  # type: Optional[float]
-        self._timeout_time = None  # type: Optional[float]  # For convenience, = start_time + timeout
         self.is_aborted_due_to_timeout = False
+
+        self._last_response_time = 0
+        self._timeout_timer = None  # type: Optional[QTimer]
+        if self._timeout is not None:
+            self._timeout_timer = QTimer(parent = self)
+            self._timeout_timer.setSingleShot(True)
+
+            timeout_check_interval = self._timeout * 1000 * (1 + self.TIMEOUT_CHECK_TOLERANCE)
+            self._timeout_timer.setInterval(timeout_check_interval)
+            self._timeout_timer.timeout.connect(self._onTimeoutTimerTriggered)
+
+        self._manager_timeout_callback = manager_timeout_callback
 
     @property
     def request_id(self) -> str:
@@ -64,47 +119,60 @@ class HttpRequestData:
     def timeout(self) -> Optional[float]:
         return self._timeout
 
-    @property
-    def timeout_time(self) -> Optional[float]:
-        return self._timeout_time
-
     # Sets the start time of this request. This is called when this request is issued to the QNetworkManager.
     def setStartTime(self, start_time: float) -> None:
         self._start_time = start_time
+
+        # Prepare timeout handling
         if self._timeout is not None:
-            self._timeout_time = self._start_time + self._timeout
+            self._last_response_time = start_time
+            self._timeout_timer.start()
+            Logger.log("d", "Request [%s] timeout timer started.", self)
 
-    # Checks with the given timestamp (in seconds) to see if this request has exceeded its timeout.
-    # If no timeout is specified for this request, this check will return False.
-    def hasExceededTimeout(self, now: float) -> bool:
-        if self._timeout_time is None:
-            return False
-        return now > self._timeout_time
-
-    def getTimeToTimeout(self, now: float) -> Optional[float]:
-        if self._timeout_time is None:
-            return None
-        return self._timeout_time - now
+    # Do some cleanup, such as stopping the timeout timer.
+    def setDone(self) -> None:
+        if self._timeout_timer is not None:
+            self._timeout_timer.stop()
+            self._timeout_timer.timeout.disconnect(self._onTimeoutTimerTriggered)
 
     # Since Qt 5.12, pyqtSignal().connect() will return a Connection instance that represents a connection. This
     # Connection instance can later be used to disconnect for cleanup purpose. We are using Qt 5.10 and this feature
     # is not available yet, and I'm not sure if disconnecting a lambda can potentially cause issues. For this reason,
     # I'm using the following facade callback functions to handle the lambda function cases.
-    def onCallback(self, reply: "QNetworkReply") -> None:
-        if self.callback is not None:
-            self.callback(reply)
-
-    def onErrorCallback(self, reply: "QNetworkReply", error: "QNetworkReply.NetworkError") -> None:
-        if self.error_callback is not None:
-            self.error_callback(reply, error)
 
     def onDownloadProgressCallback(self, bytes_received: int, bytes_total: int) -> None:
+        # Update info for timeout handling
+        if self._timeout is not None:
+            now = time.time()
+            time_last = now - self._last_response_time
+            Logger.log("d", "Request [%s] download progress time last: [%s]", self, time_last)
+            self._last_response_time = time.time()
+            # We've got a response, restart the timeout timer
+            self._timeout_timer.start()
+
         if self.download_progress_callback is not None:
             self.download_progress_callback(bytes_received, bytes_total)
 
     def onUploadProgressCallback(self, bytes_sent: int, bytes_total: int) -> None:
+        # Update info for timeout handling
+        if self._timeout is not None:
+            now = time.time()
+            time_last = now - self._last_response_time
+            Logger.log("d", "Request [%s] upload progress, time last: [%s]", self, time_last)
+            self._last_response_time = time.time()
+            # We've got a response, restart the timeout timer
+            self._timeout_timer.start()
+
         if self.upload_progress_callback is not None:
             self.upload_progress_callback(bytes_sent, bytes_total)
+
+    def _onTimeoutTimerTriggered(self) -> None:
+        now = time.time()
+        time_last = now - self._last_response_time
+        if self.reply.isRunning() and time_last >= self._timeout:
+            self._manager_timeout_callback(self)
+        else:
+            self._timeout_timer.start()
 
     def __str__(self) -> str:
         data = "no-data"
@@ -146,12 +214,14 @@ class HttpRequestData:
 #       download a 1MB file, and for this request you set a timeout of 10 minutes, the request will be aborted after
 #       10 minutes if it's not finished.
 #
-class HttpRequestManager(QObject):
+class HttpRequestManager(TaskManager):
 
     __instance = None  # type: Optional[HttpRequestManager]
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> Optional["HttpRequestManager"]:
+        if cls.__instance is None:
+            cls.__instance = cls()
         return cls.__instance
 
     def __init__(self, max_concurrent_requests: int = 10, parent: Optional["QObject"] = None) -> None:
@@ -160,9 +230,6 @@ class HttpRequestManager(QObject):
         HttpRequestManager.__instance = self
 
         super().__init__(parent)
-
-        from cura.CuraApplication import CuraApplication
-        self._application = CuraApplication.getInstance()
 
         self._network_manager = QNetworkAccessManager(self)
 
@@ -177,11 +244,6 @@ class HttpRequestManager(QObject):
         self._requests_in_progress = set()  # type: Set[HttpRequestData]
         self._request_lock = RLock()
         self._process_requests_scheduled = False
-
-        # Timer for managing timeouts.
-        self._timeout_timer = QTimer(parent = self)
-        self._timeout_timer.setSingleShot(True)
-        self._timeout_timer.timeout.connect(self._triggerTimeoutCheck)
 
     # Public API for creating an HTTP GET request.
     # Returns an HttpRequestData instance that represents this request.
@@ -255,7 +317,7 @@ class HttpRequestManager(QObject):
                        download_progress_callback: Optional[Callable[[int, int], None]] = None,
                        upload_progress_callback: Optional[Callable[[int, int], None]] = None,
                        timeout: Optional[float] = None) -> "HttpRequestData":
-        assert(timeout is None or timeout > 0)
+        # Sanity checks
         if timeout is not None and timeout <= 0:
             raise ValueError("Timeout must be a positive number if provided, but [%s] was given" % timeout)
 
@@ -286,7 +348,8 @@ class HttpRequestManager(QObject):
                                        error_callback = error_callback,
                                        download_progress_callback = download_progress_callback,
                                        upload_progress_callback = upload_progress_callback,
-                                       timeout = timeout)
+                                       timeout = timeout,
+                                       manager_timeout_callback = self._onRequestTimeout)
 
         with self._request_lock:
             Logger.log("d", "%s has been queued", request_data)
@@ -294,51 +357,21 @@ class HttpRequestManager(QObject):
 
             # Schedule a call to process pending requests in the queue
             if not self._process_requests_scheduled:
-                self._application.callLater(self._processNextRequestsInQueue)
+                self.callLater(0, self._processNextRequestsInQueue)
                 self._process_requests_scheduled = True
                 Logger.log("d", "process requests call has been scheduled")
 
         return request_data
 
     # For easier debugging, so you know when the call is triggered by the timeout timer.
-    def _triggerTimeoutCheck(self) -> None:
-        Logger.log("d", "Timeout checkpoint triggered.")
-        self._checkRequetsForTimeouts()
-
-    def _checkRequetsForTimeouts(self) -> None:
-        has_timeout_timer_rescheduled = False
+    def _onRequestTimeout(self, request_data: "HttpRequestData") -> None:
+        Logger.log("d", "Request [%s] timeout.", self)
         with self._request_lock:
-            now = time.time()
-            # Sort all currently in progress requests by their remaining times to timeout.
-            #  - Abort the requests that have exceeded the timeout limit.
-            #  - Schedule the timeout Timer to the next most recent timeout as a checkpoint.
-            requests_with_timeout = filter(lambda r: r.timeout is not None, self._requests_in_progress)
-            sorted_requests = sorted(requests_with_timeout, key = lambda r: r.getTimeToTimeout(now))
-            for request in sorted_requests:
-                if request.hasExceededTimeout(now):
-                    # Abort the requests that have exceeded the timeout limit.
-                    if request.reply is not None and request.reply.isRunning():
-                        request.reply.abort()
-                        request.is_aborted_due_to_timeout = True
-                        Logger.log("d", "%s aborted due to timeout [%s sec]", request, request.timeout)
-                else:
-                    # Schedule the timeout Timer to the next most recent timeout as a checkpoint.
-                    seconds_to_timeout = request.getTimeToTimeout(now)
-                    if seconds_to_timeout is not None:  # Make type checking happy
-                        next_check_time = seconds_to_timeout + 0.5  # add a little margin
-                        self._timeout_timer.stop()
-                        self._timeout_timer.setInterval(next_check_time * 1000)
-                        self._timeout_timer.start()
-                        has_timeout_timer_rescheduled = True
-                        Logger.log("d", "Timeout timer scheduled in [%s] sec for request", request)
-                        break
+            if request_data not in self._requests_in_progress:
+                return
 
-        if not has_timeout_timer_rescheduled:
-            self._timeout_timer.stop()
-
-        Logger.log("d", "Timeout check done.")
-        # We don't need to reschedule _processRequest() because abort() will trigger finished() which will
-        # eventually try to schedule _processRequest().
+            request_data.reply.abort()
+            request_data.is_aborted_due_to_timeout = True
 
     # Processes the next requests in the pending queue. This function will issue as many requests to the QNetworkManager
     # as possible but limited by the value "_max_concurrent_requests". It stops if there is no more pending requests.
@@ -380,53 +413,55 @@ class HttpRequestManager(QObject):
         # connect callback signals
         reply.error.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.QueuedConnection)
         reply.finished.connect(lambda rd = request_data: self._onRequestFinished(rd), type = Qt.QueuedConnection)
-        if request_data.download_progress_callback is not None:
+
+        # Only connect download/upload progress callbacks when necessary to reduce CPU usage.
+        if request_data.download_progress_callback is not None or request_data.timeout is not None:
             reply.downloadProgress.connect(request_data.onDownloadProgressCallback, type = Qt.QueuedConnection)
-        if request_data.upload_progress_callback is not None:
+        if request_data.upload_progress_callback is not None or request_data.timeout is not None:
             reply.uploadProgress.connect(request_data.onUploadProgressCallback, type = Qt.QueuedConnection)
 
         with self._request_lock:
             self._requests_in_progress.add(request_data)
             request_data.setStartTime(now)
-            self._checkRequetsForTimeouts()
 
     def _onRequestError(self, request_data: "HttpRequestData", error: "QNetworkReply.NetworkError") -> None:
         error_string = None
         if request_data.reply is not None:
             error_string = request_data.reply.errorString()
         Logger.log("d", "%s got an error %s, %s", request_data, error, error_string)
+
         with self._request_lock:
             # safeguard: make sure that we have the reply in the currently in-progress requests set
             if request_data not in self._requests_in_progress:
                 # TODO: ERROR, should not happen
                 Logger.log("e", "%s not found in the in-progress set", request_data)
                 pass
+            else:
+                # disconnect callback signals
+                if request_data.reply is not None:
+                    if request_data.download_progress_callback is not None:
+                        request_data.reply.downloadProgress.disconnect(request_data.onDownloadProgressCallback)
+                    if request_data.upload_progress_callback is not None:
+                        request_data.reply.uploadProgress.disconnect(request_data.onUploadProgressCallback)
 
-            # disconnect callback signals
-            if request_data.reply is not None:
-                if request_data.download_progress_callback is not None:
-                    request_data.reply.downloadProgress.disconnect(request_data.onDownloadProgressCallback)
-                if request_data.upload_progress_callback is not None:
-                    request_data.reply.uploadProgress.disconnect(request_data.onUploadProgressCallback)
-
-            self._requests_in_progress.remove(request_data)
+                    request_data.setDone()
+                    self._requests_in_progress.remove(request_data)
 
         # schedule the error callback if there is one
         if request_data.error_callback is not None:
             Logger.log("d", "%s error callback scheduled", request_data)
-            self._application.callLater(request_data.error_callback, request_data.reply, error)
+            self.callLater(0, request_data.error_callback, request_data.reply, error)
 
         # continue to process the next request
         self._processNextRequestsInQueue()
-        self._checkRequetsForTimeouts()  # TODO: optimize this
 
     def _onRequestFinished(self, request_data: "HttpRequestData") -> None:
         # See https://doc.qt.io/archives/qt-5.10/qnetworkreply.html#abort
         # Calling QNetworkReply.abort() will also trigger finished(), so we need to know if a request was finished or
-        # aborted. This can be done by checking if the error is QNetworkReply.OperationCanceledError.
+        # aborted. This can be done by checking if the error is QNetworkReply.OperationCanceledError. If a request was
+        # aborted due to timeout, the request's HttpRequestData.is_aborted_due_to_timeout will be set to True.
         #
-        #  - Do nothing if the request was aborted by the user.
-        #  - Call the timeout callback if the request was aborted due to timeout.
+        # We do nothing if the request was aborted because an error callback will also be triggered by Qt.
         if request_data.reply is not None and request_data.reply.error() == QNetworkReply.OperationCanceledError:
             Logger.log("d", "%s was aborted, do nothing", request_data)
             return
@@ -446,13 +481,13 @@ class HttpRequestManager(QObject):
                     if request_data.upload_progress_callback is not None:
                         request_data.reply.uploadProgress.disconnect(request_data.onUploadProgressCallback)
 
+                request_data.setDone()
                 self._requests_in_progress.remove(request_data)
 
         # schedule the callback if there is one
         if request_data.callback is not None:
             Logger.log("d", "%s callback scheduled", request_data)
-            self._application.callLater(request_data.callback, request_data.reply)
+            self.callLater(0, request_data.callback, request_data.reply)
 
         # continue to process the next request
         self._processNextRequestsInQueue()
-        self._checkRequetsForTimeouts()  # TODO: optimize this
