@@ -1,7 +1,7 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Optional, cast
+from typing import Any, Callable, Dict, Optional, cast
 
 from PyQt5.QtCore import QObject, QCoreApplication, QEvent, QTimer
 
@@ -15,7 +15,7 @@ __all__ = ["TaskManager"]
 #
 class _CallFunctionEvent(QEvent):
 
-    def __init__(self, task_manager: "TaskManager", func: callable, args: Any, kwargs: Any,
+    def __init__(self, task_manager: "TaskManager", func: Callable, args: Any, kwargs: Any,
                  delay: Optional[float] = None) -> None:
         super().__init__(task_manager.event_type)
 
@@ -75,7 +75,7 @@ class TaskManager(QObject):
         super().__init__(parent = parent)
         self._event_type = TaskManager.acquireNewEventType()
         # For storing all delayed events
-        self._delayed_events = dict()
+        self._delayed_events = dict()  # type: Dict[_CallFunctionEvent, Dict[str, Any]]
 
     @property
     def event_type(self) -> int:
@@ -93,7 +93,7 @@ class TaskManager(QObject):
     # Schedules a callback function to be called later. If delay is given, the callback will be scheduled to call after
     # the given amount of time. Otherwise, the callback will be scheduled to the QCoreApplication instance to be called
     # the next time the event gets picked up.
-    def callLater(self, delay: float, callback: callable, *args, **kwargs) -> None:
+    def callLater(self, delay: float, callback: Callable, *args, **kwargs) -> None:
         if delay < 0:
             raise ValueError("delay must be a non-negative value, but got [%s] instead." % delay)
 
@@ -106,9 +106,12 @@ class TaskManager(QObject):
             self._scheduleDelayedCallEvent(event)
 
     def _scheduleDelayedCallEvent(self, event: "_CallFunctionEvent") -> None:
+        if event.delay is None:
+            return
+
         timer = QTimer(self)
         timer.setSingleShot(True)
-        timer.setInterval(event._delay * 1000 * (1 + self.TIME_TOLERANCE))
+        timer.setInterval(event.delay * 1000 * (1 + self.TIME_TOLERANCE))
         timer_callback = lambda e = event: self._onDelayReached(e)
         timer.timeout.connect(timer_callback)
         timer.start()

@@ -71,8 +71,6 @@ def test_getTimeout() -> None:
         http_request_manager.callLater(0, app.quit)
 
     request_data = http_request_manager.get(url = "http://localhost:8080/timeout",
-                                            callback = error_callback,
-                                            download_progress_callback = cbo.download_progress_callback,
                                             error_callback = error_callback, timeout = 4)
     # Make sure that if something goes wrong, we quit after 10 seconds
     http_request_manager.callLater(10.0, app.quit)
@@ -82,5 +80,3 @@ def test_getTimeout() -> None:
 
     cbo.error_callback.assert_called_once_with(request_data.reply, QNetworkReply.OperationCanceledError)
     assert request_data.is_aborted_due_to_timeout
-
-    cbo.download_progress_callback.assert_called()

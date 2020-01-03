@@ -68,6 +68,7 @@ class HttpRequestData(QObject):
 
     def __init__(self, request_id: str,
                  http_method: str, request: "QNetworkRequest",
+                 manager_timeout_callback: Callable[["HttpRequestData"], None],
                  data: Optional[Union[bytes, bytearray]] = None,
                  callback: Optional[Callable[["QNetworkReply"], None]] = None,
                  error_callback: Optional[Callable[["QNetworkReply", "QNetworkReply.NetworkError"], None]] = None,
@@ -75,7 +76,6 @@ class HttpRequestData(QObject):
                  upload_progress_callback: Optional[Callable[[int, int], None]] = None,
                  timeout: Optional[float] = None,
                  reply: Optional["QNetworkReply"] = None,
-                 manager_timeout_callback: Optional[Callable[["HttpRequestData"], None]] = None,
                  parent: Optional["QObject"] = None) -> None:
         super().__init__(parent = parent)
 
@@ -99,12 +99,10 @@ class HttpRequestData(QObject):
         self._start_time = None  # type: Optional[float]
         self.is_aborted_due_to_timeout = False
 
-        self._last_response_time = 0
-        self._timeout_timer = None  # type: Optional[QTimer]
+        self._last_response_time = float(0)
+        self._timeout_timer = QTimer(parent = self)
         if self._timeout is not None:
-            self._timeout_timer = QTimer(parent = self)
             self._timeout_timer.setSingleShot(True)
-
             timeout_check_interval = self._timeout * 1000 * (1 + self.TIMEOUT_CHECK_TOLERANCE)
             self._timeout_timer.setInterval(timeout_check_interval)
             self._timeout_timer.timeout.connect(self._onTimeoutTimerTriggered)
@@ -131,7 +129,7 @@ class HttpRequestData(QObject):
 
     # Do some cleanup, such as stopping the timeout timer.
     def setDone(self) -> None:
-        if self._timeout_timer is not None:
+        if self._timeout is not None:
             self._timeout_timer.stop()
             self._timeout_timer.timeout.disconnect(self._onTimeoutTimerTriggered)
 
@@ -167,6 +165,12 @@ class HttpRequestData(QObject):
             self.upload_progress_callback(bytes_sent, bytes_total)
 
     def _onTimeoutTimerTriggered(self) -> None:
+        # Make typing happy
+        if self._timeout is None:
+            return
+        if self.reply is None:
+            return
+
         now = time.time()
         time_last = now - self._last_response_time
         if self.reply.isRunning() and time_last >= self._timeout:
@@ -344,12 +348,12 @@ class HttpRequestManager(TaskManager):
                                        http_method = http_method,
                                        request = request,
                                        data = data,
+                                       manager_timeout_callback = self._onRequestTimeout,
                                        callback = callback,
                                        error_callback = error_callback,
                                        download_progress_callback = download_progress_callback,
                                        upload_progress_callback = upload_progress_callback,
-                                       timeout = timeout,
-                                       manager_timeout_callback = self._onRequestTimeout)
+                                       timeout = timeout)
 
         with self._request_lock:
             Logger.log("d", "%s has been queued", request_data)
@@ -366,6 +370,11 @@ class HttpRequestManager(TaskManager):
     # For easier debugging, so you know when the call is triggered by the timeout timer.
     def _onRequestTimeout(self, request_data: "HttpRequestData") -> None:
         Logger.log("d", "Request [%s] timeout.", self)
+
+        # Make typing happy
+        if request_data.reply is None:
+            return
+
         with self._request_lock:
             if request_data not in self._requests_in_progress:
                 return
