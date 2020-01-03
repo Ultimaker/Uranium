@@ -193,7 +193,7 @@ class Selection:
         cls.selectionCenterChanged.emit()
 
     __selection = []    # type: List[SceneNode]
-    __selection_center = Vector(0, 0, 0)
+    __selection_center = None  # type: Optional[Vector]
     __selected_face = None    # type: Optional[Tuple[SceneNode, int]]
     __hover_face = None    # type: Optional[Tuple[SceneNode, int]]
     __face_select_mode = False
