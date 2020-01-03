@@ -149,6 +149,8 @@ class Selection:
 
     @classmethod
     def getSelectionCenter(cls) -> Vector:
+        if cls.__selection_center is None:
+            cls.__selection_center = cls.getBoundingBox().center
         return cls.__selection_center
 
     ##  Apply an operation to the entire selection
@@ -187,7 +189,7 @@ class Selection:
 
     @classmethod
     def _onTransformationChanged(cls, _) -> None:
-        cls.__selection_center = cls.getBoundingBox().center
+        cls.__selection_center = None
         cls.selectionCenterChanged.emit()
 
     __selection = []    # type: List[SceneNode]
