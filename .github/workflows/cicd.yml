@@ -8,6 +8,6 @@ jobs:
     container: ultimaker/cura-build-environment
     steps:
     - name: Checkout master
-      uses: actions/checkout@v1.2.0
+      uses: actions/checkout@v2
     - name: Build and test
       run: docker/build.sh
