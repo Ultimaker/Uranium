@@ -54,6 +54,7 @@ class MainWindow(QQuickWindow):
             self._preferences.resetPreference("general/window_height")
             self._preferences.resetPreference("general/window_left")
             self._preferences.resetPreference("general/window_top")
+            self._preferences.resetPreference("general/window_state")
 
         # Restore window geometry
         self.setWidth(int(self._preferences.getValue("general/window_width")))
