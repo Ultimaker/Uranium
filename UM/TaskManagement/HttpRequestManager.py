@@ -207,14 +207,12 @@ class HttpRequestManager(TaskManager):
                                        timeout = timeout)
 
         with self._request_lock:
-            Logger.log("d", "%s has been queued", request_data)
             self._request_queue.append(request_data)
 
             # Schedule a call to process pending requests in the queue
             if not self._process_requests_scheduled:
                 self.callLater(0, self._processNextRequestsInQueue)
                 self._process_requests_scheduled = True
-                Logger.log("d", "process requests call has been scheduled")
 
         return request_data
 
