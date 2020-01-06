@@ -237,20 +237,20 @@ class HttpRequestManager(TaskManager):
     # as possible but limited by the value "_max_concurrent_requests". It stops if there is no more pending requests.
     def _processNextRequestsInQueue(self) -> None:
         with self._request_lock:
-            # do nothing if there's no more requests to process
+            # Do nothing if there's no more requests to process
             if not self._request_queue:
                 self._process_requests_scheduled = False
                 Logger.log("d", "No more requests to process, stop")
                 return
 
-            # do not exceed the max request limit
+            # Do not exceed the max request limit
             if len(self._requests_in_progress) >= self._max_concurrent_requests:
                 self._process_requests_scheduled = False
                 Logger.log("d", "The in-progress requests has reached the limit %s, stop",
                            self._max_concurrent_requests)
                 return
 
-            # fetch the next request and process
+            # Fetch the next request and process
             next_request_data = self._request_queue.popleft()
         self._processRequest(next_request_data)
 
@@ -259,17 +259,17 @@ class HttpRequestManager(TaskManager):
     def _processRequest(self, request_data: "HttpRequestData") -> None:
         now = time.time()
 
-        # get the right http_method function and prepare arguments.
+        # Get the right http_method function and prepare arguments.
         method = getattr(self._network_manager, request_data.http_method)
         args = [request_data.request]
         if request_data.data is not None:
             args.append(request_data.data)
 
-        # issue the request and add the reply into the currently in-progress requests set
+        # Issue the request and add the reply into the currently in-progress requests set
         reply = method(*args)
         request_data.reply = reply
 
-        # connect callback signals
+        # Connect callback signals
         reply.error.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.QueuedConnection)
         reply.finished.connect(lambda rd = request_data: self._onRequestFinished(rd), type = Qt.QueuedConnection)
 
@@ -290,13 +290,13 @@ class HttpRequestManager(TaskManager):
         Logger.log("d", "%s got an error %s, %s", request_data, error, error_string)
 
         with self._request_lock:
-            # safeguard: make sure that we have the reply in the currently in-progress requests set
+            # Safeguard: make sure that we have the reply in the currently in-progress requests set
             if request_data not in self._requests_in_progress:
                 # TODO: ERROR, should not happen
                 Logger.log("e", "%s not found in the in-progress set", request_data)
                 pass
             else:
-                # disconnect callback signals
+                # Disconnect callback signals
                 if request_data.reply is not None:
                     if request_data.download_progress_callback is not None:
                         request_data.reply.downloadProgress.disconnect(request_data.onDownloadProgressCallback)
@@ -306,12 +306,12 @@ class HttpRequestManager(TaskManager):
                     request_data.setDone()
                     self._requests_in_progress.remove(request_data)
 
-        # schedule the error callback if there is one
+        # Schedule the error callback if there is one
         if request_data.error_callback is not None:
             Logger.log("d", "%s error callback scheduled", request_data)
             self.callLater(0, request_data.error_callback, request_data.reply, error)
 
-        # continue to process the next request
+        # Continue to process the next request
         self._processNextRequestsInQueue()
 
     def _onRequestFinished(self, request_data: "HttpRequestData") -> None:
@@ -326,13 +326,13 @@ class HttpRequestManager(TaskManager):
             return
 
         with self._request_lock:
-            # safeguard: make sure that we have the reply in the currently in-progress requests set.
+            # Safeguard: make sure that we have the reply in the currently in-progress requests set.
             if request_data not in self._requests_in_progress:
                 # This can happen if a request has been aborted. The finished() signal will still be triggered at the
                 # end. In this case, do nothing with this request.
                 Logger.log("e", "%s not found in the in-progress set", request_data)
             else:
-                # disconnect callback signals
+                # Disconnect callback signals
                 if request_data.reply is not None:
                     if request_data.download_progress_callback is not None:
                         request_data.reply.downloadProgress.disconnect(request_data.onDownloadProgressCallback)
@@ -342,9 +342,9 @@ class HttpRequestManager(TaskManager):
                 request_data.setDone()
                 self._requests_in_progress.remove(request_data)
 
-        # schedule the callback if there is one
+        # Schedule the callback if there is one
         if request_data.callback is not None:
             self.callLater(0, request_data.callback, request_data.reply)
 
-        # continue to process the next request
+        # Continue to process the next request
         self._processNextRequestsInQueue()

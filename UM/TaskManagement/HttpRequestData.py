@@ -1,3 +1,14 @@
+from typing import Callable, Optional, Union, TYPE_CHECKING
+from PyQt5.QtCore import QObject, QTimer
+
+from UM.Logger import Logger
+
+import time
+
+if TYPE_CHECKING:
+    from PyQt5.QtNetwork import QNetworkRequest, QNetworkReply
+
+
 #
 # This is an internal data class which holds all data regarding a network request.
 #  - request_id: A unique ID that's generated for each request.
@@ -11,17 +22,6 @@
 #  - timeout (optional): The timeout in seconds for this request. Must be a positive number if present.
 #  - reply: The QNetworkReply for this request. It will only present after this request gets processed.
 #
-from typing import Callable, Optional, Union, TYPE_CHECKING
-from PyQt5.QtCore import QObject, QTimer
-
-from UM.Logger import Logger
-
-import time
-
-if TYPE_CHECKING:
-    from PyQt5.QtNetwork import QNetworkRequest, QNetworkReply
-
-
 class HttpRequestData(QObject):
 
     # Add some tolerance for scheduling the QTimer to check for timeouts, because the QTimer may trigger the event a
