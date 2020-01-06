@@ -88,6 +88,7 @@ class HttpRequestManager(TaskManager):
         super().__init__(parent)
 
         self._network_manager = QNetworkAccessManager(self)
+        self._account_manager = None
 
         # All the requests that have been issued to the QNetworkManager are considered as running concurrently. This
         # number defines the max number of requests that will be issued to the QNetworkManager.
