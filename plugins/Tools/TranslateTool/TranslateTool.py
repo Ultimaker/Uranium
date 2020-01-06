@@ -1,7 +1,7 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 import time
 from typing import cast, List, Optional, Union
 
@@ -48,11 +48,19 @@ class TranslateTool(Tool):
                                   "X", "Y", "Z",
                                   SceneNodeSettings.LockPosition)
 
+        self._update_selection_center_timer = QTimer()
+        self._update_selection_center_timer.setInterval(50)
+        self._update_selection_center_timer.setSingleShot(True)
+        self._update_selection_center_timer.timeout.connect(self.propertyChanged.emit)
+
         # Ensure that the properties (X, Y & Z) are updated whenever the selection center is changed.
-        Selection.selectionCenterChanged.connect(self.propertyChanged)
+        Selection.selectionCenterChanged.connect(self._onSelectionCenterChanged)
 
         # CURA-5966 Make sure to render whenever objects get selected/deselected.
         Selection.selectionChanged.connect(self.propertyChanged)
+
+    def _onSelectionCenterChanged(self):
+        self._update_selection_center_timer.start()
 
     ##  Get the x-location of the selection bounding box center.
     #   \return X location in mm.
