@@ -143,7 +143,6 @@ class HttpRequestData(QObject):
         if self._timeout is not None:
             now = time.time()
             time_last = now - self._last_response_time
-            Logger.log("d", "Request [%s] download progress time last: [%s]", self, time_last)
             self._last_response_time = time.time()
             # We've got a response, restart the timeout timer
             self._timeout_timer.start()
@@ -156,7 +155,6 @@ class HttpRequestData(QObject):
         if self._timeout is not None:
             now = time.time()
             time_last = now - self._last_response_time
-            Logger.log("d", "Request [%s] upload progress, time last: [%s]", self, time_last)
             self._last_response_time = time.time()
             # We've got a response, restart the timeout timer
             self._timeout_timer.start()
@@ -475,7 +473,6 @@ class HttpRequestManager(TaskManager):
             Logger.log("d", "%s was aborted, do nothing", request_data)
             return
 
-        Logger.log("d", "%s finished", request_data)
         with self._request_lock:
             # safeguard: make sure that we have the reply in the currently in-progress requests set.
             if request_data not in self._requests_in_progress:
@@ -495,7 +492,6 @@ class HttpRequestManager(TaskManager):
 
         # schedule the callback if there is one
         if request_data.callback is not None:
-            Logger.log("d", "%s callback scheduled", request_data)
             self.callLater(0, request_data.callback, request_data.reply)
 
         # continue to process the next request
