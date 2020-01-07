@@ -337,7 +337,9 @@ class HttpRequestManager(TaskManager):
         Logger.log("i", "Request [%s] finished.", request_data.request_id)
 
         if self._enable_request_benchmarking:
-            time_spent = time.time() - request_data.start_time
+            time_spent = None  # type: Optional[float]
+            if request_data.start_time is not None:
+                time_spent = time.time() - request_data.start_time
             Logger.log("d", "Request [%s] finished, took %s seconds, pending for %s seconds",
                        request_data, time_spent, request_data.pending_time)
 
