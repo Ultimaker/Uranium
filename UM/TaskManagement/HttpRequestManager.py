@@ -12,6 +12,7 @@ from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkRepl
 
 from UM.Logger import Logger
 from UM.TaskManagement.HttpRequestData import HttpRequestData
+from UM.TaskManagement.HttpRequestScope import HttpRequestScope
 
 from UM.TaskManagement.TaskManager import TaskManager
 
@@ -116,12 +117,14 @@ class HttpRequestManager(TaskManager):
             error_callback: Optional[Callable[["QNetworkReply", "QNetworkReply.NetworkError"], None]] = None,
             download_progress_callback: Optional[Callable[[int, int], None]] = None,
             upload_progress_callback: Optional[Callable[[int, int], None]] = None,
-            timeout: Optional[float] = None) -> "HttpRequestData":
+            timeout: Optional[float] = None,
+            scope: Optional[HttpRequestScope] = None) -> "HttpRequestData":
         return self._createRequest("get", url, headers_dict = headers_dict,
                                    callback = callback, error_callback = error_callback,
                                    download_progress_callback = download_progress_callback,
                                    upload_progress_callback = upload_progress_callback,
-                                   timeout = timeout)
+                                   timeout = timeout,
+                                   scope = scope)
 
     # Public API for creating an HTTP PUT request.
     # Returns an HttpRequestData instance that represents this request.
@@ -132,12 +135,14 @@ class HttpRequestManager(TaskManager):
             error_callback: Optional[Callable[["QNetworkReply", "QNetworkReply.NetworkError"], None]] = None,
             download_progress_callback: Optional[Callable[[int, int], None]] = None,
             upload_progress_callback: Optional[Callable[[int, int], None]] = None,
-            timeout: Optional[float] = None) -> "HttpRequestData":
+            timeout: Optional[float] = None,
+            scope: Optional[HttpRequestScope] = None) -> "HttpRequestData":
         return self._createRequest("put", url, headers_dict = headers_dict, data = data,
                                    callback = callback, error_callback = error_callback,
                                    download_progress_callback = download_progress_callback,
                                    upload_progress_callback = upload_progress_callback,
-                                   timeout = timeout)
+                                   timeout = timeout,
+                                   scope = scope)
 
     # Public API for creating an HTTP POST request. Returns a unique request ID for this request.
     # Returns an HttpRequestData instance that represents this request.
@@ -148,12 +153,14 @@ class HttpRequestManager(TaskManager):
              error_callback: Optional[Callable[["QNetworkReply", "QNetworkReply.NetworkError"], None]] = None,
              download_progress_callback: Optional[Callable[[int, int], None]] = None,
              upload_progress_callback: Optional[Callable[[int, int], None]] = None,
-             timeout: Optional[float] = None) -> "HttpRequestData":
+             timeout: Optional[float] = None,
+             scope: Optional[HttpRequestScope] = None) -> "HttpRequestData":
         return self._createRequest("post", url, headers_dict = headers_dict, data = data,
                                    callback = callback, error_callback = error_callback,
                                    download_progress_callback = download_progress_callback,
                                    upload_progress_callback = upload_progress_callback,
-                                   timeout = timeout)
+                                   timeout = timeout,
+                                   scope = scope)
 
     # Public API for aborting a given HttpRequestData. If the request is not pending or in progress, nothing
     # will be done.
@@ -179,7 +186,8 @@ class HttpRequestManager(TaskManager):
                        error_callback: Optional[Callable[["QNetworkReply", "QNetworkReply.NetworkError"], None]] = None,
                        download_progress_callback: Optional[Callable[[int, int], None]] = None,
                        upload_progress_callback: Optional[Callable[[int, int], None]] = None,
-                       timeout: Optional[float] = None) -> "HttpRequestData":
+                       timeout: Optional[float] = None,
+                       scope: Optional[HttpRequestScope] = None ) -> "HttpRequestData":
         # Sanity checks
         if timeout is not None and timeout <= 0:
             raise ValueError("Timeout must be a positive number if provided, but [%s] was given" % timeout)
@@ -198,6 +206,9 @@ class HttpRequestManager(TaskManager):
         if headers_dict is not None:
             for key, value in headers_dict.items():
                 request.setRawHeader(key.encode("utf-8"), value.encode("utf-8"))
+
+        if scope is not None:
+            scope.request_hook(request)
 
         # Generate a unique request ID
         request_id = uuid.uuid4().hex
