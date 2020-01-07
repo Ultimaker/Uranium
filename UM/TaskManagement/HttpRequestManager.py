@@ -276,6 +276,8 @@ class HttpRequestManager(TaskManager):
         reply = method(*args)
         request_data.reply = reply
 
+        Logger.log("i", "Request [%s] started", request_data.request_id)
+
         # Connect callback signals
         reply.error.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.QueuedConnection)
         reply.finished.connect(lambda rd = request_data: self._onRequestFinished(rd), type = Qt.QueuedConnection)
@@ -331,6 +333,8 @@ class HttpRequestManager(TaskManager):
         if request_data.reply is not None and request_data.reply.error() == QNetworkReply.OperationCanceledError:
             Logger.log("d", "%s was aborted, do nothing", request_data)
             return
+
+        Logger.log("i", "Request [%s] finished.", request_data.request_id)
 
         if self._enable_request_benchmarking:
             time_spent = time.time() - request_data.start_time
