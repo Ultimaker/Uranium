@@ -58,6 +58,9 @@ class HttpRequestData(QObject):
         self._timeout = timeout
         self.reply = reply
 
+        # For benchmarking. For calculating the time a request spent pending.
+        self._create_time = time.time()
+
         # The timestamp when this request was initially issued to the QNetworkManager. This field to used to track and
         # manage timeouts (if set) for the requests.
         self._start_time = None  # type: Optional[float]
@@ -80,6 +83,17 @@ class HttpRequestData(QObject):
     @property
     def timeout(self) -> Optional[float]:
         return self._timeout
+
+    @property
+    def start_time(self) -> Optional[float]:
+        return self._start_time
+
+    # For benchmarking. Time in seconds that this request stayed in the pending queue.
+    @property
+    def pending_time(self) -> Optional[float]:
+        if self._start_time is None:
+            return None
+        return self._start_time - self._create_time
 
     # Sets the start time of this request. This is called when this request is issued to the QNetworkManager.
     def setStartTime(self, start_time: float) -> None:

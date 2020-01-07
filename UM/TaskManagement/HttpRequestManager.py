@@ -79,7 +79,8 @@ class HttpRequestManager(TaskManager):
             cls.__instance = cls()
         return cls.__instance
 
-    def __init__(self, max_concurrent_requests: int = 10, parent: Optional["QObject"] = None) -> None:
+    def __init__(self, max_concurrent_requests: int = 10, parent: Optional["QObject"] = None,
+                 enable_request_benchmarking: bool = False) -> None:
         if HttpRequestManager.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         HttpRequestManager.__instance = self
@@ -100,7 +101,13 @@ class HttpRequestManager(TaskManager):
         self._request_lock = RLock()
         self._process_requests_scheduled = False
 
-    # Public API for creating an HTTP GET request.
+        # Debug options
+        #
+        # Enabling benchmarking will make the manager to time how much time it takes for a request from start to finish
+        # and log them.
+        self._enable_request_benchmarking = enable_request_benchmarking
+
+        # Public API for creating an HTTP GET request.
     # Returns an HttpRequestData instance that represents this request.
     def get(self, url: str,
             headers_dict: Optional[Dict[str, str]] = None,
@@ -322,6 +329,11 @@ class HttpRequestManager(TaskManager):
         if request_data.reply is not None and request_data.reply.error() == QNetworkReply.OperationCanceledError:
             Logger.log("d", "%s was aborted, do nothing", request_data)
             return
+
+        if self._enable_request_benchmarking:
+            time_spent = time.time() - request_data.start_time
+            Logger.log("d", "Request [%s] finished, took %s seconds, pending for %s seconds",
+                       request_data, time_spent, request_data.pending_time)
 
         with self._request_lock:
             # Safeguard: make sure that we have the reply in the currently in-progress requests set.
