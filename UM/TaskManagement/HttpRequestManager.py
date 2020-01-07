@@ -241,23 +241,25 @@ class HttpRequestManager(TaskManager):
     # Processes the next requests in the pending queue. This function will issue as many requests to the QNetworkManager
     # as possible but limited by the value "_max_concurrent_requests". It stops if there is no more pending requests.
     def _processNextRequestsInQueue(self) -> None:
-        with self._request_lock:
-            # Do nothing if there's no more requests to process
-            if not self._request_queue:
-                self._process_requests_scheduled = False
-                Logger.log("d", "No more requests to process, stop")
-                return
+        # Process all requests until the max concurrent number is hit or there's no more requests to process.
+        while True:
+            with self._request_lock:
+                # Do nothing if there's no more requests to process
+                if not self._request_queue:
+                    self._process_requests_scheduled = False
+                    Logger.log("d", "No more requests to process, stop")
+                    return
 
-            # Do not exceed the max request limit
-            if len(self._requests_in_progress) >= self._max_concurrent_requests:
-                self._process_requests_scheduled = False
-                Logger.log("d", "The in-progress requests has reached the limit %s, stop",
-                           self._max_concurrent_requests)
-                return
+                # Do not exceed the max request limit
+                if len(self._requests_in_progress) >= self._max_concurrent_requests:
+                    self._process_requests_scheduled = False
+                    Logger.log("d", "The in-progress requests has reached the limit %s, stop",
+                               self._max_concurrent_requests)
+                    return
 
-            # Fetch the next request and process
-            next_request_data = self._request_queue.popleft()
-        self._processRequest(next_request_data)
+                # Fetch the next request and process
+                next_request_data = self._request_queue.popleft()
+            self._processRequest(next_request_data)
 
     # Processes the given HttpRequestData by issuing the request using QNetworkAccessManager and moves the
     # request into the currently in-progress list.
