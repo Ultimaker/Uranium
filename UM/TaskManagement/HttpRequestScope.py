@@ -5,8 +5,6 @@ from PyQt5.QtNetwork import QNetworkRequest
 
 from UM.Application import Application
 
-from cura.API import CuraAPI, Account
-
 
 # Modifies a request in some way. Could be used to add authorization headers, or set user agents, for example
 class HttpRequestScope:
@@ -31,20 +29,3 @@ class DefaultUserAgentScope(HttpRequestScope):
     def request_hook(self, request: QNetworkRequest):
         super().request_hook(request)
         self.add_headers(request, self.header_dict)
-
-
-# Adds the default User Agent and an API-token
-class UltimakerCloudScope(DefaultUserAgentScope):
-    def __init__(self, application: Application):
-        super().__init__(application)
-        api = CuraAPI()
-        self._account = api.account  # type: Account
-
-    def request_hook(self, request: QNetworkRequest):
-        super().request_hook(request)
-        token = self._account.accessToken
-        header_dict = {
-            "Authorization": "Bearer {}".format(token)
-        }
-        self.add_headers(request, header_dict)
-
