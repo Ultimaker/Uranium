@@ -60,7 +60,7 @@ def test_comparePackageVersions():
         assert expected_result == package_manager._comparePackageVersions(info_dict1, info_dict2)
 
 
-def test_getLicence():
+def test_getLicense():
     manager = PackageManager(MagicMock())
     assert manager.getPackageLicense(test_package_path) == "Do whatever you want with this.\n"
 
