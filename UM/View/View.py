@@ -58,14 +58,14 @@ class View(QObject, PluginObject):
     #
     #   This should queue all the meshes that should be rendered.
     def beginRendering(self) -> None:
-        raise NotImplementedError()
+        pass
 
     ##  Perform any steps needed when ending the rendering process.
     #
     #   If there is any cleanup or other tasks that need to be performed
     #   after rendering this method should be used.
     def endRendering(self) -> None:
-        raise NotImplementedError()
+        pass
     
     ##  Handle an event.
     #   \param event \type{Event} The event to handle.
