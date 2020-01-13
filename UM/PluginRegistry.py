@@ -416,7 +416,7 @@ class PluginRegistry(QObject):
         try:
             to_register = plugin.register(self._application)  # type: ignore  # We catch AttributeError on this in case register() doesn't exist.
             if not to_register:
-                Logger.log("e", "Plugin %s did not return any objects to register", plugin_id)
+                Logger.log("w", "Plugin %s did not return any objects to register", plugin_id)
                 return
             for plugin_type, plugin_object in to_register.items():
                 if type(plugin_object) == list:
