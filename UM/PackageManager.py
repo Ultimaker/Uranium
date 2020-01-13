@@ -214,7 +214,6 @@ class PackageManager(QObject):
         return 1
 
     def _saveManagementData(self) -> None:
-        print("4")
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
         container_registry = self._application.getContainerRegistry()
         with container_registry.lockFile():
