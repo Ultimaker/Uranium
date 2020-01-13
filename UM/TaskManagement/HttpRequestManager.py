@@ -77,7 +77,7 @@ class HttpRequestManager(TaskManager):
     @classmethod
     def getInstance(cls, *args, **kwargs) -> Optional["HttpRequestManager"]:
         if cls.__instance is None:
-            cls.__instance = cls()
+            cls.__instance = cls(*args, **kwargs)
         return cls.__instance
 
     def __init__(self, max_concurrent_requests: int = 10, parent: Optional["QObject"] = None,

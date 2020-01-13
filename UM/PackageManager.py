@@ -362,7 +362,7 @@ class PackageManager(QObject):
             # Get package information
             package_info = self.getPackageInfo(filename)
             if not package_info:
-                return
+                return None
             package_id = package_info["package_id"]
 
             # If the package is being installed but it is in the list on to remove, then it is deleted from that list.

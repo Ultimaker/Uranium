@@ -18,7 +18,7 @@ class HttpRequestScope:
 
 
 class DefaultUserAgentScope(HttpRequestScope):
-    def __init__(self, application: Application):
+    def __init__(self, application: Application) -> None:
         self.header_dict = {
             "User-Agent": "%s/%s (%s %s)" % (application.getApplicationName(),
                                              application.getVersion(),
