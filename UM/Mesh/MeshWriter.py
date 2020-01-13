@@ -20,7 +20,7 @@ class MeshWriter(FileWriter):
     #
     #   \param stream \type{IOStream} The stream to output to.
     #   \param nodes A collection of scene nodes to write to the stream.
-    def write(self, stream, node):
+    def write(self, stream, node, mode = FileWriter.OutputMode.BinaryMode):
         raise NotImplementedError("MeshWriter plugin was not correctly implemented, no write was specified")
 
     ##  Filters a collection of nodes to only include nodes that are actual
