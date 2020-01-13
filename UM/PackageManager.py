@@ -438,7 +438,6 @@ class PackageManager(QObject):
             self.packagesWithUpdateChanged.emit()
 
     def dismissPackage(self, package_id: str) -> None:
-        print("3")
         self._dismissed_packages.add(package_id)
         self._saveManagementData()
 
