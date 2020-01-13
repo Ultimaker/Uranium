@@ -25,9 +25,8 @@ class WorkspaceFileHandler(FileHandler):
         results = None
         try:
             results = reader.read(file_name)
-        except:
-            Logger.logException("e", "An exception occurred while loading workspace.")
-            Logger.log("w", "Unable to load workspace %s", file_name)
+        except Exception:
+            Logger.logException("w", "An exception occurred while loading workspace [%s]" % file_name)
 
         return results
 
