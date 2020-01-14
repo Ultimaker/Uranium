@@ -22,7 +22,7 @@ class WorkspaceFileHandler(FileHandler):
         super().__init__(application, writer_type, reader_type, parent)
         self.workspace_reader = None  # type: Optional[WorkspaceReader]
 
-    def readerRead(self, reader: WorkspaceReader, file_name: str, **kwargs) -> Optional[str]:
+    def readerRead(self, reader: WorkspaceReader, file_name: str, **kwargs):
         self.workspace_reader = reader
         results = None
         try:
@@ -40,15 +40,20 @@ class WorkspaceFileHandler(FileHandler):
 
     def _readWorkspaceFinished(self, job: ReadFileJob) -> None:
         # Add the loaded nodes to the scene.
-        nodes = job.getResult()
+        result = job.getResult()
+        if isinstance(result, tuple):
+            nodes, metadata = result
+        else:
+            nodes = result
+            metadata = {}
+
         if nodes is not None:  # Job was not a failure.
             self._application.resetWorkspace()
-            # Add the loaded nodes to the scene.
-            nodes = job.getResult()
             for node in nodes:
                 # We need to prevent circular dependency, so do some just in time importing.
                 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
                 op = AddSceneNodeOperation(node, self._application.getController().getScene().getRoot())
                 op.push()
 
+            self._application._workspace_metadata_storage.setData(metadata)
             self._application.workspaceLoaded.emit(cast(WorkspaceReader, self.workspace_reader).workspaceName())

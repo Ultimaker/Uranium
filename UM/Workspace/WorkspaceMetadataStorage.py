@@ -7,10 +7,13 @@ class WorkspaceMetadataStorage:
         # We allow for a set of key value pairs to be stored per plugin.
         self._data = defaultdict(dict)  # type: Dict[str, Dict[str, Any]]
 
-    def setDataToStore(self, plugin_id: str, key: str, data: Any) -> None:
+    def setEntryToStore(self, plugin_id: str, key: str, data: Any) -> None:
         self._data[plugin_id][key] = data
 
-    def getData(self, plugin_id) -> Dict[str, Any]:
+    def setData(self, data: Dict[str, Dict[str, Any]]) -> None:
+        self._data = defaultdict(dict, data)
+
+    def getPluginMetadata(self, plugin_id: str) -> Dict[str, Any]:
         return self._data[plugin_id]
 
     def clear(self) -> None:
