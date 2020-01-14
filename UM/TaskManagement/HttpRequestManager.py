@@ -5,7 +5,7 @@ from collections import deque
 from threading import RLock
 import time
 import uuid
-from typing import Callable, Deque, Dict, Set, Union, Optional
+from typing import Callable, Deque, Dict, Set, Union, Optional, Any
 
 from PyQt5.QtCore import QObject, QUrl, Qt
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
@@ -75,7 +75,7 @@ class HttpRequestManager(TaskManager):
     __instance = None  # type: Optional[HttpRequestManager]
 
     @classmethod
-    def getInstance(cls, *args, **kwargs) -> Optional["HttpRequestManager"]:
+    def getInstance(cls, *args, **kwargs) -> "HttpRequestManager":
         if cls.__instance is None:
             cls.__instance = cls(*args, **kwargs)
         return cls.__instance
