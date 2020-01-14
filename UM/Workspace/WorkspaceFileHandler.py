@@ -6,9 +6,11 @@ from typing import Optional
 
 from UM.Logger import Logger
 from UM.FileHandler.FileHandler import FileHandler
-from UM.FileHandler.FileReader import FileReader #For typing.
-from UM.FileHandler.ReadFileJob import ReadFileJob #For typing.
-from typing import TYPE_CHECKING
+from UM.FileHandler.ReadFileJob import ReadFileJob  # For typing.
+from typing import TYPE_CHECKING, cast
+
+from UM.Workspace.WorkspaceReader import WorkspaceReader
+
 if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
 
@@ -18,9 +20,9 @@ if TYPE_CHECKING:
 class WorkspaceFileHandler(FileHandler):
     def __init__(self, application: "QtApplication", writer_type: str = "workspace_writer", reader_type: str = "workspace_reader", parent: QObject = None) -> None:
         super().__init__(application, writer_type, reader_type, parent)
-        self.workspace_reader = None  # type: Optional[FileReader]
+        self.workspace_reader = None  # type: Optional[WorkspaceReader]
 
-    def readerRead(self, reader: FileReader, file_name: str, **kwargs) -> Optional[str]:
+    def readerRead(self, reader: WorkspaceReader, file_name: str, **kwargs) -> Optional[str]:
         self.workspace_reader = reader
         results = None
         try:
@@ -48,6 +50,5 @@ class WorkspaceFileHandler(FileHandler):
                 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
                 op = AddSceneNodeOperation(node, self._application.getController().getScene().getRoot())
                 op.push()
-                self._application.getController().getScene().sceneChanged.emit(node)
 
-            self._application.workspaceLoaded.emit(job._filename)
+            self._application.workspaceLoaded.emit(cast(WorkspaceReader, self.workspace_reader).workspaceName())
