@@ -40,11 +40,7 @@ class WorkspaceFileHandler(FileHandler):
         # Add the loaded nodes to the scene.
         nodes = job.getResult()
         if nodes is not None:  # Job was not a failure.
-            # Delete all old nodes.
-            self._application.deleteAll()
-            # The name of the project is set after deleting all
-            self._application.workspaceLoaded.emit(job._filename)
-
+            self._application.resetWorkspace()
             # Add the loaded nodes to the scene.
             nodes = job.getResult()
             for node in nodes:
@@ -53,3 +49,5 @@ class WorkspaceFileHandler(FileHandler):
                 op = AddSceneNodeOperation(node, self._application.getController().getScene().getRoot())
                 op.push()
                 self._application.getController().getScene().sceneChanged.emit(node)
+
+            self._application.workspaceLoaded.emit(job._filename)

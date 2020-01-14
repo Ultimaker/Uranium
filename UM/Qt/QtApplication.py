@@ -30,6 +30,7 @@ from UM.Signal import Signal, signalemitter
 from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Message import Message #For typing.
+from UM.Workspace.WorkspaceMetadataStorage import WorkspaceMetadataStorage
 from UM.i18n import i18nCatalog
 from UM.Job import Job #For typing.
 from UM.JobQueue import JobQueue
@@ -115,6 +116,8 @@ class QtApplication(QApplication, Application):
         self._configuration_error_message = None #type: Optional[ConfigurationErrorMessage]
 
         self._http_network_request_manager = HttpRequestManager(parent = self)
+
+        self._workspace_metadata_storage = WorkspaceMetadataStorage()
 
     def addCommandLineOptions(self) -> None:
         super().addCommandLineOptions()
@@ -556,6 +559,12 @@ class QtApplication(QApplication, Application):
     @pyqtSlot()
     def deleteAll(self, only_selectable = True) -> None:
         self.getController().deleteAllNodesWithMeshData(only_selectable)
+
+    @pyqtSlot()
+    def resetWorkspace(self) -> None:
+        self._workspace_metadata_storage.clear()
+        self.deleteAll()
+        self.workspaceLoaded.emit("")
 
     ##  Get the MeshFileHandler of this application.
     def getMeshFileHandler(self) -> MeshFileHandler:
