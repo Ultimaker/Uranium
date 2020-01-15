@@ -133,8 +133,12 @@ class QtApplication(QApplication, Application):
         # Remove this and you will get Windows 95 style for all widgets if you are using Qt 5.10+
         self.setStyle("fusion")
 
-        self.setAttribute(Qt.AA_UseDesktopOpenGL)
+        Application.getInstance().getPreferences().addPreference("view/force_empty_shader_cache", True)  # TODO: Set default to false after we're done with testing & decide to keep this.
         Application.getInstance().getPreferences().addPreference("view/force_legacy_opengl", True)  # TODO: Set default to false after we're done with testing & decide to keep this.
+
+        if Application.getInstance().getPreferences().getValue("view/force_empty_shader_cache"):
+            self.setAttribute(Qt.AA_DisableShaderDiskCache)
+        self.setAttribute(Qt.AA_UseDesktopOpenGL)
         force_legacy_opengl = Application.getInstance().getPreferences().getValue("view/force_legacy_opengl")
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion(force_legacy_opengl)
 
