@@ -60,7 +60,7 @@ def test_comparePackageVersions():
         assert expected_result == package_manager._comparePackageVersions(info_dict1, info_dict2)
 
 
-def test_getLicence():
+def test_getLicense():
     manager = PackageManager(MagicMock())
     assert manager.getPackageLicense(test_package_path) == "Do whatever you want with this.\n"
 
@@ -72,9 +72,10 @@ def test_installAndRemovePackage():
     mock_application.getPluginRegistry = MagicMock(return_value = mock_registry)
     manager = PackageManager(mock_application)
     manager.installedPackagesChanged = MagicMock()
-    manager.installPackage(test_package_path)
+    package_id = manager.installPackage(test_package_path)
     assert manager.installedPackagesChanged.emit.call_count == 1
     assert manager.isPackageInstalled("UnitTestPackage")
+    assert package_id == "UnitTestPackage"
 
     info = manager.getInstalledPackageInfo("UnitTestPackage")
     assert info["author"]["author_id"] == "nallath"
