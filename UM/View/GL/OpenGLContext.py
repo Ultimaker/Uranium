@@ -101,9 +101,11 @@ class OpenGLContext:
     #   Note that PyQt only supports 4.1, 2.1 and 2.0. Cura omits support for 2.1, so the
     #   only returned options are 4.1 and 2.0.
     @classmethod
-    def detectBestOpenGLVersion(cls) -> Tuple[Optional[int], Optional[int], Optional[int]]:
-        Logger.log("d", "Trying OpenGL context 4.1...")
-        ctx = cls.setContext(4, 1, core = True)
+    def detectBestOpenGLVersion(cls, force_compatability: bool) -> Tuple[Optional[int], Optional[int], Optional[int]]:
+        ctx = None
+        if not force_compatability:
+            Logger.log("d", "Trying OpenGL context 4.1...")
+            ctx = cls.setContext(4, 1, core = True)
         if ctx is not None:
             fmt = ctx.format()
             profile = fmt.profile()
