@@ -124,6 +124,19 @@ class QtApplication(QApplication, Application):
 
     def initialize(self) -> None:
         super().initialize()
+
+        Application.getInstance().getPreferences().addPreference("view/force_empty_shader_cache", True)  # TODO: Set default to false after we're done with testing & decide to keep this.
+        Application.getInstance().getPreferences().addPreference("view/force_legacy_opengl", True)  # TODO: Set default to false after we're done with testing & decide to keep this.
+
+        # Read preferences here (upgrade won't work) to get:
+        #  - The language in use, so the splash window can be shown in the correct language.
+        #  - The OpenGL 'force' parameters.
+        try:
+            preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
+            self._preferences.readFromFile(preferences_filename)
+        except FileNotFoundError:
+            Logger.log("i", "Preferences file not found, ignore and use default language '%s'", self._default_language)
+
         # Initialize the package manager to remove and install scheduled packages.
         self._package_manager = self._package_manager_class(self, parent = self)
 
@@ -132,9 +145,6 @@ class QtApplication(QApplication, Application):
 
         # Remove this and you will get Windows 95 style for all widgets if you are using Qt 5.10+
         self.setStyle("fusion")
-
-        Application.getInstance().getPreferences().addPreference("view/force_empty_shader_cache", True)  # TODO: Set default to false after we're done with testing & decide to keep this.
-        Application.getInstance().getPreferences().addPreference("view/force_legacy_opengl", True)  # TODO: Set default to false after we're done with testing & decide to keep this.
 
         if Application.getInstance().getPreferences().getValue("view/force_empty_shader_cache"):
             self.setAttribute(Qt.AA_DisableShaderDiskCache)
@@ -169,14 +179,6 @@ class QtApplication(QApplication, Application):
         i18n_catalog = i18nCatalog("uranium")
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Initializing package manager..."))
         self._package_manager.initialize()
-
-        # Read preferences here (upgrade won't work) to get the language in use, so the splash window can be shown in
-        # the correct language.
-        try:
-            preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
-            self._preferences.readFromFile(preferences_filename)
-        except FileNotFoundError:
-            Logger.log("i", "Preferences file not found, ignore and use default language '%s'", self._default_language)
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
