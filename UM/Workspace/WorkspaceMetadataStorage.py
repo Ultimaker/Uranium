@@ -10,8 +10,11 @@ class WorkspaceMetadataStorage:
     def setEntryToStore(self, plugin_id: str, key: str, data: Any) -> None:
         self._data[plugin_id][key] = data
 
-    def setData(self, data: Dict[str, Dict[str, Any]]) -> None:
+    def setAllData(self, data: Dict[str, Dict[str, Any]]) -> None:
         self._data = defaultdict(dict, data)
+
+    def getAllData(self) -> Dict[str, Dict[str, Any]]:
+        return self._data
 
     def getPluginMetadata(self, plugin_id: str) -> Dict[str, Any]:
         return self._data[plugin_id]
