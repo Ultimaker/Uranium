@@ -55,5 +55,5 @@ class WorkspaceFileHandler(FileHandler):
                 op = AddSceneNodeOperation(node, self._application.getController().getScene().getRoot())
                 op.push()
 
-            self._application._workspace_metadata_storage.setAllData(metadata)
+            self._application.getWorkspaceMetadataStorage().setAllData(metadata)
             self._application.workspaceLoaded.emit(cast(WorkspaceReader, self.workspace_reader).workspaceName())
