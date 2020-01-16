@@ -109,7 +109,7 @@ class HttpRequestManager(TaskManager):
         # and log them.
         self._enable_request_benchmarking = enable_request_benchmarking
 
-        # Public API for creating an HTTP GET request.
+    # Public API for creating an HTTP GET request.
     # Returns an HttpRequestData instance that represents this request.
     def get(self, url: str,
             headers_dict: Optional[Dict[str, str]] = None,
@@ -161,6 +161,23 @@ class HttpRequestManager(TaskManager):
                                    upload_progress_callback = upload_progress_callback,
                                    timeout = timeout,
                                    scope = scope)
+
+    # Public API for creating an HTTP DELETE request.
+    # Returns an HttpRequestData instance that represents this request.
+    def delete(self, url: str,
+               headers_dict: Optional[Dict[str, str]] = None,
+               callback: Optional[Callable[["QNetworkReply"], None]] = None,
+               error_callback: Optional[Callable[["QNetworkReply", "QNetworkReply.NetworkError"], None]] = None,
+               download_progress_callback: Optional[Callable[[int, int], None]] = None,
+               upload_progress_callback: Optional[Callable[[int, int], None]] = None,
+               timeout: Optional[float] = None,
+               scope: Optional[HttpRequestScope] = None) -> "HttpRequestData":
+        return self._createRequest("deleteResource", url, headers_dict=headers_dict,
+                                   callback=callback, error_callback=error_callback,
+                                   download_progress_callback=download_progress_callback,
+                                   upload_progress_callback=upload_progress_callback,
+                                   timeout=timeout,
+                                   scope=scope)
 
     # Public API for aborting a given HttpRequestData. If the request is not pending or in progress, nothing
     # will be done.
