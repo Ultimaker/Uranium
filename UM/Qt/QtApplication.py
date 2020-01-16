@@ -11,7 +11,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtS
 from UM.FlameProfiler import pyqtSlot
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
-from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics
+from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat
 from PyQt5.QtCore import QTimer
 
 from UM.Backend.Backend import Backend #For typing.
@@ -125,8 +125,9 @@ class QtApplication(QApplication, Application):
     def initialize(self) -> None:
         super().initialize()
 
-        Application.getInstance().getPreferences().addPreference("view/force_empty_shader_cache", True)  # TODO: Set default to false after we're done with testing & decide to keep this.
-        Application.getInstance().getPreferences().addPreference("view/force_legacy_opengl", True)  # TODO: Set default to false after we're done with testing & decide to keep this.
+        Application.getInstance().getPreferences().addPreference("view/force_empty_shader_cache", False)
+        Application.getInstance().getPreferences().addPreference("view/force_legacy_opengl", False)
+        Application.getInstance().getPreferences().addPreference("view/force_modern_opengl", True)
 
         # Read preferences here (upgrade won't work) to get:
         #  - The language in use, so the splash window can be shown in the correct language.
@@ -149,8 +150,12 @@ class QtApplication(QApplication, Application):
         if Application.getInstance().getPreferences().getValue("view/force_empty_shader_cache"):
             self.setAttribute(Qt.AA_DisableShaderDiskCache)
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
-        force_legacy_opengl = Application.getInstance().getPreferences().getValue("view/force_legacy_opengl")
-        major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion(force_legacy_opengl)
+        if not Application.getInstance().getPreferences().getValue("view/force_modern_opengl"):
+            force_legacy_opengl = Application.getInstance().getPreferences().getValue("view/force_legacy_opengl")
+            major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion(force_legacy_opengl)
+        else:
+            Logger.info("Force 'modern' OpenGL (4.1 core) -- overrides 'force legacy opengl' preference.")
+            major_version, minor_version, profile = (4, 1, QSurfaceFormat.CoreProfile)
 
         if major_version is None or minor_version is None or profile is None:
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
