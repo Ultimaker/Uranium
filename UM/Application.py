@@ -101,12 +101,12 @@ class Application:
 
         self._app_install_dir = self.getInstallPrefix()  # type: str
 
-        self._workspace_metadata_storage = WorkspaceMetadataStorage()
+        self._workspace_metadata_storage = WorkspaceMetadataStorage()  # type: WorkspaceMetadataStorage
 
     def getAPIVersion(self) -> "Version":
         return self._api_version
 
-    def getWorkspaceMetadataStorage(self) -> WorkSpaceMetadataStorage:
+    def getWorkspaceMetadataStorage(self) -> WorkspaceMetadataStorage:
         return self._workspace_metadata_storage
 
     # Adds the command line options that can be parsed by the command line parser.
