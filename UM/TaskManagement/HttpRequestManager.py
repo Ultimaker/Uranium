@@ -5,7 +5,7 @@ from collections import deque
 from threading import RLock
 import time
 import uuid
-from typing import Callable, Deque, Dict, Set, Union, Optional, Any
+from typing import Callable, cast, Dict, Set, Union, Optional, Any
 
 from PyQt5.QtCore import QObject, QUrl, Qt
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
@@ -96,7 +96,7 @@ class HttpRequestManager(TaskManager):
         self._max_concurrent_requests = max_concurrent_requests
 
         # A FIFO queue for the pending requests.
-        self._request_queue = deque()  # type: Deque[HttpRequestData]
+        self._request_queue = deque()  # type: deque
 
         # A set of all currently in progress requests
         self._requests_in_progress = set()  # type: Set[HttpRequestData]
@@ -271,7 +271,7 @@ class HttpRequestManager(TaskManager):
 
                 # Fetch the next request and process
                 next_request_data = self._request_queue.popleft()
-            self._processRequest(next_request_data)
+            self._processRequest(cast(HttpRequestData, next_request_data))
 
     # Processes the given HttpRequestData by issuing the request using QNetworkAccessManager and moves the
     # request into the currently in-progress list.
