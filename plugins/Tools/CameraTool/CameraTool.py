@@ -236,14 +236,10 @@ class CameraTool(Tool):
         if not camera or not camera.isEnabled():
             return
 
-        self._scene.getSceneLock().acquire()
-
         camera_position = camera.getWorldPosition()
         camera.translate(Vector(-event.deltaX * 100, event.deltaY * 100, 0))
         translation = camera.getWorldPosition() - camera_position
         self._origin += translation
-
-        self._scene.getSceneLock().release()
 
     ##  "Zoom" the camera in response to a mouse event.
     #
@@ -256,7 +252,6 @@ class CameraTool(Tool):
 
         self.clipToZoom()
 
-        self._scene.getSceneLock().acquire()
         if camera.isPerspective():
             r = (camera.getWorldPosition() - self._origin).length()
             delta = r * (zoom_range / 128 / 10.0)
@@ -300,8 +295,6 @@ class CameraTool(Tool):
             else:
                 camera.setZoomFactor(new_zoom_factor)
 
-        self._scene.getSceneLock().release()
-
     ##  Rotate the camera in response to a mouse event.
     #
     #   \param x Amount by which the camera should be rotated horizontally, expressed in pixelunits
@@ -310,8 +303,6 @@ class CameraTool(Tool):
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
             return
-
-        self._scene.getSceneLock().acquire()
 
         dx = math.radians(x * 180.0)
         dy = math.radians(y * 180.0)
@@ -337,5 +328,3 @@ class CameraTool(Tool):
 
         camera.setPosition(n)
         camera.lookAt(self._origin)
-
-        self._scene.getSceneLock().release()

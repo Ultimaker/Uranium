@@ -91,7 +91,7 @@ ListView
                 margins: UM.Theme.getSize("default_margin").width
             }
 
-            height: UM.Theme.getSize("message_close").height
+            height: childrenRect.height
 
             Button
             {
@@ -133,9 +133,10 @@ ListView
                 text: model.title == undefined ? "" : model.title
                 color: UM.Theme.getColor("text")
                 font: UM.Theme.getFont("default_bold")
+                wrapMode: Text.WordWrap
                 elide: Text.ElideRight
+                maximumLineCount: 2
                 renderType: Text.NativeRendering
-                height: parent.height
             }
         }
         Item
@@ -209,7 +210,7 @@ ListView
                 topMargin: UM.Theme.getSize("narrow_margin").height
             }
 
-            height: contentHeight
+            height: text == "" ? 0 : contentHeight
 
             function getProgressText()
             {

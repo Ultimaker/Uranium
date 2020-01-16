@@ -358,16 +358,17 @@ class PackageManager(QObject):
         filename = QUrl(file_url).toLocalFile()
         return self.installPackage(filename)
 
-    # Schedules the given package file to be installed upon the next start.
+    ## Schedules the given package file to be installed upon the next start.
+    # \return The to-be-installed package_id or None if something went wrong
     @pyqtSlot(str)
-    def installPackage(self, filename: str) -> None:
+    def installPackage(self, filename: str) -> Optional[str]:
         has_changes = False
         package_id = ""
         try:
             # Get package information
             package_info = self.getPackageInfo(filename)
             if not package_info:
-                return
+                return None
             package_id = package_info["package_id"]
 
             # If the package is being installed but it is in the list on to remove, then it is deleted from that list.
@@ -407,6 +408,11 @@ class PackageManager(QObject):
                         # The install ensured that the package no longer has a valid update option.
                         self._packages_with_update_available.remove(package_id)
                         self.packagesWithUpdateChanged.emit()
+
+        if has_changes:
+            return package_id
+        else:
+            return None
 
     # Schedules the given package to be removed upon the next start.
     # \param package_id id of the package
