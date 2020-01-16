@@ -30,7 +30,6 @@ from UM.Signal import Signal, signalemitter
 from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Message import Message #For typing.
-from UM.Workspace.WorkspaceMetadataStorage import WorkspaceMetadataStorage
 from UM.i18n import i18nCatalog
 from UM.Job import Job #For typing.
 from UM.JobQueue import JobQueue
@@ -116,8 +115,6 @@ class QtApplication(QApplication, Application):
         self._configuration_error_message = None #type: Optional[ConfigurationErrorMessage]
 
         self._http_network_request_manager = HttpRequestManager(parent = self)
-
-        self._workspace_metadata_storage = WorkspaceMetadataStorage()
 
     def addCommandLineOptions(self) -> None:
         super().addCommandLineOptions()

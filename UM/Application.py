@@ -22,6 +22,7 @@ from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.View.Renderer import Renderer #For typing.
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
+from UM.Workspace.WorkspaceMetadataStorage import WorkspaceMetadataStorage
 from UM.i18n import i18nCatalog
 from UM.Version import Version
 
@@ -100,8 +101,13 @@ class Application:
 
         self._app_install_dir = self.getInstallPrefix()  # type: str
 
+        self._workspace_metadata_storage = WorkspaceMetadataStorage()
+
     def getAPIVersion(self) -> "Version":
         return self._api_version
+
+    def getWorkspaceMetadataStorage(self) -> WorkSpaceMetadataStorage:
+        return self._workspace_metadata_storage
 
     # Adds the command line options that can be parsed by the command line parser.
     # Can be overridden to add additional command line options to the parser.
