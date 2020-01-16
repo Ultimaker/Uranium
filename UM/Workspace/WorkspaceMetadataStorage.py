@@ -23,6 +23,10 @@ class JSONDict(Dict[str, JSONType]):
 
 
 class WorkspaceMetadataStorage:
+    #  The WorkspaceMetadataStorage, as the name implies, allows for plugins to store (and retrieve) extra information
+    #   to a workspace. When a workspace is stored, all workspace readers will need to ensure that the workspace data
+    #   is correctly stored to file. The same also holds when loading a workspace; the existing data will be cleared
+    #   and replaced with the data recovered from the file (if any)
     def __init__(self) -> None:
         # We allow for a set of key value pairs to be stored per plugin.
         self._data = defaultdict(dict)  # type: Dict[str, Dict[str, JSONType]]
