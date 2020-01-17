@@ -127,7 +127,7 @@ class QtApplication(QApplication, Application):
 
         Application.getInstance().getPreferences().addPreference("view/force_empty_shader_cache", False)
         Application.getInstance().getPreferences().addPreference("view/force_legacy_opengl", False)
-        Application.getInstance().getPreferences().addPreference("view/force_modern_opengl", True)
+        Application.getInstance().getPreferences().addPreference("view/force_modern_opengl", False)
 
         # Read preferences here (upgrade won't work) to get:
         #  - The language in use, so the splash window can be shown in the correct language.

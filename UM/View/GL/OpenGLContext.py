@@ -128,21 +128,13 @@ class OpenGLContext:
                 gl_window.setSurfaceType(QWindow.OpenGLSurface)
                 gl_window.showMinimized()
 
-                gl_format = QSurfaceFormat()
-                gl_format.setMajorVersion(major_version)
-                gl_format.setMinorVersion(minor_version)
-                gl_format.setProfile(profile)
-
-                gl_context = QOpenGLContext()
-                gl_context.setFormat(gl_format)
-                gl_context.create()
-                gl_context.makeCurrent(gl_window)
+                ctx.makeCurrent(gl_window)
 
                 gl_profile = QOpenGLVersionProfile()
                 gl_profile.setVersion(major_version, minor_version)
                 gl_profile.setProfile(profile)
 
-                gl = gl_context.versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the requested profile and the implementation of your graphics card.
+                gl = ctx.versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the requested profile and the implementation of your graphics card.
 
                 gpu_type = "Unknown"  # type: str
 
