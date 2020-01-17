@@ -259,8 +259,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
-        # Instance containers can only set value, so if someone asks for anything else, quit early.
-        if property_name != "value":
+        # Instance containers can only set value, state & validationstate, so if someone asks for anything else, quit early.
+        if property_name not in ["value", "state", "validationState"]:
             return None
         self._instantiateCachedValues()
         if key in self._instances:
