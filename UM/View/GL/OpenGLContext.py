@@ -5,6 +5,7 @@ from typing import Dict, Optional, Tuple, Any
 from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat, QWindow
 
 from UM.Logger import Logger
+from UM.Platform import Platform
 
 
 class OpenGLContext:
@@ -124,11 +125,14 @@ class OpenGLContext:
 
                 # CURA-6092: Check if we're not using software backed 4.1 context; A software 4.1 context
                 # is much slower than a hardware backed 2.0 context
-                gl_window = QWindow()
-                gl_window.setSurfaceType(QWindow.OpenGLSurface)
-                gl_window.showMinimized()
+                # Check for OS, Since this only seems to happen on specific versions of Mac OSX and
+                # the workaround (which involves the deletion of an OpenGL context) is a problem for some Intel drivers.
+                if Platform.isOSX():
+                    gl_window = QWindow()
+                    gl_window.setSurfaceType(QWindow.OpenGLSurface)
+                    gl_window.showMinimized()
 
-                ctx.makeCurrent(gl_window)
+                    ctx.makeCurrent(gl_window)
 
                 gl_profile = QOpenGLVersionProfile()
                 gl_profile.setVersion(major_version, minor_version)
