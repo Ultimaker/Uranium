@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Dict, Optional, Tuple, Any
@@ -127,12 +127,14 @@ class OpenGLContext:
                 # is much slower than a hardware backed 2.0 context
                 # Check for OS, Since this only seems to happen on specific versions of Mac OSX and
                 # the workaround (which involves the deletion of an OpenGL context) is a problem for some Intel drivers.
-                if Platform.isOSX():
-                    gl_window = QWindow()
-                    gl_window.setSurfaceType(QWindow.OpenGLSurface)
-                    gl_window.showMinimized()
+                if not Platform.isOSX():
+                    return major_version, minor_version, QSurfaceFormat.CoreProfile
 
-                    ctx.makeCurrent(gl_window)
+                gl_window = QWindow()
+                gl_window.setSurfaceType(QWindow.OpenGLSurface)
+                gl_window.showMinimized()
+
+                ctx.makeCurrent(gl_window)
 
                 gl_profile = QOpenGLVersionProfile()
                 gl_profile.setVersion(major_version, minor_version)
