@@ -11,7 +11,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtS
 from UM.FlameProfiler import pyqtSlot
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
-from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics
+from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat
 from PyQt5.QtCore import QTimer
 
 from UM.Backend.Backend import Backend #For typing.
@@ -124,6 +124,20 @@ class QtApplication(QApplication, Application):
 
     def initialize(self) -> None:
         super().initialize()
+
+        Application.getInstance().getPreferences().addPreference("view/force_empty_shader_cache", False)
+        Application.getInstance().getPreferences().addPreference("view/force_legacy_opengl", False)
+        Application.getInstance().getPreferences().addPreference("view/force_modern_opengl", False)
+
+        # Read preferences here (upgrade won't work) to get:
+        #  - The language in use, so the splash window can be shown in the correct language.
+        #  - The OpenGL 'force' parameters.
+        try:
+            preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
+            self._preferences.readFromFile(preferences_filename)
+        except FileNotFoundError:
+            Logger.log("i", "Preferences file not found, ignore and use default language '%s'", self._default_language)
+
         # Initialize the package manager to remove and install scheduled packages.
         self._package_manager = self._package_manager_class(self, parent = self)
 
@@ -133,8 +147,15 @@ class QtApplication(QApplication, Application):
         # Remove this and you will get Windows 95 style for all widgets if you are using Qt 5.10+
         self.setStyle("fusion")
 
+        if Application.getInstance().getPreferences().getValue("view/force_empty_shader_cache"):
+            self.setAttribute(Qt.AA_DisableShaderDiskCache)
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
-        major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
+        if not Application.getInstance().getPreferences().getValue("view/force_modern_opengl"):
+            force_legacy_opengl = Application.getInstance().getPreferences().getValue("view/force_legacy_opengl")
+            major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion(force_legacy_opengl)
+        else:
+            Logger.info("Force 'modern' OpenGL (4.1 core) -- overrides 'force legacy opengl' preference.")
+            major_version, minor_version, profile = (4, 1, QSurfaceFormat.CoreProfile)
 
         if major_version is None or minor_version is None or profile is None:
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
@@ -163,14 +184,6 @@ class QtApplication(QApplication, Application):
         i18n_catalog = i18nCatalog("uranium")
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Initializing package manager..."))
         self._package_manager.initialize()
-
-        # Read preferences here (upgrade won't work) to get the language in use, so the splash window can be shown in
-        # the correct language.
-        try:
-            preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
-            self._preferences.readFromFile(preferences_filename)
-        except FileNotFoundError:
-            Logger.log("i", "Preferences file not found, ignore and use default language '%s'", self._default_language)
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
