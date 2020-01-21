@@ -152,6 +152,8 @@ class MeshData:
     ##  Get the array of indices
     #   \return \type{numpy.ndarray}
     def getIndices(self) -> numpy.ndarray:
+        if self._indices is not None and self._indices.dtype != "int32":
+            self._indices = numpy.asarray(self._indices, dtype=numpy.int32)
         return self._indices
 
     def hasColors(self) -> bool:
