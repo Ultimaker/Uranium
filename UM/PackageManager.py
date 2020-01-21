@@ -345,8 +345,25 @@ class PackageManager(QObject):
     def getToRemovePackageIDs(self) -> Set[str]:
         return self._to_remove_package_set
 
+    def dismissPackage(self, package_id: str) -> None:
+        self._dismissed_packages.add(package_id)
+        self._saveManagementData()
+
     def getDismissedPackages(self) -> List[str]:
         return list(self._dismissed_packages)
+
+    def removeFromDismissedPackages(self, package: str) -> None:
+        if package in self._dismissed_packages:
+            self._dismissed_packages.remove(package)
+            Logger.debug("Removed package [%s] from the dismissed packages list" % package)
+
+    def reEvaluateDismissedPackages(self, data) -> None:
+        dismissed_packages = self.getDismissedPackages()
+        for dismissed in dismissed_packages:
+            for item in data:
+                if item['package_id'] == dismissed:
+                    if self.sdk_version in item["sdk_versions"]:
+                        self.removeFromDismissedPackages(dismissed)
 
     # Checks if the given package is installed (at all).
     def isPackageInstalled(self, package_id: str) -> bool:
@@ -443,9 +460,7 @@ class PackageManager(QObject):
             self._packages_with_update_available.add(package_id)
             self.packagesWithUpdateChanged.emit()
 
-    def dismissPackage(self, package_id: str) -> None:
-        self._dismissed_packages.add(package_id)
-        self._saveManagementData()
+
 
     ##  Is the package an user installed package?
     def isUserInstalledPackage(self, package_id: str) -> bool:
