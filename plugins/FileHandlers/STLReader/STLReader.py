@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
@@ -19,8 +19,8 @@ try:
     import stl  # numpy-stl lib
     import stl.mesh
 
-    # Increase max count. (10 million should be okay-ish)
-    stl.stl.MAX_COUNT = 10000000
+    # Increase max count. (100 million should be okay-ish)
+    stl.stl.MAX_COUNT = 100000000
     use_numpystl = True
 except ImportError:
     Logger.log("w", "Could not find numpy-stl, falling back to slower code.")

@@ -63,11 +63,7 @@ class Scene:
             else:
                 self._connectSignalsRoot()
 
-    ##  Gets the global scene lock.
-    #
-    #   Use this lock to prevent any read or write actions on the scene from other threads,
-    #   assuming those threads also properly acquire the lock. Most notably, this
-    #   prevents the rendering thread from rendering the scene while it is changing.
+    @deprecated("Scene lock is no longer used", "4.5")
     def getSceneLock(self) -> threading.Lock:
         return self._lock
 
