@@ -361,7 +361,7 @@ class PackageManager(QObject):
         dismissed_packages = self.getDismissedPackages()
         for package in dismissed_packages:
             for item in json_data:
-                if item['package_id'] == package:
+                if item["package_id"] == package:
                     if sdk_version in item["sdk_versions"]:
                         self.removeFromDismissedPackages(package)
 
