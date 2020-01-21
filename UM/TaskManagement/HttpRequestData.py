@@ -48,7 +48,7 @@ class HttpRequestData(QObject):
             raise ValueError("Timeout must be a positive value, but got [%s] instead." % timeout)
 
         self._request_id = request_id
-        self.http_method = http_method.lower()
+        self.http_method = http_method
         self.request = request
         self.data = data
         self.callback = callback
