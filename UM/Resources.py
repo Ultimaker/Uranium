@@ -501,7 +501,10 @@ class Resources:
         temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
         # src -> temp -> dest
         try:
-            shutil.copytree(src_path, temp_dir_path, ignore = shutil.ignore_patterns("*.lock", "*.log", "old"))
+            # Copy everything, except for the logs, lock or really old (we used to copy old configs to the "old" folder)
+            # config files.
+            shutil.copytree(src_path, temp_dir_path,
+                            ignore = shutil.ignore_patterns("*.lock", "*.log", "*.log.?", "old"))
             # if the dest_path exist, it needs to be removed first
             if not os.path.exists(dest_path):
                 shutil.move(temp_dir_path, dest_path)
