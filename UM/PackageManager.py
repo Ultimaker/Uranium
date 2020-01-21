@@ -357,13 +357,21 @@ class PackageManager(QObject):
             self._dismissed_packages.remove(package)
             Logger.debug("Removed package [%s] from the dismissed packages list" % package)
 
-    def reEvaluateDismissedPackages(self, json_data: List[Dict[str, List[Any]]], sdk_version: str) -> None:
+    def reEvaluateDismissedPackages(self, subscribed_packages_payload: List[Dict[str, Any]], sdk_version: str) -> None:
+        '''
+        It removes a package from the "dismissed incompatible packages" list, if it gets updated in the meantime.
+        We check every package from the payload against our current CURA SDK version, and if it is in there -
+        we remove the already dismissed package from the above mentioned list.
+
+        :param subscribed_packages_payload: The response from Web CURA, a list of packages that a user is subscribed to.
+        :param sdk_version: Current CURA SDK version.
+        :return: None.
+        '''
         dismissed_packages = self.getDismissedPackages()
-        for package in dismissed_packages:
-            for item in json_data:
-                if item["package_id"] == package:
-                    if sdk_version in item["sdk_versions"]:
-                        self.removeFromDismissedPackages(package)
+        if dismissed_packages:
+            for package in subscribed_packages_payload:
+                if package["package_id"] in dismissed_packages and sdk_version in package["sdk_versions"]:
+                    self.removeFromDismissedPackages(package["package_id"])
 
     # Checks if the given package is installed (at all).
     def isPackageInstalled(self, package_id: str) -> bool:
