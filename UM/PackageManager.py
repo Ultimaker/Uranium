@@ -11,9 +11,6 @@ import urllib.parse  # For interpreting escape characters using unquote_plus.
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty
 
-from cura import ApplicationMetadata
-
-
 from UM import i18nCatalog
 from UM.Logger import Logger
 from UM.Message import Message
@@ -36,7 +33,6 @@ class PackageManager(QObject):
         self._application = application
         self._container_registry = self._application.getContainerRegistry()
         self._plugin_registry = self._application.getPluginRegistry()
-        self._sdk_version = ApplicationMetadata.CuraSDKVersion
 
         # JSON files that keep track of all installed packages.
         self._user_package_management_file_path = None  # type: Optional[str]
