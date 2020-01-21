@@ -29,6 +29,7 @@ Window
 
     property alias leftButtons: leftButtonRow.children;
     property alias rightButtons: rightButtonRow.children;
+    property alias backgroundColor: background.color
 
     signal accepted();
     signal rejected();
@@ -54,6 +55,7 @@ Window
     }
 
     Rectangle {
+        id: background
         anchors.fill: parent;
         color: palette.window;
 
