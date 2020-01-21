@@ -11,6 +11,9 @@ import urllib.parse  # For interpreting escape characters using unquote_plus.
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty
 
+from cura import ApplicationMetadata
+
+
 from UM import i18nCatalog
 from UM.Logger import Logger
 from UM.Message import Message
@@ -33,6 +36,7 @@ class PackageManager(QObject):
         self._application = application
         self._container_registry = self._application.getContainerRegistry()
         self._plugin_registry = self._application.getPluginRegistry()
+        self._sdk_version = ApplicationMetadata.CuraSDKVersion
 
         # JSON files that keep track of all installed packages.
         self._user_package_management_file_path = None  # type: Optional[str]
@@ -357,13 +361,13 @@ class PackageManager(QObject):
             self._dismissed_packages.remove(package)
             Logger.debug("Removed package [%s] from the dismissed packages list" % package)
 
-    def reEvaluateDismissedPackages(self, data) -> None:
+    def reEvaluateDismissedPackages(self, json_data: List[Dict[str, List[Any]]], sdk_version: str) -> None:
         dismissed_packages = self.getDismissedPackages()
-        for dismissed in dismissed_packages:
-            for item in data:
-                if item['package_id'] == dismissed:
-                    if self.sdk_version in item["sdk_versions"]:
-                        self.removeFromDismissedPackages(dismissed)
+        for package in dismissed_packages:
+            for item in json_data:
+                if item['package_id'] == package:
+                    if sdk_version in item["sdk_versions"]:
+                        self.removeFromDismissedPackages(package)
 
     # Checks if the given package is installed (at all).
     def isPackageInstalled(self, package_id: str) -> bool:
@@ -459,8 +463,6 @@ class PackageManager(QObject):
         if self.checkIfPackageCanUpdate(package_id):
             self._packages_with_update_available.add(package_id)
             self.packagesWithUpdateChanged.emit()
-
-
 
     ##  Is the package an user installed package?
     def isUserInstalledPackage(self, package_id: str) -> bool:
