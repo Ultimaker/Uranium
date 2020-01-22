@@ -106,9 +106,15 @@ def test_getBasicAuthSuccess() -> None:
         # quit now so we don't need to wait
         http_request_manager.callLater(0, app.quit)
 
+    def error_callback(*args, **kwargs):
+        cbo.callback(*args, **kwargs)
+        # quit now so we don't need to wait
+        http_request_manager.callLater(0, app.quit)
+
     request_data = http_request_manager.get(url="http://localhost:8080/auth",
                                             headers_dict = {"Authorization": "Basic dXNlcjp1c2Vy"},
-                                            callback = callback)
+                                            callback = callback,
+                                            error_callback=error_callback)
     # Make sure that if something goes wrong, we quit after 10 seconds
     http_request_manager.callLater(10.0, app.quit)
 
@@ -116,6 +122,7 @@ def test_getBasicAuthSuccess() -> None:
     http_request_manager.cleanup()  # Remove all unscheduled events
 
     cbo.callback.assert_called_once_with(request_data.reply)
+    cbo.error_callback.assert_not_called()
 
 
 #
@@ -129,12 +136,18 @@ def test_getBasicAuthFail() -> None:
 
     cbo = mock.Mock()
 
+    def callback(*args, **kwargs):
+        cbo.callback(*args, **kwargs)
+        # quit now so we don't need to wait
+        http_request_manager.callLater(0, app.quit)
+
     def error_callback(*args, **kwargs):
         cbo.error_callback(*args, **kwargs)
         # quit now so we don't need to wait
         http_request_manager.callLater(0, app.quit)
 
     request_data = http_request_manager.get(url="http://localhost:8080/auth",
+                                            callback=callback,
                                             error_callback = error_callback)
     # Make sure that if something goes wrong, we quit after 10 seconds
     http_request_manager.callLater(10.0, app.quit)
@@ -143,3 +156,4 @@ def test_getBasicAuthFail() -> None:
     http_request_manager.cleanup()  # Remove all unscheduled events
 
     cbo.error_callback.assert_called_once_with(request_data.reply, request_data.reply.error())
+    cbo.callback.assert_not_called()
