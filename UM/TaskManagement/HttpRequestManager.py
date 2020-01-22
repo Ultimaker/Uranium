@@ -358,9 +358,12 @@ class HttpRequestManager(TaskManager):
         # aborted. This can be done by checking if the error is QNetworkReply.OperationCanceledError. If a request was
         # aborted due to timeout, the request's HttpRequestData.is_aborted_due_to_timeout will be set to True.
         #
-        # We do nothing if the request was aborted because an error callback will also be triggered by Qt.
-        if request_data.reply is not None and request_data.reply.error() == QNetworkReply.OperationCanceledError:
-            Logger.log("d", "%s was aborted, do nothing", request_data)
+        # We do nothing if the request was aborted or and error was detected because an error callback will also
+        # be triggered by Qt.
+        if request_data.reply is not None and request_data.reply.error() != QNetworkReply.NoError:
+            if request_data.reply.error() == QNetworkReply.OperationCanceledError:
+                Logger.log("d", "%s was aborted, do nothing", request_data)
+            # stop processing for any kind of error
             return
 
         Logger.log("i", "Request [%s] finished.", request_data.request_id)
