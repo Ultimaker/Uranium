@@ -6,7 +6,8 @@ from PyQt5.QtNetwork import QNetworkRequest
 from UM.Application import Application
 
 
-# Modifies a request in some way. Could be used to add authorization headers, or set user agents, for example
+## Modifies a request in some way. This concept is sometimes called a request interceptor. Could be used to add
+# authorization headers or set user agents, for example
 class HttpRequestScope:
     ## Invoked after request-specific headers are set and before HttpRequestData is created
     def request_hook(self, request: QNetworkRequest):
@@ -17,6 +18,7 @@ class HttpRequestScope:
             request.setRawHeader(key.encode("utf-8"), value.encode("utf-8"))
 
 
+## Adds a User-Agent header
 class DefaultUserAgentScope(HttpRequestScope):
     def __init__(self, application: Application) -> None:
         self.header_dict = {
