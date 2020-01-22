@@ -27,7 +27,9 @@ from UM.TaskManagement.TaskManager import TaskManager
 #      QNetworkAccessManager.
 #  (3) Updates on each request is done via user-specified callback functions. So, for each request, you can give
 #      optional callbacks:
-#       - A successful callback, invoked when the request has been finished successfully.
+#       - A successful callback, invoked when the request has been finished successfully. The definition of successful
+#         follows that of Qt. A HTTP 404 or 500 is considered successful in this context. You should check the value of
+#         reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) when receiving this callback
 #       - An error callback, invoked when an error has occurred, including when a request was aborted by the user or
 #         timed out.
 #       - A download progress callback, invoked when there's an update on the download progress.
@@ -358,9 +360,12 @@ class HttpRequestManager(TaskManager):
         # aborted. This can be done by checking if the error is QNetworkReply.OperationCanceledError. If a request was
         # aborted due to timeout, the request's HttpRequestData.is_aborted_due_to_timeout will be set to True.
         #
-        # We do nothing if the request was aborted because an error callback will also be triggered by Qt.
-        if request_data.reply is not None and request_data.reply.error() == QNetworkReply.OperationCanceledError:
-            Logger.log("d", "%s was aborted, do nothing", request_data)
+        # We do nothing if the request was aborted or and error was detected because an error callback will also
+        # be triggered by Qt.
+        if request_data.reply is not None:
+            if request_data.reply.error() == QNetworkReply.OperationCanceledError:
+                Logger.log("d", "%s was aborted, do nothing", request_data)
+            # stop processing for any kind of error
             return
 
         Logger.log("i", "Request [%s] finished.", request_data.request_id)
