@@ -362,7 +362,7 @@ class HttpRequestManager(TaskManager):
         #
         # We do nothing if the request was aborted or and error was detected because an error callback will also
         # be triggered by Qt.
-        if request_data.reply is not None and request_data.reply.error() is not None:
+        if request_data.reply is not None and request_data.reply.error() != QNetworkReply.NoError:
             if request_data.reply.error() == QNetworkReply.OperationCanceledError:
                 Logger.log("d", "%s was aborted, do nothing", request_data)
             # stop processing for any kind of error
