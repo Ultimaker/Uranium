@@ -27,9 +27,7 @@ from UM.TaskManagement.TaskManager import TaskManager
 #      QNetworkAccessManager.
 #  (3) Updates on each request is done via user-specified callback functions. So, for each request, you can give
 #      optional callbacks:
-#       - A successful callback, invoked when the request has been finished successfully. The definition of successful
-#         follows that of Qt. A HTTP 404 or 500 is considered successful in this context. You should check the value of
-#         reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) when receiving this callback
+#       - A successful callback, invoked when the request has been finished successfully.
 #       - An error callback, invoked when an error has occurred, including when a request was aborted by the user or
 #         timed out.
 #       - A download progress callback, invoked when there's an update on the download progress.
