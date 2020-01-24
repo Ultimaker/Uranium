@@ -345,17 +345,13 @@ class PackageManager(QObject):
     def getToRemovePackageIDs(self) -> Set[str]:
         return self._to_remove_package_set
 
-    def dismissPackage(self, package_id: str) -> None:
-        self._dismissed_packages.add(package_id)
+    def dismissAllIncompatiblePackages(self, incompatible_packages: List[str]) -> None:
+        self._dismissed_packages.update(incompatible_packages)
         self._saveManagementData()
+        Logger.debug("Dismissed Incompatible package(s): {}".format(incompatible_packages))
 
     def getDismissedPackages(self) -> List[str]:
         return list(self._dismissed_packages)
-
-    def removeFromDismissedPackages(self, package: str) -> None:
-        if package in self._dismissed_packages:
-            self._dismissed_packages.remove(package)
-            Logger.debug("Removed package [%s] from the dismissed packages list" % package)
 
     def reEvaluateDismissedPackages(self, subscribed_packages_payload: List[Dict[str, Any]], sdk_version: str) -> None:
         '''
@@ -372,6 +368,11 @@ class PackageManager(QObject):
             for package in subscribed_packages_payload:
                 if package["package_id"] in dismissed_packages and sdk_version in package["sdk_versions"]:
                     self.removeFromDismissedPackages(package["package_id"])
+
+    def removeFromDismissedPackages(self, package: str) -> None:
+        if package in self._dismissed_packages:
+            self._dismissed_packages.remove(package)
+            Logger.debug("Removed package [%s] from the dismissed packages list" % package)
 
     # Checks if the given package is installed (at all).
     def isPackageInstalled(self, package_id: str) -> bool:
