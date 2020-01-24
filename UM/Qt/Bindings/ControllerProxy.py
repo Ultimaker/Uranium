@@ -67,6 +67,18 @@ class ControllerProxy(QObject):
     def setCameraRotation(self, coordinate: str, angle: int) -> None:
         self._controller.setCameraRotation(coordinate, angle)
 
+    @pyqtSlot(int, int, int)
+    def setCameraPosition(self, x_position: int = 0, y_position: int = 0, z_position: int = 0) -> None:
+        self._controller.setCameraPosition(x_position, y_position, z_position)
+
+    @pyqtSlot(int, int, int)
+    def setLookAtPosition(self, x_look_at_position: int = 0, y_look_at_position: int = 0, z_look_at_position: int = 0) -> None:
+        self._controller.setLookAtPosition(x_look_at_position, y_look_at_position, z_look_at_position)
+
+    @pyqtSlot(float)
+    def setCameraZoomFactor(self, camera_zoom_factor: float = 0) -> None:
+        self._controller.setCameraZoomFactor(camera_zoom_factor)
+
     ##  Changes the position of the origin of the camera.
     #   \param coordinate The new origin of the camera. Use either:
     #     "home": The centre of the build plate.

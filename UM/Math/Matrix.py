@@ -459,9 +459,12 @@ class Matrix:
         syz = sy_syz / sy
         # Reconstruct rotation matrix, ensure positive determinant
         Rmat = numpy.array([M0, M1, M2]).T
-        if numpy.linalg.det(Rmat) < 0:
-            sx *= -1
-            Rmat[:, 0] *= -1
+
+        # The original code ensures that the determinant is positive, but I can't find a single situation where this
+        # is actualy used / needed by us. It is, however, one of the more expensive parts of this function.
+        #if numpy.linalg.det(Rmat) < 0:
+        #    sx *= -1
+        #    Rmat[:, 0] *= -1
 
         return Vector(data = T), Matrix(data=Rmat), Vector(data = numpy.array([sx, sy, sz])), Vector(data=numpy.array([sxy, sxz, syz]))
 

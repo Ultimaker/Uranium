@@ -1,10 +1,16 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Job import Job
-import time
+
 from UM.Logger import Logger
 from UM.FileHandler.FileWriter import FileWriter
+from UM.Message import Message
+
+import io
+import time
+
+from typing import Any, Optional, Union
 
 
 ##  A Job subclass that performs writing.
@@ -18,7 +24,7 @@ class WriteFileJob(Job):
     #   \param data Whatever it is what we want to write.
     #   \param mode Additional information to send to the writer, for example: such as whether to
     #   write in binary format or in ASCII format.
-    def __init__(self, writer, stream, data, mode):
+    def __init__(self, writer: FileWriter, stream: Union[io.BytesIO, io.StringIO], data: Any, mode: int) -> None:
         super().__init__()
         self._stream = stream
         self._writer = writer
@@ -26,33 +32,32 @@ class WriteFileJob(Job):
         self._file_name = ""
         self._mode = mode
         self._add_to_recent_files = False  # If this file should be added to the "recent files" list upon success
-        self._message = None
+        self._message = None  # type: Optional[Message]
         self.progress.connect(self._onProgress)
         self.finished.connect(self._onFinished)
 
-    def _onFinished(self, job):
+    def _onFinished(self, job: Job) -> None:
         if self == job and self._message is not None:
             self._message.hide()
             self._message = None
 
-    def _onProgress(self, job, amount):
+    def _onProgress(self, job: Job, amount: float) -> None:
         if self == job and self._message:
             self._message.setProgress(amount)
 
-    def setFileName(self, name):
+    def setFileName(self, name: str) -> None:
         self._file_name = name
 
-    def getFileName(self):
+    def getFileName(self) -> str:
         return self._file_name
 
-    def getStream(self):
+    def getStream(self) -> Union[io.BytesIO, io.StringIO]:
         return self._stream
 
-    ##  Set the message associated with this job
-    def setMessage(self, message):
+    def setMessage(self, message: Message) -> None:
         self._message = message
 
-    def getMessage(self):
+    def getMessage(self) -> Optional[Message]:
         return self._message
 
     def setAddToRecentFiles(self, value: bool) -> None:
@@ -61,11 +66,11 @@ class WriteFileJob(Job):
     def getAddToRecentFiles(self) -> bool:
         return self._add_to_recent_files and self._writer.getAddToRecentFiles()
 
-    def run(self):
+    def run(self) -> None:
         Job.yieldThread()
         begin_time = time.time()
         self.setResult(self._writer.write(self._stream, self._data, self._mode))
         if not self.getResult():
-            self.setError(self._writer.getInformation())
+            self.setError(Exception(self._writer.getInformation()))
         end_time = time.time()
         Logger.log("d", "Writing file took %s seconds", end_time - begin_time)

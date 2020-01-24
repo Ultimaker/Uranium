@@ -448,6 +448,27 @@ class Controller:
                     camera.setPosition(Vector(0, 100, 700))
                     self._camera_tool.rotateCamera(0, angle)  # type: ignore
 
+    # Position camera view according to defined position
+    def setCameraPosition(self, x_position: int = 0, y_position: int = 0, z_position: int = 0) -> None:
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+        camera.setPosition(Vector(x_position, y_position, z_position))
+
+    # Indicate position where the camera should point at
+    def setLookAtPosition(self, x_look_at_position: int = 0, y_look_at_position: int = 0, z_look_at_position: int = 0) -> None:
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+        camera.lookAt(Vector(x_look_at_position, y_look_at_position, z_look_at_position))
+
+    # Sets the zoom factor of the camera
+    def setCameraZoomFactor(self, camera_zoom_factor: float = 0) -> None:
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+        camera.setZoomFactor(camera_zoom_factor)
+
     ##  Changes the origin of the camera, i.e. where it looks at.
     #   \param coordinate One of the following options:
     #    - "home": The centre of the build plate.

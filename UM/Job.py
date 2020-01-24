@@ -4,6 +4,7 @@
 import time
 from typing import Any, Optional
 
+from UM.Decorators import deprecated
 from UM.JobQueue import JobQueue
 from UM.Signal import Signal, signalemitter
 
@@ -21,7 +22,7 @@ class Job:
         self._running = False   # type: bool
         self._finished = False  # type: bool
         self._result = None     # type: Any
-        self._message = ""      # type: str
+        self._message = None    # type: Any
         self._error = None      # type: Optional[Exception]
 
     ##  Perform the actual task of this job. Should be reimplemented by subclasses.
@@ -30,11 +31,13 @@ class Job:
         raise NotImplementedError()
 
     # Get optional message
-    def getMessage(self) -> str:
+    @deprecated
+    def getMessage(self):
         return self._message
 
     # Set optional message
-    def setMessage(self, message: str) -> None:
+    @deprecated
+    def setMessage(self, message) -> None:
         self._message = message
 
     ##  Get the result of the job.

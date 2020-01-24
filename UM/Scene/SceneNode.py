@@ -681,14 +681,9 @@ class SceneNode:
             child._transformChanged()
 
     def _updateLocalTransformation(self) -> None:
-        translation, euler_angle_matrix, scale, shear = self._transformation.decompose()
+        self._position, euler_angle_matrix, self._scale, self._shear = self._transformation.decompose()
 
-        self._position = translation
-        self._scale = scale
-        self._shear = shear
-        orientation = Quaternion()
-        orientation.setByMatrix(euler_angle_matrix)
-        self._orientation = orientation
+        self._orientation.setByMatrix(euler_angle_matrix)
 
     def _updateWorldTransformation(self) -> None:
         if self._parent:
@@ -696,9 +691,7 @@ class SceneNode:
         else:
             self._world_transformation = self._transformation
 
-        world_translation, world_euler_angle_matrix, world_scale, world_shear = self._world_transformation.decompose()
-        self._derived_position = world_translation
-        self._derived_scale = world_scale
+        self._derived_position, world_euler_angle_matrix, self._derived_scale, world_shear = self._world_transformation.decompose()
         self._derived_orientation.setByMatrix(world_euler_angle_matrix)
 
     def _updateTransformation(self) -> None:
