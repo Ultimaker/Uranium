@@ -66,9 +66,11 @@ class Camera(SceneNode.SceneNode):
         return self._zoom_factor
 
     def setZoomFactor(self, zoom_factor: float) -> None:
-        if self._zoom_factor != zoom_factor:
-            self._zoom_factor = zoom_factor
-            self._updatePerspectiveMatrix()
+        # Only an orthographic camera has a zoom at the moment.
+        if not self.isPerspective():
+            if self._zoom_factor != zoom_factor:
+                self._zoom_factor = zoom_factor
+                self._updatePerspectiveMatrix()
 
     def setMeshData(self, mesh_data: Optional["MeshData"]) -> None:
         assert mesh_data is None, "Camera's can't have mesh data"
@@ -105,7 +107,7 @@ class Camera(SceneNode.SceneNode):
         projection_matrix = Matrix()
         if self.isPerspective():
             if view_width != 0 and view_height != 0:
-                projection_matrix.setPerspective(30 + self._zoom_factor, view_width / view_height, 1, 500)
+                projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
         else:
             # Almost no near/far plane, please.
             if view_width != 0 and view_height != 0:
