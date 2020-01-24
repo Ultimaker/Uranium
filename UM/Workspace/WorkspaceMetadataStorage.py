@@ -12,6 +12,7 @@ from typing import Union, Dict, List
 
 
 # modified from Original source: https://github.com/python/mypy/issues/731#issuecomment-539905783
+# The recursive type doesn't seem to work for us. MyPy crashes with it. So this limits the type to 3 levels deep nesting.
 JSONPrimitive = Union[str, int, bool, None]
 JSONTypeLevel1 = Union[JSONPrimitive, Dict[str, JSONPrimitive], List[JSONPrimitive]]
 JSONTypeLevel2 = Union[JSONPrimitive, Dict[str, JSONTypeLevel1], List[JSONTypeLevel1]]
