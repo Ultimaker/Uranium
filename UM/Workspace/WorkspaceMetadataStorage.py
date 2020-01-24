@@ -1,3 +1,6 @@
+# Copyright (c) 2020 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
+
 from collections import defaultdict
 from typing import Dict, Union, List
 
