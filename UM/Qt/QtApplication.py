@@ -570,6 +570,12 @@ class QtApplication(QApplication, Application):
     def deleteAll(self, only_selectable = True) -> None:
         self.getController().deleteAllNodesWithMeshData(only_selectable)
 
+    @pyqtSlot()
+    def resetWorkspace(self) -> None:
+        self._workspace_metadata_storage.clear()
+        self.deleteAll()
+        self.workspaceLoaded.emit("")
+
     ##  Get the MeshFileHandler of this application.
     def getMeshFileHandler(self) -> MeshFileHandler:
         return self._mesh_file_handler
