@@ -125,7 +125,7 @@ class FileHandler(QObject):
     # \param file_name The name of the file to load.
     # \param kwargs Keyword arguments.
     # \returns None if nothing was found
-    def readerRead(self, reader: FileReader, file_name: str, **kwargs: Any):
+    def readerRead(self, reader, file_name: str, **kwargs: Any):
         raise NotImplementedError("readerRead must be implemented by subclasses.")
 
     ##  Get a mesh writer object that supports writing the specified mime type

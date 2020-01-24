@@ -8,5 +8,5 @@ class WorkspaceWriter(FileWriter):
     def __init__(self, add_to_recent_files: bool = True) -> None:
         super().__init__(add_to_recent_files)
 
-    def write(self, stream, node):
+    def write(self, stream, node, mode = FileWriter.OutputMode.BinaryMode):
         raise NotImplementedError("WorkspaceWriter plugin was not correctly implemented, no write was specified")

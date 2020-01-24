@@ -4,11 +4,6 @@ from unittest.mock import patch, MagicMock
 from UM.Job import Job
 
 
-def test_getSetMessage():
-    job = Job()
-
-    job.setMessage("BLORP")
-    assert job.getMessage() == "BLORP"
 
 
 def test_getSetError():
