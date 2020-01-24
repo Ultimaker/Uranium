@@ -36,7 +36,7 @@ class Tool(PluginObject):
         Selection.selectionChanged.connect(self._onSelectionChanged)
         self._selected_objects_without_selected_ancestors = None #type: Optional[List[SceneNode]]
 
-        self._shortcut_key = None
+        self._shortcut_key = None  # type: Optional[int]
 
     ##  Should be emitted whenever a longer running operation is started, like a drag to scale an object.
     #
@@ -56,7 +56,7 @@ class Tool(PluginObject):
     def setExposedProperties(self, *args: str):
         self._exposed_properties = list(args)
 
-    def getShortcutKey(self):
+    def getShortcutKey(self) -> Optional[int]:
         return self._shortcut_key
 
     ##  Handle an event.

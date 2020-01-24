@@ -1,14 +1,15 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtGui import QOpenGLTexture, QImage
+from PyQt5.QtGui import QOpenGLTexture, QImage, QAbstractOpenGLFunctions
+
 
 ##  A class describing the interface to be used for texture objects.
 #
 #   This interface should be implemented by OpenGL implementations to handle texture
 #   objects.
-class Texture(object):
-    def __init__(self, open_gl_binding_object):
+class Texture:
+    def __init__(self, open_gl_binding_object: QAbstractOpenGLFunctions) -> None:
         super().__init__()
 
         self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target2D)
@@ -17,7 +18,7 @@ class Texture(object):
         self._image = None
 
     ##  Get the OpenGL ID of the texture.
-    def getTextureId(self):
+    def getTextureId(self) -> int:
         return self._qt_texture.textureId()
 
     ##  Bind the texture to a certain texture unit.

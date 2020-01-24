@@ -1,6 +1,7 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import enum
 import random
 
 from UM.Resources import Resources
@@ -24,10 +25,15 @@ from UM.View.GL.OpenGL import OpenGL
 #   information about what objects are actually selected is rendered into the alpha channel
 #   of this render pass so it can be used later on in the composite pass.
 class SelectionPass(RenderPass):
+    class SelectionMode(enum.Enum):
+        OBJECTS = "objects"
+        FACES = "faces"
+
     def __init__(self, width, height):
         super().__init__("selection", width, height, -999)
 
         self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "selection.shader"))
+        self._face_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "select_face.shader"))
         self._tool_handle_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
         self._gl = OpenGL.getInstance().getBindingsObject()
         self._scene = Application.getInstance().getController().getScene()
@@ -48,10 +54,22 @@ class SelectionPass(RenderPass):
             ToolHandle.AllAxisSelectionColor: ToolHandle.AllAxis
         }
 
+        self._mode = SelectionPass.SelectionMode.OBJECTS
+        Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
+
         self._output = None
+
+    def _onSelectedFaceChanged(self):
+        self._mode = SelectionPass.SelectionMode.FACES if Selection.getFaceSelectMode() else SelectionPass.SelectionMode.OBJECTS
 
     ##  Perform the actual rendering.
     def render(self):
+        if self._mode == SelectionPass.SelectionMode.OBJECTS:
+            self._renderObjectsMode()
+        elif self._mode == SelectionPass.SelectionMode.FACES:
+            self._renderFacesMode()
+
+    def _renderObjectsMode(self):
         self._selection_map = self._toolhandle_selection_map.copy()
 
         batch = RenderBatch(self._shader)
@@ -80,6 +98,24 @@ class SelectionPass(RenderPass):
 
         self.release()
 
+    def _renderFacesMode(self):
+        batch = RenderBatch(self._face_shader)
+
+        selectable_objects = False
+        for node in Selection.getAllSelectedObjects():
+            if isinstance(node, ToolHandle):
+                continue  # Ignore tool-handles in this mode.
+
+            if node.isSelectable() and node.getMeshData():
+                selectable_objects = True
+                batch.addItem(transformation = node.getWorldTransformation(), mesh = node.getMeshData())
+
+        self.bind()
+        if selectable_objects:
+            batch.render(self._scene.getActiveCamera())
+
+        self.release()
+
     ##  Get the object id at a certain pixel coordinate.
     def getIdAtPosition(self, x, y):
         output = self.getOutput()
@@ -95,6 +131,26 @@ class SelectionPass(RenderPass):
         pixel = output.pixel(px, py)
         return self._selection_map.get(Color.fromARGB(pixel), None)
 
+    ## Get an unique identifier to the face of the polygon at a certain pixel-coordinate.
+    def getFaceIdAtPosition(self, x, y):
+        output = self.getOutput()
+
+        window_size = self._renderer.getWindowSize()
+
+        px = (0.5 + x / 2.0) * window_size[0]
+        py = (0.5 + y / 2.0) * window_size[1]
+
+        if px < 0 or px > (output.width() - 1) or py < 0 or py > (output.height() - 1):
+            return -1
+
+        face_color = Color.fromARGB(output.pixel(px, py))
+        if int(face_color.b * 255) % 2 == 0:
+            return -1
+        return (
+            ((int(face_color.b * 255.) - 1) << 15) |
+            (int(face_color.g * 255.) << 8) |
+            int(face_color.r * 255.)
+        )
 
     def _getNodeColor(self, node):
         while True:

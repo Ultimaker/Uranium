@@ -6,6 +6,7 @@ import warnings
 import inspect
 
 from UM.Logger import Logger
+from typing import Callable, Any
 import time
 
 ##  Decorator that can be used to indicate a method has been deprecated
@@ -40,7 +41,7 @@ def ascopy(function):
 #   This is primarily intended for conditional debugging, to make it possible to add extra
 #   debugging before calling a function that is only enabled when you actually want to
 #   debug things.
-def call_if_enabled(function, condition):
+def call_if_enabled(function: Callable[..., Any], condition: bool) -> Callable[..., Any]:
     if condition:
         def call_decorated(decorated_function):
             def call_function(*args, **kwargs):

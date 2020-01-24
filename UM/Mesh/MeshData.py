@@ -8,7 +8,7 @@ from UM.Math import NumPyUtil
 from UM.Math.Matrix import Matrix
 
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Tuple, Dict, Any
 
 import threading
 import numpy
@@ -21,9 +21,11 @@ numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
 MAXIMUM_HULL_VERTICES_COUNT = 1024   # Maximum number of vertices to have in the convex hull.
 
+
 class MeshType(Enum):
     faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
     pointcloud = 2
+
 
 # This object is being used as a 'symbol' to identify parameters have not been explicitly supplied
 # to the set() method. We can't use the value None for this purpose because it is also a valid (new)
@@ -43,12 +45,13 @@ Reuse = object()
 #   attributes: a dict with {"value", "opengl_type", "opengl_name"} type in vector2f, vector3f, uniforms, ...
 class MeshData:
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
-                 center_position=None, zero_position=None, type = MeshType.faces, attributes=None):
+                 center_position=None, zero_position=None, type = MeshType.faces, attributes=None) -> None:
         self._application = None  # Initialize this later otherwise unit tests break
 
         self._vertices = NumPyUtil.immutableNDArray(vertices)
         self._normals = NumPyUtil.immutableNDArray(normals)
         self._indices = NumPyUtil.immutableNDArray(indices)
+        self._indices_byte_array = None
         self._colors = NumPyUtil.immutableNDArray(colors)
         self._uvs = NumPyUtil.immutableNDArray(uvs)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
@@ -61,12 +64,12 @@ class MeshData:
         if zero_position is not None:
             self._zero_position = zero_position
         else:
-            self._zero_position = Vector(0, 0, 0) # type: Vector
+            self._zero_position = Vector(0, 0, 0)
         self._convex_hull = None    # type: Optional[scipy.spatial.ConvexHull]
         self._convex_hull_vertices = None  # type: Optional[numpy.ndarray]
         self._convex_hull_lock = threading.Lock()
 
-        self._attributes = {}
+        self._attributes = {}  # type: Dict[str, Any]
         if attributes is not None:
             for key, attribute in attributes.items():
                 new_value = {}
@@ -149,6 +152,8 @@ class MeshData:
     ##  Get the array of indices
     #   \return \type{numpy.ndarray}
     def getIndices(self) -> numpy.ndarray:
+        if self._indices is not None and self._indices.dtype != "int32":
+            self._indices = numpy.asarray(self._indices, dtype=numpy.int32)
         return self._indices
 
     def hasColors(self) -> bool:
@@ -223,7 +228,9 @@ class MeshData:
     def getIndicesAsByteArray(self) -> Optional[bytes]:
         if self._indices is None:
             return None
-        return self._indices.tostring()
+        if self._indices_byte_array is None:
+            self._indices_byte_array = self._indices.tostring()
+        return self._indices_byte_array
 
     def getColorsAsByteArray(self) -> Optional[bytes]:
         if self._colors is None:
@@ -238,7 +245,7 @@ class MeshData:
     #######################################################################
     # Convex hull handling
     #######################################################################
-    def _computeConvexHull(self):
+    def _computeConvexHull(self) -> None:
         points = self.getVertices()
         if points is None:
             return
@@ -274,6 +281,32 @@ class MeshData:
         else:
             return None
 
+    ##  Gets the plane the supplied face lies in. The resultant plane is specified by a point and a normal.
+    #
+    #   \param face_id \type{int} The index of the face (not the flattened indices).
+    #   \return \type{Tuple[numpy.ndarray, numpy.ndarray]} A plane, the 1st vector is the center, the 2nd the normal.
+    def getFacePlane(self, face_id: int) -> Tuple[numpy.ndarray, numpy.ndarray]:
+        v_a, v_b, v_c = self.getFaceNodes(face_id)
+        in_point = (v_a + v_b + v_c) / 3.0
+        face_normal = numpy.cross(v_b - v_a, v_c - v_a)
+        return in_point, face_normal
+
+    ##  Gets the node vectors of the supplied face.
+    #
+    #   \param face_id \type{int} The index of the face (not the flattened indices).
+    #   \return \type{Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]} Tuple of all three local vectors. 
+    def getFaceNodes(self, face_id: int) -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]:
+        if not self._indices or len(self._indices) == 0:
+            base_index = face_id * 3
+            v_a = self._vertices[base_index]
+            v_b = self._vertices[base_index + 1]
+            v_c = self._vertices[base_index + 2]
+        else:
+            v_a = self._vertices[self._indices[face_id][0]]
+            v_b = self._vertices[self._indices[face_id][1]]
+            v_c = self._vertices[self._indices[face_id][2]]
+        return v_a, v_b, v_c
+
     def hasAttribute(self, key: str) -> bool:
         return key in self._attributes
 
@@ -287,6 +320,27 @@ class MeshData:
         result = list(self._attributes.keys())
         result.sort()
         return result
+
+    def invertNormals(self) -> None:
+        if self._normals is not None:
+            mirror = Matrix()
+            mirror.setToIdentity()
+            mirror.scaleByFactor(-1.0)
+            self._normals = transformNormals(self._normals, mirror)
+        if self._indices is not None:
+            new_indices = []
+            for face in self._indices:
+                new_indices.append([face[1], face[0], face[2]])
+            self._indices = NumPyUtil.immutableNDArray(new_indices)
+            self._indices_byte_array = None
+        else:
+            new_vertices = []
+            num_vertices = len(self._vertices)
+            for i in range(0, num_vertices, 3):
+                new_vertices.append(self._vertices[i + 1])
+                new_vertices.append(self._vertices[i])
+                new_vertices.append(self._vertices[i + 2])
+            self._vertices = NumPyUtil.immutableNDArray(new_vertices)
 
     def toString(self) -> str:
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \

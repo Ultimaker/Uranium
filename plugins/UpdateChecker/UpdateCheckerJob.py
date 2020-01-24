@@ -45,7 +45,7 @@ class UpdateCheckerJob(Job):
             request = urllib.request.Request(self._url, headers = headers)
             latest_version_file = urllib.request.urlopen(request, context = context)
         except Exception as e:
-            Logger.log("w", "Failed to check for new version: %s" % e)
+            Logger.logException("w", "Failed to check for new version: %s" % e)
             if not self.silent:
                 Message(i18n_catalog.i18nc("@info", "Could not access update information."),
                     title = i18n_catalog.i18nc("@info:title", "Version Upgrade")
@@ -78,7 +78,7 @@ class UpdateCheckerJob(Job):
                                 preferences = Application.getInstance().getPreferences()
                                 latest_version_shown = preferences.getValue("info/latest_update_version_shown")
                                 if latest_version_shown == newest_version and not self.display_same_version:
-                                    continue #Don't show this update again. The user already clicked it away and doesn't want it again.
+                                    continue  # Don't show this update again. The user already clicked it away and doesn't want it again.
                                 preferences.setValue("info/latest_update_version_shown", str(newest_version))
                                 Logger.log("i", "Found a new version of the software. Spawning message")
                                 self.showUpdate(newest_version, value["url"])

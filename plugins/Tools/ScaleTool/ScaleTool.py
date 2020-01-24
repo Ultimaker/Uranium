@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import List, Tuple, TYPE_CHECKING, Optional
 
@@ -16,7 +16,10 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 
 from PyQt5.QtCore import Qt
-from . import ScaleToolHandle
+try:
+    from . import ScaleToolHandle
+except (ImportError, SystemError):
+    import ScaleToolHandle  # type: ignore  # This fixes the tests not being able to import.
 
 import scipy
 if TYPE_CHECKING:

@@ -17,6 +17,8 @@ from UM.PluginObject import PluginObject
 from UM.PluginRegistry import PluginRegistry  # To find plug-ins.
 from UM.Resources import Resources  # To load old versions from.
 
+from PyQt5.QtCore import QCoreApplication
+
 catalogue = UM.i18n.i18nCatalog("uranium")
 
 ##  File that needs upgrading, with all the required info to upgrade it.
@@ -66,7 +68,7 @@ class VersionUpgradeManager:
         super().__init__()
 
         self._application = application
-        self._version_upgrades = {} # type: Dict[Tuple[str, int], Set[Tuple[str, int, Callable[[str, List[str]], Optional[Tuple[List[str], List[str]]]]]]]   # For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
+        self._version_upgrades = {} # type: Dict[Tuple[str, int], Set[Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]]   # For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
 
         # For each config type, gives a function with which to get the version number from those files.
         self._get_version_functions = {}  # type: Dict[str, Callable[[str], int]]
@@ -78,7 +80,7 @@ class VersionUpgradeManager:
         self._current_versions = {} # type: Dict[Tuple[str, int], Any]
 
         self._upgrade_tasks = collections.deque()  # type: collections.deque  # The files that we still have to upgrade.
-        self._upgrade_routes = {}  # type: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, List[str]], Optional[Tuple[List[str], List[str]]]]]] #How to upgrade from one version to another. Needs to be pre-computed after all version upgrade plug-ins are registered.
+        self._upgrade_routes = {}  # type: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]] #How to upgrade from one version to another. Needs to be pre-computed after all version upgrade plug-ins are registered.
 
         self._registry = PluginRegistry.getInstance()   # type: PluginRegistry
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
@@ -89,6 +91,7 @@ class VersionUpgradeManager:
             "plugins\.json",  # plugins.json and packages.json need to remain the same for the version upgrade plug-ins.
             "packages\.json",
             ".*\.log",        # Don't process the log. It's not needed and it could be really big.
+            ".*\.log.?",      # Don't process the backup of the log. It's not needed and it could be really big.
             "3.[0-3]\\.*",    # Don't upgrade folders that are back-ups from older version upgrades. Until v3.3 we stored the back-up in the config folder itself.
             "3.[0-3]/.*",
             "2.[0-7]\\.*",
@@ -125,7 +128,7 @@ class VersionUpgradeManager:
     #   \param current_versions A dictionary of tuples of configuration types
     #   and their versions currently in use, and with each of these a tuple of
     #   where to store this type of file and its MIME type.
-    def setCurrentVersions(self, current_versions) -> None:
+    def setCurrentVersions(self, current_versions: Dict[Tuple[str, int], Any]) -> None:
         self._current_versions = current_versions
 
     def registerCurrentVersion(self, version_info: Tuple[str, int], type_info: Any) -> None:
@@ -150,9 +153,9 @@ class VersionUpgradeManager:
         while self._upgrade_tasks:
             upgrade_task = self._upgrade_tasks.popleft()
             self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type)  # Upgrade this file.
-
+            QCoreApplication.processEvents()  # Ensure that the GUI does not freeze.
         if upgraded:
-            message = UM.Message.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", Application.getInstance().getApplicationName()), title = catalogue.i18nc("@info:title", "Version Upgrade"))
+            message = UM.Message.Message(text = catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", Application.getInstance().getApplicationName()), title = catalogue.i18nc("@info:title", "Version Upgrade"))
             message.show()
         return upgraded
 
@@ -228,9 +231,9 @@ class VersionUpgradeManager:
     #   \return A dictionary of type/version pairs that map to functions that
     #   upgrade said data format one step towards the most recent version, such
     #   that the fewest number of steps is required.
-    def _findShortestUpgradeRoutes(self) -> Dict[Tuple[str, int], Tuple[str, int, Callable[[str, List[str]], Optional[Tuple[List[str], List[str]]]]]]:
+    def _findShortestUpgradeRoutes(self) -> Dict[Tuple[str, int], Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]:
         # For each (type, version) tuple, which upgrade function to use to upgrade it towards the newest versions.
-        result = {}  # type: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, List[str]], Optional[Tuple[List[str], List[str]]]]]]
+        result = {}  # type: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]
 
         # Perform a many-to-many shortest path search with Dijkstra's algorithm.
         front = collections.deque()  # type: collections.deque #Use as a queue for breadth-first iteration: Append right, pop left.
@@ -362,8 +365,7 @@ class VersionUpgradeManager:
             return False
 
         filenames_without_extension = [self._stripMimeTypeExtension(mime_type, configuration_file)]
-        result_data = self.updateFilesData(configuration_type, version,
-                                                            files_data, filenames_without_extension)
+        result_data = self.updateFilesData(configuration_type, version, files_data, filenames_without_extension)
         if not result_data:
             return False
         configuration_type, version, files_data, filenames_without_extension = result_data
@@ -395,7 +397,7 @@ class VersionUpgradeManager:
             return True
         return False  # Version didn't change. Was already current.
 
-    def updateFilesData(self, configuration_type: str, version, files_data, file_names_without_extension) -> Optional[FilesDataUpdateResult]:
+    def updateFilesData(self, configuration_type: str, version: int, files_data: List[str], file_names_without_extension: List[str]) -> Optional[FilesDataUpdateResult]:
         old_configuration_type = configuration_type
 
         # Keep converting the file until it's at one of the current versions.
@@ -426,10 +428,10 @@ class VersionUpgradeManager:
             version = new_version
             configuration_type = new_type
 
-        return FilesDataUpdateResult(configuration_type=configuration_type,
-                                     version=version,
-                                     files_data=files_data,
-                                     file_names_without_extension=file_names_without_extension)
+        return FilesDataUpdateResult(configuration_type = configuration_type,
+                                     version = version,
+                                     files_data = files_data,
+                                     file_names_without_extension = file_names_without_extension)
 
     def _stripMimeTypeExtension(self, mime_type: MimeType, file_name: str) -> str:
         suffixes = mime_type.suffixes[:]

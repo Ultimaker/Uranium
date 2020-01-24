@@ -1,14 +1,17 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
 import io
 import copy
+import os
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlEngine #To take ownership of this class ourselves.
 
+from UM.Trust import Trust
+from UM.Decorators import override
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For typing.
 from UM.Signal import Signal, signalemitter
@@ -192,7 +195,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     name = pyqtProperty(str, fget = getName, fset = setName, notify = pyqtNameChanged)
 
     def getReadOnly(self) -> bool:
-        return _containerRegistry.isReadOnly(self.getId())
+        return _containerRegistry.isReadOnly(self.getId())  # TODO???: Why not also take self._read_only into account?
     readOnly = pyqtProperty(bool, fget = getReadOnly)
 
     def getNumInstances(self) -> int:
@@ -256,6 +259,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
+        # Instance containers can only set value, state & validationstate, so if someone asks for anything else, quit early.
+        if property_name not in ["value", "state", "validationState"]:
+            return None
         self._instantiateCachedValues()
         if key in self._instances:
             try:
@@ -400,7 +406,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         self._instantiateCachedValues()
         parser = configparser.ConfigParser(interpolation = None)
 
@@ -486,6 +492,28 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             #Logger.log("d", "Could not get version from serialized: %s", e)
             pass
         return version
+
+    @override(ContainerInterface)
+    def _trustHook(self, file_name: Optional[str]) -> bool:
+        # NOTE: In an enterprise environment, if there _is_ a signature file for an unbundled package, verify it.
+        #       (Note that this is a different behaviour w.r.t. the plugins, where the check is not just verification!)
+        #       (Note that there shouldn't be a check if trust has to be here, since it'll continue on 'no signature'.)
+        if file_name is None:
+            return True
+        trust_instance = Trust.getInstanceOrNone()
+        if trust_instance is not None:
+            from UM.Application import Application
+            install_prefix = os.path.abspath(Application.getInstallPrefix())
+            try:
+                common_path = os.path.commonpath([install_prefix, file_name])
+            except ValueError:
+                common_path = ""
+            if common_path is "" or not common_path.startswith(install_prefix):
+                if trust_instance.signatureFileExistsFor(file_name):
+                    _containerRegistry.setExplicitReadOnly(self.getId())  # TODO???: self._read_only = True
+                    if not trust_instance.signedFileCheck(file_name):
+                        raise Exception("Can't validate file {0}".format(file_name))
+        return True
 
     ##  \copydoc ContainerInterface::deserialize
     #
@@ -666,7 +694,6 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         other = cast(InstanceContainer, other)
         own_weight = int(self.getMetaDataEntry("weight", 0))
         other_weight = int(other.getMetaDataEntry("weight", 0))
-        print(own_weight, other_weight)
         if own_weight and other_weight:
             return own_weight < other_weight
 

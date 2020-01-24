@@ -64,6 +64,7 @@ class PackageManager(QObject):
         self._installed_package_dict = {}  # type: Dict[str, Dict[str, Any]] # A dict of all installed packages
         self._to_remove_package_set = set()  # type: Set[str] # A set of packages that need to be removed at the next start
         self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that need to be installed at the next start
+        self._dismissed_packages = set()    # type: Set[str] # A set of packages that are dismissed by the user
 
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
         self._available_package_versions = {}  # type: Dict[str, Set[UMVersion]]
@@ -91,6 +92,11 @@ class PackageManager(QObject):
     @pyqtProperty("QStringList", notify = packagesWithUpdateChanged)
     def packagesWithUpdate(self) -> Set[str]:
         return self._packages_with_update_available
+
+    ## Alternative way of setting the available package updates without having to check all packages in the cloud.
+    def setPackagesWithUpdate(self, packages: Set[str]):
+        self._packages_with_update_available = packages
+        self.packagesWithUpdateChanged.emit()
 
     def checkIfPackageCanUpdate(self, package_id: str) -> bool:
         available_versions = self._available_package_versions.get(package_id)
@@ -148,6 +154,7 @@ class PackageManager(QObject):
                     self._installed_package_dict = management_dict.get("installed", {})
                     self._to_remove_package_set = set(management_dict.get("to_remove", []))
                     self._to_install_package_dict = management_dict.get("to_install", {})
+                    self._dismissed_packages = set(management_dict.get("dismissed", []))
                     Logger.log("i", "Loaded user packages management file from %s", self._user_package_management_file_path)
             except FileNotFoundError:
                 Logger.log("i", "User package management file %s doesn't exist, do nothing", self._user_package_management_file_path)
@@ -214,7 +221,8 @@ class PackageManager(QObject):
                 data_dict = {"version": PackageManager.Version,
                              "installed": self._installed_package_dict,
                              "to_remove": list(self._to_remove_package_set),
-                             "to_install": self._to_install_package_dict}
+                             "to_install": self._to_install_package_dict,
+                             "dismissed": list(self._dismissed_packages)}
                 json.dump(data_dict, f, sort_keys = True, indent = 4)
                 Logger.log("i", "Package management file %s was saved", self._user_package_management_file_path)
 
@@ -291,6 +299,24 @@ class PackageManager(QObject):
 
         return all_installed_ids
 
+    # Get a list of packages that the user has installed on the Cura Marketplace
+    def getUserInstalledPackages(self) -> List[str]:
+        return [package for package in self._installed_package_dict]
+
+    ## Get a list of tuples that contain the package ID and version.
+    #  Used by the Marketplace to check which packages have updates available.
+    def getAllInstalledPackageIdsAndVersions(self) -> List[Tuple[str, str]]:
+        package_ids_and_versions = []  # type: List[Tuple[str, str]]
+        all_installed_ids = self.getAllInstalledPackageIDs()
+        for package_id in all_installed_ids:
+            package_info = self.getInstalledPackageInfo(package_id)
+            if package_info is None:
+                continue
+            if "package_version" not in package_info:
+                continue
+            package_ids_and_versions.append((package_id, package_info["package_version"]))
+        return package_ids_and_versions
+
     def getAllInstalledPackagesInfo(self) -> Dict[str, List[Dict[str, Any]]]:
 
         all_installed_ids = self.getAllInstalledPackageIDs()
@@ -319,6 +345,9 @@ class PackageManager(QObject):
     def getToRemovePackageIDs(self) -> Set[str]:
         return self._to_remove_package_set
 
+    def getDismissedPackages(self) -> List[str]:
+        return list(self._dismissed_packages)
+
     # Checks if the given package is installed (at all).
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
@@ -329,16 +358,17 @@ class PackageManager(QObject):
         filename = QUrl(file_url).toLocalFile()
         return self.installPackage(filename)
 
-    # Schedules the given package file to be installed upon the next start.
+    ## Schedules the given package file to be installed upon the next start.
+    # \return The to-be-installed package_id or None if something went wrong
     @pyqtSlot(str)
-    def installPackage(self, filename: str) -> None:
+    def installPackage(self, filename: str) -> Optional[str]:
         has_changes = False
         package_id = ""
         try:
             # Get package information
             package_info = self.getPackageInfo(filename)
             if not package_info:
-                return
+                return None
             package_id = package_info["package_id"]
 
             # If the package is being installed but it is in the list on to remove, then it is deleted from that list.
@@ -379,6 +409,11 @@ class PackageManager(QObject):
                         self._packages_with_update_available.remove(package_id)
                         self.packagesWithUpdateChanged.emit()
 
+        if has_changes:
+            return package_id
+        else:
+            return None
+
     # Schedules the given package to be removed upon the next start.
     # \param package_id id of the package
     # \param force_add is used when updating. In that case you actually want to uninstall & install
@@ -407,6 +442,10 @@ class PackageManager(QObject):
         if self.checkIfPackageCanUpdate(package_id):
             self._packages_with_update_available.add(package_id)
             self.packagesWithUpdateChanged.emit()
+
+    def dismissPackage(self, package_id: str) -> None:
+        self._dismissed_packages.add(package_id)
+        self._saveManagementData()
 
     ##  Is the package an user installed package?
     def isUserInstalledPackage(self, package_id: str) -> bool:
@@ -514,20 +553,21 @@ class PackageManager(QObject):
     # Returns None if there is no license file found.
     def getPackageLicense(self, filename: str) -> Optional[str]:
         license_string = None
+        def is_license(zipinfo: zipfile.ZipInfo) -> bool:
+            return os.path.basename(zipinfo.filename).startswith("LICENSE")
         with zipfile.ZipFile(filename) as archive:
             # Go through all the files and use the first successful read as the result
-            for file_info in archive.infolist():
-                if file_info.filename.endswith("LICENSE"):
-                    Logger.log("d", "Found potential license file '%s'", file_info.filename)
-                    try:
-                        with archive.open(file_info.filename, "r") as f:
-                            data = f.read()
-                        license_string = data.decode("utf-8")
-                        break
-                    except:
-                        Logger.logException("e", "Failed to load potential license file '%s' as text file.",
-                                            file_info.filename)
-                        license_string = None
+            license_files = sorted(filter(is_license, archive.infolist()), key = lambda x: len(x.filename))  # Find the one with the shortest path.
+            for file_info in license_files:
+                Logger.log("d", "Found potential license file '{filename}'".format(filename = file_info.filename))
+                try:
+                    with archive.open(file_info.filename, "r") as f:
+                        data = f.read()
+                    license_string = data.decode("utf-8")
+                    break
+                except:
+                    Logger.logException("e", "Failed to load potential license file '%s' as text file.", file_info.filename)
+                    license_string = None
         return license_string
 
     ##  Find the package files by package_id by looking at the installed folder

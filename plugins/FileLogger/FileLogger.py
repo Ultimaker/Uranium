@@ -7,6 +7,7 @@ from UM.VersionUpgradeManager import VersionUpgradeManager
 from typing import Set
 
 import logging
+import logging.handlers
 
 
 class FileLogger(LogOutput):
@@ -24,7 +25,9 @@ class FileLogger(LogOutput):
 
     def setFileName(self, file_name: str) -> None:
         if ".log" in file_name:
-            file_handler = logging.FileHandler(file_name, encoding = "utf-8")
+            file_handler = logging.handlers.RotatingFileHandler(file_name, encoding = "utf-8",
+                                                                maxBytes = 5 * 1024 * 1024,
+                                                                backupCount = 1)
             format_handler = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
             file_handler.setFormatter(format_handler)
             self._logger.addHandler(file_handler)

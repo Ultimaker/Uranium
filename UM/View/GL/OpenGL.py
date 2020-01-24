@@ -10,6 +10,7 @@ from typing import Any, TYPE_CHECKING, cast
 
 from UM.Logger import Logger
 
+from UM.Version import Version
 from UM.View.GL.FrameBufferObject import FrameBufferObject
 from UM.View.GL.ShaderProgram import ShaderProgram
 from UM.View.GL.ShaderProgram import InvalidShaderProgramError
@@ -32,6 +33,7 @@ if TYPE_CHECKING:
 class OpenGL:
     VertexBufferProperty = "__vertex_buffer"
     IndexBufferProperty = "__index_buffer"
+    IndexBufferRangeProperty = "__index_range_buffer"
 
     ##  Different OpenGL chipset vendors.
     class Vendor:
@@ -98,6 +100,12 @@ class OpenGL:
 
         self._opengl_version = self._gl.glGetString(self._gl.GL_VERSION) #type: str
 
+        self._opengl_shading_language_version = Version("0.0")  # type: Version
+        try:
+            self._opengl_shading_language_version = Version(self._gl.glGetString(self._gl.GL_SHADING_LANGUAGE_VERSION))
+        except:
+            self._opengl_shading_language_version = Version("1.0")
+
         if not self.hasFrameBufferObjects():
             Logger.log("w", "No frame buffer support, falling back to texture copies.")
 
@@ -105,6 +113,7 @@ class OpenGL:
         Logger.log("d", "OpenGL Version:  %s", self._opengl_version)
         Logger.log("d", "OpenGL Vendor:   %s", self._gl.glGetString(self._gl.GL_VENDOR))
         Logger.log("d", "OpenGL Renderer: %s", self._gpu_type)
+        Logger.log("d", "GLSL Version:    %s", self._opengl_shading_language_version)
 
     ##  Check if the current OpenGL implementation supports FrameBuffer Objects.
     #
@@ -117,6 +126,12 @@ class OpenGL:
     #   \return Version of OpenGL
     def getOpenGLVersion(self) -> str:
         return self._opengl_version
+
+    ##  Get the current OpenGL shading language version.
+    #
+    #   \return Shading language version of OpenGL
+    def getOpenGLShadingLanguageVersion(self) -> "Version":
+        return self._opengl_shading_language_version
 
     ##  Get the current GPU vendor name.
     #
@@ -142,7 +157,7 @@ class OpenGL:
     #   as methods and additionally defines all OpenGL constants. This object
     #   is used to make direct OpenGL calls so should match OpenGL as closely
     #   as possible.
-    def getBindingsObject(self):
+    def getBindingsObject(self) -> Any:
         return self._gl
 
     ##  Create a FrameBuffer Object.
@@ -273,7 +288,11 @@ class OpenGL:
             return None
 
         if not kwargs.get("force_recreate", False) and hasattr(mesh, OpenGL.IndexBufferProperty):
-            return getattr(mesh, OpenGL.IndexBufferProperty)
+            if hasattr(mesh, OpenGL.IndexBufferRangeProperty):
+                if getattr(mesh, OpenGL.IndexBufferRangeProperty) == (kwargs['index_start'], kwargs['index_stop']):
+                    return getattr(mesh, OpenGL.IndexBufferProperty)
+            else:
+                return getattr(mesh, OpenGL.IndexBufferProperty)
 
         buffer = QOpenGLBuffer(QOpenGLBuffer.IndexBuffer)
         buffer.create()
@@ -281,12 +300,14 @@ class OpenGL:
 
         data = cast(bytes, mesh.getIndicesAsByteArray()) # We check for None at the beginning of the method
         if 'index_start' in kwargs and 'index_stop' in kwargs:
+            setattr(mesh, OpenGL.IndexBufferRangeProperty, (kwargs['index_start'], kwargs['index_stop']))
             buffer.allocate(data[4 * kwargs['index_start']:4 * kwargs['index_stop']], 4*(kwargs['index_stop'] - kwargs['index_start']))
         else:
             buffer.allocate(data, len(data))
         buffer.release()
 
         setattr(mesh, OpenGL.IndexBufferProperty, buffer)
+
         return buffer
 
     __instance = None    # type: OpenGL

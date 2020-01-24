@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
@@ -10,7 +10,8 @@ from UM.Resources import Resources
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
-from MockContainer import MockContainer
+
+from .MockContainer import MockContainer
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
@@ -348,16 +349,23 @@ def test_load(container_registry):
     assert "inherits" in ids_found
 
 
-##  Test that uses the lazy loading part of the registry. Instead of loading eveyrthing, we load the metadata
-#   so that the containers can be loaded just in time.
+##  Test that uses the lazy loading part of the registry. Instead of loading
+#   everything, we load the metadata so that the containers can be loaded just
+#   in time.
 def test_loadAllMetada(container_registry):
+    # Although we get different mocked ContainerRegistry objects every time, queries are done via ContainerQuery, which
+    # has a class-wide built-in cache. The cache is not cleared between each test, so it can happen that the cache's
+    # state from the last test will affect this test.
+    from UM.Settings.ContainerQuery import ContainerQuery
+    ContainerQuery.cache.clear()
+
     # Before we start, the container should not even be there.
-    instances_before = container_registry.findInstanceContainersMetadata(author="Ultimaker")
+    instances_before = container_registry.findInstanceContainersMetadata(author = "Ultimaker")
     assert len(instances_before) == 0
 
     container_registry.loadAllMetadata()
 
-    instances = container_registry.findInstanceContainersMetadata(author="Ultimaker")
+    instances = container_registry.findInstanceContainersMetadata(author = "Ultimaker")
     assert len(instances) == 1
 
     # Since we only loaded the metadata, the actual container should not be loaded just yet.

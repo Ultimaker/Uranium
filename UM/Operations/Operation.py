@@ -3,12 +3,10 @@
 
 import time
 
-from UM.Application import Application
-
 
 ##  Base class for operations that should support undo and redo.
 class Operation:
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._timestamp = time.time()
         self._always_merge = False
@@ -17,7 +15,7 @@ class Operation:
     #
     #   This should be reimplemented by subclasses to perform all actions necessary to
     #   redo the operation.
-    def undo(self):
+    def undo(self) -> None:
         raise NotImplementedError("Undo should be reimplemented by subclasses")
 
     ##  Redo the operation.
@@ -26,7 +24,7 @@ class Operation:
     #   redo the operation.
     #
     #   \note This is automatically called when the operation is first put onto the OperationStack.
-    def redo(self):
+    def redo(self) -> None:
         raise NotImplementedError("Redo should be reimplemented by subclasses")
 
     ##  Perform operation merging.
@@ -46,5 +44,7 @@ class Operation:
     #
     #   This is a convenience method that pushes this operation onto the Application's
     #   operation stack.
-    def push(self):
+    def push(self) -> None:
+        # Because of circular dependency
+        from UM.Application import Application
         Application.getInstance().getOperationStack().push(self)

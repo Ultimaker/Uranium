@@ -6,8 +6,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 
-import UM 1.0 as UM
-import "."
+import UM 1.3 as UM
 
 ListView
 {
@@ -92,7 +91,7 @@ ListView
                 margins: UM.Theme.getSize("default_margin").width
             }
 
-            height: UM.Theme.getSize("message_close").height
+            height: childrenRect.height
 
             Button
             {
@@ -134,9 +133,10 @@ ListView
                 text: model.title == undefined ? "" : model.title
                 color: UM.Theme.getColor("text")
                 font: UM.Theme.getFont("default_bold")
+                wrapMode: Text.WordWrap
                 elide: Text.ElideRight
+                maximumLineCount: 2
                 renderType: Text.NativeRendering
-                height: parent.height
             }
         }
         Item
@@ -210,7 +210,7 @@ ListView
                 topMargin: UM.Theme.getSize("narrow_margin").height
             }
 
-            height: contentHeight
+            height: text == "" ? 0 : contentHeight
 
             function getProgressText()
             {
@@ -224,7 +224,6 @@ ListView
             wrapMode: Text.Wrap
             renderType: Text.NativeRendering
         }
-
 
         CheckBox
         {
@@ -255,7 +254,7 @@ ListView
             }
         }
 
-        ProgressBar
+        UM.ProgressBar
         {
             id: totalProgressBar
             value: 0

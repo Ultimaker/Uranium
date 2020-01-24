@@ -144,12 +144,12 @@ class Matrix:
     ##  Return the transpose of the matrix.
     def getTransposed(self) -> "Matrix":
         try:
-            return Matrix(numpy.transpose(self._data))
+            return Matrix(self._data.transpose())
         except:
             return Matrix(self._data)
 
     def transpose(self) -> None:
-        self._data = numpy.transpose(self._data)
+        self._data = self._data.transpose()
 
     ##  Translate the matrix based on Vector.
     #   \param direction The vector by which the matrix needs to be translated.
@@ -400,7 +400,7 @@ class Matrix:
         self._data[2, 3] = -1.
         self._data[3, 2] = (2. * far * near) / (near - far)
 
-    def decompose(self):
+    def decompose(self) -> Tuple[Vector, "Matrix", Vector, Vector]:
         '''
         SOURCE: https://github.com/matthew-brett/transforms3d/blob/e402e56686648d9a88aa048068333b41daa69d1a/transforms3d/affines.py
         Decompose 4x4 homogenous affine matrix into parts.

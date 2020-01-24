@@ -1,6 +1,6 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List, Union
 
 import numpy
 import scipy.spatial
@@ -30,7 +30,7 @@ class Polygon:
             [-radius * 0.707, -radius * 0.707]
         ], numpy.float32))
 
-    def __init__(self, points = None):
+    def __init__(self, points: Optional[Union[numpy.ndarray, List]] = None):
         self._points = NumPyUtil.immutableNDArray(points)
 
     def __eq__(self, other):
@@ -58,7 +58,7 @@ class Polygon:
     def isValid(self) -> bool:
         return bool(self._points is not None and len(self._points) >= 3)
 
-    def getPoints(self):
+    def getPoints(self) -> numpy.array:
         return self._points
 
     ##  Project this polygon on a line described by a normal.
@@ -81,7 +81,7 @@ class Polygon:
     #
     #   \param x The distance to move along the X-axis.
     #   \param y The distance to move along the Y-axis.
-    def translate(self, x = 0, y = 0) -> "Polygon":
+    def translate(self, x: float = 0, y: float = 0) -> "Polygon":
         if self.isValid():
             return Polygon(numpy.add(self._points, numpy.array([[x, y]])))
         else:
@@ -91,32 +91,34 @@ class Polygon:
     #
     #   \param point_on_axis A point on the axis to mirror across.
     #   \param axis_direction The direction vector of the axis to mirror across.
-    def mirror(self, point_on_axis, axis_direction) -> "Polygon":
-        #Input checking.
+    def mirror(self, point_on_axis: List[float], axis_direction: List[float]) -> "Polygon":
+        # Input checking.
         if axis_direction == [0, 0]:
             Logger.log("w", "Tried to mirror a polygon over an axis with direction [0, 0].")
             return self  # Axis has no direction. Can't expect us to mirror anything!
-        axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
-        if not self.isValid(): # Not a valid polygon, so don't do anything.
+        axis_direction /= numpy.linalg.norm(axis_direction)  # Normalise the direction.
+        if not self.isValid():  # Not a valid polygon, so don't do anything.
             return self
 
-        #In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points such that the axis goes through the origin.
+        # In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points
+        # such that the axis goes through the origin.
         point_matrix = numpy.matrix(self._points)
-        point_matrix -= point_on_axis #Moves all points such that the axis origin is at [0,0].
+        point_matrix -= point_on_axis  # Moves all points such that the axis origin is at [0,0].
 
-        #To mirror a coordinate, we have to add the projection of the point to the axis twice (where v is the vector to reflect):
+        # To mirror a coordinate, we have to add the projection of the point to the axis twice
+        # (where v is the vector to reflect):
         #  reflection(v) = 2 * projection(v) - v
-        #Writing out the projection, this becomes (where l is the normalised direction of the line):
+        # Writing out the projection, this becomes (where l is the normalised direction of the line):
         #  reflection(v) = 2 * (l . v) l - v
-        #With Snell's law this can be simplified to the Householder transformation matrix:
+        # With Snell's law this can be simplified to the Householder transformation matrix:
         #  reflection(v) = R v
         #  R = 2 l l^T - I
-        #This simplifies the entire reflection to one big matrix transformation.
+        # This simplifies the entire reflection to one big matrix transformation.
         axis_matrix = numpy.matrix(axis_direction)
         reflection = 2 * numpy.transpose(axis_matrix) * axis_matrix - numpy.identity(2)
-        point_matrix = point_matrix * reflection #Apply the actual transformation.
+        point_matrix = point_matrix * reflection  # Apply the actual transformation.
 
-        #Shift the points back to the original coordinate space before the axis was normalised to the origin.
+        # Shift the points back to the original coordinate space before the axis was normalised to the origin.
         point_matrix += point_on_axis
         return Polygon(point_matrix.getA()[::-1])
 
@@ -129,7 +131,8 @@ class Polygon:
         me = self.getConvexHull()
         him = other.getConvexHull()
 
-        if len(me._points) <= 2 or len(him._points) <= 2: #If either polygon has no surface area, then the intersection is empty.
+        # If either polygon has no surface area, then the intersection is empty.
+        if len(me._points) <= 2 or len(him._points) <= 2:
             return Polygon()
 
         polygen_me = ShapelyUtil.polygon2ShapelyPolygon(me)
@@ -139,7 +142,10 @@ class Polygon:
         if polygon_intersection.area == 0:
             return Polygon()
 
-        return Polygon(points = [list(p) for p in polygon_intersection.exterior.coords[:4]])
+        points = [list(p) for p in polygon_intersection.exterior.coords]
+        if points[0] == points[-1]:
+            points.pop()
+        return Polygon(points)
 
     #  Computes the convex hull of the union of the convex hulls of this and another polygon.
     #
@@ -180,7 +186,7 @@ class Polygon:
 
         polygon_intersection = polygon_me.intersection(polygon_other)
         ret_size = None
-        if polygon_intersection:
+        if polygon_intersection and polygon_intersection.area > 0:
             ret_size = (polygon_intersection.bounds[2] - polygon_intersection.bounds[0],
                         polygon_intersection.bounds[3] - polygon_intersection.bounds[1],
                         )
@@ -234,12 +240,12 @@ class Polygon:
     #   \param point The point to check of whether it is inside.
     #   \return True if it is inside, or False otherwise.
     def isInside(self, point) -> bool:
-        for i in range(0,len(self._points)):
+        for i in range(0, len(self._points)):
             if self._isRightTurn(self._points[i], self._points[(i + 1) % len(self._points)], point) == -1: #Outside this halfplane!
                 return False
         return True
 
-    def _isRightTurn(self, p, q, r):
+    def _isRightTurn(self, p: numpy.ndarray, q: numpy.ndarray, r: numpy.ndarray) -> float:
         sum1 = q[0] * r[1] + p[0] * q[1] + r[0] * p[1]
         sum2 = q[0] * p[1] + r[0] * q[1] + p[0] * r[1]
 

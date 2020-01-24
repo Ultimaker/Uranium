@@ -1,6 +1,8 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import Optional
 
+from UM.Scene.SceneNode import SceneNode
 from UM.Tool import Tool
 from UM.Job import Job
 from UM.Event import Event, MouseEvent, KeyEvent
@@ -19,7 +21,13 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
 
-from . import RotateToolHandle
+from UM.Version import Version
+
+from UM.View.GL.OpenGL import OpenGL
+try:
+    from . import RotateToolHandle
+except (ImportError, SystemError):
+    import RotateToolHandle  # type: ignore  # This fixes the tests not being able to import.
 
 import math
 import time
@@ -27,10 +35,10 @@ import time
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
+
 ##  Provides the tool to rotate meshes and groups
 #
 #   The tool exposes a ToolHint to show the rotation angle of the current operation
-
 class RotateTool(Tool):
     def __init__(self):
         super().__init__()
@@ -48,8 +56,11 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         self._rotating = False
-        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
+        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported", "SelectFaceToLayFlatMode")
         self._saved_node_positions = []
+
+        self._select_face_mode = False
+        Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
 
     ##  Handle mouse and keyboard events
     #
@@ -179,11 +190,55 @@ class RotateTool(Tool):
                     self.operationStopped.emit(self)
                 return True
 
+    def _onSelectedFaceChanged(self):
+        if not self._select_face_mode:
+            return
+
+        self._handle.setEnabled(not Selection.getFaceSelectMode())
+
+        selected_face = Selection.getSelectedFace()
+        if not Selection.getSelectedFace() or not (Selection.hasSelection() and Selection.getFaceSelectMode()):
+            return
+
+        original_node, face_id = selected_face
+        meshdata = original_node.getMeshDataTransformed()
+        if not meshdata or face_id < 0:
+            return
+
+        face_mid, face_normal = meshdata.getFacePlane(face_id)
+        object_mid = original_node.getBoundingBox().center
+        rotation_point_vector = Vector(object_mid.x, object_mid.y, face_mid[2])
+        face_normal_vector = Vector(face_normal[0], face_normal[1], face_normal[2])
+        rotation_quaternion = Quaternion.rotationTo(face_normal_vector.normalized(), Vector(0.0, -1.0, 0.0))
+
+        operation = GroupedOperation()
+        current_node = None  # type: Optional[SceneNode]
+        for node in Selection.getAllSelectedObjects():
+            current_node = node
+            parent_node = current_node.getParent()
+            while parent_node and parent_node.callDecoration("isGroup"):
+                current_node = parent_node
+                parent_node = current_node.getParent()
+        if current_node is None:
+            return
+
+        rotate_operation = RotateOperation(current_node, rotation_quaternion, rotation_point_vector)
+        operation.addOperation(rotate_operation)
+        operation.push()
+
+        # NOTE: We might want to consider unchecking the select-face button afterthe operation is done.
+
     ##  Return a formatted angle of the current rotate operation
     #
     #   \return type(String) fully formatted string showing the angle by which the mesh(es) are rotated
     def getToolHint(self):
         return "%d°" % round(math.degrees(self._angle)) if self._angle else None
+
+    ##  Get whether the select face feature is supported.
+    #   \return True if it is supported, or False otherwise.
+    def getSelectFaceSupported(self) -> bool:
+        # Use a dummy postfix, since an equal version with a postfix is considered smaller normally.
+        return Version(OpenGL.getInstance().getOpenGLVersion()) >= Version("4.1 dummy-postfix")
 
     ##  Get the state of the "snap rotation to N-degree increments" option
     #
@@ -213,9 +268,27 @@ class RotateTool(Tool):
             self._snap_angle = angle
             self.propertyChanged.emit()
 
+    ##  Wether the rotate tool is in 'Lay flat by face'-Mode.
+    #
+    #   \return (bool)
+    def getSelectFaceToLayFlatMode(self) -> bool:
+        if not Selection.getFaceSelectMode():
+            self._select_face_mode = False  # .. but not the other way around!
+        return self._select_face_mode
+
+    ##  Set the rotate tool to/from 'Lay flat by face'-Mode.
+    #
+    #   \param (bool)
+    def setSelectFaceToLayFlatMode(self, select: bool) -> None:
+        if select != self._select_face_mode or select != Selection.getFaceSelectMode():
+            self._select_face_mode = select
+            if not select:
+                Selection.clearFace()
+            Selection.setFaceSelectMode(self._select_face_mode)
+            self.propertyChanged.emit()
+
     ##  Reset the orientation of the mesh(es) to their original orientation(s)
     def resetRotation(self):
-
         for node in self._getSelectedObjectsWithoutSelectedAncestors():
             node.setMirror(Vector(1, 1, 1))
 

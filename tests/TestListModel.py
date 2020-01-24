@@ -35,7 +35,6 @@ class TestListModel(TestCase):
 
     def test_removeItem(self):
         self.list_model.removeItem(1)
-        print(self.list_model._items)
         assert self.list_model.getItem(1) == {"name":"zomg", "data": 14}
 
     def test_clear(self):

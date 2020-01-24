@@ -1,7 +1,7 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 import time
 from typing import cast, List, Optional, Union
 
@@ -16,7 +16,10 @@ from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
 
-from . import TranslateToolHandle
+try:
+    from . import TranslateToolHandle
+except (ImportError, SystemError):
+    import TranslateToolHandle  # type: ignore  # This fixes the tests not being able to import.
 
 
 DIMENSION_TOLERANCE = 0.0001  # Tolerance value used for comparing dimensions from the UI.
@@ -45,11 +48,19 @@ class TranslateTool(Tool):
                                   "X", "Y", "Z",
                                   SceneNodeSettings.LockPosition)
 
+        self._update_selection_center_timer = QTimer()
+        self._update_selection_center_timer.setInterval(50)
+        self._update_selection_center_timer.setSingleShot(True)
+        self._update_selection_center_timer.timeout.connect(self.propertyChanged.emit)
+
         # Ensure that the properties (X, Y & Z) are updated whenever the selection center is changed.
-        Selection.selectionCenterChanged.connect(self.propertyChanged)
+        Selection.selectionCenterChanged.connect(self._onSelectionCenterChanged)
 
         # CURA-5966 Make sure to render whenever objects get selected/deselected.
         Selection.selectionChanged.connect(self.propertyChanged)
+
+    def _onSelectionCenterChanged(self):
+        self._update_selection_center_timer.start()
 
     ##  Get the x-location of the selection bounding box center.
     #   \return X location in mm.
@@ -79,7 +90,8 @@ class TranslateTool(Tool):
             return float(Selection.getBoundingBox().bottom)
         return 0.0
 
-    def _parseInt(self, str_value: str) -> float:
+    @staticmethod
+    def _parseFloat(str_value: str) -> float:
         try:
             parsed_value = float(str_value)
         except ValueError:
@@ -90,7 +102,7 @@ class TranslateTool(Tool):
     #   the selection bounding box center.
     #   \param x Location in mm.
     def setX(self, x: str) -> None:
-        parsed_x = self._parseInt(x)
+        parsed_x = self._parseFloat(x)
         bounding_box = Selection.getBoundingBox()
 
         if not Float.fuzzyCompare(parsed_x, float(bounding_box.center.x), DIMENSION_TOLERANCE):
@@ -115,7 +127,7 @@ class TranslateTool(Tool):
     #   the selection bounding box center.
     #   \param y Location in mm.
     def setY(self, y: str) -> None:
-        parsed_y = self._parseInt(y)
+        parsed_y = self._parseFloat(y)
         bounding_box = Selection.getBoundingBox()
 
         if not Float.fuzzyCompare(parsed_y, float(bounding_box.center.z), DIMENSION_TOLERANCE):
@@ -142,7 +154,7 @@ class TranslateTool(Tool):
     #   the selection bounding box bottom.
     #   \param z Location in mm.
     def setZ(self, z: str) -> None:
-        parsed_z = self._parseInt(z)
+        parsed_z = self._parseFloat(z)
         bounding_box = Selection.getBoundingBox()
 
         if not Float.fuzzyCompare(parsed_z, float(bounding_box.bottom), DIMENSION_TOLERANCE):
@@ -182,21 +194,21 @@ class TranslateTool(Tool):
         total_size = Selection.getCount()
         false_state_counter = 0
         true_state_counter = 0
-        if Selection.hasSelection():
-            for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
-                if selected_node.getSetting(SceneNodeSettings.LockPosition, "False") != "False":
-                    true_state_counter += 1
-                else:
-                    false_state_counter += 1
+        if not Selection.hasSelection():
+            return False
 
-            if total_size == false_state_counter: # if no locked positions
-                return False
-            elif total_size == true_state_counter: # if all selected objects are locked
-                return True
+        for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
+            if selected_node.getSetting(SceneNodeSettings.LockPosition, "False") != "False":
+                true_state_counter += 1
             else:
-                return "partially"  # if at least one is locked
+                false_state_counter += 1
 
-        return False
+        if total_size == false_state_counter:  # No locked positions
+            return False
+        elif total_size == true_state_counter:  # All selected objects are locked
+            return True
+        else:
+            return "partially"  # At least one, but not all are locked
 
     ##  Handle mouse and keyboard events.
     #   \param event The event to handle.

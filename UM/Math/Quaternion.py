@@ -18,10 +18,10 @@ from UM.Math.Matrix import Matrix
 #         of the quaternion remains 1. This is done to make this class simpler
 #         to use.
 #
-class Quaternion(object):
+class Quaternion:
     EPS = numpy.finfo(float).eps * 4.0
 
-    def __init__(self, x=0.0, y=0.0, z=0.0, w=1.0):
+    def __init__(self, x: float = 0.0, y: float = 0.0, z: float = 0.0, w: float = 1.0) -> None:
         # Components are stored as XYZW
         self._data = numpy.array([x, y, z, w], dtype=numpy.float64)
 
@@ -48,7 +48,7 @@ class Quaternion(object):
     #
     #   \param angle \type{float} Angle in radians
     #   \param axis \type{Vector} Axis of rotation
-    def setByAngleAxis(self, angle, axis):
+    def setByAngleAxis(self, angle: float, axis: Vector) -> None:
         a = axis.normalized().getData()
         halfAngle = angle / 2.0
         self._data[3] = math.cos(halfAngle)
@@ -116,12 +116,12 @@ class Quaternion(object):
         q._data = -q._data
         return q
 
-    def getInverse(self):
+    def getInverse(self) -> "Quaternion":
         result = copy.deepcopy(self)
         result.invert()
         return result
 
-    def invert(self):
+    def invert(self) -> "Quaternion":
         self._data[0:3] = -self._data[0:3]
         return self
 
@@ -137,16 +137,16 @@ class Quaternion(object):
     def dot(self, other):
         return numpy.dot(self._data, other._data)
 
-    def length(self):
+    def length(self) -> float:
         return numpy.linalg.norm(self._data)
 
-    def normalize(self):
+    def normalize(self) -> None:
         self._data /= numpy.linalg.norm(self._data)
 
     ## Set quaternion by providing a homogeneous (4x4) rotation matrix.
     # \param matrix 4x4 Matrix object
     # \param ensure_unit_length
-    def setByMatrix(self, matrix, ensure_unit_length = False):
+    def setByMatrix(self, matrix: Matrix, ensure_unit_length: bool = False) -> None:
         trace = matrix.at(0, 0) + matrix.at(1, 1) + matrix.at(2, 2)
         if trace > 0.0:
             self._data[0] = matrix.at(2, 1) - matrix.at(1, 2)
@@ -181,7 +181,7 @@ class Quaternion(object):
         if ensure_unit_length:
             self.normalize()
 
-    def toMatrix(self):
+    def toMatrix(self) -> Matrix:
         m = numpy.zeros((4, 4), dtype=numpy.float64)
 
         s = 2.0 / (self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2)
@@ -246,7 +246,7 @@ class Quaternion(object):
             if Float.fuzzyCompare(axis.length(), 0.0):
                 axis = Vector.Unit_Y.cross(v1)
 
-            axis.normalize()
+            axis = axis.normalized()
             q = Quaternion()
             q.setByAngleAxis(math.pi, axis)
         else:
@@ -266,13 +266,13 @@ class Quaternion(object):
         return q
 
     @staticmethod
-    def fromMatrix(matrix):
+    def fromMatrix(matrix: Matrix) -> "Quaternion":
         q = Quaternion()
         q.setByMatrix(matrix)
         return q
 
     @staticmethod
-    def fromAngleAxis(angle, axis):
+    def fromAngleAxis(angle: float, axis: Vector) -> "Quaternion":
         q = Quaternion()
         q.setByAngleAxis(angle, axis)
         return q

@@ -26,12 +26,37 @@ Controls.ProgressBar
     {
         anchors.fill: parent
 
+        // The progress block for showing progress value
         Rectangle
         {
-            width: progressBar.visualPosition * parent.width
+            id: progressBlockDeterminate
+            x: progressBar.indeterminate ? progressBar.visualPosition * parent.width : 0
+            width: progressBar.indeterminate ? parent.width * 0.1 : progressBar.visualPosition * parent.width
             height: parent.height
             radius: UM.Theme.getSize("progressbar_radius").width
             color: UM.Theme.getColor("progressbar_control")
+        }
+        SequentialAnimation
+        {
+            PropertyAnimation
+            {
+                target: progressBar
+                property: "value"
+                from: 0
+                to: 0.9 // The block is not centered, so let it go to 90% (since it's 10% long)
+                duration: 3000
+            }
+            PropertyAnimation
+            {
+                target: progressBar
+                property: "value"
+                from: 0.9 // The block is not centered, so let it go to 90% (since it's 10% long)
+                to: 0
+                duration: 3000
+            }
+
+            loops: Animation.Infinite
+            running: progressBar.visible && progressBar.indeterminate
         }
     }
 }
