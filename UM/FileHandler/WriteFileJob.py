@@ -10,7 +10,7 @@ from UM.Message import Message
 import io
 import time
 
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 
 ##  A Job subclass that performs writing.
@@ -24,7 +24,7 @@ class WriteFileJob(Job):
     #   \param data Whatever it is what we want to write.
     #   \param mode Additional information to send to the writer, for example: such as whether to
     #   write in binary format or in ASCII format.
-    def __init__(self, writer: FileWriter, stream: io.IOBase, data: Any, mode: int) -> None:
+    def __init__(self, writer: FileWriter, stream: Union[io.BytesIO, io.StringIO], data: Any, mode: int) -> None:
         super().__init__()
         self._stream = stream
         self._writer = writer
@@ -51,7 +51,7 @@ class WriteFileJob(Job):
     def getFileName(self) -> str:
         return self._file_name
 
-    def getStream(self) -> io.IOBase:
+    def getStream(self) -> Union[io.BytesIO, io.StringIO]:
         return self._stream
 
     def setMessage(self, message: Message) -> None:
