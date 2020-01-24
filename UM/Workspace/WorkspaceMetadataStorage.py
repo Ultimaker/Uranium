@@ -10,7 +10,7 @@ from typing import Union, Dict, List
 
 # modified from Original source: https://github.com/python/mypy/issues/731#issuecomment-539905783
 JSONPrimitive = Union[str, int, bool, None]
-JSONType = Union[JSONPrimitive, 'JSONList', 'JSONDict', dict, list]
+JSONType = Union[JSONPrimitive, 'JSONList', 'JSONDict', Dict, List]
 
 
 # work around mypy#731: no recursive structural types yet
