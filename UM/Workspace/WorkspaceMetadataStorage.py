@@ -13,16 +13,9 @@ from typing import Union, Dict, List
 
 # modified from Original source: https://github.com/python/mypy/issues/731#issuecomment-539905783
 JSONPrimitive = Union[str, int, bool, None]
-JSONType = Union[JSONPrimitive, 'JSONList', 'JSONDict', Dict, List]
-
-
-# work around mypy#731: no recursive structural types yet
-class JSONList(List[JSONType]):
-    pass
-
-
-class JSONDict(Dict[str, JSONType]):
-    pass
+JSONTypeLevel1 = Union[JSONPrimitive, Dict[str, JSONPrimitive], List[JSONPrimitive]]
+JSONTypeLevel2 = Union[JSONPrimitive, Dict[str, JSONTypeLevel1], List[JSONTypeLevel1]]
+JSONType = Union[JSONPrimitive, Dict[str, JSONTypeLevel2], List[JSONTypeLevel2]]
 
 
 class WorkspaceMetadataStorage:
