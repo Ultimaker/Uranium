@@ -3,7 +3,7 @@ import re
 
 
 class Dox2Rst:
-    REGEX = re.compile(r"(?P<before>[\s\S]*\n)?(?P<dox>\s*##.*\n(?:\s*#.*)*\n)(?P<def>\s*def.*)\n(?P<after>[\s\S]*)")
+    REGEX = re.compile(r"(?P<before>[\s\S]*\n)?(?P<dox>\s*##.*\n(?:\s*#.*)*\n*)(?P<def>\s*(?:def|class).*)\n(?P<after>[\s\S]*)")
 
     COMMENT_INDENT_PATTERN = re.compile(r"^\s*#", re.MULTILINE)
     COMMENT_INDENT_SUB = "    \g<0>"
