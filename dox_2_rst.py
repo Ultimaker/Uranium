@@ -3,7 +3,7 @@ import re
 
 
 class Dox2Rst:
-    REGEX = re.compile(r"(?P<before>[\s\S]*\n)?(?P<dox>\s*##.*\n(?:\s*#.*)*\n*)(?P<def>\s*(?:def|class).*)\n(?P<after>[\s\S]*)")
+    REGEX = re.compile(r"(?P<before>[\s\S]*\n)?(?P<dox>\s*##.*\n(?:\s*#.*)*\n*)(?P<decorator>(?:\s*@.*\n)*)(?P<def>\s*(?:def|class).*)\n(?P<after>[\s\S]*)")
 
     COMMENT_INDENT_PATTERN = re.compile(r"^\s*#", re.MULTILINE)
     COMMENT_INDENT_SUB = "    \g<0>"
@@ -30,8 +30,9 @@ class Dox2Rst:
             comment_block = match.group("dox")
             comment_block = self.add_indent(comment_block)
             comment_block = self.convert_comment_block(comment_block)
-            contents = "{before}{definition}\n{rst}{after}".format(
+            contents = "{before}{decorator}{definition}\n{rst}{after}".format(
                 before=match.group("before"),
+                decorator=match.group("decorator"),
                 definition=match.group("def"),
                 rst=comment_block,
                 after=match.group("after")
