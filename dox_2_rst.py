@@ -65,7 +65,12 @@ class Dox2Rst:
         output = output.replace(":param \w", "")
         output = re.sub(self.PARAM_REGEX, self.PARAM_SUB, output)
         # Add closing """
-        output = "{before}{indent}\"\"\"\n".format(before=output, indent=indent)
+        if len(output.splitlines()) > 1:
+            output = "{before}{indent}\"\"\"\n".format(before=output, indent=indent)
+        else:
+            output = output.splitlines()[0]
+            output = "{before}\"\"\"\n".format(before=output, indent=indent)
+
         return output
 
     def add_indent(self, comment_block: str):
