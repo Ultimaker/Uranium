@@ -345,8 +345,34 @@ class PackageManager(QObject):
     def getToRemovePackageIDs(self) -> Set[str]:
         return self._to_remove_package_set
 
+    def dismissAllIncompatiblePackages(self, incompatible_packages: List[str]) -> None:
+        self._dismissed_packages.update(incompatible_packages)
+        self._saveManagementData()
+        Logger.debug("Dismissed Incompatible package(s): {}".format(incompatible_packages))
+
     def getDismissedPackages(self) -> List[str]:
         return list(self._dismissed_packages)
+
+    def reEvaluateDismissedPackages(self, subscribed_packages_payload: List[Dict[str, Any]], sdk_version: str) -> None:
+        '''
+        It removes a package from the "dismissed incompatible packages" list, if it gets updated in the meantime.
+        We check every package from the payload against our current CURA SDK version, and if it is in there -
+        we remove the already dismissed package from the above mentioned list.
+
+        :param subscribed_packages_payload: The response from Web CURA, a list of packages that a user is subscribed to.
+        :param sdk_version: Current CURA SDK version.
+        :return: None.
+        '''
+        dismissed_packages = self.getDismissedPackages()
+        if dismissed_packages:
+            for package in subscribed_packages_payload:
+                if package["package_id"] in dismissed_packages and sdk_version in package["sdk_versions"]:
+                    self.removeFromDismissedPackages(package["package_id"])
+
+    def removeFromDismissedPackages(self, package: str) -> None:
+        if package in self._dismissed_packages:
+            self._dismissed_packages.remove(package)
+            Logger.debug("Removed package [%s] from the dismissed packages list" % package)
 
     # Checks if the given package is installed (at all).
     def isPackageInstalled(self, package_id: str) -> bool:
@@ -442,10 +468,6 @@ class PackageManager(QObject):
         if self.checkIfPackageCanUpdate(package_id):
             self._packages_with_update_available.add(package_id)
             self.packagesWithUpdateChanged.emit()
-
-    def dismissPackage(self, package_id: str) -> None:
-        self._dismissed_packages.add(package_id)
-        self._saveManagementData()
 
     ##  Is the package an user installed package?
     def isUserInstalledPackage(self, package_id: str) -> bool:
