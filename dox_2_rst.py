@@ -18,10 +18,10 @@ class Dox2Rst:
             changed = True
             while changed:
                 contents, changed = self.replace_first_dox_comment(contents)
-
-            f.seek(0)
-            f.truncate()
-            f.write(contents)
+            print(contents)
+            # f.seek(0)
+            # f.truncate()
+            # f.write(contents)
 
 
     def replace_first_dox_comment(self, contents: str):
@@ -40,6 +40,7 @@ class Dox2Rst:
         else:
             return contents, False
 
+    OPENING_REGEX = re.compile(r"## +")
     PARAM_REGEX = re.compile(r"param: \w+")
     PARAM_SUB = "\g<0>:"
 
@@ -55,7 +56,7 @@ class Dox2Rst:
             indent = indent.group()
 
         # replace opening
-        output = dox_block.replace("##", '"""')
+        output = re.sub(self.OPENING_REGEX, '"""', dox_block)
         output = re.sub(self.DOX_CONTINUATION_PREFIX_PATTERN, indent, output)
         # replace keyword escapes ie. \return -> :return
         output = output.replace('\\', ":")
