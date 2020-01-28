@@ -1,5 +1,7 @@
+import argparse
 import os
 import re
+from pathlib import Path
 
 
 class Dox2Rst:
@@ -15,17 +17,20 @@ class Dox2Rst:
     INDENT_PATTERN = re.compile(r"\s*")
     DOX_CONTINUATION_PREFIX_PATTERN = re.compile(r"( +#) *", re.MULTILINE)
 
-    def convert(self, file_path:str):
+    def convert(self, file_path: str, dry_run: bool = False):
         contents, changed = "", False
         with open(file_path, "r+") as f:
             contents = f.read()
             changed = True
             while changed:
                 contents, changed = self.replace_first_dox_comment(contents)
-            print(contents)
-            # f.seek(0)
-            # f.truncate()
-            # f.write(contents)
+            if dry_run:
+                print("======[[ {} ]]======".format(file_path))
+                print(contents)
+            else:
+                f.seek(0)
+                f.truncate()
+                f.write(contents)
 
 
     def replace_first_dox_comment(self, contents: str):
@@ -83,5 +88,33 @@ class Dox2Rst:
         return re.sub(self.COMMENT_INDENT_PATTERN, self.COMMENT_INDENT_SUB, comment_block)
 
 
+def main():
+    parser = argparse.ArgumentParser("Dox2Rst")
+    parser.add_argument("-r", "--recursive", dest="recursive",
+                        help="Find python files to convert recursively", default=False, action="store_true")
+    parser.add_argument("-d", "--dry", dest="dry_run",
+                        help="Print output; do not change files", default=False, action="store_true")
+    parser.add_argument("paths", metavar="PATHS", type=str, nargs="+", help="Files or Directories to process")
+
+    args = parser.parse_args()
+
+    glob_func = "rglob" if args.recursive else "glob"
+
+    python_file_list = []
+    for entry in args.paths:
+        if not os.path.exists(entry):
+            print("WARNING: skipping {}: not found".format(entry))
+            continue
+        if os.path.isfile(entry):
+            python_file_list.append(entry)
+        else:
+            for path_like in getattr(Path(entry), glob_func)('*.py'):
+                python_file_list.append(path_like)
+
+    dox_2_rst = Dox2Rst()
+    for file_path in python_file_list:
+        dox_2_rst.convert(str(file_path), dry_run=args.dry_run)
+
+
 if __name__ == "__main__":
-    Dox2Rst().convert("./plugins/LocalContainerProvider/LocalContainerProvider.py")
+    main()
