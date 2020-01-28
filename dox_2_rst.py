@@ -17,21 +17,25 @@ class Dox2Rst:
     INDENT_PATTERN = re.compile(r"\s*")
     DOX_CONTINUATION_PREFIX_PATTERN = re.compile(r"( +#) *", re.MULTILINE)
 
-    def convert(self, file_path: str, dry_run: bool = False):
-        contents, changed = "", False
+    def convert(self, file_path: str, dry_run: bool = False) -> int:
         with open(file_path, "r+") as f:
             contents = f.read()
             changed = True
+            change_count = 0
             while changed:
                 contents, changed = self.replace_first_dox_comment(contents)
-            if dry_run:
-                print("======[[ {} ]]======".format(file_path))
-                print(contents)
-            else:
-                f.seek(0)
-                f.truncate()
-                f.write(contents)
+                change_count = change_count + changed  # Increase count by 1 if changed
 
+            if change_count > 0:
+                if dry_run:
+                    print("======[[ {} ]]======".format(file_path))
+                    print(contents)
+                else:
+                    f.seek(0)
+                    f.truncate()
+                    f.write(contents)
+
+            return change_count
 
     def replace_first_dox_comment(self, contents: str):
         match = self.REGEX.match(contents)
@@ -100,6 +104,8 @@ def main():
 
     glob_func = "rglob" if args.recursive else "glob"
 
+    changed_files_count = 0
+    total_changes_count = 0
     python_file_list = []
     for entry in args.paths:
         if not os.path.exists(entry):
@@ -113,7 +119,13 @@ def main():
 
     dox_2_rst = Dox2Rst()
     for file_path in python_file_list:
-        dox_2_rst.convert(str(file_path), dry_run=args.dry_run)
+        comments_changed_count = dox_2_rst.convert(str(file_path), dry_run=args.dry_run)
+        if comments_changed_count > 0:
+            changed_files_count = changed_files_count + 1
+        total_changes_count = total_changes_count + comments_changed_count
+
+    print("Considered {} Python files".format(len(python_file_list)))
+    print("Converted {} comments across {} files".format(total_changes_count, changed_files_count))
 
 
 if __name__ == "__main__":
