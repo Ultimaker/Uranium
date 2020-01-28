@@ -93,7 +93,7 @@ class Dox2Rst:
 
 
 def main():
-    parser = argparse.ArgumentParser("Dox2Rst")
+    parser = argparse.ArgumentParser("python dox_2_rst.py")
     parser.add_argument("-r", "--recursive", dest="recursive",
                         help="Find python files to convert recursively", default=False, action="store_true")
     parser.add_argument("-d", "--dry", dest="dry_run",
