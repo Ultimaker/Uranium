@@ -16,6 +16,7 @@ from UM.Logger import Logger
 from UM.Message import Message
 from UM.MimeTypeDatabase import MimeTypeDatabase  # To get the type of container we're loading.
 from UM.Resources import Resources
+from UM.Signal import Signal
 from UM.Version import Version as UMVersion
 
 catalog = i18nCatalog("uranium")
@@ -71,6 +72,7 @@ class PackageManager(QObject):
 
         self._packages_with_update_available = set()  # type: Set[str]
 
+    packageInstalled = Signal()  # Emits the package_id (str) of an installed package
     installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
     packagesWithUpdateChanged = pyqtSignal()
 
@@ -378,12 +380,6 @@ class PackageManager(QObject):
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
 
-    # This is called by drag-and-dropping curapackage files.
-    @pyqtSlot(QUrl)
-    def installPackageViaDragAndDrop(self, file_url: str) -> None:
-        filename = QUrl(file_url).toLocalFile()
-        return self.installPackage(filename)
-
     ## Schedules the given package file to be installed upon the next start.
     # \return The to-be-installed package_id or None if something went wrong
     @pyqtSlot(str)
@@ -436,6 +432,7 @@ class PackageManager(QObject):
                         self.packagesWithUpdateChanged.emit()
 
         if has_changes:
+            self.packageInstalled.emit(package_id)
             return package_id
         else:
             return None
