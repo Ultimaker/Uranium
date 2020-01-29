@@ -55,7 +55,7 @@ class Dox2Rst:
             return contents, False
 
     OPENING_REGEX = re.compile(r"## +")
-    PARAM_REGEX = re.compile(r"param: \w+")
+    PARAM_REGEX = re.compile(r":param \w+")
     PARAM_SUB = "\g<0>:"
 
     def convert_comment_block(self, dox_block: str):
@@ -77,7 +77,6 @@ class Dox2Rst:
 
         output = output.replace(":code", "")
         output = output.replace(":endcode", "")
-        output = output.replace(":param \w", "")
         output = re.sub(self.PARAM_REGEX, self.PARAM_SUB, output)
         # Add closing """
         if len(output.splitlines()) > 1:
