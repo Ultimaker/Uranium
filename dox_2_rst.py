@@ -49,7 +49,7 @@ class Dox2Rst:
             comment_block = match.group("dox")
             comment_block = self.add_indent(comment_block)
             comment_block = self.convert_comment_block(comment_block)
-            contents = "{before}{decorator}{definition}\n{rst}{after}".format(
+            contents = "{before}{decorator}{definition}\n{rst}\n{after}".format(
                 before=match.group("before"),
                 decorator=match.group("decorator"),
                 definition=match.group("def"),
