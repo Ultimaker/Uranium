@@ -11,19 +11,25 @@ class Dox2Rst:
                        r"(?P<def>\s*(?:def|class).*)\n" +
                        r"(?P<after>[\s\S]*)")
 
-    COMMENT_INDENT_PATTERN = re.compile(r"^\s*#", re.MULTILINE)
-    COMMENT_INDENT_SUB = "    \g<0>"
-
     INDENT_PATTERN = re.compile(r"\s*")
     DOX_CONTINUATION_PREFIX_PATTERN = re.compile(r"( +#) *", re.MULTILINE)
 
     def convert(self, file_path: str, dry_run: bool = False) -> int:
+        print(file_path)
         with open(file_path, "r+") as f:
             contents = f.read()
-            changed = True
             change_count = 0
+
+            # Block comments
+            changed = True
             while changed:
-                contents, changed = self.replace_first_dox_comment(contents)
+                contents, changed = self.replace_first_block_comment(contents)
+                change_count = change_count + changed  # Increase count by 1 if changed
+
+            # variable / member comments
+            changed = True
+            while changed:
+                contents, changed = self.replace_first_member_comment(contents)
                 change_count = change_count + changed  # Increase count by 1 if changed
 
             if change_count > 0:
@@ -37,7 +43,7 @@ class Dox2Rst:
 
             return change_count
 
-    def replace_first_dox_comment(self, contents: str):
+    def replace_first_block_comment(self, contents: str) -> (str, bool):
         match = self.REGEX.match(contents)
         if match is not None:
             comment_block = match.group("dox")
@@ -89,7 +95,29 @@ class Dox2Rst:
 
         return output
 
+    MEMBER_COMMENT_REGEX = re.compile(r"(?P<before>[\s\S]*\n)?(?P<dox>\s*##.*\n(?:\s*#.*)*\n*)(?P<var>[\s\w]+=.+\n)(?P<after>[\s\S]*)")
+
+    def replace_first_member_comment(self, contents: str) -> (str, bool):
+        match = self.MEMBER_COMMENT_REGEX.match(contents)
+        if match is not None:
+            comment = match.group("dox")
+            comment = self.convert_comment_block(comment)
+            contents = "{before}{var}{comment}{after}".format(
+                before=match.group("before"),
+                var=match.group("var"),
+                comment=comment,
+                after=match.group("after")
+            )
+            return contents, True
+        else:
+            return contents, False
+
+    COMMENT_INDENT_PATTERN = re.compile(r"^\s*#", re.MULTILINE)
+    COMMENT_INDENT_SUB = "    \g<0>"
+
     def add_indent(self, comment_block: str):
+        """Add a single level of indent."""
+
         return re.sub(self.COMMENT_INDENT_PATTERN, self.COMMENT_INDENT_SUB, comment_block)
 
 
