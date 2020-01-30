@@ -69,11 +69,6 @@ if int(major) < 5 or (int(major) == 5 and int(minor) < 9):
 ##  Application subclass that provides a Qt application object.
 @signalemitter
 class QtApplication(QApplication, Application):
-    class OpenGlVersionDetect:
-        Autodetect = "autodetect"
-        ForceLegacy = "force_legacy"
-        ForceModern = "force_modern"
-
     pluginsLoaded = Signal()
     applicationRunning = Signal()
     
@@ -132,7 +127,7 @@ class QtApplication(QApplication, Application):
 
         preferences = Application.getInstance().getPreferences()
         preferences.addPreference("view/force_empty_shader_cache", False)
-        preferences.addPreference("view/opengl_version_detect", self.OpenGlVersionDetect.Autodetect)
+        preferences.addPreference("view/opengl_version_detect", OpenGLContext.OpenGlVersionDetect.Autodetect)
 
         # Read preferences here (upgrade won't work) to get:
         #  - The language in use, so the splash window can be shown in the correct language.
@@ -155,9 +150,9 @@ class QtApplication(QApplication, Application):
         if preferences.getValue("view/force_empty_shader_cache"):
             self.setAttribute(Qt.AA_DisableShaderDiskCache)
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
-        if preferences.getValue("view/opengl_version_detect") != self.OpenGlVersionDetect.ForceModern:
+        if preferences.getValue("view/opengl_version_detect") != OpenGLContext.OpenGlVersionDetect.ForceModern:
             major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion(
-                preferences.getValue("view/opengl_version_detect") == self.OpenGlVersionDetect.ForceLegacy)
+                preferences.getValue("view/opengl_version_detect") == OpenGLContext.OpenGlVersionDetect.ForceLegacy)
         else:
             Logger.info("Force 'modern' OpenGL (4.1 core) -- overrides 'force legacy opengl' preference.")
             major_version, minor_version, profile = (4, 1, QSurfaceFormat.CoreProfile)
