@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections
@@ -6,6 +6,8 @@ import os.path
 from typing import List
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
+
+from UM.Decorators import deprecated
 from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
@@ -278,6 +280,11 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         for child in definitions[0].children:
             self.expandRecursive(child.key)
+
+    #@deprecated("Use collapseRecursive instead.", "4.5")  # Commented out because these two decorators don't work together.
+    @pyqtSlot(str)
+    def collapse(self, key: str) -> None:
+        return self.collapseRecursive(key)
 
     ##  Hide the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
