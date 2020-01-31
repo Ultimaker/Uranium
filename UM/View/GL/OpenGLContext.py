@@ -9,6 +9,10 @@ from UM.Platform import Platform
 
 
 class OpenGLContext:
+    class OpenGlVersionDetect:
+        Autodetect = "autodetect"
+        ForceLegacy = "force_legacy"
+        ForceModern = "force_modern"
 
     ##  Set OpenGL context, given major, minor version + core using QOpenGLContext
     #   Unfortunately, what you get back does not have to be the requested version.
