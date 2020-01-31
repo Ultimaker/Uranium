@@ -27,23 +27,26 @@ class MeshType(Enum):
     pointcloud = 2
 
 
-# This object is being used as a 'symbol' to identify parameters have not been explicitly supplied
+Reuse = object()
+"""This object is being used as a 'symbol' to identify parameters have not been explicitly supplied
 # to the set() method. We can't use the value None for this purpose because it is also a valid (new)
 # value to set a field to in set().
-Reuse = object()
+"""
 
 
-##  Class to hold a list of verts and possibly how (and if) they are connected.
-#
-#   This class stores three numpy arrays that contain the data for a mesh. Vertices
-#   are stored as a two-dimensional array of floats with the rows being individual
-#   vertices and the three columns being the X, Y and Z components of the vertices.
-#   Normals are stored in the same manner and kept in sync with the vertices. Indices
-#   are stored as a two-dimensional array of integers with the rows being the individual
-#   faces and the three columns being the indices that refer to the individual vertices.
-#
-#   attributes: a dict with {"value", "opengl_type", "opengl_name"} type in vector2f, vector3f, uniforms, ...
 class MeshData:
+    """Class to hold a list of verts and possibly how (and if) they are connected.
+    
+    This class stores three numpy arrays that contain the data for a mesh. Vertices
+    are stored as a two-dimensional array of floats with the rows being individual
+    vertices and the three columns being the X, Y and Z components of the vertices.
+    Normals are stored in the same manner and kept in sync with the vertices. Indices
+    are stored as a two-dimensional array of integers with the rows being the individual
+    faces and the three columns being the indices that refer to the individual vertices.
+    
+    attributes: a dict with {"value", "opengl_type", "opengl_name"} type in vector2f, vector3f, uniforms, ...
+    """
+
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
                  center_position=None, zero_position=None, type = MeshType.faces, attributes=None) -> None:
         self._application = None  # Initialize this later otherwise unit tests break
@@ -80,18 +83,23 @@ class MeshData:
                         new_value[attribute_key] = attribute_value
                 self._attributes[key] = new_value
 
-    ##  Triggered when this file is deleted.
-    #
-    #   The file will then no longer be watched for changes.
     def __del__(self):
+        """Triggered when this file is deleted.
+        
+        The file will then no longer be watched for changes.
+        """
+
         if self._file_name:
             if self._application:
                 self._application.getController().getScene().removeWatchedFile(self._file_name)
 
-    ## Create a new MeshData with specified changes
-    #   \return \type{MeshData}
     def set(self, vertices=Reuse, normals=Reuse, indices=Reuse, colors=Reuse, uvs=Reuse, file_name=Reuse,
             center_position=Reuse, zero_position=Reuse, attributes=Reuse) -> "MeshData":
+        """Create a new MeshData with specified changes
+
+        :return: :type{MeshData}
+        """
+
         vertices = vertices if vertices is not Reuse else self._vertices
         normals = normals if normals is not Reuse else self._normals
         indices = indices if indices is not Reuse else self._indices
@@ -122,36 +130,45 @@ class MeshData:
     def getFaceCount(self) -> int:
         return self._face_count
 
-    ##  Get the array of vertices
     def getVertices(self) -> numpy.ndarray:
+        """Get the array of vertices"""
+
         return self._vertices
 
-    ##  Get the number of vertices
     def getVertexCount(self) -> int:
+        """Get the number of vertices"""
+
         return self._vertex_count
 
-    ##  Get a vertex by index
     def getVertex(self, index):
+        """Get a vertex by index"""
+
         try:
             return self._vertices[index]
         except IndexError:
             return None
 
-    ##  Return whether this mesh has vertex normals.
     def hasNormals(self) -> bool:
+        """Return whether this mesh has vertex normals."""
+
         return self._normals is not None
 
-    ##  Return the list of vertex normals.
     def getNormals(self) -> numpy.ndarray:
+        """Return the list of vertex normals."""
+
         return self._normals
 
-    ##  Return whether this mesh has indices.
     def hasIndices(self) -> bool:
+        """Return whether this mesh has indices."""
+
         return self._indices is not None
 
-    ##  Get the array of indices
-    #   \return \type{numpy.ndarray}
     def getIndices(self) -> numpy.ndarray:
+        """Get the array of indices
+
+        :return: :type{numpy.ndarray}
+        """
+
         if self._indices is not None and self._indices.dtype != "int32":
             self._indices = numpy.asarray(self._indices, dtype=numpy.int32)
         return self._indices
@@ -168,9 +185,12 @@ class MeshData:
     def getFileName(self) -> Optional[str]:
         return self._file_name
 
-    ##  Transform the meshdata, center and zero position by given Matrix
-    #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation: Matrix) -> "MeshData":
+        """Transform the meshdata, center and zero position by given Matrix
+
+        :param transformation: 4x4 homogeneous transformation matrix
+        """
+
         if self._vertices is not None:
             transformed_vertices = transformVertices(self._vertices, transformation)
             transformed_normals = transformNormals(self._normals, transformation) if self._normals is not None else None
@@ -186,10 +206,12 @@ class MeshData:
         else:
             return MeshData(vertices = self._vertices)
 
-    ##  Get the extents of this mesh.
-    #
-    #   \param matrix The transformation matrix from model to world coordinates.
     def getExtents(self, matrix: Optional[Matrix] = None) -> Optional[AxisAlignedBox]:
+        """Get the extents of this mesh.
+        
+        :param matrix: The transformation matrix from model to world coordinates.
+        """
+
         if self._vertices is None:
             return None
 
@@ -206,26 +228,32 @@ class MeshData:
 
         return AxisAlignedBox(minimum=Vector(min[0], min[1], min[2]), maximum=Vector(max[0], max[1], max[2]))
 
-    ##  Get all vertices of this mesh as a bytearray
-    #
-    #   \return A bytearray object with 3 floats per vertex.
     def getVerticesAsByteArray(self) -> Optional[bytes]:
+        """Get all vertices of this mesh as a bytearray
+        
+        :return: A bytearray object with 3 floats per vertex.
+        """
+
         if self._vertices is None:
             return None
         return self._vertices.tostring()
 
-    ##  Get all normals of this mesh as a bytearray
-    #
-    #   \return A bytearray object with 3 floats per normal.
     def getNormalsAsByteArray(self) -> Optional[bytes]:
+        """Get all normals of this mesh as a bytearray
+        
+        :return: A bytearray object with 3 floats per normal.
+        """
+
         if self._normals is None:
             return None
         return self._normals.tostring()
 
-    ##  Get all indices as a bytearray
-    #
-    #   \return A bytearray object with 3 ints per face.
     def getIndicesAsByteArray(self) -> Optional[bytes]:
+        """Get all indices as a bytearray
+        
+        :return: A bytearray object with 3 ints per face.
+        """
+
         if self._indices is None:
             return None
         if self._indices_byte_array is None:
@@ -242,28 +270,31 @@ class MeshData:
             return None
         return self._uvs.tostring()
 
-    #######################################################################
-    # Convex hull handling
-    #######################################################################
     def _computeConvexHull(self) -> None:
+        """Convex hull handling"""
+
         points = self.getVertices()
         if points is None:
             return
         self._convex_hull = approximateConvexHull(points, MAXIMUM_HULL_VERTICES_COUNT)
 
-    ##  Gets the Convex Hull of this mesh
-    #
-    #    \return \type{scipy.spatial.ConvexHull}
     def getConvexHull(self) -> Optional[scipy.spatial.ConvexHull]:
+        """Gets the Convex Hull of this mesh
+        
+        :return: :type{scipy.spatial.ConvexHull}
+        """
+
         with self._convex_hull_lock:
             if self._convex_hull is None:
                 self._computeConvexHull()
             return self._convex_hull
 
-    ##  Gets the convex hull points
-    #
-    #   \return \type{numpy.ndarray} the vertices which describe the convex hull
     def getConvexHullVertices(self) -> Optional[numpy.ndarray]:
+        """Gets the convex hull points
+        
+        :return: :type{numpy.ndarray} the vertices which describe the convex hull
+        """
+
         if self._convex_hull_vertices is None:
             convex_hull = self.getConvexHull()
             if convex_hull is None:
@@ -271,31 +302,37 @@ class MeshData:
             self._convex_hull_vertices = numpy.take(convex_hull.points, convex_hull.vertices, axis=0)
         return self._convex_hull_vertices
 
-    ##  Gets transformed convex hull points
-    #
-    #   \return \type{numpy.ndarray} the vertices which describe the convex hull
     def getConvexHullTransformedVertices(self, transformation: Matrix) -> Optional[numpy.ndarray]:
+        """Gets transformed convex hull points
+        
+        :return: :type{numpy.ndarray} the vertices which describe the convex hull
+        """
+
         vertices = self.getConvexHullVertices()
         if vertices is not None:
             return transformVertices(vertices, transformation)
         else:
             return None
 
-    ##  Gets the plane the supplied face lies in. The resultant plane is specified by a point and a normal.
-    #
-    #   \param face_id \type{int} The index of the face (not the flattened indices).
-    #   \return \type{Tuple[numpy.ndarray, numpy.ndarray]} A plane, the 1st vector is the center, the 2nd the normal.
     def getFacePlane(self, face_id: int) -> Tuple[numpy.ndarray, numpy.ndarray]:
+        """Gets the plane the supplied face lies in. The resultant plane is specified by a point and a normal.
+        
+        :param face_id: :type{int} The index of the face (not the flattened indices).
+        :return: :type{Tuple[numpy.ndarray, numpy.ndarray]} A plane, the 1st vector is the center, the 2nd the normal.
+        """
+
         v_a, v_b, v_c = self.getFaceNodes(face_id)
         in_point = (v_a + v_b + v_c) / 3.0
         face_normal = numpy.cross(v_b - v_a, v_c - v_a)
         return in_point, face_normal
 
-    ##  Gets the node vectors of the supplied face.
-    #
-    #   \param face_id \type{int} The index of the face (not the flattened indices).
-    #   \return \type{Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]} Tuple of all three local vectors. 
     def getFaceNodes(self, face_id: int) -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]:
+        """Gets the node vectors of the supplied face.
+        
+        :param face_id: :type{int} The index of the face (not the flattened indices).
+        :return: :type{Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]} Tuple of all three local vectors. 
+        """
+
         if not self._indices or len(self._indices) == 0:
             base_index = face_id * 3
             v_a = self._vertices[base_index]
@@ -310,13 +347,17 @@ class MeshData:
     def hasAttribute(self, key: str) -> bool:
         return key in self._attributes
 
-    ##  the return value is a dict with at least keys opengl_name, opengl_type, value
     def getAttribute(self, key: str):
+        """the return value is a dict with at least keys opengl_name, opengl_type, value"""
+
         return self._attributes[key]
 
-    ##  Return attribute names in alphabetical order
-    #   The sorting assures that the order is always the same.
     def attributeNames(self) -> List[str]:
+        """Return attribute names in alphabetical order
+
+        The sorting assures that the order is always the same.
+        """
+
         result = list(self._attributes.keys())
         result.sort()
         return result
@@ -348,12 +389,14 @@ class MeshData:
                str(self._attributes.keys()) + ") "
 
 
-##  Transform an array of vertices using a matrix
-#
-#   \param vertices \type{numpy.ndarray} array of 3D vertices
-#   \param transformation a 4x4 matrix
-#   \return \type{numpy.ndarray} the transformed vertices
 def transformVertices(vertices: numpy.ndarray, transformation: Matrix) -> numpy.ndarray:
+    """Transform an array of vertices using a matrix
+    
+    :param vertices: :type{numpy.ndarray} array of 3D vertices
+    :param transformation: a 4x4 matrix
+    :return: :type{numpy.ndarray} the transformed vertices
+    """
+
     data = numpy.pad(vertices, ((0, 0), (0, 1)), "constant", constant_values=(0.0, 0.0))
     data = data.dot(transformation.getTransposed().getData())
     data += transformation.getData()[:, 3]
@@ -361,14 +404,16 @@ def transformVertices(vertices: numpy.ndarray, transformation: Matrix) -> numpy.
     return data
 
 
-##  Transform an array of normals using a matrix
-#
-#   \param normals \type{numpy.ndarray} array of 3D normals
-#   \param transformation a 4x4 matrix
-#   \return \type{numpy.ndarray} the transformed normals
-#
-#   \note This assumes the normals are untranslated unit normals, and returns the same.
 def transformNormals(normals: numpy.ndarray, transformation: Matrix) -> numpy.ndarray:
+    """Transform an array of normals using a matrix
+    
+    :param normals: :type{numpy.ndarray} array of 3D normals
+    :param transformation: a 4x4 matrix
+    :return: :type{numpy.ndarray} the transformed normals
+    
+    :note This assumes the normals are untranslated unit normals, and returns the same.
+    """
+
     data = numpy.pad(normals, ((0, 0), (0, 1)), "constant", constant_values=(0.0, 0.0))
 
     # Get the translation from the transformation so we can cancel it later.
@@ -391,34 +436,40 @@ def transformNormals(normals: numpy.ndarray, transformation: Matrix) -> numpy.nd
     return data
 
 
-##  Round an array of vertices off to the nearest multiple of unit
-#
-#   \param vertices \type{numpy.ndarray} the source array of vertices
-#   \param unit \type{float} the unit to scale the vertices to
-#   \return \type{numpy.ndarray} the rounded vertices
 def roundVertexArray(vertices: numpy.ndarray, unit: float) -> numpy.ndarray:
+    """Round an array of vertices off to the nearest multiple of unit
+    
+    :param vertices: :type{numpy.ndarray} the source array of vertices
+    :param unit: :type{float} the unit to scale the vertices to
+    :return: :type{numpy.ndarray} the rounded vertices
+    """
+
     expanded = vertices / unit
     rounded = expanded.round(0)
     return rounded * unit
 
 
-##  Extract the unique vectors from an array of vectors
-#
-#   \param vertices \type{numpy.ndarray} the source array of vertices
-#   \return \type{numpy.ndarray} the array of unique vertices
 def uniqueVertices(vertices: numpy.ndarray) -> numpy.ndarray:
+    """Extract the unique vectors from an array of vectors
+    
+    :param vertices: :type{numpy.ndarray} the source array of vertices
+    :return: :type{numpy.ndarray} the array of unique vertices
+    """
+
     vertex_byte_view = numpy.ascontiguousarray(vertices).view(
         numpy.dtype((numpy.void, vertices.dtype.itemsize * vertices.shape[1])))
     _, idx = numpy.unique(vertex_byte_view, return_index=True)
     return vertices[idx]  # Select the unique rows by index.
 
 
-##  Compute an approximation of the convex hull of an array of vertices
-#
-#   \param vertices \type{numpy.ndarray} the source array of vertices
-#   \param target_count \type{int} the maximum number of vertices which may be in the result
-#   \return \type{scipy.spatial.ConvexHull} the convex hull or None if the input was degenerate
 def approximateConvexHull(vertex_data: numpy.ndarray, target_count: int) -> Optional[scipy.spatial.ConvexHull]:
+    """Compute an approximation of the convex hull of an array of vertices
+    
+    :param vertices: :type{numpy.ndarray} the source array of vertices
+    :param target_count: :type{int} the maximum number of vertices which may be in the result
+    :return: :type{scipy.spatial.ConvexHull} the convex hull or None if the input was degenerate
+    """
+
     start_time = time()
 
     input_max = target_count * 50   # Maximum number of vertices we want to feed to the convex hull algorithm.
@@ -466,12 +517,14 @@ def createConvexHull(vertex_data: numpy.ndarray) -> scipy.spatial.ConvexHull:
     return hull_result
 
 
-##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
-#
-#   \param vertices \type{narray} list of vertices as a 1D list of float triples
-#   \param vertex_count \type{integer} the number of vertices to use in the vertices array
-#   \return \type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
 def calculateNormalsFromVertices(vertices: numpy.ndarray, vertex_count: int) -> numpy.ndarray:
+    """Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
+    
+    :param vertices: :type{narray} list of vertices as a 1D list of float triples
+    :param vertex_count: :type{integer} the number of vertices to use in the vertices array
+    :return: :type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
+    """
+
     start_time = time()
     # Numpy magic!
 
@@ -499,13 +552,15 @@ def calculateNormalsFromVertices(vertices: numpy.ndarray, vertex_count: int) -> 
     return normals
 
 
-## Calculate the normals of this mesh of triagles using indexes.
-#
-#   \param vertices \type{narray} list of vertices as a 1D list of float triples
-#   \param indices \type{narray} list of indices as a 1D list of integers
-#   \param face_count \type{integer} the number of triangles defined by the indices array
-#   \return \type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
 def calculateNormalsFromIndexedVertices(vertices: numpy.ndarray, indices: numpy.ndarray, face_count: int) -> numpy.ndarray:
+    """Calculate the normals of this mesh of triagles using indexes.
+    
+    :param vertices: :type{narray} list of vertices as a 1D list of float triples
+    :param indices: :type{narray} list of indices as a 1D list of integers
+    :param face_count: :type{integer} the number of triangles defined by the indices array
+    :return: :type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
+    """
+
     start_time = time()
     # Numpy magic!
     # First, reset the normals

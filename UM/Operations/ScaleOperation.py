@@ -7,23 +7,26 @@ from . import Operation
 from UM.Scene.SceneNode import SceneNode #To get the world transformation.
 from UM.Math.Vector import Vector
 
-##  Operation that scales a scene node, uniformly or non-uniformly.
 class ScaleOperation(Operation.Operation):
-    ##  Initialises the scale operation.
-    #
-    #   \param node The scene node to scale.
-    #   \param scale A matrix to scale the node with. This matrix should only be
-    #   non-zero on the diagonal.
-    #   \param set_scale Whether to simply replace the old scale with the new
-    #   one (True) or modify the old scale (False).
-    #   \param add_scale Whether to add to the old scale (True) or multiply with
-    #   it (False).
-    #   \param relative_scale Whether to multiply the scale relative to the
-    #   current scale (True) or simply multiply it with a constant (False).
-    #   \param scale_around_point All coordinates are moved away from or towards
-    #   this point.
-    #   \param snap Whether to use snap scaling (True) or not (False).
+    """Operation that scales a scene node, uniformly or non-uniformly."""
+
     def __init__(self, node, scale, set_scale = False, add_scale = False, relative_scale = False, scale_around_point = Vector(0, 0, 0), snap = False):
+        """Initialises the scale operation.
+        
+        :param node: The scene node to scale.
+        :param scale: A matrix to scale the node with. This matrix should only be
+        non-zero on the diagonal.
+        :param set_scale: Whether to simply replace the old scale with the new
+        one (True) or modify the old scale (False).
+        :param add_scale: Whether to add to the old scale (True) or multiply with
+        it (False).
+        :param relative_scale: Whether to multiply the scale relative to the
+        current scale (True) or simply multiply it with a constant (False).
+        :param scale_around_point: All coordinates are moved away from or towards
+        this point.
+        :param snap: Whether to use snap scaling (True) or not (False).
+        """
+
         super().__init__()
         self._node = node #The scene node to scale.
         self._old_transformation = node.getLocalTransformation() #The transformation of the node before scaling.
@@ -35,12 +38,14 @@ class ScaleOperation(Operation.Operation):
         self._scale = scale #The transformation matrix that scales space correctly.
         self._min_scale = 0.01 #A minimum scale factor. Much lower would introduce rounding errors.
 
-    ##  Undo the scale operation.
     def undo(self):
+        """Undo the scale operation."""
+
         self._node.setTransformation(self._old_transformation)
 
-    ##  Redo the scale operation.
     def redo(self):
+        """Redo the scale operation."""
+
         if self._set_scale: #Simply change the scale.
             self._node.setScale(self._scale, SceneNode.TransformSpace.World)
         elif self._add_scale: #Add to the current scale.
@@ -107,17 +112,19 @@ class ScaleOperation(Operation.Operation):
             self._node.scale(self._scale, SceneNode.TransformSpace.World) #Default to _set_scale
             self._node.setPosition(self._scale_around_point, SceneNode.TransformSpace.World)  # If scaling around a point, shift that point to the axis origin first and shift it back after performing the transformation.
 
-    ##  Merge this operation with another scale operation.
-    #
-    #   This prevents the user from having to undo multiple operations if they
-    #   were not his operations.
-    #
-    #   You should ONLY merge this operation with an older operation. It is NOT
-    #   symmetric.
-    #
-    #   \param other The older scale operation to merge this operation with.
-    #   \return A new operation that performs both scale operations.
     def mergeWith(self, other):
+        """Merge this operation with another scale operation.
+        
+        This prevents the user from having to undo multiple operations if they
+        were not his operations.
+        
+        You should ONLY merge this operation with an older operation. It is NOT
+        symmetric.
+        
+        :param other: The older scale operation to merge this operation with.
+        :return: A new operation that performs both scale operations.
+        """
+
         if type(other) is not ScaleOperation:
             return False
         if other._node != self._node: #Must be scaling the same node.
@@ -137,10 +144,12 @@ class ScaleOperation(Operation.Operation):
         op._old_transformation = copy.deepcopy(other._old_transformation) #Use the oldest transformation of the two.
         return op
 
-    ##  Returns a programmer-readable representation of this operation.
-    #
-    #   \return A programmer-readable representation of this operation.
     def __repr__(self):
+        """Returns a programmer-readable representation of this operation.
+        
+        :return: A programmer-readable representation of this operation.
+        """
+
         mode = "set" if self._set_scale else "add" if self._add_scale else "relative"
         return "ScaleOp.(node={0},scale={1},mode={2})".format(self._node, self._scale, mode)
 

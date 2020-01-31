@@ -16,15 +16,18 @@ import numbers
 from typing import Optional, Union
 
 
-##  Builds new meshes by adding primitives.
-#
-#   This class functions in much the same way as a normal StringBuilder would.
-#   Each instance of MeshBuilder creates one mesh. This mesh starts empty, but
-#   you can add primitives to it via the various methods of this class. The
-#   result can then be converted to a normal mesh.
 class MeshBuilder:
-    ##  Creates a new MeshBuilder with an empty mesh.
+    """Builds new meshes by adding primitives.
+    
+    This class functions in much the same way as a normal StringBuilder would.
+    Each instance of MeshBuilder creates one mesh. This mesh starts empty, but
+    you can add primitives to it via the various methods of this class. The
+    result can then be converted to a normal mesh.
+    """
+
     def __init__(self) -> None:
+        """Creates a new MeshBuilder with an empty mesh."""
+
         self._vertices = None  # type: Optional[numpy.ndarray]
         self._normals = None  # type: Optional[numpy.ndarray]
         self._indices = None  # type: Optional[numpy.ndarray]
@@ -37,10 +40,12 @@ class MeshBuilder:
         # original center position
         self._center_position = None  # type: Optional[Vector]
 
-    ##  Build a MeshData object.
-    #
-    #   \return A Mesh data.
     def build(self) -> MeshData:
+        """Build a MeshData object.
+        
+        :return: A Mesh data.
+        """
+
         return MeshData(vertices = self.getVertices(), normals = self.getNormals(), indices = self.getIndices(),
                         colors = self.getColors(), uvs = self.getUVCoordinates(), file_name = self.getFileName(),
                         center_position = self.getCenterPosition())
@@ -51,9 +56,12 @@ class MeshBuilder:
     def getCenterPosition(self) -> Optional[Vector]:
         return self._center_position
 
-    ##  Set the type of the mesh
-    #   \param mesh_type MeshType enum
     def setType(self, mesh_type):
+        """Set the type of the mesh
+
+        :param mesh_type: MeshType enum
+        """
+
         if isinstance(mesh_type, MeshType):
             self._type = mesh_type
 
@@ -63,8 +71,9 @@ class MeshBuilder:
     def getFaceCount(self) -> int:
         return self._face_count
 
-    ##  Get the array of vertices
     def getVertices(self) -> Optional[numpy.ndarray]:
+        """Get the array of vertices"""
+
         if self._vertices is None:
             return None
 
@@ -74,12 +83,14 @@ class MeshBuilder:
         self._vertices = vertices
         self._vertex_count = int(self._vertices.size / 3)
 
-    ##  Get the number of vertices
     def getVertexCount(self):
+        """Get the number of vertices"""
+
         return self._vertex_count
 
-    ##  Get a vertex by index
     def getVertex(self, index):
+        """Get a vertex by index"""
+
         try:
             return self._vertices[index]
         except IndexError:
@@ -97,24 +108,29 @@ class MeshBuilder:
             pass
         # self._dataChanged()
 
-    ##  Return whether this mesh has vertex normals.
     def hasNormals(self):
+        """Return whether this mesh has vertex normals."""
+
         return self._normals is not None
 
-    ##  Return the list of vertex normals.
     def getNormals(self) -> Optional[numpy.ndarray]:
+        """Return the list of vertex normals."""
+
         if self._normals is None:
             return None
 
         return self._normals[0: self._vertex_count]
 
-    ##  Return whether this mesh has indices.
     def hasIndices(self):
+        """Return whether this mesh has indices."""
+
         return self._indices is not None
 
-    ##  Get the array of indices
-    #   \return \type{numpy.ndarray}
     def getIndices(self) -> Optional[numpy.ndarray]:
+        """Get the array of indices
+        :return: :type{numpy.ndarray}
+        """
+
         if self._indices is None:
             return None
 
@@ -147,14 +163,16 @@ class MeshBuilder:
     def setFileName(self, file_name: Optional[str]) -> None:
         self._file_name = file_name
 
-    ##  Set the amount of faces before loading data to the mesh.
-    #
-    #   This way we can create the array before we fill it. This method will reserve
-    #   `(num_faces * 3)` amount of space for vertices, `(num_faces * 3)` amount of space
-    #   for normals and `num_faces` amount of space for indices.
-    #
-    #   \param num_faces Number of faces for which memory must be reserved.
     def reserveFaceCount(self, num_faces: Union[int, float]) -> None:
+        """Set the amount of faces before loading data to the mesh.
+        
+        This way we can create the array before we fill it. This method will reserve
+        `(num_faces * 3)` amount of space for vertices, `(num_faces * 3)` amount of space
+        for normals and `num_faces` amount of space for indices.
+        
+        :param num_faces: Number of faces for which memory must be reserved.
+        """
+
         if type(num_faces) == float:
             Logger.log("w", "Had to convert 'num_faces' with int(): %s -> %s ", num_faces, int(num_faces))
             num_faces = int(num_faces)
@@ -166,14 +184,16 @@ class MeshBuilder:
         self._vertex_count = 0
         self._face_count = 0
 
-    ##  Preallocate space for vertices before loading data to the mesh.
-    #
-    #   This way we can create the array before we fill it. This method will reserve
-    #   `num_vertices` amount of space for vertices. It deletes any existing normals
-    #   and indices but does not reserve space for them.
-    #
-    #   \param num_vertices Number of verts to be reserved.
     def reserveVertexCount(self, num_vertices):
+        """Preallocate space for vertices before loading data to the mesh.
+        
+        This way we can create the array before we fill it. This method will reserve
+        `num_vertices` amount of space for vertices. It deletes any existing normals
+        and indices but does not reserve space for them.
+        
+        :param num_vertices: Number of verts to be reserved.
+        """
+
         self._vertices = numpy.zeros((num_vertices, 3), dtype=numpy.float32)
         self._normals = None
         self._indices = None
@@ -181,15 +201,17 @@ class MeshBuilder:
         self._vertex_count = 0
         self._face_count = 0
 
-    ##  Set the amount of faces and vertices before loading data to the mesh.
-    #
-    #   This way we can create the array before we fill it. This method will reserve
-    #   `num_vertices` amount of space for vertices, `num_vertices` amount of space
-    #   for colors and `num_faces` amount of space for indices.
-    #
-    #   \param num_faces Number of faces for which memory must be reserved.
-    #   \param num_vertices Number of vertices for which memory must be reserved.
     def reserveFaceAndVertexCount(self, num_faces, num_vertices):
+        """Set the amount of faces and vertices before loading data to the mesh.
+        
+        This way we can create the array before we fill it. This method will reserve
+        `num_vertices` amount of space for vertices, `num_vertices` amount of space
+        for colors and `num_faces` amount of space for indices.
+        
+        :param num_faces: Number of faces for which memory must be reserved.
+        :param num_vertices: Number of vertices for which memory must be reserved.
+        """
+
         if not isinstance(num_faces, (numbers.Integral, numpy.integer)):
             Logger.log("w", "Had to convert %s 'num_faces' with int(): %s -> %s ", type(num_faces), num_faces, int(num_faces))
             num_faces = int(num_faces)
@@ -204,11 +226,14 @@ class MeshBuilder:
         self._vertex_count = 0
         self._face_count = 0
 
-    ##  Add a vertex to the mesh.
-    #   \param x x coordinate of vertex.
-    #   \param y y coordinate of vertex.
-    #   \param z z coordinate of vertex.
     def addVertex(self, x: float, y: float, z: float) -> None:
+        """Add a vertex to the mesh.
+
+        :param x: x coordinate of vertex.
+        :param y: y coordinate of vertex.
+        :param z: z coordinate of vertex.
+        """
+
         if self._vertices is None:
             self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
 
@@ -220,14 +245,17 @@ class MeshBuilder:
         self._vertices[self._vertex_count, 2] = z
         self._vertex_count += 1
 
-    ##  Add a vertex to the mesh.
-    #   \param x x coordinate of vertex.
-    #   \param y y coordinate of vertex.
-    #   \param z z coordinate of vertex.
-    #   \param nx x part of normal.
-    #   \param ny y part of normal.
-    #   \param nz z part of normal.
     def addVertexWithNormal(self, x, y, z, nx, ny, nz):
+        """Add a vertex to the mesh.
+
+        :param x: x coordinate of vertex.
+        :param y: y coordinate of vertex.
+        :param z: z coordinate of vertex.
+        :param nx: x part of normal.
+        :param ny: y part of normal.
+        :param nz: z part of normal.
+        """
+
         if self._vertices is None:
             self._vertices = numpy.zeros((10, 3), dtype = numpy.float32)
 
@@ -251,17 +279,20 @@ class MeshBuilder:
         self._normals[self._vertex_count, 2] = nz
         self._vertex_count += 1
 
-    ##  Add a face by providing three verts.
-    #   \param x0 x coordinate of first vertex.
-    #   \param y0 y coordinate of first vertex.
-    #   \param z0 z coordinate of first vertex.
-    #   \param x1 x coordinate of second vertex.
-    #   \param y1 y coordinate of second vertex.
-    #   \param z1 z coordinate of second vertex.
-    #   \param x2 x coordinate of third vertex.
-    #   \param y2 y coordinate of third vertex.
-    #   \param z2 z coordinate of third vertex.
     def addFaceByPoints(self, x0, y0, z0, x1, y1, z1, x2, y2, z2):
+        """Add a face by providing three verts.
+
+        :param x0: x coordinate of first vertex.
+        :param y0: y coordinate of first vertex.
+        :param z0: z coordinate of first vertex.
+        :param x1: x coordinate of second vertex.
+        :param y1: y coordinate of second vertex.
+        :param z1: z coordinate of second vertex.
+        :param x2: x coordinate of third vertex.
+        :param y2: y coordinate of third vertex.
+        :param z2: z coordinate of third vertex.
+        """
+
         if self._indices is None:
             self._indices = numpy.zeros((10, 3), dtype = numpy.int32)
 
@@ -277,29 +308,31 @@ class MeshBuilder:
         self.addVertex(x1, y1, z1)
         self.addVertex(x2, y2, z2)
 
-    ##  Add a face by providing three vertices and the normals that go with those vertices.
-    #
-    #   \param x0 The X coordinate of the first vertex.
-    #   \param y0 The Y coordinate of the first vertex.
-    #   \param z0 The Z coordinate of the first vertex.
-    #   \param nx0 The X coordinate of the normal of the first vertex.
-    #   \param ny0 The Y coordinate of the normal of the first vertex.
-    #   \param nz0 The Z coordinate of the normal of the first vertex.
-    #
-    #   \param x1 The X coordinate of the second vertex.
-    #   \param y1 The Y coordinate of the second vertex.
-    #   \param z1 The Z coordinate of the second vertex.
-    #   \param nx1 The X coordinate of the normal of the second vertex.
-    #   \param ny1 The Y coordinate of the normal of the second vertex.
-    #   \param nz1 The Z coordinate of the normal of the second vertex.
-    #
-    #   \param x2 The X coordinate of the third vertex.
-    #   \param y2 The Y coordinate of the third vertex.
-    #   \param z2 The Z coordinate of the third vertex.
-    #   \param nx2 The X coordinate of the normal of the third vertex.
-    #   \param ny2 The Y coordinate of the normal of the third vertex.
-    #   \param nz2 The Z coordinate of the normal of the third vertex.
     def addFaceWithNormals(self,x0, y0, z0, nx0, ny0, nz0, x1, y1, z1, nx1, ny1, nz1, x2, y2, z2, nx2, ny2, nz2):
+        """Add a face by providing three vertices and the normals that go with those vertices.
+        
+        :param x0: The X coordinate of the first vertex.
+        :param y0: The Y coordinate of the first vertex.
+        :param z0: The Z coordinate of the first vertex.
+        :param nx0: The X coordinate of the normal of the first vertex.
+        :param ny0: The Y coordinate of the normal of the first vertex.
+        :param nz0: The Z coordinate of the normal of the first vertex.
+        
+        :param x1: The X coordinate of the second vertex.
+        :param y1: The Y coordinate of the second vertex.
+        :param z1: The Z coordinate of the second vertex.
+        :param nx1: The X coordinate of the normal of the second vertex.
+        :param ny1: The Y coordinate of the normal of the second vertex.
+        :param nz1: The Z coordinate of the normal of the second vertex.
+        
+        :param x2: The X coordinate of the third vertex.
+        :param y2: The Y coordinate of the third vertex.
+        :param z2: The Z coordinate of the third vertex.
+        :param nx2: The X coordinate of the normal of the third vertex.
+        :param ny2: The Y coordinate of the normal of the third vertex.
+        :param nz2: The Z coordinate of the normal of the third vertex.
+        """
+
         if self._indices is None:
             self._indices = numpy.zeros((10, 3), dtype = numpy.int32)
 
@@ -315,11 +348,13 @@ class MeshBuilder:
         self.addVertexWithNormal(x1, y1, z1, nx1, ny1, nz1)
         self.addVertexWithNormal(x2, y2, z2, nx2, ny2, nz2)
 
-    ##  Sets the color for a vertex
-    #
-    #   \param index \type{int} the index of the vertex in the vertices array.
-    #   \param color \type{UM.Math.Color} the color of the vertex.
     def setVertexColor(self, index, color):
+        """Sets the color for a vertex
+        
+        :param index: :type{int} the index of the vertex in the vertices array.
+        :param color: :type{UM.Math.Color} the color of the vertex.
+        """
+
         if self._colors is None:
             self._colors = numpy.zeros((10, 4), dtype = numpy.float32)
 
@@ -363,13 +398,15 @@ class MeshBuilder:
         else:
             self._colors = numpy.concatenate((self._colors[0:self._vertex_count], colors))
 
-    ## Add faces defined by indices into vertices with vetex colors defined by colors
-    # Assumes vertices and colors have the same length.
-    #
-    # \param vertices is a numpy array where each row corresponds to a 3D point used to define the faces.
-    # \param indices consists of row triplet indices into the input \p vertices to build up the triangular faces.
-    # \param colors defines the color of each vertex in \p vertices.
     def addFacesWithColor(self, vertices, indices, colors):
+        """Add faces defined by indices into vertices with vetex colors defined by colors
+        Assumes vertices and colors have the same length.
+        
+        :param vertices: is a numpy array where each row corresponds to a 3D point used to define the faces.
+        :param indices: consists of row triplet indices into the input :p vertices to build up the triangular faces.
+        :param colors: defines the color of each vertex in :p vertices.
+        """
+
         if len(self._indices) < self._face_count + len(indices) or len(self._colors) < self._vertex_count + len(colors) or len(self._vertices) < self._vertex_count + len(vertices):
             Logger.log("w", "Insufficient size of mesh_data: f_c: %s, v_c: %s, _in_l: %s, in_l: %s, _co_l: %s, co_l: %s, _ve_l: %s, ve_l: %s", self._face_count, self._vertex_count, len(self._indices), len(indices), len(self._colors), len(colors),len(self._vertices), len(vertices))
             return
@@ -382,17 +419,21 @@ class MeshBuilder:
         self._vertices[self._vertex_count:end_index, :] = vertices
         self._vertex_count += len(vertices)
 
-    ##
-    # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
     def setColors(self, colors):
+        """
+        :param colors: is a vertexCount by 4 numpy array with floats in range of 0 to 1.
+        """
+
         self._colors = colors
 
-    ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
-    #
-    #   Keyword arguments:
-    #   - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
-    #           is stored as a set of three unique vertices.
     def calculateNormals(self, fast=False):
+        """Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
+        
+        Keyword arguments:
+        - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
+        is stored as a set of three unique vertices.
+        """
+
         if self._vertices is None:
             return
 
@@ -401,13 +442,15 @@ class MeshBuilder:
         else:
             self._normals = calculateNormalsFromVertices(self._vertices, self._vertex_count)
 
-    ##  Adds a 3-dimensional line to the mesh of this mesh builder.
-    #
-    #   \param v0 One endpoint of the line to add.
-    #   \param v1 The other endpoint of the line to add.
-    #   \param color (Optional) The colour of the line, if any. If no colour is
-    #   provided, the colour is determined by the shader.
     def addLine(self, v0, v1, color = None):
+        """Adds a 3-dimensional line to the mesh of this mesh builder.
+        
+        :param v0: One endpoint of the line to add.
+        :param v1: The other endpoint of the line to add.
+        :param color: (Optional) The colour of the line, if any. If no colour is
+        provided, the colour is determined by the shader.
+        """
+
         self.addVertex(v0.x, v0.y, v0.z)
         self.addVertex(v1.x, v1.y, v1.z)
 
@@ -415,16 +458,18 @@ class MeshBuilder:
             self.setVertexColor(self.getVertexCount() - 2, color)
             self.setVertexColor(self.getVertexCount() - 1, color)
 
-    ##  Adds a triangle to the mesh of this mesh builder.
-    #
-    #   \param v0 The first corner of the triangle.
-    #   \param v1 The second corner of the triangle.
-    #   \param v2 The third corner of the triangle.
-    #   \param normal (Optional) The normal vector for the triangle. If no
-    #   normal vector is provided, it will be calculated automatically.
-    #   \param color (Optional) The colour for the triangle. If no colour is
-    #   provided, the colour is determined by the shader.
     def addFace(self, v0, v1, v2, normal = None, color = None):
+        """Adds a triangle to the mesh of this mesh builder.
+        
+        :param v0: The first corner of the triangle.
+        :param v1: The second corner of the triangle.
+        :param v2: The third corner of the triangle.
+        :param normal: (Optional) The normal vector for the triangle. If no
+        normal vector is provided, it will be calculated automatically.
+        :param color: (Optional) The colour for the triangle. If no colour is
+        provided, the colour is determined by the shader.
+        """
+
         if normal:
             self.addFaceWithNormals(
                                 v0.x, v0.y, v0.z,
@@ -442,22 +487,24 @@ class MeshBuilder:
             self.setVertexColor(self.getVertexCount() - 2, color)
             self.setVertexColor(self.getVertexCount() - 1, color)
 
-    ##  Add a quadrilateral to the mesh of this mesh builder.
-    #
-    #   The quadrilateral will be constructed as two triangles. v0 and v2 are
-    #   the two vertices across the diagonal of the quadrilateral.
-    #
-    #   \param v0 The first corner of the quadrilateral.
-    #   \param v1 The second corner of the quadrilateral.
-    #   \param v2 The third corner of the quadrilateral.
-    #   \param v3 The fourth corner of the quadrilateral.
-    #   \param normal (Optional) The normal vector for the quadrilateral. Both
-    #   triangles will get the same normal vector, if provided. If no normal
-    #   vector is provided, the normal vectors for both triangles are computed
-    #   automatically.
-    #   \param color (Optional) The colour for the quadrilateral. If no colour
-    #   is provided, the colour is determined by the shader.
     def addQuad(self, v0, v1, v2, v3, normal = None, color = None):
+        """Add a quadrilateral to the mesh of this mesh builder.
+        
+        The quadrilateral will be constructed as two triangles. v0 and v2 are
+        the two vertices across the diagonal of the quadrilateral.
+        
+        :param v0: The first corner of the quadrilateral.
+        :param v1: The second corner of the quadrilateral.
+        :param v2: The third corner of the quadrilateral.
+        :param v3: The fourth corner of the quadrilateral.
+        :param normal: (Optional) The normal vector for the quadrilateral. Both
+        triangles will get the same normal vector, if provided. If no normal
+        vector is provided, the normal vectors for both triangles are computed
+        automatically.
+        :param color: (Optional) The colour for the quadrilateral. If no colour
+        is provided, the colour is determined by the shader.
+        """
+
         self.addFace(v0, v2, v1,
             color = color,
             normal = normal
@@ -467,20 +514,22 @@ class MeshBuilder:
             normal = normal
         )
 
-    ##  Add a rectangular cuboid to the mesh of this mesh builder.
-    #
-    #   A rectangular cuboid is a square block with arbitrary width, height and
-    #   depth.
-    #
-    #   \param width The size of the rectangular cuboid in the X dimension.
-    #   \param height The size of the rectangular cuboid in the Y dimension.
-    #   \param depth The size of the rectangular cuboid in the Z dimension.
-    #   \param center (Optional) The position of the centre of the rectangular
-    #   cuboid in space. If not provided, the cuboid is placed at the coordinate
-    #   origin.
-    #   \param color (Optional) The colour for the rectangular cuboid. If no
-    #   colour is provided, the colour is determined by the shader.
     def addCube(self, width, height, depth, center = Vector(0, 0, 0), color = None):
+        """Add a rectangular cuboid to the mesh of this mesh builder.
+        
+        A rectangular cuboid is a square block with arbitrary width, height and
+        depth.
+        
+        :param width: The size of the rectangular cuboid in the X dimension.
+        :param height: The size of the rectangular cuboid in the Y dimension.
+        :param depth: The size of the rectangular cuboid in the Z dimension.
+        :param center: (Optional) The position of the centre of the rectangular
+        cuboid in space. If not provided, the cuboid is placed at the coordinate
+        origin.
+        :param color: (Optional) The colour for the rectangular cuboid. If no
+        colour is provided, the colour is determined by the shader.
+        """
+
         #Compute the actual positions of the planes.
         minW = -width / 2 + center.x
         maxW = width / 2 + center.x
@@ -529,22 +578,24 @@ class MeshBuilder:
             for i in range(1, 9):
                 self.setVertexColor(vertex_count - i, color)
 
-    ##  Add an arc to the mesh of this mesh builder.
-    #
-    #   An arc is a curve that is also a segment of a circle.
-    #
-    #   \param radius The radius of the circle this arc is a segment of.
-    #   \param axis The axis perpendicular to the plane on which the arc lies.
-    #   \param angle (Optional) The length of the arc, in radians. If not
-    #   provided, the entire circle is used (2 pi).
-    #   \param center (Optional) The position of the centre of the arc in space.
-    #   If no position is provided, the arc is centred around the coordinate
-    #   origin.
-    #   \param sections (Optional) The resolution of the arc. The arc is
-    #   approximated by this number of line segments.
-    #   \param color (Optional) The colour for the arc. If no colour is
-    #   provided, the colour is determined by the shader.
     def addArc(self, radius, axis, angle = math.pi * 2, center = Vector(0, 0, 0), sections = 32, color = None):
+        """Add an arc to the mesh of this mesh builder.
+        
+        An arc is a curve that is also a segment of a circle.
+        
+        :param radius: The radius of the circle this arc is a segment of.
+        :param axis: The axis perpendicular to the plane on which the arc lies.
+        :param angle: (Optional) The length of the arc, in radians. If not
+        provided, the entire circle is used (2 pi).
+        :param center: (Optional) The position of the centre of the arc in space.
+        If no position is provided, the arc is centred around the coordinate
+        origin.
+        :param sections: (Optional) The resolution of the arc. The arc is
+        approximated by this number of line segments.
+        :param color: (Optional) The colour for the arc. If no colour is
+        provided, the colour is determined by the shader.
+        """
+
         #We'll compute the vertices of the arc by computing an initial point and
         #rotating the initial point with a rotation matrix.
         if axis == Vector.Unit_Y:
@@ -568,31 +619,33 @@ class MeshBuilder:
                 self.setVertexColor(self.getVertexCount() - 2, color)
                 self.setVertexColor(self.getVertexCount() - 1, color)
 
-    ##  Adds a torus to the mesh of this mesh builder.
-    #
-    #   The torus is the shape of a doughnut. This doughnut is delicious and
-    #   moist, but not very healthy.
-    #
-    #   \param inner_radius The radius of the hole inside the torus. Must be
-    #   smaller than outer_radius.
-    #   \param outer_radius The radius of the outside of the torus. Must be
-    #   larger than inner_radius.
-    #   \param width The radius of the torus in perpendicular direction to its
-    #   perimeter. This is the "thickness".
-    #   \param center (Optional) The position of the centre of the torus. If no
-    #   position is provided, the torus will be centred around the coordinate
-    #   origin.
-    #   \param sections (Optional) The resolution of the torus in the
-    #   circumference. The resolution of the intersection of the torus cannot be
-    #   changed.
-    #   \param color (Optional) The colour of the torus. If no colour is
-    #   provided, a colour will be determined by the shader.
-    #   \param angle (Optional) An angle of rotation to rotate the torus by, in
-    #   radians.
-    #   \param axis (Optional) An axis of rotation to rotate the torus around.
-    #   If no axis is provided and the angle of rotation is nonzero, the torus
-    #   will be rotated around the Y-axis.
     def addDonut(self, inner_radius, outer_radius, width, center = Vector(0, 0, 0), sections = 32, color = None, angle = 0, axis = Vector.Unit_Y):
+        """Adds a torus to the mesh of this mesh builder.
+        
+        The torus is the shape of a doughnut. This doughnut is delicious and
+        moist, but not very healthy.
+        
+        :param inner_radius: The radius of the hole inside the torus. Must be
+        smaller than outer_radius.
+        :param outer_radius: The radius of the outside of the torus. Must be
+        larger than inner_radius.
+        :param width: The radius of the torus in perpendicular direction to its
+        perimeter. This is the "thickness".
+        :param center: (Optional) The position of the centre of the torus. If no
+        position is provided, the torus will be centred around the coordinate
+        origin.
+        :param sections: (Optional) The resolution of the torus in the
+        circumference. The resolution of the intersection of the torus cannot be
+        changed.
+        :param color: (Optional) The colour of the torus. If no colour is
+        provided, a colour will be determined by the shader.
+        :param angle: (Optional) An angle of rotation to rotate the torus by, in
+        radians.
+        :param axis: (Optional) An axis of rotation to rotate the torus around.
+        If no axis is provided and the angle of rotation is nonzero, the torus
+        will be rotated around the Y-axis.
+        """
+
         vertices = []
         indices = []
         colors = []
@@ -647,22 +700,24 @@ class MeshBuilder:
         self.addIndices(numpy.asarray(indices, dtype = numpy.int32))
         self.addColors(numpy.asarray(colors, dtype = numpy.float32))
 
-    ##  Adds a pyramid to the mesh of this mesh builder.
-    #
-    #   \param width The width of the base of the pyramid.
-    #   \param height The height of the pyramid (from base to notch).
-    #   \param depth The depth of the base of the pyramid.
-    #   \param angle (Optional) An angle of rotation to rotate the pyramid by,
-    #   in degrees.
-    #   \param axis (Optional) An axis of rotation to rotate the pyramid around.
-    #   If no axis is provided and the angle of rotation is nonzero, the pyramid
-    #   will be rotated around the Y-axis.
-    #   \param center (Optional) The position of the centre of the base of the
-    #   pyramid. If not provided, the pyramid will be placed on the coordinate
-    #   origin.
-    #   \param color (Optional) The colour of the pyramid. If no colour is
-    #   provided, a colour will be determined by the shader.
     def addPyramid(self, width, height, depth, angle = 0, axis = Vector.Unit_Y, center = Vector(0, 0, 0), color = None):
+        """Adds a pyramid to the mesh of this mesh builder.
+        
+        :param width: The width of the base of the pyramid.
+        :param height: The height of the pyramid (from base to notch).
+        :param depth: The depth of the base of the pyramid.
+        :param angle: (Optional) An angle of rotation to rotate the pyramid by,
+        in degrees.
+        :param axis: (Optional) An axis of rotation to rotate the pyramid around.
+        If no axis is provided and the angle of rotation is nonzero, the pyramid
+        will be rotated around the Y-axis.
+        :param center: (Optional) The position of the centre of the base of the
+        pyramid. If not provided, the pyramid will be placed on the coordinate
+        origin.
+        :param color: (Optional) The colour of the pyramid. If no colour is
+        provided, a colour will be determined by the shader.
+        """
+
         angle = math.radians(angle)
 
         minW = -width / 2
@@ -700,11 +755,13 @@ class MeshBuilder:
             for i in range(1, 6):
                 self.setVertexColor(vertex_count - i, color)
 
-    ##  Create a mesh from points that represent a convex hull.
-    #   \param hull_points list of xy values
-    #   \param height the opengl y position of the generated mesh
-    #   \return success
     def addConvexPolygon(self, hull_points, height, color=None):
+        """Create a mesh from points that represent a convex hull.
+        :param hull_points: list of xy values
+        :param height: the opengl y position of the generated mesh
+        :return: success
+        """
+
         # Input checking.
         if len(hull_points) < 3:
             return False
@@ -720,11 +777,14 @@ class MeshBuilder:
 
         return True
 
-    ##  Create an extrusion from xy coordinates that represent a convex polygon.
-    #   \param xy_points list of xy values
-    #   \param y0, y1 opengl y locations
-    #   \return success
     def addConvexPolygonExtrusion(self, xy_points, y0, y1, color=None):
+        """Create an extrusion from xy coordinates that represent a convex polygon.
+        :param xy_points: list of xy values
+        :param y0: opengl y location 0
+        :param y1: opengl y location 1
+        :return: success
+        """
+
         if len(xy_points) < 3:
             return False
 
