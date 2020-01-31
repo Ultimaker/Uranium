@@ -21,17 +21,21 @@ class DurationFormat(QObject):
     Q_ENUMS(Format)
 
 
-##  A class representing a time duration.
-#
-#   This is primarily used as a value type to QML so we can report things
-#   like "How long will this print take" without needing a bunch of logic
-#   in the QML.
 class Duration(QObject):
-    ##  Create a duration object.
-    #
-    #   \param duration The duration in seconds. If this is None (the default), an invalid Duration object will be created.
-    #   \param parent The QObject parent.
+    """A class representing a time duration.
+    
+    This is primarily used as a value type to QML so we can report things
+    like "How long will this print take" without needing a bunch of logic
+    in the QML.
+    """
+
     def __init__(self, duration: Optional[int] = None, parent = None) -> None:
+        """Create a duration object.
+        
+        :param duration: The duration in seconds. If this is None (the default), an invalid Duration object will be created.
+        :param parent: The QObject parent.
+        """
+
         super().__init__(parent)
 
         self._days = -1
@@ -68,12 +72,14 @@ class Duration(QObject):
     def isTotalDurationZero(self):
         return self._days == 0 and self._hours == 0 and self._minutes == 0 and self._seconds == 0
 
-    ##  Set the duration in seconds.
-    #
-    #   This will convert the given amount of seconds into an amount of days, hours, minutes and seconds.
-    #   Note that this is mostly a workaround for issues with PyQt, as a value type this class should not
-    #   really have a setter.
     def setDuration(self, duration: int) -> None:
+        """Set the duration in seconds.
+        
+        This will convert the given amount of seconds into an amount of days, hours, minutes and seconds.
+        Note that this is mostly a workaround for issues with PyQt, as a value type this class should not
+        really have a setter.
+        """
+
         if duration < 0:
             self._days = -1
             self._hours = -1
@@ -99,14 +105,16 @@ class Duration(QObject):
 
         self.durationChanged.emit()
 
-    ##  Get a string representation of this object that can be used to display
-    #   in interfaces.
-    #
-    #   This is not called toString() primarily because that conflicts with
-    #   JavaScript's toString().
-    #   \return A human-readable string representation of this duration.
     @pyqtSlot(int, result = str)
     def getDisplayString(self, display_format = DurationFormat.Format.Short):
+        """Get a string representation of this object that can be used to display
+        in interfaces.
+        
+        This is not called toString() primarily because that conflicts with
+        JavaScript's toString().
+        :return: A human-readable string representation of this duration.
+        """
+
         if display_format == DurationFormat.Format.Seconds:
             return str(((self._days * 24 + self._hours)* 60 + self._minutes) * 60 + self._seconds )
         elif display_format == DurationFormat.Format.Short:
@@ -126,10 +134,12 @@ class Duration(QObject):
 
         return ""
 
-    ##  Get an integer representation of this duration.
-    #
-    #   The integer contains the number of seconds in the duration. Convert it
-    #   back to a Duration instance by providing the number of seconds to the
-    #   constructor.
     def __int__(self):
+        """Get an integer representation of this duration.
+        
+        The integer contains the number of seconds in the duration. Convert it
+        back to a Duration instance by providing the number of seconds to the
+        constructor.
+        """
+
         return self._days * 3600 * 24 + self._hours * 3600 + self._minutes * 60 + self._seconds

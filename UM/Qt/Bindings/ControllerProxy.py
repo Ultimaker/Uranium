@@ -79,12 +79,14 @@ class ControllerProxy(QObject):
     def setCameraZoomFactor(self, camera_zoom_factor: float = 0) -> None:
         self._controller.setCameraZoomFactor(camera_zoom_factor)
 
-    ##  Changes the position of the origin of the camera.
-    #   \param coordinate The new origin of the camera. Use either:
-    #     "home": The centre of the build plate.
-    #     "3d": The centre of the build volume.
     @pyqtSlot(str)
     def setCameraOrigin(self, coordinate: str) -> None:
+        """Changes the position of the origin of the camera.
+        :param coordinate: The new origin of the camera. Use either:
+                           "home": The centre of the build plate.
+                           "3d": The centre of the build volume.
+        """
+
         self._controller.setCameraOrigin(coordinate)
 
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])

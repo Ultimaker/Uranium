@@ -14,9 +14,10 @@ from UM.Scene.Camera import Camera
 from typing import Optional
 
 
-##  QQuickWindow subclass that provides the main window.
 @signalemitter
 class MainWindow(QQuickWindow):
+    """QQuickWindow subclass that provides the main window."""
+
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
 

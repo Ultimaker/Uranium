@@ -5,8 +5,9 @@ from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from UM.View.GL.OpenGLContext import OpenGLContext
 
 
-##  Expose OpenGLContext functions to qml.
 class OpenGLContextProxy(QObject):
+    """Expose OpenGLContext functions to qml."""
+
     dummySignal = pyqtSignal(int, arguments = ["state"])
 
     @pyqtProperty(bool, notify = dummySignal)

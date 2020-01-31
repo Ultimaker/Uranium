@@ -7,8 +7,9 @@ from UM.InputDevice import InputDevice
 from UM.Event import MouseEvent, WheelEvent
 
 
-##  An InputDevice subclass that processes Qt mouse events and returns a UM.Event.MouseEvent
 class QtMouseDevice(InputDevice):
+    """An InputDevice subclass that processes Qt mouse events and returns a UM.Event.MouseEvent"""
+
     def __init__(self, window):
         super().__init__()
         self._x = None
