@@ -51,26 +51,32 @@ def _isTraceEnabled() -> bool:
     return "URANIUM_TRACE_SETTINGINSTANCE" in os.environ
 
 
-##  The state of the instance
-#
-#   This enum describes which state the instance is in. The state describes
-#   how the instance got its value.
 class InstanceState(enum.IntEnum):
+    """The state of the instance
+    
+    This enum describes which state the instance is in. The state describes
+    how the instance got its value.
+    """
+
     Default = 1  ## Default state, no value has been set.
     Calculated = 2  ## Value is the result of calculations in a SettingFunction object.
     User = 3  ## Value is the result of direct user interaction.
 
 
-##  Encapsulates all state of a setting.
-#
-#   The SettingInstance class contains all state related to a setting.
 @signalemitter
 class SettingInstance:
-    ##  Constructor.
-    #
-    #   \param definition The SettingDefinition object this is an instance of.
-    #   \param container The container of this instance. Needed for relation handling.
+    """Encapsulates all state of a setting.
+    
+    The SettingInstance class contains all state related to a setting.
+    """
+
     def __init__(self, definition: SettingDefinition, container: ContainerInterface, *args: Any, **kwargs: Any) -> None:
+        """Constructor.
+        
+        :param definition: The SettingDefinition object this is an instance of.
+        :param container: The container of this instance. Needed for relation handling.
+        """
+
         super().__init__()
 
         self._definition = definition  # type: SettingDefinition
@@ -86,17 +92,18 @@ class SettingInstance:
 
         self.__property_values = {}  # type: Dict[str, Any]
 
-    ##  Get a list of all supported property names
     def getPropertyNames(self) -> Iterable[str]:
+        """Get a list of all supported property names"""
+
         return self.__property_values.keys()
 
-    ##  Copies the setting instance and all its properties and state.
-    #
-    #   The definition and the instance container containing this instance are
-    #   not deep-copied but just taken over from the original, since they are
-    #   seen as back-links. Please set them correctly after deep-copying this
-    #   instance.
     def __deepcopy__(self, memo: Dict[int, Dict[str, Any]]) -> "SettingInstance":
+        """Copies the setting instance and all its properties and state.
+        
+        The definition and the instance container containing this instance are not deep-copied but just taken over from
+        the original, since they are seen as back-links. Please set them correctly after deep-copying this instance.
+        """
+
         result = SettingInstance(self._definition, self._container)
         result._visible = self._visible
         result._validator = copy.deepcopy(self._validator, memo) #type: ignore #I give up trying to get the type of deepcopy argument 1 right.
@@ -185,25 +192,29 @@ class SettingInstance:
             else:
                 raise AttributeError("No property {0} defined".format(name))
 
-    ##  Emitted whenever a property of this instance changes.
-    #
-    #   \param instance The instance that reported the property change (usually self).
-    #   \param property The name of the property that changed.
     propertyChanged = Signal()
+    """Emitted whenever a property of this instance changes.
+    
+    :param instance: The instance that reported the property change (usually self).
+    :param property: The name of the property that changed.
+    """
 
-    ##  The SettingDefinition this instance maintains state for.
     @property
     def definition(self) -> SettingDefinition:
+        """The SettingDefinition this instance maintains state for."""
+
         return self._definition
 
-    ##  The container of this instance.
     @property
     def container(self) -> ContainerInterface:
+        """The container of this instance."""
+
         return self._container
 
-    ##  Get the state of validation of this instance.
     @property
     def validationState(self) -> Optional[Validator]:
+        """Get the state of validation of this instance."""
+
         return self._validator
 
     @property
@@ -216,9 +227,10 @@ class SettingInstance:
     def __repr__(self) -> str:
         return "<SettingInstance (0x{0:x}) definition={1} container={2}>".format(id(self), self._definition, self._container)
 
-    ## protected:
     @call_if_enabled(_traceRelations, _isTraceEnabled())
     def updateRelations(self, container: ContainerInterface, emit_signals: bool = True) -> None:
+        """protected:"""
+
         property_names = SettingDefinition.getPropertyNames()
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
@@ -239,11 +251,14 @@ class SettingInstance:
                     if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
                         container.propertyChanged.emit(relation.target.key, "validationState")
 
-    ##  Recursive function to put all settings that require eachother for changes of a property value in a list
-    #   \param relations_set \type{set} Set of keys (strings) of settings that are influenced
-    #   \param relations list of relation objects that need to be checked.
-    #   \param role name of the property value of the settings
     def _addRelations(self, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], role: str) -> None:
+        """Recursive function to put all settings that require eachother for changes of a property value in a list
+
+        :param relations_set: :type{set} Set of keys (strings) of settings that are influenced
+        :param relations: list of relation objects that need to be checked.
+        :param role: name of the property value of the settings
+        """
+
         for relation in filter(lambda r: r.role == role, relations):
             if relation.type == RelationType.RequiresTarget:
                 continue

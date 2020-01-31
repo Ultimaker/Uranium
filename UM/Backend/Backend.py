@@ -168,7 +168,7 @@ class Backend(PluginObject):
         self._logSocketState(state)
         if state == Arcus.SocketState.Listening:
             if not UM.Application.Application.getInstance().getUseExternalBackend():
-                self.starte
+                self.startEngine()
         elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()

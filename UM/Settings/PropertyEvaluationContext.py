@@ -4,12 +4,14 @@
 from collections import deque
 
 
-##  Context for evaluating a property value
-#   It contains:
-#     1. a stack of containers during the evaluation in the function call stack fashion
-#     2. a context dictionary which contains all the current context
-#
 class PropertyEvaluationContext:
+    """Context for evaluating a property value
+
+    It contains:
+    1. a stack of containers during the evaluation in the function call stack fashion
+    2. a context dictionary which contains all the current context
+    """
+
 
     def __init__(self, source_stack = None):
         self.stack_of_containers = deque()
