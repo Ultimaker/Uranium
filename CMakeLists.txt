@@ -10,7 +10,7 @@ include(UraniumTranslationTools)
 
 include(GNUInstallDirs)
 
-find_package(PythonInterp 3.5.0 REQUIRED)
+find_package(PythonInterp 3 REQUIRED)
 
 # # Checks using pylint
 # Note that we use exit 0 here to not mark the build as a failure on check failure

@@ -153,6 +153,9 @@ class Application:
         Resources.ApplicationIdentifier = self._app_name
         Resources.ApplicationVersion = self._version
 
+        app_root = os.path.abspath(os.path.join(os.path.dirname(sys.executable)))
+        Resources.addSearchPath(os.path.join(app_root, "share", "uranium", "resources"))
+
         Resources.addSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
         Resources.addSearchPath(os.path.join(self._app_install_dir, "share", "uranium", "resources"))
         Resources.addSearchPath(os.path.join(self._app_install_dir, "Resources", "uranium", "resources"))
@@ -179,6 +182,9 @@ class Application:
         self._operation_stack = OperationStack(self._controller)
 
         self._plugin_registry = PluginRegistry(self)
+
+        self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "uranium", "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "cura", "plugins"))
 
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib", "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib64", "uranium"))
