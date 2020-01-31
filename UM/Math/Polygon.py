@@ -9,16 +9,19 @@ from UM.Logger import Logger
 from UM.Math import NumPyUtil
 from UM.Math import ShapelyUtil
 
-##  A class representing an immutable arbitrary 2-dimensional polygon.
 class Polygon:
-    ##  Return vertices from an approximate circle.
-    #
-    #   An octagon is returned, which comes close enough to a circle.
-    #
-    #   \param radius The radius of the circle.
-    #   \return A polygon that approximates a circle.
+    """A class representing an immutable arbitrary 2-dimensional polygon."""
+
     @staticmethod
     def approximatedCircle(radius):
+        """Return vertices from an approximate circle.
+        
+        An octagon is returned, which comes close enough to a circle.
+        
+        :param radius: The radius of the circle.
+        :return: A polygon that approximates a circle.
+        """
+
         return Polygon(points = numpy.array([
             [-radius, 0],
             [-radius * 0.707, radius * 0.707],
@@ -45,13 +48,15 @@ class Polygon:
             return False
         return numpy.array_equal(self._points, other.getPoints())
 
-    ##  Gives a debugging representation of the polygon.
-    #
-    #   This lists the polygon's coordinates, like so::
-    #     [[0,0], [1,3], [3,0]]
-    #
-    #   \return A representation of the polygon that is useful for debugging.
     def __repr__(self):
+        """Gives a debugging representation of the polygon.
+        
+        This lists the polygon's coordinates, like so::
+        [[0,0], [1,3], [3,0]]
+        
+        :return: A representation of the polygon that is useful for debugging.
+        """
+
         coordinates = (("[" + str(point[0]) + "," + str(point[1]) + "]") for point in self._points)
         return "[" + ", ".join(coordinates) + "]"
 
@@ -61,12 +66,14 @@ class Polygon:
     def getPoints(self) -> numpy.array:
         return self._points
 
-    ##  Project this polygon on a line described by a normal.
-    #
-    #   \param normal The normal to project on.
-    #   \return A tuple describing the line segment of this Polygon projected on to the infinite line described by normal.
-    #           The first element is the minimum value, the second the maximum.
     def project(self, normal) -> Tuple[float, float]:
+        """Project this polygon on a line described by a normal.
+        
+        :param normal: The normal to project on.
+        :return: A tuple describing the line segment of this Polygon projected on to the infinite line described by normal.
+        The first element is the minimum value, the second the maximum.
+        """
+
         projection_min = numpy.dot(normal, self._points[0])
 
         projection_max = projection_min
@@ -77,21 +84,25 @@ class Polygon:
 
         return projection_min, projection_max
 
-    ##  Moves the polygon by a fixed offset.
-    #
-    #   \param x The distance to move along the X-axis.
-    #   \param y The distance to move along the Y-axis.
     def translate(self, x: float = 0, y: float = 0) -> "Polygon":
+        """Moves the polygon by a fixed offset.
+        
+        :param x: The distance to move along the X-axis.
+        :param y: The distance to move along the Y-axis.
+        """
+
         if self.isValid():
             return Polygon(numpy.add(self._points, numpy.array([[x, y]])))
         else:
             return self
 
-    ##  Mirrors this polygon across the specified axis.
-    #
-    #   \param point_on_axis A point on the axis to mirror across.
-    #   \param axis_direction The direction vector of the axis to mirror across.
     def mirror(self, point_on_axis: List[float], axis_direction: List[float]) -> "Polygon":
+        """Mirrors this polygon across the specified axis.
+        
+        :param point_on_axis: A point on the axis to mirror across.
+        :param axis_direction: The direction vector of the axis to mirror across.
+        """
+
         # Input checking.
         if axis_direction == [0, 0]:
             Logger.log("w", "Tried to mirror a polygon over an axis with direction [0, 0].")
@@ -122,12 +133,14 @@ class Polygon:
         point_matrix += point_on_axis
         return Polygon(point_matrix.getA()[::-1])
 
-    ##  Computes the intersection of the convex hulls of this and another
-    #   polygon.
-    #
-    #   \param other The other polygon to intersect convex hulls with.
-    #   \return The intersection of the two polygons' convex hulls.
     def intersectionConvexHulls(self, other: "Polygon") -> "Polygon":
+        """Computes the intersection of the convex hulls of this and another
+        polygon.
+        
+        :param other: The other polygon to intersect convex hulls with.
+        :return: The intersection of the two polygons' convex hulls.
+        """
+
         me = self.getConvexHull()
         him = other.getConvexHull()
 
@@ -169,11 +182,13 @@ class Polygon:
 
         return Polygon(points = [list(p) for p in polygon_union.exterior.coords[:-1]])
 
-    ##  Check to see whether this polygon intersects with another polygon.
-    #
-    #   \param other \type{Polygon} The polygon to check for intersection.
-    #   \return A tuple of the x and y distance of intersection, or None if no intersection occured.
     def intersectsPolygon(self, other: "Polygon") -> Optional[Tuple[float, float]]:
+        """Check to see whether this polygon intersects with another polygon.
+        
+        :param other: :type{Polygon} The polygon to check for intersection.
+        :return: A tuple of the x and y distance of intersection, or None if no intersection occured.
+        """
+
         if not self.isValid() or not other.isValid():
             return None
 
@@ -192,9 +207,12 @@ class Polygon:
                         )
         return ret_size
 
-    ##  Calculate the convex hull around the set of points of this polygon.
-    #   \return The convex hull around the points of this polygon.
     def getConvexHull(self) -> "Polygon":
+        """Calculate the convex hull around the set of points of this polygon.
+
+        :return: The convex hull around the points of this polygon.
+        """
+
         points = self._points
 
         if len(points) < 1:
@@ -209,11 +227,13 @@ class Polygon:
 
         return Polygon(numpy.flipud(hull.points[hull.vertices]))
 
-    ##  Perform a Minkowski sum of this polygon with another polygon.
-    #
-    #   \param other The polygon to perform a Minkowski sum with.
-    #   \return \type{Polygon} The Minkowski sum of this polygon with other.
     def getMinkowskiSum(self, other: "Polygon") -> "Polygon":
+        """Perform a Minkowski sum of this polygon with another polygon.
+        
+        :param other: The polygon to perform a Minkowski sum with.
+        :return: :type{Polygon} The Minkowski sum of this polygon with other.
+        """
+
         points = numpy.zeros((len(self._points) * len(other._points), 2))
         for n in range(0, len(self._points)):
             for m in range(0, len(other._points)):
@@ -221,25 +241,29 @@ class Polygon:
 
         return Polygon(points)
 
-    ##  Create a Minkowski hull from this polygon and another polygon.
-    #
-    #   The Minkowski hull is the convex hull around the Minkowski sum of this
-    #   polygon with other.
-    #
-    #   \param other \type{Polygon} The Polygon to do a Minkowski addition with.
-    #   \return The convex hull around the Minkowski sum of this Polygon with other
     def getMinkowskiHull(self, other: "Polygon") -> "Polygon":
+        """Create a Minkowski hull from this polygon and another polygon.
+        
+        The Minkowski hull is the convex hull around the Minkowski sum of this
+        polygon with other.
+        
+        :param other: :type{Polygon} The Polygon to do a Minkowski addition with.
+        :return: The convex hull around the Minkowski sum of this Polygon with other
+        """
+
         sum = self.getMinkowskiSum(other)
         return sum.getConvexHull()
 
-    ##  Whether the specified point is inside this polygon.
-    #
-    #   If the point is exactly on the border or on a vector, it does not count
-    #   as being inside the polygon.
-    #
-    #   \param point The point to check of whether it is inside.
-    #   \return True if it is inside, or False otherwise.
     def isInside(self, point) -> bool:
+        """Whether the specified point is inside this polygon.
+        
+        If the point is exactly on the border or on a vector, it does not count
+        as being inside the polygon.
+        
+        :param point: The point to check of whether it is inside.
+        :return: True if it is inside, or False otherwise.
+        """
+
         for i in range(0, len(self._points)):
             if self._isRightTurn(self._points[i], self._points[(i + 1) % len(self._points)], point) == -1: #Outside this halfplane!
                 return False

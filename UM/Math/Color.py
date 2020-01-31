@@ -4,10 +4,12 @@
 from typing import Union
 
 
-##  An RGBA color value.
-#
-#   This class represents an RGBA color value, in the range of 0.0 to 1.0.
 class Color:
+    """An RGBA color value.
+    
+    This class represents an RGBA color value, in the range of 0.0 to 1.0.
+    """
+
     def __init__(self, r: Union[int, float] = 0, g: Union[int, float] = 0, b: Union[int, float] = 0, a: Union[int, float] = 0) -> None:
         self._r = r if type(r) is float else r / 255    # type: float
         self._g = g if type(g) is float else g / 255    # type: float
@@ -65,12 +67,14 @@ class Color:
     def __repr__(self):
         return "Color(r = {0}, g = {1}, b = {2}, a = {3})".format(self._r, self._g, self._b, self._a)
 
-    ##  Returns a new Color constructed from a 32-bit integer in ARGB order.
-    #
-    #   \param value A 32-bit integer representing a color in ARGB order.
-    #   \return A Color constructed from the components of value.
     @staticmethod
     def fromARGB(value):
+        """Returns a new Color constructed from a 32-bit integer in ARGB order.
+        
+        :param value: A 32-bit integer representing a color in ARGB order.
+        :return: A Color constructed from the components of value.
+        """
+
         return Color(
             (value & 0x00ff0000) >> 16,
             (value & 0x0000ff00) >> 8,
@@ -104,12 +108,14 @@ class Color:
     def dropHightBits(color):
         return Color.fromARGBLowBits(color.get32BitValue())
 
-    ##  Returns a new Color constructed from a 7- or 9-character string "#RRGGBB" or "#AARRGGBB" format.
-    #
-    #   \param value A 7- or 9-character string representing a color in "#RRGGBB" or "#AARRGGBB" format.
-    #   \return A Color constructed from the components of value.
     @staticmethod
     def fromHexString(value):
+        """Returns a new Color constructed from a 7- or 9-character string "#RRGGBB" or "#AARRGGBB" format.
+        
+        :param value: A 7- or 9-character string representing a color in "#RRGGBB" or "#AARRGGBB" format.
+        :return: A Color constructed from the components of value.
+        """
+
         if len(value) == 9:
             return Color(
                 int(value[3:5], 16) / 255,

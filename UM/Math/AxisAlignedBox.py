@@ -10,8 +10,9 @@ import numpy
 from typing import Optional, Tuple, Union
 
 
-## Axis aligned bounding box.
 class AxisAlignedBox:
+    """Axis aligned bounding box."""
+
     class IntersectionResult:
         NoIntersection = 1
         PartialIntersection = 2
@@ -112,17 +113,21 @@ class AxisAlignedBox:
     def maximum(self) -> Vector:
         return self._max
 
-    ##  Check if the bounding box is valid.
-    #   Uses fuzzycompare to validate.
-    #   \sa Float::fuzzyCompare()
     def isValid(self) -> bool:
+        """Check if the bounding box is valid.
+        Uses fuzzycompare to validate.
+        :sa Float::fuzzyCompare()
+        """
+
         return not(Float.fuzzyCompare(self._min.x, self._max.x) or
                    Float.fuzzyCompare(self._min.y, self._max.y) or
                    Float.fuzzyCompare(self._min.z, self._max.z))
 
-    ##  Intersect the bounding box with a ray
-    #   \sa Ray
     def intersectsRay(self, ray: Ray) -> Union[Tuple[float, float], bool]:
+        """Intersect the bounding box with a ray
+        :sa Ray
+        """
+
         inv = ray.inverseDirection
 
         t = numpy.empty((2,3), dtype=numpy.float32)
@@ -144,11 +149,13 @@ class AxisAlignedBox:
         else:
             return False
 
-    ##  Check to see if this box intersects another box.
-    #
-    #   \param box The box to check for intersection.
-    #   \return \type{IntersectionResult} NoIntersection when no intersection occurs, PartialIntersection when partially intersected, FullIntersection when box is fully contained inside this box.
     def intersectsBox(self, box: "AxisAlignedBox") -> int:
+        """Check to see if this box intersects another box.
+        
+        :param box: The box to check for intersection.
+        :return: NoIntersection when no intersection occurs, PartialIntersection when partially intersected, FullIntersection when box is fully contained inside this box.
+        """
+
         if self._min.x > box._max.x or box._min.x > self._max.x:
             return self.IntersectionResult.NoIntersection
 
@@ -163,7 +170,6 @@ class AxisAlignedBox:
 
         return self.IntersectionResult.PartialIntersection
 
-    ##  private:
     def __repr__(self) -> str:
         return "AxisAlignedBox(min = {0}, max = {1})".format(self._min, self._max)
 

@@ -19,8 +19,9 @@ from UM.Platform import Platform
 import Arcus
 
 
-##  The current processing state of the backend.
 class BackendState(IntEnum):
+    """The current processing state of the backend."""
+
     NotStarted = 1
     Processing = 2
     Done = 3
@@ -28,11 +29,13 @@ class BackendState(IntEnum):
     Disabled = 5
 
 
-##      Base class for any backend communication (separate piece of software).
-#       It makes use of the Socket class from libArcus for the actual communication bits.
-#       The message_handlers dict should be filled with string (full name of proto message), function pairs.
 @signalemitter
 class Backend(PluginObject):
+    """Base class for any backend communication (separate piece of software).
+    It makes use of the Socket class from libArcus for the actual communication bits.
+    The message_handlers dict should be filled with string (full name of proto message), function pairs.
+    """
+
     def __init__(self):
         super().__init__()  # Call super to make multiple inheritance work.
         self._supported_commands = {}
@@ -59,9 +62,11 @@ class Backend(PluginObject):
             self._backend_state = new_state
             self.backendStateChange.emit(self._backend_state)
 
-    ##   \brief Start the backend / engine.
-    #   Runs the engine, this is only called when the socket is fully opened & ready to accept connections
     def startEngine(self):
+        """:brief Start the backend / engine.
+        Runs the engine, this is only called when the socket is fully opened & ready to accept connections
+        """
+
         command = self.getEngineCommand()
         if not command:
             self._createSocket()
@@ -101,20 +106,22 @@ class Backend(PluginObject):
         Logger.log("d", "[Backend] " + line_str.strip())
         self._backend_log.append(line)
 
-    ##  Get the logging messages of the backend connection.
-    #   \returns  
     def getLog(self):
+        """Get the logging messages of the backend connection."""
+
         if self._backend_log_max_lines and type(self._backend_log_max_lines) == int:
             while len(self._backend_log) >= self._backend_log_max_lines:
                 del(self._backend_log[0])
         return self._backend_log
     
-    ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
+        """Get the command used to start the backend executable """
+
         return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
 
-    ##  Start the (external) backend process.
     def _runEngineProcess(self, command_list) -> Optional[subprocess.Popen]:
+        """Start the (external) backend process."""
+
         kwargs = {} #type: Dict[str, Any]
         if sys.platform == "win32":
             su = subprocess.STARTUPINFO()
@@ -155,18 +162,20 @@ class Backend(PluginObject):
                 break
             self._backendLog(line)
 
-    ##  Private socket state changed handler.
     def _onSocketStateChanged(self, state):
+        """Private socket state changed handler."""
+
         self._logSocketState(state)
         if state == Arcus.SocketState.Listening:
             if not UM.Application.Application.getInstance().getUseExternalBackend():
-                self.startEngine()
+                self.starte
         elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()
 
-    ## Debug function created to provide more info for CURA-2127
     def _logSocketState(self, state):
+        """Debug function created to provide more info for CURA-2127"""
+
         if state == Arcus.SocketState.Listening:
             Logger.log("d", "Socket state changed to Listening")
         elif state == Arcus.SocketState.Connecting:
@@ -180,8 +189,9 @@ class Backend(PluginObject):
         elif state == Arcus.SocketState.Closed:
             Logger.log("d", "Socket state changed to Closed")
 
-    ##  Private message handler
     def _onMessageReceived(self):
+        """Private message handler"""
+
         message = self._socket.takeNextMessage()
 
         if message.getTypeName() not in self._message_handlers:
@@ -190,8 +200,9 @@ class Backend(PluginObject):
 
         self._message_handlers[message.getTypeName()](message)
     
-    ##  Private socket error handler   
     def _onSocketError(self, error):
+        """Private socket error handler"""
+
         if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
             self._port += 1
             Logger.log("d", "Socket was unable to bind to port, increasing port number to %s", self._port)
@@ -205,8 +216,9 @@ class Backend(PluginObject):
 
         self._createSocket()
 
-    ##  Creates a socket and attaches listeners.
     def _createSocket(self, protocol_file):
+        """Creates a socket and attaches listeners."""
+
         if self._socket:
             Logger.log("d", "Previous socket existed. Closing that first.") # temp debug logging
             self._socket.stateChanged.disconnect(self._onSocketStateChanged)

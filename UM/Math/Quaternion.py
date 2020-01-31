@@ -10,15 +10,17 @@ from UM.Math.Vector import Vector
 from UM.Math.Float import Float
 from UM.Math.Matrix import Matrix
 
-##  Unit Quaternion class based on numpy arrays.
-#
-#   This class represents a Unit quaternion that can be used for rotations.
-#
-#   \note The operations that modify this quaternion will ensure the length
-#         of the quaternion remains 1. This is done to make this class simpler
-#         to use.
-#
 class Quaternion:
+    """Unit Quaternion class based on numpy arrays.
+    
+    This class represents a Unit quaternion that can be used for rotations.
+    
+    :note The operations that modify this quaternion will ensure the length
+    of the quaternion remains 1. This is done to make this class simpler
+    to use.
+    
+    """
+
     EPS = numpy.finfo(float).eps * 4.0
 
     def __init__(self, x: float = 0.0, y: float = 0.0, z: float = 0.0, w: float = 1.0) -> None:
@@ -44,11 +46,13 @@ class Quaternion:
     def w(self):
         return self._data[3]
 
-    ##  Set quaternion by providing rotation about an axis.
-    #
-    #   \param angle \type{float} Angle in radians
-    #   \param axis \type{Vector} Axis of rotation
     def setByAngleAxis(self, angle: float, axis: Vector) -> None:
+        """Set quaternion by providing rotation about an axis.
+        
+        :param angle: :type{float} Angle in radians
+        :param axis: :type{Vector} Axis of rotation
+        """
+
         a = axis.normalized().getData()
         halfAngle = angle / 2.0
         self._data[3] = math.cos(halfAngle)
@@ -143,10 +147,13 @@ class Quaternion:
     def normalize(self) -> None:
         self._data /= numpy.linalg.norm(self._data)
 
-    ## Set quaternion by providing a homogeneous (4x4) rotation matrix.
-    # \param matrix 4x4 Matrix object
-    # \param ensure_unit_length
     def setByMatrix(self, matrix: Matrix, ensure_unit_length: bool = False) -> None:
+        """Set quaternion by providing a homogeneous (4x4) rotation matrix.
+
+        :param matrix: 4x4 Matrix object
+        :param ensure_unit_length:
+        """
+
         trace = matrix.at(0, 0) + matrix.at(1, 1) + matrix.at(2, 2)
         if trace > 0.0:
             self._data[0] = matrix.at(2, 1) - matrix.at(1, 2)
@@ -228,12 +235,14 @@ class Quaternion:
         rho = math.acos(start.dot(end))
         return (start * math.sin((1 - amount) * rho) + end * math.sin(amount * rho)) / math.sin(rho)
 
-    ##  Returns a quaternion representing the rotation from vector 1 to vector 2.
-    #
-    #   \param v1 \type{Vector} The vector to rotate from.
-    #   \param v2 \type{Vector} The vector to rotate to.
     @staticmethod
     def rotationTo(v1, v2):
+        """Returns a quaternion representing the rotation from vector 1 to vector 2.
+        
+        :param v1: :type{Vector} The vector to rotate from.
+        :param v2: :type{Vector} The vector to rotate to.
+        """
+
         d = v1.dot(v2)
 
         if d >= 1.0:
