@@ -68,7 +68,8 @@ class VersionUpgradeManager:
         super().__init__()
 
         self._application = application
-        self._version_upgrades = {} # type: Dict[Tuple[str, int], Set[Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]]   # For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
+        ## For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
+        self._version_upgrades = {} # type: Dict[Tuple[str, int], Set[Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]]
 
         # For each config type, gives a function with which to get the version number from those files.
         self._get_version_functions = {}  # type: Dict[str, Callable[[str], int]]
@@ -142,22 +143,15 @@ class VersionUpgradeManager:
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     #
-    #   \return True if anything was upgraded, or False if it was already up to
-    #   date.
-    def upgrade(self) -> bool:
+    def upgrade(self):
         Logger.log("i", "Looking for old configuration files to upgrade.")
         self._upgrade_tasks.extend(self._getUpgradeTasks())     # Get the initial files to upgrade.
         self._upgrade_routes = self._findShortestUpgradeRoutes()  # Pre-compute the upgrade routes.
 
-        upgraded = False  # Did we upgrade something?
         while self._upgrade_tasks:
             upgrade_task = self._upgrade_tasks.popleft()
             self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type)  # Upgrade this file.
             QCoreApplication.processEvents()  # Ensure that the GUI does not freeze.
-        if upgraded:
-            message = UM.Message.Message(text = catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", Application.getInstance().getApplicationName()), title = catalogue.i18nc("@info:title", "Version Upgrade"))
-            message.show()
-        return upgraded
 
     ##  Schedules an additional file for upgrading.
     #
