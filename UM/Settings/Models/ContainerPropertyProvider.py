@@ -11,11 +11,13 @@ from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Settings.DefinitionContainer import DefinitionContainer
 
 
-##  This class provides the value and change notifications for the properties of a single setting
-#
-#   This class provides the property values through QObject dynamic properties so that they
-#   are available from QML.
 class ContainerPropertyProvider(QObject):
+    """This class provides the value and change notifications for the properties of a single setting
+    
+    This class provides the property values through QObject dynamic properties so that they
+    are available from QML.
+    """
+
     def __init__(self, parent = None):
         super().__init__(parent = parent)
 
@@ -25,8 +27,9 @@ class ContainerPropertyProvider(QObject):
         self._watched_properties = []
         self._property_values = {}
 
-    ##  Set the containerId property.
     def setContainerId(self, container_id):
+        """Set the containerId property."""
+
         if container_id == self._container_id:
             return # No change.
 
@@ -48,52 +51,62 @@ class ContainerPropertyProvider(QObject):
         self._update()
         self.containerIdChanged.emit()
 
-    ##  Emitted when the containerId property changes.
     containerIdChanged = pyqtSignal()
-    ##  The ID of the container we should query for property values.
+    """Emitted when the containerId property changes."""
     @pyqtProperty(str, fset = setContainerId, notify = containerIdChanged)
     def containerId(self):
+        """The ID of the container we should query for property values."""
+
         return self._container_id
 
-    ##  Set the watchedProperties property.
     def setWatchedProperties(self, properties):
+        """Set the watchedProperties property."""
+
         if properties != self._watched_properties:
             self._watched_properties = properties
             self._update()
             self.watchedPropertiesChanged.emit()
 
-    ##  Emitted when the watchedProperties property changes.
     watchedPropertiesChanged = pyqtSignal()
-    ##  A list of property names that should be watched for changes.
+    """Emitted when the watchedProperties property changes."""
+
     @pyqtProperty("QVariantList", fset = setWatchedProperties, notify = watchedPropertiesChanged)
     def watchedProperties(self):
+        """A list of property names that should be watched for changes."""
+
         return self._watched_properties
 
-    ##  Set the key property.
     def setKey(self, key):
+        """Set the key property."""
+
         if key != self._key:
             self._key = key
             self._update()
             self.keyChanged.emit()
 
-    ##  Emitted when the key property changes.
     keyChanged = pyqtSignal()
-    ##  The key of the setting that we should provide property values for.
+    """Emitted when the key property changes."""
+
     @pyqtProperty(str, fset = setKey, notify = keyChanged)
     def key(self):
+        """The key of the setting that we should provide property values for."""
+
         return self._key
 
     propertiesChanged = pyqtSignal()
+
     @pyqtProperty("QVariantMap", notify = propertiesChanged)
     def properties(self):
         return self._property_values
 
-    ##  Set the value of a property.
-    #
-    #   \param property_name The name of the property to set.
-    #   \param property_value The value of the property to set.
     @pyqtSlot(str, "QVariant")
     def setPropertyValue(self, property_name, property_value):
+        """Set the value of a property.
+        
+        :param property_name: The name of the property to set.
+        :param property_value: The value of the property to set.
+        """
+
         if not self._container or not self._key:
             return
 

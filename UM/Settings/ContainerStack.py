@@ -49,15 +49,18 @@ MimeTypeDatabase.addMimeType(
 )
 
 
-##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
 class ContainerStack(QObject, ContainerInterface, PluginObject):
+    """A stack of setting containers to handle setting value retrieval."""
+
     Version = 4  # type: int
 
-    ##  Constructor
-    #
-    #   \param stack_id A unique, machine readable/writable ID.
     def __init__(self, stack_id: str) -> None:
+        """Constructor
+        
+        :param stack_id: A unique, machine readable/writable ID.
+        """
+
         super().__init__()
         QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
@@ -77,49 +80,61 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._property_changes = {}  # type: Dict[str, Set[str]]
         self._emit_property_changed_queued = False  # type: bool
 
-    ##  For pickle support
     def __getnewargs__(self) -> Tuple[str]:
+        """For pickle support"""
+
         return (self.getId(),)
 
-    ##  For pickle support
     def __getstate__(self) -> Dict[str, Any]:
+        """For pickle support"""
+
         return self.__dict__
 
-    ##  For pickle support
     def __setstate__(self, state: Dict[str, Any]) -> None:
+        """For pickle support"""
+
         self.__dict__.update(state)
 
-    ##  \copydoc ContainerInterface::getId
-    #
-    #   Reimplemented from ContainerInterface
     def getId(self) -> str:
+        """:copydoc ContainerInterface::getId
+        
+        Reimplemented from ContainerInterface
+        """
+
         return cast(str, self._metadata["id"])
 
     id = pyqtProperty(str, fget = getId, constant = True)
 
-    ##  \copydoc ContainerInterface::getName
-    #
-    #   Reimplemented from ContainerInterface
     def getName(self) -> str:
+        """:copydoc ContainerInterface::getName
+        
+        Reimplemented from ContainerInterface
+        """
+
         return str(self._metadata["name"])
 
-    ##  Set the name of this stack.
-    #
-    #   \param name \type{string} The new name of the stack.
     def setName(self, name: str) -> None:
+        """Set the name of this stack.
+        
+        :param name: The new name of the stack.
+        """
+
         if name != self.getName():
             self._metadata["name"] = name
             self.nameChanged.emit()
             self.metaDataChanged.emit(self)
 
-    ##  Emitted whenever the name of this stack changes.
     nameChanged = pyqtSignal()
+    """Emitted whenever the name of this stack changes."""
+
     name = pyqtProperty(str, fget = getName, fset = setName, notify = nameChanged)
 
-    ##  \copydoc ContainerInterface::isReadOnly
-    #
-    #   Reimplemented from ContainerInterface
     def isReadOnly(self) -> bool:
+        """:copydoc ContainerInterface::isReadOnly
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._read_only
 
     def setReadOnly(self, read_only: bool) -> None:
@@ -130,14 +145,17 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     readOnlyChanged = pyqtSignal()
     readOnly = pyqtProperty(bool, fget = isReadOnly, fset = setReadOnly, notify = readOnlyChanged)
 
-    ##  \copydoc ContainerInterface::getMetaData
-    #
-    #   Reimplemented from ContainerInterface
     def getMetaData(self) -> Dict[str, Any]:
+        """:copydoc ContainerInterface::getMetaData
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._metadata
 
-    ##  Set the complete set of metadata
     def setMetaData(self, meta_data: Dict[str, Any]) -> None:
+        """Set the complete set of metadata"""
+
         if meta_data == self.getMetaData():
             return #Unnecessary.
 
@@ -156,10 +174,12 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     metaDataChanged = pyqtSignal(QObject)
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
 
-    ##  \copydoc ContainerInterface::getMetaDataEntry
-    #
-    #   Reimplemented from ContainerInterface
     def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
+        """:copydoc ContainerInterface::getMetaDataEntry
+        
+        Reimplemented from ContainerInterface
+        """
+
         value = self._metadata.get(entry, None)
 
         if value is None:
@@ -192,20 +212,22 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     containersChanged = Signal()
 
-    ##  \copydoc ContainerInterface::getProperty
-    #
-    #   Reimplemented from ContainerInterface.
-    #
-    #   getProperty will start at the top of the stack and try to get the property
-    #   specified. If that container returns no value, the next container on the
-    #   stack will be tried and so on until the bottom of the stack is reached.
-    #   If a next stack is defined for this stack it will then try to get the
-    #   value from that stack. If no next stack is defined, None will be returned.
-    #
-    #   Note that if the property value is a function, this method will return the
-    #   result of evaluating that property with the current stack. If you need the
-    #   actual function, use getRawProperty()
     def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
+        """:copydoc ContainerInterface::getProperty
+        
+        Reimplemented from ContainerInterface.
+        
+        getProperty will start at the top of the stack and try to get the property
+        specified. If that container returns no value, the next container on the
+        stack will be tried and so on until the bottom of the stack is reached.
+        If a next stack is defined for this stack it will then try to get the
+        value from that stack. If no next stack is defined, None will be returned.
+        
+        Note that if the property value is a function, this method will return the
+        result of evaluating that property with the current stack. If you need the
+        actual function, use getRawProperty()
+        """
+
         value = self.getRawProperty(key, property_name, context = context)
         if isinstance(value, SettingFunction):
             if context is not None:
@@ -216,24 +238,26 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return value
 
-    ##  Retrieve a property of a setting by key and property name.
-    #
-    #   This method does the same as getProperty() except it does not perform any
-    #   special handling of the result, instead the raw stored value is returned.
-    #
-    #   \param key The key to get the property value of.
-    #   \param property_name The name of the property to get the value of.
-    #   \param use_next True if the value should be retrieved from the next
-    #   stack if not found in this stack. False if not.
-    #   \param skip_until_container A container ID to skip to. If set, it will
-    #   be as if all containers above the specified container are empty. If the
-    #   container is not in the stack, it'll try to find it in the next stack.
-    #
-    #   \return The raw property value of the property, or None if not found. Note that
-    #           the value might be a SettingFunction instance.
-    #
-    def getRawProperty(self, key: str, property_name: str, *, context: Optional[PropertyEvaluationContext] = None,
-                       use_next: bool = True, skip_until_container: Optional[ContainerInterface] = None) -> Any:
+    def getRawProperty(self, key: str, property_name: str, *, context: Optional[PropertyEvaluationContext] = None, use_next: bool = True, skip_until_container: Optional[ContainerInterface] = None) -> Any:
+        """Retrieve a property of a setting by key and property name.
+        
+        This method does the same as getProperty() except it does not perform any
+        special handling of the result, instead the raw stored value is returned.
+        
+        :param key: The key to get the property value of.
+        :param property_name: The name of the property to get the value of.
+        :param use_next: True if the value should be retrieved from the next
+        stack if not found in this stack. False if not.
+        :param skip_until_container: A container ID to skip to. If set, it will
+        be as if all containers above the specified container are empty. If the
+        container is not in the stack, it'll try to find it in the next stack.
+        
+        :return: The raw property value of the property, or None if not found. Note that
+        the value might be a SettingFunction instance.
+        
+        """
+
+
         containers = self._containers
         if context is not None:
             # if context is provided, check if there is any container that needs to be skipped.
@@ -263,14 +287,16 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         else:
             return None
 
-    ##  \copydoc ContainerInterface::hasProperty
-    #
-    #   Reimplemented from ContainerInterface.
-    #
-    #   hasProperty will check if any of the containers in the stack has the
-    #   specified property. If it does, it stops and returns True. If it gets to
-    #   the end of the stack, it returns False.
     def hasProperty(self, key: str, property_name: str) -> bool:
+        """:copydoc ContainerInterface::hasProperty
+        
+        Reimplemented from ContainerInterface.
+        
+        hasProperty will check if any of the containers in the stack has the
+        specified property. If it does, it stops and returns True. If it gets to
+        the end of the stack, it returns False.
+        """
+
         for container in self._containers:
             if container.hasProperty(key, property_name):
                 return True
@@ -285,12 +311,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     propertyChanged = Signal(Signal.Queued)
     propertiesChanged = Signal(Signal.Queued)
 
-    ##  \copydoc ContainerInterface::serialize
-    #
-    #   Reimplemented from ContainerInterface
-    #
-    #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
     def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
+        """:copydoc ContainerInterface::serialize
+        
+        Reimplemented from ContainerInterface
+        
+        TODO: Expand documentation here, include the fact that this should _not_ include all containers
+        """
+
         parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
 
         parser["general"] = {}
@@ -315,12 +343,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         parser.write(stream)
         return stream.getvalue()
 
-    ##  Deserializes the given data and checks if the required fields are present.
-    #
-    #   The profile upgrading code depends on information such as "configuration_type" and "version", which come from
-    #   the serialized data. Due to legacy problem, those data may not be available if it comes from an ancient Cura.
     @classmethod
     def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
+        """Deserializes the given data and checks if the required fields are present.
+        
+        The profile upgrading code depends on information such as "configuration_type" and "version", which come from
+        the serialized data. Due to legacy problem, those data may not be available if it comes from an ancient Cura.
+        """
+
         parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values=False)
         parser.read_string(serialized)
 
@@ -357,12 +387,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             Logger.log("d", "Could not get version from serialized: %s", e)
         return version
 
-    ##  \copydoc ContainerInterface::deserialize
-    #
-    #   Reimplemented from ContainerInterface
-    #
-    #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
+        """:copydoc ContainerInterface::deserialize
+        
+        Reimplemented from ContainerInterface
+        
+        TODO: Expand documentation here, include the fact that this should _not_ include all containers
+        """
+
         # Update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
@@ -417,19 +449,21 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return serialized
 
-    ##  Gets the metadata of a container stack from a serialised format.
-    #
-    #   This parses the entire CFG document and only extracts the metadata from
-    #   it.
-    #
-    #   \param serialized A CFG document, serialised as a string.
-    #   \param container_id The ID of the container that we're getting the
-    #   metadata of, as obtained from the file name.
-    #   \return A dictionary of metadata that was in the CFG document as a
-    #   singleton list. If anything went wrong, this returns an empty list
-    #   instead.
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
+        """Gets the metadata of a container stack from a serialised format.
+        
+        This parses the entire CFG document and only extracts the metadata from
+        it.
+        
+        :param serialized: A CFG document, serialised as a string.
+        :param container_id: The ID of the container that we're getting the
+        metadata of, as obtained from the file name.
+        :return: A dictionary of metadata that was in the CFG document as a
+        singleton list. If anything went wrong, this returns an empty list
+        instead.
+        """
+
         serialized = cls._updateSerialized(serialized)  # Update to most recent version.
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
@@ -449,13 +483,15 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return [metadata]
 
-    ##  Get all keys known to this container stack.
-    #
-    #   In combination with getProperty(), you can obtain the current property
-    #   values of all settings.
-    #
-    #   \return A set of all setting keys in this container stack.
     def getAllKeys(self) -> Set[str]:
+        """Get all keys known to this container stack.
+        
+        In combination with getProperty(), you can obtain the current property
+        values of all settings.
+        
+        :return: A set of all setting keys in this container stack.
+        """
+
         keys = set()  # type: Set[str]
         definition_containers = [container for container in self.getContainers() if container.__class__ == DefinitionContainer] #To get all keys, get all definitions from all definition containers.
         for definition_container in cast(List[DefinitionContainer], definition_containers):
@@ -464,65 +500,78 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             keys |= self._next_stack.getAllKeys()
         return keys
 
-    ##  Get a list of all containers in this stack.
-    #
-    #   Note that it returns a shallow copy of the container list, as it's only allowed to change the order or entries
-    #   in this list by the proper functions.
-    #   \return \type{list} A list of all containers in this stack.
     def getContainers(self) -> List[ContainerInterface]:
+        """Get a list of all containers in this stack.
+        
+        Note that it returns a shallow copy of the container list, as it's only allowed to change the order or entries
+        in this list by the proper functions.
+        :return: A list of all containers in this stack.
+        """
+
         return self._containers[:]
 
     def getContainerIndex(self, container: ContainerInterface) -> int:
         return self._containers.index(container)
 
-    ##  Get a container by index.
-    #
-    #   \param index The index of the container to get.
-    #
-    #   \return The container at the specified index.
-    #
-    #   \exception IndexError Raised when the specified index is out of bounds.
     def getContainer(self, index: int) -> ContainerInterface:
+        """Get a container by index.
+        
+        :param index: The index of the container to get.
+        
+        :return: The container at the specified index.
+        
+        :exception IndexError: Raised when the specified index is out of bounds.
+        """
+
         if index < 0:
             raise IndexError
         return self._containers[index]
 
-    ##  Get the container at the top of the stack.
-    #
-    #   This is a convenience method that will always return the top of the stack.
-    #
-    #   \return The container at the top of the stack, or None if no containers have been added.
     def getTop(self) -> Optional[ContainerInterface]:
+        """Get the container at the top of the stack.
+        
+        This is a convenience method that will always return the top of the stack.
+        
+        :return: The container at the top of the stack, or None if no containers have been added.
+        """
+
         if self._containers:
             return self._containers[0]
 
         return None
 
-    ##  Get the container at the bottom of the stack.
-    #
-    #   This is a convenience method that will always return the bottom of the stack.
-    #
-    #   \return The container at the bottom of the stack, or None if no containers have been added.
     def getBottom(self) -> Optional[ContainerInterface]:
+        """Get the container at the bottom of the stack.
+        
+        This is a convenience method that will always return the bottom of the stack.
+        
+        :return: The container at the bottom of the stack, or None if no containers have been added.
+        """
+
         if self._containers:
             return self._containers[-1]
 
         return None
 
-    ##  \copydoc ContainerInterface::getPath.
-    #
-    #   Reimplemented from ContainerInterface
     def getPath(self) -> str:
+        """:copydoc ContainerInterface::getPath.
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._path
 
-    ##  \copydoc ContainerInterface::setPath
-    #
-    #   Reimplemented from ContainerInterface
     def setPath(self, path: str) -> None:
+        """:copydoc ContainerInterface::setPath
+        
+        Reimplemented from ContainerInterface
+        """
+
         self._path = path
 
-    ##  Get the SettingDefinition object for a specified key
     def getSettingDefinition(self, key: str) -> Optional[SettingDefinition]:
+        """Get the SettingDefinition object for a specified key"""
+
         for container in self._containers:
             if not isinstance(container, DefinitionContainer):
                 continue
@@ -536,16 +585,18 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         else:
             return None
 
-    ##  Find a container matching certain criteria.
-    #
-    #   \param criteria A dictionary containing key and value pairs that need to
-    #   match the container. Note that the value of "*" can be used as a wild
-    #   card. This will ensure that any container that has the specified key in
-    #   the meta data is found.
-    #   \param container_type An optional type of container to filter on.
-    #   \return The first container that matches the filter criteria or None if not found.
     @UM.FlameProfiler.profile
     def findContainer(self, criteria: Dict[str, Any] = None, container_type: type = None, **kwargs: Any) -> Optional[ContainerInterface]:
+        """Find a container matching certain criteria.
+        
+        :param criteria: A dictionary containing key and value pairs that need to
+        match the container. Note that the value of "*" can be used as a wild
+        card. This will ensure that any container that has the specified key in
+        the meta data is found.
+        :param container_type: An optional type of container to filter on.
+        :return: The first container that matches the filter criteria or None if not found.
+        """
+
         if not criteria and kwargs:
             criteria = kwargs
         elif criteria is None:
@@ -572,18 +623,22 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return None
 
-    ##  Add a container to the top of the stack.
-    #
-    #   \param container The container to add to the stack.
     def addContainer(self, container: ContainerInterface) -> None:
+        """Add a container to the top of the stack.
+        
+        :param container: The container to add to the stack.
+        """
+
         self.insertContainer(0, container)
 
-    ##  Insert a container into the stack.
-    #
-    #   \param index The index of to insert the container at.
-    #          A negative index counts from the bottom
-    #   \param container The container to add to the stack.
     def insertContainer(self, index: int, container: ContainerInterface) -> None:
+        """Insert a container into the stack.
+        
+        :param index: The index of to insert the container at.
+        A negative index counts from the bottom
+        :param container: The container to add to the stack.
+        """
+
         if container is self:
             raise Exception("Unable to add stack to itself.")
 
@@ -592,15 +647,17 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self.containersChanged.emit(container)
         self._dirty = True
 
-    ##  Replace a container in the stack.
-    #
-    #   \param index \type{int} The index of the container to replace.
-    #   \param container The container to replace the existing entry with.
-    #   \param postpone_emit  During stack manipulation you may want to emit later.
-    #
-    #   \exception IndexError Raised when the specified index is out of bounds.
-    #   \exception Exception when trying to replace container ContainerStack.
     def replaceContainer(self, index: int, container: ContainerInterface, postpone_emit: bool = False) -> None:
+        """Replace a container in the stack.
+        
+        :param index: :type{int} The index of the container to replace.
+        :param container: The container to replace the existing entry with.
+        :param postpone_emit:  During stack manipulation you may want to emit later.
+        
+        :exception IndexError: Raised when the specified index is out of bounds.
+        :exception Exception: when trying to replace container ContainerStack.
+        """
+
         if index < 0:
             raise IndexError
         if container is self:
@@ -616,12 +673,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         else:
             self.containersChanged.emit(container)
 
-    ##  Remove a container from the stack.
-    #
-    #   \param index \type{int} The index of the container to remove.
-    #
-    #   \exception IndexError Raised when the specified index is out of bounds.
     def removeContainer(self, index: int = 0) -> None:
+        """Remove a container from the stack.
+        
+        :param index: :type{int} The index of the container to remove.
+        
+        :exception IndexError: Raised when the specified index is out of bounds.
+        """
+
         if index < 0:
             raise IndexError
         try:
@@ -633,21 +692,25 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         except TypeError:
             raise IndexError("Can't delete container with index %s" % index)
 
-    ##  Get the next stack
-    #
-    #   The next stack is the stack that is searched for a setting value if the
-    #   bottom of the stack is reached when searching for a value.
-    #
-    #   \return \type{ContainerStack} The next stack or None if not set.
     def getNextStack(self) -> Optional["ContainerStack"]:
+        """Get the next stack
+        
+        The next stack is the stack that is searched for a setting value if the
+        bottom of the stack is reached when searching for a value.
+        
+        :return: :type{ContainerStack} The next stack or None if not set.
+        """
+
         return self._next_stack
 
-    ##  Set the next stack
-    #
-    #   \param stack \type{ContainerStack} The next stack to set. Can be None.
-    #   Raises Exception when trying to set itself as next stack (to prevent infinite loops)
-    #   \sa getNextStack
     def setNextStack(self, stack: "ContainerStack", connect_signals: bool = True) -> None:
+        """Set the next stack
+        
+        :param stack: :type{ContainerStack} The next stack to set. Can be None.
+        Raises Exception when trying to set itself as next stack (to prevent infinite loops)
+        :sa getNextStack
+        """
+
         if self is stack:
             raise Exception("Next stack can not be itself")
         if self._next_stack == stack:
@@ -661,17 +724,20 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             self._next_stack.propertyChanged.connect(self._collectPropertyChanges)
             self.containersChanged.connect(self._next_stack.containersChanged)
 
-    ##  Send postponed emits
-    #   These emits are collected from the option postpone_emit.
-    #   Note: the option can be implemented for all functions modifying the stack.
     def sendPostponedEmits(self) -> None:
+        """Send postponed emits
+        These emits are collected from the option postpone_emit.
+        Note: the option can be implemented for all functions modifying the stack.
+        """
+
         while self._postponed_emits:
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(signal_arg)
 
-    ##  Check if the container stack has errors
     @UM.FlameProfiler.profile
     def hasErrors(self) -> bool:
+        """Check if the container stack has errors"""
+
         for key in self.getAllKeys():
             enabled = self.getProperty(key, "enabled")
             if not enabled:
@@ -690,9 +756,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                 return True
         return False
 
-    ##  Get all the keys that are in an error state in this stack
     @UM.FlameProfiler.profile
     def getErrorKeys(self) -> List[str]:
+        """Get all the keys that are in an error state in this stack"""
+
         error_keys = []
         for key in self.getAllKeys():
             validation_state = self.getProperty(key, "validationState")

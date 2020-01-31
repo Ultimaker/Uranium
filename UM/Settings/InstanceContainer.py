@@ -44,17 +44,18 @@ MimeTypeDatabase.addMimeType(
 )
 
 
-##  A container for SettingInstance objects.
-#
-#
 @signalemitter
 class InstanceContainer(QObject, ContainerInterface, PluginObject):
+    """A container for SettingInstance objects."""
+
     Version = 4
 
-    ##  Constructor
-    #
-    #   \param container_id A unique, machine readable/writable ID for this container.
     def __init__(self, container_id: str, parent: QObject = None, *args: Any, **kwargs: Any) -> None:
+        """Constructor
+        
+        :param container_id: A unique, machine readable/writable ID for this container.
+        """
+
         super().__init__()
         QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
@@ -124,22 +125,27 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def __ne__(self, other: object) -> bool:
         return not (self == other)
 
-    ##  For pickle support
     def __getnewargs__(self) -> Tuple[str]:
+        """For pickle support"""
+
         return (self.getId(),)
 
-    ##  For pickle support
     def __getstate__(self) -> Dict[str, Any]:
+        """For pickle support"""
+
         return self.__dict__
 
-    ##  For pickle support
     def __setstate__(self, state: Dict[str, Any]) -> None:
+        """For pickle support"""
+
         self.__dict__.update(state)
 
-    ##  \copydoc ContainerInterface::getId
-    #
-    #   Reimplemented from ContainerInterface
     def getId(self) -> str:
+        """:copydoc ContainerInterface::getId
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._metadata["id"]
 
     id = pyqtProperty(str, fget = getId, constant = True)
@@ -154,22 +160,28 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def getLoadingPriority(cls) -> int:
         return 1
 
-    ##  \copydoc ContainerInterface::getPath.
-    #
-    #   Reimplemented from ContainerInterface
     def getPath(self) -> str:
+        """:copydoc ContainerInterface::getPath.
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._path
 
-    ##  \copydoc ContainerInterface::setPath
-    #
-    #   Reimplemented from ContainerInterface
     def setPath(self, path: str) -> None:
+        """:copydoc ContainerInterface::setPath
+        
+        Reimplemented from ContainerInterface
+        """
+
         self._path = path
 
-    ##  \copydoc ContainerInterface::getName
-    #
-    #   Reimplemented from ContainerInterface
     def getName(self) -> str:
+        """:copydoc ContainerInterface::getName
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._metadata["name"]
 
     def setName(self, name: str) -> None:
@@ -201,10 +213,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def getNumInstances(self) -> int:
         return len(self._instances)
 
-    ##  \copydoc ContainerInterface::getMetaData
-    #
-    #   Reimplemented from ContainerInterface
     def getMetaData(self) -> Dict[str, Any]:
+        """:copydoc ContainerInterface::getMetaData
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._metadata
 
     def setMetaData(self, metadata: Dict[str, Any]) -> None:
@@ -227,26 +241,31 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     metaDataChanged = pyqtSignal(QObject)
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
 
-    ##  \copydoc ContainerInterface::getMetaDataEntry
-    #
-    #   Reimplemented from ContainerInterface
     def getMetaDataEntry(self, entry: str, default = None) -> Any:
+        """:copydoc ContainerInterface::getMetaDataEntry
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._metadata.get(entry, default)
 
-    ##  Set a metadata entry to a certain value.
-    #
-    #   \param key The key of the metadata entry to set.
-    #   \param value The new value of the metadata.
-    #
-    #   \note This does nothing if the key is not already added to the metadata.
     def setMetaDataEntry(self, key: str, value: Any) -> None:
+        """Set a metadata entry to a certain value.
+        
+        :param key: The key of the metadata entry to set.
+        :param value: The new value of the metadata.
+        
+        :note This does nothing if the key is not already added to the metadata.
+        """
+
         if key not in self._metadata or self._metadata[key] != value:
             self._metadata[key] = value
             self._dirty = True
             self.metaDataChanged.emit(self)
 
-    ##  Check if this container is dirty, that is, if it changed from deserialization.
     def isDirty(self) -> bool:
+        """Check if this container is dirty, that is, if it changed from deserialization."""
+
         return self._dirty
 
     def setDirty(self, dirty: bool) -> None:
@@ -255,10 +274,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         else:
             self._dirty = dirty
 
-    ##  \copydoc ContainerInterface::getProperty
-    #
-    #   Reimplemented from ContainerInterface
     def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
+        """:copydoc ContainerInterface::getProperty
+        
+        Reimplemented from ContainerInterface
+        """
+
         # Instance containers can only set value, state & validationstate, so if someone asks for anything else, quit early.
         if property_name not in ["value", "state", "validationState"]:
             return None
@@ -271,10 +292,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return None
 
-    ##  \copydoc ContainerInterface::hasProperty
-    #
-    #   Reimplemented from ContainerInterface.
     def hasProperty(self, key: str, property_name: str) -> bool:
+        """:copydoc ContainerInterface::hasProperty
+        
+        Reimplemented from ContainerInterface.
+        """
+
         # --- Kinda a hack:
         # When we check if a property exists, it is not necessary to flush the cache because we simply want to know
         # whether it is there. Flushing the cache can cause propertyChanged signals being emitted, and, as a result,
@@ -289,9 +312,11 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         self._instantiateMissingSettingInstancesInCache()
         return key in self._instances and hasattr(self._instances[key], property_name)
 
-    ##  Creates SettingInstances that are missing in this InstanceContainer from the cache if any.
-    #   This function will **ONLY instantiate SettingInstances. The cached values will not be applied.**
     def _instantiateMissingSettingInstancesInCache(self) -> None:
+        """Creates SettingInstances that are missing in this InstanceContainer from the cache if any.
+        This function will **ONLY instantiate SettingInstances. The cached values will not be applied.**
+        """
+
         if not self._cached_values:
             return
 
@@ -310,20 +335,25 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                 instance.propertyChanged.connect(self.propertyChanged)
                 self._instances[instance.definition.key] = instance
 
-    ##  Set the value of a property of a SettingInstance.
-    #
-    #   This will set the value of the specified property on the SettingInstance corresponding to key.
-    #   If no instance has been created for the specified key, a new one will be created and inserted
-    #   into this instance.
-    #
-    #   \param key The key of the setting to set a property of.
-    #   \param property_name  The name of the property to set.
-    #   \param property_value The new value of the property.
-    #   \param container The container to use for retrieving values when changing the property triggers property updates. Defaults to None, which means use the current container.
-    #   \param set_from_cache Flag to indicate that the property was set from cache. This triggers the behavior that the read_only and setDirty are ignored.
-    #
-    #   \note If no definition container is set for this container, new instances cannot be created and this method will do nothing.
     def setProperty(self, key: str, property_name: str, property_value: Any, container: ContainerInterface = None, set_from_cache: bool = False) -> None:
+        """Set the value of a property of a SettingInstance.
+        
+        This will set the value of the specified property on the SettingInstance corresponding to key.
+        If no instance has been created for the specified key, a new one will be created and inserted
+        into this instance.
+        
+        :param key: The key of the setting to set a property of.
+        :param property_name:  The name of the property to set.
+        :param property_value: The new value of the property.
+        :param container: The container to use for retrieving values when changing the property triggers property
+        updates. Defaults to None, which means use the current container.
+        :param set_from_cache: Flag to indicate that the property was set from cache. This triggers the behavior that
+        the read_only and setDirty are ignored.
+        
+        :note If no definition container is set for this container, new instances cannot be created and this method
+        will do nothing.
+        """
+
         if self._read_only and not set_from_cache:
             Logger.log(
                 "w",
@@ -354,30 +384,35 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     propertyChanged = Signal()
 
-    ##  Remove all instances from this container.
     def clear(self) -> None:
+        """Remove all instances from this container."""
+
         self._instantiateCachedValues()
         all_keys = self._instances.copy()
         for key in all_keys:
             self.removeInstance(key, postpone_emit=True)
         self.sendPostponedEmits()
 
-    ##  Get all the keys of the instances of this container
-    #   \returns list of keys
     def getAllKeys(self) -> Set[str]:
+        """Get all the keys of the instances of this container
+        :returns: list of keys
+        """
+
         keys = set(key for key in self._instances)
         if self._cached_values:
             # If we only want the keys and the actual values are still cached, just get the keys from the cache.
             keys.update(self._cached_values.keys())
         return keys
 
-    ##  Create a new InstanceContainer with the same contents as this container
-    #
-    #   \param new_id The new ID of the container
-    #   \param new_name The new name of the container. Defaults to None to indicate the name should not change.
-    #
-    #   \return A new InstanceContainer with the same contents as this container.
     def duplicate(self, new_id: str, new_name: str = None) -> "InstanceContainer":
+        """Create a new InstanceContainer with the same contents as this container
+        
+        :param new_id: The new ID of the container
+        :param new_name: The new name of the container. Defaults to None to indicate the name should not change.
+        
+        :return: A new InstanceContainer with the same contents as this container.
+        """
+
         self._instantiateCachedValues()
         new_container = self.__class__(new_id)
         new_metadata = copy.deepcopy(self._metadata)
@@ -403,10 +438,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         new_container._read_only = False
         return new_container
 
-    ##  \copydoc ContainerInterface::serialize
-    #
-    #   Reimplemented from ContainerInterface
     def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
+        """:copydoc ContainerInterface::serialize
+        
+        Reimplemented from ContainerInterface
+        """
+
         self._instantiateCachedValues()
         parser = configparser.ConfigParser(interpolation = None)
 
@@ -515,10 +552,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                         raise Exception("Can't validate file {0}".format(file_name))
         return True
 
-    ##  \copydoc ContainerInterface::deserialize
-    #
-    #   Reimplemented from ContainerInterface
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
+        """:copydoc ContainerInterface::deserialize
+        
+        Reimplemented from ContainerInterface
+        """
+
         # update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
@@ -551,19 +590,19 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return serialized
 
-    ##  Gets the metadata of an instance container from a serialised format.
-    #
-    #   This parses the entire CFG document and only extracts the metadata from
-    #   it.
-    #
-    #   \param serialized A CFG document, serialised as a string.
-    #   \param container_id The ID of the container to get the metadata of, as
-    #   obtained from the file name.
-    #   \return A dictionary of metadata that was in the CFG document in a
-    #   singleton list. If anything went wrong, this returns an empty list
-    #   instead.
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
+        """Gets the metadata of an instance container from a serialised format.
+        
+        This parses the entire CFG document and only extracts the metadata from
+        it.
+        
+        :param serialized: A CFG document, serialised as a string.
+        :param container_id: The ID of the container to get the metadata of, as obtained from the file name.
+        :return: A dictionary of metadata that was in the CFG document in a singleton list. If anything went
+        wrong, this returns an empty list instead.
+        """
+
         serialized = cls._updateSerialized(serialized)  # Update to most recent version.
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
@@ -584,8 +623,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return [metadata]
 
-    ##  Instance containers are lazy loaded. This function ensures that it happened.
     def _instantiateCachedValues(self) -> None:
+        """Instance containers are lazy loaded. This function ensures that it happened."""
+
         if not self._cached_values:
             return
         definition = self.getDefinition()
@@ -594,10 +634,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         self._cached_values = None
 
-    ##  Find instances matching certain criteria.
-    #
-    #   \param kwargs A dictionary of keyword arguments with key-value pairs that should match properties of the instances.
     def findInstances(self, **kwargs: Any) -> List[SettingInstance]:
+        """Find instances matching certain criteria.
+        
+        :param kwargs: A dictionary of keyword arguments with key-value pairs that should match properties of the instances.
+        """
+
         self._instantiateCachedValues()
         result = []
         for setting_key, instance in self._instances.items():
@@ -609,17 +651,18 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return result
 
-    ##  Get an instance by key
-    #
     def getInstance(self, key: str) -> Optional[SettingInstance]:
+        """Get an instance by key"""
+
         self._instantiateCachedValues()
         if key in self._instances:
             return self._instances[key]
 
         return None
 
-    ##  Add a new instance to this container.
     def addInstance(self, instance: SettingInstance) -> None:
+        """Add a new instance to this container."""
+
         self._instantiateCachedValues()
         key = instance.definition.key
         if key in self._instances:
@@ -629,9 +672,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         instance.propertyChanged.emit(key, "value")
         self._instances[key] = instance
 
-    ##  Remove an instance from this container.
-    #   /param postpone_emit postpone emit until calling sendPostponedEmits
     def removeInstance(self, key: str, postpone_emit: bool = False) -> None:
+        """Remove an instance from this container.
+
+        :param postpone_emit: postpone emit until calling sendPostponedEmits
+        """
+
         self._instantiateCachedValues()
         if key not in self._instances:
             return
@@ -659,8 +705,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         instance.updateRelations(self)
 
-    ##  Update all instances from this container.
     def update(self) -> None:
+        """Update all instances from this container."""
+
         self._instantiateCachedValues()
         for key, instance in self._instances.items():
             instance.propertyChanged.emit(key, "value")
@@ -671,8 +718,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                     self.propertyChanged.emit(key, property_name)
         self._dirty = True
 
-    ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self) -> DefinitionContainerInterface:
+        """Get the DefinitionContainer used for new instance creation."""
+
         if self._definition is None:
             definitions = _containerRegistry.findDefinitionContainers(id = self._metadata.get("definition", ""))
             if not definitions:
@@ -680,11 +728,13 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             self._definition = definitions[0]
         return self._definition
 
-    ##  Set the DefinitionContainer to use for new instance creation.
-    #
-    #   Since SettingInstance needs a SettingDefinition to work properly, we need some
-    #   way of figuring out what SettingDefinition to use when creating a new SettingInstance.
     def setDefinition(self, definition_id: str) -> None:
+        """Set the DefinitionContainer to use for new instance creation.
+        
+        Since SettingInstance needs a SettingDefinition to work properly, we need some
+        way of figuring out what SettingDefinition to use when creating a new SettingInstance.
+        """
+
         self._metadata["definition"] = definition_id
         self._definition = None
 
@@ -699,14 +749,18 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return self.getName() < other.getName()
 
-    ##  Simple string representation for debugging.
     def __str__(self) -> str:
+        """Simple string representation for debugging."""
+
         return "<InstanceContainer '{container_id}' ('{name}')>".format(container_id = self.getId(), name = self.getName())
 
-    ##  Send the postponed emits
-    #   These emits are collected from the option postpone_emit.
-    #   Note: the option can be implemented for all functions modifying the container.
     def sendPostponedEmits(self) -> None:
+        """Send the postponed emits
+
+        These emits are collected from the option postpone_emit.
+        Note: the option can be implemented for all functions modifying the container.
+        """
+
         while self._postponed_emits:
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(*signal_arg)

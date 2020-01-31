@@ -44,16 +44,17 @@ MimeTypeDatabase.addMimeType(
 )
 
 
-##  A container for SettingDefinition objects.
-#
-#
 class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
+    """A container for SettingDefinition objects."""
+
     Version = 2
 
-    ##  Constructor
-    #
-    #   \param container_id A unique, machine readable/writable ID for this container.
     def __init__(self, container_id: str, i18n_catalog: i18nCatalog = None, parent: QObject = None, *args, **kwargs) -> None:
+        """Constructor
+        
+        :param container_id: A unique, machine readable/writable ID for this container.
+        """
+
         super().__init__()
         QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
 
@@ -68,46 +69,56 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         self._definition_cache = {}                # type: Dict[str, SettingDefinition]
         self._path = ""
 
-    ##  Reimplement __setattr__ so we can make sure the definition remains unchanged after creation.
     def __setattr__(self, name: str, value: Any) -> None:
+        """Reimplement __setattr__ so we can make sure the definition remains unchanged after creation."""
+
         super().__setattr__(name, value)
         #raise NotImplementedError()
 
-    ##  For pickle support
     def __getnewargs__(self) -> Tuple[str, Optional[i18nCatalog]]:
+        """For pickle support"""
+
         return (self.getId(), self._i18n_catalog)
 
-    ##  For pickle support
     def __getstate__(self) -> Dict[str, Any]:
+        """For pickle support"""
+
         return self.__dict__
 
-    ##  For pickle support
     def __setstate__(self, state: Dict[str, Any]) -> None:
+        """For pickle support"""
+
         # We need to call QObject.__init__() in order to initialize the underlying C++ object.
         # pickle doesn't do that so we have to do this here.
         QObject.__init__(self, parent = None)
         self.__dict__.update(state)
 
-    ##  \copydoc ContainerInterface::getId
-    #
-    #   Reimplemented from ContainerInterface
     def getId(self) -> str:
+        """:copydoc ContainerInterface::getId
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._metadata["id"]
 
     id = pyqtProperty(str, fget = getId, constant = True)
 
-    ##  \copydoc ContainerInterface::getName
-    #
-    #   Reimplemented from ContainerInterface
     def getName(self) -> str:
+        """:copydoc ContainerInterface::getName
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._metadata["name"]
 
     name = pyqtProperty(str, fget = getName, constant = True)
 
-    ##  \copydoc ContainerInterface::isReadOnly
-    #
-    #   Reimplemented from ContainerInterface
     def isReadOnly(self) -> bool:
+        """:copydoc ContainerInterface::isReadOnly
+        
+        Reimplemented from ContainerInterface
+        """
+
         return True
 
     def setReadOnly(self, read_only: bool) -> None:
@@ -115,22 +126,28 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     readOnly = pyqtProperty(bool, fget = isReadOnly, constant = True)
 
-    ##  \copydoc ContainerInterface::getPath.
-    #
-    #   Reimplemented from ContainerInterface
     def getPath(self) -> str:
+        """:copydoc ContainerInterface::getPath.
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._path
 
-    ##  \copydoc ContainerInterface::setPath
-    #
-    #   Reimplemented from ContainerInterface
     def setPath(self, path: str) -> None:
+        """:copydoc ContainerInterface::setPath
+        
+        Reimplemented from ContainerInterface
+        """
+
         self._path = path
 
-    ##  \copydoc ContainerInterface::getMetaData
-    #
-    #   Reimplemented from ContainerInterface
     def getMetaData(self) -> Dict[str, Any]:
+        """:copydoc ContainerInterface::getMetaData
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._metadata
 
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, constant = True)
@@ -139,37 +156,45 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def definitions(self) -> List[SettingDefinition]:
         return self._definitions
 
-    ##  Gets all ancestors of this definition container.
-    #
-    #   This returns the definition in the "inherits" property of this
-    #   container, and the definition in its "inherits" property, and so on. The
-    #   ancestors are returned in order from parent to
-    #   grand-grand-grand-...-grandparent, normally ending in a "root"
-    #   container.
-    #
-    #   \return A list of ancestors, in order from near ancestor to the root.
     def getInheritedFiles(self) -> List[str]:
+        """Gets all ancestors of this definition container.
+        
+        This returns the definition in the "inherits" property of this
+        container, and the definition in its "inherits" property, and so on. The
+        ancestors are returned in order from parent to
+        grand-grand-grand-...-grandparent, normally ending in a "root"
+        container.
+        
+        :return: A list of ancestors, in order from near ancestor to the root.
+        """
+
         return self._inherited_files
 
-    ##  \copydoc DefinitionContainerInterface::getAllKeys
-    #
-    #   \return A set of all keys of settings in this container.
     def getAllKeys(self) -> Set[str]:
+        """:copydoc DefinitionContainerInterface::getAllKeys
+        
+        :return: A set of all keys of settings in this container.
+        """
+
         keys = set()  # type: Set[str]
         for definition in self.definitions:
             keys |= definition.getAllKeys()
         return keys
 
-    ##  \copydoc ContainerInterface::getMetaDataEntry
-    #
-    #   Reimplemented from ContainerInterface
     def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
+        """:copydoc ContainerInterface::getMetaDataEntry
+        
+        Reimplemented from ContainerInterface
+        """
+
         return self._metadata.get(entry, default)
 
-    ##  \copydoc ContainerInterface::getProperty
-    #
-    #   Reimplemented from ContainerInterface.
     def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
+        """:copydoc ContainerInterface::getProperty
+        
+        Reimplemented from ContainerInterface.
+        """
+
         definition = self._getDefinition(key)
         if not definition:
             return None
@@ -182,10 +207,12 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         except AttributeError:
             return None
 
-    ##  \copydoc ContainerInterface::hasProperty
-    #
-    #   Reimplemented from ContainerInterface
     def hasProperty(self, key: str, property_name: str, ignore_inherited: bool = False) -> Any:
+        """:copydoc ContainerInterface::hasProperty
+        
+        Reimplemented from ContainerInterface
+        """
+
         definition = self._getDefinition(key)
         if not definition:
             return False
@@ -193,18 +220,20 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             return False
         return hasattr(definition, property_name)
 
-    ##  This signal is unused since the definition container is immutable, but is provided for API consistency.
     propertyChanged = Signal()
+    """This signal is unused since the definition container is immutable, but is provided for API consistency."""
 
     metaDataChanged = Signal()
 
-    ##  \copydoc ContainerInterface::serialize
-    #
-    #   TODO: This implementation flattens the definition container, since the
-    #   data about inheritance and overrides was lost when deserialising.
-    #
-    #   Reimplemented from ContainerInterface
     def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
+        """:copydoc ContainerInterface::serialize
+        
+        TODO: This implementation flattens the definition container, since the
+        data about inheritance and overrides was lost when deserialising.
+        
+        Reimplemented from ContainerInterface
+        """
+
         data = {}  # type: Dict[str, Any]  # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
@@ -274,19 +303,23 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         return is_valid
 
-    ##  Add a setting definition instance if it doesn't exist yet.
-    #
-    #   Warning: this might not work when there are relationships higher up in the stack.
     def addDefinition(self, definition: SettingDefinition) -> None:
+        """Add a setting definition instance if it doesn't exist yet.
+        
+        Warning: this might not work when there are relationships higher up in the stack.
+        """
+
         if definition.key not in [d.key for d in self._definitions]:
             self._definitions.append(definition)
             self._definition_cache[definition.key] = definition
             self._updateRelations(definition)
 
-    ##  \copydoc ContainerInterface::deserialize
-    #
-    #   Reimplemented from ContainerInterface
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
+        """:copydoc ContainerInterface::deserialize
+        
+        Reimplemented from ContainerInterface
+        """
+
         # update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parsed, is_valid = self.readAndValidateSerialized(serialized)
@@ -310,18 +343,20 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         return serialized
 
-    ##  Gets the metadata of a definition container from a serialised format.
-    #
-    #   This parses the entire JSON document and only extracts the metadata from
-    #   it.
-    #
-    #   \param serialized A JSON document, serialised as a string.
-    #   \param container_id The ID of the container (as obtained from the file
-    #   name).
-    #   \return A dictionary of metadata that was in the JSON document in a
-    #   singleton list. If anything went wrong, the list will be empty.
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
+        """Gets the metadata of a definition container from a serialised format.
+        
+        This parses the entire JSON document and only extracts the metadata from
+        it.
+        
+        :param serialized: A JSON document, serialised as a string.
+        :param container_id: The ID of the container (as obtained from the file name).
+
+        :return: A dictionary of metadata that was in the JSON document in a
+        singleton list. If anything went wrong, the list will be empty.
+        """
+
         serialized = cls._updateSerialized(serialized) #Update to most recent version.
         try:
             parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
@@ -350,10 +385,13 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             metadata.update(parsed["metadata"])
         return [metadata]
 
-    ##  Find definitions matching certain criteria.
-    #
-    #   \param kwargs A dictionary of keyword arguments containing key-value pairs which should match properties of the definition.
     def findDefinitions(self, **kwargs: Any) -> List[SettingDefinition]:
+        """Find definitions matching certain criteria.
+        
+        :param kwargs: A dictionary of keyword arguments containing key-value pairs which should match properties of
+        the definition.
+        """
+
         if len(kwargs) == 1 and "key" in kwargs:
             # If we are searching for a single definition by exact key, we can speed up things by retrieving from the cache.
             key = kwargs["key"]
@@ -482,6 +520,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def isDirty(self) -> bool:
         return False
 
-    ##  Simple short string representation for debugging purposes.
     def __str__(self) -> str:
+        """Simple short string representation for debugging purposes."""
+
         return "<DefinitionContainer '{definition_id}' ('{name}')>".format(definition_id = self.getId(), name = self.getName())
