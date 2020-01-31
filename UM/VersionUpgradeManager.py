@@ -29,7 +29,8 @@ catalogue = UM.i18n.i18nCatalog("uranium")
 #   - file_name: The name to the file that needs to be upgraded, relative to the
 #     storage path.
 #   - configuration_type: The configuration type of the file before upgrading.
-UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name", "configuration_type"])
+FileTask = collections.namedtuple("FileTask", ["storage_path", "file_name", "configuration_type"])
+CallableTask = collections.namedtuple("CallableTask", ["callable"])
 
 FilesDataUpdateResult = collections.namedtuple("FilesDataUpdateResult",
                                                ["configuration_type", "version", "files_data",
@@ -145,12 +146,19 @@ class VersionUpgradeManager:
     #
     def upgrade(self):
         Logger.log("i", "Looking for old configuration files to upgrade.")
-        self._upgrade_tasks.extend(self._getUpgradeTasks())     # Get the initial files to upgrade.
+        # Get the initial upgrade tasks. Tasks might be added during the upgrade, see addExtraTask()
+        self._upgrade_tasks.extend(self._getUpgradeTasks())
         self._upgrade_routes = self._findShortestUpgradeRoutes()  # Pre-compute the upgrade routes.
 
         while self._upgrade_tasks:
             upgrade_task = self._upgrade_tasks.popleft()
-            self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type)  # Upgrade this file.
+            if type(upgrade_task) is FileTask:
+                self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type)  # Upgrade this file.
+            elif type(upgrade_task) is CallableTask:
+                upgrade_task.callable()
+            else:
+                raise TypeError("Unsupported upgrade task: " + upgrade_task)
+
             QCoreApplication.processEvents()  # Ensure that the GUI does not freeze.
 
     ##  Schedules an additional file for upgrading.
@@ -170,7 +178,10 @@ class VersionUpgradeManager:
     #   storage path.
     #   \param configuration_type The file type of the specified file.
     def upgradeExtraFile(self, storage_path: str, file_name: str, configuration_type: str) -> None:
-        self._upgrade_tasks.append(UpgradeTask(storage_path = storage_path, file_name = file_name, configuration_type = configuration_type))
+        self._upgrade_tasks.append(FileTask(storage_path = storage_path, file_name = file_name, configuration_type = configuration_type))
+
+    def upgradeExtraTask(self, task: CallableTask):
+        self._upgrade_tasks.append(task)
 
     # private:
 
@@ -272,7 +283,7 @@ class VersionUpgradeManager:
     ##  Gets all files that need to be upgraded.
     #
     #   \return A sequence of UpgradeTasks of files to upgrade.
-    def _getUpgradeTasks(self) -> Iterator[UpgradeTask]:
+    def _getUpgradeTasks(self) -> Iterator[FileTask]:
         storage_path_prefixes = set()
         storage_path_prefixes.add(Resources.getConfigStoragePath())
         storage_path_prefixes.add(Resources.getDataStoragePath())
@@ -305,8 +316,8 @@ class VersionUpgradeManager:
 
                             Logger.log("i", "Create upgrade task for configuration file [%s] with type [%s] and source version [%s]",
                                        configuration_file, old_configuration_type, file_version)
-                            yield UpgradeTask(storage_path = path, file_name = configuration_file,
-                                              configuration_type = old_configuration_type)
+                            yield FileTask(storage_path = path, file_name = configuration_file,
+                                           configuration_type = old_configuration_type)
 
     ##  Gets the version of the given file data
     def getFileVersion(self, configuration_type: str, file_data: str) -> Optional[int]:
@@ -442,3 +453,5 @@ class VersionUpgradeManager:
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "VersionUpgradeManager":
         return cls.__instance
+
+
