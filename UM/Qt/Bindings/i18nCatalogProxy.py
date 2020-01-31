@@ -67,24 +67,26 @@ class i18nCatalogProxy(QObject): # [CodeStyle: Ultimaker code style requires cla
     def _call_i18ncp(self, context, single, multiple, counter):
         return self._catalog.i18ncp(context, single, multiple, counter)
 
-    ##  Wrap a function in a bit of a javascript to re-trigger a method call on signal emit.
-    #
-    #   This slightly magical method wraps a Python method exposed to QML in a JavaScript
-    #   closure with the same signature as the Python method. This allows the closure to be
-    #   exposed as a QML property instead of a QML slot. Using a property for this allows us
-    #   to add a notify signal to re-trigger the method execution. Due to the way notify
-    #   signals are handled by QML, re-triggering the method only needs a signal emit.
-    #
-    #   \param engine \type{QQmlEngine} The QML engine to use to evaluate JavaScript.
-    #   \param this_object \type{QObject} The object to call the function on.
-    #   \param function \type{Function} The function to call. Should be marked as pyqtSlot.
-    #
-    #   \return \type{QJSValue} A JavaScript closure that when called calls the wrapper Python method.
-    #
-    #   \note Currently, only functions taking a fixed list of positional arguments are supported.
-    #
-    #   \todo Move this to a more generic place so more things can use it.
     def _wrapFunction(self, engine, this_object, function):
+        """Wrap a function in a bit of a javascript to re-trigger a method call on signal emit.
+        
+        This slightly magical method wraps a Python method exposed to QML in a JavaScript
+        closure with the same signature as the Python method. This allows the closure to be
+        exposed as a QML property instead of a QML slot. Using a property for this allows us
+        to add a notify signal to re-trigger the method execution. Due to the way notify
+        signals are handled by QML, re-triggering the method only needs a signal emit.
+        
+        :param engine: :type{QQmlEngine} The QML engine to use to evaluate JavaScript.
+        :param this_object: :type{QObject} The object to call the function on.
+        :param function: :type{Function} The function to call. Should be marked as pyqtSlot.
+        
+        :return: :type{QJSValue} A JavaScript closure that when called calls the wrapper Python method.
+        
+        :note Currently, only functions taking a fixed list of positional arguments are supported.
+        
+        :todo Move this to a more generic place so more things can use it.
+        """
+
         # JavaScript code that wraps the Python method call in a closure
         wrap_js = """(function(this_object) {{
             return function({args}) {{ return this_object.{function}({args}) }}

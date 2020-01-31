@@ -17,11 +17,13 @@ from UM.View.GL.OpenGL import OpenGL
 from UM.View.RenderBatch import RenderBatch
 
 
-##    A tool handle is a object in the scene that gives queues for what the tool it is
-#     'paired' with can do. ToolHandles are, for example, used for translation, rotation & scale handles.
-#     They can also be used as actual objects to interact with (in the case of translation,
-#     pressing one arrow of the toolhandle locks the translation in that direction)
 class ToolHandle(SceneNode.SceneNode):
+    """A tool handle is a object in the scene that gives queues for what the tool it is
+    'paired' with can do. ToolHandles are, for example, used for translation, rotation & scale handles.
+    They can also be used as actual objects to interact with (in the case of translation,
+    pressing one arrow of the toolhandle locks the translation in that direction)
+    """
+
     NoAxis = 1
     XAxis = 2
     YAxis = 3

@@ -62,19 +62,21 @@ class OutputDeviceManagerProxy(QObject):
     def refreshConnections(self) -> None:
         return self._device_manager.refreshConnections()
 
-    ##  Request that the current scene is written to the output device.
-    #
-    #   The output device to write with will be selected based on the device_id.
-    #   A file format is chosen from the list of available file formats by the
-    #   output device.
-    #
-    #   \param device_id The handle of the device to write to.
-    #   \param file_name A suggestion for the file name to write
-    #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param kwargs Keyword arguments:
-    #       limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
     @pyqtSlot(str, str, "QVariantMap")
     def requestWriteToDevice(self, device_id: str, file_name: str, kwargs: Mapping[str, str]) -> None:
+        """Request that the current scene is written to the output device.
+        
+        The output device to write with will be selected based on the device_id.
+        A file format is chosen from the list of available file formats by the
+        output device.
+        
+        :param device_id: The handle of the device to write to.
+        :param file_name: A suggestion for the file name to write
+        to. Can be freely ignored if providing a file name makes no sense.
+        :param kwargs: Keyword arguments:
+        limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
+        """
+
         limit_mimetypes = kwargs.get("limit_mimetypes", None)
         file_type = kwargs.get("file_type", "mesh")
         preferred_mimetypes = kwargs.get("preferred_mimetypes", None)
@@ -83,19 +85,21 @@ class OutputDeviceManagerProxy(QObject):
         # loop, since that does work.
         Application.getInstance().callLater(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot()], device_id, file_name, limit_mimetypes, file_type, preferred_mimetypes = preferred_mimetypes)
 
-    ##  Request that the current selection is written to the output device.
-    #
-    #   The output device to write with will be selected based on the device_id.
-    #   A file format is chosen from the list of available file formats by the
-    #   output device.
-    #
-    #   \param device_id The handle of the device to write to.
-    #   \param file_name A suggestion for the file name to write
-    #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param kwargs Keyword arguments:
-    #       limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
     @pyqtSlot(str, str, "QVariantMap")
     def requestWriteSelectionToDevice(self, device_id: str, file_name: str, kwargs: Mapping[str, str]) -> None:
+        """Request that the current selection is written to the output device.
+        
+        The output device to write with will be selected based on the device_id.
+        A file format is chosen from the list of available file formats by the
+        output device.
+        
+        :param device_id: The handle of the device to write to.
+        :param file_name: A suggestion for the file name to write
+        to. Can be freely ignored if providing a file name makes no sense.
+        :param kwargs: Keyword arguments:
+            limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
+        """
+
         if not Selection.hasSelection():
             return
 
@@ -109,19 +113,21 @@ class OutputDeviceManagerProxy(QObject):
     def _onActiveDeviceChanged(self) -> None:
         self.activeDeviceChanged.emit()
 
-    ##  Writes the specified node to the output device.
-    #
-    #   The output device to write with will be selected based on the device_id.
-    #   A file format is chosen from the list of available file formats by the
-    #   output device.
-    #
-    #   \param nodes The scene nodes that must be written to the device.
-    #   \param device_id The handle of the device to write to.
-    #   \param file_name A suggestion for the file name to write
-    #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
-    #   \param file_type What file handler to get the writer from.
     def _writeToDevice(self, nodes: List[SceneNode], device_id: str, file_name: str, limit_mimetypes: bool, file_type: str = "mesh", **kwargs) -> None:
+        """Writes the specified node to the output device.
+        
+        The output device to write with will be selected based on the device_id.
+        A file format is chosen from the list of available file formats by the
+        output device.
+        
+        :param nodes: The scene nodes that must be written to the device.
+        :param device_id: The handle of the device to write to.
+        :param file_name: A suggestion for the file name to write
+        to. Can be freely ignored if providing a file name makes no sense.
+        :param limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
+        :param file_type: What file handler to get the writer from.
+        """
+
         device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return

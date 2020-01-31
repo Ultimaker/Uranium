@@ -31,11 +31,13 @@ class BackendProxy(QObject):
 
     backendStateChange = pyqtSignal(int, arguments = ["state"])
 
-    ##  Returns the current state of processing of the backend.
-    #
-    #   \return \type{IntEnum} The current state of the backend.
     @pyqtProperty(int, notify = backendStateChange)
     def state(self):
+        """Returns the current state of processing of the backend.
+        
+        :return: :type{IntEnum} The current state of the backend.
+        """
+
         return self._state
 
     def _onProcessingProgress(self, amount):
