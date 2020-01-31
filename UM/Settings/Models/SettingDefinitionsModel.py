@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections
@@ -6,6 +6,8 @@ import os.path
 from typing import List
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
+
+from UM.Decorators import deprecated
 from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
@@ -19,7 +21,7 @@ from UM.Settings.SettingDefinition import SettingDefinition
 
 class SettingDefinitionsModel(QAbstractListModel):
     """Model that provides a flattened list of the tree of SettingDefinition objects in a DefinitionContainer
-    
+
     This model exposes the tree of SettingDefinition objects in a DefinitionContainer as a list of settings.
     It uses two lists, one is the list of definitions which directly corresponds with the flattened contents
     of the DefinitionContainer. The other is a list matching rows in the model to indexes in the list of
@@ -297,6 +299,12 @@ class SettingDefinitionsModel(QAbstractListModel):
         for child in definitions[0].children:
             self.expandRecursive(child.key)
 
+    #@deprecated("Use collapseRecursive instead.", "4.5")  # Commented out because these two decorators don't work together.
+    @pyqtSlot(str)
+    def collapse(self, key: str) -> None:
+        return self.collapseRecursive(key)
+
+    ##  Hide the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
     def collapseRecursive(self, key: str) -> None:
         """Hide the children of a specified SettingDefinition and all children of those settings as well."""
@@ -459,7 +467,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtProperty(int, notify = itemsChanged)
     def count(self):
         """Reimplemented from QAbstractListModel
-        
+
         Note that count() is overridden from QAbstractItemModel. The signature
         of the method in that class is "int count()" which makes this slot
         declaration incorrect.
@@ -474,7 +482,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtSlot(QObject, result = int)
     def rowCount(self, parent = None) -> int:
         """This function is necessary because it is abstract in QAbstractListModel.
-        
+
         Under the hood, Qt will call this function when it needs to know how many items are in the model.
         This pyqtSlot will not be linked to the itemsChanged signal, so please use the normal count() function instead.
         """

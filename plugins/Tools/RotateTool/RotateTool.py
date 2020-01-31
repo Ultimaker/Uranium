@@ -204,6 +204,8 @@ class RotateTool(Tool):
         meshdata = original_node.getMeshDataTransformed()
         if not meshdata or face_id < 0:
             return
+        if face_id > (meshdata.getVertexCount() / 3 if not meshdata.hasIndices() else meshdata.getFaceCount()):
+            return
 
         face_mid, face_normal = meshdata.getFacePlane(face_id)
         object_mid = original_node.getBoundingBox().center

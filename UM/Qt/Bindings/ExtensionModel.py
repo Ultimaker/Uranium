@@ -1,10 +1,12 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import Qt
 from UM.FlameProfiler import pyqtSlot
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
+from UM.Logger import Logger
+
 
 class ExtensionModel(ListModel):
     NameRole = Qt.UserRole + 1
@@ -43,7 +45,12 @@ class ExtensionModel(ListModel):
     def subMenuTriggered(self, extension_name, option_name):
         for item in self._items:
             if extension_name == item["name"]:
-                item["extension"].activateMenuItem(option_name)
+                try:
+                    item["extension"].activateMenuItem(option_name)
+                except Exception:
+                    # Yes, we really want a broad exception here. These items are always plugins, and those should be
+                    # kept from crashing the main application as much as possible.
+                    Logger.logException("w", "Failed to activate the menu item")
 
     @pyqtSlot(str, str)
     def callExtensionMethod(self, extension_name, method_name):
