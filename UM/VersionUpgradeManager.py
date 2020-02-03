@@ -144,7 +144,7 @@ class VersionUpgradeManager:
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     #
-    def upgrade(self):
+    def upgrade(self) -> None:
         Logger.log("i", "Looking for old configuration files to upgrade.")
         # Get the initial upgrade tasks. Tasks might be added during the upgrade, see addExtraTask()
         self._upgrade_tasks.extend(self._getUpgradeTasks())
@@ -180,7 +180,7 @@ class VersionUpgradeManager:
     def upgradeExtraFile(self, storage_path: str, file_name: str, configuration_type: str) -> None:
         self._upgrade_tasks.append(FileTask(storage_path = storage_path, file_name = file_name, configuration_type = configuration_type))
 
-    def upgradeExtraTask(self, task: CallableTask):
+    def upgradeExtraTask(self, task: CallableTask) -> None:
         self._upgrade_tasks.append(task)
 
     # private:
@@ -453,5 +453,4 @@ class VersionUpgradeManager:
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "VersionUpgradeManager":
         return cls.__instance
-
 
