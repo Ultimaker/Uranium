@@ -138,7 +138,7 @@ class PackageManager(QObject):
         self._bundled_package_dict = {}
         for search_path in self._bundled_package_management_file_paths:
             with open(search_path, "r", encoding = "utf-8") as f:
-                self._bundled_package_dict.update(json.load(f, encoding = "utf-8"))
+                self._bundled_package_dict.update(json.load(f))
                 Logger.log("i", "Loaded bundled packages data from %s", search_path)
 
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
@@ -148,7 +148,7 @@ class PackageManager(QObject):
                 # Load the user packages:
                 with open(cast(str, self._user_package_management_file_path), "r", encoding="utf-8") as f:
                     try:
-                        management_dict = json.load(f, encoding="utf-8")
+                        management_dict = json.load(f)
                     except JSONDecodeError:
                         # The file got corrupted, ignore it. This happens extremely infrequently.
                         # The file will get overridden once a user downloads something.
