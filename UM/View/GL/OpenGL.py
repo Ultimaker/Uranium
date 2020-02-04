@@ -299,7 +299,7 @@ class OpenGL:
         buffer.bind()
 
         data = cast(bytes, mesh.getIndicesAsByteArray()) # We check for None at the beginning of the method
-        if 'index_start' in kwargs and 'index_stop' in kwargs and hasattr(mesh, OpenGL.IndexBufferProperty):
+        if 'index_start' in kwargs and 'index_stop' in kwargs:
             setattr(mesh, OpenGL.IndexBufferRangeProperty, (kwargs['index_start'], kwargs['index_stop']))
             buffer.allocate(data[4 * kwargs['index_start']:4 * kwargs['index_stop']], 4*(kwargs['index_stop'] - kwargs['index_start']))
         else:
