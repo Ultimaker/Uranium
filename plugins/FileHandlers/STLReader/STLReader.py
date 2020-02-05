@@ -12,16 +12,21 @@ from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 import os
 import struct
 import numpy
+import platform
 
 use_numpystl = False
 
 try:
-    import stl  # numpy-stl lib
-    import stl.mesh
+    # Work around for CURA-7154. Some models crash with a segfault, but only when packed.
+    if platform.system() != "Linux":
+        import stl  # numpy-stl lib
+        import stl.mesh
 
-    # Increase max count. (100 million should be okay-ish)
-    stl.stl.MAX_COUNT = 100000000
-    use_numpystl = True
+        # Increase max count. (100 million should be okay-ish)
+        stl.stl.MAX_COUNT = 100000000
+        use_numpystl = True
+    else:
+        Logger.log("w", "Not loading numpy-stl due to linux issue")
 except ImportError:
     Logger.log("w", "Could not find numpy-stl, falling back to slower code.")
     # We have our own fallback code.
