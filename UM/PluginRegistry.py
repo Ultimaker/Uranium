@@ -31,17 +31,19 @@ if TYPE_CHECKING:
 
 plugin_path_ignore_list = ["__pycache__", "tests", ".git"]
 
-##  A central object to dynamically load modules as plugins.
-#
-#   The PluginRegistry class can load modules dynamically and use
-#   them as plugins. Each plugin module is expected to be a directory with
-#   and `__init__` file defining a `getMetaData` and a `register` function.
-#
-#   For more details, see the [plugins] file.
-#
-#   [plugins]: docs/plugins.md
 
 class PluginRegistry(QObject):
+    """A central object to dynamically load modules as plugins.
+    
+    The PluginRegistry class can load modules dynamically and use
+    them as plugins. Each plugin module is expected to be a directory with
+    and `__init__` file defining a `getMetaData` and a `register` function.
+    
+    For more details, see the [plugins] file.
+
+    [plugins]: docs/plugins.md
+    """
+
     def __init__(self, application: "Application", parent: QObject = None) -> None:
         if PluginRegistry.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
@@ -342,11 +344,13 @@ class PluginRegistry(QObject):
         self._bundled_plugin_cache[plugin_id] = is_bundled
         return is_bundled
 
-    ##  Load all plugins matching a certain set of metadata
-    #   \param meta_data \type{dict} The meta data that needs to be matched.
-    #   \sa loadPlugin
-    #   NOTE: This is the method which kicks everything off at app launch.
     def loadPlugins(self, metadata: Optional[Dict[str, Any]] = None) -> None:
+        """Load all plugins matching a certain set of metadata
+
+        :param metadata: The meta data that needs to be matched.
+        NOTE: This is the method which kicks everything off at app launch.
+        """
+
         start_time = time.time()
         # Get a list of all installed plugins:
         plugin_ids = self._findInstalledPlugins()
@@ -555,10 +559,13 @@ class PluginRegistry(QObject):
 
         return plugin_ids
 
-    ##  Try to find a module implementing a plugin
-    #   \param plugin_id The name of the plugin to find
-    #   \returns module if it was found (and, if 'self._check_if_trusted' is set, also secure), None otherwise
     def _findPlugin(self, plugin_id: str) -> Optional[types.ModuleType]:
+        """Try to find a module implementing a plugin
+
+        :param plugin_id: The name of the plugin to find
+        :returns: module if it was found (and, if 'self._check_if_trusted' is set, also secure), None otherwise
+        """
+
         if plugin_id in self._found_plugins:
             return self._found_plugins[plugin_id]
         location = None
@@ -670,11 +677,9 @@ class PluginRegistry(QObject):
             if "description" in meta_data["plugin"]:
                 meta_data["plugin"]["description"] = i18n_catalog.i18n(meta_data["plugin"]["description"])
 
-    ##  private:
-    #   Populate the list of metadata
-    #   \param plugin_id \type{string}
-    #   \return
     def _populateMetaData(self, plugin_id: str) -> bool:
+        """Populate the list of metadata"""
+
         plugin = self._findPlugin(plugin_id)
         if not plugin:
             Logger.log("w", "Could not find plugin %s", plugin_id)
@@ -731,9 +736,12 @@ class PluginRegistry(QObject):
                 return False
         return True
 
-    ##  Get a specific plugin object given an ID. If not loaded, load it.
-    #   \param plugin_id \type{string} The ID of the plugin object to get.
     def getPluginObject(self, plugin_id: str) -> PluginObject:
+        """Get a specific plugin object given an ID. If not loaded, load it.
+
+        :param plugin_id: The ID of the plugin object to get.
+        """
+
         if plugin_id not in self._plugins:
             self.loadPlugin(plugin_id)
         if plugin_id not in self._plugin_objects:
@@ -774,11 +782,13 @@ class PluginRegistry(QObject):
         file_types.append(i18n_catalog.i18nc("@item:inlistbox", "All Files (*)"))
         return file_types
 
-    ##  Get the path to a plugin.
-    #
-    #   \param plugin_id \type{string} The PluginObject.getPluginId() of the plugin.
-    #   \return \type{string} The absolute path to the plugin or an empty string if the plugin could not be found.
     def getPluginPath(self, plugin_id: str) -> Optional[str]:
+        """Get the path to a plugin.
+        
+        :param plugin_id: The PluginObject.getPluginId() of the plugin.
+        :return: The absolute path to the plugin or an empty string if the plugin could not be found.
+        """
+
         if plugin_id in self._plugins:
             plugin = self._plugins.get(plugin_id)
         else:
@@ -793,29 +803,33 @@ class PluginRegistry(QObject):
 
         return None
 
-    ##  Add a new plugin type.
-    #
-    #   This function is used to add new plugin types. Plugin types are simple
-    #   string identifiers that match a certain plugin to a registration function.
-    #
-    #   The callable `register_function` is responsible for handling the object.
-    #   Usually it will add the object to a list of objects in the relevant class.
-    #   For example, the plugin type 'tool' has Controller::addTool as register
-    #   function.
-    #
-    #   `register_function` will be called every time a plugin of `type` is loaded.
-    #
-    #   \param type \type{string} The name of the plugin type to add.
-    #   \param register_function \type{callable} A callable that takes an object as parameter.
     @classmethod
     def addType(cls, plugin_type: str, register_function: Callable[[Any], None]) -> None:
+        """Add a new plugin type.
+        
+        This function is used to add new plugin types. Plugin types are simple
+        string identifiers that match a certain plugin to a registration function.
+        
+        The callable `register_function` is responsible for handling the object.
+        Usually it will add the object to a list of objects in the relevant class.
+        For example, the plugin type 'tool' has Controller::addTool as register
+        function.
+        
+        `register_function` will be called every time a plugin of `type` is loaded.
+        
+        :param plugin_type: The name of the plugin type to add.
+        :param register_function: A callable that takes an object as parameter.
+        """
+
         cls._type_register_map[plugin_type] = register_function
 
-    ##  Remove a plugin type.
-    #
-    #   \param type The plugin type to remove.
     @classmethod
     def removeType(cls, plugin_type: str) -> None:
+        """Remove a plugin type.
+        
+        :param plugin_type: The plugin type to remove.
+        """
+
         if plugin_type in cls._type_register_map:
             del cls._type_register_map[plugin_type]
 

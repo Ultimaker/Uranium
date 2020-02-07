@@ -3,12 +3,14 @@
 from typing import Optional, Dict, Any
 
 
-##  Base class for objects that can be provided by a plugin.
-#
-#   This class should be inherited by any class that can be provided
-#   by a plugin. Its only function is to serve as a mapping between
-#   the plugin and the object.
 class PluginObject:
+    """Base class for objects that can be provided by a plugin.
+    
+    This class should be inherited by any class that can be provided
+    by a plugin. Its only function is to serve as a mapping between
+    the plugin and the object.
+    """
+
     def __init__(self, *args, **kwags) -> None:
         self._plugin_id = None  # type: Optional[str]
         self._version = None  # type: Optional[str]

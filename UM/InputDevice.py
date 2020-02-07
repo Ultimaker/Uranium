@@ -5,14 +5,19 @@ from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 
 
-##  Abstract base class for all input devices (Human Input Devices)
-#   Examples of this are mouse & keyboard
 @signalemitter
 class InputDevice(PluginObject):
+    """Abstract base class for all input devices (Human Input Devices)
+
+    Examples of this are mouse & keyboard
+    """
+
     def __init__(self) -> None:
         super().__init__()
 
-    ##  Emitted whenever the device produces an event.
-    #   All actions performed with the device should be seen as an event.
-    #   \param event The event that is emitted.
     event = Signal()
+    """Emitted whenever the device produces an event.
+    
+    All actions performed with the device should be seen as an event.
+    :param event: The event that is emitted.
+    """

@@ -14,11 +14,12 @@ from UM.Resources import Resources
 i18n_catalog = i18nCatalog("uranium")
 
 
-##  This is a specialised message that shows errors in the configuration.
-#
-#   This class coalesces all errors in the configuration. Whenever there are new
-#   errors the message gets updated (and shown if it was hidden).
 class ConfigurationErrorMessage(Message):
+    """This is a specialised message that shows errors in the configuration.
+    
+    This class coalesces all errors in the configuration. Whenever there are new
+    errors the message gets updated (and shown if it was hidden).
+    """
 
     def __init__(self, application, *args, **kwargs):
         if ConfigurationErrorMessage.__instance is not None:

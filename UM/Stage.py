@@ -7,10 +7,12 @@ from PyQt5.QtCore import QObject, pyqtSignal, pyqtProperty, QUrl
 from UM.PluginObject import PluginObject
 
 
-##  Stages handle combined views in an Uranium application.
-#   The active stage decides which QML component to show where.
-#   Uranium has no notion of specific view locations as that's application specific.
 class Stage(QObject, PluginObject):
+    """Stages handle combined views in an Uranium application.
+
+    The active stage decides which QML component to show where.
+    Uranium has no notion of specific view locations as that's application specific.
+    """
 
     iconSourceChanged = pyqtSignal()
 
@@ -19,22 +21,24 @@ class Stage(QObject, PluginObject):
         self._components = {}  # type: Dict[str, QUrl]
         self._icon_source = QUrl()
 
-    ##  Something to do when this Stage is selected
     def onStageSelected(self) -> None:
+        """Something to do when this Stage is selected"""
         pass
 
-    ##  Something to do when this Stage is deselected
     def onStageDeselected(self) -> None:
+        """Something to do when this Stage is deselected"""
         pass
 
-    ##  Add a QML component to the stage
     def addDisplayComponent(self, name: str, source: Union[str, QUrl]) -> None:
+        """Add a QML component to the stage"""
+
         if type(source) == str:
             source = QUrl.fromLocalFile(source)
         self._components[name] = source
 
-    ##  Get a QUrl by name.
     def getDisplayComponent(self, name: str) -> QUrl:
+        """Get a QUrl by name."""
+
         if name in self._components:
             return self._components[name]
         return QUrl()

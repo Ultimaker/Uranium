@@ -3,9 +3,11 @@
 
 #pylint: disable=bad-whitespace
 
-##      Very simple class filled with a bunch of colours that are chosen thusly that they are easily distinguishable
-#       for humans.
 class ColorGenerator():
+    """Very simple class filled with a bunch of colours that are chosen thusly that they are easily distinguishable
+    for humans.
+    """
+
     def __init__(self):
         self._rgb_color_list = [
             [   0, 255,   0], [   0,   0, 255], [ 255,   0,   0],
@@ -38,10 +40,13 @@ class ColorGenerator():
             [        0., 1., 0.8 ], [  12./360., 1., 1.0]
         ]
 
-    ##  Get a colour, based on index from the list
-    #   \param index \type{int}
-    #   \returns colour \type{list} list with 3 integers
     def getColor(self, index):
+        """Get a colour, based on index from the list
+
+        :type index: int
+        :returns: list with 3 integers
+        """
+
         while index >= len(self._color_list):
             index -= len(self._color_list)
         return self._color_list[index]

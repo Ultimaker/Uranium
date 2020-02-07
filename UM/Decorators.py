@@ -9,11 +9,14 @@ from UM.Logger import Logger
 from typing import Callable, Any
 import time
 
-##  Decorator that can be used to indicate a method has been deprecated
-#
-#   \param message The message to display when the method is called. Should include a suggestion about what to use.
-#   \param since A version since when this method has been deprecated.
+
 def deprecated(message, since = "Unknown"): #pylint: disable=bad-whitespace
+    """Decorator that can be used to indicate a method has been deprecated
+    
+    :param message: The message to display when the method is called. Should include a suggestion about what to use.
+    :param since: A version since when this method has been deprecated.
+    """
+
     def deprecated_decorator(function):
         def deprecated_function(*args, **kwargs):
             warning = "{0} is deprecated (since {1}): {2}".format(function, since, message)
@@ -24,24 +27,28 @@ def deprecated(message, since = "Unknown"): #pylint: disable=bad-whitespace
     return deprecated_decorator
 
 
-##  Decorator to ensure the returned value is always a copy and never a direct reference
-#
-#   "Everything is a Reference" is not nice when dealing with value-types like a Vector or Matrix.
-#   Since you hardly ever want to manipulate internal state of for example a SceneNode, most get methods
-#   should return a copy instead of the actual object. This decorator ensures that happens.
 def ascopy(function):
+    """Decorator to ensure the returned value is always a copy and never a direct reference
+    
+    "Everything is a Reference" is not nice when dealing with value-types like a Vector or Matrix.
+    Since you hardly ever want to manipulate internal state of for example a SceneNode, most get methods
+    should return a copy instead of the actual object. This decorator ensures that happens.
+    """
+
     def copy_function(*args, **kwargs):
         return copy.deepcopy(function(*args, **kwargs))
 
     return copy_function
 
 
-##  Decorator to conditionally call an extra function before calling the actual function.
-#
-#   This is primarily intended for conditional debugging, to make it possible to add extra
-#   debugging before calling a function that is only enabled when you actually want to
-#   debug things.
 def call_if_enabled(function: Callable[..., Any], condition: bool) -> Callable[..., Any]:
+    """Decorator to conditionally call an extra function before calling the actual function.
+    
+    This is primarily intended for conditional debugging, to make it possible to add extra
+    debugging before calling a function that is only enabled when you actually want to
+    debug things.
+    """
+
     if condition:
         def call_decorated(decorated_function):
             def call_function(*args, **kwargs):
@@ -57,16 +64,19 @@ def call_if_enabled(function: Callable[..., Any], condition: bool) -> Callable[.
             return decorated_function
         return call_direct
 
-##  Raised when the override decorator does not find the function it claims to override.
 class InvalidOverrideError(Exception):
+    """Raised when the override decorator does not find the function it claims to override."""
+
     pass
 
-##  Function decorator that can be used to mark a function as an override.
-#
-#   This works basically the same as the override attribute in C++ functions.
-#
-#   \param cls The class this function overrides a function from.
 def override(cls):
+    """Function decorator that can be used to mark a function as an override.
+    
+    This works basically the same as the override attribute in C++ functions.
+    
+    :param cls: The class this function overrides a function from.
+    """
+
     def override_decorator(function):
         function_signature = inspect.signature(function)
         if not inspect.getmembers(cls, lambda i: inspect.isfunction(i) and sameSignature(inspect.signature(i), function_signature)):
@@ -74,13 +84,15 @@ def override(cls):
         return function
     return override_decorator
 
-##  Class decorator that checks to see if all methods of the base class have been reimplemented
-#
-#   This is meant as a simple sanity check. An interface here is defined as a class with
-#   only functions. Any subclass is expected to reimplement all functions defined in the class,
-#   excluding builtin functions like __getattr__. It is also expected to match the signature of
-#   those functions.
 def interface(cls):
+    """Class decorator that checks to see if all methods of the base class have been reimplemented
+    
+    This is meant as a simple sanity check. An interface here is defined as a class with
+    only functions. Any subclass is expected to reimplement all functions defined in the class,
+    excluding builtin functions like __getattr__. It is also expected to match the signature of
+    those functions.
+    """
+
     # Then, replace the new method with a method that checks if all methods have been reimplemented
     old_new = cls.__new__
     def new_new(subclass, *args, **kwargs):
