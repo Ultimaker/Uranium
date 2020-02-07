@@ -263,6 +263,7 @@ class Trust:
         try:
             json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
 
+            # Open the file containing signatures:
             with open(json_filename, "r", encoding = "utf-8") as data_file:
                 json_data = json.load(data_file)
                 signatures_json = json_data.get(TrustBasics.getRootSignatureCategory(), None)
@@ -270,6 +271,7 @@ class Trust:
                     Logger.logException("e", "Can't parse (folder) signature file '{0}'.".format(data_file))
                     return False
 
+                # Loop over all files within the folder (excluding the signature file):
                 file_count = 0
                 for root, dirnames, filenames in os.walk(path, followlinks = True):
                     for filename in filenames:
@@ -278,15 +280,18 @@ class Trust:
                         file_count += 1
                         name_on_disk, name_in_data = TrustBasics.getFilePathInfo(path, root, filename)
 
+                        # Get the signature for the current to-verify file:
                         signature = signatures_json.get(name_in_data, None)
                         if signature is None:
                             Logger.logException("e", "File '{0}' was not signed with a checksum.".format(name_on_disk))
                             return False
 
+                        # Verify the file:
                         if not self._verifyFile(name_on_disk, signature):
                             Logger.logException("e", "File '{0}' didn't match with checksum.".format(name_on_disk))
                             return False
 
+                # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
                     Logger.logException("e", "Mismatch: # entries in '{0}' vs. real files.".format(json_filename))
                     return False

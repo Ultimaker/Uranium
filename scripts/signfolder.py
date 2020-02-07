@@ -44,6 +44,7 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
     try:
         signatures = {}  # Dict[str, str]
 
+        # Loop over all files in the folder:
         for root, dirnames, filenames in os.walk(path, followlinks = True):
             if os.path.basename(root) in ignore_folders:
                 continue
@@ -51,6 +52,7 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
                 if filename == TrustBasics.getSignaturesLocalFilename() and root == path:
                     continue
 
+                # Generate a signature for the current file:
                 name_on_disk, name_in_data = TrustBasics.getFilePathInfo(path, root, filename)
                 signature = TrustBasics.getFileSignature(name_on_disk, private_key)
                 if signature is None:
@@ -58,6 +60,7 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
                     return False
                 signatures[name_in_data] = signature
 
+        # Save signatures to json:
         wrapped_signatures = {TrustBasics.getRootSignatureCategory(): signatures}
 
         json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
