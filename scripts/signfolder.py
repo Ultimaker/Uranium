@@ -9,6 +9,7 @@ from typing import Optional, List
 from UM.Logger import Logger
 from UM.Trust import TrustBasics
 
+# Default arguments, if arguments to the script are omitted, these values are used:
 DEFAULT_PRIVATE_KEY_PATH = "../private_key.pem"
 DEFAULT_TO_SIGN_FOLDER = "."
 DEFAULT_IGNORE_SUBFOLDERS = ["__pycache__"]
@@ -16,6 +17,25 @@ DEFAULT_PASSWORD = ""
 
 
 def signFolder(private_key_path: str, path: str, ignore_folders: List[str], optional_password: Optional[str]) -> bool:
+    """ Generate a signature for a folder (given a private key) and save it to a json signature file within that folder.
+    - The signature file itself will not be signed.
+    - On validation, any 'extra' files not in the ignored (cache) folders should also trigger failure.
+    - Be careful, symlinks will be followed!
+    A json signature file for a folder looks like this:
+    {
+      "root_signatures": {
+        "text.txt": "...<key in base-64>...",
+        "img.png": "...<key in base-64>...",
+        "subfolder/text.txt": "...<key in base-64>..."
+      }
+    }
+
+    :param private_key_path: Path to the file containing the private key.
+    :param path: The folder to be signed.
+    :param ignore_folders: Local cache folders (that should be deleted on restart of the app) can be ignored.
+    :param optional_password: If the private key has a password, it should be provided here.
+    :return: Whether a valid signature file has been generated and saved.
+    """
     password = None if optional_password == "" else optional_password
     private_key = TrustBasics.loadPrivateKey(private_key_path, password)
     if private_key is None:
@@ -53,6 +73,12 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
 
 
 def mainfunc():
+    """ Arguments:
+    `-k <filename>` or `--private <filename>` path to the private key
+    `-f <path>` or `--folder <path>` path to the folder to be signed
+    `-i <local-path>` or `--ignore <local-path>` sub-folders to be ignored (useful for cache files that'll be deleted)
+    `-w <password>` or `--password <password>` if the private key file has a password, it should be specified like this
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("-k", "--private", type = str, default = DEFAULT_PRIVATE_KEY_PATH)
     parser.add_argument("-f", "--folder", type = str, default = DEFAULT_TO_SIGN_FOLDER)
