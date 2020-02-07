@@ -24,7 +24,7 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
     try:
         signatures = {}  # Dict[str, str]
 
-        for root, dirnames, filenames in os.walk(path):
+        for root, dirnames, filenames in os.walk(path, followlinks = True):
             if os.path.basename(root) in ignore_folders:
                 continue
             for filename in filenames:

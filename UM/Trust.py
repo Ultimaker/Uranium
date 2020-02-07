@@ -197,7 +197,7 @@ class Trust:
                     return False
 
                 file_count = 0
-                for root, dirnames, filenames in os.walk(path):
+                for root, dirnames, filenames in os.walk(path, followlinks = True):
                     for filename in filenames:
                         if filename == TrustBasics.getSignaturesLocalFilename() and root == path:
                             continue
