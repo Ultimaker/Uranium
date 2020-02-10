@@ -20,32 +20,34 @@ vertexBufferProperty = "__gl_vertex_buffer"
 indexBufferProperty = "__gl_index_buffer"
 
 
-##  The RenderBatch class represent a batch of objects that should be rendered.
-#
-#   Each RenderBatch contains a list of objects to render and all state related
-#   to those objects. It tries to minimize changes to state between render the
-#   individual objects. This means that for example the ShaderProgram used is
-#   only bound once, at the start of rendering. There are a few values, like
-#   the model-view-projection matrix that are updated for each object.
-#
-#   Currently RenderBatch objects are created each frame including the
-#   VertexArrayObject (VAO). This is done to greatly simplify managing
-#   RenderBatch-changes. Whenever (sets of) RenderBatches are managed throughout
-#   the lifetime of a session, crossing multiple frames, the usage of VAO's can
-#   improve performance by reusing them.
 class RenderBatch:
-    ##  The type of render batch.
-    #
-    #   This determines some basic state values, like blending on/off and additionally
-    #   is used to determine sorting order.
+    """The RenderBatch class represent a batch of objects that should be rendered.
+
+    Each RenderBatch contains a list of objects to render and all state related
+    to those objects. It tries to minimize changes to state between render the
+    individual objects. This means that for example the ShaderProgram used is
+    only bound once, at the start of rendering. There are a few values, like
+    the model-view-projection matrix that are updated for each object.
+
+    Currently RenderBatch objects are created each frame including the
+    VertexArrayObject (VAO). This is done to greatly simplify managing
+    RenderBatch-changes. Whenever (sets of) RenderBatches are managed throughout
+    the lifetime of a session, crossing multiple frames, the usage of VAO's can
+    improve performance by reusing them.
+    """
     class RenderType:
+        """The type of render batch.
+
+        This determines some basic state values, like blending on/off and additionally
+        is used to determine sorting order.
+        """
         NoType = 0 ## No special state changes are done.
         Solid = 1 ## Depth testing and depth writing are enabled.
         Transparent = 2 ## Depth testing is enabled, depth writing is disabled.
         Overlay = 3 ## Depth testing is disabled.
 
-    ##  The mode to render objects in. These correspond to OpenGL render modes.
     class RenderMode:
+        """The mode to render objects in. These correspond to OpenGL render modes."""
         Points = 0x0000
         Lines = 0x0001
         LineLoop = 0x0002
@@ -54,28 +56,29 @@ class RenderBatch:
         TriangleStrip = 0x0005
         TriangleFan = 0x0006
 
-    ##  Blending mode.
     class BlendMode:
+        """Blending mode."""
         NoBlending = 0 ## Blending disabled.
         Normal = 1 ## Standard alpha blending, mixing source and destination values based on respective alpha channels.
         Additive = 2 ## Additive blending, the value of the rendered pixel is added to the color already in the buffer.
 
-    ##  Init method.
-    #
-    #   \param shader The shader to use for this batch.
-    #   \param kwargs Keyword arguments.
-    #                 Possible values:
-    #                 - type: The RenderType to use for this batch. Defaults to RenderType.Solid.
-    #                 - mode: The RenderMode to use for this batch. Defaults to RenderMode.Triangles.
-    #                 - backface_cull: Whether to enable or disable backface culling. Defaults to True.
-    #                 - range: A tuple indicating the start and end of a range of triangles to render. Defaults to None.
-    #                 - sort: A modifier to influence object sorting. Lower values will cause the object to be rendered before others. Mostly relevant to Transparent mode.
-    #                 - blend_mode: The BlendMode to use to render this batch. Defaults to NoBlending when type is Solid, Normal when type is Transparent or Overlay.
-    #                 - state_setup_callback: A callback function to be called just after the state has been set up but before rendering.
-    #                                         This can be used to do additional alterations to the state that can not be done otherwise.
-    #                                         The callback is passed the OpenGL bindings object as first and only parameter.
-    #                 - state_teardown_callback: A callback similar to state_setup_callback, but called after everything was rendered, to handle cleaning up state changes made in state_setup_callback.
     def __init__(self, shader: ShaderProgram, **kwargs) -> None:
+        """Init method.
+
+        :param shader: The shader to use for this batch.
+        :param kwargs: Keyword arguments.
+        Possible values:
+        - type: The RenderType to use for this batch. Defaults to RenderType.Solid.
+        - mode: The RenderMode to use for this batch. Defaults to RenderMode.Triangles.
+        - backface_cull: Whether to enable or disable backface culling. Defaults to True.
+        - range: A tuple indicating the start and end of a range of triangles to render. Defaults to None.
+        - sort: A modifier to influence object sorting. Lower values will cause the object to be rendered before others. Mostly relevant to Transparent mode.
+        - blend_mode: The BlendMode to use to render this batch. Defaults to NoBlending when type is Solid, Normal when type is Transparent or Overlay.
+        - state_setup_callback: A callback function to be called just after the state has been set up but before rendering.
+        This can be used to do additional alterations to the state that can not be done otherwise.
+        The callback is passed the OpenGL bindings object as first and only parameter.
+        - state_teardown_callback: A callback similar to state_setup_callback, but called after everything was rendered, to handle cleaning up state changes made in state_setup_callback.
+        """
         self._shader = shader
         self._render_type = kwargs.get("type", self.RenderType.Solid)  # type: int
         self._render_mode = kwargs.get("mode", self.RenderMode.Triangles)  # type: int
@@ -94,45 +97,48 @@ class RenderBatch:
 
         self._gl = OpenGL.getInstance().getBindingsObject()
 
-    ##  The RenderType for this batch.
     @property
     def renderType(self):
+        """The RenderType for this batch."""
         return self._render_type
 
-    ##  The RenderMode for this batch.
     @property
     def renderMode(self):
+        """The RenderMode for this batch."""
         return self._render_mode
 
-    ##  The shader for this batch.
     @property
     def shader(self):
+        """The shader for this batch."""
         return self._shader
 
-    ##  Whether backface culling is enabled or not.
     @property
     def backfaceCull(self):
+        """Whether backface culling is enabled or not."""
         return self._backface_cull
 
-    ##  The range of elements to render.
-    #
-    #   \return The range of elements to render, as a tuple of (start, end)
     @property
     def renderRange(self):
+        """The range of elements to render.
+
+        :return: The range of elements to render, as a tuple of (start, end)
+        """
         return self._render_range
 
-    ##  The items to render.
-    #
-    #   \return A list of tuples, where each item is (transform_matrix, mesh, extra_uniforms)
     @property
     def items(self):
+        """The items to render.
+
+        :return: A list of tuples, where each item is (transform_matrix, mesh, extra_uniforms)
+        """
         return self._items
 
-    ##  Less-than comparison method.
-    #
-    #   This sorts RenderType.Solid before RenderType.Transparent
-    #   and RenderType.Transparent before RenderType.Overlay.
     def __lt__(self, other):
+        """Less-than comparison method.
+
+        This sorts RenderType.Solid before RenderType.Transparent
+        and RenderType.Transparent before RenderType.Overlay.
+        """
         if self._render_type == other._render_type:
             return self._sort_weight < other._sort_weight
 
@@ -144,13 +150,14 @@ class RenderBatch:
 
         return False
 
-    ##  Add an item to render to this batch.
-    #
-    #   \param transformation The transformation matrix to use for rendering the item.
-    #   \param mesh The mesh to render with the transform matrix.
-    #   \param uniforms A dict of additional uniform bindings to set when rendering the item.
-    #                   Note these are set specifically for this item.
     def addItem(self, transformation: Optional[Matrix], mesh: Optional[MeshData], uniforms = None):
+        """Add an item to render to this batch.
+
+        :param transformation: The transformation matrix to use for rendering the item.
+        :param mesh: The mesh to render with the transform matrix.
+        :param uniforms: A dict of additional uniform bindings to set when rendering the item.
+        Note these are set specifically for this item.
+        """
         if not transformation:
             Logger.log("w", "Tried to add an item to batch without transformation")
             return
@@ -160,10 +167,11 @@ class RenderBatch:
 
         self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms})
 
-    ##  Render the batch.
-    #
-    #   \param camera The camera to render from.
     def render(self, camera: Optional[Camera]):
+        """Render the batch.
+
+        :param camera: The camera to render from.
+        """
         if camera is None:
             Logger.log("e", "Unable to render batch without a camera.")
             return

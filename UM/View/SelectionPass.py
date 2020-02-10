@@ -18,13 +18,14 @@ from UM.View.RenderBatch import RenderBatch
 from UM.View.GL.OpenGL import OpenGL
 
 
-##  A RenderPass subclass responsible for rendering selectable objects to a texture.
-#
-#   This pass performs the rendering of selectable objects to a texture that can be
-#   sampled to retrieve the actual object that was underneath the mouse cursor. Additionally,
-#   information about what objects are actually selected is rendered into the alpha channel
-#   of this render pass so it can be used later on in the composite pass.
 class SelectionPass(RenderPass):
+    """A RenderPass subclass responsible for rendering selectable objects to a texture.
+
+    This pass performs the rendering of selectable objects to a texture that can be
+    sampled to retrieve the actual object that was underneath the mouse cursor. Additionally,
+    information about what objects are actually selected is rendered into the alpha channel
+    of this render pass so it can be used later on in the composite pass.
+    """
     class SelectionMode(enum.Enum):
         OBJECTS = "objects"
         FACES = "faces"
@@ -62,8 +63,8 @@ class SelectionPass(RenderPass):
     def _onSelectedFaceChanged(self):
         self._mode = SelectionPass.SelectionMode.FACES if Selection.getFaceSelectMode() else SelectionPass.SelectionMode.OBJECTS
 
-    ##  Perform the actual rendering.
     def render(self):
+        """Perform the actual rendering."""
         if self._mode == SelectionPass.SelectionMode.OBJECTS:
             self._renderObjectsMode()
         elif self._mode == SelectionPass.SelectionMode.FACES:
@@ -116,8 +117,8 @@ class SelectionPass(RenderPass):
 
         self.release()
 
-    ##  Get the object id at a certain pixel coordinate.
     def getIdAtPosition(self, x, y):
+        """Get the object id at a certain pixel coordinate."""
         output = self.getOutput()
 
         window_size = self._renderer.getWindowSize()
@@ -131,8 +132,8 @@ class SelectionPass(RenderPass):
         pixel = output.pixel(px, py)
         return self._selection_map.get(Color.fromARGB(pixel), None)
 
-    ## Get an unique identifier to the face of the polygon at a certain pixel-coordinate.
     def getFaceIdAtPosition(self, x, y):
+        """Get an unique identifier to the face of the polygon at a certain pixel-coordinate."""
         output = self.getOutput()
 
         window_size = self._renderer.getWindowSize()
@@ -170,11 +171,12 @@ class SelectionPass(RenderPass):
     def _dropAlpha(self, color):
         return Color(color.r, color.g, color.b, 0.0)
 
-    ##  Get the top root group for a node
-    #
-    #   \param node type(SceneNode)
-    #   \return group type(SceneNode)
     def _isInSelectedGroup(self, node):
+        """Get the top root group for a node
+
+        :param node: type(SceneNode)
+        :return: group type(SceneNode)
+        """
         group_node = node.getParent()
         while group_node.callDecoration("isGroup"):
             if Selection.isSelected(group_node):

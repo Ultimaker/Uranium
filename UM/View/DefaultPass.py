@@ -5,10 +5,11 @@ import UM.Qt.QtApplication
 from UM.View.RenderPass import RenderPass
 
 
-##  A render pass subclass that renders everything with the default parameters.
-#
-#   This class provides the basic rendering of the objects in the scene.
 class DefaultPass(RenderPass):
+    """A render pass subclass that renders everything with the default parameters.
+
+    This class provides the basic rendering of the objects in the scene.
+    """
     def __init__(self, width: int, height: int) -> None:
         super().__init__("default", width, height, 0)
 

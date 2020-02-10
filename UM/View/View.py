@@ -16,8 +16,8 @@ if TYPE_CHECKING:
     from UM.Event import Event
 
 
-## Abstract base class for view objects.
 class View(QObject, PluginObject):
+    """Abstract base class for view objects."""
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self._renderer = None  # type: Optional[Renderer]
@@ -28,47 +28,49 @@ class View(QObject, PluginObject):
     def name(self) -> str:
         return self.getPluginId()
 
-    ##  Add a QML component that is provided by this View.
     def addDisplayComponent(self, name: str, source: Union[str, QUrl]) -> None:
+        """Add a QML component that is provided by this View."""
         if type(source) == str:
             source = QUrl.fromLocalFile(source)
         self._components[name] = source
 
-    ##  Get a QUrl by name.
     def getDisplayComponent(self, name: str) -> QUrl:
+        """Get a QUrl by name."""
         if name in self._components:
             return self._components[name]
         return QUrl()
 
-    ##  Get the controller object associated with this View.
-    #   \sa Controller
     def getController(self) -> "Controller":
+        """Get the controller object associated with this View.
+        :sa Controller
+        """
         return self._controller
 
-    ##  Get the Renderer instance for this View.
     def getRenderer(self) -> Optional["Renderer"]:
+        """Get the Renderer instance for this View."""
         return self._renderer
 
-    ##  Set the renderer object to use with this View.
-    #   \param renderer \type{Renderer} The renderer to use.
     def setRenderer(self, renderer: Renderer) -> None:
+        """Set the renderer object to use with this View.
+
+        :param renderer: :type{Renderer} The renderer to use.
+        """
         self._renderer = renderer
 
-    ##  Begin the rendering process.
-    #
-    #   This should queue all the meshes that should be rendered.
     def beginRendering(self) -> None:
+        """Begin the rendering process.
+
+        This should queue all the meshes that should be rendered.
+        """
         pass
 
-    ##  Perform any steps needed when ending the rendering process.
-    #
-    #   If there is any cleanup or other tasks that need to be performed
-    #   after rendering this method should be used.
     def endRendering(self) -> None:
+        """Perform any steps needed when ending the rendering process.
+
+        If there is any cleanup or other tasks that need to be performed
+        after rendering this method should be used.
+        """
         pass
-    
-    ##  Handle an event.
-    #   \param event \type{Event} The event to handle.
-    #   \sa Event
+
     def event(self, event: "Event") -> bool:
         return False

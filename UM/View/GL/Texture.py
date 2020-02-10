@@ -4,11 +4,12 @@
 from PyQt5.QtGui import QOpenGLTexture, QImage, QAbstractOpenGLFunctions
 
 
-##  A class describing the interface to be used for texture objects.
-#
-#   This interface should be implemented by OpenGL implementations to handle texture
-#   objects.
 class Texture:
+    """A class describing the interface to be used for texture objects.
+
+    This interface should be implemented by OpenGL implementations to handle texture
+    objects.
+    """
     def __init__(self, open_gl_binding_object: QAbstractOpenGLFunctions) -> None:
         super().__init__()
 
@@ -17,14 +18,15 @@ class Texture:
         self._file_name = None
         self._image = None
 
-    ##  Get the OpenGL ID of the texture.
     def getTextureId(self) -> int:
+        """Get the OpenGL ID of the texture."""
         return self._qt_texture.textureId()
 
-    ##  Bind the texture to a certain texture unit.
-    #
-    #   \param texture_unit The texture unit to bind to.
     def bind(self, texture_unit):
+        """Bind the texture to a certain texture unit.
+
+        :param texture_unit: The texture unit to bind to.
+        """
         if not self._qt_texture.isCreated():
             if self._file_name != None:
                 self._image = QImage(self._file_name).mirrored()
@@ -35,19 +37,21 @@ class Texture:
             self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
 
         self._qt_texture.bind(texture_unit)
-    ##  Release the texture from a certain texture unit.
-    #
-    #   \param texture_unit The texture unit to release from.
     def release(self, texture_unit):
+        """Release the texture from a certain texture unit.
+
+        :param texture_unit: The texture unit to release from.
+        """
         self._qt_texture.release(texture_unit)
 
-    ##  Load an image and upload it to the texture.
-    #
-    #   \param file_name The file name of the image to load.
     def load(self, file_name):
+        """Load an image and upload it to the texture.
+
+        :param file_name: The file name of the image to load.
+        """
         self._file_name = file_name
-        #Actually loading the texture is postponed until the next bind() call.
-        #This makes sure we are on the right thread and have a current context when trying to upload.
+        # Actually loading the texture is postponed until the next bind() call.
+        # This makes sure we are on the right thread and have a current context when trying to upload.
 
     def setImage(self, image):
         self._image = image

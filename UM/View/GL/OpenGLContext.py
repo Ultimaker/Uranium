@@ -14,10 +14,11 @@ class OpenGLContext:
         ForceLegacy = "force_legacy"
         ForceModern = "force_modern"
 
-    ##  Set OpenGL context, given major, minor version + core using QOpenGLContext
-    #   Unfortunately, what you get back does not have to be the requested version.
     @classmethod
     def setContext(cls, major_version: int, minor_version: int, core = False, profile = None):
+        """Set OpenGL context, given major, minor version + core using QOpenGLContext
+        Unfortunately, what you get back does not have to be the requested version.
+        """
         new_format = QSurfaceFormat()
         new_format.setMajorVersion(major_version)
         new_format.setMinorVersion(minor_version)
@@ -38,23 +39,25 @@ class OpenGLContext:
             Logger.log("e", "Failed creating OpenGL context (%d, %d, core=%s)" % (major_version, minor_version, core))
             return None
 
-    ##  Check to see if the current OpenGL implementation has a certain OpenGL extension.
-    #
-    #   \param extension_name \type{string} The name of the extension to query for.
-    #   \param ctx optionally provide context object to be used, or current context will be used.
-    #
-    #   \return True if the extension is available, False if not.
     @classmethod
     def hasExtension(cls, extension_name: str, ctx = None) -> bool:
+        """Check to see if the current OpenGL implementation has a certain OpenGL extension.
+
+        :param extension_name: :type{string} The name of the extension to query for.
+        :param ctx: optionally provide context object to be used, or current context will be used.
+
+        :return: True if the extension is available, False if not.
+        """
         if ctx is None:
             ctx = QOpenGLContext.currentContext()
         return ctx.hasExtension(bytearray(extension_name, "utf-8"))
 
-    ##  Return if the current (or provided) context supports Vertex Array Objects
-    #
-    #   \param ctx (optional) context.
     @classmethod
     def supportsVertexArrayObjects(cls, ctx = None) -> bool:
+        """Return if the current (or provided) context supports Vertex Array Objects
+
+        :param ctx: (optional) context.
+        """
         if ctx is None:
             ctx = QOpenGLContext.currentContext()
         result = False
@@ -67,13 +70,14 @@ class OpenGLContext:
         cls.properties["supportsVertexArrayObjects"] = result
         return result
 
-    ##  Set the default format for each new OpenGL context
-    #   \param major_version
-    #   \param minor_version
-    #   \param core (optional) True for QSurfaceFormat.CoreProfile, False for CompatibilityProfile
-    #   \param profile (optional) QSurfaceFormat.CoreProfile, CompatibilityProfile or NoProfile, overrules option core
     @classmethod
     def setDefaultFormat(cls, major_version: int, minor_version: int, core = False, profile = None) -> None:
+        """Set the default format for each new OpenGL context
+        :param major_version:
+        :param minor_version:
+        :param core: (optional) True for QSurfaceFormat.CoreProfile, False for CompatibilityProfile
+        :param profile: (optional) QSurfaceFormat.CoreProfile, CompatibilityProfile or NoProfile, overrules option core
+        """
         new_format = QSurfaceFormat()
         new_format.setMajorVersion(major_version)
         new_format.setMinorVersion(minor_version)
@@ -90,23 +94,25 @@ class OpenGLContext:
         cls.minor_version = minor_version
         cls.profile = profile_
 
-    ##  Return if the OpenGL context version we ASKED for is legacy or not
     @classmethod
     def isLegacyOpenGL(cls) -> bool:
+        """Return if the OpenGL context version we ASKED for is legacy or not"""
         if cls.major_version < 4:
             return True
         if cls.major_version == 4 and cls.minor_version < 1:
             return True
         return False
 
-    ##  Return "best" OpenGL to use, 4.1 core or 2.0.
-    #   result is <major_version>, <minor_version>, <profile>
-    #   The version depends on what versions are supported in Qt (4.1 and 2.0) and what
-    #   the GPU supports. If creating a context fails at all, (None, None, None) is returned
-    #   Note that PyQt only supports 4.1, 2.1 and 2.0. Cura omits support for 2.1, so the
-    #   only returned options are 4.1 and 2.0.
     @classmethod
     def detectBestOpenGLVersion(cls, force_compatability: bool) -> Tuple[Optional[int], Optional[int], Optional[int]]:
+        """Return "best" OpenGL to use, 4.1 core or 2.0.
+
+        result is <major_version>, <minor_version>, <profile>
+        The version depends on what versions are supported in Qt (4.1 and 2.0) and what
+        the GPU supports. If creating a context fails at all, (None, None, None) is returned
+        Note that PyQt only supports 4.1, 2.1 and 2.0. Cura omits support for 2.1, so the
+        only returned options are 4.1 and 2.0.
+        """
         cls.detect_ogl_context = None
         if not force_compatability:
             Logger.log("d", "Trying OpenGL context 4.1...")
@@ -192,9 +198,9 @@ class OpenGLContext:
             Logger.log("d", "Failed to create OpenGL context 2.0.")
             return None, None, None
 
-    ##  Return OpenGL version number and profile as a nice formatted string
     @classmethod
     def versionAsText(cls, major_version: int, minor_version: int, profile) -> str:
+        """Return OpenGL version number and profile as a nice formatted string"""
         if profile == QSurfaceFormat.CompatibilityProfile:
             xtra = "Compatibility profile"
         elif profile == QSurfaceFormat.CoreProfile:

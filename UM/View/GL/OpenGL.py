@@ -23,20 +23,21 @@ if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
 
 
-##  Convenience methods for dealing with OpenGL.
-#
-#   This class simplifies dealing with OpenGL and different Python OpenGL bindings. It
-#   mostly describes an interface that should be implemented for dealing with basic OpenGL
-#   functionality using these different OpenGL bindings. Additionally, it provides singleton
-#   handling. The implementation-defined subclass must be set as singleton instance as soon
-#   as possible so that any calls to getInstance() return a proper object.
 class OpenGL:
+    """Convenience methods for dealing with OpenGL.
+
+    This class simplifies dealing with OpenGL and different Python OpenGL bindings. It
+    mostly describes an interface that should be implemented for dealing with basic OpenGL
+    functionality using these different OpenGL bindings. Additionally, it provides singleton
+    handling. The implementation-defined subclass must be set as singleton instance as soon
+    as possible so that any calls to getInstance() return a proper object.
+    """
     VertexBufferProperty = "__vertex_buffer"
     IndexBufferProperty = "__index_buffer"
     IndexBufferRangeProperty = "__index_range_buffer"
 
-    ##  Different OpenGL chipset vendors.
     class Vendor:
+        """Different OpenGL chipset vendors."""
         NVidia = 1
         AMD = 2
         Intel = 3
@@ -115,67 +116,77 @@ class OpenGL:
         Logger.log("d", "OpenGL Renderer: %s", self._gpu_type)
         Logger.log("d", "GLSL Version:    %s", self._opengl_shading_language_version)
 
-    ##  Check if the current OpenGL implementation supports FrameBuffer Objects.
-    #
-    #   \return True if FBOs are supported, False if not.
     def hasFrameBufferObjects(self) -> bool:
+        """Check if the current OpenGL implementation supports FrameBuffer Objects.
+
+        :return: True if FBOs are supported, False if not.
+        """
         return QOpenGLFramebufferObject.hasOpenGLFramebufferObjects()
 
-    ##  Get the current OpenGL version.
-    #
-    #   \return Version of OpenGL
     def getOpenGLVersion(self) -> str:
+        """Get the current OpenGL version.
+
+        :return: Version of OpenGL
+        """
         return self._opengl_version
 
-    ##  Get the current OpenGL shading language version.
-    #
-    #   \return Shading language version of OpenGL
     def getOpenGLShadingLanguageVersion(self) -> "Version":
+        """Get the current OpenGL shading language version.
+
+        :return: Shading language version of OpenGL
+        """
         return self._opengl_shading_language_version
 
-    ##  Get the current GPU vendor name.
-    #
-    #   \return Name of the vendor of current GPU
     def getGPUVendorName(self) -> str:
+        """Get the current GPU vendor name.
+
+        :return: Name of the vendor of current GPU
+        """
         return self._gl.glGetString(self._gl.GL_VENDOR)
 
-    ##  Get the current GPU vendor.
-    #
-    #   \return One of the items of OpenGL.Vendor.
     def getGPUVendor(self) -> int:
+        """Get the current GPU vendor.
+
+        :return: One of the items of OpenGL.Vendor.
+        """
         return self._gpu_vendor
 
-    ##  Get a string describing the current GPU type.
-    #
-    #   This effectively should return the OpenGL renderer string.
     def getGPUType(self) -> str:
+        """Get a string describing the current GPU type.
+
+        This effectively should return the OpenGL renderer string.
+        """
         return self._gpu_type
 
-    ##  Get the OpenGL bindings object.
-    #
-    #   This should return an object that has all supported OpenGL functions
-    #   as methods and additionally defines all OpenGL constants. This object
-    #   is used to make direct OpenGL calls so should match OpenGL as closely
-    #   as possible.
     def getBindingsObject(self) -> Any:
+        """Get the OpenGL bindings object.
+
+        This should return an object that has all supported OpenGL functions
+        as methods and additionally defines all OpenGL constants. This object
+        is used to make direct OpenGL calls so should match OpenGL as closely
+        as possible.
+        """
         return self._gl
 
-    ##  Create a FrameBuffer Object.
-    #
-    #   This should return an implementation-specifc FrameBufferObject subclass.
     def createFrameBufferObject(self, width: int, height: int) -> FrameBufferObject:
+        """Create a FrameBuffer Object.
+
+        This should return an implementation-specifc FrameBufferObject subclass.
+        """
         return FrameBufferObject(width, height)
 
-    ##  Create a Texture Object.
-    #
-    #   This should return an implementation-specific Texture subclass.
     def createTexture(self) -> Texture:
+        """Create a Texture Object.
+
+        This should return an implementation-specific Texture subclass.
+        """
         return Texture(self._gl)
 
-    ##  Create a ShaderProgram Object.
-    #
-    #   This should return an implementation-specifc ShaderProgram subclass.
     def createShaderProgram(self, file_name: str) -> ShaderProgram:
+        """Create a ShaderProgram Object.
+
+        This should return an implementation-specifc ShaderProgram subclass.
+        """
         shader = ShaderProgram()
         # The version_string must match the keys in shader files.
         if OpenGLContext.isLegacyOpenGL():
@@ -192,20 +203,21 @@ class OpenGL:
                 shader.load(file_name, version = "")
         return shader
 
-    ##  Create a Vertex buffer for a mesh.
-    #
-    #   This will create a vertex buffer object that is filled with the
-    #   vertex data of the mesh.
-    #
-    #   By default, the associated vertex buffer should be cached using a
-    #   custom property on the mesh. This should use the VertexBufferProperty
-    #   property name.
-    #
-    #   \param mesh The mesh to create a vertex buffer for.
-    #   \param kwargs Keyword arguments.
-    #                 Possible values:
-    #                 - force_recreate: Ignore the cached value if set and always create a new buffer.
     def createVertexBuffer(self, mesh: "MeshData", **kwargs: Any) -> QOpenGLBuffer:
+        """Create a Vertex buffer for a mesh.
+
+        This will create a vertex buffer object that is filled with the
+        vertex data of the mesh.
+
+        By default, the associated vertex buffer should be cached using a
+        custom property on the mesh. This should use the VertexBufferProperty
+        property name.
+
+        :param mesh: The mesh to create a vertex buffer for.
+        :param kwargs: Keyword arguments.
+        Possible values:
+        - force_recreate: Ignore the cached value if set and always create a new buffer.
+        """
         if not kwargs.get("force_recreate", False) and hasattr(mesh, OpenGL.VertexBufferProperty):
             return getattr(mesh, OpenGL.VertexBufferProperty)
 
@@ -270,20 +282,21 @@ class OpenGL:
         setattr(mesh, OpenGL.VertexBufferProperty, buffer)
         return buffer
 
-    ##  Create an index buffer for a mesh.
-    #
-    #   This will create an index buffer object that is filled with the
-    #   index data of the mesh.
-    #
-    #   By default, the associated index buffer should be cached using a
-    #   custom property on the mesh. This should use the IndexBufferProperty
-    #   property name.
-    #
-    #   \param mesh The mesh to create an index buffer for.
-    #   \param kwargs Keyword arguments.
-    #                 Possible values:
-    #                 - force_recreate: Ignore the cached value if set and always create a new buffer.
     def createIndexBuffer(self, mesh: "MeshData", **kwargs: Any):
+        """Create an index buffer for a mesh.
+
+        This will create an index buffer object that is filled with the
+        index data of the mesh.
+
+        By default, the associated index buffer should be cached using a
+        custom property on the mesh. This should use the IndexBufferProperty
+        property name.
+
+        :param mesh: The mesh to create an index buffer for.
+        :param kwargs: Keyword arguments.
+            Possible values:
+            - force_recreate: Ignore the cached value if set and always create a new buffer.
+        """
         if not mesh.hasIndices():
             return None
 
