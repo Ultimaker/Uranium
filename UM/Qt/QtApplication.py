@@ -66,9 +66,10 @@ if int(major) < 5 or (int(major) == 5 and int(minor) < 9):
     raise UnsupportedVersionError("This application requires at least PyQt 5.9.0")
 
 
-##  Application subclass that provides a Qt application object.
 @signalemitter
 class QtApplication(QApplication, Application):
+    """Application subclass that provides a Qt application object."""
+
     pluginsLoaded = Signal()
     applicationRunning = Signal()
     
@@ -491,23 +492,30 @@ class QtApplication(QApplication, Application):
         else:
             return False
 
-    ##  Get the backend of the application (the program that does the heavy lifting).
-    #   The backend is also a QObject, which can be used from qml.
     @pyqtSlot(result = "QObject*")
     def getBackend(self) -> Backend:
+        """Get the backend of the application (the program that does the heavy lifting).
+
+        The backend is also a QObject, which can be used from qml.
+        """
+
         return self._backend
 
-    ##  Property used to expose the backend
-    #   It is made static as the backend is not supposed to change during runtime.
-    #   This makes the connection between backend and QML more reliable than the pyqtSlot above.
-    #   \returns Backend \type{Backend}
     @pyqtProperty("QVariant", constant = True)
     def backend(self) -> Backend:
+        """Property used to expose the backend
+
+        It is made static as the backend is not supposed to change during runtime.
+        This makes the connection between backend and QML more reliable than the pyqtSlot above.
+        :returns: Backend :type{Backend}
+        """
+
         return self.getBackend()
 
-    ## Create a class variable so we can manage the splash in the CrashHandler dialog when the Application instance
-    # is not yet created, e.g. when an error occurs during the initialization
     splash = None  # type: Optional[QSplashScreen]
+    """Create a class variable so we can manage the splash in the CrashHandler dialog when the Application instance
+    is not yet created, e.g. when an error occurs during the initialization
+    """
 
     def createSplash(self) -> None:
         if not self.getIsHeadLess():
@@ -520,8 +528,9 @@ class QtApplication(QApplication, Application):
                     QtApplication.splash.show()
                     self.processEvents()
 
-    ##  Display text on the splash screen.
     def showSplashMessage(self, message: str) -> None:
+        """Display text on the splash screen."""
+
         if not QtApplication.splash:
             self.createSplash()
         
@@ -532,19 +541,22 @@ class QtApplication(QApplication, Application):
         elif self.getIsHeadLess():
             Logger.log("d", message)
 
-    ##  Close the splash screen after the application has started.
     def closeSplash(self) -> None:
+        """Close the splash screen after the application has started."""
+
         if QtApplication.splash:
             QtApplication.splash.close()
             QtApplication.splash = None
 
-    ## Create a QML component from a qml file.
-    #  \param qml_file_path: The absolute file path to the root qml file.
-    #  \param context_properties: Optional dictionary containing the properties that will be set on the context of the
-    #                              qml instance before creation.
-    #  \return None in case the creation failed (qml error), else it returns the qml instance.
-    #  \note If the creation fails, this function will ensure any errors are logged to the logging service.
     def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None) -> Optional["QObject"]:
+        """Create a QML component from a qml file.
+        :param qml_file_path:: The absolute file path to the root qml file.
+        :param context_properties:: Optional dictionary containing the properties that will be set on the context of the
+        qml instance before creation.
+        :return: None in case the creation failed (qml error), else it returns the qml instance.
+        :note If the creation fails, this function will ensure any errors are logged to the logging service.
+        """
+
         if self._qml_engine is None: # Protect in case the engine was not initialized yet
             return None
         path = QUrl.fromLocalFile(qml_file_path)
@@ -564,10 +576,12 @@ class QtApplication(QApplication, Application):
         result.attached_context = result_context
         return result
 
-    ##  Delete all nodes containing mesh data in the scene.
-    #   \param only_selectable. Set this to False to delete objects from all build plates
     @pyqtSlot()
     def deleteAll(self, only_selectable = True) -> None:
+        """Delete all nodes containing mesh data in the scene.
+        :param only_selectable:. Set this to False to delete objects from all build plates
+        """
+
         self.getController().deleteAllNodesWithMeshData(only_selectable)
 
     @pyqtSlot()
@@ -576,8 +590,9 @@ class QtApplication(QApplication, Application):
         self.deleteAll()
         self.workspaceLoaded.emit("")
 
-    ##  Get the MeshFileHandler of this application.
     def getMeshFileHandler(self) -> MeshFileHandler:
+        """Get the MeshFileHandler of this application."""
+
         return self._mesh_file_handler
 
     def getWorkspaceFileHandler(self) -> WorkspaceFileHandler:
@@ -590,12 +605,14 @@ class QtApplication(QApplication, Application):
     def getHttpRequestManager(self) -> "HttpRequestManager":
         return self._http_network_request_manager
 
-    ##  Gets the instance of this application.
-    #
-    #   This is just to further specify the type of Application.getInstance().
-    #   \return The instance of this application.
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "QtApplication":
+        """Gets the instance of this application.
+        
+        This is just to further specify the type of Application.getInstance().
+        :return: The instance of this application.
+        """
+
         return cast(QtApplication, super().getInstance(**kwargs))
 
     def _createSplashScreen(self) -> QSplashScreen:
@@ -618,10 +635,12 @@ class QtApplication(QApplication, Application):
         return self.getApplicationDisplayName()
 
 
-##  Internal.
-#
-#   Wrapper around a FunctionEvent object to make Qt handle the event properly.
 class _QtFunctionEvent(QEvent):
+    """Internal.
+    
+    Wrapper around a FunctionEvent object to make Qt handle the event properly.
+    """
+
     QtFunctionEvent = QEvent.User + 1
 
     def __init__(self, fevent: QEvent) -> None:

@@ -6,12 +6,14 @@ import numpy
 from copy import deepcopy
 
 
-##  Creates an immutable copy of the given narray
-#
-#   If the array is already immutable then it just returns it.
-#   \param nda \type{numpy.ndarray} the array to copy. May be a list
-#   \return \type{numpy.ndarray} an immutable narray
 def immutableNDArray(nda: Union[List, numpy.array]) -> numpy.array:
+    """Creates an immutable copy of the given narray
+    
+    If the array is already immutable then it just returns it.
+    :param nda: :type{numpy.ndarray} the array to copy. May be a list
+    :return: :type{numpy.ndarray} an immutable narray
+    """
+
     if nda is None:
         return None
 

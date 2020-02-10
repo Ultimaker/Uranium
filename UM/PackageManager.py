@@ -95,8 +95,10 @@ class PackageManager(QObject):
     def packagesWithUpdate(self) -> Set[str]:
         return self._packages_with_update_available
 
-    ## Alternative way of setting the available package updates without having to check all packages in the cloud.
     def setPackagesWithUpdate(self, packages: Set[str]):
+        """Alternative way of setting the available package updates without having to check all packages in the
+        cloud. """
+
         self._packages_with_update_available = packages
         self.packagesWithUpdateChanged.emit()
 
@@ -305,9 +307,12 @@ class PackageManager(QObject):
     def getUserInstalledPackages(self) -> List[str]:
         return [package for package in self._installed_package_dict]
 
-    ## Get a list of tuples that contain the package ID and version.
-    #  Used by the Marketplace to check which packages have updates available.
     def getAllInstalledPackageIdsAndVersions(self) -> List[Tuple[str, str]]:
+        """Get a list of tuples that contain the package ID and version.
+
+        Used by the Marketplace to check which packages have updates available.
+        """
+
         package_ids_and_versions = []  # type: List[Tuple[str, str]]
         all_installed_ids = self.getAllInstalledPackageIDs()
         for package_id in all_installed_ids:
@@ -380,10 +385,19 @@ class PackageManager(QObject):
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
 
-    ## Schedules the given package file to be installed upon the next start.
-    # \return The to-be-installed package_id or None if something went wrong
+    @pyqtSlot(QUrl)
+    def installPackageViaDragAndDrop(self, file_url: str) -> None:
+        """This is called by drag-and-dropping curapackage files."""
+        filename = QUrl(file_url).toLocalFile()
+        return self.installPackage(filename)
+
     @pyqtSlot(str)
     def installPackage(self, filename: str) -> Optional[str]:
+        """Schedules the given package file to be installed upon the next start.
+
+        :return: The to-be-installed package_id or None if something went wrong
+        """
+
         has_changes = False
         package_id = ""
         try:
@@ -468,6 +482,8 @@ class PackageManager(QObject):
 
     ##  Is the package an user installed package?
     def isUserInstalledPackage(self, package_id: str) -> bool:
+        """Is the package an user installed package?"""
+
         return package_id in self._installed_package_dict
 
     # Removes everything associated with the given package ID.
@@ -589,9 +605,10 @@ class PackageManager(QObject):
                     license_string = None
         return license_string
 
-    ##  Find the package files by package_id by looking at the installed folder
     @staticmethod
     def getPackageFiles(package_id) -> List[Tuple[str, List[str]]]:
+        """Find the package files by package_id by looking at the installed folder"""
+
         data_storage_dir = os.path.abspath(Resources.getDataStoragePath())
 
         os_walk = []
@@ -611,9 +628,10 @@ class PackageManager(QObject):
 
         return result
 
-    ##  Return container ids for contents found with package_id
     @staticmethod
     def getPackageContainerIds(package_id: str) -> List[str]:
+        """Return container ids for contents found with package_id"""
+
         package_files = PackageManager.getPackageFiles(package_id)
         ids = []
         for root_path, file_names in package_files:
@@ -624,9 +642,10 @@ class PackageManager(QObject):
                     ids.append(id)
         return ids
 
-    ##  Try to return Id for given path by looking at its existence in the mimetype database
     @staticmethod
     def convertPathToId(path: str) -> str:
+        """Try to return Id for given path by looking at its existence in the mimetype database"""
+
         mime = None
         try:
             mime = MimeTypeDatabase.getMimeTypeForFile(path)

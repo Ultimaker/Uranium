@@ -15,21 +15,25 @@ if TYPE_CHECKING:
 numpy.seterr(divide="ignore")
 
 
-##  Simple 3D-vector class based on numpy arrays.
-#
-#   This class represents an immutable 3-dimensional vector.
 class Vector:
+    """Simple 3D-vector class based on numpy arrays.
+    
+    This class represents an immutable 3-dimensional vector.
+    """
+
     # These fields are filled in below. This is needed to help static analysis tools (read: PyCharm)
     Null = None     # type: Vector
     Unit_X = None   # type: Vector
     Unit_Y = None   # type: Vector
     Unit_Z = None   # type: Vector
 
-    ##  Initialize a new vector
-    #   \param x X coordinate of vector.
-    #   \param y Y coordinate of vector.
-    #   \param z Z coordinate of vector.
     def __init__(self, x: Optional[float] = None, y: Optional[float] = None, z: Optional[float] = None, data: Optional[numpy.ndarray] = None, round_digits: Optional[int] = None) -> None:
+        """Initialize a new vector
+        :param x: X coordinate of vector.
+        :param y: Y coordinate of vector.
+        :param z: Z coordinate of vector.
+        """
+
         if x is not None and y is not None and z is not None:
             self._data = numpy.array([x, y, z], dtype = numpy.float64)
         elif data is not None:
@@ -38,27 +42,32 @@ class Vector:
             self._data = numpy.zeros(3, dtype = numpy.float64)
         self.round_digits = round_digits  # for comparisons
 
-    ##  Get numpy array with the data
-    #   \returns numpy array of length 3 holding xyz data.
     def getData(self) -> numpy.ndarray:
+        """Get numpy array with the data
+        :returns: numpy array of length 3 holding xyz data.
+        """
+
         return self._data.astype(numpy.float64)
 
     def setRoundDigits(self, digits: int) -> None:
         self.round_digits = digits
 
-    ##  Return the x component of this vector
     @property
     def x(self):
+        """Return the x component of this vector"""
+
         return numpy.float64(self._data[0])
 
-    ##  Return the y component of this vector
     @property
     def y(self):
+        """Return the y component of this vector"""
+
         return numpy.float64(self._data[1])
 
-    ## Return the z component of this vector
     @property
     def z(self):
+        """Return the z component of this vector"""
+
         return numpy.float64(self._data[2])
 
     def set(self, x: Optional[float] = None, y: Optional[float] = None, z: Optional[float] = None) -> "Vector":
@@ -67,8 +76,9 @@ class Vector:
         new_z = self._data[2] if z is None else z
         return Vector(new_x, new_y, new_z)
 
-    ##  Get the angle from this vector to another
     def angleToVector(self, vector: "Vector") -> float:
+        """Get the angle from this vector to another"""
+
         v0 = numpy.array(self._data, dtype = numpy.float64, copy = False)
         v1 = numpy.array(vector.getData(), dtype = numpy.float64, copy = False)
         dot = numpy.sum(v0 * v1)
@@ -83,8 +93,9 @@ class Vector:
         else:
             return self
 
-    ##  Return length, i.e. Euclidean norm, of ndarray along axis.
     def _normalizeVector(self, data: numpy.ndarray) -> numpy.ndarray:
+        """Return length, i.e. Euclidean norm, of ndarray along axis."""
+
         data = numpy.array(data, dtype = numpy.float64, copy = True)
         if data.ndim == 1:
             return math.sqrt(numpy.dot(data, data))
@@ -125,10 +136,12 @@ class Vector:
 
         return Vector(d[0], d[1], d[2])
 
-    ##  Scale a vector by another vector.
-    #
-    #   This will do a component-wise multiply of the two vectors.
     def scale(self, other: "Vector") -> "Vector":
+        """Scale a vector by another vector.
+        
+        This will do a component-wise multiply of the two vectors.
+        """
+
         return Vector(self.x * other.x, self.y * other.y, self.z * other.z)
 
     def __eq__(self, other):
@@ -138,11 +151,13 @@ class Vector:
             return False
         return self.equals(other)
 
-    ## Compares this vector to another vector.
-    #
-    #   \param epsilon optional tolerance value for the comparision.
-    #   \returns True if the two vectors are the same.
     def equals(self, other: "Vector", epsilon: float = 1e-6) -> bool:
+        """Compares this vector to another vector.
+        
+        :param epsilon: optional tolerance value for the comparision.
+        :returns: True if the two vectors are the same.
+        """
+
         return Float.fuzzyCompare(self.x, other.x, epsilon) and \
                Float.fuzzyCompare(self.y, other.y, epsilon) and \
                Float.fuzzyCompare(self.z, other.z, epsilon)

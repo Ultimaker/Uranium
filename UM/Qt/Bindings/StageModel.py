@@ -7,9 +7,12 @@ from UM.PluginRegistry import PluginRegistry
 from UM.Qt.ListModel import ListModel
 
 
-##  The StageModel is a representation of all stages in QML.
-#   Use it to populate a stage based menu (like top bar).
 class StageModel(ListModel):
+    """The StageModel is a representation of all stages in QML.
+
+    Use it to populate a stage based menu (like top bar).
+    """
+
     IdRole = Qt.UserRole + 1
     NameRole = Qt.UserRole + 2
     StageRole = Qt.UserRole + 4

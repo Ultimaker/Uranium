@@ -83,10 +83,12 @@ record_profile_requested = False
 stop_record_profile_requested = False
 
 
-##  Fetch the accumulated profile data.
-#
-#   \return \type{ProfileCallNode} or None if there is no data.
 def getProfileData():
+    """Fetch the accumulated profile data.
+    
+    :return: :type{ProfileCallNode} or None if there is no data.
+    """
+
     raw_profile_calls = child_accu_stack[0]
     if len(raw_profile_calls) == 0:
         return None
@@ -97,22 +99,25 @@ def getProfileData():
     return _ProfileCallNode("", 0, start_time, end_time, fill_children)
 
 
-##  Erase any profile data.
 def clearProfileData():
+    """Erase any profile data."""
+
     global clear_profile_requested
     clear_profile_requested = True
 
 
-##  Start recording profile data.
 def startRecordingProfileData():
+    """Start recording profile data."""
+
     global record_profile_requested
     global stop_record_profile_requested
     stop_record_profile_requested = False
     record_profile_requested = True
 
 
-##  Stop recording profile data.
 def stopRecordingProfileData():
+    """Stop recording profile data."""
+
     global stop_record_profile_requested
     stop_record_profile_requested = True
 
@@ -136,12 +141,14 @@ def secondsToMS(value):
     return math.floor(value *1000)
 
 
-##  Profile a block of code.
-#
-#   Use this context manager to wrap and profile a block of code.
-#   \param name \type{str} The name to use to identify this code in the profile report.
 @contextmanager
 def profileCall(name):
+    """Profile a block of code.
+    
+    Use this context manager to wrap and profile a block of code.
+    :param name: :type{str} The name to use to identify this code in the profile report.
+    """
+
     if enabled():
         start_time = time.perf_counter()
         child_accu_stack.append([])
@@ -157,10 +164,12 @@ def profileCall(name):
         yield
 
 
-##  Return whether we are recording profiling information.
-#
-#   \return \type{bool} True if we are recording.
 def isRecordingProfile() -> bool:
+    """Return whether we are recording profiling information.
+    
+    :return: :type{bool} True if we are recording.
+    """
+
     global record_profile
     return record_profile and threading.main_thread() is threading.current_thread()
 
@@ -189,10 +198,9 @@ def updateProfileConfig():
             Logger.log('d', 'Stopping record stop_record_profile_requested')
 
 
-##  Decorator which can be manually applied to methods to record profiling information.
-#
-#   \type{Callable}
 def profile(function):
+    """Decorator which can be manually applied to methods to record profiling information."""
+
     if enabled():
         @functools.wraps(function)
         def runIt(*args, ** kwargs):
@@ -206,10 +214,12 @@ def profile(function):
         return function
 
 
-##  Drop in replacement for PyQt5's pyqtSlot decorator which records profiling information.
-#
-#   See the PyQt5 documentation for information about pyqtSlot.
 def pyqtSlot(*args, **kwargs) -> Callable[..., Any]:
+    """Drop in replacement for PyQt5's pyqtSlot decorator which records profiling information.
+    
+    See the PyQt5 documentation for information about pyqtSlot.
+    """
+
     if enabled():
         def wrapIt(function):
             @functools.wraps(function)

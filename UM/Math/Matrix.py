@@ -15,11 +15,13 @@ if TYPE_CHECKING:
     from UM.Math.Quaternion import Quaternion
 
 
-## This class is a 4x4 homogeneous matrix wrapper around numpy.
-#
-# Heavily based (in most cases a straight copy with some refactoring) on the excellent
-# 'library' Transformations.py created by Christoph Gohlke.
 class Matrix:
+    """This class is a 4x4 homogeneous matrix wrapper around numpy.
+    
+    Heavily based (in most cases a straight copy with some refactoring) on the excellent
+    'library' Transformations.py created by Christoph Gohlke.
+    """
+
     # epsilon for testing whether a number is close to zero
     _EPS = numpy.finfo(float).eps * 4.0
 
@@ -120,29 +122,36 @@ class Matrix:
         else:
             return Matrix(data = numpy.dot(other.getData(), self._data))
 
-    ##  Get raw data.
-    #   \returns 4x4 numpy array
     def getData(self) -> numpy.ndarray:
+        """Get raw data.
+        :returns: 4x4 numpy array
+        """
+
         return self._data.astype(numpy.float32)
 
-    ##  Create a 4x4 identity matrix. This overwrites any existing data.
     def setToIdentity(self) -> None:
+        """Create a 4x4 identity matrix. This overwrites any existing data."""
+
         self._data = numpy.identity(4, dtype = numpy.float64)
 
-    ##  Invert the matrix
     def invert(self) -> None:
+        """Invert the matrix"""
+
         self._data = numpy.linalg.inv(self._data)
 
-    ##  Return a inverted copy of the matrix.
-    #   \returns The invertex matrix.
     def getInverse(self) -> "Matrix":
+        """Return a inverted copy of the matrix.
+        :returns: The invertex matrix.
+        """
+
         try:
             return Matrix(numpy.linalg.inv(self._data))
         except:
             return Matrix(self._data)
 
-    ##  Return the transpose of the matrix.
     def getTransposed(self) -> "Matrix":
+        """Return the transpose of the matrix."""
+
         try:
             return Matrix(self._data.transpose())
         except:
@@ -151,16 +160,20 @@ class Matrix:
     def transpose(self) -> None:
         self._data = self._data.transpose()
 
-    ##  Translate the matrix based on Vector.
-    #   \param direction The vector by which the matrix needs to be translated.
     def translate(self, direction: Vector) -> None:
+        """Translate the matrix based on Vector.
+        :param direction: The vector by which the matrix needs to be translated.
+        """
+
         translation_matrix = Matrix()
         translation_matrix.setByTranslation(direction)
         self.multiply(translation_matrix)
 
-    ##  Set the matrix by translation vector. This overwrites any existing data.
-    #   \param direction The vector by which the (unit) matrix needs to be translated.
     def setByTranslation(self, direction: Vector) -> None:
+        """Set the matrix by translation vector. This overwrites any existing data.
+        :param direction: The vector by which the (unit) matrix needs to be translated.
+        """
+
         M = numpy.identity(4, dtype = numpy.float64)
         M[:3, 3] = direction.getData()[:3]
         self._data = M
@@ -171,20 +184,24 @@ class Matrix:
     def getTranslation(self) -> Vector:
         return Vector(data = self._data[:3, 3])
 
-    ##  Rotate the matrix based on rotation axis
-    #   \param angle The angle by which matrix needs to be rotated.
-    #   \param direction Axis by which the matrix needs to be rotated about.
-    #   \param point Point where from where the rotation happens. If None, origin is used.
     def rotateByAxis(self, angle: float, direction: Vector, point: Optional[List[float]] = None) -> None:
+        """Rotate the matrix based on rotation axis
+        :param angle: The angle by which matrix needs to be rotated.
+        :param direction: Axis by which the matrix needs to be rotated about.
+        :param point: Point where from where the rotation happens. If None, origin is used.
+        """
+
         rotation_matrix = Matrix()
         rotation_matrix.setByRotationAxis(angle, direction, point)
         self.multiply(rotation_matrix)
 
-    ##  Set the matrix based on rotation axis. This overwrites any existing data.
-    #   \param angle The angle by which matrix needs to be rotated in radians.
-    #   \param direction Axis by which the matrix needs to be rotated about.
-    #   \param point Point where from where the rotation happens. If None, origin is used.
     def setByRotationAxis(self, angle: float, direction: Vector, point: Optional[List[float]] = None) -> None:
+        """Set the matrix based on rotation axis. This overwrites any existing data.
+        :param angle: The angle by which matrix needs to be rotated in radians.
+        :param direction: Axis by which the matrix needs to be rotated about.
+        :param point: Point where from where the rotation happens. If None, origin is used.
+        """
+
         sina = math.sin(angle)
         cosa = math.cos(angle)
         direction_data = self._unitVector(direction.getData())
@@ -203,15 +220,17 @@ class Matrix:
             M[:3, 3] = point - numpy.dot(R, point)
         self._data = M
 
-    ##  Return transformation matrix from sequence of transformations.
-    #   This is the inverse of the decompose_matrix function.
-    #   @param scale : vector of 3 scaling factors
-    #   @param shear : list of shear factors for x-y, x-z, y-z axes
-    #   @param angles : list of Euler angles about static x, y, z axes
-    #   @param translate : translation vector along x, y, z axes
-    #   @param perspective : perspective partition of matrix
-    #   @param mirror: vector with mirror factors (1 if that axis is not mirrored, -1 if it is)
     def compose(self, scale: Vector = None, shear: Vector = None, angles: Vector = None, translate: Vector = None, perspective: Vector = None, mirror: Vector = None) -> None:
+        """Return transformation matrix from sequence of transformations.
+        This is the inverse of the decompose_matrix function.
+        :param scale : vector of 3 scaling factors
+        :param shear : list of shear factors for x-y, x-z, y-z axes
+        :param angles : list of Euler angles about static x, y, z axes
+        :param translate : translation vector along x, y, z axes
+        :param perspective : perspective partition of matrix
+        :param mirror: vector with mirror factors (1 if that axis is not mirrored, -1 if it is)
+        """
+
         M = numpy.identity(4)
         if perspective is not None:
             P = numpy.identity(4)
@@ -246,10 +265,13 @@ class Matrix:
         M /= M[3, 3]
         self._data = M
 
-    ## Return Euler angles from rotation matrix for specified axis sequence.
-    #  axes : One of 24 axis sequences as string or encoded tuple
-    #  Note that many Euler angle triplets can describe one matrix.
     def getEuler(self, axes: str = "sxyz") -> Vector:
+        """Return Euler angles from rotation matrix for specified axis sequence.
+
+        :param axes: One of 24 axis sequences as string or encoded tuple
+        Note that many Euler angle triplets can describe one matrix.
+        """
+
         firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes.lower()]
 
         i = firstaxis
@@ -284,12 +306,14 @@ class Matrix:
             ax, az = az, ax
         return Vector(ax, ay, az)
 
-    ## Return homogeneous rotation matrix from Euler angles and axis sequence.
-    #  @param ai Eulers roll
-    #  @param aj Eulers pitch
-    #  @param ak Eulers yaw
-    #  @param axes One of 24 axis sequences as string or encoded tuple
     def setByEuler(self, ai: float, aj: float, ak: float, axes: str = "sxyz") -> None:
+        """Return homogeneous rotation matrix from Euler angles and axis sequence.
+        :param ai: Eulers roll
+        :param aj: Eulers pitch
+        :param ak: Eulers yaw
+        :param axes: One of 24 axis sequences as string or encoded tuple
+        """
+
         firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes.lower()]
         i = firstaxis
         j = self._NEXT_AXIS[i + parity]
@@ -328,20 +352,26 @@ class Matrix:
             M[k, k] = cj * ci
         self._data = M
 
-    ##  Scale the matrix by factor wrt origin & direction.
-    #   \param factor The factor by which to scale
-    #   \param origin From where does the scaling need to be done
-    #   \param direction In what direction is the scaling (if None, it's uniform)
     def scaleByFactor(self, factor: float, origin: Optional[List[float]] = None, direction: Optional[Vector] = None) -> None:
+        """Scale the matrix by factor wrt origin & direction.
+
+        :param factor: The factor by which to scale
+        :param origin: From where does the scaling need to be done
+        :param direction: In what direction is the scaling (if None, it's uniform)
+        """
+
         scale_matrix = Matrix()
         scale_matrix.setByScaleFactor(factor, origin, direction)
         self.multiply(scale_matrix)
 
-    ##  Set the matrix by scale by factor wrt origin & direction. This overwrites any existing data
-    #   \param factor The factor by which to scale
-    #   \param origin From where does the scaling need to be done
-    #   \param direction In what direction is the scaling (if None, it's uniform)
     def setByScaleFactor(self, factor: float, origin: Optional[List[float]] = None, direction: Optional[Vector] = None) -> None:
+        """Set the matrix by scale by factor wrt origin & direction. This overwrites any existing data
+
+        :param factor: The factor by which to scale
+        :param origin: From where does the scaling need to be done
+        :param direction: In what direction is the scaling (if None, it's uniform)
+        """
+
         if direction is None:
             # uniform scaling
             M = numpy.diag([factor, factor, factor, 1.0])
@@ -368,14 +398,17 @@ class Matrix:
 
         return Vector(x, y, z)
 
-    ##  Set the matrix to an orthographic projection. This overwrites any existing data.
-    #   \param left The left edge of the projection
-    #   \param right The right edge of the projection
-    #   \param top The top edge of the projection
-    #   \param bottom The bottom edge of the projection
-    #   \param near The near plane of the projection
-    #   \param far The far plane of the projection
     def setOrtho(self, left: float, right: float, bottom: float, top: float, near: float, far: float) -> None:
+        """Set the matrix to an orthographic projection. This overwrites any existing data.
+
+        :param left: The left edge of the projection
+        :param right: The right edge of the projection
+        :param top: The top edge of the projection
+        :param bottom: The bottom edge of the projection
+        :param near: The near plane of the projection
+        :param far: The far plane of the projection
+        """
+
         self.setToIdentity()
         self._data[0, 0] = 2 / (right - left)
         self._data[1, 1] = 2 / (top - bottom)
@@ -384,12 +417,15 @@ class Matrix:
         self._data[3, 1] = -((top + bottom) / (top - bottom))
         self._data[3, 2] = -((far + near) / (far - near))
 
-    ##  Set the matrix to a perspective projection. This overwrites any existing data.
-    #   \param fovy Field of view in the Y direction
-    #   \param aspect The aspect ratio
-    #   \param near Distance to the near plane
-    #   \param far Distance to the far plane
     def setPerspective(self, fovy: float, aspect: float, near: float, far: float) -> None:
+        """Set the matrix to a perspective projection. This overwrites any existing data.
+
+        :param fovy: Field of view in the Y direction
+        :param aspect: The aspect ratio
+        :param near: Distance to the near plane
+        :param far: Distance to the far plane
+        """
+
         self.setToIdentity()
 
         f = 2. / math.tan(math.radians(fovy) / 2.)
@@ -401,7 +437,7 @@ class Matrix:
         self._data[3, 2] = (2. * far * near) / (near - far)
 
     def decompose(self) -> Tuple[Vector, "Matrix", Vector, Vector]:
-        '''
+        """
         SOURCE: https://github.com/matthew-brett/transforms3d/blob/e402e56686648d9a88aa048068333b41daa69d1a/transforms3d/affines.py
         Decompose 4x4 homogenous affine matrix into parts.
         The parts are translations, rotations, zooms, shears.
@@ -432,7 +468,7 @@ class Matrix:
         S : array, shape (3,)
            Shear vector, such that shears fill upper triangle above
            diagonal to form shear matrix (type ``striu``).
-        '''
+        """
         A44 = numpy.asarray(self._data, dtype = numpy.float64)
         T = A44[:-1, -1]
         RZS = A44[:-1, :-1]

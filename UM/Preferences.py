@@ -19,11 +19,14 @@ MimeTypeDatabase.addMimeType(
 )
 
 
-##      Preferences are application based settings that are saved for future use.
-#       Typical preferences would be window size, standard machine, etc.
-#       The application preferences can be gotten from the getPreferences() function in Application
 @signalemitter
 class Preferences:
+    """Preferences are application based settings that are saved for future use.
+
+    Typical preferences would be window size, standard machine, etc.
+    The application preferences can be gotten from the getPreferences() function in Application
+    """
+
     Version = 6
 
     def __init__(self) -> None:
@@ -32,8 +35,12 @@ class Preferences:
         self._parser = None  # type: Optional[configparser.ConfigParser]
         self._preferences = {}  # type: Dict[str, Dict[str, _Preference]]
 
-    ##  Add a new preference to the list. If the preference was already added, it's default is set to whatever is provided
     def addPreference(self, key: str, default_value: Any) -> None:
+        """Add a new preference to the list.
+
+        If the preference was already added, it's default is set to whatever is provided
+        """
+
         if key.count("/") != 1:
             raise Exception("Preferences must be in the [CATEGORY]/[KEY] format")
         preference = self._findPreference(key)
@@ -57,14 +64,16 @@ class Preferences:
         del self._preferences[group][key]
         Logger.log("i", "Preferences '%s' removed.", key)
 
-    ##  Changes the default value of a preference.
-    #
-    #   If the preference is currently set to the old default, the value of the
-    #   preference will be set to the new default.
-    #
-    #   \param key The key of the preference to set the default of.
-    #   \param default_value The new default value of the preference.
     def setDefault(self, key: str, default_value: Any) -> None:
+        """Changes the default value of a preference.
+        
+        If the preference is currently set to the old default, the value of the
+        preference will be set to the new default.
+        
+        :param key: The key of the preference to set the default of.
+        :param default_value: The new default value of the preference.
+        """
+
         preference = self._findPreference(key)
         if not preference:  # Key not found.
             Logger.log("w", "Tried to set the default value of non-existing setting %s.", key)
@@ -189,8 +198,9 @@ class Preferences:
 
         del self._parser["general"]["version"]
 
-    ##  Extract data from string and store it in the Configuration parser.
     def deserialize(self, serialized: str) -> None:
+        """Extract data from string and store it in the Configuration parser."""
+
         updated_preferences = self.__updateSerialized(serialized)
         self._parser = configparser.ConfigParser(interpolation = None)
         try:
@@ -211,8 +221,9 @@ class Preferences:
 
         self.__initializeSettings()
 
-    ##  Updates the given serialized data to the latest version.
     def __updateSerialized(self, serialized: str) -> str:
+        """Updates the given serialized data to the latest version."""
+
         configuration_type = "preferences"
 
         try:

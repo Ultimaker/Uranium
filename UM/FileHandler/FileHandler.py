@@ -17,9 +17,12 @@ i18n_catalog = i18nCatalog("uranium")
 if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
 
-##  Central class for reading and writing meshes.
-#   This class is created by Application and handles reading and writing mesh files.
+
 class FileHandler(QObject):
+    """Central class for reading and writing meshes.
+    This class is created by Application and handles reading and writing mesh files.
+    """
+
 
     def __init__(self, application: "QtApplication", writer_type: str = "unknown_file_writer", reader_type: str = "unknown_file_reader", parent: QObject = None) -> None:
         if cast(FileHandler, self.__class__).__instance is not None:
@@ -78,9 +81,11 @@ class FileHandler(QObject):
     def _readLocalFile(self, file: QUrl) -> None:
         raise NotImplementedError("_readLocalFile needs to be implemented by subclasses")
 
-    ##  Get list of all supported filetypes for writing.
-    #   \return List of dicts containing id, extension, description and mime_type for all supported file types.
     def getSupportedFileTypesWrite(self) -> List[Dict[str, Union[str, int]]]:
+        """Get list of all supported filetypes for writing.
+        :return: List of dicts containing id, extension, description and mime_type for all supported file types.
+        """
+
         supported_types = []
         meta_data = PluginRegistry.getInstance().getAllMetaData(filter={self._writer_type: {}}, active_only=True)
         for entry in meta_data:
@@ -128,12 +133,14 @@ class FileHandler(QObject):
     def readerRead(self, reader, file_name: str, **kwargs: Any):
         raise NotImplementedError("readerRead must be implemented by subclasses.")
 
-    ##  Get a mesh writer object that supports writing the specified mime type
-    #
-    #   \param mime The mime type that should be supported.
-    #   \return A FileWriter instance or None if no mesh writer supports the specified mime type. If there are multiple
-    #           writers that support the specified mime type, the first entry is returned.
     def getWriterByMimeType(self, mime: str) -> Optional["FileWriter"]:
+        """Get a mesh writer object that supports writing the specified mime type
+        
+        :param mime: The mime type that should be supported.
+        :return: A FileWriter instance or None if no mesh writer supports the specified mime type. If there are multiple
+        writers that support the specified mime type, the first entry is returned.
+        """
+
         writer_data = PluginRegistry.getInstance().getAllMetaData(filter={self._writer_type: {}}, active_only=True)
         for entry in writer_data:
             for output in entry[self._writer_type].get("output", []):
@@ -142,17 +149,20 @@ class FileHandler(QObject):
 
         return None
 
-    ##  Get an instance of a mesh writer by ID
     def getWriter(self, writer_id: str) -> Optional["FileWriter"]:
+        """Get an instance of a mesh writer by ID"""
+
         if writer_id not in self._writers:
             return None
 
         return self._writers[writer_id]
 
-    ##  Find a Reader that accepts the given file name.
-    #   \param file_name The name of file to load.
-    #   \returns Reader that accepts the given file name. If no acceptable Reader is found None is returned.
     def getReaderForFile(self, file_name: str) -> Optional["FileReader"]:
+        """Find a Reader that accepts the given file name.
+        :param file_name: The name of file to load.
+        :returns: Reader that accepts the given file name. If no acceptable Reader is found None is returned.
+        """
+
         for id, reader in self._readers.items():
             try:
                 if reader.acceptsFile(file_name):

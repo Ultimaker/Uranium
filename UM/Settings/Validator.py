@@ -24,15 +24,19 @@ class ValidatorState(Enum):
     MaximumWarning = "MaximumWarning"
 
 
-##  Validates that a SettingInstance's value is within a certain minimum and maximum value.
-#
-#   This class performs validation of any value that has __lt__ and __gt__ implemented, but
-#   it is primarily used for numerical values like integers and floats.
 class Validator(SettingFunction.SettingFunction):
-    ##  Constructor
-    #
-    #   \param instance The instance this Validator validates.
+    """Validates that a SettingInstance's value is within a certain minimum and maximum value.
+    
+    This class performs validation of any value that has __lt__ and __gt__ implemented, but
+    it is primarily used for numerical values like integers and floats.
+    """
+
     def __init__(self, key: str) -> None:
+        """Constructor
+        
+        :param instance: The instance this Validator validates.
+        """
+
         if key is None:
             raise ValueError("Instance should not be None")
 
@@ -40,8 +44,9 @@ class Validator(SettingFunction.SettingFunction):
 
         self._key = key  # type: str
 
-    ##  Perform the actual validation.
     def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Optional[ValidatorState]:
+        """Perform the actual validation."""
+
         if not value_provider:
             return None
 

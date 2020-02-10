@@ -9,15 +9,17 @@ import functools
 if TYPE_CHECKING:
     from UM.Settings.ContainerRegistry import ContainerRegistry
 
-##  Wrapper class to perform a search for a certain set of containers.
-#
-#   This class is primarily intended to be used internally by
-#   ContainerRegistry::findContainers. It is used to perform the actual
-#   searching for containers and cache the results.
-#
-#   \note Instances of this class will ignore the query results when
-#   comparing. This is done to simplify the caching code in ContainerRegistry.
 class ContainerQuery:
+    """Wrapper class to perform a search for a certain set of containers.
+    
+    This class is primarily intended to be used internally by
+    ContainerRegistry::findContainers. It is used to perform the actual
+    searching for containers and cache the results.
+    
+    :note Instances of this class will ignore the query results when
+    comparing. This is done to simplify the caching code in ContainerRegistry.
+    """
+
     cache = {}  # type: Dict[Tuple[Any, ...], ContainerQuery]  # To speed things up, we're keeping a cache of the container queries we've executed before.
 
     # If a field is provided in the format "[t1|t2|t3|...]", try to find if any of the given tokens is present in the
@@ -25,13 +27,15 @@ class ContainerQuery:
     # like "[my_printer][something]".
     OPTIONS_REGEX = re.compile("^\\[[a-zA-Z0-9-_\\+\\. ]+(\\|[a-zA-Z0-9-_\\+\\. ]+)*\\]$")
 
-    ##  Constructor
-    #
-    #   \param registry The ContainerRegistry instance this query operates on.
-    #   \param container_type A specific container class that should be filtered for.
-    #   \param ignore_case Whether or not the query should be case sensitive.
-    #   \param kwargs A dict of key, value pairs that should be searched for.
     def __init__(self, registry: "ContainerRegistry", *, ignore_case = False, **kwargs: Any) -> None:
+        """Constructor
+        
+        :param registry: The ContainerRegistry instance this query operates on.
+        :param container_type: A specific container class that should be filtered for.
+        :param ignore_case: Whether or not the query should be case sensitive.
+        :param kwargs: A dict of key, value pairs that should be searched for.
+        """
+
         self._registry = registry
 
         self._ignore_case = ignore_case
@@ -39,30 +43,38 @@ class ContainerQuery:
 
         self._result = None  # type: Optional[List[Dict[str, Any]]]
 
-    ##  Get the class of the containers that this query should find, if any.
-    #
-    #   If the query doesn't filter on container type, `None` is returned.
     def getContainerType(self) -> Optional[type]:
+        """Get the class of the containers that this query should find, if any.
+        
+        If the query doesn't filter on container type, `None` is returned.
+        """
+
         return self._kwargs.get("container_type")
 
-    ##  Retrieve the result of this query.
-    #
-    #   \return A list of containers matching this query, or None if the query was not executed.
     def getResult(self) -> Optional[List[Dict[str, Any]]]:
+        """Retrieve the result of this query.
+        
+        :return: A list of containers matching this query, or None if the query was not executed.
+        """
+
         return self._result
 
-    ##  Check to see if this is a very simple query that looks up a single container by ID.
-    #
-    #   \return True if this query is case sensitive, has only 1 thing to search for and that thing is "id".
     def isIdOnly(self) -> bool:
+        """Check to see if this is a very simple query that looks up a single container by ID.
+        
+        :return: True if this query is case sensitive, has only 1 thing to search for and that thing is "id".
+        """
+
         return len(self._kwargs) == 1 and not self._ignore_case and "id" in self._kwargs
 
-    ##  Execute the actual query.
-    #
-    #   This will search the container metadata of the ContainerRegistry based
-    #   on the arguments provided to this class' constructor. After it is done,
-    #   the result can be retrieved with getResult().
     def execute(self, candidates: Optional[List[Any]] = None) -> None:
+        """Execute the actual query.
+        
+        This will search the container metadata of the ContainerRegistry based
+        on the arguments provided to this class' constructor. After it is done,
+        the result can be retrieved with getResult().
+        """
+
         # If we filter on multiple metadata entries, we can filter on each entry
         # separately. We then cache the sub-filters so that subsequent filters
         # with a similar-but-different query can be sped up. For instance, if we
@@ -111,8 +123,9 @@ class ContainerQuery:
 
         self._result = filtered_candidates
 
-    ##  Human-readable string representation for debugging.
     def __str__(self):
+        """Human-readable string representation for debugging."""
+
         return str(self._kwargs)
 
     # protected:

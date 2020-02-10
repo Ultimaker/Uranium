@@ -17,12 +17,14 @@ else:
         pass
 
 
-##  A class to handle atomic writes to a file.
-#
-#   This class can be used to perform atomic writes to a file. Atomic writes ensure
-#   that the file contents are always correct and that concurrent writes do not
-#   end up writing to the same file at the same time.
 class SaveFile:
+    """A class to handle atomic writes to a file.
+    
+    This class can be used to perform atomic writes to a file. Atomic writes ensure
+    that the file contents are always correct and that concurrent writes do not
+    end up writing to the same file at the same time.
+    """
+
     # How many time so re-try saving this file when getting unknown exceptions.
     __max_retries = 10
 

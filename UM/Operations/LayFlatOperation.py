@@ -13,20 +13,24 @@ import math
 import time
 import numpy
 
-##  Operation that lays a mesh flat on the scene.
-class LayFlatOperation(Operation.Operation):
-    ##  Signal that indicates that the progress meter has changed.
-    progress = Signal()
 
-    ##  Creates the operation.
-    #
-    #   An optional orientation may be added if the answer of this lay flat
-    #   operation is already known. This may occur if two lay flat operations
-    #   are combined.
-    #
-    #   \param node The scene node to apply the operation on.
-    #   \param orientation A pre-calculated result orientation.
+class LayFlatOperation(Operation.Operation):
+    """Operation that lays a mesh flat on the scene."""
+
+    progress = Signal()
+    """Signal that indicates that the progress meter has changed."""
+
     def __init__(self, node, orientation = None):
+        """Creates the operation.
+        
+        An optional orientation may be added if the answer of this lay flat
+        operation is already known. This may occur if two lay flat operations
+        are combined.
+        
+        :param node: The scene node to apply the operation on.
+        :param orientation: A pre-calculated result orientation.
+        """
+
         super().__init__()
         self._node = node #Node the operation is applied on.
 
@@ -39,11 +43,13 @@ class LayFlatOperation(Operation.Operation):
         else:
             self._new_orientation = self._old_orientation
 
-    ##  Computes some orientation to hopefully lay the object flat.
-    #
-    #   No promises! This algorithm finds the lowest three vertices and lays
-    #   them flat. This is a rather naive heuristic, but fast and practical.
     def process(self):
+        """Computes some orientation to hopefully lay the object flat.
+        
+        No promises! This algorithm finds the lowest three vertices and lays
+        them flat. This is a rather naive heuristic, but fast and practical.
+        """
+
         # Based on https://github.com/daid/Cura/blob/SteamEngine/Cura/util/printableObject.py#L207
         # Note: Y & Z axis are swapped
 
@@ -108,13 +114,15 @@ class LayFlatOperation(Operation.Operation):
 
         self._new_orientation = self._node.getOrientation() #Save the resulting orientation.
 
-    ##  Increments the progress.
-    #
-    #   This lets the progress bar update to give the user an impression of how
-    #   long he still has to wait.
-    #
-    #   \param progress The amount of progress made since the last emission.
     def _emitProgress(self, progress):
+        """Increments the progress.
+        
+        This lets the progress bar update to give the user an impression of how
+        long he still has to wait.
+        
+        :param progress: The amount of progress made since the last emission.
+        """
+
         # Rate-limited progress notification
         # This is done to prevent the UI from being flooded with progress signals.
         self._progress += progress
@@ -124,28 +132,32 @@ class LayFlatOperation(Operation.Operation):
             self.progress.emit(self._progress)
             self._progress = 0
 
-    ##  Undoes this lay flat operation.
     def undo(self):
+        """Undoes this lay flat operation."""
+
         self._node.setOrientation(self._old_orientation) #Restore saved orientation.
 
-    ##  Re-does this lay flat operation.
     def redo(self):
+        """Re-does this lay flat operation."""
+
         if self._new_orientation: #Only if the orientation was finished calculating.
             self._node.setOrientation(self._new_orientation)
             pass
 
-    ##  Merge this lay flat operation with another lay flat operation.
-    #
-    #   If multiple lay flat operations are executed in sequence, the user needs
-    #   to press undo only once to undo them all.
-    #
-    #   You should ONLY merge a lay flat operation with an older operation. It
-    #   is NOT symmetric.
-    #
-    #   \param other The lay flat operation to merge this operation with. The
-    #   specified operation must be an older operation than this operation.
-    #   \return True if the merge was successful, or False otherwise.
     def mergeWith(self, other):
+        """Merge this lay flat operation with another lay flat operation.
+        
+        If multiple lay flat operations are executed in sequence, the user needs
+        to press undo only once to undo them all.
+        
+        You should ONLY merge a lay flat operation with an older operation. It
+        is NOT symmetric.
+        
+        :param other: The lay flat operation to merge this operation with. The
+        specified operation must be an older operation than this operation.
+        :return: True if the merge was successful, or False otherwise.
+        """
+
         if type(other) is not LayFlatOperation: #Must be a LayFlatOperation.
             return False
 
@@ -159,6 +171,7 @@ class LayFlatOperation(Operation.Operation):
         op._old_orientation = other._old_orientation #But use the old orientation of the other one.
         return op
 
-    ##  Makes a programmer-readable representation of this operation.
     def __repr__(self):
+        """Makes a programmer-readable representation of this operation."""
+
         return "LayFlatOp.(node={0})".format(self._node)

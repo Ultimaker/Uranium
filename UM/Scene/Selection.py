@@ -11,11 +11,14 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Operations.GroupedOperation import GroupedOperation
 
 
-##    This class is responsible for keeping track of what objects are selected
-#     It uses signals to notify others of changes in the selection
-#     It also has a convenience function that allows it to apply a single operation
-#     to all selected objects.
 class Selection:
+    """This class is responsible for keeping track of what objects are selected
+
+    It uses signals to notify others of changes in the selection
+    It also has a convenience function that allows it to apply a single operation
+    to all selected objects.
+    """
+
     @classmethod
     def add(cls, object: SceneNode) -> None:
         if object not in cls.__selection:
@@ -78,8 +81,9 @@ class Selection:
             cls.hoverFaceChanged.emit()
 
     @classmethod
-    ##  Get number of selected objects
     def getCount(cls) -> int:
+        """Get number of selected objects"""
+
         return len(cls.__selection)
 
     @classmethod
@@ -109,10 +113,13 @@ class Selection:
         return bounding_box
 
     @classmethod
-    ##  Get selected object by index
-    #   \param index index of the object to return
-    #   \returns selected object or None if index was incorrect / not found
     def getSelectedObject(cls, index: int) -> Optional[SceneNode]:
+        """Get selected object by index
+
+        :param index: index of the object to return
+        :returns: selected object or None if index was incorrect / not found
+        """
+
         try:
             return cls.__selection[index]
         except IndexError:
@@ -135,8 +142,9 @@ class Selection:
         cls.hoverFaceChanged.emit()
 
     @classmethod
-    ##  Check if anything is selected at all.
     def hasSelection(cls) -> bool:
+        """Check if anything is selected at all."""
+
         return bool(cls.__selection)
 
     selectionChanged = Signal()
@@ -153,20 +161,22 @@ class Selection:
             cls.__selection_center = cls.getBoundingBox().center
         return cls.__selection_center
 
-    ##  Apply an operation to the entire selection
-    #
-    #   This will create and push an operation onto the operation stack. Dependent
-    #   on whether there is one item selected or multiple it will be just the
-    #   operation or a grouped operation containing the operation for each selected
-    #   node.
-    #
-    #   \param operation \type{Class} The operation to create and push. It should take a SceneNode as first positional parameter.
-    #   \param args The additional positional arguments passed along to the operation constructor.
-    #   \param kwargs The additional keyword arguments that will be passed along to the operation constructor.
-    #
-    #   \return list of instantiated operations
     @classmethod
     def applyOperation(cls, operation, *args, **kwargs):
+        """Apply an operation to the entire selection
+        
+        This will create and push an operation onto the operation stack. Dependent
+        on whether there is one item selected or multiple it will be just the
+        operation or a grouped operation containing the operation for each selected
+        node.
+        
+        :param operation: :type{Class} The operation to create and push. It should take a SceneNode as first positional parameter.
+        :param args: The additional positional arguments passed along to the operation constructor.
+        :param kwargs: The additional keyword arguments that will be passed along to the operation constructor.
+        
+        :return: list of instantiated operations
+        """
+
         if not cls.__selection:
             return
 

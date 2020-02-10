@@ -11,18 +11,22 @@ from typing import cast, List, Optional, TYPE_CHECKING, Union
 if TYPE_CHECKING:
     from UM.Job import Job
 
-##  A thread pool and queue manager for Jobs.
-#
-#   The JobQueue class manages a queue of Job objects and a set of threads that
-#   can take things from this queue to process them.
-#   \sa Job
 @signalemitter
 class JobQueue:
-    ##  Initialize.
-    #
-    #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
-    #                       When 'auto', the number of threads is based on the number of processors and cores on the machine.
+    """A thread pool and queue manager for Jobs.
+    
+    The JobQueue class manages a queue of Job objects and a set of threads that
+    can take things from this queue to process them.
+    :sa Job
+    """
+
     def __init__(self, thread_count: Union[str, int] = "auto") -> None: #pylint: disable=bad-whitespace
+        """Initialize.
+        
+        :param thread_count: The amount of threads to use. Can be a positive integer or `auto`.
+        When `auto`, the number of threads is based on the number of processors and cores on the machine.
+        """
+
         if JobQueue.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         JobQueue.__instance = self
@@ -49,40 +53,48 @@ class JobQueue:
             thread.daemon = True
             thread.start()
 
-    ##  Add a Job to the queue.
-    #
-    #   \param job The Job to add.
     def add(self, job: "Job") -> None:
+        """Add a Job to the queue.
+        
+        :param job: The Job to add.
+        """
+
         with self._jobs_lock:
             self._jobs.append(job)
             self._semaphore.release()
 
-    ##  Remove a waiting Job from the queue.
-    #
-    #   \param job The Job to remove.
-    #
-    #   \note If a job has already begun processing it is already removed from the queue
-    #   and thus can no longer be cancelled.
     def remove(self, job: "Job") -> None:
+        """Remove a waiting Job from the queue.
+        
+        :param job: The Job to remove.
+        
+        :note If a job has already begun processing it is already removed from the queue
+        and thus can no longer be cancelled.
+        """
+
         with self._jobs_lock:
             if job in self._jobs:
                 self._jobs.remove(job)
 
-    ##  Emitted whenever a job starts processing.
-    #
-    #   \param job \type{Job} The job that has started processing.
     jobStarted = Signal()
+    """Emitted whenever a job starts processing.
+    
+    :param job: :type{Job} The job that has started processing.
+    """
 
-    ##  Emitted whenever a job has finished processing.
-    #
-    #   \param job \type{Job} The job that has finished processing.
     jobFinished = Signal()
+    """Emitted whenever a job has finished processing.
+    
+    :param job: :type{Job} The job that has finished processing.
+    """
 
-    ## protected:
-
-    #   Get the next job off the queue.
-    #   Note that this will block until a job is available.
     def _nextJob(self) -> Optional["Job"]:
+        """protected:
+    
+        Get the next job off the queue.
+        Note that this will block until a job is available.
+        """
+
         self._semaphore.acquire()
         with self._jobs_lock:
             # Semaphore release() can apparently cause all waiting threads to continue.
@@ -98,10 +110,9 @@ class JobQueue:
         return cls.__instance
 
 
-##  Internal
-#
-#   A worker thread that can process jobs from the JobQueue.
 class _Worker(threading.Thread):
+    """A worker thread that can process jobs from the JobQueue."""
+
     def __init__(self, queue: JobQueue) -> None:
         super().__init__()
         self._queue = queue

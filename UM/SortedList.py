@@ -25,9 +25,7 @@ from textwrap import dedent
 from typing import Any, Callable
 
 
-###############################################################################
 # BEGIN Python 2/3 Shims
-###############################################################################
 
 try:
     from collections.abc import Sequence, MutableSequence
@@ -117,9 +115,7 @@ def recursive_repr(fillvalue='...'):
 
     return decorating_function
 
-###############################################################################
 # END Python 2/3 Shims
-###############################################################################
 
 
 class SortedList(MutableSequence):
@@ -180,7 +176,6 @@ class SortedList(MutableSequence):
     """
     DEFAULT_LOAD_FACTOR = 1000
 
-
     def __init__(self, iterable=None, key=None):
         """Initialize sorted list instance.
 
@@ -209,7 +204,6 @@ class SortedList(MutableSequence):
 
         if iterable is not None:
             self._update(iterable)
-
 
     def __new__(cls, iterable=None, key=None):
         """Create new sorted list or sorted-key list instance.

@@ -3,8 +3,9 @@
 from UM.PluginObject import PluginObject
 
 
-##  Base class for writer objects
 class FileWriter(PluginObject):
+    """Base class for writer objects"""
+
     class OutputMode:
         TextMode = 1
         BinaryMode = 2

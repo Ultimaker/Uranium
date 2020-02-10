@@ -33,10 +33,12 @@ def _debug_value(value: Any) -> Any:
 # when it's a Python code (formula), the value needs to be evaluated via this class.
 #
 class SettingFunction:
-    ##  Constructor.
-    #
-    #   \param code The Python code this function should evaluate.
     def __init__(self, expression: str) -> None:
+        """Constructor.
+        
+        :param code: The Python code this function should evaluate.
+        """
+
         super().__init__()
 
         self._code = expression
@@ -64,11 +66,12 @@ class SettingFunction:
         except Exception as e:
             Logger.log("e", "Exception in function ({0}) for setting: {1}".format(str(e), self._code))
 
-    ##  Call the actual function to calculate the value.
-    #
-    #   \param value_provider The container from which to get setting values in
-    #   the formula.
     def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Any:
+        """Call the actual function to calculate the value.
+        
+        :param value_provider: The container from which to get setting values in the formula.
+        """
+
         if not value_provider:
             return None
 
@@ -111,16 +114,20 @@ class SettingFunction:
     def __hash__(self) -> int:
         return hash(self._code)
 
-    ##  Returns whether the function is ready to be executed.
-    #
-    #   \return True if the function is valid, or False if it's not.
     def isValid(self) -> bool:
+        """Returns whether the function is ready to be executed.
+        
+        :return: True if the function is valid, or False if it's not.
+        """
+
         return self._valid
 
-    ##  Retrieve a set of the keys (strings) of all the settings used in this function.
-    #
-    #   \return A set of the keys (strings) of all the settings used in this functions.
     def getUsedSettingKeys(self) -> FrozenSet[str]:
+        """Retrieve a set of the keys (strings) of all the settings used in this function.
+        
+        :return: A set of the keys (strings) of all the settings used in this functions.
+        """
+
         return self._used_keys
 
     def __str__(self) -> str:
@@ -129,11 +136,13 @@ class SettingFunction:
     def __repr__(self) -> str:
         return "<UM.Settings.SettingFunction (0x{0:x}) ={1} >".format(id(self), self._code)
 
-    ##  To support Pickle
-    #
-    #   Pickle does not support the compiled code, so instead remove it from the state.
-    #   We can re-compile it later on anyway.
     def __getstate__(self) -> Dict[str, Any]:
+        """To support Pickle
+        
+        Pickle does not support the compiled code, so instead remove it from the state.
+        We can re-compile it later on anyway.
+        """
+
         state = self.__dict__.copy()
         del state["_compiled"]
         return state
@@ -142,12 +151,14 @@ class SettingFunction:
         self.__dict__.update(state)
         self._compiled = compile(self._code, repr(self), "eval")
 
-    ##  Expose a custom function to the code executed by SettingFunction
-    #
-    #   \param name What identifier to use in the executed code.
-    #   \param operator A callable that implements the actual logic to execute.
     @classmethod
     def registerOperator(cls, name: str, operator: Callable) -> None:
+        """Expose a custom function to the code executed by SettingFunction
+        
+        :param name: What identifier to use in the executed code.
+        :param operator: A callable that implements the actual logic to execute.
+        """
+
         cls.__operators[name] = operator
         _SettingExpressionVisitor._knownNames.add(name)
 
@@ -183,15 +194,18 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
             self.values.add(node.id)
             self.keys.add(node.id)
 
-    ##  This one is used before Python 3.8 to visit string types.
-    #
-    #   visit_Str will be marked as deprecated from Python 3.8 and onwards.
     def visit_Str(self, node: ast.AST) -> None:
+        """This one is used before Python 3.8 to visit string types.
+        
+        visit_Str will be marked as deprecated from Python 3.8 and onwards.
+        """
+
         if node.s not in self._knownNames and node.s not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.s.
             self.keys.add(node.s)  # type: ignore
 
-    ##  This one is used on Python 3.8+ to visit string types.
     def visit_Constant(self, node: ast.AST) -> None:
+        """This one is used on Python 3.8+ to visit string types."""
+
         if isinstance(node.value, str) and node.value not in self._knownNames and node.value not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.value.
             self.keys.add(node.value)  # type: ignore
 

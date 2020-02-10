@@ -10,9 +10,11 @@ from UM.Settings.DefinitionContainer import DefinitionContainer
 from typing import Dict
 
 
-##  Model that holds definition containers. By setting the filter property the definitions held by this model can be
-#   changed.
 class DefinitionContainersModel(ListModel):
+    """Model that holds definition containers. By setting the filter property the definitions held by this model can be
+    changed.
+    """
+
     NameRole = Qt.UserRole + 1          # Human readable name (string)
     IdRole = Qt.UserRole + 2            # Unique ID of Definition
     SectionRole = Qt.UserRole + 3       # Section of definition / machine. (string)
@@ -37,14 +39,16 @@ class DefinitionContainersModel(ListModel):
         self._filter_dict = {}
         self._update()
 
-    ##  Handler for container change events from registry
     def _onContainerChanged(self, container):
+        """Handler for container change events from registry"""
+
         # We only need to update when the changed container is a DefinitionContainer.
         if isinstance(container, DefinitionContainer):
             self._update()
 
-    ##  Private convenience function to reset & repopulate the model.
     def _update(self) -> None:
+        """Private convenience function to reset & repopulate the model."""
+
         items = []
         definition_containers = ContainerRegistry.getInstance().findDefinitionContainersMetadata(**self._filter_dict)
         definition_containers.sort(key = self._sortKey)
@@ -83,9 +87,11 @@ class DefinitionContainersModel(ListModel):
     def preferredSections(self):
         return self._preferred_sections
 
-    ##  Set the filter of this model based on a string.
-    #   \param filter_dict Dictionary to do the filtering by.
     def setFilter(self, filter_dict):
+        """Set the filter of this model based on a string.
+        :param filter_dict: Dictionary to do the filtering by.
+        """
+
         self._filter_dict = filter_dict
         self._update()
 

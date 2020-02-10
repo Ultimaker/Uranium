@@ -53,15 +53,16 @@ class ActiveToolProxy(QObject):
         if action:
             action()
 
-    ##  Triggers one of the tools' actions and provides additional parameters to
-    #   the action.
-    #
-    #   The additional data is passed as a parameter to the function call of the
-    #   action.
-    #   \param action The action to trigger.
-    #   \param data The additional data to call
     @pyqtSlot(str, QVariant)
     def triggerActionWithData(self, action: str, data: Any):
+        """Triggers one of the tools' actions and provides additional parameters to the action.
+        
+        The additional data is passed as a parameter to the function call of the
+        action.
+        :param action: The action to trigger.
+        :param data: The additional data to call
+        """
+
         if not self._active_tool:
             return
         if not hasattr(self._active_tool, action):

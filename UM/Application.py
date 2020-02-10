@@ -33,20 +33,24 @@ if TYPE_CHECKING:
     from UM.Extension import Extension
 
 
-##  Central object responsible for running the main event loop and creating other central objects.
-#
-#   The Application object is a central object for accessing other important objects. It is also
-#   responsible for starting the main event loop. It is passed on to plugins so it can be easily
-#   used to access objects required for those plugins.
 @signalemitter
 class Application:
-    ##  Init method
-    #
-    #   \param name \type{string} The name of the application.
-    #   \param version \type{string} Version, formatted as major.minor.rev
-    #   \param build_type Additional version info on the type of build this is, such as "master".
-    #   \param is_debug_mode Whether to run in debug mode.
+    """Central object responsible for running the main event loop and creating other central objects.
+    
+    The Application object is a central object for accessing other important objects. It is also
+    responsible for starting the main event loop. It is passed on to plugins so it can be easily
+    used to access objects required for those plugins.
+    """
+
     def __init__(self, name: str, version: str, api_version: str, app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
+        """Init method
+        
+        :param name: :type{string} The name of the application.
+        :param version: :type{string} Version, formatted as major.minor.rev
+        :param build_type: Additional version info on the type of build this is, such as "master".
+        :param is_debug_mode: Whether to run in debug mode.
+        """
+
         if Application.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         Application.__instance = self
@@ -222,10 +226,12 @@ class Application:
     def hasJustUpdatedFromOldVersion(self) -> bool:
         return self._just_updated_from_old_version
 
-    ##  Run the main event loop.
-    #   This method should be re-implemented by subclasses to start the main event loop.
-    #   \exception NotImplementedError
     def run(self):
+        """Run the main event loop.
+        This method should be re-implemented by subclasses to start the main event loop.
+        :exception NotImplementedError:
+        """
+
         self.addCommandLineOptions()
         self.parseCliOptions()
         self.initialize()
@@ -236,12 +242,13 @@ class Application:
     def getContainerRegistry(self) -> ContainerRegistry:
         return self._container_registry
 
-    ##  Get the lock filename
     def getApplicationLockFilename(self) -> str:
+        """Get the lock filename"""
+
         return self._config_lock_filename
 
-    ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()
+    """Emitted when the application window was closed and we need to shut down the application"""
 
     showMessageSignal = Signal()
 
@@ -268,12 +275,14 @@ class Application:
     def showToastMessage(self, title: str, message: str) -> None:
         raise NotImplementedError
 
-    ##  Get the version of the application
     def getVersion(self) -> str:
+        """Get the version of the application"""
+
         return self._version
 
-    ##  Get the build type of the application
     def getBuildType(self) -> str:
+        """Get the build type of the application"""
+
         return self._build_type
 
     def getIsDebugMode(self) -> bool:
@@ -287,8 +296,9 @@ class Application:
 
     visibleMessageAdded = Signal()
 
-    ##  Hide message by ID (as provided by built-in id function)
     def hideMessageById(self, message_id: int) -> None:
+        """Hide message by ID (as provided by built-in id function)"""
+
         # If a user and the application tries to close same message dialog simultaneously, message_id could become an empty
         # string, and then the application will raise an error when trying to do "int(message_id)".
         # So we check the message_id here.
@@ -305,26 +315,32 @@ class Application:
 
     visibleMessageRemoved = Signal()
 
-    ##  Get list of all visible messages
     def getVisibleMessages(self) -> List[Message]:
+        """Get list of all visible messages"""
+
         with self._message_lock:
             return self._visible_messages
 
-    ##  Function that needs to be overridden by child classes with a list of plugins it needs.
     def _loadPlugins(self) -> None:
+        """Function that needs to be overridden by child classes with a list of plugins it needs."""
+
         pass
 
-    ##  Get name of the application.
-    #   \returns app_name \type{string}
     def getApplicationName(self) -> str:
+        """Get name of the application.
+        :returns: app_name
+        """
+
         return self._app_name
 
     def getApplicationDisplayName(self) -> str:
         return self._app_display_name
 
-    ##  Get the preferences.
-    #   \return preferences \type{Preferences}
     def getPreferences(self) -> Preferences:
+        """Get the preferences.
+        :return: preferences
+        """
+
         return self._preferences
 
     def savePreferences(self) -> None:
@@ -333,10 +349,12 @@ class Application:
         else:
             Logger.log("i", "Preferences filename not set. Unable to save file.")
 
-    ##  Get the currently used IETF language tag.
-    #   The returned tag is during runtime used to translate strings.
-    #   \returns Language tag.
     def getApplicationLanguage(self) -> str:
+        """Get the currently used IETF language tag.
+        The returned tag is during runtime used to translate strings.
+        :returns: Language tag.
+        """
+
         language = os.getenv("URANIUM_LANGUAGE")
         if not language:
             language = self._preferences.getValue("general/language")
@@ -347,33 +365,44 @@ class Application:
 
         return language
 
-    ##  Application has a list of plugins that it *must* have. If it does not have these, it cannot function.
-    #   These plugins can not be disabled in any way.
     def getRequiredPlugins(self) -> List[str]:
+        """Application has a list of plugins that it *must* have. If it does not have these, it cannot function.
+        These plugins can not be disabled in any way.
+        """
+
         return self._required_plugins
 
-    ##  Set the plugins that the application *must* have in order to function.
-    #   \param plugin_names \type{list} List of strings with the names of the required plugins
     def setRequiredPlugins(self, plugin_names: List[str]) -> None:
+        """Set the plugins that the application *must* have in order to function.
+        :param plugin_names: List of strings with the names of the required plugins
+        """
+
         self._required_plugins = plugin_names
 
-    ##  Set the backend of the application (the program that does the heavy lifting).
     def setBackend(self, backend: "Backend") -> None:
+        """Set the backend of the application (the program that does the heavy lifting)."""
+
         self._backend = backend
 
-    ##  Get the backend of the application (the program that does the heavy lifting).
-    #   \returns Backend \type{Backend}
     def getBackend(self) -> "Backend":
+        """Get the backend of the application (the program that does the heavy lifting).
+        :returns: Backend
+        """
+
         return self._backend
 
-    ##  Get the PluginRegistry of this application.
-    #   \returns PluginRegistry \type{PluginRegistry}
     def getPluginRegistry(self) -> PluginRegistry:
+        """Get the PluginRegistry of this application.
+        :returns: PluginRegistry
+        """
+
         return self._plugin_registry
 
-    ##  Get the Controller of this application.
-    #   \returns Controller \type{Controller}
     def getController(self) -> Controller:
+        """Get the Controller of this application.
+        :returns: Controller
+        """
+
         return self._controller
 
     def getOperationStack(self) -> OperationStack:
@@ -382,30 +411,37 @@ class Application:
     def getOutputDeviceManager(self) -> OutputDeviceManager:
         return self._output_device_manager
 
-    ##  Return an application-specific Renderer object.
-    #   \exception NotImplementedError
     def getRenderer(self) -> Renderer:
+        """Return an application-specific Renderer object.
+        :exception NotImplementedError
+        """
+
         raise NotImplementedError("getRenderer must be implemented by subclasses.")
 
-    ##  Post a function event onto the event loop.
-    #
-    #   This takes a CallFunctionEvent object and puts it into the actual event loop.
-    #   \exception NotImplementedError
     def functionEvent(self, event: CallFunctionEvent) -> None:
+        """Post a function event onto the event loop.
+        
+        This takes a CallFunctionEvent object and puts it into the actual event loop.
+        :exception NotImplementedError
+        """
+
         raise NotImplementedError("functionEvent must be implemented by subclasses.")
 
-    ##  Call a function the next time the event loop runs.
-    #
-    #   You can't get the result of this function directly. It won't block.
-    #   \param function The function to call.
-    #   \param args The positional arguments to pass to the function.
-    #   \param kwargs The keyword arguments to pass to the function.
     def callLater(self, func: Callable[..., Any], *args, **kwargs) -> None:
+        """Call a function the next time the event loop runs.
+        
+        You can't get the result of this function directly. It won't block.
+        :param func: The function to call.
+        :param args: The positional arguments to pass to the function.
+        :param kwargs: The keyword arguments to pass to the function.
+        """
+
         event = CallFunctionEvent(func, args, kwargs)
         self.functionEvent(event)
 
-    ##  Get the application's main thread.
     def getMainThread(self) -> threading.Thread:
+        """Get the application's main thread."""
+
         return self._main_thread
 
     def addExtension(self, extension: "Extension") -> None:

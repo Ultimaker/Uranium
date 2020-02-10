@@ -18,11 +18,13 @@ if TYPE_CHECKING:
     from UM.Mesh.MeshData import MeshData
 
 
-##  A SceneNode subclass that provides a camera object.
-#
-#   The camera provides a projection matrix and its transformation matrix
-#   can be used as view matrix.
 class Camera(SceneNode.SceneNode):
+    """A SceneNode subclass that provides a camera object.
+    
+    The camera provides a projection matrix and its transformation matrix
+    can be used as view matrix.
+    """
+
     class PerspectiveMode(enum.Enum):
         PERSPECTIVE = "perspective"
         ORTHOGRAPHIC = "orthographic"
@@ -81,8 +83,9 @@ class Camera(SceneNode.SceneNode):
     def setAutoAdjustViewPort(self, auto_adjust: bool) -> None:
         self._auto_adjust_view_port_size = auto_adjust
 
-    ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self) -> Matrix:
+        """Get the projection matrix of this camera."""
+
         return self._projection_matrix
     
     def getViewportWidth(self) -> int:
@@ -146,9 +149,11 @@ class Camera(SceneNode.SceneNode):
         # It's a camera. It doesn't need rendering.
         return True
 
-    ##  Set the projection matrix of this camera.
-    #   \param matrix The projection matrix to use for this camera.
     def setProjectionMatrix(self, matrix: Matrix) -> None:
+        """Set the projection matrix of this camera.
+        :param matrix: The projection matrix to use for this camera.
+        """
+
         self._projection_matrix = matrix
         self._cached_view_projection_matrix = None
 
@@ -173,18 +178,20 @@ class Camera(SceneNode.SceneNode):
 
     perspectiveChanged = Signal()
 
-    ##  Get a ray from the camera into the world.
-    #
-    #   This will create a ray from the camera's origin, passing through (x, y)
-    #   on the near plane and continuing based on the projection matrix.
-    #
-    #   \param x The X coordinate on the near plane this ray should pass through.
-    #   \param y The Y coordinate on the near plane this ray should pass through.
-    #
-    #   \return A Ray object representing a ray from the camera origin through X, Y.
-    #
-    #   \note The near-plane coordinates should be in normalized form, that is within (-1, 1).
     def getRay(self, x: float, y: float) -> Ray:
+        """Get a ray from the camera into the world.
+        
+        This will create a ray from the camera's origin, passing through (x, y)
+        on the near plane and continuing based on the projection matrix.
+        
+        :param x: The X coordinate on the near plane this ray should pass through.
+        :param y: The Y coordinate on the near plane this ray should pass through.
+        
+        :return: A Ray object representing a ray from the camera origin through X, Y.
+        
+        :note The near-plane coordinates should be in normalized form, that is within (-1, 1).
+        """
+
         window_x = ((x + 1) / 2) * self._window_width
         window_y = ((y + 1) / 2) * self._window_height
         view_x = (window_x / self._viewport_width) * 2 - 1
@@ -221,8 +228,9 @@ class Camera(SceneNode.SceneNode):
 
         return Ray(origin, Vector(direction[0], direction[1], direction[2]))
 
-    ##  Project a 3D position onto the 2D view plane.
     def project(self, position: Vector) -> Tuple[float, float]:
+        """Project a 3D position onto the 2D view plane."""
+
         projection = self._projection_matrix
         view = self.getWorldTransformation()
         view.invert()
@@ -231,8 +239,9 @@ class Camera(SceneNode.SceneNode):
         position = position.preMultiply(projection)
         return position.x / position.z / 2.0, position.y / position.z / 2.0
 
-    ##  Updates the _perspective field if the preference was modified.
     def _preferencesChanged(self, key: str) -> None:
+        """Updates the _perspective field if the preference was modified."""
+
         if key != "general/camera_perspective_mode":  # Only listen to camera_perspective_mode.
             return
         from UM.Application import Application

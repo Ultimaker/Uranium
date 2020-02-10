@@ -14,9 +14,11 @@ from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
 
 
-##  Model that holds instance containers. By setting the filter property the instances held by this model can be
-#   changed.
 class InstanceContainersModel(ListModel):
+    """Model that holds instance containers. By setting the filter property the instances held by this model can be
+    changed.
+    """
+
     NameRole = Qt.UserRole + 1  # Human readable name (string)
     IdRole = Qt.UserRole + 2    # Unique ID of the InstanceContainer
     MetaDataRole = Qt.UserRole + 3
@@ -52,14 +54,16 @@ class InstanceContainersModel(ListModel):
         self._filter_dicts = []  # type: List[Dict[str, str]]
         self._container_change_timer.start()
 
-    ##  Handler for container added / removed events from registry
     def _onContainerChanged(self, container: ContainerInterface) -> None:
+        """Handler for container added / removed events from registry"""
+
         # We only need to update when the changed container is a instanceContainer
         if isinstance(container, InstanceContainer):
             self._container_change_timer.start()
 
-    ##  Private convenience function to reset & repopulate the model.
     def _update(self) -> None:
+        """Private convenience function to reset & repopulate the model."""
+
         #You can only connect on the instance containers, not on the metadata.
         #However the metadata can't be edited, so it's not needed.
         for container in self._instance_containers.values():
@@ -74,11 +78,13 @@ class InstanceContainersModel(ListModel):
         if new_items != self._items:
             self.setItems(new_items)
 
-    ##  Computes the items that need to be in this list model.
-    #
-    #   This does not set the items in the list itself. It is intended to be
-    #   overwritten by subclasses that add their own roles to the model.
     def _recomputeItems(self) -> Generator[Dict[str, Any], None, None]:
+        """Computes the items that need to be in this list model.
+        
+        This does not set the items in the list itself. It is intended to be
+        overwritten by subclasses that add their own roles to the model.
+        """
+
         registry = ContainerRegistry.getInstance()
         result = []
         for container in self._instance_containers.values():
@@ -101,14 +107,15 @@ class InstanceContainersModel(ListModel):
             })
         yield from sorted(result, key = self._sortKey)
 
-    ##  Fetch the list of containers to display.
-    #
-    #   This method is intended to be overridable by subclasses.
-    #
-    #   \return A tuple of an ID-to-instance mapping that includes all fully
-    #   loaded containers, and an ID-to-metadata mapping that includes the
-    #   containers of which only the metadata is known.
     def _fetchInstanceContainers(self) -> Tuple[Dict[str, InstanceContainer], Dict[str, Dict[str, Any]]]:
+        """Fetch the list of containers to display.
+        
+        This method is intended to be overridable by subclasses.
+        
+        :return: A tuple of an ID-to-instance mapping that includes all fully loaded containers, and
+        an ID-to-metadata mapping that includes the containers of which only the metadata is known.
+        """
+
         registry = ContainerRegistry.getInstance() #Cache this for speed.
         containers = {} #type: Dict[str, InstanceContainer] #Mapping from container ID to container.
         metadatas = {} #type: Dict[str, Dict[str, Any]] #Mapping from container ID to metadata.
@@ -133,9 +140,12 @@ class InstanceContainersModel(ListModel):
     def sectionProperty(self) -> str:
         return self._section_property
 
-    ##  Set the filter of this model based on a string.
-    #   \param filter_dict \type{Dict} Dictionary to do the filtering by.
     def setFilter(self, filter_dict: Dict[str, str]) -> None:
+        """Set the filter of this model based on a string.
+
+        :param filter_dict: :type{Dict} Dictionary to do the filtering by.
+        """
+
         self.setFilterList([filter_dict])
 
     filterChanged = pyqtSignal()
@@ -143,11 +153,13 @@ class InstanceContainersModel(ListModel):
     def filter(self) -> Dict[str, str]:
         return self._filter_dicts[0] if len(self._filter_dicts) != 0 else {}
 
-    ##  Set a list of filters to use when fetching containers.
-    #
-    #   \param filter_list List of filter dicts to fetch multiple sets of
-    #   containers. The final result is the union of these sets.
     def setFilterList(self, filter_list: List[Dict[str, str]]) -> None:
+        """Set a list of filters to use when fetching containers.
+        
+        :param filter_list: List of filter dicts to fetch multiple sets of
+        containers. The final result is the union of these sets.
+        """
+
         if filter_list != self._filter_dicts:
             self._filter_dicts = filter_list
             self.filterChanged.emit()
@@ -157,16 +169,16 @@ class InstanceContainersModel(ListModel):
     def filterList(self) -> List[Dict[str, str]]:
         return self._filter_dicts
 
-    ##  Gets a list of the possible file filters that the plugins have
-    #   registered they can read or write. The convenience meta-filters
-    #   "All Supported Types" and "All Files" are added when listing
-    #   readers, but not when listing writers.
-    #
-    #   \param io_type Name of the needed IO type
-    #   \return A list of strings indicating file name filters for a file
-    #   dialog.
     @pyqtSlot(str, result="QVariantList")
     def getFileNameFilters(self, io_type: str) -> List[str]:
+        """Gets a list of the possible file filters that the plugins have registered they can read or write.
+        The convenience meta-filters "All Supported Types" and "All Files" are added when listing readers,
+        but not when listing writers.
+        
+        :param io_type: Name of the needed IO type
+        :return: A list of strings indicating file name filters for a file dialog.
+        """
+
         #TODO: This function should be in UM.Resources!
         filters = []
         all_types = []
@@ -188,9 +200,12 @@ class InstanceContainersModel(ListModel):
     def getDefaultPath(self) -> QUrl:
         return QUrl.fromLocalFile(os.path.expanduser("~/"))
 
-    ##  Gets a list of profile reader or writer plugins
-    #   \return List of tuples of (plugin_id, meta_data).
     def _getIOPlugins(self, io_type: str) -> List[Tuple[str, Dict[str, Any]]]:
+        """Gets a list of profile reader or writer plugins
+
+        :return: List of tuples of (plugin_id, meta_data).
+        """
+
         pr = PluginRegistry.getInstance()
         active_plugin_ids = pr.getActivePlugins()
 
@@ -222,9 +237,11 @@ class InstanceContainersModel(ListModel):
         self.setProperty(index, "name", container.getName())
         self.setProperty(index, "id", container.getId())
 
-    ##  If a container has loaded fully (rather than just metadata) we need to
-    #   move it from the dict of metadata to the dict of full containers.
     def _onContainerLoadComplete(self, container_id: str) -> None:
+        """If a container has loaded fully (rather than just metadata) we need to
+        move it from the dict of metadata to the dict of full containers.
+        """
+
         if container_id in self._instance_containers_metadata:
             del self._instance_containers_metadata[container_id]
             self._instance_containers[container_id] = ContainerRegistry.getInstance().findContainers(id = container_id)[0]
