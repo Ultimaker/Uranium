@@ -61,4 +61,5 @@ class ExtensionModel(ListModel):
     def callExtensionMethod(self, extension_name, method_name):
         for item in self._items:
             if extension_name == item["name"]:
-                getattr(item["extension"], method_name)()
+                if hasattr(item["extension"], method_name):
+                    getattr(item["extension"], method_name)()
