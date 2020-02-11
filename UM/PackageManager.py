@@ -320,7 +320,7 @@ class PackageManager(QObject):
 
         return all_installed_ids
 
-    # Get a list of packages that the user has installed on the Cura Marketplace
+    # Get a list of packages that the user has installed.
     def getUserInstalledPackages(self) -> List[str]:
         return [package for package in self._installed_package_dict]
 
