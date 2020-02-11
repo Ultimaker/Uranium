@@ -101,7 +101,13 @@ class PackageManager(QObject):
         self.packagesWithUpdateChanged.emit()
 
     def isPackageCompatible(self, package_api_version: UMVersion) -> bool:
-        """Check whether an api version is compatible with the application's api version"""
+        """
+        Check whether an API version is compatible with the application's API
+        version.
+        :param package_api_version: The API version to check.
+        :return: ``True`` if packages with this API version are compatible, or
+        ``False`` if they are not.
+        """
         app_api_version = self._application.getAPIVersion()
 
         if app_api_version.getMajor() != package_api_version.getMajor():
@@ -112,8 +118,6 @@ class PackageManager(QObject):
             return False
 
         return True
-
-
 
     def checkIfPackageCanUpdate(self, package_id: str) -> bool:
         available_versions = self._available_package_versions.get(package_id)
