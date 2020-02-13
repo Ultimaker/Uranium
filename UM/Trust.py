@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import base64
@@ -6,6 +6,9 @@ import json
 import os
 from typing import Optional, Tuple
 
+# Note that we unfortunately need to use 'hazmat' code, as there apparently is no way to do what we want otherwise.
+# (Even if what we want should be relatively commonplace in security.)
+# Noted because if we _can_ make the change away from 'hazmat' (as opposed to lib-cryptography in general) we _should_.
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
@@ -16,11 +19,16 @@ from cryptography.hazmat.primitives.serialization import load_pem_public_key, lo
 from UM.Logger import Logger
 
 
-# Anything shared between the main code and the (keygen/signing) scripts, does not need state:
 class TrustBasics:
+    """Anything shared between the main code and the (keygen/signing) scripts which does not need state.
+
+    See 'Trust' (below) and the 'createkeypair.py', 'signfile.py' and 'signfolder.py' scripts in the 'scripts' folder.
+    """
+
+    # Considered SHA256 at first, but this is reportedly robust against something called 'length extension attacks'.
     __hash_algorithm = hashes.SHA384()
 
-    # For directories (plugins for example):
+    # For (in) directories (plugins for example):
     __signatures_relative_filename = "signature.json"
     __root_signatures_category = "root_signatures"
 
@@ -30,39 +38,76 @@ class TrustBasics:
 
     @classmethod
     def getHashAlgorithm(cls):
+        """To ensure the same hash-algorithm is used by every part of this code.
+
+        :return: The hash-algorithm used for the entire 'suite'.
+        """
+
         return cls.__hash_algorithm
 
-    # Only used for in folders, there's another mechanism for 'loose' files:
     @classmethod
     def getSignaturesLocalFilename(cls) -> str:
+        """'Signed folder' scenario: Get the filename the signature file in a folder has.
+
+        :return: The filename of the signatures file (not the path).
+        """
+
         return cls.__signatures_relative_filename
 
-    # Only used for in folders, there's another mechanism for 'loose' files:
     @classmethod
     def getRootSignatureCategory(cls) -> str:
+        """'Signed folder' scenario: In anticipation of other keys, put the 'master' signature into this category.
+
+        :return: The json 'name' for the main signatures category.
+        """
+
         return cls.__root_signatures_category
 
-    # Only used for single files, there's another mechanism for folders:
     @classmethod
     def getSignaturePathForFile(cls, filename: str) -> str:
+        """'Single signed file' scenario: Get the name of the signature-file that should be located next to the file.
+
+        :param filename: The file that has (or needs to be) signed.
+        :return: The path of the signature-file of this file.
+        """
+
         return os.path.join(
             os.path.dirname(filename),
             os.path.basename(filename).split(".")[0] + cls.__signature_filename_extension
         )
 
-    # Only used for single files, there's another mechanism for folders:
     @classmethod
     def getRootSignatureEntry(cls) -> str:
+        """'Single signed file' scenario: In anticipation of other keys, put the 'master' signature into this entry.
+
+        :return: The json 'name' for the main signature.
+        """
+
         return cls.__root_signature_entry
 
     @classmethod
     def getFilePathInfo(cls, base_folder_path: str, current_full_path: str, local_filename: str) -> Tuple[str, str]:
+        """'Signed folder' scenario: When walking over directory, it's convenient to have the full path on one hand,
+        and the 'name' of the file in the signature json file just below the signed directory on the other.
+
+        :param base_folder_path: The signed folder(name), where the signature file resides.
+        :param current_full_path: The full path to the current folder.
+        :param local_filename: The local filename of the current file.
+        :return: A tuple with the full path to the file on disk and the 'signed-folder-local' path of that same file.
+        """
+
         name_on_disk = os.path.join(current_full_path, local_filename)
         name_in_data = name_on_disk.replace(base_folder_path, "").replace("\\", "/")
         return name_on_disk, name_in_data if not name_in_data.startswith("/") else name_in_data[1:]
 
     @classmethod
     def getFileHash(cls, filename: str) -> Optional[str]:
+        """Gets the hash for the provided file.
+
+        :param filename: The filename of the file to be hashed.
+        :return: The hash of the file.
+        """
+
         hasher = hashes.Hash(cls.__hash_algorithm, backend = default_backend())
         try:
             with open(filename, "rb") as file:
@@ -74,6 +119,13 @@ class TrustBasics:
 
     @classmethod
     def getFileSignature(cls, filename: str, private_key: RSAPrivateKey) -> Optional[str]:
+        """Creates the signature for the (hash of the) provided file, given a private key.
+
+        :param filename: The file to be signed.
+        :param private_key: The private key used for signing.
+        :return: The signature if successful, 'None' otherwise.
+        """
+
         file_hash = cls.getFileHash(filename)
         if file_hash is None:
             return None
@@ -91,11 +143,23 @@ class TrustBasics:
 
     @staticmethod
     def generateNewKeyPair() -> Tuple[RSAPrivateKeyWithSerialization, RSAPublicKey]:
+        """Create a new private-public key-pair.
+
+        :return: A tulple of private-key/public key.
+        """
+
         private_key = rsa.generate_private_key(public_exponent = 65537, key_size = 4096, backend = default_backend())
         return private_key, private_key.public_key()
 
     @staticmethod
     def loadPrivateKey(private_filename: str, optional_password: Optional[str]) -> Optional[RSAPrivateKey]:
+        """Load a private key from a file.
+
+        :param private_filename: The filename of the file containing the private key.
+        :param optional_password: The key can be signed with a password as well (or not).
+        :return: The private key contained in the file.
+        """
+
         try:
             password_bytes = None if optional_password is None else optional_password.encode()
             with open(private_filename, "rb") as file:
@@ -107,6 +171,15 @@ class TrustBasics:
 
     @staticmethod
     def saveKeyPair(private_key: "RSAPrivateKeyWithSerialization", private_path: str, public_path: str, optional_password: Optional[str] = None) -> bool:
+        """Save a key-pair to two distinct files.
+
+        :param private_key: The private key to save. The public one will be generated from it.
+        :param private_path: Path to the filename where the private key will be saved.
+        :param public_path: Path to the filename where the public key will be saved.
+        :param optional_password: The private key can be signed with a password as well (or not).
+        :return: True on success.
+        """
+
         try:
             encrypt_method = serialization.NoEncryption()  # type: ignore
             if optional_password is not None:
@@ -134,29 +207,58 @@ class TrustBasics:
         return False
 
 
-# Trust as a singleton class for the main code, as opposed to the (keygen/signing) scripts:
 class Trust:
+    """Trust for use in the main-application code, as opposed to the (keygen/signing) scripts.
+
+    Can be seen as an elaborate wrapper around a public-key.
+    Currently used as a singleton, as we currently have only one single 'master' public key for the entire app.
+    See the 'createkeypair.py', 'signfile.py' and 'signfolder.py' scripts in the 'scripts' folder.
+    """
+
     __instance = None
 
     @staticmethod
     def getPublicRootKeyPath() -> str:
+        """It is assumed that the application will have a 'master' public key.
+
+        :return: Path to the 'master' public key of this application.
+        """
+
         from UM.Application import Application
         return os.path.abspath(os.path.join(Application.getAppFolderPrefix(), "public_key.pem"))
 
     @classmethod
     def getInstance(cls):
+        """Get the 'canonical' Trusts object for this application. See also 'getPublicRootKeyPath'.
+
+        :raise Exception: if the public key in `getPublicRootKeyPath()` can't be loaded for some reason.
+        :return: The Trust singleton.
+        """
+
         if cls.__instance is None:
             cls.__instance = Trust(Trust.getPublicRootKeyPath())
         return cls.__instance
 
     @classmethod
     def getInstanceOrNone(cls):
+        """Get the  'canonical' Trust object or None if the . Useful if only _optional_ verification is needed.
+
+        :return: Trust singleton or None if problems occurred with loading the public key in `getPublicRootKeyPath()`.
+        """
+
         try:
             return cls.getInstance()
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             return None
 
     def __init__(self, public_key_filename: str) -> None:
+        """Initializes a Trust object. A Trust object represents a public key and related utility methods on that key.
+        If the application only has a single public key, it's best to use 'getInstance' or 'getInstanceOrNone'.
+
+        :raise Exception: if public key file provided by the argument can't be found or parsed.
+        :param public_key_filename: Path to the file that holds the public key.
+        """
+
         self._public_key = None  #type: Optional[RSAPublicKey]
         try:
             with open(public_key_filename, "rb") as file:
@@ -186,9 +288,16 @@ class Trust:
         return False
 
     def signedFolderCheck(self, path: str) -> bool:
+        """In the 'singed folder' case, check whether the folder is signed according to the Trust-objects' public key.
+
+        :param path: The path to the folder to be checked (not the signature-file).
+        :return: True if the folder is signed (contains a signatures-file) and signed correctly.
+        """
+
         try:
             json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
 
+            # Open the file containing signatures:
             with open(json_filename, "r", encoding = "utf-8") as data_file:
                 json_data = json.load(data_file)
                 signatures_json = json_data.get(TrustBasics.getRootSignatureCategory(), None)
@@ -196,23 +305,27 @@ class Trust:
                     Logger.logException("e", "Can't parse (folder) signature file '{0}'.".format(data_file))
                     return False
 
+                # Loop over all files within the folder (excluding the signature file):
                 file_count = 0
-                for root, dirnames, filenames in os.walk(path):
+                for root, dirnames, filenames in os.walk(path, followlinks = True):
                     for filename in filenames:
                         if filename == TrustBasics.getSignaturesLocalFilename() and root == path:
                             continue
                         file_count += 1
                         name_on_disk, name_in_data = TrustBasics.getFilePathInfo(path, root, filename)
 
+                        # Get the signature for the current to-verify file:
                         signature = signatures_json.get(name_in_data, None)
                         if signature is None:
                             Logger.logException("e", "File '{0}' was not signed with a checksum.".format(name_on_disk))
                             return False
 
+                        # Verify the file:
                         if not self._verifyFile(name_on_disk, signature):
                             Logger.logException("e", "File '{0}' didn't match with checksum.".format(name_on_disk))
                             return False
 
+                # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
                     Logger.logException("e", "Mismatch: # entries in '{0}' vs. real files.".format(json_filename))
                     return False
@@ -225,6 +338,12 @@ class Trust:
         return False
 
     def signedFileCheck(self, filename: str) -> bool:
+        """In the 'single signed file' case, check whether a file is signed according to the Trust-objects' public key.
+
+        :param filename: The path to the file to be checked (not the signature-file).
+        :return: True if the file is signed (is next to a signature file) and signed correctly.
+        """
+
         try:
             signature_filename = TrustBasics.getSignaturePathForFile(filename)
 
@@ -248,4 +367,10 @@ class Trust:
 
     @staticmethod
     def signatureFileExistsFor(filename: str) -> bool:
+        """Whether or not a signature file _exist_ (so _not_ necessarily correct)  for the provided (single file) path.
+
+        :param filename: The filename that should be checked for.
+        :return: Returns True if there is a signature file next to the provided single file (as opposed to folder).
+        """
+
         return os.path.exists(TrustBasics.getSignaturePathForFile(filename))
