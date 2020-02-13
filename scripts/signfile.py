@@ -15,7 +15,8 @@ DEFAULT_PASSWORD = ""
 
 
 def signFile(private_key_path: str, filename: str, optional_password: Optional[str]) -> bool:
-    """ Generate a signature for a file (given a private key) and save it to a json signature file.
+    """Generate a signature for a file (given a private key) and save it to a json signature file.
+
     A json signature file for a single file looks like this:
     {
       "root_signature": "...<key in base-64>..."
@@ -26,6 +27,7 @@ def signFile(private_key_path: str, filename: str, optional_password: Optional[s
     :param optional_password: If the private key has a password, it should be provided here.
     :return: Whether a valid signature file has been generated and saved.
     """
+
     password = None if optional_password == "" else optional_password
     private_key = TrustBasics.loadPrivateKey(private_key_path, password)
     if private_key is None:
@@ -52,11 +54,13 @@ def signFile(private_key_path: str, filename: str, optional_password: Optional[s
 
 
 def mainfunc():
-    """ Arguments:
+    """Arguments:
+
     `-k <filename>` or `--private <filename>` path to the private key
     `-f <filename>` or `--file <filename>` path to the file to be signed
     `-w <password>` or `--password <password>` if the private key file has a password, it should be specified like this
     """
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-k", "--private", type = str, default = DEFAULT_PRIVATE_KEY_PATH)
     parser.add_argument("-f", "--file", type = str, default = DEFAULT_TO_SIGN_FILE)

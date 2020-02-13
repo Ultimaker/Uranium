@@ -13,22 +13,26 @@ DEFAULT_PASSWORD = ""
 
 
 def createAndStoreNewKeyPair(private_filename: str, public_filename: str, optional_password: Optional[str]) -> None:
-    """ Creates a new public and private key, and saves them to the provided filenames.
+    """Creates a new public and private key, and saves them to the provided filenames.
+
     :param private_filename: Filename to save the private key to.
     :param public_filename: Filename to save the public key to.
     :param optional_password: Private keys can have a password (or not).
     """
+
     password = None if optional_password == "" else optional_password
     private_key, public_key = TrustBasics.generateNewKeyPair()
     TrustBasics.saveKeyPair(private_key, private_filename, public_filename, password)
 
 
 def mainfunc():
-    """ Arguments:
+    """Arguments:
+
     `-k <filename>` or `--private <filename>` will store the generated private key to <filename>
     `-p <filename>` or `--public <filename>` will store the generated public key to <filename>
     `-w <password>` or `--password <password>` will give the private key a password (none if omitted, which is default)
     """
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-k", "--private", type = str, default = DEFAULT_PRIVATE_KEY_PATH)
     parser.add_argument("-p", "--public", type = str, default = DEFAULT_PUBLIC_KEY_PATH)
