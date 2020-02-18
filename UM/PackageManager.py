@@ -102,6 +102,25 @@ class PackageManager(QObject):
         self._packages_with_update_available = packages
         self.packagesWithUpdateChanged.emit()
 
+    def isPackageCompatible(self, package_api_version: UMVersion) -> bool:
+        """
+        Check whether an API version is compatible with the application's API
+        version.
+        :param package_api_version: The API version to check.
+        :return: ``True`` if packages with this API version are compatible, or
+        ``False`` if they are not.
+        """
+        app_api_version = self._application.getAPIVersion()
+
+        if app_api_version.getMajor() != package_api_version.getMajor():
+            return False
+
+        # minor versions are backwards compatible
+        if app_api_version.getMinor() < package_api_version.getMinor():
+            return False
+
+        return True
+
     def checkIfPackageCanUpdate(self, package_id: str) -> bool:
         available_versions = self._available_package_versions.get(package_id)
 
@@ -303,7 +322,7 @@ class PackageManager(QObject):
 
         return all_installed_ids
 
-    # Get a list of packages that the user has installed on the Cura Marketplace
+    # Get a list of packages that the user has installed.
     def getUserInstalledPackages(self) -> List[str]:
         return [package for package in self._installed_package_dict]
 
@@ -361,15 +380,15 @@ class PackageManager(QObject):
         return list(self._dismissed_packages)
 
     def reEvaluateDismissedPackages(self, subscribed_packages_payload: List[Dict[str, Any]], sdk_version: str) -> None:
-        '''
-        It removes a package from the "dismissed incompatible packages" list, if it gets updated in the meantime.
-        We check every package from the payload against our current CURA SDK version, and if it is in there -
-        we remove the already dismissed package from the above mentioned list.
-
-        :param subscribed_packages_payload: The response from Web CURA, a list of packages that a user is subscribed to.
-        :param sdk_version: Current CURA SDK version.
-        :return: None.
-        '''
+        """
+        It removes a package from the "dismissed incompatible packages" list, if
+        it gets updated in the meantime. We check every package from the payload
+        against our current Cura SDK version, and if it is in there - we remove
+        the already dismissed package from the above mentioned list.
+        :param subscribed_packages_payload: The response from Web Cura, a list
+        of packages that a user is subscribed to.
+        :param sdk_version: Current Cura SDK version.
+        """
         dismissed_packages = self.getDismissedPackages()
         if dismissed_packages:
             for package in subscribed_packages_payload:
