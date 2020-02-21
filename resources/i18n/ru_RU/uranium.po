@@ -281,7 +281,7 @@ msgstr "Загрузка настроек..."
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:292
 msgctxt "@info:progress"
 msgid "Loading UI..."
-msgstr ""
+msgstr "Загрузка пользовательского интерфейса..."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:158
 #, python-brace-format
