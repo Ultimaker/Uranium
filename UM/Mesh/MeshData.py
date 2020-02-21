@@ -228,9 +228,7 @@ class MeshData:
     def getIndicesAsByteArray(self) -> Optional[bytes]:
         if self._indices is None:
             return None
-        if self._indices_byte_array is None:
-            self._indices_byte_array = self._indices.tostring()
-        return self._indices_byte_array
+        return self._indices.tostring()
 
     def getColorsAsByteArray(self) -> Optional[bytes]:
         if self._colors is None:
