@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.5\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2020-02-07 15:17+0100\n"
-"PO-Revision-Date: 2019-09-23 13:25+0200\n"
+"PO-Revision-Date: 2020-02-21 13:40+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Brule <jason@brule.co.jp>, Japanese <info@bothof.nl>\n"
 "Language: ja_JP\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.3\n"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:59
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:64
@@ -263,17 +263,17 @@ msgstr "パッケージマネージャーを初期化中..."
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:198
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr "プラグインをロードする…"
+msgstr "プラグインをロードする..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:205
 msgctxt "@info:progress"
 msgid "Updating configuration..."
-msgstr "コンフィグレーションをアップデートする…"
+msgstr "コンフィグレーションをアップデートする..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:211
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr "プレファレンスをロード中…"
+msgstr "プレファレンスをロード中..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:292
 msgctxt "@info:progress"
@@ -485,7 +485,7 @@ msgstr "STLファイル"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:304
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr "オブジェクトをビルドプレート上に平に並べる…"
+msgstr "オブジェクトをビルドプレート上に平に並べる..."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:304
 msgctxt "@title"
