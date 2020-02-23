@@ -333,7 +333,7 @@ class MeshData:
         :return: :type{Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]} Tuple of all three local vectors. 
         """
 
-        if not self._indices or len(self._indices) == 0:
+        if self._indices is None or len(self._indices) == 0:
             base_index = face_id * 3
             v_a = self._vertices[base_index]
             v_b = self._vertices[base_index + 1]
