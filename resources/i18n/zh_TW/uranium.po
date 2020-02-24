@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.5\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2020-02-07 15:17+0100\n"
-"PO-Revision-Date: 2019-11-09 21:13+0800\n"
+"PO-Revision-Date: 2020-02-16 13:45+0800\n"
 "Last-Translator: Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language-Team: Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language: zh_TW\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Lang-Code: xx\n"
 "Country-Code: XX\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.3\n"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:59
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:64
@@ -277,7 +277,7 @@ msgstr "正在載入偏好設定..."
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:292
 msgctxt "@info:progress"
 msgid "Loading UI..."
-msgstr ""
+msgstr "正在載入 UI..."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:158
 #, python-brace-format
