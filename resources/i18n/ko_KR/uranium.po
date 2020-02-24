@@ -275,7 +275,7 @@ msgstr "환경 설정로드 중 ..."
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:292
 msgctxt "@info:progress"
 msgid "Loading UI..."
-msgstr ""
+msgstr "UI 로딩 중..."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:158
 #, python-brace-format

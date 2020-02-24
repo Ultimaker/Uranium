@@ -276,7 +276,7 @@ msgstr "正在加载偏好设置..."
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:292
 msgctxt "@info:progress"
 msgid "Loading UI..."
-msgstr ""
+msgstr "正在加载用户界面..."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:158
 #, python-brace-format

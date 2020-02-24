@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.5\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2020-02-07 15:17+0100\n"
-"PO-Revision-Date: 2018-11-06 15:42+0100\n"
+"PO-Revision-Date: 2020-02-21 13:35+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: German <info@bothof.nl>\n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:59
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:64
@@ -278,7 +278,7 @@ msgstr "Einstellungen werden geladen..."
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:292
 msgctxt "@info:progress"
 msgid "Loading UI..."
-msgstr ""
+msgstr "Benutzeroberfläche wird geladen..."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:158
 #, python-brace-format
