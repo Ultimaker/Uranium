@@ -33,7 +33,6 @@ if TYPE_CHECKING:
 class OpenGL:
     VertexBufferProperty = "__vertex_buffer"
     IndexBufferProperty = "__index_buffer"
-    IndexBufferRangeProperty = "__index_range_buffer"
 
     ##  Different OpenGL chipset vendors.
     class Vendor:
@@ -288,11 +287,7 @@ class OpenGL:
             return None
 
         if not kwargs.get("force_recreate", False) and hasattr(mesh, OpenGL.IndexBufferProperty):
-            if hasattr(mesh, OpenGL.IndexBufferRangeProperty):
-                if getattr(mesh, OpenGL.IndexBufferRangeProperty) == (kwargs['index_start'], kwargs['index_stop']):
-                    return getattr(mesh, OpenGL.IndexBufferProperty)
-            else:
-                return getattr(mesh, OpenGL.IndexBufferProperty)
+            return getattr(mesh, OpenGL.IndexBufferProperty)
 
         buffer = QOpenGLBuffer(QOpenGLBuffer.IndexBuffer)
         buffer.create()
@@ -300,7 +295,6 @@ class OpenGL:
 
         data = cast(bytes, mesh.getIndicesAsByteArray()) # We check for None at the beginning of the method
         if 'index_start' in kwargs and 'index_stop' in kwargs:
-            setattr(mesh, OpenGL.IndexBufferRangeProperty, (kwargs['index_start'], kwargs['index_stop']))
             buffer.allocate(data[4 * kwargs['index_start']:4 * kwargs['index_stop']], 4*(kwargs['index_stop'] - kwargs['index_start']))
         else:
             buffer.allocate(data, len(data))
