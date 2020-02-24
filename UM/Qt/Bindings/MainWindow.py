@@ -9,6 +9,7 @@ from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
+from UM.Scene.Selection import Selection
 from UM.Signal import Signal, signalemitter
 from UM.Scene.Camera import Camera
 from typing import Optional
@@ -42,6 +43,7 @@ class MainWindow(QQuickWindow):
         self._app.getController().addInputDevice(self._key_device)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
         self._app.getController().activeViewChanged.connect(self._onActiveViewChanged)
+        Selection.selectionChanged.connect(self._onSceneChanged)
         self._preferences = Application.getInstance().getPreferences()
 
         self._preferences.addPreference("general/window_width", 1280)
@@ -242,7 +244,7 @@ class MainWindow(QQuickWindow):
         else:
             self._app.getRenderer().reRenderLast()
 
-    def _onSceneChanged(self, object):
+    def _onSceneChanged(self, object = None):
         self._full_render_required = True
         self.update()
 

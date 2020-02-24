@@ -290,7 +290,8 @@ class QtApplication(QApplication, Application):
         self.getTheme()
         self.processEvents()
 
-        self.showSplashMessage(self._i18n_catalog.i18nc("@info:progress", "Loading UI..."))
+        i18n_catalog = i18nCatalog("uranium")
+        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading UI..."))
         self._qml_engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
 
