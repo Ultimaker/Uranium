@@ -54,7 +54,6 @@ class MeshData:
         self._vertices = NumPyUtil.immutableNDArray(vertices)
         self._normals = NumPyUtil.immutableNDArray(normals)
         self._indices = NumPyUtil.immutableNDArray(indices)
-        self._indices_byte_array = None
         self._colors = NumPyUtil.immutableNDArray(colors)
         self._uvs = NumPyUtil.immutableNDArray(uvs)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
@@ -256,9 +255,7 @@ class MeshData:
 
         if self._indices is None:
             return None
-        if self._indices_byte_array is None:
-            self._indices_byte_array = self._indices.tostring()
-        return self._indices_byte_array
+        return self._indices.tostring()
 
     def getColorsAsByteArray(self) -> Optional[bytes]:
         if self._colors is None:
