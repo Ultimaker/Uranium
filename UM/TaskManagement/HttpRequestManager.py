@@ -1,6 +1,6 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
+import json
 from collections import deque
 from threading import RLock
 import time
@@ -192,6 +192,14 @@ class HttpRequestManager(TaskManager):
                 if request.reply is not None and request.reply.isRunning():
                     request.reply.abort()
                     Logger.log("d", "%s aborted", request)
+
+    @staticmethod
+    def readJSON(reply: QNetworkReply) -> Any:
+        """ Read a Json response into a Python object (list, dict, str depending on json type)"""
+        try:
+            return json.loads(bytes(reply.readAll()).decode("utf-8"))
+        except json.decoder.JSONDecodeError:
+            Logger.log("w", "Received invalid JSON for user subscribed packages from the Web Marketplace")
 
     # This function creates a HttpRequestData with the given data and puts it into the pending request queue.
     # If no request processing call has been scheduled, it will schedule it too.
