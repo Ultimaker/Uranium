@@ -147,6 +147,8 @@ class OutputDeviceManagerProxy(QObject):
             message = Message(str(e), title = catalog.i18nc("@info:title", "Error"))
             message.show()
         except Exception as e:
+            message = Message(str(e), title=catalog.i18nc("@info:title", "Error"))
+            message.show()
             Logger.logException("e", "Unable to write to file %s: %s", file_name, e)
 
 
