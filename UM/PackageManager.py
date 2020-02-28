@@ -158,9 +158,13 @@ class PackageManager(QObject):
         # Load the bundled packages:
         self._bundled_package_dict = {}
         for search_path in self._bundled_package_management_file_paths:
-            with open(search_path, "r", encoding = "utf-8") as f:
-                self._bundled_package_dict.update(json.load(f))
-                Logger.log("i", "Loaded bundled packages data from %s", search_path)
+            try:
+                with open(search_path, "r", encoding = "utf-8") as f:
+                    self._bundled_package_dict.update(json.load(f))
+                    Logger.log("i", "Loaded bundled packages data from %s", search_path)
+            except UnicodeDecodeError:
+                Logger.logException("e", "Can't decode package management files. File is corrupt.")
+                return
 
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
         container_registry = self._application.getContainerRegistry()
