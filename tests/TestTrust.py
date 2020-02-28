@@ -15,6 +15,7 @@ _subfolder_names = ["sub", "."]
 _file_names = ["x.txt", "y.txt", "z.txt"]
 _passphrase = "swordfish"  # For code coverage: Securely storing a private key without one is probably better.
 
+
 class TestTrust:
 
     # NOTE: Exhaustively testing trust is going to be difficult. We rely on audits (as well) in this matter.
@@ -40,13 +41,14 @@ class TestTrust:
                 file.write("".join(random.choice(['a', 'b', 'c', '0', '1', '2', '\n']) for _ in range(1024)))
 
         # instantiate a trust object with the public key that was just generated:
-        trust = Trust(public_path)  # Don't use Trust.getInstance as that uses the 'normal' public key instead of test.
-        yield temp_path, private_path, trust
+        violation_callback = MagicMock()
+        trust = Trust(public_path, lambda msg: violation_callback())  # No '.getInstance', since key & handler provided.
+        yield temp_path, private_path, trust, violation_callback
 
         temp_dir.cleanup()
 
     def test_signFileAndVerify(self, init_trust):
-        temp_dir, private_path, trust_instance = init_trust
+        temp_dir, private_path, trust_instance, violation_callback = init_trust
         filepath_signed = os.path.join(temp_dir, _folder_names[0], _subfolder_names[0], _file_names[0])
         filepath_unsigned = os.path.join(temp_dir, _folder_names[1], _subfolder_names[0], _file_names[2])
 
@@ -59,17 +61,23 @@ class TestTrust:
         public_key = copy.copy(trust_instance._public_key)
         trust_instance._public_key = None
         assert not trust_instance.signedFileCheck(filepath_signed)
+        assert violation_callback.call_count > 0
+        violation_callback.reset_mock()
         trust_instance._public_key = public_key
 
         with open(filepath_signed, "w") as file:
             file.write("\nPay 10 Golden Talents To Get Your Data Back Or Else\n")
         assert not trust_instance.signedFolderCheck(filepath_signed)
+        assert violation_callback.call_count > 0
+        violation_callback.reset_mock()
 
         os.remove(filepath_signed)
         assert not trust_instance.signedFolderCheck(filepath_signed)
+        assert violation_callback.call_count > 0
+        violation_callback.reset_mock()
 
     def test_signFolderAndVerify(self, init_trust):
-        temp_dir, private_path, trust_instance = init_trust
+        temp_dir, private_path, trust_instance, violation_callback = init_trust
         folderpath_signed = os.path.join(temp_dir, _folder_names[0])
         folderpath_unsigned = os.path.join(temp_dir, _folder_names[1])
 
@@ -77,20 +85,30 @@ class TestTrust:
 
         assert trust_instance.signedFolderCheck(folderpath_signed)
         assert not trust_instance.signedFolderCheck(folderpath_unsigned)
+        assert violation_callback.call_count > 0
+        violation_callback.reset_mock()
         assert not trust_instance.signedFileCheck("folder-not-found-check")
+        assert violation_callback.call_count > 0
+        violation_callback.reset_mock()
 
         public_key = copy.copy(trust_instance._public_key)
         trust_instance._public_key = None
         assert not trust_instance.signedFolderCheck(folderpath_signed)
+        assert violation_callback.call_count > 0
+        violation_callback.reset_mock()
         trust_instance._public_key = public_key
 
         filepath = os.path.join(folderpath_signed, _subfolder_names[0], _file_names[1])
         with open(filepath, "w") as file:
             file.write("\nAlice and Bob will never notice this! Hehehehe.\n")
         assert not trust_instance.signedFolderCheck(folderpath_signed)
+        assert violation_callback.call_count > 0
+        violation_callback.reset_mock()
 
         os.remove(filepath)
         assert not trust_instance.signedFolderCheck(folderpath_signed)
+        assert violation_callback.call_count > 0
+        violation_callback.reset_mock()
 
     def test_initTrustFail(self):
         with pytest.raises(Exception):
