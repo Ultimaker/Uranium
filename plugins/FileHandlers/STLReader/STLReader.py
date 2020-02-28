@@ -54,7 +54,7 @@ class STLReader(MeshReader):
                 file_read = True
             except:
                 Logger.logException("e", "Reading file failed with Numpy-STL!")
-        
+
         if not file_read:
             Logger.log("i", "Using legacy code to load STL data.")
             f = open(file_name, "rb")
@@ -155,7 +155,10 @@ class STLReader(MeshReader):
     def _loadBinary(self, mesh_builder, f):
         f.read(80)  # Skip the header
 
-        num_faces = struct.unpack("<I", f.read(4))[0]
+        try:
+            num_faces = struct.unpack("<I", f.read(4))[0]
+        except struct.error:  # Can't unpack it if the file didn't have 4 bytes in it.
+            return False
         # On ascii files, the num_faces will be big, due to 4 ascii bytes being seen as an unsigned int.
         if num_faces < 1 or num_faces > 1000000000:
             return False
