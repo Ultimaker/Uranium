@@ -754,6 +754,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return "<InstanceContainer '{container_id}' ('{name}')>".format(container_id = self.getId(), name = self.getName())
 
+    def __repr__(self) -> str:
+        return str(self)
+
     def sendPostponedEmits(self) -> None:
         """Send the postponed emits
 
