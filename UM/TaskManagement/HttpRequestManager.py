@@ -197,9 +197,19 @@ class HttpRequestManager(TaskManager):
     def readJSON(reply: QNetworkReply) -> Any:
         """ Read a Json response into a Python object (list, dict, str depending on json type)"""
         try:
-            return json.loads(bytes(reply.readAll()).decode("utf-8"))
+            return json.loads(HttpRequestManager.readText(reply))
         except json.decoder.JSONDecodeError:
             Logger.log("w", "Received invalid JSON for user subscribed packages from the Web Marketplace")
+
+    @staticmethod
+    def readText(reply: QNetworkReply) -> str:
+        """Decode raw reply bytes as utf-8"""
+        return bytes(reply.readAll()).decode("utf-8")
+
+    @staticmethod
+    def replyIndicatesSuccess(reply: QNetworkReply, error: Optional["QNetworkReply.NetworkError"] = None):
+        """Returns whether reply status code indicates success and error is None"""
+        return error is None and 200 <= reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) < 300
 
     # This function creates a HttpRequestData with the given data and puts it into the pending request queue.
     # If no request processing call has been scheduled, it will schedule it too.
