@@ -10,7 +10,6 @@ from UM.PluginRegistry import PluginRegistry
 if TYPE_CHECKING:
     from UM.OutputDevice.OutputDevice import OutputDevice
     from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
-    from UM.Application import Application
 
 # Used internally to determine plugins capable of 'manual' addition of devices, see also [add|remove]ManualDevice below.
 class ManualDeviceAdditionAttempt(Enum):
@@ -56,7 +55,7 @@ class OutputDeviceManager:
 
     """
 
-    def __init__(self, application:"Application") -> None:
+    def __init__(self) -> None:
         super().__init__()
 
         self._output_devices = {}  # type: Dict[str, OutputDevice]
@@ -66,17 +65,7 @@ class OutputDeviceManager:
         self._write_in_progress = False
         PluginRegistry.addType("output_device", self.addOutputDevicePlugin)
 
-        self._application = application
-        self._application.getPreferences().addPreference("output_devices/last_used_device", "")
-        self._application.engineCreatedSignal.connect(self._onEngineCreated)
-
         self._is_running = False
-
-    def _onEngineCreated(self):
-        device_id = self._application.getPreferences().getValue("output_devices/last_used_device")
-        if device_id in self._output_devices:
-            self.setActiveDevice(device_id)
-
 
     writeStarted = Signal()
     """Emitted whenever a registered device emits writeStarted.
@@ -242,7 +231,6 @@ class OutputDeviceManager:
             return
 
         if not self._active_device or self._active_device.getId() != device_id:
-            self._application.getPreferences().setValue("output_devices/last_used_device", device_id)
             self._active_device = self.getOutputDevice(device_id)
             self._write_in_progress = False
             self._active_device_override = True

@@ -181,7 +181,7 @@ class Application:
         self._preferences.addPreference("general/disabled_plugins", "")
 
         self._controller = Controller(self)
-        self._output_device_manager = OutputDeviceManager(self)
+        self._output_device_manager = OutputDeviceManager()
 
         self._operation_stack = OperationStack(self._controller)
 

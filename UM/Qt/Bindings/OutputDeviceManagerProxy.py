@@ -26,16 +26,25 @@ class OutputDeviceManagerProxy(QObject):
         super().__init__(parent)
         self._device_manager = Application.getInstance().getOutputDeviceManager() #type: OutputDeviceManager
         self._device_manager.activeDeviceChanged.connect(self._onActiveDeviceChanged)
-        self._onActiveDeviceChanged()
+
+        Application.getInstance().getPreferences().addPreference("output_devices/last_used_device", "")
+
+        device_id = Application.getInstance().getPreferences().getValue("output_devices/last_used_device")
+
+        if device_id in self._device_manager.getOutputDeviceIds():
+            self._device_manager.setActiveDevice(device_id)
+        else:
+            self._onActiveDeviceChanged()
 
     activeDeviceChanged = pyqtSignal()
-    
+
     @pyqtProperty(str, notify = activeDeviceChanged)
     def activeDevice(self) -> str:
         return self._device_manager.getActiveDevice().getId()
 
     @pyqtSlot(str)
     def setActiveDevice(self, device_id: str) -> None:
+        Application.getInstance().getPreferences().setValue("output_devices/last_used_device", device_id)
         self._device_manager.setActiveDevice(device_id)
 
     @pyqtProperty(str, notify = activeDeviceChanged)
@@ -65,11 +74,11 @@ class OutputDeviceManagerProxy(QObject):
     @pyqtSlot(str, str, "QVariantMap")
     def requestWriteToDevice(self, device_id: str, file_name: str, kwargs: Mapping[str, str]) -> None:
         """Request that the current scene is written to the output device.
-        
+
         The output device to write with will be selected based on the device_id.
         A file format is chosen from the list of available file formats by the
         output device.
-        
+
         :param device_id: The handle of the device to write to.
         :param file_name: A suggestion for the file name to write
         to. Can be freely ignored if providing a file name makes no sense.
@@ -81,18 +90,18 @@ class OutputDeviceManagerProxy(QObject):
         file_type = kwargs.get("file_type", "mesh")
         preferred_mimetypes = kwargs.get("preferred_mimetypes", None)
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
-        # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
+        # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event
         # loop, since that does work.
         Application.getInstance().callLater(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot()], device_id, file_name, limit_mimetypes, file_type, preferred_mimetypes = preferred_mimetypes)
 
     @pyqtSlot(str, str, "QVariantMap")
     def requestWriteSelectionToDevice(self, device_id: str, file_name: str, kwargs: Mapping[str, str]) -> None:
         """Request that the current selection is written to the output device.
-        
+
         The output device to write with will be selected based on the device_id.
         A file format is chosen from the list of available file formats by the
         output device.
-        
+
         :param device_id: The handle of the device to write to.
         :param file_name: A suggestion for the file name to write
         to. Can be freely ignored if providing a file name makes no sense.
@@ -106,7 +115,7 @@ class OutputDeviceManagerProxy(QObject):
         limit_mimetypes = kwargs.get("limit_mimetypes", False)
         preferred_mimetypes = kwargs.get("preferred_mimetypes", None)
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
-        # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
+        # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event
         # loop, since that does work.
         Application.getInstance().callLater(self._writeToDevice, Selection.getAllSelectedObjects(), device_id, file_name, limit_mimetypes, preferred_mimetypes = preferred_mimetypes)
 
@@ -115,11 +124,11 @@ class OutputDeviceManagerProxy(QObject):
 
     def _writeToDevice(self, nodes: List[SceneNode], device_id: str, file_name: str, limit_mimetypes: bool, file_type: str = "mesh", **kwargs) -> None:
         """Writes the specified node to the output device.
-        
+
         The output device to write with will be selected based on the device_id.
         A file format is chosen from the list of available file formats by the
         output device.
-        
+
         :param nodes: The scene nodes that must be written to the device.
         :param device_id: The handle of the device to write to.
         :param file_name: A suggestion for the file name to write
