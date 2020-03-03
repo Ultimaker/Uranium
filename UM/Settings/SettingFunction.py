@@ -245,7 +245,13 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "uuid",
         "hashlib",
         "base64",
-        "uuid3"
+        "uuid3",
+        "NAMESPACE_DNS",
+        "decode",
+        "encode",
+        "b64encode",
+        "digest",
+        "md5"
     }  # type: Set[str]
 
     _blacklist = {
