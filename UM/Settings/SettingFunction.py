@@ -250,6 +250,12 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "ceil",
         "min",
         "sqrt",
+        "log",
+        "tan",
+        "cos",
+        "sin",
+        "pi",
+        "floor"
         "debug",
         "sum",
         "len",
