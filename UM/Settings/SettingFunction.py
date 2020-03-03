@@ -316,3 +316,27 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "__pycache__",
         "__file__"
     }  # type: Set[str]
+
+    _allowed_builtins = {
+        "bool",
+        "True",
+        "False",
+        "None",
+        "float",
+        "int",
+        "str",
+        "sum",
+        "pow",
+        "abs",
+        "all",
+        "any",
+        "round",
+        "divmod",
+        "hash",
+        "len",
+        "max",
+        "min"
+    }  # type: Set[str]
+
+    _disallowed_builtins = set(dir(builtins)) - _allowed_builtins
+    _blacklist |= _disallowed_builtins
