@@ -234,7 +234,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         if node.s not in self._knownNames and node.s not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.s.
             self.keys.add(node.s)  # type: ignore
 
-    def visit_Constant(self, node: ast.Constant) -> None:
+    def visit_Constant(self, node) -> None:
         """This one is used on Python 3.8+ to visit string types."""
         # The blacklisting is done just in case (All function calls should be whitelisted. The blacklist is to make
         # extra sure that certain calls are *not* made!)
