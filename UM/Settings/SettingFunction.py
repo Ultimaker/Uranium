@@ -194,39 +194,88 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
             self.values.add(node.id)
             self.keys.add(node.id)
 
+    def visit_DictComp(self, node: ast.DictComp) -> None:
+        # This is mostly because there is no reason to use it at the moment. It might also be an attack vector.
+        raise IllegalMethodError("Dict Comprehension is not allowed")
+
+    def visit_ListComp(self, node):
+        # This is mostly because there is no reason to use it at the moment. It might also be an attack vector.
+        raise IllegalMethodError("List Comprehension is not allowed")
+
+    def visit_Attribute(self, node: ast.Attribute) -> None:
+        if node.attr not in self._knownNames:
+            raise IllegalMethodError(node.attr)
+        self.visit(node.value)  # Go a step deeper
+
+    def generic_visit(self, node):
+        for child_node in ast.iter_child_nodes(node):
+            self.visit(child_node)
+
     def visit_Str(self, node: ast.AST) -> None:
         """This one is used before Python 3.8 to visit string types.
         
         visit_Str will be marked as deprecated from Python 3.8 and onwards.
         """
+        # The blacklisting is done just in case (All function calls should be whitelisted. The blacklist is to make
+        # extra sure that certain calls are *not* made!)
+        if node.s in self._blacklist:
+            raise IllegalMethodError(node.s)
 
         if node.s not in self._knownNames and node.s not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.s.
             self.keys.add(node.s)  # type: ignore
 
     def visit_Constant(self, node: ast.AST) -> None:
         """This one is used on Python 3.8+ to visit string types."""
-
+        # The blacklisting is done just in case (All function calls should be whitelisted. The blacklist is to make
+        # extra sure that certain calls are *not* made!)
+        if node.value in self._blacklist:
+            raise IllegalMethodError(node.value)
         if isinstance(node.value, str) and node.value not in self._knownNames and node.value not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.value.
             self.keys.add(node.value)  # type: ignore
 
     _knownNames = {
         "math",
+        "round",
         "max",
+        "ceil",
         "min",
         "debug",
         "sum",
         "len",
         "uuid",
         "hashlib",
-        "base64"
+        "base64",
+        "uuid3"
     }  # type: Set[str]
 
     _blacklist = {
         "sys",
         "os",
+        "delattr"
+        "getattr"
+        "dir"
+        "open",
+        "write",
+        "compile",
         "import",
         "__import__",
+        "_",  # Because you can use this guy to create a number of the other blacklisted strings
+        "__",
+        "__enter__",
+        "__builtins__",
         "eval",
         "exec",
+        "execfile",
+        "file",
         "subprocess",
+        "globals",
+        "__class__"
+        "__globals__"
+        "hasattr",
+        "raw_input",
+        "input",
+        "reload",
+        "setattr",
+        "vars",
+        "locals"
     }  # type: Set[str]
