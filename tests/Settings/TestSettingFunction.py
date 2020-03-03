@@ -37,7 +37,9 @@ setting_function_bad_data = [
     "",                                                                 # Empty string.
     "os.read(os.open(\"/etc/passwd\", os.O_RDONLY), 10)",               # Function that reads your passwords from your system.
     "exec(\"os.read(os.open(\\\"/etc/passwd\\\", os.O_RDONLY), 10)\")", # Obfuscated function that reads your passwords from your system.
-    "("                                                                 # Syntax error.
+    "(",                                                                # Syntax error.
+    "[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == '_ImportLockContext'][0]().__enter__.__globals__['__builtins__']['__import__']('os').system(\"echo omgzomg\")",  # Obsfucated call to system
+    "[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == '_ImportLockContext'][0]().__enter__.__globals__['__' + 'builtins__']['__import__']('os').system(\"echo omgzomg\")"   #Another obsfucated call to system
 ]
 
 
