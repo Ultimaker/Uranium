@@ -275,17 +275,18 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
     _blacklist = {
         "sys",
         "os",
-        "delattr"
-        "getattr"
-        "dir"
+        "delattr",
+        "getattr",
+        "dir",
         "open",
         "write",
         "compile",
         "import",
         "__import__",
+        "__self__",
         "_",  # Because you can use this guy to create a number of the other blacklisted strings
         "__",
-        "."
+        ".",
         "_._",   # Just in case (I also don't see a reason for someone to use a string named like that...)
         "__enter__",
         "__builtins__",
