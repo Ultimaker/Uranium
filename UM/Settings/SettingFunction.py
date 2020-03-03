@@ -267,6 +267,8 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "__import__",
         "_",  # Because you can use this guy to create a number of the other blacklisted strings
         "__",
+        "."
+        "_._",   # Just in case (I also don't see a reason for someone to use a string named like that...)
         "__enter__",
         "__builtins__",
         "eval",
@@ -283,5 +285,15 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "reload",
         "setattr",
         "vars",
-        "locals"
+        "locals",
+        "system",
+        "literal_eval",
+        "ast.literal_eval",
+        "ast",
+        "lambda",
+        "__getattribute__",
+        "__setattr__",
+        "find_module",
+        "__pycache__",
+        "__file__"
     }  # type: Set[str]
