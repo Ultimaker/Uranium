@@ -249,6 +249,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "max",
         "ceil",
         "min",
+        "sqrt",
         "debug",
         "sum",
         "len",
