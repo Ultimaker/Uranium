@@ -211,6 +211,16 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         for child_node in ast.iter_child_nodes(node):
             self.visit(child_node)
 
+    def visit_Slice(self, node):
+        """
+        Visitor function for slices.
+        We want to block all usage of slices, since it can be used to wiggle your way around the string filtering.
+        For example: "_0"[:1] + "_0"[:1] + "import__" will still result in the final string "__import__"
+        :param node:
+        :return:
+        """
+        raise IllegalMethodError("Slices are not allowed")
+
     def visit_Str(self, node: ast.AST) -> None:
         """This one is used before Python 3.8 to visit string types.
         
