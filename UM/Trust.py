@@ -4,6 +4,7 @@
 import base64
 import json
 import os
+import sys
 from typing import Callable, Optional, Tuple
 
 # Note that we unfortunately need to use 'hazmat' code, as there apparently is no way to do what we want otherwise.
@@ -38,13 +39,10 @@ class TrustBasics:
 
     @staticmethod
     def defaultViolationHandler(message: str) -> None:
-        """Any (real) trust violation in the life code should go through this method in the end.
-
-        :return: The hash-algorithm used for the entire 'suite'.
-        """
+        """This violationHandler is called after any other handlers"""
 
         Logger.logException("e", message)
-        raise SystemExit(0x69)
+        sys.exit("Trust violation")
 
     @classmethod
     def getHashAlgorithm(cls):
@@ -251,7 +249,9 @@ class Trust:
 
     @classmethod
     def getInstanceOrNone(cls):
-        """Get the  'canonical' Trust object or None if the . Useful if only _optional_ verification is needed.
+        """Get the  'canonical' Trust object or None if not initialized yet
+
+        Useful if only _optional_ verification is needed.
 
         :return: Trust singleton or None if problems occurred with loading the public key in `getPublicRootKeyPath()`.
         """
@@ -261,15 +261,17 @@ class Trust:
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             return None
 
-    def __init__(self, public_key_filename: str, err_handler: Callable = TrustBasics.defaultViolationHandler) -> None:
+    def __init__(self, public_key_filename: str, pre_err_handler: Callable[[str], None] = None) -> None:
         """Initializes a Trust object. A Trust object represents a public key and related utility methods on that key.
         If the application only has a single public key, it's best to use 'getInstance' or 'getInstanceOrNone'.
 
-        :raise Exception: if public key file provided by the argument can't be found or parsed.
         :param public_key_filename: Path to the file that holds the public key.
+        :param pre_err_handler: An extra error handler which will be called before TrustBasics.defaultViolationHandler
+                                Receives a human readable error string as argument.
+        :raise Exception: if public key file provided by the argument can't be found or parsed.
         """
 
-        self._public_key = None  #type: Optional[RSAPublicKey]
+        self._public_key = None  # type: Optional[RSAPublicKey]
         try:
             with open(public_key_filename, "rb") as file:
                 self._public_key = load_pem_public_key(file.read(), backend = default_backend())
@@ -278,7 +280,12 @@ class Trust:
             raise Exception("e", "Couldn't load public-key '{0}'.".format(public_key_filename))
             # NOTE: Handle _potential_ security violation outside of this initializer, in case it's just for validation.
 
-        self._violation_handler = err_handler
+        def violation_handler(message: str):
+            if pre_err_handler is not None:
+                pre_err_handler(message)
+            TrustBasics.defaultViolationHandler(message=message)
+
+        self._violation_handler = violation_handler  # type: Callable[[str], None]
 
     def _verifyFile(self, filename: str, signature: str) -> bool:
         if self._public_key is None:
