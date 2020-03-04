@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
@@ -27,18 +27,17 @@ def _debug_value(value: Any) -> Any:
     return value
 
 
-#
-# This class is used to evaluate Python codes (or you can call them formulas) for a setting's property. If a setting's
-# property is a static type, e.g., a string, an int, a float, etc., its value will just be interpreted as it is, but
-# when it's a Python code (formula), the value needs to be evaluated via this class.
-#
 class SettingFunction:
+    """
+    This class is used to evaluate Python codes (or you can call them formulas) for a setting's property. If a setting's
+    property is a static type, e.g., a string, an int, a float, etc., its value will just be interpreted as it is, but
+    when it's a Python code (formula), the value needs to be evaluated via this class.
+    """
     def __init__(self, expression: str) -> None:
         """Constructor.
         
-        :param code: The Python code this function should evaluate.
+        :param expression: The Python code this function should evaluate.
         """
-
         super().__init__()
 
         self._code = expression
@@ -70,6 +69,7 @@ class SettingFunction:
         """Call the actual function to calculate the value.
         
         :param value_provider: The container from which to get setting values in the formula.
+        :param context: The context in which the call needs to be executed
         """
 
         if not value_provider:
@@ -78,8 +78,8 @@ class SettingFunction:
         if not self._valid:
             return None
 
-        locals = {} # type: Dict[str, Any]
-        # if there is a context, evaluate the values from the perspective of the original caller
+        locals = {}  # type: Dict[str, Any]
+        # If there is a context, evaluate the values from the perspective of the original caller
         if context is not None:
             value_provider = context.rootStack()
         for name in self._used_values:
@@ -92,14 +92,14 @@ class SettingFunction:
         g = {}  # type: Dict[str, Any]
         g.update(globals())
         g.update(self.__operators)
-        # override operators if there is any in the context
+        # Override operators if there is any in the context
         if context is not None:
             g.update(context.context.get("override_operators", {}))
 
         try:
             if self._compiled:
                 return eval(self._compiled, g, locals)
-            Logger.log("e", "An error ocurred evaluating the function {0}.".format(self))
+            Logger.log("e", "An error occurred evaluating the function {0}.".format(self))
             return 0
         except Exception as e:
             Logger.logException("d", "An exception occurred in inherit function {0}: {1}".format(self, str(e)))
@@ -170,13 +170,14 @@ class SettingFunction:
 _VisitResult = NamedTuple("_VisitResult", [("values", Set[str]), ("keys", Set[str])])
 
 
-# Helper class used to analyze a parsed function.
-#
-# It walks a Python AST generated from a Python expression. It will analyze the AST and
-# produce two sets, one set of "used keys" and one set of "used values". "used keys" are
-# setting keys (strings) that are used by the expression, whereas "used values" are
-# actual variable references that are needed for the function to be executed.
 class _SettingExpressionVisitor(ast.NodeVisitor):
+    """
+    Helper class used to analyze a parsed function.
+
+    It walks a Python AST generated from a Python expression. It will analyze the AST and produce two sets, one set of
+    "used keys" and one set of "used values". "used keys" are setting keys (strings) that are used by the expression,
+    whereas "used values" are actual variable references that are needed for the function to be executed.
+    """
     def __init__(self) -> None:
         super().__init__()
         self.values = set()  # type: Set[str]
