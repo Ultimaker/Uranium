@@ -236,6 +236,12 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         if node.s not in self._knownNames and node.s not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.s.
             self.keys.add(node.s)  # type: ignore
 
+    def visit_Subscript(self, node: ast.Index):
+        if type(node.value) == ast.Str:
+            raise IllegalMethodError("Indexing on strings is not allowed")
+        for child_node in ast.iter_child_nodes(node):
+            self.visit(child_node)
+
     def visit_Constant(self, node) -> None:
         """This one is used on Python 3.8+ to visit string types."""
         # The blacklisting is done just in case (All function calls should be whitelisted. The blacklist is to make
