@@ -40,6 +40,10 @@ setting_function_bad_data = [
     "(",                                                                # Syntax error.
     "[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == '_ImportLockContext'][0]().__enter__.__globals__['__builtins__']['__import__']('os').system(\"echo omgzomg\")",  # Obsfucated call to system
     "[x for x in (1).__class__.__base__.__subclasses__() if x.__name__ == '_ImportLockContext'][0]().__enter__.__globals__['__' + 'builtins__']['__import__']('os').system(\"echo omgzomg\")"   #Another obsfucated call to system
+    "'_'", # This string is not allowed
+    "import sys",  # We don't allow importing
+    "'a_a'[1]",  # Trying to circumvent the protection against underscores
+    "{x:x for x in [1,2,3,4]}"  # We don't allow dict comprehension
 ]
 
 
