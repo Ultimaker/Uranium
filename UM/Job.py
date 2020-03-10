@@ -36,12 +36,12 @@ class Job:
         raise NotImplementedError()
 
     # Get optional message
-    @deprecated
+    @deprecated("Get message for job is no longer used", "4.5")
     def getMessage(self):
         return self._message
 
     # Set optional message
-    @deprecated
+    @deprecated("Set message for job is no longer used", "4.5")
     def setMessage(self, message) -> None:
         self._message = message
 
