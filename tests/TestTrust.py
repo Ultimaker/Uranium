@@ -56,25 +56,30 @@ class TestTrust:
         assert signFile(private_path, filepath_signed, _passphrase)
 
         assert trust_instance.signedFileCheck(filepath_signed)
+        assert violation_callback.call_count == 0  # No violation
+
         assert not trust_instance.signedFileCheck(filepath_unsigned)
+        assert violation_callback.call_count == 1
+
         assert not trust_instance.signedFileCheck("file-not-found-check")
+        assert violation_callback.call_count == 2
 
         public_key = copy.copy(trust_instance._public_key)
         trust_instance._public_key = None
         assert not trust_instance.signedFileCheck(filepath_signed)
-        assert violation_callback.call_count > 0
+        assert violation_callback.call_count == 3
         violation_callback.reset_mock()
         trust_instance._public_key = public_key
 
         with open(filepath_signed, "w") as file:
             file.write("\nPay 10 Golden Talents To Get Your Data Back Or Else\n")
         assert not trust_instance.signedFolderCheck(filepath_signed)
-        assert violation_callback.call_count > 0
+        assert violation_callback.call_count == 1
         violation_callback.reset_mock()
 
         os.remove(filepath_signed)
         assert not trust_instance.signedFolderCheck(filepath_signed)
-        assert violation_callback.call_count > 0
+        assert violation_callback.call_count == 1
         violation_callback.reset_mock()
 
     def test_signFolderAndVerify(self, init_trust):
