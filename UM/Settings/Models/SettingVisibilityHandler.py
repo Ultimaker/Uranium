@@ -20,3 +20,7 @@ class SettingVisibilityHandler(QObject):
     def getVisible(self) -> Set[str]:
         return self._visible.copy()
 
+    def forceVisibilityChanged(self) -> None:
+        self.visibilityChanged.emit()
+
+
