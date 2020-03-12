@@ -372,6 +372,9 @@ class SettingPropertyProvider(QObject):
         for property_name in self._watched_properties:
             self._property_map.insert(property_name, self._getPropertyValue(property_name))
 
+        # Notify that the properties have been changed.Kewl
+        self.propertiesChanged.emit()
+
         # Force update of value_used
         self._value_used = None
         self.isValueUsedChanged.emit()
