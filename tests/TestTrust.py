@@ -42,7 +42,8 @@ class TestTrust:
 
         # instantiate a trust object with the public key that was just generated:
         violation_callback = MagicMock()
-        trust = Trust(public_path, lambda msg: violation_callback())  # No '.getInstance', since key & handler provided.
+        trust = Trust(public_path)  # No '.getInstance', since key & handler provided.
+        trust._violation_handler = violation_callback
         yield temp_path, private_path, trust, violation_callback
 
         temp_dir.cleanup()
