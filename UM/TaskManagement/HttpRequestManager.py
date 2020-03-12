@@ -199,7 +199,7 @@ class HttpRequestManager(TaskManager):
         try:
             return json.loads(HttpRequestManager.readText(reply))
         except json.decoder.JSONDecodeError:
-            Logger.log("w", "Received invalid JSON for user subscribed packages from the Web Marketplace")
+            Logger.log("w", "Received invalid JSON: " + str(reply.url()))
 
     @staticmethod
     def readText(reply: QNetworkReply) -> str:
@@ -207,7 +207,7 @@ class HttpRequestManager(TaskManager):
         return bytes(reply.readAll()).decode("utf-8")
 
     @staticmethod
-    def replyIndicatesSuccess(reply: QNetworkReply, error: Optional["QNetworkReply.NetworkError"] = None):
+    def replyIndicatesSuccess(reply: QNetworkReply, error: Optional["QNetworkReply.NetworkError"] = None) -> bool:
         """Returns whether reply status code indicates success and error is None"""
         return error is None and 200 <= reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) < 300
 
@@ -243,7 +243,7 @@ class HttpRequestManager(TaskManager):
                 request.setRawHeader(key.encode("utf-8"), value.encode("utf-8"))
 
         if scope is not None:
-            scope.request_hook(request)
+            scope.requestHook(request)
 
         # Generate a unique request ID
         request_id = uuid.uuid4().hex

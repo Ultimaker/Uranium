@@ -12,12 +12,13 @@ class HttpRequestScope:
     Could be used to add authorization headers or set user agents, for example
     """
 
-    def request_hook(self, request: QNetworkRequest):
+    def requestHook(self, request: QNetworkRequest) -> None:
         """Invoked after request-specific headers are set and before HttpRequestData is created"""
 
         pass
 
-    def add_headers(self, request: QNetworkRequest, header_dict: Dict):
+    @staticmethod
+    def addHeaders(request: QNetworkRequest, header_dict: Dict) -> None:
         for key, value in header_dict.items():
             request.setRawHeader(key.encode("utf-8"), value.encode("utf-8"))
 
@@ -33,22 +34,22 @@ class DefaultUserAgentScope(HttpRequestScope):
                                              platform.machine())
         }
 
-    def request_hook(self, request: QNetworkRequest):
-        super().request_hook(request)
-        self.add_headers(request, self.header_dict)
+    def requestHook(self, request: QNetworkRequest) -> None:
+        super().requestHook(request)
+        self.addHeaders(request, self.header_dict)
 
 
 class JsonDecoratorScope(HttpRequestScope):
     """Extends a scope by adding Content-Type and Accept for application/json"""
 
-    def __init__(self, base: HttpRequestScope):
+    def __init__(self, base: HttpRequestScope) -> None:
         self.base = base
         self.header_dict = {
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
 
-    def request_hook(self, request: QNetworkRequest):
+    def requestHook(self, request: QNetworkRequest) -> None:
         # not calling super().request_hook() because base will do that.
-        self.base.request_hook(request)
-        self.add_headers(request, self.header_dict)
+        self.base.requestHook(request)
+        self.addHeaders(request, self.header_dict)
