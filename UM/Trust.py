@@ -4,7 +4,8 @@
 import base64
 import json
 import os
-from typing import Optional, Tuple
+import sys
+from typing import Callable, Optional, Tuple
 
 # Note that we unfortunately need to use 'hazmat' code, as there apparently is no way to do what we want otherwise.
 # (Even if what we want should be relatively commonplace in security.)
@@ -35,6 +36,13 @@ class TrustBasics:
     # For(/next to) single files:
     __signature_filename_extension = ".signature"
     __root_signature_entry = "root_signature"
+
+    @staticmethod
+    def defaultViolationHandler(message: str) -> None:
+        """This violationHandler is called after any other handlers"""
+
+        Logger.logException("e", message)
+        sys.exit("Trust violation")
 
     @classmethod
     def getHashAlgorithm(cls):
@@ -241,7 +249,9 @@ class Trust:
 
     @classmethod
     def getInstanceOrNone(cls):
-        """Get the  'canonical' Trust object or None if the . Useful if only _optional_ verification is needed.
+        """Get the  'canonical' Trust object or None if not initialized yet
+
+        Useful if only _optional_ verification is needed.
 
         :return: Trust singleton or None if problems occurred with loading the public key in `getPublicRootKeyPath()`.
         """
@@ -251,21 +261,31 @@ class Trust:
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             return None
 
-    def __init__(self, public_key_filename: str) -> None:
+    def __init__(self, public_key_filename: str, pre_err_handler: Callable[[str], None] = None) -> None:
         """Initializes a Trust object. A Trust object represents a public key and related utility methods on that key.
         If the application only has a single public key, it's best to use 'getInstance' or 'getInstanceOrNone'.
 
-        :raise Exception: if public key file provided by the argument can't be found or parsed.
         :param public_key_filename: Path to the file that holds the public key.
+        :param pre_err_handler: An extra error handler which will be called before TrustBasics.defaultViolationHandler
+                                Receives a human readable error string as argument.
+        :raise Exception: if public key file provided by the argument can't be found or parsed.
         """
 
-        self._public_key = None  #type: Optional[RSAPublicKey]
+        self._public_key = None  # type: Optional[RSAPublicKey]
         try:
             with open(public_key_filename, "rb") as file:
                 self._public_key = load_pem_public_key(file.read(), backend = default_backend())
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             self._public_key = None
             raise Exception("e", "Couldn't load public-key '{0}'.".format(public_key_filename))
+            # NOTE: Handle _potential_ security violation outside of this initializer, in case it's just for validation.
+
+        def violation_handler(message: str):
+            if pre_err_handler is not None:
+                pre_err_handler(message)
+            TrustBasics.defaultViolationHandler(message=message)
+
+        self._violation_handler = violation_handler  # type: Callable[[str], None]
 
     def _verifyFile(self, filename: str, signature: str) -> bool:
         if self._public_key is None:
@@ -284,7 +304,7 @@ class Trust:
             )
             return True
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Couldn't verify '{0}' with supplied signature.".format(filename))
+            self._violation_handler("Couldn't verify '{0}' with supplied signature.".format(filename))
         return False
 
     def signedFolderCheck(self, path: str) -> bool:
@@ -317,24 +337,24 @@ class Trust:
                         # Get the signature for the current to-verify file:
                         signature = signatures_json.get(name_in_data, None)
                         if signature is None:
-                            Logger.logException("e", "File '{0}' was not signed with a checksum.".format(name_on_disk))
+                            self._violation_handler("File '{0}' was not signed with a checksum.".format(name_on_disk))
                             return False
 
                         # Verify the file:
                         if not self._verifyFile(name_on_disk, signature):
-                            Logger.logException("e", "File '{0}' didn't match with checksum.".format(name_on_disk))
+                            self._violation_handler("File '{0}' didn't match with checksum.".format(name_on_disk))
                             return False
 
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
-                    Logger.logException("e", "Mismatch: # entries in '{0}' vs. real files.".format(json_filename))
+                    self._violation_handler("Mismatch: # entries in '{0}' vs. real files.".format(json_filename))
                     return False
 
             Logger.log("i", "Verified unbundled folder '{0}'.".format(path))
             return True
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Can't find or parse signatures for unbundled folder '{0}'.".format(path))
+            self._violation_handler("Can't find or parse signatures for unbundled folder '{0}'.".format(path))
         return False
 
     def signedFileCheck(self, filename: str) -> bool:
@@ -351,18 +371,18 @@ class Trust:
                 json_data = json.load(data_file)
                 signature = json_data.get(TrustBasics.getRootSignatureEntry(), None)
                 if signature is None:
-                    Logger.logException("e", "Can't parse signature file '{0}'.".format(signature_filename))
+                    self._violation_handler("Can't parse signature file '{0}'.".format(signature_filename))
                     return False
 
                 if not self._verifyFile(filename, signature):
-                    Logger.logException("e", "File '{0}' didn't match with checksum.".format(filename))
+                    self._violation_handler("File '{0}' didn't match with checksum.".format(filename))
                     return False
 
             Logger.log("i", "Verified unbundled file '{0}'.".format(filename))
             return True
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Can't find or parse signatures for unbundled file '{0}'.".format(filename))
+            self._violation_handler("Can't find or parse signatures for unbundled file '{0}'.".format(filename))
         return False
 
     @staticmethod
