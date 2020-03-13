@@ -93,6 +93,12 @@ class Dox2Rst:
             output = output.splitlines()[0]
             output = "{before}\"\"\"\n".format(before=output, indent=indent)
 
+        # ensure separation of subject line and body
+        lines = output.splitlines()
+        if len(lines) > 1 and re.search(r"\S", lines[1]) is not None:
+            lines.insert(1, indent)
+            output = "\n".join(lines)
+
         return output
 
     MEMBER_COMMENT_REGEX = re.compile(r"(?P<before>[\s\S]*\n)?(?P<dox>\s*##.*\n(?:\s*#.*)*\n*)(?P<var>[\s\w]+=.+\n)(?P<after>[\s\S]*)")
