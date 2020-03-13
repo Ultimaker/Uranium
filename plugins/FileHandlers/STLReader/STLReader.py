@@ -2,17 +2,18 @@
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Mesh.MeshReader import MeshReader
-from UM.Mesh.MeshBuilder import MeshBuilder
-from UM.Logger import Logger
-from UM.Scene.SceneNode import SceneNode
-from UM.Job import Job
-from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
-
 import os
-import struct
-import numpy
 import platform
+import struct
+
+import numpy
+
+from UM.Job import Job
+from UM.Logger import Logger
+from UM.Mesh.MeshBuilder import MeshBuilder
+from UM.Mesh.MeshReader import MeshReader
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
+from UM.Scene.SceneNode import SceneNode
 
 use_numpystl = False
 
@@ -71,8 +72,9 @@ class STLReader(MeshReader):
         mesh_builder.calculateNormals(fast = True)
         mesh_builder.setFileName(file_name)
 
-    ## Decide if we need to use ascii or binary in order to read file
     def _read(self, file_name):
+        """Decide if we need to use ascii or binary in order to read file"""
+
         mesh_builder = MeshBuilder()
         scene_node = SceneNode()
 
@@ -119,10 +121,13 @@ class STLReader(MeshReader):
             mesh_builder.addVertices(vertices)
 
     # Private
-    ## Load the STL data from file by considering the data as ascii.
-    # \param mesh The MeshData object where the data is written to.
-    # \param f The file handle
     def _loadAscii(self, mesh_builder, f):
+        """Load the STL data from file by considering the data as ascii.
+
+        :param mesh_builder: The MeshData object where the data is written to.
+        :param f: The file handle
+        """
+
         num_verts = 0
         for lines in f:
             for line in lines.split("\r"):
@@ -149,10 +154,12 @@ class STLReader(MeshReader):
                 Job.yieldThread()
 
     # Private
-    ## Load the STL data from file by consdering the data as Binary.
-    # \param mesh The MeshData object where the data is written to.
-    # \param f The file handle
     def _loadBinary(self, mesh_builder, f):
+        """Load the STL data from file by consdering the data as Binary.
+        :param mesh: The MeshData object where the data is written to.
+        :param f: The file handle
+        """
+
         f.read(80)  # Skip the header
 
         try:

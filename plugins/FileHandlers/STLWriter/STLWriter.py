@@ -2,24 +2,26 @@
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Mesh.MeshWriter import MeshWriter
-from UM.Logger import Logger
-
-import time
 import struct
+import time
 
+from UM.Logger import Logger
+from UM.Mesh.MeshWriter import MeshWriter
 from UM.i18n import i18nCatalog
+
 catalog = i18nCatalog("uranium")
 
 class STLWriter(MeshWriter):
-    ##  Write the specified sequence of nodes to a stream in the STL format.
-    #
-    #   \param stream The output stream to write to.
-    #   \param nodes A sequence of scene nodes to write to the output stream.
-    #   \param mode The output mode to use for writing scene nodes. Text mode
-    #   causes the writer to write in STL's ASCII format. Binary mode causes the
-    #   writer to write in STL's binary format. Any other mode is invalid.
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
+        """Write the specified sequence of nodes to a stream in the STL format.
+        
+        :param stream: The output stream to write to.
+        :param nodes: A sequence of scene nodes to write to the output stream.
+        :param mode: The output mode to use for writing scene nodes. Text mode
+        causes the writer to write in STL's ASCII format. Binary mode causes the
+        writer to write in STL's binary format. Any other mode is invalid.
+        """
+
         try:
             MeshWriter._meshNodes(nodes).__next__()
         except StopIteration:

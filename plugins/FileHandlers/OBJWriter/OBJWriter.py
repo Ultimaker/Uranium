@@ -2,22 +2,24 @@
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Logger import Logger
-from UM.Mesh.MeshWriter import MeshWriter
-
 import time
 
+from UM.Logger import Logger
+from UM.Mesh.MeshWriter import MeshWriter
 from UM.i18n import i18nCatalog
+
 catalog = i18nCatalog("uranium")
 
 class OBJWriter(MeshWriter):
-    ##  Writes the specified nodes to a stream in the OBJ format.
-    #
-    #   \param stream The stream to write the OBJ data to.
-    #   \param nodes The nodes to write as OBJ data.
-    #   \param mode Additional information on how to serialise the OBJ format.
-    #   The OBJ format only supports text mode.
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
+        """Writes the specified nodes to a stream in the OBJ format.
+        
+        :param stream: The stream to write the OBJ data to.
+        :param nodes: The nodes to write as OBJ data.
+        :param mode: Additional information on how to serialise the OBJ format.
+        The OBJ format only supports text mode.
+        """
+
         if mode != MeshWriter.OutputMode.TextMode:
             Logger.log("e", "OBJWriter does not support non-text mode.")
             self.setInformation(catalog.i18nc("@error:not supported", "OBJWriter does not support non-text mode."))
