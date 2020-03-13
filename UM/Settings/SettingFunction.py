@@ -3,16 +3,12 @@
 
 import ast
 import builtins  # To check against functions that are built-in in Python.
-import math  # Imported here so it can be used easily by the setting functions.
-import uuid  # Imported here so it can be used easily by the setting functions.
-import base64  # Imported here so it can be used easily by the setting functions.
-import hashlib  # Imported here so it can be used easily by the setting functions.
 from types import CodeType
 from typing import Any, Callable, Dict, FrozenSet, NamedTuple, Optional, Set, TYPE_CHECKING
 
+from UM.Logger import Logger
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
-from UM.Logger import Logger
 
 if TYPE_CHECKING:
     from typing import FrozenSet
@@ -28,10 +24,10 @@ def _debug_value(value: Any) -> Any:
 
 
 class SettingFunction:
-    """
-    This class is used to evaluate Python codes (or you can call them formulas) for a setting's property. If a setting's
-    property is a static type, e.g., a string, an int, a float, etc., its value will just be interpreted as it is, but
-    when it's a Python code (formula), the value needs to be evaluated via this class.
+    """Evaluates Python formulas for a setting's property.
+
+    If a setting's property is a static type, e.g. a string, an int, a float, etc., its value will just be interpreted
+    as it is, but when it's a Python code (formula), the value needs to be evaluated via this class.
     """
     def __init__(self, expression: str) -> None:
         """Constructor.
