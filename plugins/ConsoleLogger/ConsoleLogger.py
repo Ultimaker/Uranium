@@ -1,10 +1,10 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Logger import LogOutput
+import logging
 from typing import Set
 
-import logging
+from UM.Logger import LogOutput
 
 try:
     from colorlog import ColoredFormatter
@@ -31,10 +31,13 @@ class ConsoleLogger(LogOutput):
         self._logger.addHandler(stream_handler)
         self._show_once = set()  # type: Set[str]
     
-    ##  Log the message to console
-    #   \param log_type "e" (error), "i"(info), "d"(debug), "w"(warning) or "c"(critical) (can postfix with "_once")
-    #   \param message String containing message to be logged
     def log(self, log_type: str, message: str) -> None:
+        """Log the message to console
+
+        :param log_type: "e" (error), "i"(info), "d"(debug), "w"(warning) or "c"(critical) (can postfix with "_once")
+        :param message: String containing message to be logged
+        """
+
         if log_type == "w":  # Warning
             self._logger.warning(message)
         elif log_type == "i":  # Info
