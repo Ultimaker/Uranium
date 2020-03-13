@@ -1,23 +1,24 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Event import MouseEvent, KeyEvent
-from UM.Tool import Tool
-from UM.Application import Application
-from UM.Scene.Selection import Selection
-from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
-
-from UM.Logger import Logger
-
 from PyQt5 import QtCore, QtWidgets
 
+from UM.Application import Application
+from UM.Event import MouseEvent
+from UM.Logger import Logger
+from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
+from UM.Scene.Selection import Selection
+from UM.Tool import Tool
 
-##  Provides the tool to select meshes and groups
-#
-#   Note that the tool has two implementations for different modes of selection:
-#   Pixel Selection Mode and BoundingBox Selection Mode. Of these two, only Pixel Selection Mode
-#   is in active use. BoundingBox Selection Mode may not be functional.
+
 class SelectionTool(Tool):
+    """Provides the tool to select meshes and groups
+    
+    Note that the tool has two implementations for different modes of selection:
+    Pixel Selection Mode and BoundingBox Selection Mode. Of these two, only Pixel Selection Mode
+    is in active use. BoundingBox Selection Mode may not be functional.
+    """
+
     PixelSelectionMode = 1
     BoundingBoxSelectionMode = 2
 
@@ -34,27 +35,33 @@ class SelectionTool(Tool):
         self._alt_is_active = None
         self._shift_is_active = None  # Shift modifier key is used for multi-selection
 
-    ##  Prepare modifier-key variables on each event
-    #
-    #   \param event type(Event) event passed from event handler
     def checkModifierKeys(self, event):
+        """Prepare modifier-key variables on each event
+        
+        :param event: type(Event) event passed from event handler
+        """
+
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         self._shift_is_active = modifiers & QtCore.Qt.ShiftModifier
         self._ctrl_is_active = modifiers & QtCore.Qt.ControlModifier
         self._alt_is_active = modifiers & QtCore.Qt.AltModifier
 
-    ##  Set the selection mode
-    #
-    #   The tool has two implementations for different modes of selection: PixelSelectionMode and BoundingboxSelectionMode.
-    #   Of these two, only Pixel Selection Mode is in active use. BoundingBox Selection Mode may not be functional.
-    #   \param mode type(SelectionTool enum)
     def setSelectionMode(self, mode):
+        """Set the selection mode
+        
+        The tool has two implementations for different modes of selection: PixelSelectionMode and BoundingboxSelectionMode.
+        Of these two, only Pixel Selection Mode is in active use. BoundingBox Selection Mode may not be functional.
+        :param mode: type(SelectionTool enum)
+        """
+
         self._selection_mode = mode
 
-    ##  Handle mouse and keyboard events
-    #
-    #   \param event type(Event)
     def event(self, event):
+        """Handle mouse and keyboard events
+        
+        :param event: type(Event)
+        """
+
         # The selection renderpass is used to identify objects in the current view
         if self._selection_pass is None:
             self._selection_pass = self._renderer.getRenderPass("selection")
@@ -72,10 +79,12 @@ class SelectionTool(Tool):
             Application.getInstance().getController().toolOperationStopped.emit(self)
         return False
 
-    ##  Handle mouse and keyboard events for bounding box selection
-    #
-    #   \param event type(Event) passed from self.event()
     def _boundingBoxSelection(self, event):
+        """Handle mouse and keyboard events for bounding box selection
+        
+        :param event: type(Event) passed from self.event()
+        """
+
         root = self._scene.getRoot()
 
         ray = self._scene.getActiveCamera().getRay(event.x, event.y)
@@ -98,10 +107,12 @@ class SelectionTool(Tool):
         else:
             Selection.clear()
 
-    ##  Handle mouse and keyboard events for pixel selection
-    #
-    #   \param event type(Event) passed from self.event()
     def _pixelSelection(self, event):
+        """Handle mouse and keyboard events for pixel selection
+        
+        :param event: type(Event) passed from self.event()
+        """
+
         # Find a node id by looking at a pixel value at the requested location
         if self._selection_pass:
             if Selection.getFaceSelectMode():
@@ -180,21 +191,25 @@ class SelectionTool(Tool):
             return True
         return False
 
-    ##  Check whether a node is in a group
-    #
-    #   \param node type(SceneNode)
-    #   \return in_group type(boolean)
     def _isNodeInGroup(self, node):
+        """Check whether a node is in a group
+        
+        :param node: type(SceneNode)
+        :return: in_group type(boolean)
+        """
+
         parent_node = node.getParent()
         if not parent_node:
             return False
         return parent_node.callDecoration("isGroup")
 
-    ##  Get the top root group for a node
-    #
-    #   \param node type(SceneNode)
-    #   \return group type(SceneNode)
     def _findTopGroupNode(self, node):
+        """Get the top root group for a node
+        
+        :param node: type(SceneNode)
+        :return: group type(SceneNode)
+        """
+
         group_node = node
         while group_node.getParent().callDecoration("isGroup"):
             group_node = group_node.getParent()

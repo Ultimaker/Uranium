@@ -2,20 +2,20 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import List, Tuple, TYPE_CHECKING, Optional
 
-from UM.Tool import Tool
+from PyQt5.QtCore import Qt
+
 from UM.Event import Event, MouseEvent, KeyEvent
-from UM.Scene.ToolHandle import ToolHandle
-from UM.Scene.Selection import Selection
-from UM.Math.Plane import Plane
-from UM.Math.Vector import Vector
 from UM.Math.Float import Float
 from UM.Math.Matrix import Matrix
-
-from UM.Operations.ScaleOperation import ScaleOperation
+from UM.Math.Plane import Plane
+from UM.Math.Vector import Vector
 from UM.Operations.GroupedOperation import GroupedOperation
+from UM.Operations.ScaleOperation import ScaleOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
+from UM.Scene.Selection import Selection
+from UM.Scene.ToolHandle import ToolHandle
+from UM.Tool import Tool
 
-from PyQt5.QtCore import Qt
 try:
     from . import ScaleToolHandle
 except (ImportError, SystemError):
@@ -28,8 +28,9 @@ if TYPE_CHECKING:
 DIMENSION_TOLERANCE = 0.0001    # Tolerance value used for comparing dimensions from the UI.
 
 
-##  Provides the tool to scale meshes and groups
 class ScaleTool(Tool):
+    """Provides the tool to scale meshes and groups"""
+
     def __init__(self):
         super().__init__()
         self._handle = ScaleToolHandle.ScaleToolHandle()
@@ -63,10 +64,12 @@ class ScaleTool(Tool):
             "ScaleZ"
         )
 
-    ##  Handle mouse and keyboard events
-    #
-    #   \param event type(Event)
     def event(self, event):
+        """Handle mouse and keyboard events
+        
+        :param event: type(Event)
+        """
+
         super().event(event)
 
         if event.type == Event.ToolActivateEvent:
@@ -200,99 +203,122 @@ class ScaleTool(Tool):
                 self.operationStopped.emit(self)
                 return True
 
-    ##  Reset scale of the selected objects
     def resetScale(self):
+        """Reset scale of the selected objects"""
+
         Selection.applyOperation(SetTransformOperation, None, None, Vector(1.0, 1.0, 1.0), Vector(0, 0, 0))
 
-    ##  Get non-uniform scaling flag
-    #
-    #   \return scale type(boolean)
     def getNonUniformScale(self):
+        """Get non-uniform scaling flag
+        
+        :return: scale type(boolean)
+        """
+
         return self._non_uniform_scale
 
-    ##  Set non-uniform scaling flag
-    #
-    #   \param scale type(boolean)
     def setNonUniformScale(self, scale):
+        """Set non-uniform scaling flag
+        
+        :param scale: type(boolean)
+        """
+
         if scale != self._non_uniform_scale:
             self._non_uniform_scale = scale
             self.propertyChanged.emit()
 
-    ##  Get snap scaling flag
-    #
-    #   \return snap type(boolean)
     def getScaleSnap(self):
+        """Get snap scaling flag
+        
+        :return: snap type(boolean)
+        """
+
         return self._snap_scale
 
-    ##  Set snap scaling flag
-    #
-    #   \param snap type(boolean)
     def setScaleSnap(self, snap):
+        """Set snap scaling flag
+        
+        :param snap: type(boolean)
+        """
+
         if self._snap_scale != snap:
             self._snap_scale = snap
             self.propertyChanged.emit()
 
-    ##  Get the width of the bounding box of the selected object(s)
-    #
-    #   \return width type(float) Width in mm
     def getObjectWidth(self):
+        """Get the width of the bounding box of the selected object(s)
+        
+        :return: width type(float) Width in mm
+        """
+
         if Selection.hasSelection():
             return float(Selection.getSelectedObject(0).getBoundingBox().width)
 
         return 0.0
 
-    ##  Get the height of the bounding box of the selected object(s)
-    #
-    #   \return height type(float) height in mm
     def getObjectHeight(self):
+        """Get the height of the bounding box of the selected object(s)
+        
+        :return: height type(float) height in mm
+        """
+
         if Selection.hasSelection():
             return float(Selection.getSelectedObject(0).getBoundingBox().height)
 
         return 0.0
 
-    ##  Get the depth of the bounding box of the first selected object
-    #
-    #   \return depth type(float) depth in mm
     def getObjectDepth(self):
+        """Get the depth of the bounding box of the first selected object
+        
+        :return: depth type(float) depth in mm
+        """
+
         if Selection.hasSelection():
             return float(Selection.getSelectedObject(0).getBoundingBox().depth)
 
         return 0.0
 
-    ##  Get the x-axis scale of the first selected object
-    #
-    #   \return scale type(float) scale factor (1.0 = normal scale)
     def getScaleX(self):
+        """Get the x-axis scale of the first selected object
+        
+        :return: scale type(float) scale factor (1.0 = normal scale)
+        """
+
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
             return abs(round(float(Selection.getSelectedObject(0).getScale().x), 4))
 
         return 1.0
 
-    ##  Get the y-axis scale of the first selected object
-    #
-    #   \return scale type(float) scale factor (1.0 = normal scale)
     def getScaleY(self):
+        """Get the y-axis scale of the first selected object
+        
+        :return: scale type(float) scale factor (1.0 = normal scale)
+        """
+
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
             return abs(round(float(Selection.getSelectedObject(0).getScale().y), 4))
 
         return 1.0
 
-    ##  Get the z-axis scale of the of the first selected object
-    #
-    #   \return scale type(float) scale factor (1.0 = normal scale)
     def getScaleZ(self):
+        """Get the z-axis scale of the of the first selected object
+        
+        :return: scale type(float) scale factor (1.0 = normal scale)
+        """
+
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
             return abs(round(float(Selection.getSelectedObject(0).getScale().z), 4))
 
         return 1.0
 
-    ##  Set the width of the selected object(s) by scaling the first selected object to a certain width
-    #
-    #   \param width type(float) width in mm
     def setObjectWidth(self, width):
+        """Set the width of the selected object(s) by scaling the first selected object to a certain width
+        
+        :param width: type(float) width in mm
+        """
+
         obj = Selection.getSelectedObject(0)
         if obj:
             width = float(width)
@@ -305,10 +331,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
 
                 self._scaleSelectedNodes(scale_vector)
-    ##  Set the height of the selected object(s) by scaling the first selected object to a certain height
-    #
-    #   \param height type(float) height in mm
     def setObjectHeight(self, height):
+        """Set the height of the selected object(s) by scaling the first selected object to a certain height
+        
+        :param height: type(float) height in mm
+        """
+
         obj = Selection.getSelectedObject(0)
         if obj:
             height = float(height)
@@ -322,10 +350,12 @@ class ScaleTool(Tool):
 
                 self._scaleSelectedNodes(scale_vector)
 
-    ##  Set the depth of the selected object(s) by scaling the first selected object to a certain depth
-    #
-    #   \param depth type(float) depth in mm
     def setObjectDepth(self, depth):
+        """Set the depth of the selected object(s) by scaling the first selected object to a certain depth
+        
+        :param depth: type(float) depth in mm
+        """
+
         obj = Selection.getSelectedObject(0)
         if obj:
             depth = float(depth)
@@ -339,10 +369,12 @@ class ScaleTool(Tool):
 
                 self._scaleSelectedNodes(scale_vector)
 
-    ##  Set the x-scale of the selected object(s) by scaling the first selected object to a certain factor
-    #
-    #   \param scale type(float) scale factor (1.0 = normal scale)
     def setScaleX(self, scale):
+        """Set the x-scale of the selected object(s) by scaling the first selected object to a certain factor
+        
+        :param scale: type(float) scale factor (1.0 = normal scale)
+        """
+
         obj = Selection.getSelectedObject(0)
         if obj:
             obj_scale = obj.getScale()
@@ -355,10 +387,12 @@ class ScaleTool(Tool):
 
                 self._scaleSelectedNodes(scale_vector)
 
-    ##  Set the y-scale of the selected object(s) by scaling the first selected object to a certain factor
-    #
-    #   \param scale type(float) scale factor (1.0 = normal scale)
     def setScaleY(self, scale):
+        """Set the y-scale of the selected object(s) by scaling the first selected object to a certain factor
+        
+        :param scale: type(float) scale factor (1.0 = normal scale)
+        """
+
         obj = Selection.getSelectedObject(0)
         if obj:
             obj_scale = obj.getScale()
@@ -371,10 +405,12 @@ class ScaleTool(Tool):
 
                 self._scaleSelectedNodes(scale_vector)
 
-    ##  Set the z-scale of the selected object(s) by scaling the first selected object to a certain factor
-    #
-    #   \param scale type(float) scale factor (1.0 = normal scale)
     def setScaleZ(self, scale):
+        """Set the z-scale of the selected object(s) by scaling the first selected object to a certain factor
+        
+        :param scale: type(float) scale factor (1.0 = normal scale)
+        """
+
         obj = Selection.getSelectedObject(0)
         if obj:
             obj_scale = obj.getScale()
@@ -398,12 +434,14 @@ class ScaleTool(Tool):
             for node in selected_nodes:
                 ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()).push()
 
-    ##  Convenience function that gives the scale of an object in the coordinate space of the world.
-    #   The function might return wrong value if the grouped models are rotated
-    #
-    #   \param node type(SceneNode)
-    #   \return scale type(float) scale factor (1.0 = normal scale)
     def _getScaleInWorldCoordinates(self, node):
+        """Convenience function that gives the scale of an object in the coordinate space of the world.
+        
+        The function might return wrong value if the grouped models are rotated
+        
+        :param node: type(SceneNode)
+        :return: scale type(float) scale factor (1.0 = normal scale)
+        """
         aabb = node.getBoundingBox()
         original_aabb = self._getRotatedExtents(node)
         if aabb is not None and original_aabb is not None:

@@ -3,14 +3,15 @@
 
 from UM.Application import Application
 from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
+from UM.i18n import i18nCatalog
 from .LocalFileOutputDevice import LocalFileOutputDevice
 
-from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
 
 
-##  Implements an OutputDevicePlugin that provides a single instance of LocalFileOutputDevice
 class LocalFileOutputDevicePlugin(OutputDevicePlugin):
+    """Implements an OutputDevicePlugin that provides a single instance of LocalFileOutputDevice"""
+
     def __init__(self):
         super().__init__()
 

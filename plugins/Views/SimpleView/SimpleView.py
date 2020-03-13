@@ -2,15 +2,14 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Resources import Resources
-
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-
-from UM.View.View import View
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.View import View
 
 
-## Standard view for mesh models.
 class SimpleView(View):
+    """Standard view for mesh models."""
+
     def __init__(self):
         super().__init__()
 

@@ -2,28 +2,25 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Optional
 
-from UM.Scene.SceneNode import SceneNode
-from UM.Tool import Tool
-from UM.Job import Job
-from UM.Event import Event, MouseEvent, KeyEvent
-from UM.Message import Message
-from UM.Scene.ToolHandle import ToolHandle
-from UM.Scene.Selection import Selection
-
-from UM.Math.Plane import Plane
-from UM.Math.Vector import Vector
-from UM.Math.Quaternion import Quaternion
-
 from PyQt5.QtCore import Qt
 
-from UM.Operations.RotateOperation import RotateOperation
+from UM.Event import Event, MouseEvent, KeyEvent
+from UM.Job import Job
+from UM.Math.Plane import Plane
+from UM.Math.Quaternion import Quaternion
+from UM.Math.Vector import Vector
+from UM.Message import Message
 from UM.Operations.GroupedOperation import GroupedOperation
-from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
-
+from UM.Operations.RotateOperation import RotateOperation
+from UM.Operations.SetTransformOperation import SetTransformOperation
+from UM.Scene.SceneNode import SceneNode
+from UM.Scene.Selection import Selection
+from UM.Scene.ToolHandle import ToolHandle
+from UM.Tool import Tool
 from UM.Version import Version
-
 from UM.View.GL.OpenGL import OpenGL
+
 try:
     from . import RotateToolHandle
 except (ImportError, SystemError):
@@ -36,10 +33,12 @@ from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
 
-##  Provides the tool to rotate meshes and groups
-#
-#   The tool exposes a ToolHint to show the rotation angle of the current operation
 class RotateTool(Tool):
+    """Provides the tool to rotate meshes and groups
+    
+    The tool exposes a ToolHint to show the rotation angle of the current operation
+    """
+
     def __init__(self):
         super().__init__()
         self._handle = RotateToolHandle.RotateToolHandle()
@@ -62,10 +61,12 @@ class RotateTool(Tool):
         self._select_face_mode = False
         Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
 
-    ##  Handle mouse and keyboard events
-    #
-    #   \param event type(Event)
     def event(self, event):
+        """Handle mouse and keyboard events
+        
+        :param event: type(Event)
+        """
+
         super().event(event)
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
@@ -230,58 +231,62 @@ class RotateTool(Tool):
 
         # NOTE: We might want to consider unchecking the select-face button afterthe operation is done.
 
-    ##  Return a formatted angle of the current rotate operation
-    #
-    #   \return type(String) fully formatted string showing the angle by which the mesh(es) are rotated
     def getToolHint(self):
+        """Return a formatted angle of the current rotate operation
+        
+        :return: type(String) fully formatted string showing the angle by which the mesh(es) are rotated
+        """
+
         return "%d°" % round(math.degrees(self._angle)) if self._angle else None
 
-    ##  Get whether the select face feature is supported.
-    #   \return True if it is supported, or False otherwise.
     def getSelectFaceSupported(self) -> bool:
+        """Get whether the select face feature is supported.
+        
+        :return: True if it is supported, or False otherwise.
+        """
         # Use a dummy postfix, since an equal version with a postfix is considered smaller normally.
         return Version(OpenGL.getInstance().getOpenGLVersion()) >= Version("4.1 dummy-postfix")
 
-    ##  Get the state of the "snap rotation to N-degree increments" option
-    #
-    #   \return type(Boolean)
     def getRotationSnap(self):
+        """Get the state of the "snap rotation to N-degree increments" option
+        
+        :return: type(Boolean)
+        """
+
         return self._snap_rotation
 
-    ##  Set the state of the "snap rotation to N-degree increments" option
-    #
-    #   \param snap type(Boolean)
     def setRotationSnap(self, snap):
+        """Set the state of the "snap rotation to N-degree increments" option
+        
+        :param snap: type(Boolean)
+        """
+
         if snap != self._snap_rotation:
             self._snap_rotation = snap
             self.propertyChanged.emit()
 
-    ##  Get the number of degrees used in the "snap rotation to N-degree increments" option
-    #
-    #   \return type(Number)
     def getRotationSnapAngle(self):
+        """Get the number of degrees used in the "snap rotation to N-degree increments" option"""
+
         return self._snap_angle
 
-    ##  Set the number of degrees used in the "snap rotation to N-degree increments" option
-    #
-    #   \param snap type(Number)
     def setRotationSnapAngle(self, angle):
+        """Set the number of degrees used in the "snap rotation to N-degree increments" option"""
+
         if angle != self._snap_angle:
             self._snap_angle = angle
             self.propertyChanged.emit()
 
-    ##  Wether the rotate tool is in 'Lay flat by face'-Mode.
-    #
-    #   \return (bool)
     def getSelectFaceToLayFlatMode(self) -> bool:
+        """Whether the rotate tool is in 'Lay flat by face'-Mode."""
+
         if not Selection.getFaceSelectMode():
             self._select_face_mode = False  # .. but not the other way around!
         return self._select_face_mode
 
-    ##  Set the rotate tool to/from 'Lay flat by face'-Mode.
-    #
-    #   \param (bool)
     def setSelectFaceToLayFlatMode(self, select: bool) -> None:
+        """Set the rotate tool to/from 'Lay flat by face'-Mode."""
+
         if select != self._select_face_mode or select != Selection.getFaceSelectMode():
             self._select_face_mode = select
             if not select:
@@ -289,17 +294,20 @@ class RotateTool(Tool):
             Selection.setFaceSelectMode(self._select_face_mode)
             self.propertyChanged.emit()
 
-    ##  Reset the orientation of the mesh(es) to their original orientation(s)
     def resetRotation(self):
+        """Reset the orientation of the mesh(es) to their original orientation(s)"""
+
         for node in self._getSelectedObjectsWithoutSelectedAncestors():
             node.setMirror(Vector(1, 1, 1))
 
         Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)
 
-    ##  Initialise and start a LayFlatOperation
-    #
-    #   Note: The LayFlat functionality is mostly used for 3d printing and should probably be moved into the Cura project
     def layFlat(self):
+        """Initialise and start a LayFlatOperation
+        
+        Note: The LayFlat functionality is mostly used for 3d printing and should probably be moved into the Cura project
+        """
+
         self.operationStarted.emit(self)
         self._progress_message = Message(i18n_catalog.i18nc("@label", "Laying object flat on buildplate..."), lifetime = 0, dismissable = False, title = i18n_catalog.i18nc("@title", "Object Rotation"))
         self._progress_message.setProgress(0)
@@ -318,27 +326,32 @@ class RotateTool(Tool):
         job.finished.connect(self._layFlatFinished)
         job.start()
 
-    ##  Lays the given object flat. The given object can be a group or not.
     def _layObjectFlat(self, selected_object):
+        """Lays the given object flat. The given object can be a group or not."""
+
         if not selected_object.callDecoration("isGroup"):
             self._total_iterations += selected_object.getMeshData().getVertexCount() * 2
         else:
             for child in selected_object.getChildren():
                 self._layObjectFlat(child)
 
-    ##  Called while performing the LayFlatOperation so progress can be shown
-    #
-    #   Note that the LayFlatOperation rate-limits these callbacks to prevent the UI from being flooded with property change notifications,
-    #   \param iterations type(int) number of iterations performed since the last callback
     def _layFlatProgress(self, iterations: int):
+        """Called while performing the LayFlatOperation so progress can be shown
+        
+        Note that the LayFlatOperation rate-limits these callbacks to prevent the UI from being flooded with property change notifications,
+        :param iterations: type(int) number of iterations performed since the last callback
+        """
+
         self._iterations += iterations
         if self._progress_message:
             self._progress_message.setProgress(min(100 * (self._iterations / self._total_iterations), 100))
 
-    ##  Called when the LayFlatJob is done running all of its LayFlatOperations
-    #
-    #   \param job type(LayFlatJob)
     def _layFlatFinished(self, job):
+        """Called when the LayFlatJob is done running all of its LayFlatOperations
+        
+        :param job: type(LayFlatJob)
+        """
+
         if self._progress_message:
             self._progress_message.hide()
             self._progress_message = None
@@ -346,10 +359,12 @@ class RotateTool(Tool):
         self.operationStopped.emit(self)
 
 
-##  A LayFlatJob bundles multiple LayFlatOperations for multiple selected objects
-#
-#   The job is executed on its own thread, processing each operation in order, so it does not lock up the GUI.
 class LayFlatJob(Job):
+    """A LayFlatJob bundles multiple LayFlatOperations for multiple selected objects
+    
+    The job is executed on its own thread, processing each operation in order, so it does not lock up the GUI.
+    """
+
     def __init__(self, operations):
         super().__init__()
 

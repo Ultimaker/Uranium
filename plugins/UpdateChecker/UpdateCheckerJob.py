@@ -1,26 +1,27 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Application import Application
-from UM.Message import Message
-from UM.Version import Version
-from UM.Logger import Logger
-from UM.Job import Job
-
+import codecs
+import json
+import platform
 import ssl
 import urllib.request
-import platform
-import json
-import codecs
 
 import certifi
 
+from UM.Application import Application
+from UM.Job import Job
+from UM.Logger import Logger
+from UM.Message import Message
+from UM.Version import Version
 from UM.i18n import i18nCatalog
+
 i18n_catalog = i18nCatalog("uranium")
 
 
-##  This job checks if there is an update available on the provided URL.
 class UpdateCheckerJob(Job):
+    """This job checks if there is an update available on the provided URL."""
+
     def __init__(self, silent = False, display_same_version = True, url = None, callback = None, set_download_url_callback = None):
         super().__init__()
         self.silent = silent

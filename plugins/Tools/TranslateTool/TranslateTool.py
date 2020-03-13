@@ -1,16 +1,17 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, QTimer
 import time
 from typing import cast, List, Optional, Union
 
+from PyQt5.QtCore import Qt, QTimer
+
 from UM.Event import Event, MouseEvent, KeyEvent
+from UM.Math.Float import Float
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
-from UM.Math.Float import Float
-from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
+from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Scene.SceneNodeSettings import SceneNodeSettings
 from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
@@ -25,10 +26,12 @@ except (ImportError, SystemError):
 DIMENSION_TOLERANCE = 0.0001  # Tolerance value used for comparing dimensions from the UI.
 DIRECTION_TOLERANCE = 0.0001  # Used to check if you're perpendicular on some axis
 
-##  Provides the tool to move meshes and groups.
-#
-#   The tool exposes a ToolHint to show the distance of the current operation.
 class TranslateTool(Tool):
+    """Provides the tool to move meshes and groups.
+    
+    The tool exposes a ToolHint to show the distance of the current operation.
+    """
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -62,27 +65,33 @@ class TranslateTool(Tool):
     def _onSelectionCenterChanged(self):
         self._update_selection_center_timer.start()
 
-    ##  Get the x-location of the selection bounding box center.
-    #   \return X location in mm.
     def getX(self) -> float:
+        """Get the x-location of the selection bounding box center.
+        
+        :return: X location in mm.
+        """
         if Selection.hasSelection():
             return float(Selection.getBoundingBox().center.x)
         return 0.0
 
-    ##  Get the y-location of the selection bounding box center.
-    #   \return Y location in mm.
     def getY(self) -> float:
+        """Get the y-location of the selection bounding box center.
+        
+        :return: Y location in mm.
+        """
         if Selection.hasSelection():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
             return float(Selection.getBoundingBox().center.z)
         return 0.0
 
-    ##  Get the z-location of the selection bounding box bottom
-    #   The bottom is used as opposed to the center, because the biggest use
-    #   case is to push the selection into the build plate.
-    #   \return Z location in mm.
     def getZ(self) -> float:
+        """Get the z-location of the selection bounding box bottom
+        
+        The bottom is used as opposed to the center, because the biggest use
+        case is to push the selection into the build plate.
+        :return: Z location in mm.
+        """
         # We want to display based on the bottom instead of the actual coordinate.
         if Selection.hasSelection():
             # Note; The switching of z & y is intentional. We display z as up for the user,
@@ -98,10 +107,12 @@ class TranslateTool(Tool):
             parsed_value = float(0)
         return parsed_value
 
-    ##  Set the x-location of the selected object(s) by translating relative to
-    #   the selection bounding box center.
-    #   \param x Location in mm.
     def setX(self, x: str) -> None:
+        """Set the x-location of the selected object(s) by translating relative to
+        
+        the selection bounding box center.
+        :param x: Location in mm.
+        """
         parsed_x = self._parseFloat(x)
         bounding_box = Selection.getBoundingBox()
 
@@ -123,10 +134,12 @@ class TranslateTool(Tool):
 
         self._controller.toolOperationStopped.emit(self)
 
-    ##  Set the y-location of the selected object(s) by translating relative to
-    #   the selection bounding box center.
-    #   \param y Location in mm.
     def setY(self, y: str) -> None:
+        """Set the y-location of the selected object(s) by translating relative to
+        
+        the selection bounding box center.
+        :param y: Location in mm.
+        """
         parsed_y = self._parseFloat(y)
         bounding_box = Selection.getBoundingBox()
 
@@ -150,10 +163,12 @@ class TranslateTool(Tool):
 
         self._controller.toolOperationStopped.emit(self)
 
-    ##  Set the y-location of the selected object(s) by translating relative to
-    #   the selection bounding box bottom.
-    #   \param z Location in mm.
     def setZ(self, z: str) -> None:
+        """Set the y-location of the selected object(s) by translating relative to
+        
+        the selection bounding box bottom.
+        :param z: Location in mm.
+        """
         parsed_z = self._parseFloat(z)
         bounding_box = Selection.getBoundingBox()
 
@@ -176,17 +191,21 @@ class TranslateTool(Tool):
                     TranslateOperation(selected_node, new_position, set_position=True).push()
         self._controller.toolOperationStopped.emit(self)
 
-    ##  Set which axis/axes are enabled for the current translate operation
-    #
-    #   \param axis List of axes (expressed as ToolHandle enum).
     def setEnabledAxis(self, axis: List[int]) -> None:
+        """Set which axis/axes are enabled for the current translate operation
+        
+        :param axis: List of axes (expressed as ToolHandle enum).
+        """
+
         self._enabled_axis = axis
         self._handle.setEnabledAxis(axis)
 
-    ##  Set lock setting to the object. This setting will be used to prevent
-    #   model movement on the build plate.
-    #   \param value The setting state.
     def setLockPosition(self, value: bool) -> None:
+        """Set lock setting to the object. This setting will be used to prevent
+        
+        model movement on the build plate.
+        :param value: The setting state.
+        """
         for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
             selected_node.setSetting(SceneNodeSettings.LockPosition, str(value))
 
@@ -210,11 +229,13 @@ class TranslateTool(Tool):
         else:
             return "partially"  # At least one, but not all are locked
 
-    ##  Handle mouse and keyboard events.
-    #   \param event The event to handle.
-    #   \return Whether this event has been caught by this tool (True) or should
-    #   be passed on (False).
     def event(self, event: Event) -> bool:
+        """Handle mouse and keyboard events.
+        
+        :param event: The event to handle.
+        :return: Whether this event has been caught by this tool (True) or should
+        be passed on (False).
+        """
         super().event(event)
 
         # Make sure the displayed values are updated if the bounding box of the selected mesh(es) changes
@@ -347,8 +368,10 @@ class TranslateTool(Tool):
 
         return False
 
-    ##  Return a formatted distance of the current translate operation.
-    #   \return Fully formatted string showing the distance by which the
-    #   mesh(es) are dragged.
     def getToolHint(self) -> Optional[str]:
+        """Return a formatted distance of the current translate operation.
+        
+        :return: Fully formatted string showing the distance by which the
+        mesh(es) are dragged.
+        """
         return "%.2f mm" % self._distance.length() if self._distance else None

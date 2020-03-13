@@ -1,25 +1,21 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Tool import Tool
-from UM.Event import Event, MouseEvent
-
-from UM.Math.Vector import Vector
-
-from UM.Operations.MirrorOperation import MirrorOperation
-from UM.Operations.GroupedOperation import GroupedOperation
-
-from UM.Scene.Selection import Selection
-from UM.Scene.ToolHandle import ToolHandle
-
 from PyQt5.QtCore import Qt
 
+from UM.Event import Event, MouseEvent
+from UM.Math.Vector import Vector
+from UM.Operations.GroupedOperation import GroupedOperation
+from UM.Operations.MirrorOperation import MirrorOperation
+from UM.Scene.Selection import Selection
+from UM.Scene.ToolHandle import ToolHandle
+from UM.Tool import Tool
 from . import MirrorToolHandle
-
-##  Provides the tool to mirror meshes and groups
 
 
 class MirrorTool(Tool):
+    """Provides the tool to mirror meshes and groups"""
+
     def __init__(self):
         super().__init__()
 
@@ -28,10 +24,12 @@ class MirrorTool(Tool):
 
         self._operation_started = False
 
-    ##  Handle mouse and keyboard events
-    #
-    #   \param event type(Event)
     def event(self, event):
+        """Handle mouse and keyboard events
+        
+        :param event: type(Event)
+        """
+
         super().event(event)
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():

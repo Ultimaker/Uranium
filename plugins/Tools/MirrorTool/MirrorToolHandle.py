@@ -1,15 +1,14 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Scene.ToolHandle import ToolHandle
-from UM.View.Renderer import Renderer
-from UM.Mesh.MeshData import MeshData
-from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Math.Vector import Vector
+from UM.Mesh.MeshBuilder import MeshBuilder
+from UM.Scene.ToolHandle import ToolHandle
 
-##  Provides the two pyramid-shaped toolhandles for each axis for the mirror tool
 
 class MirrorToolHandle(ToolHandle):
+    """Provides the two pyramid-shaped toolhandles for each axis for the mirror tool"""
+
     def __init__(self, parent = None):
         self._name = "MirrorToolHandle"
         super().__init__(parent)

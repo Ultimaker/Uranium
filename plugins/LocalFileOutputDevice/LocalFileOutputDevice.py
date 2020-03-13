@@ -9,21 +9,20 @@ from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 from UM.Application import Application
+from UM.FileHandler.WriteFileJob import WriteFileJob
 from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
-from UM.FileHandler.WriteFileJob import WriteFileJob
 from UM.Message import Message
-
-from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice import OutputDeviceError
-
+from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.i18n import i18nCatalog
 
 catalog = i18nCatalog("uranium")
 
 
-##  Implements an OutputDevice that supports saving to arbitrary local files.
 class LocalFileOutputDevice(OutputDevice):
+    """Implements an OutputDevice that supports saving to arbitrary local files."""
+
     def __init__(self):
         super().__init__("local_file")
 
@@ -34,16 +33,18 @@ class LocalFileOutputDevice(OutputDevice):
 
         self._writing = False
 
-    ##  Request the specified nodes to be written to a file.
-    #
-    #   \param nodes A collection of scene nodes that should be written to the
-    #   file.
-    #   \param file_name \type{string} A suggestion for the file name to write
-    #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param limit_mimetypes Should we limit the available MIME types to the
-    #   MIME types available to the currently active machine?
-    #   \param kwargs Keyword arguments.
     def requestWrite(self, nodes, file_name = None, limit_mimetypes = None, file_handler = None, **kwargs):
+        """Request the specified nodes to be written to a file.
+        
+        :param nodes: A collection of scene nodes that should be written to the
+        file.
+        :param file_name: A suggestion for the file name to write
+        to. Can be freely ignored if providing a file name makes no sense.
+        :param limit_mimetypes: Should we limit the available MIME types to the
+        MIME types available to the currently active machine?
+        :param kwargs: Keyword arguments.
+        """
+
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 

@@ -1,14 +1,14 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Scene.ToolHandle import ToolHandle
-from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Math.Vector import Vector
-
-##  Provides the two block-shaped toolhandles connected with a line for each axis for the scale tool
+from UM.Mesh.MeshBuilder import MeshBuilder
+from UM.Scene.ToolHandle import ToolHandle
 
 
 class ScaleToolHandle(ToolHandle):
+    """Provides the two block-shaped toolhandles connected with a line for each axis for the scale tool"""
+
     def __init__(self, parent = None):
         super().__init__(parent)
         self._handle = "ScaleToolHandle"
