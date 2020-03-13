@@ -1,13 +1,13 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from json import JSONDecodeError
-from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
 import json
 import os
 import shutil
-import zipfile
 import tempfile
 import urllib.parse  # For interpreting escape characters using unquote_plus.
+import zipfile
+from json import JSONDecodeError
+from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty
 
@@ -503,7 +503,6 @@ class PackageManager(QObject):
             self._packages_with_update_available.add(package_id)
             self.packagesWithUpdateChanged.emit()
 
-    ##  Is the package an user installed package?
     def isUserInstalledPackage(self, package_id: str) -> bool:
         """Is the package an user installed package?"""
 
