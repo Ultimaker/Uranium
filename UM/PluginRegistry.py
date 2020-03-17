@@ -5,23 +5,24 @@ import imp
 import json
 import os
 import shutil  # For deleting plugin directories;
-import stat    # For setting file permissions correctly;
-import zipfile
+import stat  # For setting file permissions correctly;
+import time
 import types
-from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING, Union
+import zipfile
+from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 
+from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
-from UM.i18n import i18nCatalog
 from UM.Logger import Logger
+from UM.Message import Message
 from UM.Platform import Platform
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.PluginObject import PluginObject  # For type hinting
 from UM.Resources import Resources
-from UM.Trust import Trust
+from UM.Trust import Trust, TrustException
 from UM.Version import Version
-import time
-from PyQt5.QtCore import QCoreApplication
+from UM.i18n import i18nCatalog
 
 i18n_catalog = i18nCatalog("uranium")
 
@@ -349,7 +350,14 @@ class PluginRegistry(QObject):
         plugin_ids = self._findInstalledPlugins()
         for plugin_id in plugin_ids:
             # Get the plugin metadata:
-            plugin_metadata = self.getMetaData(plugin_id)
+            try:
+                plugin_metadata = self.getMetaData(plugin_id)
+            except TrustException:
+                Logger.error("Plugin {} was not loaded because it could not be verified.", plugin_id)
+                message_text = i18n_catalog.i18nc("@error:untrusted",
+                                                  "Plugin {} was not loaded because it could not be verified.", plugin_id)
+                Message(text = message_text).show()
+                continue
 
             # Save all metadata to the metadata dictionary:
             self._metadata[plugin_id] = plugin_metadata

@@ -4,7 +4,6 @@
 import base64
 import json
 import os
-import sys
 from typing import Callable, Optional, Tuple
 
 # Note that we unfortunately need to use 'hazmat' code, as there apparently is no way to do what we want otherwise.
@@ -42,7 +41,7 @@ class TrustBasics:
         """This violationHandler is called after any other handlers"""
 
         Logger.logException("e", message)
-        sys.exit("Trust violation")
+        raise TrustException()
 
     @classmethod
     def getHashAlgorithm(cls):
@@ -394,3 +393,7 @@ class Trust:
         """
 
         return os.path.exists(TrustBasics.getSignaturePathForFile(filename))
+
+
+class TrustException(Exception):
+    pass
