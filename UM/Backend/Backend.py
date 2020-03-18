@@ -139,6 +139,8 @@ class Backend(PluginObject):
             Logger.logException("e", "Unable to find backend executable: %s", command_list[0])
         except BlockingIOError:
             Logger.log("e", "Couldn't start back-end: Resource is temporarily unavailable")
+        except OSError as e:
+            Logger.log("e", "Couldn't start back-end: Operating system is blocking it (antivirus?): {err}".format(err = str(e)))
         return None
 
     def _storeOutputToLogThread(self, handle):
