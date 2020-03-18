@@ -706,6 +706,9 @@ class PluginRegistry(QObject):
             except FileNotFoundError:
                 Logger.logException("e", "Unable to find the required plugin.json file for plugin %s", plugin_id)
                 raise InvalidMetaDataError(plugin_id)
+            except UnicodeDecodeError:
+                Logger.logException("e", "The plug-in metadata file for plug-in {plugin_id} is corrupt.".format(plugin_id = plugin_id))
+                raise InvalidMetaDataError(plugin_id)
 
         except AttributeError as e:
             Logger.log("e", "An error occurred getting metadata from plugin %s: %s", plugin_id, str(e))
