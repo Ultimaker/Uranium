@@ -1,10 +1,10 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 import json
-from collections import deque
-from threading import RLock
 import time
 import uuid
+from collections import deque
+from threading import RLock
 from typing import Callable, cast, Dict, Set, Union, Optional, Any
 
 from PyQt5.QtCore import QObject, QUrl, Qt
@@ -13,7 +13,6 @@ from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkRepl
 from UM.Logger import Logger
 from UM.TaskManagement.HttpRequestData import HttpRequestData
 from UM.TaskManagement.HttpRequestScope import HttpRequestScope
-
 from UM.TaskManagement.TaskManager import TaskManager
 
 
@@ -195,11 +194,15 @@ class HttpRequestManager(TaskManager):
 
     @staticmethod
     def readJSON(reply: QNetworkReply) -> Any:
-        """ Read a Json response into a Python object (list, dict, str depending on json type)"""
+        """ Read a Json response into a Python object (list, dict, str depending on json type)
+
+        :return: Python object representing the Json or None in case of error
+        """
         try:
             return json.loads(HttpRequestManager.readText(reply))
         except json.decoder.JSONDecodeError:
             Logger.log("w", "Received invalid JSON: " + str(reply.url()))
+            return None
 
     @staticmethod
     def readText(reply: QNetworkReply) -> str:
@@ -210,6 +213,23 @@ class HttpRequestManager(TaskManager):
     def replyIndicatesSuccess(reply: QNetworkReply, error: Optional["QNetworkReply.NetworkError"] = None) -> bool:
         """Returns whether reply status code indicates success and error is None"""
         return error is None and 200 <= reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) < 300
+
+    @staticmethod
+    def safeHttpStatus(reply: Optional[QNetworkReply]):
+        """Returns the status code or -1 if there isn't any"""
+        if reply is None:
+            return -1
+
+        return reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) or -1
+
+    @staticmethod
+    def qt_network_error_name(error: QNetworkReply.NetworkError):
+        """String representation of a NetworkError, eg 'ProtocolInvalidOperationError'"""
+
+        for k, v in QNetworkReply.__dict__.items():
+            if v == error:
+                return k
+        return "Unknown Qt Network error"
 
     # This function creates a HttpRequestData with the given data and puts it into the pending request queue.
     # If no request processing call has been scheduled, it will schedule it too.
