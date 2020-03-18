@@ -43,9 +43,11 @@ class LockFile:
 
         start_wait = time.time()
         while True:
-            if time.time() - start_wait > self._timeout: # Timeout expired. Overwrite the lock file.
+            if time.time() - start_wait > self._timeout:  # Timeout expired. Overwrite the lock file.
                 try:
                     os.remove(self._filename)
+                except FileNotFoundError:
+                    pass  # In case the file is simply not found, continue as normal.
                 except Exception as e:
                     stats = None
                     try:
