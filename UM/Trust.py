@@ -18,6 +18,7 @@ from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
 from cryptography.hazmat.primitives.serialization import load_pem_public_key, load_pem_private_key
 
 from UM.Logger import Logger
+from UM.Resources import Resources
 
 
 class TrustBasics:
@@ -232,8 +233,7 @@ class Trust:
         :return: Path to the 'master' public key of this application.
         """
 
-        from UM.Application import Application
-        return os.path.abspath(os.path.join(Application.getAppFolderPrefix(), "public_key.pem"))
+        return Resources.getPath(Resources.Resources, "public_key.pem")
 
     @classmethod
     def getInstance(cls):
