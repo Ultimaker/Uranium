@@ -351,7 +351,8 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "hash",
         "len",
         "max",
-        "min"
+        "min",
+        "map"
     }  # type: Set[str]
 
     _disallowed_builtins = set(dir(builtins)) - _allowed_builtins
