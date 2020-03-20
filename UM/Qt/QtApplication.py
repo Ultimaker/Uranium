@@ -117,6 +117,10 @@ class QtApplication(QApplication, Application):
 
         self._http_network_request_manager = HttpRequestManager(parent = self)
 
+        #Metadata required for the file dialogues.
+        self.setOrganizationDomain("https://ultimaker.com/")
+        self.setOrganizationName("Ultimaker B.V.")
+
     def addCommandLineOptions(self) -> None:
         super().addCommandLineOptions()
         # This flag is used by QApplication. We don't process it.
