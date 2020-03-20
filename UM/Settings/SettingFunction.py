@@ -271,7 +271,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "cos",
         "sin",
         "pi",
-        "floor"
+        "floor",
         "debug",
         "sum",
         "len",
