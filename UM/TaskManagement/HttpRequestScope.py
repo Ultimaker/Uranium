@@ -40,7 +40,10 @@ class DefaultUserAgentScope(HttpRequestScope):
 
 
 class JsonDecoratorScope(HttpRequestScope):
-    """Extends a scope by adding Content-Type and Accept for application/json"""
+    """Extends a scope by adding Content-Type and Accept for application/json
+
+    Should be used for Json requests which only accept a Json response
+    """
 
     def __init__(self, base: HttpRequestScope) -> None:
         self.base = base
