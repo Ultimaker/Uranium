@@ -87,7 +87,6 @@ Window
             {
                 id: contentLoader
                 anchors.fill: parent
-                active: source != ""
                 property var manager: null
             }
         }
