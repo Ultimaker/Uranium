@@ -38,10 +38,10 @@ class JobQueue:
                 thread_count = multiprocessing.cpu_count()
             except NotImplementedError:
                 thread_count = 0
-        thread_count = cast(int, thread_count) #Now it's always an integer.
+        thread_count = cast(int, thread_count)
 
         if thread_count <= 0:
-            thread_count = 2  # Assume we can run at least two threads in parallel.
+            thread_count = 1  # Assume we can run at least one thread in parallel (as well as the main thread).
 
         self._threads = [_Worker(self) for t in range(thread_count)]
 
