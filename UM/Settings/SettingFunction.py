@@ -285,7 +285,8 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "b64encode",
         "digest",
         "md5",
-        "radians"
+        "radians",
+        "degrees"
     }  # type: Set[str]
 
     _blacklist = {
