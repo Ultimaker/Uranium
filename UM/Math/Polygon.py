@@ -224,6 +224,8 @@ class Polygon:
             hull = scipy.spatial.ConvexHull(points)
         except scipy.spatial.qhull.QhullError:
             return Polygon(numpy.zeros((0, 2), numpy.float64))
+        except OSError:  # For some reason, Spatial sometimes attempts to open a temp file. If this temp file contains non-ASCII characters that fails. See https://github.com/scipy/scipy/issues/8850
+            return Polygon(numpy.zeros((0, 2), numpy.float64))
 
         return Polygon(numpy.flipud(hull.points[hull.vertices]))
 
