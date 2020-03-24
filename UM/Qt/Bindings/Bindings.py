@@ -27,6 +27,7 @@ from . import OutputDeviceManagerProxy
 from . import i18nCatalogProxy
 from . import ExtensionModel
 from . import VisibleMessagesModel
+from . import Utilities
 
 from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
 from UM.Settings.Models.DefinitionContainersModel import DefinitionContainersModel
@@ -107,6 +108,9 @@ class Bindings:
 
         # Additions after 3.1
         qmlRegisterType(StageModel.StageModel, "UM", 1, 4, "StageModel")
+
+        # Additions after 4.6
+        qmlRegisterSingletonType(Utilities.UrlUtil, "UM", 1, 5, "UrlUtil", Utilities.createUrlUtil)
 
     @staticmethod
     def addRegisterType(class_type: type, qml_import_name: str, major_version: int, minor_version: int, class_name: str) -> None:
