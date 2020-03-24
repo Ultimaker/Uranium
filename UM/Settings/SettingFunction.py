@@ -249,14 +249,18 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
             self.visit(child_node)
 
     def visit_Constant(self, node) -> None:
-        """This one is used on Python 3.8+ to visit string types."""
+        """This one is used on Python 3.8+ to visit constant string, bool, int and float types."""
         # The blacklisting is done just in case (All function calls should be whitelisted. The blacklist is to make
         # extra sure that certain calls are *not* made!)
+        if not isinstance(node.value, str):
+            # bool, int and float constants are allowed
+            return
+
         if node.value in self._blacklist:
             raise IllegalMethodError(node.value)
         if node.s.startswith("_"):
             raise IllegalMethodError(node.s)
-        if isinstance(node.value, str) and node.value not in self._knownNames and node.value not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.value.
+        if node.value not in self._knownNames and node.value not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.value.
             self.keys.add(node.value)  # type: ignore
 
     _knownNames = {
