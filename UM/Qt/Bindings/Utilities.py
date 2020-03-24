@@ -1,12 +1,15 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import Optional, List, Union
+from typing import List, TYPE_CHECKING
 from urllib.parse import urlparse
 
 from PyQt5.QtCore import pyqtSlot, QUrl, QObject
 from PyQt5.QtGui import QDesktopServices
 
 from UM.Logger import Logger
+
+if TYPE_CHECKING:
+    from PyQt5.QtQml import QQmlEngine, QJSEngine
 
 
 class UrlUtil(QObject):
