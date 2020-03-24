@@ -286,7 +286,12 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "digest",
         "md5",
         "radians",
-        "degrees"
+        "degrees",
+        "lower",
+        "upper",
+        "startswith",
+        "endswith",
+        "capitalize"
     }  # type: Set[str]
 
     _blacklist = {
