@@ -1,6 +1,6 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
+import json
 from collections import deque
 from threading import RLock
 import time
@@ -193,6 +193,24 @@ class HttpRequestManager(TaskManager):
                     request.reply.abort()
                     Logger.log("d", "%s aborted", request)
 
+    @staticmethod
+    def readJSON(reply: QNetworkReply) -> Any:
+        """ Read a Json response into a Python object (list, dict, str depending on json type)"""
+        try:
+            return json.loads(HttpRequestManager.readText(reply))
+        except json.decoder.JSONDecodeError:
+            Logger.log("w", "Received invalid JSON: " + str(reply.url()))
+
+    @staticmethod
+    def readText(reply: QNetworkReply) -> str:
+        """Decode raw reply bytes as utf-8"""
+        return bytes(reply.readAll()).decode("utf-8")
+
+    @staticmethod
+    def replyIndicatesSuccess(reply: QNetworkReply, error: Optional["QNetworkReply.NetworkError"] = None) -> bool:
+        """Returns whether reply status code indicates success and error is None"""
+        return error is None and 200 <= reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) < 300
+
     # This function creates a HttpRequestData with the given data and puts it into the pending request queue.
     # If no request processing call has been scheduled, it will schedule it too.
     # Returns an HttpRequestData instance that represents this request.
@@ -225,7 +243,7 @@ class HttpRequestManager(TaskManager):
                 request.setRawHeader(key.encode("utf-8"), value.encode("utf-8"))
 
         if scope is not None:
-            scope.request_hook(request)
+            scope.requestHook(request)
 
         # Generate a unique request ID
         request_id = uuid.uuid4().hex

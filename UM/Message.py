@@ -2,9 +2,10 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Optional, Union, Dict, List
 
-from UM.Signal import Signal, signalemitter
-from UM.Logger import Logger
 from PyQt5.QtCore import QTimer, pyqtSignal, QObject
+
+from UM.Logger import Logger
+from UM.Signal import Signal, signalemitter
 
 
 @signalemitter
@@ -78,6 +79,10 @@ class Message(QObject):
     inactivityTimerStart = pyqtSignal()
     actionTriggered = Signal()
     optionToggled = Signal()
+
+    titleChanged = Signal()
+    textChanged = Signal()
+    progressChanged = Signal()
 
     def _stopInactivityTimer(self) -> None:
         if self._inactivity_timer:
@@ -187,6 +192,7 @@ class Message(QObject):
         """
 
         self._text = text
+        self.textChanged.emit(self)
 
     def getText(self) -> str:
         """Returns the text in the message.
@@ -216,11 +222,11 @@ class Message(QObject):
 
         return self._max_progress
 
-    def setProgress(self, progress: float) -> None:
+    def setProgress(self, progress: Optional[float]) -> None:
         """Changes the state of the progress bar.
         
         :param progress: The new progress to display to the user. This should be
-        between 0 and the value of ``getMaxProgress()``.
+        between 0 and the value of `getMaxProgress()`. None to remove the progressbar
         """
 
         if self._progress != progress:
@@ -228,7 +234,6 @@ class Message(QObject):
             self.progressChanged.emit(self)
         self.inactivityTimerStart.emit()
 
-    progressChanged = Signal()
     """Signal that gets emitted whenever the state of the progress bar on this
     message changes.
     """
@@ -250,6 +255,7 @@ class Message(QObject):
         """
 
         self._title = title
+        self.titleChanged.emit(self)
 
     def getTitle(self) -> Optional[str]:
         """Returns the message title.
