@@ -1,10 +1,12 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Qt.ListModel import ListModel
-from UM.Application import Application
 from PyQt5.QtCore import Qt
+
+from UM.Application import Application
 from UM.FlameProfiler import pyqtSlot
+from UM.Qt.ListModel import ListModel
+
 
 class VisibleMessagesModel(ListModel):
     TextRole = Qt.UserRole + 1
@@ -57,6 +59,8 @@ class VisibleMessagesModel(ListModel):
             "option_text": message.getOptionText(),
             "option_state": message.getOptionState()
         })
+        message.titleChanged.connect(self._onMessageTitleChanged)
+        message.textChanged.connect(self._onMessageTextChanged)
         message.progressChanged.connect(self._onMessageProgress)
 
     def createActionsModel(self, actions):
@@ -95,6 +99,18 @@ class VisibleMessagesModel(ListModel):
             if self.items[index]["id"] == message_id:
                 self.removeItem(index)
                 break
+
+    def _onMessageTitleChanged(self, message):
+        index = self.find("id", str(id(message)))
+
+        if index != -1:
+            self.setProperty(index, "title", message.getTitle())
+
+    def _onMessageTextChanged(self, message):
+        index = self.find("id", str(id(message)))
+
+        if index != -1:
+            self.setProperty(index, "text", message.getText())
 
     def _onMessageProgress(self, message):
         index = self.find("id", str(id(message)))
