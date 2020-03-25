@@ -16,7 +16,7 @@ class UrlUtil(QObject):
     """
     Helper class used to open URLs from QML.
     """
-    valid_uri_schemes = ["http", "https"]
+    __valid_uri_schemes = ("http", "https")
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -33,7 +33,7 @@ class UrlUtil(QObject):
         """
         allowed_schemes = set()
         for s in schemes:
-            if s in self.valid_uri_schemes:
+            if s in self.__valid_uri_schemes:
                 allowed_schemes.add(s)
         parse_result = urlparse(target_url)
         if parse_result.scheme in allowed_schemes:
