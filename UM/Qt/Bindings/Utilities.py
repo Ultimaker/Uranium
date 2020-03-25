@@ -22,14 +22,14 @@ class UrlUtil(QObject):
         super().__init__(parent)
 
     @pyqtSlot(str, list)
-    def openUrl(self, target_url: str, schemes: List[str]) -> None:
+    def openUrl(self, target_url: str, schemes: List[str]) -> bool:
         """
         Checks whether the target_url has an allowed scheme and, if it does, it opens the URL. If the target_url has a
         disallowed or invalid scheme, then it logs an error. This function can be called inside QML files.
 
         :param target_url: The URL string to be opened e.g. 'https://example.org'
         :param schemes: A list of the schemes that are allowed to be opened e.g. ['http', 'https']
-        :return: None
+        :return: True if the URL opens successfully, False if an invalid scheme is used
         """
         allowed_schemes = set()
         for s in schemes:
@@ -37,13 +37,14 @@ class UrlUtil(QObject):
                 allowed_schemes.add(s)
         parse_result = urlparse(target_url)
         if parse_result.scheme in allowed_schemes:
-            QDesktopServices.openUrl(QUrl(target_url))
+            return QDesktopServices.openUrl(QUrl(target_url))
         else:
             Logger.log("e", "Attempted to open URL '{uri}'. The scheme '{scheme}' is not in the allowed schemes '"
                             "{allowed_schemes}'.".format(
                                                             uri = target_url,
                                                             scheme = parse_result.scheme,
                                                             allowed_schemes = allowed_schemes))
+            return False
 
 
 def createUrlUtil(engine: "QQmlEngine", script_engine: "QJSEngine") -> UrlUtil:
