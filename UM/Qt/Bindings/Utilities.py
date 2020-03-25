@@ -30,12 +30,12 @@ class UrlUtil(QObject):
         :param allowed_schemes: A list of the schemes that are allowed to be opened e.g. ['http', 'https']
         :return: True if the URL opens successfully, False if an invalid scheme is used
         """
-        if self.urlHasValidScheme(target_url, allowed_schemes):
+        if self._urlHasValidScheme(target_url, allowed_schemes):
             QDesktopServices.openUrl(QUrl(target_url))
             return True
         return False
 
-    def urlHasValidScheme(self, url: str, input_schemes: List[str]) -> bool:
+    def _urlHasValidScheme(self, url: str, input_schemes: List[str]) -> bool:
         """
         Checks if the scheme of the url is in the valid URL schemes and whether it has been allowed. If an invalid
         scheme was attempted to be allowed, the function logs a warning. If the url has a disallowed scheme, it logs an
