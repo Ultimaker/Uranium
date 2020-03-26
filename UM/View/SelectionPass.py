@@ -1,8 +1,9 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import enum
 import random
+from typing import TYPE_CHECKING
 
 from UM.Resources import Resources
 from UM.Application import Application
@@ -17,6 +18,8 @@ from UM.View.RenderPass import RenderPass
 from UM.View.RenderBatch import RenderBatch
 from UM.View.GL.OpenGL import OpenGL
 
+if TYPE_CHECKING:
+    from UM.Scene.SceneNode import SceneNode
 
 class SelectionPass(RenderPass):
     """A RenderPass subclass responsible for rendering selectable objects to a texture.
@@ -171,15 +174,20 @@ class SelectionPass(RenderPass):
     def _dropAlpha(self, color):
         return Color(color.r, color.g, color.b, 0.0)
 
-    def _isInSelectedGroup(self, node):
-        """Get the top root group for a node
-
-        :param node: type(SceneNode)
-        :return: group type(SceneNode)
+    def _isInSelectedGroup(self, node: "SceneNode") -> bool:
+        """
+        Get whether the given node is in a group that is selected.
+        :param node: The node to check.
+        :return: ``True`` if the node is in a selected group, or ``False`` if
+        it's not.
         """
         group_node = node.getParent()
+        if group_node is None:  # Separate node that's not in the scene.
+            return False  # Can never get selected.
         while group_node.callDecoration("isGroup"):
             if Selection.isSelected(group_node):
                 return True
             group_node = group_node.getParent()
+            if group_node is None:
+                return False
         return False
