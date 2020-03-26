@@ -41,8 +41,8 @@ class TestUrlUtil(TestCase):
                 self.url_util._urlHasValidScheme("https://www.ultimaker.com", allowed_schemes)
 
                 # Ensure the correct message is outputted in the console
-                expected_output = re.sub('\W+', ' ', "Attempted to allow invalid schemes")  # remove special characters
-                console_ouput = re.sub('\W+', ' ', mock_output.getvalue().strip())
+                expected_output = re.sub(r'\W+', ' ', "Attempted to allow invalid schemes")  # remove special characters
+                console_ouput = re.sub(r'\W+', ' ', mock_output.getvalue().strip())
                 self.assertIn(expected_output, console_ouput)  # Assert the correct message is in the console output
                 for scheme in schemes_list:
                     self.assertIn(scheme, console_ouput)  # Assert each of the schemes that are being tested appears in the console output
@@ -64,9 +64,9 @@ class TestUrlUtil(TestCase):
 
                 # Ensure the correct message is outputted in the console
                 expected_output = "The scheme '{scheme}' is not in the allowed schemes".format(scheme = urlparse(url).scheme)
-                expected_output = re.sub('\W+', ' ', expected_output)  # remove special characters
+                expected_output = re.sub(r'\W+', ' ', expected_output)  # remove special characters
                 console_ouput = mock_output.getvalue().strip()
-                console_ouput = re.sub('\W+', ' ', console_ouput)  # remove special characters
+                console_ouput = re.sub(r'\W+', ' ', console_ouput)  # remove special characters
                 self.assertIn(expected_output, console_ouput)
                 for scheme in allowed_schemes:
                     self.assertIn(scheme, console_ouput)
