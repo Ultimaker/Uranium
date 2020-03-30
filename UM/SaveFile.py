@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import tempfile
@@ -80,6 +80,7 @@ class SaveFile:
                 if self.__max_retries <= 0:
                     raise e
                 self.__max_retries -= 1
+                continue
 
             if not self._file.closed and os.path.sameopenfile(self._file.fileno(), file_new.fileno()):
                 file_new.close()
