@@ -22,6 +22,7 @@ class ReadMeshJob(ReadFileJob):
     def __init__(self, filename: str) -> None:
         super().__init__(filename)
         from UM.Qt.QtApplication import QtApplication
+        self.object_to_be_reloaded = 0  # used when reloading a 3mf file with multiple objects
         self._application = QtApplication.getInstance()
         self._handler = QtApplication.getInstance().getMeshFileHandler()
 
