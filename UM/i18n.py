@@ -1,9 +1,10 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import gettext
 from typing import Any, Dict, Optional, cast, TYPE_CHECKING
 
+from UM.Logger import Logger
 from UM.Resources import Resources
 
 if TYPE_CHECKING:
@@ -214,7 +215,10 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         # Ask gettext for all the translations in the .mo files.
         for path in Resources.getAllPathsForType(Resources.i18n):
             if gettext.find(cast(str, self.__name), path, languages = [self.__language]):
-                self.__translation = gettext.translation(cast(str, self.__name), path, languages = [self.__language])
+                try:
+                    self.__translation = gettext.translation(cast(str, self.__name), path, languages = [self.__language])
+                except OSError:
+                    Logger.warning("Corrupt or inaccessible translation file: {fname}".format(fname = self.__name))
 
         self.__require_update = False
 
