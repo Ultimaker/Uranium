@@ -186,11 +186,12 @@ ListView
                 }
 
                 text: model.image_caption
+                visible: text != ""
                 horizontalAlignment: Text.AlignHCenter
                 elide: Text.ElideRight
                 color: UM.Theme.getColor("text")
                 font: UM.Theme.getFont("large_bold")
-                height: contentHeight
+                height: visible ? contentHeight : 0
             }
         }
 

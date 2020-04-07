@@ -576,7 +576,10 @@ class Resources:
                 continue
 
             # Give priority to a folder with files with version number in it
-            storage_dir_name_list = next(os.walk(search_path))[1]
+            try:
+                storage_dir_name_list = next(os.walk(search_path))[1]
+            except StopIteration:  # There is no next().
+                continue
 
             match_dir_name_list = [n for n in storage_dir_name_list if version_regex.match(n) is not None]
             match_dir_version_list = [{"dir_name": n, "version": Version(n)} for n in match_dir_name_list]  # type: List[Dict[str, Union[str, Version]]]
