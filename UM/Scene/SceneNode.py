@@ -2,20 +2,21 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
-import numpy
 from typing import Any, Dict, List, Optional, cast
 
-from UM.Math.Matrix import Matrix
-from UM.Math.Vector import Vector
-from UM.Math.Quaternion import Quaternion
-from UM.Math.AxisAlignedBox import AxisAlignedBox
-from UM.Mesh.MeshData import MeshData
+import numpy
 
-from UM.Signal import Signal, signalemitter
-from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
-
+from UM.Math.AxisAlignedBox import AxisAlignedBox
+from UM.Math.Matrix import Matrix
+from UM.Math.Quaternion import Quaternion
+from UM.Math.Vector import Vector
+from UM.Mesh.MeshBuilder import MeshBuilder
+from UM.Mesh.MeshData import MeshData
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
+from UM.Signal import Signal, signalemitter
+
+
 @signalemitter
 class SceneNode:
     """A scene node object.
@@ -34,7 +35,7 @@ class SceneNode:
         Parent = 2 #type: int
         World = 3 #type: int
 
-    def __init__(self, parent: Optional["SceneNode"] = None, visible: bool = True, name: str = "") -> None:
+    def __init__(self, parent: Optional["SceneNode"] = None, visible: bool = True, name: str = "", node_id: str = "") -> None:
         """Construct a scene node.
 
         :param parent: The parent of this node (if any). Only a root node should have None as a parent.
@@ -81,6 +82,7 @@ class SceneNode:
 
         self._visible = visible  # type: bool
         self._name = name  # type: str
+        self._id = node_id  # type: str
         self._decorators = []  # type: List[SceneNodeDecorator]
 
         # Store custom settings to be compatible with Savitar SceneNode
@@ -304,6 +306,12 @@ class SceneNode:
 
     def setName(self, name: str) -> None:
         self._name = name
+
+    def getId(self) -> str:
+        return self._id
+
+    def setId(self, node_id: str) -> None:
+        self._id = node_id
 
     def getDepth(self) -> int:
         """How many nodes is this node removed from the root?
