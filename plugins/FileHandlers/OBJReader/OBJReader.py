@@ -40,13 +40,7 @@ class OBJReader(MeshReader):
                     del parts[-1]
                     previous_line_parts = parts
                     continue
-                if parts[0] == "v":
-                    vertex_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
-                elif parts[0] == "vn":
-                    normal_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
-                elif parts[0] == "vt":
-                    uv_list.append([float(parts[1]), float(parts[2])])
-                elif parts[0] == "f":
+                if parts[0] == "f":
                     parts = [i for i in map(lambda p: p.split("/"), parts)]
                     for idx in range(1, len(parts) - 2):
                         data = [int(parts[1][0]), int(parts[idx + 1][0]), int(parts[idx + 2][0])]
@@ -57,6 +51,12 @@ class OBJReader(MeshReader):
                             if len(parts[1]) > 2:
                                 data += [int(parts[1][2]), int(parts[idx + 1][2]), int(parts[idx + 2][2])]
                         face_list.append(data)
+                elif parts[0] == "v":
+                    vertex_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
+                elif parts[0] == "vn":
+                    normal_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
+                elif parts[0] == "vt":
+                    uv_list.append([float(parts[1]), float(parts[2])])
                 Job.yieldThread()
             f.close()
 
