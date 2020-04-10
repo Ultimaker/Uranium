@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import SceneNode
@@ -105,6 +105,8 @@ class Platform(SceneNode.SceneNode):
             return
 
         node = job.getResult()
+        if isinstance(node, list):  # Some model readers return lists of models. Some (e.g. STL) return a list SOMETIMES but not always.
+            node = node[0]
         if node.getMeshData():
             self.setMeshData(node.getMeshData())
 
