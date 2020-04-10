@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
@@ -42,13 +42,13 @@ class OBJReader(MeshReader):
                     continue
                 if parts[0] == "v":
                     vertex_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
-                if parts[0] == "vn":
+                elif parts[0] == "vn":
                     normal_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
-                if parts[0] == "vt":
+                elif parts[0] == "vt":
                     uv_list.append([float(parts[1]), float(parts[2])])
-                if parts[0] == "f":
+                elif parts[0] == "f":
                     parts = [i for i in map(lambda p: p.split("/"), parts)]
-                    for idx in range(1, len(parts)-2):
+                    for idx in range(1, len(parts) - 2):
                         data = [int(parts[1][0]), int(parts[idx + 1][0]), int(parts[idx + 2][0])]
                         if len(parts[1]) > 1:
                             if parts[1][1] and parts[idx + 1][1] and parts[idx + 2][1]:
