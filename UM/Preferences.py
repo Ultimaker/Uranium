@@ -205,8 +205,8 @@ class Preferences:
         self._parser = configparser.ConfigParser(interpolation = None)
         try:
             self._parser.read_string(updated_preferences)
-        except configparser.MissingSectionHeaderError:
-            Logger.log("w", "Could not deserialize preferences from loaded project")
+        except (configparser.MissingSectionHeaderError, configparser.DuplicateOptionError, configparser.DuplicateSectionError, configparser.ParsingError, configparser.InterpolationError) as e:
+            Logger.log("w", "Could not deserialize preferences file: {error}".format(error = str(e)))
             self._parser = None
             return
         has_version = "general" in self._parser and "version" in self._parser["general"]
