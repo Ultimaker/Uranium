@@ -398,8 +398,9 @@ class HttpRequestManager(TaskManager):
         #
         # We do nothing if the request was aborted or and error was detected because an error callback will also
         # be triggered by Qt.
-        if request_data.reply is not None and request_data.reply.error() != QNetworkReply.NoError:
-            if request_data.reply.error() == QNetworkReply.OperationCanceledError:
+        reply = request_data.reply
+        if reply is not None and reply.error() != QNetworkReply.NoError:
+            if reply.error() == QNetworkReply.OperationCanceledError:
                 Logger.log("d", "%s was aborted, do nothing", request_data)
             # stop processing for any kind of error
             return
@@ -421,18 +422,22 @@ class HttpRequestManager(TaskManager):
                 Logger.log("e", "%s not found in the in-progress set", request_data)
             else:
                 # Disconnect callback signals
-                if request_data.reply is not None:
+                if reply is not None:
+                    # Even after the request was successfully finished, an error may still be emitted if
+                    # the network connection is lost seconds later. Bug in Qt? Fixes CURA-7349
+                    reply.error.disconnect()
+
                     if request_data.download_progress_callback is not None:
-                        request_data.reply.downloadProgress.disconnect(request_data.onDownloadProgressCallback)
+                        reply.downloadProgress.disconnect(request_data.onDownloadProgressCallback)
                     if request_data.upload_progress_callback is not None:
-                        request_data.reply.uploadProgress.disconnect(request_data.onUploadProgressCallback)
+                        reply.uploadProgress.disconnect(request_data.onUploadProgressCallback)
 
                 request_data.setDone()
                 self._requests_in_progress.remove(request_data)
 
         # Schedule the callback if there is one
         if request_data.callback is not None:
-            self.callLater(0, request_data.callback, request_data.reply)
+            self.callLater(0, request_data.callback, reply)
 
         # Continue to process the next request
         self._processNextRequestsInQueue()
