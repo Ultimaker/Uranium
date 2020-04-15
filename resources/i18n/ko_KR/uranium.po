@@ -395,7 +395,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:358
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
-msgstr ""
+msgstr "확인할 수 없어서 플러그인 {}이(가) 로딩되지 않았습니다."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:458
 #, python-brace-format
