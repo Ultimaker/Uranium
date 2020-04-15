@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2020-04-06 16:48+0200\n"
-"PO-Revision-Date: 2020-02-17 05:50+0100\n"
+"PO-Revision-Date: 2020-04-13 04:50+0100\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -394,7 +394,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:358
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
-msgstr ""
+msgstr "Complemento {} não foi carregado porque não pôde ser verificado."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:458
 #, python-brace-format
