@@ -77,8 +77,9 @@ The following steps are pretty much the same for both Cura and Uranium, but have
 mkdir build
 cd build
 cmake ..
+cd ..
 ```
-Now build the build-target [extract-messages] (with the terminal; when your still in the build directory). (If it starts wining that it can't find some directory; fix it, throw away the build folder and create the build-files again.)
+`make` commands can now be executed from the project root. Now build the build-target [extract-messages] (with the terminal; when your still in the build directory). (If it starts wining that it can't find some directory; fix it, throw away the build folder and create the build-files again.)
 ```
 make extract-messages
 ```
@@ -122,13 +123,13 @@ Creating the MO files & testing
 -------------------------------
 In the building process; the MO files are automatically created. So you only manually create the MO files that you want to test. A great example is x-test. The PO files for x-test are automatically created by [extract-messages]. It is basically an English translation with two X's before and after each string. You use it to test whether all strings are being properly translated.  
 
-Create a directory in the directory of the language (x-test is this example). The name of the new directory has to be [LC_MESSAGES]. Create the MO file with the terminal: 
+The directory of the language (x-test is this example) must contain a special directory called `LC_MESSAGES`. This directory is created automatically. Create the MO file with the terminal (project root): 
 ```
-make i18n-update-mo
+make i18n-create-mo
 ```
 Or for your language:
 ```
-make i18n-update-mo-<code>
+make i18n-create-mo-<code>
 ```
 Setting the environment variable doesn't function. So for now you need to edit the language default in: Uranium/UM/i18n.py
 ~~def __init__(self, name = None, language = "default"):~~
