@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
@@ -40,22 +40,23 @@ class OBJReader(MeshReader):
                     del parts[-1]
                     previous_line_parts = parts
                     continue
-                if parts[0] == "v":
-                    vertex_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
-                if parts[0] == "vn":
-                    normal_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
-                if parts[0] == "vt":
-                    uv_list.append([float(parts[1]), float(parts[2])])
                 if parts[0] == "f":
                     parts = [i for i in map(lambda p: p.split("/"), parts)]
-                    for idx in range(1, len(parts)-2):
-                        data = [int(parts[1][0]), int(parts[idx+1][0]), int(parts[idx+2][0])]
-                        if len(parts[1]) > 2:
-                            data += [int(parts[1][2]), int(parts[idx+1][2]), int(parts[idx+2][2])]
+                    for idx in range(1, len(parts) - 2):
+                        data = [int(parts[1][0]), int(parts[idx + 1][0]), int(parts[idx + 2][0])]
+                        if len(parts[1]) > 1:
+                            if parts[1][1] and parts[idx + 1][1] and parts[idx + 2][1]:
+                                data += [int(parts[1][1]), int(parts[idx + 1][1]), int(parts[idx + 2][1])]
 
-                            if parts[1][1] and parts[idx+1][1] and parts[idx+2][1]:
-                                data += [int(parts[1][1]), int(parts[idx+1][1]), int(parts[idx+2][1])]
+                            if len(parts[1]) > 2:
+                                data += [int(parts[1][2]), int(parts[idx + 1][2]), int(parts[idx + 2][2])]
                         face_list.append(data)
+                elif parts[0] == "v":
+                    vertex_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
+                elif parts[0] == "vn":
+                    normal_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
+                elif parts[0] == "vt":
+                    uv_list.append([float(parts[1]), float(parts[2])])
                 Job.yieldThread()
             f.close()
 
@@ -69,22 +70,22 @@ class OBJReader(MeshReader):
                 k = face[2] - 1
 
                 if len(face) > 3:
-                    ni = face[3] - 1
-                    nj = face[4] - 1
-                    nk = face[5] - 1
-                else:
-                    ni = -1
-                    nj = -1
-                    nk = -1
-
-                if len(face) > 6:
-                    ui = face[6] - 1
-                    uj = face[7] - 1
-                    uk = face[8] - 1
+                    ui = face[3] - 1
+                    uj = face[4] - 1
+                    uk = face[5] - 1
                 else:
                     ui = -1
                     uj = -1
                     uk = -1
+
+                if len(face) > 6:
+                    ni = face[6] - 1
+                    nj = face[7] - 1
+                    nk = face[8] - 1
+                else:
+                    ni = -1
+                    nj = -1
+                    nk = -1
 
                 #TODO: improve this handling, this can cause weird errors (negative indexes are relative indexes, and are not properly handled)
                 if i < 0 or i >= num_vertices:
