@@ -3,6 +3,6 @@
     "author": "Ultimaker B.V.",
     "version": "1.0.1",
     "description": "Outputs log information to a file in your settings folder.",
-    "api": "7.1",
+    "api": "7.2.0",
     "i18n-catalog": "uranium"
 }
