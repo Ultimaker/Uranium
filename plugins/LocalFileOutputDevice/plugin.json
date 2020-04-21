@@ -3,6 +3,6 @@
     "description": "Enables saving to local files.",
     "author": "Ultimaker B.V.",
     "version": "1.0.1",
-    "api": "7.1",
+    "api": "7.2.0",
     "i18n-catalog": "uranium"
 }
