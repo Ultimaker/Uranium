@@ -5,6 +5,7 @@ import collections  # For deque, for breadth-first search and to track tasks, an
 import os  # To get the configuration file names and to rename files.
 import re
 import traceback
+import time
 from typing import Any, Dict, Callable, Iterator, List, Optional, Set, Tuple
 
 import UM.Message  # To show the "upgrade succeeded" message.
@@ -156,7 +157,7 @@ class VersionUpgradeManager:
         
         :return: True if anything was upgraded, or False if it was already up to date.
         """
-
+        start_time = time.time()
         Logger.log("i", "Looking for old configuration files to upgrade.")
         self._upgrade_tasks.extend(self._getUpgradeTasks())     # Get the initial files to upgrade.
         self._upgrade_routes = self._findShortestUpgradeRoutes()  # Pre-compute the upgrade routes.
@@ -169,6 +170,7 @@ class VersionUpgradeManager:
         if upgraded:
             message = UM.Message.Message(text = catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", Application.getInstance().getApplicationName()), title = catalogue.i18nc("@info:title", "Version Upgrade"))
             message.show()
+        Logger.log("i", "Checking and performing updates took %s", time.time() - start_time)
         return upgraded
 
     def upgradeExtraFile(self, storage_path: str, file_name: str, configuration_type: str) -> None:
