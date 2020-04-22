@@ -32,9 +32,16 @@ class VersionUpgrade(PluginObject):
         :param serialised: The contents of a config file.
         :return: The version number of that config file.
         """
+        format_version = 1
+        setting_version = 0
 
-        format_version = int(self._version_regex.search(serialised).groups()[-1])
-        setting_version = int(self._setting_version_regex.search(serialised).groups()[-1])
+        regex_result = self._version_regex.search(serialised).groups()
+        if regex_result is not None:
+            format_version = int(regex_result[-1])
+
+        regex_result = self._setting_version_regex.search(serialised).groups()
+        if regex_result is not None:
+            setting_version = int(regex_result[-1])
         return format_version * 1000000 + setting_version
 
 
