@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os  # For getting the IDs from a filename.
@@ -101,8 +101,12 @@ class LocalContainerProvider(ContainerProvider):
         resource_types = ContainerRegistry.getInstance().getResourceTypes()
         if container_type in resource_types:
             path = Resources.getStoragePath(resource_types[container_type], file_name)
-            with SaveFile(path, "wt") as f:
-                f.write(data)
+            try:
+                with SaveFile(path, "wt") as f:
+                    f.write(data)
+            except OSError as e:
+                Logger.log("e", "Unable to store local container to path {path}: {err}".format(path = path, err = str(e)))
+                return
             container.setPath(path)
             # Register it internally as being saved
             self._id_to_path[container.getId()] = path
