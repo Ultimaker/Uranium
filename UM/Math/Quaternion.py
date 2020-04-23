@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
@@ -248,7 +248,6 @@ class Quaternion:
         if d >= 1.0:
             return Quaternion() # Vectors are equal, no rotation needed.
 
-        q = None
         if Float.fuzzyCompare(d, -1.0, 1e-6):
             axis = Vector.Unit_X.cross(v1)
 
