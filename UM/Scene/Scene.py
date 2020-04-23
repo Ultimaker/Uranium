@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import functools  # For partial to update files that were changed.
@@ -162,7 +162,10 @@ class Scene:
     def _onFileChanged(self, file_path: str) -> None:
         """Triggered whenever a file is changed that we currently have loaded."""
 
-        if not os.path.isfile(file_path) or os.path.getsize(file_path) == 0:  # File doesn't exist any more, or it is empty
+        try:
+            if os.path.getsize(file_path) == 0:  # File is empty.
+                return
+        except FileNotFoundError:  # Or it doesn't exist any more.
             return
 
         # Multiple nodes may be loaded from the same file at different stages. Reload them all.
