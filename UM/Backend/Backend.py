@@ -77,7 +77,11 @@ class Backend(PluginObject):
 
         # Double check that the old process is indeed killed.
         if self._process is not None:
-            self._process.terminate()
+            try:
+                self._process.terminate()
+            except PermissionError:
+                Logger.log("e", "Unable to kill running engine. Access is denied.")
+                return
             Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
 
         self._process = self._runEngineProcess(command)
