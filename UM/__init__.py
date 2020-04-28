@@ -6,5 +6,8 @@
 ## \package UM
 #  This is the main library for Uranium applications.
 
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
+
 import warnings
 warnings.simplefilter("once", DeprecationWarning)
