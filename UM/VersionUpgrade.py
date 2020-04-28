@@ -35,13 +35,14 @@ class VersionUpgrade(PluginObject):
         format_version = 1
         setting_version = 0
 
-        regex_result = self._version_regex.search(serialised).groups()
+        regex_result = self._version_regex.search(serialised)
         if regex_result is not None:
-            format_version = int(regex_result[-1])
+            format_version = int(regex_result.groups()[-1])
 
-        regex_result = self._setting_version_regex.search(serialised).groups()
+        regex_result = self._setting_version_regex.search(serialised)
         if regex_result is not None:
-            setting_version = int(regex_result[-1])
+            setting_version = int(regex_result.groups()[-1])
+
         return format_version * 1000000 + setting_version
 
 
