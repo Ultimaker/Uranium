@@ -228,7 +228,7 @@ class TrustBasics:
                         os.remove(os.path.join(root, filename))
             return True
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Removal of pycache for unbundled plugin '{0}' failed.".format(plugin_id))
+            Logger.logException("e", "Removal of pycache for unbundled path '{0}' failed.".format(path))
         return False
 
 
