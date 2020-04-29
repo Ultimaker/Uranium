@@ -48,6 +48,8 @@ class LockFile:
                     os.remove(self._filename)
                 except FileNotFoundError:
                     pass  # In case the file is simply not found, continue as normal.
+                except OSError:
+                    pass  # Can happen if the file system is dismounted or permissions have been changed during the runtime, etc.
                 except Exception as e:
                     stats = None
                     try:
