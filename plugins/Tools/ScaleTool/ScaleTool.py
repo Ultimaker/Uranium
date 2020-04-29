@@ -244,36 +244,45 @@ class ScaleTool(Tool):
             self._snap_scale = snap
             self.propertyChanged.emit()
 
-    def getObjectWidth(self):
+    def getObjectWidth(self) -> float:
         """Get the width of the bounding box of the selected object(s)
         
-        :return: width type(float) Width in mm
+        :return: width Width in mm.
         """
 
-        if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getBoundingBox().width)
+        selection = Selection.getSelectedObject(0)
+        if selection:
+            aabb = selection.getBoundingBox()
+            if aabb:
+                return float(aabb.width)
 
         return 0.0
 
-    def getObjectHeight(self):
+    def getObjectHeight(self) -> float:
         """Get the height of the bounding box of the selected object(s)
         
-        :return: height type(float) height in mm
+        :return: height Height in mm.
         """
 
-        if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getBoundingBox().height)
+        selection = Selection.getSelectedObject(0)
+        if selection:
+            aabb = selection.getBoundingBox()
+            if aabb:
+                return float(aabb.height)
 
         return 0.0
 
-    def getObjectDepth(self):
+    def getObjectDepth(self) -> float:
         """Get the depth of the bounding box of the first selected object
         
-        :return: depth type(float) depth in mm
+        :return: depth Depth in mm.
         """
 
-        if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getBoundingBox().depth)
+        selection = Selection.getSelectedObject(0)
+        if selection:
+            aabb = selection.getBoundingBox()
+            if aabb:
+                return float(aabb.depth)
 
         return 0.0
 
