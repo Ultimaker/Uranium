@@ -11,8 +11,11 @@ if sys.platform != "win32":
     import fcntl
 
     def lockFile(file):
-        fcntl.flock(file, fcntl.LOCK_EX)
-else:
+        try:
+            fcntl.flock(file, fcntl.LOCK_EX)
+        except OSError:  # Some file systems don't support file locks.
+            pass
+else:  # On Windows, flock doesn't exist so we disable it at risk of corruption when using multiple application instances.
     def lockFile(file): #pylint: disable=unused-argument
         pass
 
