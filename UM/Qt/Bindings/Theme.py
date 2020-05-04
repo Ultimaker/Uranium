@@ -154,9 +154,17 @@ class Theme(QObject):
         if path == self._path:
             return
 
-        with open(os.path.join(path, "theme.json"), encoding = "utf-8") as f:
-            Logger.log("d", "Loading theme file: %s", os.path.join(path, "theme.json"))
-            data = json.load(f)
+        theme_full_path = os.path.join(path, "theme.json")
+        Logger.log("d", "Loading theme file: {theme_full_path}".format(theme_full_path = theme_full_path))
+        try:
+            with open(theme_full_path, encoding = "utf-8") as f:
+                data = json.load(f)
+        except EnvironmentError as e:
+            Logger.error("Unable to load theme file at {theme_full_path}: {err}".format(theme_full_path = theme_full_path, err = e))
+            return
+        except UnicodeDecodeError:
+            Logger.error("Theme file at {theme_full_path} is corrupt (invalid UTF-8 bytes).".format(theme_full_path = theme_full_path))
+            return
 
         # Iteratively load inherited themes
         try:
