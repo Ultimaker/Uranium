@@ -326,10 +326,6 @@ class PackageManager(QObject):
 
         return all_installed_ids
 
-    # Get a list of packages that the user has installed.
-    def getUserInstalledPackages(self) -> List[str]:
-        return [package for package in self._installed_package_dict]
-
     def getAllInstalledPackageIdsAndVersions(self) -> List[Tuple[str, str]]:
         """Get a list of tuples that contain the package ID and version.
 
