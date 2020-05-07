@@ -5,6 +5,8 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty
 
 from typing import Optional, Union
 
+from UM.Math.Quaternion import Quaternion
+from UM.Math.Vector import Vector
 from UM.Application import Application
 from UM.Decorators import deprecated
 from UM.Scene.Selection import Selection
@@ -73,7 +75,7 @@ class ControllerProxy(QObject):
         self._controller.setCameraPosition(x_position, y_position, z_position)
 
     @pyqtSlot(str, result = int)
-    def getCameraPosition(self, vector: str = None) -> Optional[Union[int, 'UM.Math.Vector.Vector']]:
+    def getCameraPosition(self, vector: str = None) -> Optional[Union[int, Vector]]:
         """Get the request camera position as a :py:class:`UM.Math.Vector.Vector`
         or it single requested component
 
@@ -86,7 +88,7 @@ class ControllerProxy(QObject):
         if hasattr(self._controller.getCameraPosition(), vector):
             return getattr(self._controller.getCameraPosition(), vector)
         else:
-            return
+            return self._controller.getCameraPosition()
 
     @pyqtSlot(int, int, int)
     def setLookAtPosition(self, x_look_at_position: int = 0, y_look_at_position: int = 0, z_look_at_position: int = 0) -> None:
