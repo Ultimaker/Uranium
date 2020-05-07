@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty
 
-from typing import Optional
+from typing import Optional, Union
 
 from UM.Application import Application
 from UM.Decorators import deprecated
@@ -71,6 +71,22 @@ class ControllerProxy(QObject):
     @pyqtSlot(int, int, int)
     def setCameraPosition(self, x_position: int = 0, y_position: int = 0, z_position: int = 0) -> None:
         self._controller.setCameraPosition(x_position, y_position, z_position)
+
+    @pyqtSlot(str, result = int)
+    def getCameraPosition(self, vector: str = None) -> Optional[Union[int, 'UM.Math.Vector.Vector']]:
+        """Get the request camera position as a :py:class:`UM.Math.Vector.Vector`
+        or it single requested component
+
+        :param vector: either specify the requested x, y, z component to return or
+         when it is not specified it will return the vector (Optional) default is None
+        :return: an integer for the specified component (x, y, z) or the whole
+         vector. If there isn't an active camera it will return None
+        """
+
+        if hasattr(self._controller.getCameraPosition(), vector):
+            return getattr(self._controller.getCameraPosition(), vector)
+        else:
+            return
 
     @pyqtSlot(int, int, int)
     def setLookAtPosition(self, x_look_at_position: int = 0, y_look_at_position: int = 0, z_look_at_position: int = 0) -> None:

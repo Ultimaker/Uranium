@@ -537,6 +537,18 @@ class Controller:
             return
         camera.setPosition(Vector(x_position, y_position, z_position))
 
+    def getCameraPosition(self) -> Optional[Vector]:
+        r"""Get the camera coordinate as a :py:class:`UM.Math.Vector.Vector`
+
+        :return: A vector describing the active camera position or None if  there
+         isn't an active camera.
+        """
+
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+        return camera.getPosition()
+
     # Indicate position where the camera should point at
     def setLookAtPosition(self, x_look_at_position: int = 0, y_look_at_position: int = 0, z_look_at_position: int = 0) -> None:
         camera = self._scene.getActiveCamera()
