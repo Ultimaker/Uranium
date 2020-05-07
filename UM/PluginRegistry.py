@@ -547,16 +547,20 @@ class PluginRegistry(QObject):
             paths = self._plugin_locations
 
         for folder in paths:
-            if not os.path.isdir(folder):
-                continue
+            try:
+                if not os.path.isdir(folder):
+                    continue
 
-            for file in os.listdir(folder):
-                filepath = os.path.join(folder, file)
-                if os.path.isdir(filepath):
-                    if os.path.isfile(os.path.join(filepath, "__init__.py")):
-                        plugin_ids.append(file)
-                    else:
-                        plugin_ids += self._findInstalledPlugins([filepath])
+                for file in os.listdir(folder):
+                    filepath = os.path.join(folder, file)
+                    if os.path.isdir(filepath):
+                        if os.path.isfile(os.path.join(filepath, "__init__.py")):
+                            plugin_ids.append(file)
+                        else:
+                            plugin_ids += self._findInstalledPlugins([filepath])
+            except EnvironmentError as err:
+                Logger.warning("Unable to read folder {folder}: {err}".format(folder = folder, err = err))
+                continue
 
         return plugin_ids
 
