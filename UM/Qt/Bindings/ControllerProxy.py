@@ -3,12 +3,13 @@
 
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty
 
+from typing import Optional
+
 from UM.Application import Application
 from UM.Decorators import deprecated
 from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Operations.GroupedOperation import GroupedOperation
-
 
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
@@ -88,6 +89,15 @@ class ControllerProxy(QObject):
         """
 
         self._controller.setCameraOrigin(coordinate)
+
+    @pyqtSlot(result= bool)
+    def isCameraPerspective(self) -> Optional[bool]:
+        r"""Is the camera in perspective or orthogonal mode
+
+        :return: True if camera is perspective, False if in orthogonal mode and
+        None if there isn't an instance of an active camera
+        """
+        return self._controller.isCameraPerspective()
 
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 

@@ -572,3 +572,14 @@ class Controller:
             "z": Vector(0, 100, 1)
         }
         camera.lookAt(coordinates[coordinate])
+
+    def isCameraPerspective(self) -> Optional[bool]:
+        r"""Is the camera in perspective or orthogonal mode
+
+        :return: True if camera is perspective, False if in orthogonal mode and
+        None if there isn't an instance of an active camera
+        """
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+        return camera.isPerspective()
