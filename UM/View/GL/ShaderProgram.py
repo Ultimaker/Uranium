@@ -337,15 +337,15 @@ class ShaderProgram:
         elif type(value) is Color:
             self._shader_program.setUniformValue(uniform,
                 QColor(value.r * 255, value.g * 255, value.b * 255, value.a * 255))
-        elif type(value) is list and type(value[0]) is list and len(value[0]) is 4:
+        elif type(value) is list and type(value[0]) is list and len(value[0]) == 4:
             self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(Matrix(value)))
-        elif type(value) is list and len(value) is 2:
+        elif type(value) is list and len(value) == 2:
             self._shader_program.setUniformValue(uniform, QVector2D(value[0], value[1]))
-        elif type(value) is list and len(value) is 3:
+        elif type(value) is list and len(value) == 3:
             self._shader_program.setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
-        elif type(value) is list and len(value) is 4:
+        elif type(value) is list and len(value) == 4:
             self._shader_program.setUniformValue(uniform, QVector4D(value[0], value[1], value[2], value[3]))
-        elif type(value) is list and type(value[0]) is list and len(value[0]) is 2:
+        elif type(value) is list and type(value[0]) is list and len(value[0]) == 2:
             self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
         else:
             self._shader_program.setUniformValue(uniform, value)
