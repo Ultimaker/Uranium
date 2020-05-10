@@ -70,6 +70,15 @@ class ControllerProxy(QObject):
     def setCameraRotation(self, coordinate: str, angle: int) -> None:
         self._controller.setCameraRotation(coordinate, angle)
 
+    @pyqtSlot(str, float)
+    def getCameraOrientation(self) -> Optional[Quaternion]:
+        """Get the request camera position as a :py:class:`UM.Math.Quaternion.Quaternion`
+        
+        :return: The camera position represented as an Quaternion
+        """
+        
+        return self._controller.getCameraOrientation()
+
     @pyqtSlot(int, int, int)
     def setCameraPosition(self, x_position: int = 0, y_position: int = 0, z_position: int = 0) -> None:
         self._controller.setCameraPosition(x_position, y_position, z_position)

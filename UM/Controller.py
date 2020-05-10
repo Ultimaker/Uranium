@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Scene.Scene import Scene
+from Um.Scene.Scene.SceneNode import SceneNode
 from UM.Event import Event, KeyEvent, MouseEvent, ToolEvent, ViewEvent
 from UM.Scene.SceneNode import SceneNode
 from UM.Signal import Signal, signalemitter
@@ -14,6 +15,8 @@ from UM.Stage import Stage
 from UM.InputDevice import InputDevice
 from typing import cast, Optional, Dict, Union
 from UM.Math.Vector import Vector
+from UM.Math.Quaternion import Quaternion
+
 MYPY = False
 if MYPY:
     from UM.Application import Application
@@ -529,6 +532,28 @@ class Controller:
                 else:
                     camera.setPosition(Vector(0, 100, 700))
                     self._camera_tool.rotateCamera(0, angle)  # type: ignore
+
+    def getCameraOrientation(self) -> Optional[Quaternion]:
+        """Get the request camera position as a :py:class:`UM.Math.Quaternion.Quaternion`
+
+        :return: The camera position represented as an Quaternion
+        """
+        
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+        return camera.getOrientation()
+
+    def setCameraOrientation(self, orientation: Quaternion):
+        """Set the camera position with a :py:class:`UM.Math.Quaternion.Quaternion`
+        
+        :param orientation: The camera position represented as an Quaternion
+        """
+        
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+        camera.setOrientation(orientation, SceneNode.TransformSpace.Local)
 
     # Position camera view according to defined position
     def setCameraPosition(self, x_position: int = 0, y_position: int = 0, z_position: int = 0) -> None:
