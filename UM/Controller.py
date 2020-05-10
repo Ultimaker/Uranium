@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Scene.Scene import Scene
-from Um.Scene.Scene.SceneNode import SceneNode
 from UM.Event import Event, KeyEvent, MouseEvent, ToolEvent, ViewEvent
 from UM.Scene.SceneNode import SceneNode
 from UM.Signal import Signal, signalemitter
@@ -553,7 +552,7 @@ class Controller:
         camera = self._scene.getActiveCamera()
         if not camera:
             return
-        camera.setOrientation(orientation, SceneNode.TransformSpace.Local)
+        camera.setOrientation(orientation, 3)
 
     # Position camera view according to defined position
     def setCameraPosition(self, x_position: int = 0, y_position: int = 0, z_position: int = 0) -> None:
