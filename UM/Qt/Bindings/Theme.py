@@ -80,7 +80,7 @@ class Theme(QObject):
                         with open(theme_file, encoding = "utf-8") as f:
                             try:
                                 data = json.load(f)
-                            except json.decoder.JSONDecodeError:
+                            except (UnicodeDecodeError, json.decoder.JSONDecodeError):
                                 Logger.log("w", "Could not parse theme %s", theme_id)
                                 continue # do not add this theme to the list, but continue looking for other themes
 
