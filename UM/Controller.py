@@ -15,6 +15,7 @@ from UM.InputDevice import InputDevice
 from typing import cast, Optional, Dict, Union
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
+from UM.Math.Matrix import Matrix
 
 MYPY = False
 if MYPY:
@@ -532,7 +533,7 @@ class Controller:
                     camera.setPosition(Vector(0, 100, 700))
                     self._camera_tool.rotateCamera(0, angle)  # type: ignore
 
-    def getCameraOrientation(self) -> Optional[Quaternion]:
+    def getCameraOrientation(self, axis: str = None) -> Optional[Union[Quaternion, float]]:
         """Get the request camera position as a :py:class:`UM.Math.Quaternion.Quaternion`
 
         :return: The camera position represented as an Quaternion
@@ -541,19 +542,27 @@ class Controller:
         camera = self._scene.getActiveCamera()
         if not camera:
             return
+        if axis is not None:
+            return getattr(camera.getOrientation().toMatrix().getEuler(), axis)
         return camera.getOrientation()
 
-    def setCameraOrientation(self, orientation: Quaternion):
-        """Set the camera position with a :py:class:`UM.Math.Quaternion.Quaternion`
+    def setCameraOrientation(self, **kwargs) -> None:
+        """Set the camera orientation according to the specified angle of rotation along each axis
         
-        :param orientation: The camera position represented as an Quaternion
+        :param kwargs:
+            - ai: Euler roll in radians
+            - aj: Euler pitch in radians
+            - ak: Euler yaw in radians
         """
         
         camera = self._scene.getActiveCamera()
         if not camera:
             return
-        camera.setOrientation(orientation, 3)
-
+        rotation_matrix = Matrix()
+        rotation_matrix.setByEuler(**kwargs)
+        rotation_quaternion = Quaternion.fromMatrix(rotation_matrix)
+        camera.setOrientation(rotation_quaternion, 1)
+        
     # Position camera view according to defined position
     def setCameraPosition(self, x_position: int = 0, y_position: int = 0, z_position: int = 0) -> None:
         camera = self._scene.getActiveCamera()

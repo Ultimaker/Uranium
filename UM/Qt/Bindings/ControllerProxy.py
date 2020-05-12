@@ -69,15 +69,27 @@ class ControllerProxy(QObject):
     @pyqtSlot(str, int)
     def setCameraRotation(self, coordinate: str, angle: int) -> None:
         self._controller.setCameraRotation(coordinate, angle)
-
-    @pyqtSlot(str, float)
-    def getCameraOrientation(self) -> Optional[Quaternion]:
-        """Get the request camera position as a :py:class:`UM.Math.Quaternion.Quaternion`
         
-        :return: The camera position represented as an Quaternion
+    @pyqtSlot(float, float, float)
+    def setCameraOrientation(self, x: float, y: float, z: float) -> None:
+        """Set the camera orientation according to the specified angle of rotation along each axis
+        
+        :param x: angle of rotation along the x axis given in radians
+        :param y: angle of rotation along the y axis given in radians
+        :param z: angle of rotation along the z axis given in radians
         """
+        self._controller.setCameraOrientation(ai=x, aj=y, ak=z)
+
+    @pyqtSlot(str, result = float)
+    def getCameraOrientation(self, axis: str = None) -> Optional[Union[Quaternion, float]]:
+        """Get the request camera position as a :py:class:`UM.Math.Quaternion.Quaternion` or single float
         
-        return self._controller.getCameraOrientation()
+        :param axis: When specified it wil return the requested x, y, z axis to return the rotation from, or when it 
+        is not specified it will return the vector (Optional) default is None 
+        
+        :return: The camera orientation along an axis or as a whole represented as an Quaternion
+        """
+        return self._controller.getCameraOrientation(axis)
 
     @pyqtSlot(int, int, int)
     def setCameraPosition(self, x_position: int = 0, y_position: int = 0, z_position: int = 0) -> None:
