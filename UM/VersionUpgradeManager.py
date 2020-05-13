@@ -20,6 +20,8 @@ from UM.Resources import Resources  # To load old versions from.
 
 from PyQt5.QtCore import QCoreApplication
 
+from UM.SaveFile import SaveFile
+
 catalogue = UM.i18n.i18nCatalog("uranium")
 
 UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name", "configuration_type"])
@@ -411,7 +413,7 @@ class VersionUpgradeManager:
 
             for file_idx, configuration_file_absolute in enumerate(configuration_files_absolute):
                 try:
-                    with open(os.path.join(configuration_file_absolute), "w", encoding = "utf-8") as file_handle:
+                    with SaveFile(os.path.join(configuration_file_absolute), "w", encoding = "utf-8") as file_handle:
                         file_handle.write(files_data[file_idx])  # Save the new file.
                 except IOError:
                     Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
