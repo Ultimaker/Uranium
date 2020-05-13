@@ -96,7 +96,7 @@ class ControllerProxy(QObject):
         self._controller.setCameraPosition(x_position, y_position, z_position)
 
     @pyqtSlot(str, result = int)
-    def getCameraPosition(self, vector: str = None) -> Optional[Union[int, Vector]]:
+    def getCameraPosition(self, vector: str = '') -> Optional[Union[int, Vector]]:
         """Get the request camera position as a :py:class:`UM.Math.Vector.Vector`
         or it single requested component
 
