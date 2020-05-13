@@ -522,8 +522,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def __str__(self) -> str:
         """Simple short string representation for debugging purposes."""
-
-        return "<DefinitionContainer '{definition_id}' ('{name}')>".format(definition_id = self.getId(), name = self.getName())
+        return "<DefContainer '{definition_id}'>".format(definition_id = self.getId())
 
     def __repr__(self) -> str:
         return str(self)

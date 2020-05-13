@@ -751,8 +751,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def __str__(self) -> str:
         """Simple string representation for debugging."""
-
-        return "<InstanceContainer '{container_id}' ('{name}')>".format(container_id = self.getId(), name = self.getName())
+        return "<InstContainer '{container_id}'>".format(container_id = self.getId())
 
     def __repr__(self) -> str:
         return str(self)
