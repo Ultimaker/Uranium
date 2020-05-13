@@ -541,7 +541,7 @@ class Controller:
         
         camera = self._scene.getActiveCamera()
         if not camera:
-            return
+            return None
         if axis is not None:
             return getattr(camera.getOrientation().toMatrix().getEuler(), axis)
         return camera.getOrientation()
@@ -579,7 +579,7 @@ class Controller:
 
         camera = self._scene.getActiveCamera()
         if not camera:
-            return
+            return None
         return camera.getPosition()
 
     # Indicate position where the camera should point at
@@ -626,5 +626,5 @@ class Controller:
         """
         camera = self._scene.getActiveCamera()
         if not camera:
-            return
+            return None
         return camera.isPerspective()
