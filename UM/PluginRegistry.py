@@ -337,7 +337,6 @@ class PluginRegistry(QObject):
                 break
         self._bundled_plugin_cache[plugin_id] = is_bundled
         return is_bundled
-
     def loadPlugins(self, metadata: Optional[Dict[str, Any]] = None) -> None:
         """Load all plugins matching a certain set of metadata
 
@@ -563,7 +562,7 @@ class PluginRegistry(QObject):
                 continue
 
         return plugin_ids
-
+    
     def _findPlugin(self, plugin_id: str) -> Optional[types.ModuleType]:
         """Try to find a module implementing a plugin
 

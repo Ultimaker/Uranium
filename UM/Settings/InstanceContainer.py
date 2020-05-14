@@ -545,7 +545,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                 common_path = os.path.commonpath([install_prefix, file_name])
             except ValueError:
                 common_path = ""
-            if common_path is "" or not common_path.startswith(install_prefix):
+            if common_path == "" or not common_path.startswith(install_prefix):
                 if trust_instance.signatureFileExistsFor(file_name):
                     _containerRegistry.setExplicitReadOnly(self.getId())  # TODO???: self._read_only = True
                     if not trust_instance.signedFileCheck(file_name):
