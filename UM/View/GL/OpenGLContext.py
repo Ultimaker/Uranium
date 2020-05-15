@@ -153,6 +153,7 @@ class OpenGLContext:
                 gl = cls.detect_ogl_context.versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the requested profile and the implementation of your graphics card.
 
                 gpu_type = "Unknown"  # type: str
+                glsl_version = "Unknown"  # type: str
 
                 result = None
                 if gl:
@@ -169,9 +170,19 @@ class OpenGLContext:
                     except UnicodeDecodeError:
                         Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
 
+                    # another WORKAROUND: Some graphics cards have messed up drivers, reporting OpenGL 4.1 but glsl 400,
+                    # which is a mismatch, since OpenGL 4.1 should have glsl 410 as a minimum. This causes a crash.
+                    try:
+                        glsl_version = gl.glGetString(gl.GL_SHADING_LANGUAGE_VERSION)
+                        glsl_version = ''.join((filter(lambda x: str.isdigit(x), glsl_version)))
+                    except:
+                        Logger.log("e", "glGetString not supported, likely cause: OpenGL version < 2.0")
+
                 Logger.log("d", "OpenGL renderer type for this OpenGL version: %s", gpu_type)
                 if "software" in gpu_type.lower():
                     Logger.log("w", "Unfortunately OpenGL 4.1 uses software rendering")
+                elif not glsl_version.startswith("41"):
+                    Logger.log("w", "OpenGL 4.1 must have glsl 410, but reported glsl is {}".format(glsl_version))
                 else:
                     return major_version, minor_version, QSurfaceFormat.CoreProfile
         else:
