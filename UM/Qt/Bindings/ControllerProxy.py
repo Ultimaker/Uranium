@@ -137,6 +137,14 @@ class ControllerProxy(QObject):
         None if there isn't an instance of an active camera
         """
         return self._controller.isCameraPerspective()
+    
+    @pyqtSlot(bool)
+    def setCameraPerspective(self, value: bool) -> None:
+        """Sets the camera perspective
+        
+        :param value: True is perspective False is orthographic
+        """
+        self._controller.setCameraPerspective(value)
 
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 

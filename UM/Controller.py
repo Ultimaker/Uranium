@@ -628,3 +628,13 @@ class Controller:
         if not camera:
             return None
         return camera.isPerspective()
+    
+    def setCameraPerspective(self, value: bool) -> None:
+        """Sets the camera perspective
+
+        :param value: True is perspective False is orthographic
+        """
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return None
+        camera.setPerspective(value)
