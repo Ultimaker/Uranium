@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import math
+from enum import IntEnum
 
 from UM.Math.Vector import Vector
 from UM.Mesh.MeshBuilder import MeshBuilder
@@ -10,6 +11,14 @@ from UM.Scene.ToolHandle import ToolHandle
 
 class RotateToolHandle(ToolHandle):
     """Provides the circular toolhandles for each axis for the rotate tool"""
+
+    class ExtraWidgets(IntEnum):
+        XPositive90 = 0
+        XNegative90 = 1
+        YPositive90 = 2
+        YNegative90 = 3
+        ZPositive90 = 4
+        ZNegative90 = 5
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -21,6 +30,15 @@ class RotateToolHandle(ToolHandle):
         self._active_inner_radius = 37
         self._active_outer_radius = 44
         self._active_line_width = 3
+
+        self._angle_offset = 3
+        self._handle_offset_a = self._inner_radius * math.cos(math.radians(self._angle_offset))
+        self._handle_offset_b = self._inner_radius * math.sin(math.radians(self._angle_offset))
+
+        self._handle_height = 7
+        self._handle_width = 3
+        self._active_handle_height = 9
+        self._active_handle_width = 7
 
     def buildMesh(self):
         #SOLIDMESH
@@ -50,6 +68,64 @@ class RotateToolHandle(ToolHandle):
             angle = math.pi / 2,
             color = self._x_axis_color
         )
+
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(0, self._handle_offset_a, -self._handle_offset_b),
+            color = self._x_axis_color,
+            axis = Vector.Unit_X,
+            angle = 90 + self._angle_offset
+        )
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(0, self._handle_offset_a, self._handle_offset_b),
+            color = self._x_axis_color,
+            axis = Vector.Unit_X,
+            angle = -90 - self._angle_offset
+        )
+
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(self._handle_offset_b, 0, self._handle_offset_a),
+            color = self._y_axis_color,
+            axis = Vector.Unit_Z,
+            angle = 90 - self._angle_offset
+        )
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(-self._handle_offset_b, 0, self._handle_offset_a),
+            color = self._y_axis_color,
+            axis = Vector.Unit_Z,
+            angle = -90 + self._angle_offset
+        )
+
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(self._handle_offset_a, self._handle_offset_b, 0),
+            color = self._z_axis_color,
+            axis = Vector.Unit_Z,
+            angle = - self._angle_offset
+        )
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(self._handle_offset_a, -self._handle_offset_b, 0),
+            color = self._z_axis_color,
+            axis = Vector.Unit_Z,
+            angle = 180 + self._angle_offset
+        )
+
         self.setSolidMesh(mb.build())
 
         #SELECTIONMESH
@@ -78,6 +154,63 @@ class RotateToolHandle(ToolHandle):
             axis = Vector.Unit_Y,
             angle = math.pi / 2,
             color = ToolHandle.XAxisSelectionColor
+        )
+
+        mb.addPyramid(
+            width = self._active_handle_width,
+            height = self._active_handle_height,
+            depth = self._active_handle_width,
+            center = Vector(0, self._handle_offset_a, self._handle_offset_b),
+            color = self._extra_widgets_color_map[self.ExtraWidgets.XPositive90.name],
+            axis = Vector.Unit_X,
+            angle = -90 - self._angle_offset
+        )
+        mb.addPyramid(
+            width = self._active_handle_width,
+            height = self._active_handle_height,
+            depth = self._active_handle_width,
+            center = Vector(0, self._handle_offset_a, -self._handle_offset_b),
+            color = self._extra_widgets_color_map[self.ExtraWidgets.XNegative90.name],
+            axis = Vector.Unit_X,
+            angle = 90 + self._angle_offset
+        )
+
+        mb.addPyramid(
+            width = self._active_handle_width,
+            height = self._active_handle_height,
+            depth = self._active_handle_width,
+            center = Vector(self._handle_offset_b, 0, self._handle_offset_a),
+            color = self._extra_widgets_color_map[self.ExtraWidgets.YPositive90.name],
+            axis = Vector.Unit_Z,
+            angle = 90 - self._angle_offset
+        )
+        mb.addPyramid(
+            width = self._active_handle_width,
+            height = self._active_handle_height,
+            depth = self._active_handle_width,
+            center = Vector(-self._handle_offset_b, 0, self._handle_offset_a),
+            color = self._extra_widgets_color_map[self.ExtraWidgets.YNegative90.name],
+            axis = Vector.Unit_Z,
+            angle = -90 + self._angle_offset
+        )
+
+        mb.addPyramid(
+            width = self._active_handle_width,
+            height = self._active_handle_height,
+            depth = self._active_handle_width,
+            center = Vector(self._handle_offset_a, self._handle_offset_b, 0),
+            color = self._extra_widgets_color_map[self.ExtraWidgets.ZPositive90.name],
+            axis = Vector.Unit_Z,
+            angle = - self._angle_offset
+        )
+        mb.addPyramid(
+            width = self._active_handle_width,
+            height = self._active_handle_height,
+            depth = self._active_handle_width,
+            center = Vector(self._handle_offset_a, -self._handle_offset_b, 0),
+            color = self._extra_widgets_color_map[self.ExtraWidgets.ZNegative90.name],
+            axis = Vector.Unit_Z,
+            angle = 180 + self._angle_offset
         )
 
         self.setSelectionMesh(mb.build())
