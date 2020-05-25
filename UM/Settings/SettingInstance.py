@@ -240,7 +240,7 @@ class SettingInstance:
                 continue
 
             changed_relations = set()   # type: Set[SettingRelation]
-            self._addRelations(changed_relations, self._definition.relations, property_name)
+            self._addRelations(changed_relations, self._definition.relations, [property_name])
 
             # TODO: We should send this as a single change event instead of several of them.
             # That would increase performance by reducing the amount of updates.
@@ -251,15 +251,15 @@ class SettingInstance:
                     if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
                         container.propertyChanged.emit(relation.target.key, "validationState")
 
-    def _addRelations(self, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], role: str) -> None:
+    def _addRelations(self, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], roles: List[str]) -> None:
         """Recursive function to put all settings that require eachother for changes of a property value in a list
 
         :param relations_set: :type{set} Set of keys (strings) of settings that are influenced
         :param relations: list of relation objects that need to be checked.
-        :param role: name of the property value of the settings
+        :param roles: list of name of the properties value of the settings
         """
 
-        for relation in filter(lambda r: r.role == role, relations):
+        for relation in filter(lambda r: r.role in roles, relations):
             if relation.type == RelationType.RequiresTarget:
                 continue
 
@@ -278,6 +278,4 @@ class SettingInstance:
             property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
             property_names.insert(0, "value")
 
-            # Ensure that all properties of related settings are added.
-            for property_name in property_names:
-                self._addRelations(relations_set, relation.target.relations, property_name)
+            self._addRelations(relations_set, relation.target.relations, property_names)
