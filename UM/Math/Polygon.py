@@ -235,7 +235,8 @@ class Polygon:
         :param other: The polygon to perform a Minkowski sum with.
         :return: :type{Polygon} The Minkowski sum of this polygon with other.
         """
-
+        if len(self._points) == 0 or len(other._points) == 0:  # Summing an empty polygon with a certain kernel, or summing a normal polygon with an empty polygon, would crash Numpy down below.
+            return Polygon(self._points)
         points = numpy.zeros((len(self._points) * len(other._points), 2))
         for n in range(0, len(self._points)):
             for m in range(0, len(other._points)):
