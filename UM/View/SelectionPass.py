@@ -76,6 +76,7 @@ class SelectionPass(RenderPass):
         tool_handle = active_tool.getHandle()
         for name, color in tool_handle.getExtraWidgetsColorMap().items():
             self._toolhandle_selection_map[color] = name
+            self._toolhandle_selection_map[self._dropAlpha(color)] = name
 
     def _onSelectedFaceChanged(self):
         self._mode = SelectionPass.SelectionMode.FACES if Selection.getFaceSelectMode() else SelectionPass.SelectionMode.OBJECTS
