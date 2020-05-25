@@ -356,8 +356,6 @@ class SettingDefinition:
         were found.
         """
 
-        definitions = []    # type: List["SettingDefinition"]
-
         if not self.__descendants:
             self.__descendants = self._updateDescendants()
 
@@ -374,6 +372,7 @@ class SettingDefinition:
                     return [self]
                 return [self.__descendants[key]]
 
+        definitions = []  # type: List["SettingDefinition"]
         if self.matchesFilter(**kwargs):
             definitions.append(self)
 
