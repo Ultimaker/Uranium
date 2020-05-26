@@ -194,10 +194,10 @@ class PackageManager(QObject):
             if bundled_package_dict is None:
                 continue
 
-            result = self._comparePackageVersions(installed_package_dict["package_info"],
+            should_install = self._shouldInstallCandidate(installed_package_dict["package_info"],
                                                   bundled_package_dict["package_info"])
             # The bundled package is newer
-            if result <= 0:
+            if not should_install:
                 self._to_remove_package_set.add(package_id)
                 continue
 
@@ -209,36 +209,36 @@ class PackageManager(QObject):
             if bundled_package_dict is None:
                 continue
 
-            result = self._comparePackageVersions(to_install_package_dict["package_info"],
+            should_install = self._shouldInstallCandidate(to_install_package_dict["package_info"],
                                                   bundled_package_dict["package_info"])
             # The bundled package is newer
-            if result <= 0:
+            if not should_install:
+                Logger.info(
+                    "Ignoring package {} since it's sdk or package version is lower than the bundled package",
+                    package_id
+                )
                 to_remove_package_ids.add(package_id)
                 continue
         for package_id in to_remove_package_ids:
             del self._to_install_package_dict[package_id]
 
     # Compares the SDK versions and the package versions of the two given package info dicts.
-    # Returns -1, 0, 1 indicating if the versions in dict1 is lower than, equal to, or higher than dict2.
+    # Returns True if the candidate is preferred over the base
     #  - The package with the higher SDK version is considered having the higher version number. If they are the same,
-    #  - if the bundled package version is greater than or equal to the given package, -1 is returned. Otherwise, 1.
-    def _comparePackageVersions(self, info_dict1: Dict[str, Any], info_dict2: Dict[str, Any]) -> int:
-        # If the bundled version has a higher SDK version, use the bundled version by removing the installed one.
-        sdk_version1 = UMVersion(info_dict1["sdk_version"])
-        sdk_version2 = UMVersion(info_dict2["sdk_version"])
-        if sdk_version1 < sdk_version2:
-            return -1
+    #  - if the based package version is greater than or equal to the given package, -1 is returned. Otherwise, 1.
+    def _shouldInstallCandidate(self, candidate_dict: Dict[str, Any], base_dict: Dict[str, Any]) -> bool:
+        # If the base version has a higher SDK version, use the based version by removing the candidate one.
+        sdk_version_candidate = UMVersion(candidate_dict["sdk_version"])
+        if not self.isPackageCompatible(sdk_version_candidate):
+            return False
 
-        # Remove the package with the old version to favour the newer bundled version.
-        version1 = UMVersion(info_dict1["package_version"])
-        version2 = UMVersion(info_dict2["package_version"])
-        if version1 < version2:
-            return -1
+        # Remove the package with the old version to favour the newer based version.
+        version_candidate = UMVersion(candidate_dict["package_version"])
+        version_base = UMVersion(base_dict["package_version"])
+        if version_candidate <= version_base:
+            return False
 
-        if version1 == version2:
-            return 0
-
-        return 1
+        return True
 
     def _saveManagementData(self) -> None:
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
@@ -325,10 +325,6 @@ class PackageManager(QObject):
             all_installed_ids = all_installed_ids.union(set(self._to_install_package_dict.keys()))
 
         return all_installed_ids
-
-    # Get a list of packages that the user has installed.
-    def getUserInstalledPackages(self) -> List[str]:
-        return [package for package in self._installed_package_dict]
 
     def getAllInstalledPackageIdsAndVersions(self) -> List[Tuple[str, str]]:
         """Get a list of tuples that contain the package ID and version.
