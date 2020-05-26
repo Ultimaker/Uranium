@@ -45,7 +45,7 @@ class SelectionPass(RenderPass):
         self._renderer = Application.getInstance().getRenderer()
 
         self._selection_map = {}
-        self._toolhandle_selection_map = {
+        self._default_toolhandle_selection_map = {
             self._dropAlpha(ToolHandle.DisabledSelectionColor): ToolHandle.NoAxis,
             self._dropAlpha(ToolHandle.XAxisSelectionColor): ToolHandle.XAxis,
             self._dropAlpha(ToolHandle.YAxisSelectionColor): ToolHandle.YAxis,
@@ -57,11 +57,26 @@ class SelectionPass(RenderPass):
             ToolHandle.ZAxisSelectionColor: ToolHandle.ZAxis,
             ToolHandle.AllAxisSelectionColor: ToolHandle.AllAxis
         }
+        self._toolhandle_selection_map = {}
+        Application.getInstance().getController().activeToolChanged.connect(self._onActiveToolChanged)
+        self._onActiveToolChanged()
 
         self._mode = SelectionPass.SelectionMode.OBJECTS
         Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
 
         self._output = None
+
+    def _onActiveToolChanged(self):
+        self._toolhandle_selection_map = self._default_toolhandle_selection_map.copy()
+
+        active_tool = Application.getInstance().getController().getActiveTool()
+        if not active_tool:
+            return
+
+        tool_handle = active_tool.getHandle()
+        for name, color in tool_handle.getExtraWidgetsColorMap().items():
+            self._toolhandle_selection_map[color] = name
+            self._toolhandle_selection_map[self._dropAlpha(color)] = name
 
     def _onSelectedFaceChanged(self):
         self._mode = SelectionPass.SelectionMode.FACES if Selection.getFaceSelectMode() else SelectionPass.SelectionMode.OBJECTS

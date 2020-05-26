@@ -1,6 +1,8 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Optional
+from enum import IntEnum
+import random
 
 from UM.Logger import Logger
 from UM.Mesh.MeshData import MeshData
@@ -38,6 +40,10 @@ class ToolHandle(SceneNode.SceneNode):
     ZAxisSelectionColor = Color(0.0, 1.0, 0.0, 1.0)
     AllAxisSelectionColor = Color(1.0, 1.0, 1.0, 1.0)
 
+    class ExtraWidgets(IntEnum):
+        # Toolhandle subclasses can optionally register additional widgets by overriding this enum
+        pass
+
     def __init__(self, parent = None):
         super().__init__(parent)
 
@@ -48,6 +54,7 @@ class ToolHandle(SceneNode.SceneNode):
         self._all_axis_color = None
 
         self._axis_color_map = {}
+        self._extra_widgets_color_map = {}
 
         self._scene = Application.getInstance().getController().getScene()
 
@@ -134,6 +141,9 @@ class ToolHandle(SceneNode.SceneNode):
     def isAxis(self, value):
         return value in self._axis_color_map
 
+    def getExtraWidgetsColorMap(self):
+        return self._extra_widgets_color_map
+
     def buildMesh(self) -> None:
         # This method should be overridden by toolhandle implementations
         pass
@@ -167,4 +177,20 @@ class ToolHandle(SceneNode.SceneNode):
             self.AllAxis: self._all_axis_color
         }
 
+        for name, member in self.ExtraWidgets.__members__.items():
+            self._extra_widgets_color_map[name] = self._getUnusedColor()
+
         self.buildMesh()
+
+    def _getUnusedColor(self):
+        while True:
+            r = random.randint(0, 255)
+            g = random.randint(0, 255)
+            b = random.randint(0, 255)
+            a = 255
+            color = Color(r, g, b, a)
+
+            if color not in self._axis_color_map.values() and color not in self._extra_widgets_color_map.values():
+                break
+
+        return color
