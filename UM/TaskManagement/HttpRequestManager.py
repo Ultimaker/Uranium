@@ -314,7 +314,6 @@ class HttpRequestManager(TaskManager):
                 # Do nothing if there's no more requests to process
                 if not self._request_queue:
                     self._process_requests_scheduled = False
-                    Logger.log("d", "No more requests to process, stop")
                     return
 
                 # Do not exceed the max request limit
@@ -342,8 +341,6 @@ class HttpRequestManager(TaskManager):
         # Issue the request and add the reply into the currently in-progress requests set
         reply = method(*args)
         request_data.reply = reply
-
-        Logger.log("i", "Request [%s] started", request_data.request_id)
 
         # Connect callback signals
         reply.error.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.QueuedConnection)
@@ -404,8 +401,6 @@ class HttpRequestManager(TaskManager):
                 Logger.log("d", "%s was aborted, do nothing", request_data)
             # stop processing for any kind of error
             return
-
-        Logger.log("i", "Request [%s] finished.", request_data.request_id)
 
         if self._enable_request_benchmarking:
             time_spent = None  # type: Optional[float]

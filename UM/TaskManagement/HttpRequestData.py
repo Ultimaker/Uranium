@@ -103,7 +103,6 @@ class HttpRequestData(QObject):
         if self._timeout is not None:
             self._last_response_time = start_time
             self._timeout_timer.start()
-            Logger.log("d", "Request [%s] timeout timer started.", self)
 
     # Do some cleanup, such as stopping the timeout timer.
     def setDone(self) -> None:
