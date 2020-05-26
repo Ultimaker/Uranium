@@ -59,6 +59,9 @@ class RotateTool(Tool):
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported", "SelectFaceToLayFlatMode")
         self._saved_node_positions = []
 
+        self._active_widget = None  # type: Optional[RotateToolHandle.ExtraWidgets]
+        self._widget_click_start = 0
+
         self._select_face_mode = False
         Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
 
@@ -86,6 +89,12 @@ class RotateTool(Tool):
             id = self._selection_pass.getIdAtPosition(event.x, event.y)
             if not id:
                 return False
+
+            if id in self._handle.getExtraWidgetsColorMap():
+                self._active_widget = self._handle.ExtraWidgets[id]
+                self._widget_click_start = time.monotonic()
+                # Continue as if the picked widget is the appropriate axis
+                id = math.floor(self._active_widget.value / 2) + self._handle.XAxis
 
             if self._handle.isAxis(id):
                 self.setLockedAxis(id)
@@ -182,6 +191,35 @@ class RotateTool(Tool):
             return True
 
         if event.type == Event.MouseReleaseEvent:
+            if self._active_widget != None and time.monotonic() - self._widget_click_start < 0.2:
+                id = self._selection_pass.getIdAtPosition(event.x, event.y)
+
+                if id in self._handle.getExtraWidgetsColorMap() and self._active_widget == self._handle.ExtraWidgets[id]:
+                    axis = math.floor(self._active_widget.value / 2)
+                    angle = math.radians(-90 if self._active_widget.value - 2 * axis else 90)
+                    axis +=  self._handle.XAxis
+
+                    rotation = Quaternion()
+                    if axis == ToolHandle.XAxis:
+                        rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_X)
+                    elif axis == ToolHandle.YAxis:
+                        rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_Y)
+                    else:
+                        rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_Z)
+
+
+                    # Rotate around the saved centeres of all selected nodes
+                    if len(self._saved_node_positions) > 1:
+                        op = GroupedOperation()
+                        for node, position in self._saved_node_positions:
+                            op.addOperation(RotateOperation(node, rotation, rotate_around_point = position))
+                        op.push()
+                    else:
+                        for node, position in self._saved_node_positions:
+                            RotateOperation(node, rotation, rotate_around_point=position).push()
+
+            self._active_widget = None  # type: Optional[RotateToolHandle.ExtraWidgets]
+
             # Finish a rotate operation
             if self.getDragPlane():
                 self.setDragPlane(None)

@@ -174,15 +174,14 @@ class ContainerQuery:
     # Check to see if a container matches with a specific typed property
     def _matchType(self, metadata: Dict[str, Any], property_name: str, value: Type[Any]):
         if property_name == "container_type":
-            if "container_type" in metadata:
-                try:
-                    return issubclass(metadata["container_type"], value)  # Also allow subclasses.
-                except TypeError:
-                    # Since the type error that we got is extremely not helpful, we re-raise it with more info.
-                    raise TypeError("The value {value} of the property {property} is not a type but a {type}: {metadata}"
-                                    .format(value = value, property = property_name, type = type(value), metadata = metadata))
-            else:
-                return False
+            try:
+                return issubclass(metadata["container_type"], value)  # Also allow subclasses.
+            except TypeError:
+                # Since the type error that we got is extremely not helpful, we re-raise it with more info.
+                raise TypeError("The value {value} of the property {property} is not a type but a {type}: {metadata}"
+                                .format(value = value, property = property_name, type = type(value), metadata = metadata))
+            except KeyError:
+                return False  # container_type metadata was not found.
 
         if property_name not in metadata:
             return False
