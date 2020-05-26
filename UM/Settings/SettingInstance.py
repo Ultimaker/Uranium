@@ -37,7 +37,7 @@ def _traceRelations(instance: "SettingInstance", container: ContainerInterface) 
             continue
 
         changed_relations = set()   # type: Set[SettingRelation]
-        instance._addRelations(changed_relations, instance.definition.relations, property_name)
+        instance._addRelations(changed_relations, instance.definition.relations, [property_name])
 
         for relation in changed_relations:
             Logger.log("d", "Emitting property change for relation {0}", relation)
