@@ -39,6 +39,8 @@ class LocalContainerProvider(ContainerProvider):
 
         self._is_read_only_cache = {}  # type: Dict[str, bool]
 
+        self._storage_path = ""
+
     def getContainerFilePathById(self, container_id: str) -> Optional[str]:
         return self._id_to_path.get(container_id)
 
@@ -179,7 +181,10 @@ class LocalContainerProvider(ContainerProvider):
 
         if container_id in self._is_read_only_cache:
             return self._is_read_only_cache[container_id]
-        storage_path = os.path.realpath(Resources.getDataStoragePath())
+        if self._storage_path == "":
+            self._storage_path = os.path.realpath(Resources.getDataStoragePath())
+        storage_path = self._storage_path
+
         file_path = self._id_to_path[container_id]  # If KeyError: We don't know this ID.
 
         # The container is read-only if file_path is not a subdirectory of storage_path.
