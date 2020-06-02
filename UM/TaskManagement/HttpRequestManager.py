@@ -79,7 +79,7 @@ class HttpRequestManager(TaskManager):
             cls.__instance = cls(*args, **kwargs)
         return cls.__instance
 
-    def __init__(self, max_concurrent_requests: int = 10, parent: Optional["QObject"] = None,
+    def __init__(self, max_concurrent_requests: int = 4, parent: Optional["QObject"] = None,
                  enable_request_benchmarking: bool = False) -> None:
         if HttpRequestManager.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
@@ -379,7 +379,6 @@ class HttpRequestManager(TaskManager):
 
         # Schedule the error callback if there is one
         if request_data.error_callback is not None:
-            Logger.log("d", "%s error callback scheduled", request_data)
             self.callLater(0, request_data.error_callback, request_data.reply, error)
 
         # Continue to process the next request
