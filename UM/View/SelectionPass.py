@@ -74,6 +74,8 @@ class SelectionPass(RenderPass):
             return
 
         tool_handle = active_tool.getHandle()
+        if not tool_handle:
+            return
         for name, color in tool_handle.getExtraWidgetsColorMap().items():
             self._toolhandle_selection_map[color] = name
             self._toolhandle_selection_map[self._dropAlpha(color)] = name
