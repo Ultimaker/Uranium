@@ -66,10 +66,10 @@ class Preferences:
 
     def setDefault(self, key: str, default_value: Any) -> None:
         """Changes the default value of a preference.
-        
+
         If the preference is currently set to the old default, the value of the
         preference will be set to the new default.
-        
+
         :param key: The key of the preference to set the default of.
         :param default_value: The new default value of the preference.
         """

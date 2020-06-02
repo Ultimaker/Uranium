@@ -30,7 +30,7 @@ class ConsoleLogger(LogOutput):
         stream_handler.setFormatter(logging_formatter)
         self._logger.addHandler(stream_handler)
         self._show_once = set()  # type: Set[str]
-    
+
     def log(self, log_type: str, message: str) -> None:
         """Log the message to console
 

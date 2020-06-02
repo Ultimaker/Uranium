@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 @signalemitter
 class JobQueue:
     """A thread pool and queue manager for Jobs.
-    
+
     The JobQueue class manages a queue of Job objects and a set of threads that
     can take things from this queue to process them.
     :sa Job
@@ -22,7 +22,7 @@ class JobQueue:
 
     def __init__(self, thread_count: Union[str, int] = "auto") -> None: #pylint: disable=bad-whitespace
         """Initialize.
-        
+
         :param thread_count: The amount of threads to use. Can be a positive integer or `auto`.
         When `auto`, the number of threads is based on the number of processors and cores on the machine.
         """
@@ -55,7 +55,7 @@ class JobQueue:
 
     def add(self, job: "Job") -> None:
         """Add a Job to the queue.
-        
+
         :param job: The Job to add.
         """
 
@@ -65,9 +65,9 @@ class JobQueue:
 
     def remove(self, job: "Job") -> None:
         """Remove a waiting Job from the queue.
-        
+
         :param job: The Job to remove.
-        
+
         :note If a job has already begun processing it is already removed from the queue
         and thus can no longer be cancelled.
         """
@@ -78,19 +78,19 @@ class JobQueue:
 
     jobStarted = Signal()
     """Emitted whenever a job starts processing.
-    
+
     :param job: :type{Job} The job that has started processing.
     """
 
     jobFinished = Signal()
     """Emitted whenever a job has finished processing.
-    
+
     :param job: :type{Job} The job that has finished processing.
     """
 
     def _nextJob(self) -> Optional["Job"]:
         """protected:
-    
+
         Get the next job off the queue.
         Note that this will block until a job is available.
         """

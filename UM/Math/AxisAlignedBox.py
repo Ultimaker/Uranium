@@ -151,7 +151,7 @@ class AxisAlignedBox:
 
     def intersectsBox(self, box: "AxisAlignedBox") -> int:
         """Check to see if this box intersects another box.
-        
+
         :param box: The box to check for intersection.
         :return: NoIntersection when no intersection occurs, PartialIntersection when partially intersected, FullIntersection when box is fully contained inside this box.
         """

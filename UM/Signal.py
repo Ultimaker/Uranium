@@ -92,24 +92,24 @@ def profileEmit(func):
 
 class Signal:
     """Simple implementation of signals and slots.
-    
+
     Signals and slots can be used as a light weight event system. A class can
     define signals that other classes can connect functions or methods to, called slots.
     Whenever the signal is called, it will proceed to call the connected slots.
-    
+
     To create a signal, create an instance variable of type Signal. Other objects can then
     use that variable's `connect()` method to connect methods, callable objects or signals
     to the signal. To emit the signal, call `emit()` on the signal. Arguments can be passed
     along to the signal, but slots will be required to handle them. When connecting signals
     to other signals, the connected signal will be emitted whenever the signal is emitted.
-    
+
     Signal-slot connections are weak references and as such will not prevent objects
     from being destroyed. In addition, all slots will be implicitly disconnected when
     the signal is destroyed.
-    
+
     **WARNING** It is imperative that the signals are created as instance variables, otherwise
     emitting signals will get confused. To help with this, see the SignalEmitter class.
-    
+
     Loosely based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/    pylint: disable=wrong-spelling-in-comment
     :sa SignalEmitter
     """
@@ -118,7 +118,7 @@ class Signal:
     """Signal types.
     These indicate the type of a signal, that is, how the signal handles calling the connected
     slots.
-    
+
     - Direct connections immediately call the connected slots from the thread that called emit().
     - Auto connections will push the call onto the event loop if the current thread is
       not the main thread, but make a direct call if it is.
@@ -130,7 +130,7 @@ class Signal:
 
     def __init__(self, type: int = Auto) -> None:
         """Initialize the instance.
-        
+
         :param type: The signal type. Defaults to Auto.
         """
 
@@ -178,10 +178,10 @@ class Signal:
     @profileEmit
     def emit(self, *args: Any, **kwargs: Any) -> None:
         """Emit the signal which indirectly calls all of the connected slots.
-        
+
         :param args: The positional arguments to pass along.
         :param kwargs: The keyword arguments to pass along.
-        
+
         :note If the Signal type is Queued and this is not called from the application thread
         the call will be posted as an event to the application main thread, which means the
         function will be called on the next application event loop tick.
@@ -278,7 +278,7 @@ class Signal:
 
     def __getstate__(self):
         """To support Pickle
-        
+
         Since Weak containers cannot be serialized by Pickle we just return an empty dict as state.
         """
 
@@ -286,7 +286,7 @@ class Signal:
 
     def __deepcopy__(self, memo):
         """To properly handle deepcopy in combination with __getstate__
-        
+
         Apparently deepcopy uses __getstate__ internally, which is not documented. The reimplementation
         of __getstate__ then breaks deepcopy. On the other hand, if we do not reimplement it like that,
         we break pickle. So instead make sure to also reimplement __deepcopy__.
@@ -370,17 +370,17 @@ class CompressTechnique(enum.Enum):
 @contextlib.contextmanager
 def postponeSignals(*signals, compress: CompressTechnique = CompressTechnique.NoCompression):
     """A context manager that allows postponing of signal emissions
-    
+
     This context manager will collect any calls to emit() made for the provided signals
     and only emit them after exiting. This ensures more batched processing of signals.
-    
+
     The optional "compress" argument will limit the emit calls to 1. This means that
     when a bunch of calls are made to the signal's emit() method, only the last call
     will be emitted on exit.
-    
+
     **WARNING** When compress is True, only the **last** call will be emitted. This means
     that any other calls will be ignored, _including their arguments_.
-    
+
     :param signals: The signals to postpone emits for.
     :param compress: Whether to enable compression of emits or not.
     """
@@ -422,7 +422,7 @@ def postponeSignals(*signals, compress: CompressTechnique = CompressTechnique.No
 
 def signalemitter(cls):
     """Class decorator that ensures a class has unique instances of signals.
-    
+
     Since signals need to be instance variables, normally you would need to create all
     signals in the class" `__init__` method. However, this makes them rather awkward to
     document. This decorator instead makes it possible to declare them as class variables,
@@ -458,7 +458,7 @@ T = TypeVar('T')
 
 class WeakImmutableList(Generic[T], Iterable):
     """Minimal implementation of a weak reference list with immutable tendencies.
-    
+
     Strictly speaking this isn't immutable because the garbage collector can modify
     it, but no application code can. Also, this class doesn't implement the Python
     list API, only the handful of methods we actually need in the code above.
@@ -469,7 +469,7 @@ class WeakImmutableList(Generic[T], Iterable):
 
     def append(self, item: T) -> "WeakImmutableList[T]":
         """Append an item and return a new list
-        
+
         :param item: the item to append
         :return: a new list
         """
@@ -481,7 +481,7 @@ class WeakImmutableList(Generic[T], Iterable):
 
     def remove(self, item: T) -> "WeakImmutableList[T]":
         """Remove an item and return a list
-        
+
         Note that unlike the normal Python list.remove() method, this ones
         doesn't throw a ValueError if the item isn't in the list.
         :param item: item to remove
@@ -507,7 +507,7 @@ class WeakImmutableList(Generic[T], Iterable):
 
 class WeakImmutableListIterator(Generic[T], Iterable):
     """Iterator wrapper which filters out missing values.
-    
+
     It dereferences each weak reference object and filters out the objects
     which have already disappeared via GC.
     """
@@ -536,7 +536,7 @@ class WeakImmutablePairList(Generic[T, U], Iterable):
 
     def append(self, left_item: T, right_item: U) -> "WeakImmutablePairList[T,U]":
         """Append an item and return a new list
-        
+
         :param item: the item to append
         :return: a new list
         """
@@ -548,7 +548,7 @@ class WeakImmutablePairList(Generic[T, U], Iterable):
 
     def remove(self, left_item: T, right_item: U) -> "WeakImmutablePairList[T,U]":
         """Remove an item and return a list
-        
+
         Note that unlike the normal Python list.remove() method, this ones
         doesn't throw a ValueError if the item isn't in the list.
         :param item: item to remove

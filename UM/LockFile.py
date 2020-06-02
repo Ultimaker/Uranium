@@ -20,7 +20,7 @@ class LockFile:
 
     def __init__(self, filename: str, timeout: int = 10, wait_msg: str = "Waiting for lock file to disappear...") -> None:
         """Creates the locker instance that will hold the lock file.
-        
+
         :param filename: The name and path of the lockfile to create.
         :param timeout: After this amount of seconds, the lock will break
         regardless of the state of the file system.
@@ -36,7 +36,7 @@ class LockFile:
 
     def _createLockFile(self) -> None:
         """Creates the lock file on the file system, with exclusive use.
-        
+
         If another thread wants to use a concurrent folder/file, but this file is still in use, then wait until the
         current thread releases the lock file.
         """
@@ -69,7 +69,7 @@ class LockFile:
     def _createLockFileWindows(self) -> None:
         """Creates the lock file on Windows, with exclusive use and with the delete on close flag enabled so in case
         the process ends, the file will be automatically removed.
-        
+
         If another thread wants to use a concurrent folder/file, but this file is still in use, then wait until the
         current thread releases the lock file.
         """
@@ -131,7 +131,7 @@ class LockFile:
 
     def __exit__(self, exc_type: type, exc_val: Exception, exc_tb: Any) -> None: #exc_tb is actually a traceback object which is not exposed in Python.
         """Release the lock file so that other processes may use it.
-        
+
         :param exc_type: The type of exception that was raised during the
             ``with`` block, if any. Use ``None`` if no exception was raised.
         :param exc_val: The exception instance that was raised during the

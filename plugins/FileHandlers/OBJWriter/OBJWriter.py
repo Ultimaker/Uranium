@@ -13,7 +13,7 @@ catalog = i18nCatalog("uranium")
 class OBJWriter(MeshWriter):
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
         """Writes the specified nodes to a stream in the OBJ format.
-        
+
         :param stream: The stream to write the OBJ data to.
         :param nodes: The nodes to write as OBJ data.
         :param mode: Additional information on how to serialise the OBJ format.

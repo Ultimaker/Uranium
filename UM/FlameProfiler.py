@@ -85,7 +85,7 @@ stop_record_profile_requested = False
 
 def getProfileData():
     """Fetch the accumulated profile data.
-    
+
     :return: :type{ProfileCallNode} or None if there is no data.
     """
 
@@ -144,7 +144,7 @@ def secondsToMS(value):
 @contextmanager
 def profileCall(name):
     """Profile a block of code.
-    
+
     Use this context manager to wrap and profile a block of code.
     :param name: :type{str} The name to use to identify this code in the profile report.
     """
@@ -166,7 +166,7 @@ def profileCall(name):
 
 def isRecordingProfile() -> bool:
     """Return whether we are recording profiling information.
-    
+
     :return: :type{bool} True if we are recording.
     """
 
@@ -216,7 +216,7 @@ def profile(function):
 
 def pyqtSlot(*args, **kwargs) -> Callable[..., Any]:
     """Drop in replacement for PyQt5's pyqtSlot decorator which records profiling information.
-    
+
     See the PyQt5 documentation for information about pyqtSlot.
     """
 

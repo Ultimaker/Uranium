@@ -117,7 +117,7 @@ class Backend(PluginObject):
             while len(self._backend_log) >= self._backend_log_max_lines:
                 del(self._backend_log[0])
         return self._backend_log
-    
+
     def getEngineCommand(self):
         """Get the command used to start the backend executable """
 
@@ -207,7 +207,7 @@ class Backend(PluginObject):
             return
 
         self._message_handlers[message.getTypeName()](message)
-    
+
     def _onSocketError(self, error):
         """Private socket error handler"""
 
@@ -243,7 +243,7 @@ class Backend(PluginObject):
         self._socket.stateChanged.connect(self._onSocketStateChanged)
         self._socket.messageReceived.connect(self._onMessageReceived)
         self._socket.error.connect(self._onSocketError)
-        
+
         if Platform.isWindows():
             # On Windows, the Protobuf DiskSourceTree does stupid things with paths.
             # So convert to forward slashes here so it finds the proto file properly.

@@ -72,7 +72,7 @@ class QtApplication(QApplication, Application):
 
     pluginsLoaded = Signal()
     applicationRunning = Signal()
-    
+
     def __init__(self, tray_icon_name: str = None, **kwargs) -> None:
         plugin_path = ""
         if sys.platform == "win32":
@@ -376,7 +376,7 @@ class QtApplication(QApplication, Application):
     def exec_(self, *args: Any, **kwargs: Any) -> None:
         self.applicationRunning.emit()
         super().exec_(*args, **kwargs)
-        
+
     @pyqtSlot()
     def reloadQML(self) -> None:
         # only reload when it is a release build
@@ -541,7 +541,7 @@ class QtApplication(QApplication, Application):
 
         if not QtApplication.splash:
             self.createSplash()
-        
+
         if QtApplication.splash:
             self.processEvents()  # Process events from previous loading phase before updating the message
             QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)  # Now update the message
@@ -616,7 +616,7 @@ class QtApplication(QApplication, Application):
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "QtApplication":
         """Gets the instance of this application.
-        
+
         This is just to further specify the type of Application.getInstance().
         :return: The instance of this application.
         """
@@ -645,7 +645,7 @@ class QtApplication(QApplication, Application):
 
 class _QtFunctionEvent(QEvent):
     """Internal.
-    
+
     Wrapper around a FunctionEvent object to make Qt handle the event properly.
     """
 

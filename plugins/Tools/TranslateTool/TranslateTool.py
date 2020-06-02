@@ -28,7 +28,7 @@ DIRECTION_TOLERANCE = 0.0001  # Used to check if you're perpendicular on some ax
 
 class TranslateTool(Tool):
     """Provides the tool to move meshes and groups.
-    
+
     The tool exposes a ToolHint to show the distance of the current operation.
     """
 
@@ -67,7 +67,7 @@ class TranslateTool(Tool):
 
     def getX(self) -> float:
         """Get the x-location of the selection bounding box center.
-        
+
         :return: X location in mm.
         """
         if Selection.hasSelection():
@@ -76,7 +76,7 @@ class TranslateTool(Tool):
 
     def getY(self) -> float:
         """Get the y-location of the selection bounding box center.
-        
+
         :return: Y location in mm.
         """
         if Selection.hasSelection():
@@ -87,7 +87,7 @@ class TranslateTool(Tool):
 
     def getZ(self) -> float:
         """Get the z-location of the selection bounding box bottom
-        
+
         The bottom is used as opposed to the center, because the biggest use
         case is to push the selection into the build plate.
         :return: Z location in mm.
@@ -109,7 +109,7 @@ class TranslateTool(Tool):
 
     def setX(self, x: str) -> None:
         """Set the x-location of the selected object(s) by translating relative to
-        
+
         the selection bounding box center.
         :param x: Location in mm.
         """
@@ -136,7 +136,7 @@ class TranslateTool(Tool):
 
     def setY(self, y: str) -> None:
         """Set the y-location of the selected object(s) by translating relative to
-        
+
         the selection bounding box center.
         :param y: Location in mm.
         """
@@ -165,7 +165,7 @@ class TranslateTool(Tool):
 
     def setZ(self, z: str) -> None:
         """Set the y-location of the selected object(s) by translating relative to
-        
+
         the selection bounding box bottom.
         :param z: Location in mm.
         """
@@ -193,7 +193,7 @@ class TranslateTool(Tool):
 
     def setEnabledAxis(self, axis: List[int]) -> None:
         """Set which axis/axes are enabled for the current translate operation
-        
+
         :param axis: List of axes (expressed as ToolHandle enum).
         """
 
@@ -202,7 +202,7 @@ class TranslateTool(Tool):
 
     def setLockPosition(self, value: bool) -> None:
         """Set lock setting to the object. This setting will be used to prevent
-        
+
         model movement on the build plate.
         :param value: The setting state.
         """
@@ -231,7 +231,7 @@ class TranslateTool(Tool):
 
     def event(self, event: Event) -> bool:
         """Handle mouse and keyboard events.
-        
+
         :param event: The event to handle.
         :return: Whether this event has been caught by this tool (True) or should
         be passed on (False).
@@ -370,7 +370,7 @@ class TranslateTool(Tool):
 
     def getToolHint(self) -> Optional[str]:
         """Return a formatted distance of the current translate operation.
-        
+
         :return: Fully formatted string showing the distance by which the
         mesh(es) are dragged.
         """

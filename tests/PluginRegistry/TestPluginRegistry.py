@@ -244,11 +244,11 @@ class TestPluginRegistry():
         registry.loadPlugin("TestPlugin2")
 
         assert registry.getTestPlugin().getPluginId() == "TestPlugin2"
-        
+
     def test_findAllPlugins(self, registry):
         names = registry._findInstalledPlugins()
         assert sorted(names) == ["EmptyPlugin", "OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"]
-        
+
     def test_pluginNotFound(self, registry):
         with pytest.raises(PluginNotFoundError):
             registry.loadPlugin("NoSuchPlugin")

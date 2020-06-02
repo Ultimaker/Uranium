@@ -15,9 +15,9 @@ class Polygon:
     @staticmethod
     def approximatedCircle(radius):
         """Return vertices from an approximate circle.
-        
+
         An octagon is returned, which comes close enough to a circle.
-        
+
         :param radius: The radius of the circle.
         :return: A polygon that approximates a circle.
         """
@@ -50,10 +50,10 @@ class Polygon:
 
     def __repr__(self):
         """Gives a debugging representation of the polygon.
-        
+
         This lists the polygon's coordinates, like so::
         [[0,0], [1,3], [3,0]]
-        
+
         :return: A representation of the polygon that is useful for debugging.
         """
 
@@ -68,7 +68,7 @@ class Polygon:
 
     def project(self, normal) -> Tuple[float, float]:
         """Project this polygon on a line described by a normal.
-        
+
         :param normal: The normal to project on.
         :return: A tuple describing the line segment of this Polygon projected on to the infinite line described by normal.
         The first element is the minimum value, the second the maximum.
@@ -86,7 +86,7 @@ class Polygon:
 
     def translate(self, x: float = 0, y: float = 0) -> "Polygon":
         """Moves the polygon by a fixed offset.
-        
+
         :param x: The distance to move along the X-axis.
         :param y: The distance to move along the Y-axis.
         """
@@ -98,7 +98,7 @@ class Polygon:
 
     def mirror(self, point_on_axis: List[float], axis_direction: List[float]) -> "Polygon":
         """Mirrors this polygon across the specified axis.
-        
+
         :param point_on_axis: A point on the axis to mirror across.
         :param axis_direction: The direction vector of the axis to mirror across.
         """
@@ -136,7 +136,7 @@ class Polygon:
     def intersectionConvexHulls(self, other: "Polygon") -> "Polygon":
         """Computes the intersection of the convex hulls of this and another
         polygon.
-        
+
         :param other: The other polygon to intersect convex hulls with.
         :return: The intersection of the two polygons' convex hulls.
         """
@@ -184,7 +184,7 @@ class Polygon:
 
     def intersectsPolygon(self, other: "Polygon") -> Optional[Tuple[float, float]]:
         """Check to see whether this polygon intersects with another polygon.
-        
+
         :param other: :type{Polygon} The polygon to check for intersection.
         :return: A tuple of the x and y distance of intersection, or None if no intersection occured.
         """
@@ -231,7 +231,7 @@ class Polygon:
 
     def getMinkowskiSum(self, other: "Polygon") -> "Polygon":
         """Perform a Minkowski sum of this polygon with another polygon.
-        
+
         :param other: The polygon to perform a Minkowski sum with.
         :return: :type{Polygon} The Minkowski sum of this polygon with other.
         """
@@ -246,10 +246,10 @@ class Polygon:
 
     def getMinkowskiHull(self, other: "Polygon") -> "Polygon":
         """Create a Minkowski hull from this polygon and another polygon.
-        
+
         The Minkowski hull is the convex hull around the Minkowski sum of this
         polygon with other.
-        
+
         :param other: :type{Polygon} The Polygon to do a Minkowski addition with.
         :return: The convex hull around the Minkowski sum of this Polygon with other
         """
@@ -259,10 +259,10 @@ class Polygon:
 
     def isInside(self, point) -> bool:
         """Whether the specified point is inside this polygon.
-        
+
         If the point is exactly on the border or on a vector, it does not count
         as being inside the polygon.
-        
+
         :param point: The point to check of whether it is inside.
         :return: True if it is inside, or False otherwise.
         """

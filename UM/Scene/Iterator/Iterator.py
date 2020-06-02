@@ -17,11 +17,11 @@ class Iterator:
         self._scene_node = scene_node
         self._node_stack = []  # type: List[SceneNode]
         self._fillStack()
-    
+
     def _fillStack(self) -> None:
         """Fills the list of nodes by a certain order. The strategy to do this is to be defined by the child."""
 
         raise NotImplementedError("Iterator is not correctly implemented. Requires a _fill_stack implementation.")
-    
+
     def __iter__(self) -> typing.Iterator["SceneNode"]:
         return iter(self._node_stack)

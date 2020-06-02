@@ -53,7 +53,7 @@ def _isTraceEnabled() -> bool:
 
 class InstanceState(enum.IntEnum):
     """The state of the instance
-    
+
     This enum describes which state the instance is in. The state describes
     how the instance got its value.
     """
@@ -66,13 +66,13 @@ class InstanceState(enum.IntEnum):
 @signalemitter
 class SettingInstance:
     """Encapsulates all state of a setting.
-    
+
     The SettingInstance class contains all state related to a setting.
     """
 
     def __init__(self, definition: SettingDefinition, container: ContainerInterface, *args: Any, **kwargs: Any) -> None:
         """Constructor.
-        
+
         :param definition: The SettingDefinition object this is an instance of.
         :param container: The container of this instance. Needed for relation handling.
         """
@@ -99,7 +99,7 @@ class SettingInstance:
 
     def __deepcopy__(self, memo: Dict[int, Dict[str, Any]]) -> "SettingInstance":
         """Copies the setting instance and all its properties and state.
-        
+
         The definition and the instance container containing this instance are not deep-copied but just taken over from
         the original, since they are seen as back-links. Please set them correctly after deep-copying this instance.
         """
@@ -194,7 +194,7 @@ class SettingInstance:
 
     propertyChanged = Signal()
     """Emitted whenever a property of this instance changes.
-    
+
     :param instance: The instance that reported the property change (usually self).
     :param property: The name of the property that changed.
     """

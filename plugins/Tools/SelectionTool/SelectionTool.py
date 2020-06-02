@@ -13,7 +13,7 @@ from UM.Tool import Tool
 
 class SelectionTool(Tool):
     """Provides the tool to select meshes and groups
-    
+
     Note that the tool has two implementations for different modes of selection:
     Pixel Selection Mode and BoundingBox Selection Mode. Of these two, only Pixel Selection Mode
     is in active use. BoundingBox Selection Mode may not be functional.
@@ -37,7 +37,7 @@ class SelectionTool(Tool):
 
     def checkModifierKeys(self, event):
         """Prepare modifier-key variables on each event
-        
+
         :param event: type(Event) event passed from event handler
         """
 
@@ -48,7 +48,7 @@ class SelectionTool(Tool):
 
     def setSelectionMode(self, mode):
         """Set the selection mode
-        
+
         The tool has two implementations for different modes of selection: PixelSelectionMode and BoundingboxSelectionMode.
         Of these two, only Pixel Selection Mode is in active use. BoundingBox Selection Mode may not be functional.
         :param mode: type(SelectionTool enum)
@@ -58,7 +58,7 @@ class SelectionTool(Tool):
 
     def event(self, event):
         """Handle mouse and keyboard events
-        
+
         :param event: type(Event)
         """
 
@@ -81,7 +81,7 @@ class SelectionTool(Tool):
 
     def _boundingBoxSelection(self, event):
         """Handle mouse and keyboard events for bounding box selection
-        
+
         :param event: type(Event) passed from self.event()
         """
 
@@ -109,7 +109,7 @@ class SelectionTool(Tool):
 
     def _pixelSelection(self, event):
         """Handle mouse and keyboard events for pixel selection
-        
+
         :param event: type(Event) passed from self.event()
         """
 
@@ -193,7 +193,7 @@ class SelectionTool(Tool):
 
     def _isNodeInGroup(self, node):
         """Check whether a node is in a group
-        
+
         :param node: type(SceneNode)
         :return: in_group type(boolean)
         """
@@ -205,7 +205,7 @@ class SelectionTool(Tool):
 
     def _findTopGroupNode(self, node):
         """Get the top root group for a node
-        
+
         :param node: type(SceneNode)
         :return: group type(SceneNode)
         """

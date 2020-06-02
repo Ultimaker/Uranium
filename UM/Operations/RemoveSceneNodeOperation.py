@@ -12,7 +12,7 @@ class RemoveSceneNodeOperation(Operation.Operation):
 
     def __init__(self, node: SceneNode) -> None:
         """Initialises the RemoveSceneNodeOperation.
-        
+
         :param node: The node to remove.
         """
 

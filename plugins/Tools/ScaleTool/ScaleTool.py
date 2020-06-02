@@ -66,7 +66,7 @@ class ScaleTool(Tool):
 
     def event(self, event):
         """Handle mouse and keyboard events
-        
+
         :param event: type(Event)
         """
 
@@ -210,7 +210,7 @@ class ScaleTool(Tool):
 
     def getNonUniformScale(self):
         """Get non-uniform scaling flag
-        
+
         :return: scale type(boolean)
         """
 
@@ -218,7 +218,7 @@ class ScaleTool(Tool):
 
     def setNonUniformScale(self, scale):
         """Set non-uniform scaling flag
-        
+
         :param scale: type(boolean)
         """
 
@@ -228,7 +228,7 @@ class ScaleTool(Tool):
 
     def getScaleSnap(self):
         """Get snap scaling flag
-        
+
         :return: snap type(boolean)
         """
 
@@ -236,7 +236,7 @@ class ScaleTool(Tool):
 
     def setScaleSnap(self, snap):
         """Set snap scaling flag
-        
+
         :param snap: type(boolean)
         """
 
@@ -246,7 +246,7 @@ class ScaleTool(Tool):
 
     def getObjectWidth(self) -> float:
         """Get the width of the bounding box of the selected object(s)
-        
+
         :return: width Width in mm.
         """
 
@@ -260,7 +260,7 @@ class ScaleTool(Tool):
 
     def getObjectHeight(self) -> float:
         """Get the height of the bounding box of the selected object(s)
-        
+
         :return: height Height in mm.
         """
 
@@ -274,7 +274,7 @@ class ScaleTool(Tool):
 
     def getObjectDepth(self) -> float:
         """Get the depth of the bounding box of the first selected object
-        
+
         :return: depth Depth in mm.
         """
 
@@ -288,7 +288,7 @@ class ScaleTool(Tool):
 
     def getScaleX(self):
         """Get the x-axis scale of the first selected object
-        
+
         :return: scale type(float) scale factor (1.0 = normal scale)
         """
 
@@ -300,7 +300,7 @@ class ScaleTool(Tool):
 
     def getScaleY(self):
         """Get the y-axis scale of the first selected object
-        
+
         :return: scale type(float) scale factor (1.0 = normal scale)
         """
 
@@ -312,7 +312,7 @@ class ScaleTool(Tool):
 
     def getScaleZ(self):
         """Get the z-axis scale of the of the first selected object
-        
+
         :return: scale type(float) scale factor (1.0 = normal scale)
         """
 
@@ -324,7 +324,7 @@ class ScaleTool(Tool):
 
     def setObjectWidth(self, width):
         """Set the width of the selected object(s) by scaling the first selected object to a certain width
-        
+
         :param width: type(float) width in mm
         """
 
@@ -342,7 +342,7 @@ class ScaleTool(Tool):
                 self._scaleSelectedNodes(scale_vector)
     def setObjectHeight(self, height):
         """Set the height of the selected object(s) by scaling the first selected object to a certain height
-        
+
         :param height: type(float) height in mm
         """
 
@@ -361,7 +361,7 @@ class ScaleTool(Tool):
 
     def setObjectDepth(self, depth):
         """Set the depth of the selected object(s) by scaling the first selected object to a certain depth
-        
+
         :param depth: type(float) depth in mm
         """
 
@@ -380,7 +380,7 @@ class ScaleTool(Tool):
 
     def setScaleX(self, scale):
         """Set the x-scale of the selected object(s) by scaling the first selected object to a certain factor
-        
+
         :param scale: type(float) scale factor (1.0 = normal scale)
         """
 
@@ -398,7 +398,7 @@ class ScaleTool(Tool):
 
     def setScaleY(self, scale):
         """Set the y-scale of the selected object(s) by scaling the first selected object to a certain factor
-        
+
         :param scale: type(float) scale factor (1.0 = normal scale)
         """
 
@@ -416,7 +416,7 @@ class ScaleTool(Tool):
 
     def setScaleZ(self, scale):
         """Set the z-scale of the selected object(s) by scaling the first selected object to a certain factor
-        
+
         :param scale: type(float) scale factor (1.0 = normal scale)
         """
 
@@ -445,9 +445,9 @@ class ScaleTool(Tool):
 
     def _getScaleInWorldCoordinates(self, node):
         """Convenience function that gives the scale of an object in the coordinate space of the world.
-        
+
         The function might return wrong value if the grouped models are rotated
-        
+
         :param node: type(SceneNode)
         :return: scale type(float) scale factor (1.0 = normal scale)
         """

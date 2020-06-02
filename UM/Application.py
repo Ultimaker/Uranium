@@ -36,7 +36,7 @@ if TYPE_CHECKING:
 @signalemitter
 class Application:
     """Central object responsible for running the main event loop and creating other central objects.
-    
+
     The Application object is a central object for accessing other important objects. It is also
     responsible for starting the main event loop. It is passed on to plugins so it can be easily
     used to access objects required for those plugins.
@@ -44,7 +44,7 @@ class Application:
 
     def __init__(self, name: str, version: str, api_version: str, app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
         """Init method
-        
+
         :param name: :type{string} The name of the application.
         :param version: :type{string} Version, formatted as major.minor.rev
         :param build_type: Additional version info on the type of build this is, such as "master".
@@ -420,7 +420,7 @@ class Application:
 
     def functionEvent(self, event: CallFunctionEvent) -> None:
         """Post a function event onto the event loop.
-        
+
         This takes a CallFunctionEvent object and puts it into the actual event loop.
         :exception NotImplementedError
         """
@@ -429,7 +429,7 @@ class Application:
 
     def callLater(self, func: Callable[..., Any], *args, **kwargs) -> None:
         """Call a function the next time the event loop runs.
-        
+
         You can't get the result of this function directly. It won't block.
         :param func: The function to call.
         :param args: The positional arguments to pass to the function.

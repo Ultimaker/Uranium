@@ -20,10 +20,10 @@ from UM.Signal import Signal, signalemitter
 @signalemitter
 class SceneNode:
     """A scene node object.
-    
+
     These objects can hold a mesh and multiple children. Each node has a transformation matrix
     that maps it it's parents space to the local space (it's inverse maps local space to parent).
-    
+
     SceneNodes can be "Decorated" by adding SceneNodeDecorator objects.
     These decorators can add functionality to scene nodes.
     :sa SceneNodeDecorator
@@ -504,7 +504,7 @@ class SceneNode:
 
     childrenChanged = Signal()
     """Emitted whenever the list of children of this object or any child object changes.
-    
+
     :param object: The object that triggered the change.
     """
 
@@ -544,7 +544,7 @@ class SceneNode:
 
     def rotate(self, rotation: Quaternion, transform_space: int = TransformSpace.Local) -> None:
         """Rotate the scene object (and thus its children) by given amount
-        
+
         :param rotation: :type{Quaternion} A quaternion indicating the amount of rotation.
         :param transform_space: The space relative to which to rotate. Can be any one of the constants in SceneNode::TransformSpace.
         """
@@ -566,7 +566,7 @@ class SceneNode:
 
     def setOrientation(self, orientation: Quaternion, transform_space: int = TransformSpace.Local) -> None:
         """Set the local orientation of this scene node.
-        
+
         :param orientation: :type{Quaternion} The new orientation of this scene node.
         :param transform_space: The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
         """
@@ -598,7 +598,7 @@ class SceneNode:
 
     def scale(self, scale: Vector, transform_space: int = TransformSpace.Local) -> None:
         """Scale the scene object (and thus its children) by given amount
-        
+
         :param scale: :type{Vector} A Vector with three scale values
         :param transform_space: The space relative to which to scale. Can be any one of the constants in SceneNode::TransformSpace.
         """
@@ -621,7 +621,7 @@ class SceneNode:
 
     def setScale(self, scale: Vector, transform_space: int = TransformSpace.Local) -> None:
         """Set the local scale value.
-        
+
         :param scale: :type{Vector} The new scale value of the scene node.
         :param transform_space: The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
         """
@@ -649,7 +649,7 @@ class SceneNode:
 
     def translate(self, translation: Vector, transform_space: int = TransformSpace.Local) -> None:
         """Translate the scene object (and thus its children) by given amount.
-        
+
         :param translation: :type{Vector} The amount to translate by.
         :param transform_space: The space relative to which to translate. Can be any one of the constants in SceneNode::TransformSpace.
         """
@@ -671,7 +671,7 @@ class SceneNode:
 
     def setPosition(self, position: Vector, transform_space: int = TransformSpace.Local) -> None:
         """Set the local position value.
-        
+
         :param position: The new position value of the SceneNode.
         :param transform_space: The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
         """
@@ -692,7 +692,7 @@ class SceneNode:
 
     def lookAt(self, target: Vector, up: Vector = Vector.Unit_Y) -> None:
         """Rotate this scene node in such a way that it is looking at target.
-        
+
         :param target: :type{Vector} The target to look at.
         :param up: :type{Vector} The vector to consider up. Defaults to Vector.Unit_Y, i.e. (0, 1, 0).
         """
@@ -720,9 +720,9 @@ class SceneNode:
         If you need to handle rendering in a special way, for example for tool handles,
         you can override this method and render the node. Return True to prevent the
         view from rendering any attached mesh data.
-        
+
         :param renderer: The renderer object to use for rendering.
-        
+
         :return: False if the view should render this node, True if we handle our own rendering.
         """
 
@@ -747,7 +747,7 @@ class SceneNode:
 
     def isSelectable(self) -> bool:
         """Get whether this SceneNode can be selected.
-        
+
         :note This will return false if isEnabled() returns false.
         """
 
@@ -755,7 +755,7 @@ class SceneNode:
 
     def setSelectable(self, select: bool) -> None:
         """Set whether this SceneNode can be selected.
-        
+
         :param select: True if this SceneNode should be selectable, False if not.
         """
 
@@ -772,7 +772,7 @@ class SceneNode:
 
     def setCalculateBoundingBox(self, calculate: bool) -> None:
         """Set whether or not to calculate the bounding box for this node.
-        
+
         :param calculate: True if the bounding box should be calculated, False if not.
         """
 

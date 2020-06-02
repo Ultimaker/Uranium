@@ -22,7 +22,7 @@ else:  # On Windows, flock doesn't exist so we disable it at risk of corruption 
 
 class SaveFile:
     """A class to handle atomic writes to a file.
-    
+
     This class can be used to perform atomic writes to a file. Atomic writes ensure
     that the file contents are always correct and that concurrent writes do not
     end up writing to the same file at the same time.

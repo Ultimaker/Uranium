@@ -15,7 +15,7 @@ i18n_catalog = i18nCatalog("uranium")
 
 class ReadMeshJob(ReadFileJob):
     """A Job subclass that performs mesh loading.
-    
+
     The result of this Job is a MeshData object.
     """
 

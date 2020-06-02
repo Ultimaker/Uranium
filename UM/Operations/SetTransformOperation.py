@@ -10,12 +10,12 @@ class SetTransformOperation(Operation.Operation):
 
     def __init__(self, node, translation = None, orientation = None, scale = None, shear = None, mirror = None):
         """Creates the transform operation.
-        
+
         Careful! No real input checking is done by this function. If you'd
         provide other transformations than respectively translation, orientation
         and scale in place for the translation, orientation and scale matrices,
         it could get confused.
-        
+
         :param node: The scene node to transform.
         :param translation: A translation matrix to move the node with.
         :param orientation: An orientation matrix to rotate the node with.
@@ -69,13 +69,13 @@ class SetTransformOperation(Operation.Operation):
 
     def mergeWith(self, other):
         """Merges this operation with another TransformOperation.
-        
+
         This prevents the user from having to undo multiple operations if they
         were not his operations.
-        
+
         You should ONLY merge this operation with an older operation. It is NOT
         symmetric.
-        
+
         :param other: The older operation with which to merge this operation.
         :return: A combination of the two operations, or False if the merge
         failed.
@@ -93,7 +93,7 @@ class SetTransformOperation(Operation.Operation):
 
     def __repr__(self):
         """Returns a programmer-readable representation of this operation.
-        
+
         A programmer-readable representation of this operation.
         """
 

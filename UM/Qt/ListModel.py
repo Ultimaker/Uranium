@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List
 
 class ListModel(QAbstractListModel):
     """Convenience base class for models of a list of items.
-    
+
     This class represents a list of dictionary objects that
     can be exposed to QML. It is intended primarily as a read-only
     convenience class but supports removing elements so can also be
@@ -28,7 +28,7 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(result = int)
     def rowCount(self, parent = None) -> int:
         """This function is necessary because it is abstract in QAbstractListModel.
-        
+
         Under the hood, Qt will call this function when it needs to know how
         many items are in the model.
         This pyqtSlot will not be linked to the itemsChanged signal, so please

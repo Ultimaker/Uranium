@@ -28,7 +28,7 @@ UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name"
 """File that needs upgrading, with all the required info to upgrade it.
 
    Fields are:
-   
+
    - storage_path: A path to where the type of file is stored before upgrading.
                    This is used to store the old file in an /old directory.
    - file_name: The name to the file that needs to be upgraded, relative to the
@@ -44,19 +44,19 @@ FilesDataUpdateResult = collections.namedtuple("FilesDataUpdateResult",
 class VersionUpgradeManager:
     """Regulates the upgrading of configuration from one application version to the
     next.
-    
+
     The process of upgrading will take a look at all profiles, preferences and
     machine instances and check their version numbers. If they are older than
     the current version number of their respective type of file, an upgrade
     route will be planned for it in order to upgrade the file to the current
     version in as few conversions as possible.
-    
+
     To this end, the upgrade manager will maintain the shortest routes to the
     current version for each of the types of profiles and each old version it
     encounters. Once a shortest route is found, it is cached and can be re-used
     for all nodes along this route. This minimises the extra start-up time
     required for the conversions.
-    
+
     Old versions of the configuration are not deleted, but put in a folder next
     to the current (upgraded) versions, where they are never loaded again unless
     the user manually retrieves the files.
@@ -64,7 +64,7 @@ class VersionUpgradeManager:
 
     def __init__(self, application: Application) -> None:
         """Initialises the version upgrade manager.
-        
+
         This initialises the cache for shortest upgrade routes, and registers
         the version upgrade plug-ins.
         """
@@ -124,11 +124,11 @@ class VersionUpgradeManager:
 
     def getStoragePaths(self, configuration_type: str) -> Dict[int, Set[str]]:
         """Gets the paths where a specified type of file should be stored.
-        
+
         This differs from the storage path in the Resources class, since it also
         knows where to store old file types. This information is gathered from
         the upgrade plug-ins.
-        
+
         :param configuration_type: The type of configuration to be stored.
         :return: A set of storage paths for the specified configuration type.
         """
@@ -137,7 +137,7 @@ class VersionUpgradeManager:
 
     def setCurrentVersions(self, current_versions: Dict[Tuple[str, int], Any]) -> None:
         """Changes the target versions to upgrade to.
-        
+
         :param current_versions: A dictionary of tuples of configuration types
         and their versions currently in use, and with each of these a tuple of
         where to store this type of file and its MIME type.
@@ -153,10 +153,10 @@ class VersionUpgradeManager:
     def upgrade(self) -> bool:
         """Performs the version upgrades of all configuration files to the most
         recent version.
-        
+
         The upgrade plug-ins must all be loaded at this point, or no upgrades
         can be performed.
-        
+
         :return: True if anything was upgraded, or False if it was already up to date.
         """
         start_time = time.time()
@@ -177,7 +177,7 @@ class VersionUpgradeManager:
 
     def upgradeExtraFile(self, storage_path: str, file_name: str, configuration_type: str) -> None:
         """Schedules an additional file for upgrading.
-        
+
         This method is intended to be called by upgrade plug-ins during
         upgrading, to make sure we also upgrade any extra files that should be
         added during the upgrade process.
@@ -186,7 +186,7 @@ class VersionUpgradeManager:
         still running, it will get upgraded at the end of that run. If it is
         called while the ``upgrade()`` function is not running, it would get
         upgraded during the next call to ``upgrade()``.
-        
+
         :param storage_path: The path to where the specified type of file is stored.
         :param file_name: The path to the file to upgrade, relative to the storage path.
         :param configuration_type: The file type of the specified file.
@@ -198,11 +198,11 @@ class VersionUpgradeManager:
 
     def _addVersionUpgrade(self, version_upgrade_plugin: PluginObject) -> None:
         """Adds a version upgrade plug-in.
-        
+
         This reads from the metadata which upgrades the plug-in can perform and
         sorts the upgrade functions in memory so that the upgrades can be used
         when an upgrade is requested.
-        
+
         :param version_upgrade_plugin: The plug-in object of the version upgrade plug-in.
         """
 
@@ -245,7 +245,7 @@ class VersionUpgradeManager:
     def _findShortestUpgradeRoutes(self) -> Dict[Tuple[str, int], Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]:
         """Finds the next step to take to upgrade each combination of configuration
         type and version.
-        
+
         :return: A dictionary of type/version pairs that map to functions that
             upgrade said data format one step towards the most recent version, such
             that the fewest number of steps is required.
@@ -274,10 +274,10 @@ class VersionUpgradeManager:
 
     def _getFilesInDirectory(self, directory: str) -> Iterator[str]:
         """Get the filenames of all files in a specified directory.
-        
+
         If an exclude path is given, the specified path is ignored (relative to
         the specified directory).
-        
+
         :param directory: The directory to read the files from.
         :return: The filename of each file relative to the specified directory. Note that without an * in the path, it
             will not look at sub directories.
@@ -298,7 +298,7 @@ class VersionUpgradeManager:
 
     def _getUpgradeTasks(self) -> Iterator[UpgradeTask]:
         """Gets all files that need to be upgraded.
-        
+
         :return: A sequence of UpgradeTasks of files to upgrade.
         """
 
@@ -350,10 +350,10 @@ class VersionUpgradeManager:
 
     def _upgradeFile(self, storage_path_absolute: str, configuration_file: str, old_configuration_type: str) -> bool:
         """Upgrades a single file to any version in self._current_versions.
-        
+
         A single file will be taken as source file, but may result in any number
         of output files.
-        
+
         :param storage_path_absolute: The path where to find the file.
         :param configuration_file: The file to upgrade to a current version.
         :param old_configuration_type: The type of the configuration file before upgrading it.

@@ -6,7 +6,7 @@ from typing import Union
 
 class Color:
     """An RGBA color value.
-    
+
     This class represents an RGBA color value, in the range of 0.0 to 1.0.
     """
 
@@ -70,7 +70,7 @@ class Color:
     @staticmethod
     def fromARGB(value):
         """Returns a new Color constructed from a 32-bit integer in ARGB order.
-        
+
         :param value: A 32-bit integer representing a color in ARGB order.
         :return: A Color constructed from the components of value.
         """
@@ -111,7 +111,7 @@ class Color:
     @staticmethod
     def fromHexString(value):
         """Returns a new Color constructed from a 7- or 9-character string "#RRGGBB" or "#AARRGGBB" format.
-        
+
         :param value: A 7- or 9-character string representing a color in "#RRGGBB" or "#AARRGGBB" format.
         :return: A Color constructed from the components of value.
         """

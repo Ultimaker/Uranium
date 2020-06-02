@@ -5,7 +5,7 @@ from typing import Optional, Dict, Any
 
 class PluginObject:
     """Base class for objects that can be provided by a plugin.
-    
+
     This class should be inherited by any class that can be provided
     by a plugin. Its only function is to serve as a mapping between
     the plugin and the object.

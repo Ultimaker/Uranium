@@ -17,7 +17,7 @@ from UM.Tool import Tool
 
 class CameraTool(Tool):
     """Provides the tool to manipulate the camera: moving, zooming and rotating
-    
+
     Note that zooming is performed by moving closer to or further away from the origin ("dolly")
     instead of changing the field of view of the camera ("zoom")
     """
@@ -60,7 +60,7 @@ class CameraTool(Tool):
 
     def setZoomRange(self, min: float, max: float) -> None:
         """Set the minimum and maximum distance from the origin used for "zooming" the camera
-        
+
         :param min: distance from the origin when fully zoomed in
         :param max: distance from the origin when fully zoomed out
         """
@@ -87,7 +87,7 @@ class CameraTool(Tool):
 
     def setOrigin(self, origin: Vector) -> None:
         """Set the point around which the camera rotates
-        
+
         :param origin: type(Vector) origin point
         """
 
@@ -101,7 +101,7 @@ class CameraTool(Tool):
 
     def getOrigin(self) -> Vector:
         """Get the point around which the camera rotates
-        
+
         :return: origin point
         """
 
@@ -109,7 +109,7 @@ class CameraTool(Tool):
 
     def checkModifierKeys(self, event) -> None:
         """Prepare modifier-key variables on each event
-        
+
         :param event: event passed from event handler
         """
 
@@ -126,7 +126,7 @@ class CameraTool(Tool):
 
     def moveEvent(self, event) -> bool:
         """Check if the event warrants a call off the _moveCamera method
-        
+
         :param event: event passed from event handler
         :return: type(boolean)
         """
@@ -141,7 +141,7 @@ class CameraTool(Tool):
 
     def rotateEvent(self, event) -> bool:
         """Check if the event warrants a call off the _rotateCamera method
-        
+
         :param event: event passed from event handler
         :return: type(boolean)
         """
@@ -154,7 +154,7 @@ class CameraTool(Tool):
 
     def initiateZoom(self, event) -> bool:
         """Calls the zoomaction method for the mousewheel event, mouseMoveEvent (in combo with alt or space) and when the plus or minus keys are used
-        
+
         :param event: event passed from event handler
         """
 
@@ -184,7 +184,7 @@ class CameraTool(Tool):
 
     def rotateCamera(self, x: float, y: float) -> None:
         """Rotate camera around origin.
-        
+
         :param x: Angle by which the camera should be rotated horizontally.
         :param y: Angle by which the camera should be rotated vertically.
         """
@@ -266,7 +266,7 @@ class CameraTool(Tool):
 
     def _zoomCamera(self, zoom_range: float, event: Optional[Event] = None) -> None:
         """"Zoom" the camera in response to a mouse event.
-        
+
         Note that the camera field of view is left unaffected, but instead the camera moves closer to the origin
         :param zoom_range: factor by which the distance to the origin is multiplied, multiplied by 1280
         """
@@ -322,7 +322,7 @@ class CameraTool(Tool):
 
     def _rotateCamera(self, x: float, y: float) -> None:
         """Rotate the camera in response to a mouse event.
-        
+
         :param x: Amount by which the camera should be rotated horizontally, expressed in pixelunits
         :param y: Amount by which the camera should be rotated vertically, expressed in pixelunits
         """

@@ -15,13 +15,13 @@ from typing import Any, Optional, Union
 
 class WriteFileJob(Job):
     """A Job subclass that performs writing.
-    
+
     The writer defines what the result of this job is.
     """
 
     def __init__(self, writer: Optional[FileWriter], stream: Union[io.BytesIO, io.StringIO], data: Any, mode: int) -> None:
         """Creates a new job for writing.
-        
+
         :param writer: The file writer to use, with the correct MIME type.
         :param stream: The output stream to write to.
         :param data: Whatever it is what we want to write.

@@ -78,7 +78,7 @@ class QtRenderer(Renderer):
 
     def addRenderPass(self, render_pass: "RenderPass") -> None:
         """Overridden from Renderer.
-        
+
         This makes sure the added render pass has the right size.
         """
 
@@ -98,7 +98,7 @@ class QtRenderer(Renderer):
 
     def setViewportSize(self, width: int, height: int) -> None:
         """Set the viewport size.
-        
+
         :param width: The new width of the viewport.
         :param height: The new height of the viewport.
         """
@@ -117,7 +117,7 @@ class QtRenderer(Renderer):
 
     def getWindowSize(self) -> Tuple[int, int]:
         """Get the window size.
-        
+
         :return: A tuple of (window_width, window_height)
         """
 
@@ -176,7 +176,7 @@ class QtRenderer(Renderer):
 
     def renderFullScreenQuad(self, shader: "ShaderProgram") -> None:
         """Render a full screen quad (rectangle).
-        
+
         The function is used to draw render results on.
         :param shader: The shader to use when rendering.
         """

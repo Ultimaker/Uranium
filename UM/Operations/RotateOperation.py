@@ -15,7 +15,7 @@ class RotateOperation(Operation.Operation):
 
     def __init__(self, node: SceneNode, rotation: "Quaternion", rotate_around_point: Vector = Vector(0, 0, 0)) -> None:
         """Initialises the operation.
-        
+
         :param node: The node to rotate.
         :param rotation: A transformation quaternion that rotates a space. This
         rotation is applied on the node.
@@ -42,13 +42,13 @@ class RotateOperation(Operation.Operation):
 
     def mergeWith(self, other: "RotateOperation") -> Union[bool, "RotateOperation"]:
         """Merges this operation with another RotateOperation.
-        
+
         This prevents the user from having to undo multiple operations if they
         were not his operations.
-        
+
         You should ONLY merge this operation with an older operation. It is NOT
         symmetric.
-        
+
         :param other: The older RotateOperation to merge this with.
         :return: A combination of the two rotate operations.
         """
@@ -64,7 +64,7 @@ class RotateOperation(Operation.Operation):
 
     def __repr__(self) -> str:
         """Returns a programmer-readable representation of this operation.
-        
+
         :return: A programmer-readable representation of this operation.
         """
 

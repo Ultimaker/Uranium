@@ -23,7 +23,6 @@ class FileHandler(QObject):
     This class is created by Application and handles reading and writing mesh files.
     """
 
-
     def __init__(self, application: "QtApplication", writer_type: str = "unknown_file_writer", reader_type: str = "unknown_file_reader", parent: QObject = None) -> None:
         if cast(FileHandler, self.__class__).__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
@@ -135,7 +134,7 @@ class FileHandler(QObject):
 
     def getWriterByMimeType(self, mime: str) -> Optional["FileWriter"]:
         """Get a mesh writer object that supports writing the specified mime type
-        
+
         :param mime: The mime type that should be supported.
         :return: A FileWriter instance or None if no mesh writer supports the specified mime type. If there are multiple
         writers that support the specified mime type, the first entry is returned.

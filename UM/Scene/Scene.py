@@ -25,7 +25,7 @@ i18n_catalog = i18nCatalog("uranium")
 @signalemitter
 class Scene:
     """Container object for the scene graph
-    
+
     The main purpose of this class is to provide the root SceneNode.
     """
 
@@ -116,15 +116,15 @@ class Scene:
 
     sceneChanged = Signal()
     """Signal that is emitted whenever something in the scene changes.
-    
+
     :param object: The object that triggered the change.
     """
 
     def findObject(self, object_id: int) -> Optional["SceneNode"]:
         """Find an object by id.
-        
+
         :param object_id: The id of the object to search for, as returned by the python id() method.
-        
+
         :return: The object if found, or None if not.
         """
 
@@ -210,7 +210,7 @@ class Scene:
 
     def _reloadJobFinished(self, replaced_node: SceneNode, job: ReadMeshJob) -> None:
         """Triggered when reloading has finished.
-        
+
         This then puts the resulting mesh data in the node.
         """
 

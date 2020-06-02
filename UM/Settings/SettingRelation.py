@@ -15,20 +15,20 @@ class RelationType(enum.IntEnum):
 
 class SettingRelation:
     """A representation of a relationship between two settings.
-    
+
     This is a simple class representing a relationship between two settings.
     One of the settings is the "owner", which means it contains the setting, the other
     setting is the "target", the setting the relation is pointing at. Relations
     have a type and a role. The type determines in what direction this relation is,
     the role what property it is used for.
-    
+
     :note SettingRelation objects are usually created by DefinitionContainer after
     constructing SettingDefinition objects.
     """
 
     def __init__(self, owner: SettingDefinition, target: SettingDefinition, relation_type: RelationType, role: str) -> None:
         """Constructor.
-        
+
         :param owner: :type{SettingDefinition} The object that owns this relation.
         :param target: :type{SettingDefinition} The target of the relation.
         :param type: :type{RelationType} The type of the relation.

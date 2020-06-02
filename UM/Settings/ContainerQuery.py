@@ -11,11 +11,11 @@ if TYPE_CHECKING:
 
 class ContainerQuery:
     """Wrapper class to perform a search for a certain set of containers.
-    
+
     This class is primarily intended to be used internally by
     ContainerRegistry::findContainers. It is used to perform the actual
     searching for containers and cache the results.
-    
+
     :note Instances of this class will ignore the query results when
     comparing. This is done to simplify the caching code in ContainerRegistry.
     """
@@ -29,7 +29,7 @@ class ContainerQuery:
 
     def __init__(self, registry: "ContainerRegistry", *, ignore_case = False, **kwargs: Any) -> None:
         """Constructor
-        
+
         :param registry: The ContainerRegistry instance this query operates on.
         :param container_type: A specific container class that should be filtered for.
         :param ignore_case: Whether or not the query should be case sensitive.
@@ -45,7 +45,7 @@ class ContainerQuery:
 
     def getContainerType(self) -> Optional[type]:
         """Get the class of the containers that this query should find, if any.
-        
+
         If the query doesn't filter on container type, `None` is returned.
         """
 
@@ -53,7 +53,7 @@ class ContainerQuery:
 
     def getResult(self) -> Optional[List[Dict[str, Any]]]:
         """Retrieve the result of this query.
-        
+
         :return: A list of containers matching this query, or None if the query was not executed.
         """
 
@@ -61,7 +61,7 @@ class ContainerQuery:
 
     def isIdOnly(self) -> bool:
         """Check to see if this is a very simple query that looks up a single container by ID.
-        
+
         :return: True if this query is case sensitive, has only 1 thing to search for and that thing is "id".
         """
 
@@ -69,7 +69,7 @@ class ContainerQuery:
 
     def execute(self, candidates: Optional[List[Any]] = None) -> None:
         """Execute the actual query.
-        
+
         This will search the container metadata of the ContainerRegistry based
         on the arguments provided to this class' constructor. After it is done,
         the result can be retrieved with getResult().

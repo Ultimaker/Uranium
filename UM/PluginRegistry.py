@@ -35,11 +35,11 @@ plugin_path_ignore_list = ["__pycache__", "tests", ".git"]
 
 class PluginRegistry(QObject):
     """A central object to dynamically load modules as plugins.
-    
+
     The PluginRegistry class can load modules dynamically and use
     them as plugins. Each plugin module is expected to be a directory with
     and `__init__` file defining a `getMetaData` and a `register` function.
-    
+
     For more details, see the [plugins] file.
 
     [plugins]: docs/plugins.md
@@ -562,7 +562,7 @@ class PluginRegistry(QObject):
                 continue
 
         return plugin_ids
-    
+
     def _findPlugin(self, plugin_id: str) -> Optional[types.ModuleType]:
         """Try to find a module implementing a plugin
 
@@ -780,7 +780,7 @@ class PluginRegistry(QObject):
 
     def getPluginPath(self, plugin_id: str) -> Optional[str]:
         """Get the path to a plugin.
-        
+
         :param plugin_id: The PluginObject.getPluginId() of the plugin.
         :return: The absolute path to the plugin or an empty string if the plugin could not be found.
         """
@@ -802,17 +802,17 @@ class PluginRegistry(QObject):
     @classmethod
     def addType(cls, plugin_type: str, register_function: Callable[[Any], None]) -> None:
         """Add a new plugin type.
-        
+
         This function is used to add new plugin types. Plugin types are simple
         string identifiers that match a certain plugin to a registration function.
-        
+
         The callable `register_function` is responsible for handling the object.
         Usually it will add the object to a list of objects in the relevant class.
         For example, the plugin type 'tool' has Controller::addTool as register
         function.
-        
+
         `register_function` will be called every time a plugin of `type` is loaded.
-        
+
         :param plugin_type: The name of the plugin type to add.
         :param register_function: A callable that takes an object as parameter.
         """
@@ -822,7 +822,7 @@ class PluginRegistry(QObject):
     @classmethod
     def removeType(cls, plugin_type: str) -> None:
         """Remove a plugin type.
-        
+
         :param plugin_type: The plugin type to remove.
         """
 

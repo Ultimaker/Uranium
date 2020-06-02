@@ -24,11 +24,11 @@ class ContainerInterface:
 
     def getId(self) -> str:
         """Get the ID of the container.
-        
+
         The ID should be unique, machine readable and machine writable. It is
         intended to be used for example when referencing the container in
         configuration files or when writing a file to disk.
-        
+
         :return: The unique ID of this container.
         """
 
@@ -36,10 +36,10 @@ class ContainerInterface:
 
     def getName(self) -> str:
         """Get the human-readable name of this container.
-        
+
         This should return a human-readable name for the container, that can be
         used in the interface.
-        
+
         :return: The name of this container.
         """
 
@@ -47,10 +47,10 @@ class ContainerInterface:
 
     def getMetaData(self) -> Dict[str, Any]:
         """Get all metadata of this container.
-        
+
         This returns a dictionary containing all the metadata for this container.
         How this metadata is used depends on the application.
-        
+
         :return: The metadata for this container.
         """
 
@@ -58,10 +58,10 @@ class ContainerInterface:
 
     def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
         """Get the value of a single metadata entry.
-        
+
         :param entry: The key of the metadata to retrieve.
         :param default: The default value to return if the entry cannot be found.
-        
+
         :return: The value of the metadata corresponding to `name`, or `default`
         when the entry could not be found.
         """
@@ -80,10 +80,10 @@ class ContainerInterface:
 
     def hasProperty(self, key: str, property_name: str) -> bool:
         """Get whether the container item has a specific property.
-        
+
         :param key: The key of the item to check the property from.
         :param name: The name of the property to check for.
-        
+
         :return: True if the specified item has the property, or False if it
         doesn't.
         """
@@ -100,13 +100,13 @@ class ContainerInterface:
 
     def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         """Serialize this container to a string.
-        
+
         The serialized representation of the container can be used to write the
         container to disk or send it over the network.
-        
+
         :param ignored_metadata_keys: A set of keys that should be ignored when
         it serializes the metadata.
-        
+
         :return: A string representation of this container.
         """
 
@@ -134,10 +134,10 @@ class ContainerInterface:
 
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         """Deserialize the container from a string representation.
-        
+
         This should replace the contents of this container with those in the serialized
         representation.
-        
+
         :param serialized: A serialized string containing a container that should be deserialized.
         """
 
@@ -148,7 +148,7 @@ class ContainerInterface:
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
         """Deserialize just the metadata from a string representation.
-        
+
         :param serialized: A string representing one or more containers that
         should be deserialized.
         :param container_id: The ID of the (base) container is already known and

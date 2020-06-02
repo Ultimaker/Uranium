@@ -7,7 +7,7 @@ from UM.Scene.SceneNode import SceneNode
 
 class MirrorOperation(Operation.Operation):
     """Operation that mirrors a scene node.
-    
+
     This operation needs to store the node that was mirrored and the
     transformation matrix that performs the mirror operation itself.
     Furthermore, it allows mirroring around the center of the node's bounding
@@ -16,7 +16,7 @@ class MirrorOperation(Operation.Operation):
 
     def __init__(self, node, mirror, mirror_around_center = False):
         """Initialises the operation.
-        
+
         :param node: The node to mirror.
         :param mirror: A transformation matrix that mirrors the object. This
             should only define values on the diagonal of the matrix, and only the
@@ -50,13 +50,13 @@ class MirrorOperation(Operation.Operation):
 
     def mergeWith(self, other):
         """Merge this operation with another.
-        
+
         This prevents the user from having to undo multiple operations if they
         were not his operations.
-        
+
         You should ONLY merge this operation with an older operation. It is NOT
         symmetric.
-        
+
         :param other: The operation to merge this operation with.
         :return: A combination of the two operations.
         """
@@ -72,7 +72,7 @@ class MirrorOperation(Operation.Operation):
 
     def __repr__(self):
         """Gives a programmer-readable representation of this operation.
-        
+
         :return: A programmer-readable representation of this operation.
         """
 

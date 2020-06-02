@@ -36,7 +36,7 @@ i18n_catalog = i18nCatalog("uranium")
 
 class RotateTool(Tool):
     """Provides the tool to rotate meshes and groups
-    
+
     The tool exposes a ToolHint to show the rotation angle of the current operation
     """
 
@@ -67,7 +67,7 @@ class RotateTool(Tool):
 
     def event(self, event):
         """Handle mouse and keyboard events
-        
+
         :param event: type(Event)
         """
 
@@ -272,7 +272,7 @@ class RotateTool(Tool):
 
     def getToolHint(self):
         """Return a formatted angle of the current rotate operation
-        
+
         :return: type(String) fully formatted string showing the angle by which the mesh(es) are rotated
         """
 
@@ -280,7 +280,7 @@ class RotateTool(Tool):
 
     def getSelectFaceSupported(self) -> bool:
         """Get whether the select face feature is supported.
-        
+
         :return: True if it is supported, or False otherwise.
         """
         # Use a dummy postfix, since an equal version with a postfix is considered smaller normally.
@@ -288,7 +288,7 @@ class RotateTool(Tool):
 
     def getRotationSnap(self):
         """Get the state of the "snap rotation to N-degree increments" option
-        
+
         :return: type(Boolean)
         """
 
@@ -296,7 +296,7 @@ class RotateTool(Tool):
 
     def setRotationSnap(self, snap):
         """Set the state of the "snap rotation to N-degree increments" option
-        
+
         :param snap: type(Boolean)
         """
 
@@ -343,7 +343,7 @@ class RotateTool(Tool):
 
     def layFlat(self):
         """Initialise and start a LayFlatOperation
-        
+
         Note: The LayFlat functionality is mostly used for 3d printing and should probably be moved into the Cura project
         """
 
@@ -376,7 +376,7 @@ class RotateTool(Tool):
 
     def _layFlatProgress(self, iterations: int):
         """Called while performing the LayFlatOperation so progress can be shown
-        
+
         Note that the LayFlatOperation rate-limits these callbacks to prevent the UI from being flooded with property change notifications,
         :param iterations: type(int) number of iterations performed since the last callback
         """
@@ -387,7 +387,7 @@ class RotateTool(Tool):
 
     def _layFlatFinished(self, job):
         """Called when the LayFlatJob is done running all of its LayFlatOperations
-        
+
         :param job: type(LayFlatJob)
         """
 
@@ -400,7 +400,7 @@ class RotateTool(Tool):
 
 class LayFlatJob(Job):
     """A LayFlatJob bundles multiple LayFlatOperations for multiple selected objects
-    
+
     The job is executed on its own thread, processing each operation in order, so it does not lock up the GUI.
     """
 

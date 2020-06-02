@@ -12,7 +12,7 @@ class ScaleOperation(Operation.Operation):
 
     def __init__(self, node, scale, set_scale = False, add_scale = False, relative_scale = False, scale_around_point = Vector(0, 0, 0), snap = False):
         """Initialises the scale operation.
-        
+
         :param node: The scene node to scale.
         :param scale: A matrix to scale the node with. This matrix should only be
         non-zero on the diagonal.
@@ -114,13 +114,13 @@ class ScaleOperation(Operation.Operation):
 
     def mergeWith(self, other):
         """Merge this operation with another scale operation.
-        
+
         This prevents the user from having to undo multiple operations if they
         were not his operations.
-        
+
         You should ONLY merge this operation with an older operation. It is NOT
         symmetric.
-        
+
         :param other: The older scale operation to merge this operation with.
         :return: A new operation that performs both scale operations.
         """
@@ -146,7 +146,7 @@ class ScaleOperation(Operation.Operation):
 
     def __repr__(self):
         """Returns a programmer-readable representation of this operation.
-        
+
         :return: A programmer-readable representation of this operation.
         """
 

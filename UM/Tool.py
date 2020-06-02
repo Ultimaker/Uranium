@@ -40,13 +40,13 @@ class Tool(PluginObject):
 
     operationStarted = Signal()
     """Should be emitted whenever a longer running operation is started, like a drag to scale an object.
-    
+
     :param tool: The tool that started the operation.
     """
 
     operationStopped = Signal()
     """Should be emitted whenever a longer running operation is stopped.
-    
+
     :param tool: The tool that stopped the operation.
     """
 
@@ -115,7 +115,7 @@ class Tool(PluginObject):
 
     def getLockedAxis(self) -> int:
         """Get which axis is locked, if any.
-        
+
         :return: The ID of the axis or axes that are locked. See the `ToolHandle`
             class for the associations of IDs to each axis.
         """

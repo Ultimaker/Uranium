@@ -17,7 +17,7 @@ class MimeType:
 
     def __init__(self, name: str, comment: str, suffixes: Optional[List[str]], preferred_suffix: str = None) -> None:
         """Constructor
-        
+
         :param name: The MIME type name, like "text/plain".
         :param comment: A description of the MIME type.
         :param suffixes: A list of possible suffixes for the type.
@@ -60,7 +60,7 @@ class MimeType:
     @property
     def suffixes(self) -> List[str]:
         """The list of file name suffixes for the MIME type.
-        
+
         Example: ["cfg", "tar.gz"]
         """
 
@@ -69,7 +69,7 @@ class MimeType:
     @property
     def preferredSuffix(self) -> str:
         """The preferred file name suffix for the MIME type.
-        
+
         Example: "cfg" or "tar.gz".
         """
 
@@ -77,7 +77,7 @@ class MimeType:
 
     def __repr__(self) -> str:
         """Gives a programmer-readable representation of the MIME type.
-        
+
         :return: A string representing the MIME type.
         """
 
@@ -85,10 +85,10 @@ class MimeType:
 
     def __eq__(self, other: object) -> bool:
         """Indicates whether this MIME type is equal to another MIME type.
-        
+
         They are equal if the names match, since MIME types should have unique
         names.
-        
+
         :return: ``True`` if the two MIME types are equal, or ``False``
         otherwise.
         """
@@ -101,7 +101,7 @@ class MimeType:
     def stripExtension(self, file_name: str) -> str:
         """Strip the extension from a file name when it corresponds to one of the
         suffixes of this MIME type.
-        
+
         :param file_name: The file name to strip of extension.
         :return: ``file_name`` without extension, or ``file_name`` when it does
         not match.
@@ -119,7 +119,7 @@ class MimeType:
     @staticmethod
     def fromQMimeType(qt_mime: QMimeType) -> "MimeType":
         """Create a ``MimeType`` object from a ``QMimeType`` object.
-        
+
         :param qt_mime: The ``QMimeType`` object to convert.
         :return: A new ``MimeType`` object with properties equal to the
             ``QMimeType`` object.
@@ -135,20 +135,20 @@ class MimeType:
 
 class MimeTypeDatabase:
     """Handles lookup of MIME types for files with support for custom MIME types.
-    
+
     This class wraps around ``QMimeDatabase`` and extends it with support for
     custom MIME types defined at runtime.
-    
+
     :note Custom MIME types are currently only detected based on extension.
     """
 
     @classmethod
     def getMimeType(cls, name: str) -> MimeType:
         """Get a MIME type by name.
-        
+
         This will return a ``MimeType`` object corresponding to the specified
         name.
-        
+
         :param name: The name of the MIME type to return.
         :return: A ``MimeType`` object corresponding to the specified name.
         :exception MimeTypeNotFoundError Raised when the specified MIME type
@@ -170,7 +170,7 @@ class MimeTypeDatabase:
     @classmethod
     def getMimeTypeForFile(cls, file_name: str) -> MimeType:
         """Get a MIME type for a specific file.
-        
+
         :param file_name: The name of the file to get the MIME type for.
         :return: A MimeType object that contains the detected MIME type for the file.
         :exception MimeTypeNotFoundError Raised when no MIME type can be found
@@ -208,7 +208,7 @@ class MimeTypeDatabase:
     @classmethod
     def addMimeType(cls, mime_type: MimeType) -> None:
         """Add a custom MIME type that can be detected.
-        
+
         :param mime_type: The custom MIME type to add.
         """
 

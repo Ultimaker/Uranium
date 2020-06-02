@@ -35,7 +35,7 @@ class LocalFileOutputDevice(OutputDevice):
 
     def requestWrite(self, nodes, file_name = None, limit_mimetypes = None, file_handler = None, **kwargs):
         """Request the specified nodes to be written to a file.
-        
+
         :param nodes: A collection of scene nodes that should be written to the
         file.
         :param file_name: A suggestion for the file name to write
@@ -128,7 +128,7 @@ class LocalFileOutputDevice(OutputDevice):
         # Get file name from file dialog
         file_name = dialog.selectedFiles()[0]
         Logger.log("d", "Writing to [%s]..." % file_name)
-        
+
         if os.path.exists(file_name):
             result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label Don't translate the XML tag <filename>!", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(file_name))
             if result == QMessageBox.No:

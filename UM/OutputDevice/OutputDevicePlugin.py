@@ -10,16 +10,16 @@ from UM.Application import Application
 
 class OutputDevicePlugin(PluginObject):
     """Base class for output device plugins.
-    
+
     This class provides the base for any output device plugin that should be
     registered with the OutputDeviceManager. Each OutputDevicePlugin should
     implement device detection and add/remove devices as needed.
-    
+
     For example, the Removable Device plugin searches for removable devices
     that have been plugged in and creates new OutputDevice objects for each.
     Additionally, whenever a removable device has been removed, it will remove
     the OutputDevice object from the OutputDeviceManager.
-    
+
     :sa OutputDeviceManager
     """
 

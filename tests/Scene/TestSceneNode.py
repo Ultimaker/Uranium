@@ -322,7 +322,7 @@ class SceneNodeTest(unittest.TestCase):
         builder = MeshBuilder()
         builder.addVertex(10, 20, 20)
         node.setMeshData(builder.build())
-        
+
         transformed_mesh = node.getMeshDataTransformed()
 
         transformed_vertex = transformed_mesh.getVertices()[0]

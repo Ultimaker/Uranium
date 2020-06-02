@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 class Camera(SceneNode.SceneNode):
     """A SceneNode subclass that provides a camera object.
-    
+
     The camera provides a projection matrix and its transformation matrix
     can be used as view matrix.
     """
@@ -87,18 +87,18 @@ class Camera(SceneNode.SceneNode):
         """Get the projection matrix of this camera."""
 
         return self._projection_matrix
-    
+
     def getViewportWidth(self) -> int:
         return self._viewport_width
-    
+
     def setViewportWidth(self, width: int) -> None:
         self._viewport_width = width
         self._updatePerspectiveMatrix()
-    
+
     def setViewportHeight(self, height: int) -> None:
         self._viewport_height = height
         self._updatePerspectiveMatrix()
-        
+
     def setViewportSize(self, width: int, height: int) -> None:
         self._viewport_width = width
         self._viewport_height = height
@@ -134,7 +134,7 @@ class Camera(SceneNode.SceneNode):
         self._cached_inversed_world_transformation = None
         self._camera_light_position = None
         super()._updateWorldTransformation()
-    
+
     def getViewportHeight(self) -> int:
         return self._viewport_height
 
@@ -180,15 +180,15 @@ class Camera(SceneNode.SceneNode):
 
     def getRay(self, x: float, y: float) -> Ray:
         """Get a ray from the camera into the world.
-        
+
         This will create a ray from the camera's origin, passing through (x, y)
         on the near plane and continuing based on the projection matrix.
-        
+
         :param x: The X coordinate on the near plane this ray should pass through.
         :param y: The Y coordinate on the near plane this ray should pass through.
-        
+
         :return: A Ray object representing a ray from the camera origin through X, Y.
-        
+
         :note The near-plane coordinates should be in normalized form, that is within (-1, 1).
         """
 

@@ -26,14 +26,14 @@ class ValidatorState(Enum):
 
 class Validator(SettingFunction.SettingFunction):
     """Validates that a SettingInstance's value is within a certain minimum and maximum value.
-    
+
     This class performs validation of any value that has __lt__ and __gt__ implemented, but
     it is primarily used for numerical values like integers and floats.
     """
 
     def __init__(self, key: str) -> None:
         """Constructor
-        
+
         :param instance: The instance this Validator validates.
         """
 

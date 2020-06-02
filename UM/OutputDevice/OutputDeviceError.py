@@ -4,7 +4,7 @@
 
 class WriteRequestFailedError(Exception):
     """Base class for error raised by OutputDevice::requestWrite()
-    
+
     This class serves as a base class for more specialized errors raised
     by OutputDevice::requestWrite(). Additionally, it can be raised whenever
     an error occurs for which no specialized error is available.

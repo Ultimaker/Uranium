@@ -52,7 +52,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def __init__(self, container_id: str, parent: QObject = None, *args: Any, **kwargs: Any) -> None:
         """Constructor
-        
+
         :param container_id: A unique, machine readable/writable ID for this container.
         """
 
@@ -142,7 +142,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getId(self) -> str:
         """:copydoc ContainerInterface::getId
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -162,7 +162,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getPath(self) -> str:
         """:copydoc ContainerInterface::getPath.
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -170,7 +170,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setPath(self, path: str) -> None:
         """:copydoc ContainerInterface::setPath
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -178,7 +178,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getName(self) -> str:
         """:copydoc ContainerInterface::getName
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -215,7 +215,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getMetaData(self) -> Dict[str, Any]:
         """:copydoc ContainerInterface::getMetaData
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -243,7 +243,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getMetaDataEntry(self, entry: str, default = None) -> Any:
         """:copydoc ContainerInterface::getMetaDataEntry
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -251,10 +251,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setMetaDataEntry(self, key: str, value: Any) -> None:
         """Set a metadata entry to a certain value.
-        
+
         :param key: The key of the metadata entry to set.
         :param value: The new value of the metadata.
-        
+
         :note This does nothing if the key is not already added to the metadata.
         """
 
@@ -276,7 +276,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
         """:copydoc ContainerInterface::getProperty
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -294,7 +294,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def hasProperty(self, key: str, property_name: str) -> bool:
         """:copydoc ContainerInterface::hasProperty
-        
+
         Reimplemented from ContainerInterface.
         """
 
@@ -337,11 +337,11 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setProperty(self, key: str, property_name: str, property_value: Any, container: ContainerInterface = None, set_from_cache: bool = False) -> None:
         """Set the value of a property of a SettingInstance.
-        
+
         This will set the value of the specified property on the SettingInstance corresponding to key.
         If no instance has been created for the specified key, a new one will be created and inserted
         into this instance.
-        
+
         :param key: The key of the setting to set a property of.
         :param property_name:  The name of the property to set.
         :param property_value: The new value of the property.
@@ -349,7 +349,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         updates. Defaults to None, which means use the current container.
         :param set_from_cache: Flag to indicate that the property was set from cache. This triggers the behavior that
         the read_only and setDirty are ignored.
-        
+
         :note If no definition container is set for this container, new instances cannot be created and this method
         will do nothing.
         """
@@ -406,10 +406,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def duplicate(self, new_id: str, new_name: str = None) -> "InstanceContainer":
         """Create a new InstanceContainer with the same contents as this container
-        
+
         :param new_id: The new ID of the container
         :param new_name: The new name of the container. Defaults to None to indicate the name should not change.
-        
+
         :return: A new InstanceContainer with the same contents as this container.
         """
 
@@ -440,7 +440,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         """:copydoc ContainerInterface::serialize
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -554,7 +554,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         """:copydoc ContainerInterface::deserialize
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -593,10 +593,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
         """Gets the metadata of an instance container from a serialised format.
-        
+
         This parses the entire CFG document and only extracts the metadata from
         it.
-        
+
         :param serialized: A CFG document, serialised as a string.
         :param container_id: The ID of the container to get the metadata of, as obtained from the file name.
         :return: A dictionary of metadata that was in the CFG document in a singleton list. If anything went
@@ -636,7 +636,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def findInstances(self, **kwargs: Any) -> List[SettingInstance]:
         """Find instances matching certain criteria.
-        
+
         :param kwargs: A dictionary of keyword arguments with key-value pairs that should match properties of the instances.
         """
 
@@ -730,7 +730,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setDefinition(self, definition_id: str) -> None:
         """Set the DefinitionContainer to use for new instance creation.
-        
+
         Since SettingInstance needs a SettingDefinition to work properly, we need some
         way of figuring out what SettingDefinition to use when creating a new SettingInstance.
         """
