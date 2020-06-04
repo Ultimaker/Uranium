@@ -91,10 +91,10 @@ class RotateTool(Tool):
                 return False
 
             if id in self._handle.getExtraWidgetsColorMap():
-                self._active_widget = self._handle.ExtraWidgets[id]
+                self._active_widget = self._handle.ExtraWidgets(id)
                 self._widget_click_start = time.monotonic()
                 # Continue as if the picked widget is the appropriate axis
-                id = math.floor(self._active_widget.value / 2) + self._handle.XAxis
+                id = math.floor((self._active_widget.value - self._active_widget.XPositive90.value) / 2) + self._handle.XAxis
 
             if self._handle.isAxis(id):
                 self.setLockedAxis(id)
@@ -194,8 +194,9 @@ class RotateTool(Tool):
             if self._active_widget != None and time.monotonic() - self._widget_click_start < 0.2:
                 id = self._selection_pass.getIdAtPosition(event.x, event.y)
 
-                if id in self._handle.getExtraWidgetsColorMap() and self._active_widget == self._handle.ExtraWidgets[id]:
-                    axis = math.floor(self._active_widget.value / 2)
+                if id in self._handle.getExtraWidgetsColorMap() and self._active_widget == self._handle.ExtraWidgets(id):
+                    axis = math.floor((self._active_widget.value - self._active_widget.XPositive90.value) / 2)
+
                     angle = math.radians(-90 if self._active_widget.value - 2 * axis else 90)
                     axis +=  self._handle.XAxis
 

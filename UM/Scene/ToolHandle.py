@@ -41,7 +41,9 @@ class ToolHandle(SceneNode.SceneNode):
     AllAxisSelectionColor = Color(1.0, 1.0, 1.0, 1.0)
 
     class ExtraWidgets(IntEnum):
-        # Toolhandle subclasses can optionally register additional widgets by overriding this enum
+        """Toolhandle subclasses can optionally register additional widgets by overriding this enum.
+        The ExtraWidgetsEnum should start with Toolhanlde.AllAxis + 1 in order not to overlap with the native axes.
+        """
         pass
 
     def __init__(self, parent = None):
@@ -177,8 +179,8 @@ class ToolHandle(SceneNode.SceneNode):
             self.AllAxis: self._all_axis_color
         }
 
-        for name, member in self.ExtraWidgets.__members__.items():
-            self._extra_widgets_color_map[name] = self._getUnusedColor()
+        for value in self.ExtraWidgets:
+            self._extra_widgets_color_map[value] = self._getUnusedColor()
 
         self.buildMesh()
 

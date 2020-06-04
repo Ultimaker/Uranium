@@ -13,12 +13,12 @@ class RotateToolHandle(ToolHandle):
     """Provides the circular toolhandles for each axis for the rotate tool"""
 
     class ExtraWidgets(IntEnum):
-        XPositive90 = 0
-        XNegative90 = 1
-        YPositive90 = 2
-        YNegative90 = 3
-        ZPositive90 = 4
-        ZNegative90 = 5
+        XPositive90 = ToolHandle.AllAxis + 1
+        XNegative90 = ToolHandle.AllAxis + 2
+        YPositive90 = ToolHandle.AllAxis + 3
+        YNegative90 = ToolHandle.AllAxis + 4
+        ZPositive90 = ToolHandle.AllAxis + 5
+        ZNegative90 = ToolHandle.AllAxis + 6
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -161,7 +161,7 @@ class RotateToolHandle(ToolHandle):
             height = self._active_handle_height,
             depth = self._active_handle_width,
             center = Vector(0, self._handle_offset_a, self._handle_offset_b),
-            color = self._extra_widgets_color_map[self.ExtraWidgets.XPositive90.name],
+            color = self._extra_widgets_color_map[self.ExtraWidgets.XPositive90.value],
             axis = Vector.Unit_X,
             angle = -90 - self._angle_offset
         )
@@ -170,7 +170,7 @@ class RotateToolHandle(ToolHandle):
             height = self._active_handle_height,
             depth = self._active_handle_width,
             center = Vector(0, self._handle_offset_a, -self._handle_offset_b),
-            color = self._extra_widgets_color_map[self.ExtraWidgets.XNegative90.name],
+            color = self._extra_widgets_color_map[self.ExtraWidgets.XNegative90.value],
             axis = Vector.Unit_X,
             angle = 90 + self._angle_offset
         )
@@ -180,7 +180,7 @@ class RotateToolHandle(ToolHandle):
             height = self._active_handle_height,
             depth = self._active_handle_width,
             center = Vector(self._handle_offset_b, 0, self._handle_offset_a),
-            color = self._extra_widgets_color_map[self.ExtraWidgets.YPositive90.name],
+            color = self._extra_widgets_color_map[self.ExtraWidgets.YPositive90.value],
             axis = Vector.Unit_Z,
             angle = 90 - self._angle_offset
         )
@@ -189,7 +189,7 @@ class RotateToolHandle(ToolHandle):
             height = self._active_handle_height,
             depth = self._active_handle_width,
             center = Vector(-self._handle_offset_b, 0, self._handle_offset_a),
-            color = self._extra_widgets_color_map[self.ExtraWidgets.YNegative90.name],
+            color = self._extra_widgets_color_map[self.ExtraWidgets.YNegative90.value],
             axis = Vector.Unit_Z,
             angle = -90 + self._angle_offset
         )
@@ -199,7 +199,7 @@ class RotateToolHandle(ToolHandle):
             height = self._active_handle_height,
             depth = self._active_handle_width,
             center = Vector(self._handle_offset_a, self._handle_offset_b, 0),
-            color = self._extra_widgets_color_map[self.ExtraWidgets.ZPositive90.name],
+            color = self._extra_widgets_color_map[self.ExtraWidgets.ZPositive90.value],
             axis = Vector.Unit_Z,
             angle = - self._angle_offset
         )
@@ -208,7 +208,7 @@ class RotateToolHandle(ToolHandle):
             height = self._active_handle_height,
             depth = self._active_handle_width,
             center = Vector(self._handle_offset_a, -self._handle_offset_b, 0),
-            color = self._extra_widgets_color_map[self.ExtraWidgets.ZNegative90.name],
+            color = self._extra_widgets_color_map[self.ExtraWidgets.ZNegative90.value],
             axis = Vector.Unit_Z,
             angle = 180 + self._angle_offset
         )
