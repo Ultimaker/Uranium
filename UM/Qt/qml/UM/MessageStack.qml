@@ -223,6 +223,7 @@ ListView
             font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap
             renderType: Text.NativeRendering
+            textFormat: Text.RichText
         }
 
         CheckBox
