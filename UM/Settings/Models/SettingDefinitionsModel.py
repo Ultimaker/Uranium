@@ -691,6 +691,8 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     # Determines if any child of a definition is visible.
     def _isAnyDescendantVisible(self, definition):
+        if not self._container:
+            return False
         if self._show_all:
             return True
 
