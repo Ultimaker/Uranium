@@ -258,7 +258,7 @@ class Application:
 
     workspaceLoaded = Signal()
 
-    def setGlobalContainerStack(self, stack: "ContainerStack") -> None:
+    def setGlobalContainerStack(self, stack: Optional["ContainerStack"]) -> None:
         if self._global_container_stack != stack:
             self._global_container_stack = stack
             self.globalContainerStackChanged.emit()
