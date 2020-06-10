@@ -358,6 +358,11 @@ class HttpRequestManager(TaskManager):
         error_string = None
         if request_data.reply is not None:
             error_string = request_data.reply.errorString()
+
+        if error == QNetworkReply.UnknownNetworkError:
+            # manager seems not always able to recover from a total loss of network access, so re-create it
+            self._network_manager = QNetworkAccessManager(self)
+
         Logger.log("d", "%s got an error %s, %s", request_data, error, error_string)
 
         with self._request_lock:
@@ -393,11 +398,14 @@ class HttpRequestManager(TaskManager):
         # We do nothing if the request was aborted or and error was detected because an error callback will also
         # be triggered by Qt.
         reply = request_data.reply
-        if reply is not None and reply.error() != QNetworkReply.NoError:
-            if reply.error() == QNetworkReply.OperationCanceledError:
-                Logger.log("d", "%s was aborted, do nothing", request_data)
-            # stop processing for any kind of error
-            return
+        if reply is not None:
+            reply_error = reply.error()  # error() must only be called once
+            if reply_error != QNetworkReply.NoError:
+                if reply_error == QNetworkReply.OperationCanceledError:
+                    Logger.log("d", "%s was aborted, do nothing", request_data)
+
+                # stop processing for any kind of error
+                return
 
         if self._enable_request_benchmarking:
             time_spent = None  # type: Optional[float]
