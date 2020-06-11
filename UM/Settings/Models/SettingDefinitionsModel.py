@@ -12,7 +12,7 @@ from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
 from UM.Settings import SettingRelation
-from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
 from UM.i18n import i18nCatalog
 from UM.Application import Application
@@ -40,11 +40,11 @@ class SettingDefinitionsModel(QAbstractListModel):
         super().__init__(parent = parent)
 
         self._container_id = None  # type: Optional[str]
-        self._container = None  # type: Optional[ContainerInterface]
+        self._container = None  # type: Optional[DefinitionContainer]
         self._i18n_catalog = None
 
         self._root_key = ""  # type: str
-        self._root = None  # type: Optional[str]
+        self._root = None  # type: Optional[DefinitionContainer]
 
         self._definition_list = []  # type: List[SettingDefinition]
         self._row_index_list = []  # type: List[int]
@@ -117,7 +117,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     """Emitted whenever the containerId property changes."""
 
     @pyqtProperty(str, fset = setContainerId, notify = containerIdChanged)
-    def containerId(self) -> str:
+    def containerId(self) -> Optional[str]:
         """The ID of the DefinitionContainer object this model exposes."""
 
         return self._container_id
@@ -352,10 +352,11 @@ class SettingDefinitionsModel(QAbstractListModel):
             if definition.type != "category":
                 new_visible.add(self._definition_list[index].key)
 
-        if visible:
-            self._visibility_handler.setVisible(new_visible | self._visible)
-        else:
-            self._visibility_handler.setVisible(self._visible - new_visible)
+        if self._visibility_handler:
+            if visible:
+                self._visibility_handler.setVisible(new_visible | self._visible)
+            else:
+                self._visibility_handler.setVisible(self._visible - new_visible)
 
     @pyqtSlot(bool)
     def setAllVisible(self, visible: bool) -> None:
@@ -365,10 +366,11 @@ class SettingDefinitionsModel(QAbstractListModel):
             if definition.type != "category":
                 new_visible.add(definition.key)
 
-        if visible:
-            self._visibility_handler.setVisible(new_visible | self._visible)
-        else:
-            self._visibility_handler.setVisible(self._visible - new_visible)
+        if self._visibility_handler:
+            if visible:
+                self._visibility_handler.setVisible(new_visible | self._visible)
+            else:
+                self._visibility_handler.setVisible(self._visible - new_visible)
 
     @pyqtSlot(str, bool)
     def setVisible(self, key: str, visible: bool) -> None:
@@ -420,7 +422,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             return -1
 
     @pyqtSlot(str, str, result = "QVariantList")
-    def getRequires(self, key: str, role: str = None) -> List[Optional[Dict[str, str]]]:
+    def getRequires(self, key: str, role: str = None) -> List[Dict[str, Any]]:
         definitions = self._getDefinitionsByKey(key)
         if not definitions:
             return []
@@ -442,7 +444,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         return result
 
     @pyqtSlot(str, str, result = "QVariantList")
-    def getRequiredBy(self, key: str, role: str = None) -> List[Optional[Dict[str, str]]]:
+    def getRequiredBy(self, key: str, role: str = None) -> List[Dict[str, Any]]:
         definitions = self._getDefinitionsByKey(key)
         if not definitions:
             return []
@@ -545,7 +547,9 @@ class SettingDefinitionsModel(QAbstractListModel):
         return self._role_names
 
     def _onVisibilityChanged(self) -> None:
-        self._visible = self._visibility_handler.getVisible()
+
+        if self._visibility_handler:
+            self._visible = self._visibility_handler.getVisible()
 
         for row in range(len(self._row_index_list)):
             self.dataChanged.emit(self.index(row, 0), self.index(row, 0), [self.VisibleRole])
