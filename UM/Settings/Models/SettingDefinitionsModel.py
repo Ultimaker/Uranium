@@ -12,7 +12,7 @@ from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
 from UM.Settings import SettingRelation
-from UM.Settings.DefinitionContainer import DefinitionContainer
+from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
 from UM.i18n import i18nCatalog
 from UM.Application import Application
@@ -40,11 +40,11 @@ class SettingDefinitionsModel(QAbstractListModel):
         super().__init__(parent = parent)
 
         self._container_id = None  # type: Optional[str]
-        self._container = None  # type: Optional[DefinitionContainer]
+        self._container = None  # type: Optional[DefinitionContainerInterface]
         self._i18n_catalog = None
 
         self._root_key = ""  # type: str
-        self._root = None  # type: Optional[DefinitionContainer]
+        self._root = None  # type: Optional[SettingDefinition]
 
         self._definition_list = []  # type: List[SettingDefinition]
         self._row_index_list = []  # type: List[int]
