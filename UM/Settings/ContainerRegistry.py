@@ -613,53 +613,6 @@ class ContainerRegistry(ContainerRegistryInterface):
             for stack in self.findContainerStacks():
                 self.saveContainer(stack)
 
-    # Load a binary cached version of a DefinitionContainer
-    def _loadCachedDefinition(self, definition_id: str, path: str) -> None:
-        try:
-            cache_path = Resources.getPath(Resources.Cache, "definitions", self._application.getVersion(), definition_id)
-
-            cache_mtime = os.path.getmtime(cache_path)
-            definition_mtime = os.path.getmtime(path)
-
-            if definition_mtime > cache_mtime:
-                # The definition is newer than the cached version, so ignore the cached version.
-                Logger.log("d", "Definition file %s is newer than cache, ignoring cached version", path)
-                return None
-
-            with open(cache_path, "rb") as f:
-                definition = pickle.load(f)
-
-            for file_path in definition.getInheritedFiles():
-                if os.path.getmtime(file_path) > cache_mtime:
-                    return None
-
-            return definition
-        except FileNotFoundError:
-            return None
-        except Exception as e:
-            # We could not load a cached version for some reason. Ignore it.
-            Logger.logException("d", "Could not load cached definition for {path}: {err}".format(path = path, err = str(e)))
-            return None
-
-    # Store a cached version of a DefinitionContainer
-    def _saveCachedDefinition(self, definition: DefinitionContainer):
-        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self._application.getVersion(), definition.id)
-
-        # Ensure the cache path exists
-        os.makedirs(os.path.dirname(cache_path), exist_ok = True)
-
-        try:
-            with open(cache_path, "wb") as f:
-                pickle.dump(definition, f, pickle.HIGHEST_PROTOCOL)
-        except RecursionError:
-            #Sometimes a recursion error in pickling occurs here.
-            #The cause is unknown. It must be some circular reference in the definition instances or definition containers.
-            #Instead of saving a partial cache and raising an exception, simply fail to save the cache.
-            #See CURA-4024.
-            Logger.log("w", "The definition cache for definition {definition_id} failed to pickle.".format(definition_id = definition.getId()))
-            if os.path.exists(cache_path):
-                os.remove(cache_path) #The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
-
     # Clear the internal query cache
     def _clearQueryCache(self, *args: Any, **kwargs: Any) -> None:
         ContainerQuery.ContainerQuery.cache.clear()
