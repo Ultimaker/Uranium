@@ -10,6 +10,7 @@ from typing import Any, cast, Dict, List, Optional, Set, Tuple
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlEngine #To take ownership of this class ourselves.
 
+from UM.FastConfigParser import FastConfigParser
 from UM.Trust import Trust
 from UM.Decorators import override
 from UM.Settings.Interfaces import DefinitionContainerInterface
@@ -483,11 +484,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return stream.getvalue()
 
     @classmethod
-    def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
+    def _readAndValidateSerialized(cls, serialized: str) -> FastConfigParser:
         # Disable comments in the ini files, so text values can start with a ;
         # without being removed as a comment
-        parser = configparser.ConfigParser(interpolation = None, comment_prefixes = ())
-        parser.read_string(serialized)
+        parser = FastConfigParser(serialized)
 
         has_general = "general" in parser
         has_version = has_general and "version" in parser["general"]
@@ -611,8 +611,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         """
 
         serialized = cls._updateSerialized(serialized)  # Update to most recent version.
-        parser = configparser.ConfigParser(interpolation = None)
-        parser.read_string(serialized)
+        parser = FastConfigParser(serialized)
 
         metadata = {
             "id": container_id,
