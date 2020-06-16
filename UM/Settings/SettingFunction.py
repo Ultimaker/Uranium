@@ -245,7 +245,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
     def visit_Subscript(self, node: ast.Index):
         if type(node.value) == ast.Str:
             raise IllegalMethodError("Indexing on strings is not allowed")
-        if type(node.value) == getattr(ast, "Constant", None) and isinstance(node.value.value, str):
+        if type(node.value) == getattr(ast, "Constant", None) and isinstance(getattr(node.value, "value", None), str):
             raise IllegalMethodError("Indexing on strings is not allowed")
         for child_node in ast.iter_child_nodes(node):
             self.visit(child_node)
