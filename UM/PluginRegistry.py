@@ -701,6 +701,9 @@ class PluginRegistry(QObject):
             except UnicodeDecodeError:
                 Logger.logException("e", "The plug-in metadata file for plug-in {plugin_id} is corrupt.".format(plugin_id = plugin_id))
                 raise InvalidMetaDataError(plugin_id)
+            except EnvironmentError as e:
+                Logger.logException("e", "Can't open the metadata file for plug-in {plugin_id}: {err}".format(plugin_id = plugin_id, err = str(e)))
+                raise InvalidMetaDataError(plugin_id)
 
         except AttributeError as e:
             Logger.log("e", "An error occurred getting metadata from plugin %s: %s", plugin_id, str(e))
