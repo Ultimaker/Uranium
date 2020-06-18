@@ -204,6 +204,9 @@ class ContainerInterface:
     def isDirty(self) -> bool:
         pass
 
+    def setDirty(self, dirty: bool) -> None:
+        pass
+
     propertyChanged = None   # type: Signal
 
     metaDataChanged = None  # type: Signal
