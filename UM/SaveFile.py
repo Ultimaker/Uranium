@@ -58,7 +58,7 @@ class SaveFile:
 
     def __exit__(self, exc_type, exc_value, traceback):
         self._temp_file.flush()
-        fsync(self._temp_file)
+        fsync(self._temp_file.fileno())
         self._temp_file.close()
 
         self.__max_retries = 10
