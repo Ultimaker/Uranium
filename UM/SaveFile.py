@@ -6,15 +6,21 @@ import os
 import os.path
 import sys
 from typing import Union, IO
-
+fsync = os.fsync
 if sys.platform != "win32":
     import fcntl
-
     def lockFile(file):
         try:
             fcntl.flock(file, fcntl.LOCK_EX)
         except OSError:  # Some file systems don't support file locks.
             pass
+
+    if hasattr(fcntl, 'F_FULLFSYNC'):
+        def fsync(fd):
+            # https://lists.apple.com/archives/darwin-dev/2005/Feb/msg00072.html
+            # https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man2/fsync.2.html
+            fcntl.fcntl(fd, fcntl.F_FULLFSYNC)
+
 else:  # On Windows, flock doesn't exist so we disable it at risk of corruption when using multiple application instances.
     def lockFile(file): #pylint: disable=unused-argument
         pass
@@ -51,6 +57,8 @@ class SaveFile:
         return self._temp_file
 
     def __exit__(self, exc_type, exc_value, traceback):
+        self._temp_file.flush()
+        fsync(self._temp_file)
         self._temp_file.close()
 
         self.__max_retries = 10
