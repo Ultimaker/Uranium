@@ -1,11 +1,10 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
 from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLVertexArrayObject
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
-from UM.Application import Application
 import UM.Qt.QtApplication
 from UM.View.Renderer import Renderer
 from UM.Math.Vector import Vector
@@ -25,9 +24,6 @@ from UM.Logger import Logger
 
 MYPY = False
 if MYPY:
-    from UM.Controller import Controller
-    from UM.Scene.Scene import Scene
-    from UM.Scene.Camera import Camera
     from UM.Scene.SceneNode import SceneNode
     from UM.View.RenderPass import RenderPass
     from UM.View.GL.ShaderProgram import ShaderProgram
@@ -44,9 +40,6 @@ class QtRenderer(Renderer):
     def __init__(self) -> None:
         super().__init__()
 
-        self._controller = Application.getInstance().getController()  # type: Controller
-        self._scene = self._controller.getScene()  # type: Scene
-
         self._initialized = False  # type: bool
 
         self._light_position = Vector(0, 0, 0)  # type: Vector
@@ -60,11 +53,10 @@ class QtRenderer(Renderer):
 
         self._quad_buffer = None  # type: QOpenGLBuffer
 
-        self._camera = None  # type: Optional[Camera]
-
     initialized = Signal()
 
-    def getPixelMultiplier(self) -> int:
+    @staticmethod
+    def getPixelMultiplier() -> int:
         """Get an integer multiplier that can be used to correct for screen DPI."""
 
         # Standard assumption for screen pixel density is 96 DPI. We use that as baseline to get
