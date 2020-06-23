@@ -138,7 +138,7 @@ class QtRenderer(Renderer):
         shader = kwargs.pop("shader", self._default_material)
         batch = RenderBatch(shader, type = type, **kwargs)
 
-        batch.addItem(node.getWorldTransformation(), kwargs.get("mesh", node.getMeshData()), kwargs.pop("uniforms", None))
+        batch.addItem(node.getWorldTransformation(copy = False), kwargs.get("mesh", node.getMeshData()), kwargs.pop("uniforms", None))
 
         self._batches.append(batch)
 
