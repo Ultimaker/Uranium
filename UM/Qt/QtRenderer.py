@@ -50,7 +50,7 @@ class QtRenderer(Renderer):
         self._window_height = 0  # type: int
 
         self._batches = []  # type: List[RenderBatch]
-
+        self._named_batches = {}
         self._quad_buffer = None  # type: QOpenGLBuffer
 
     initialized = Signal()
@@ -67,6 +67,14 @@ class QtRenderer(Renderer):
         """Get the list of render batches."""
 
         return self._batches
+
+    def addRenderBatch(self, render_batch, name = ""):
+        self._batches.append(render_batch)
+        if name:
+            self._named_batches[name] = render_batch
+
+    def getNamedBatch(self, name):
+        return self._named_batches.get(name)
 
     def addRenderPass(self, render_pass: "RenderPass") -> None:
         """Overridden from Renderer.
@@ -128,7 +136,13 @@ class QtRenderer(Renderer):
 
     def queueNode(self, node: "SceneNode", **kwargs) -> None:
         """Overrides Renderer::queueNode()"""
+        batch = self.createRenderBatch(**kwargs)
 
+        batch.addItem(node.getWorldTransformation(copy = False), kwargs.get("mesh", node.getMeshData()), kwargs.pop("uniforms", None))
+
+        self._batches.append(batch)
+
+    def createRenderBatch(self, **kwargs):
         type = kwargs.pop("type", RenderBatch.RenderType.Solid)
         if kwargs.pop("transparent", False):
             type = RenderBatch.RenderType.Transparent
@@ -136,11 +150,7 @@ class QtRenderer(Renderer):
             type = RenderBatch.RenderType.Overlay
 
         shader = kwargs.pop("shader", self._default_material)
-        batch = RenderBatch(shader, type = type, **kwargs)
-
-        batch.addItem(node.getWorldTransformation(copy = False), kwargs.get("mesh", node.getMeshData()), kwargs.pop("uniforms", None))
-
-        self._batches.append(batch)
+        return RenderBatch(shader, type=type, **kwargs)
 
     def render(self) -> None:
         """Overrides Renderer::render()"""
@@ -165,6 +175,7 @@ class QtRenderer(Renderer):
         """Overrides Renderer::endRendering()"""
 
         self._batches.clear()
+        self._named_batches.clear()
 
     def renderFullScreenQuad(self, shader: "ShaderProgram") -> None:
         """Render a full screen quad (rectangle).
