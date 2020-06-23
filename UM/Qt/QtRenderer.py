@@ -3,7 +3,7 @@
 
 import numpy
 from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLVertexArrayObject
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 import UM.Qt.QtApplication
 from UM.View.Renderer import Renderer
@@ -50,7 +50,7 @@ class QtRenderer(Renderer):
         self._window_height = 0  # type: int
 
         self._batches = []  # type: List[RenderBatch]
-        self._named_batches = {}
+        self._named_batches = {}  # type: Dict[str, RenderBatch]
         self._quad_buffer = None  # type: QOpenGLBuffer
 
     initialized = Signal()
