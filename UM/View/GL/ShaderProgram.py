@@ -238,10 +238,10 @@ class ShaderProgram:
 
     def bind(self) -> None:
         """Bind the shader to use it for rendering."""
-        if not self._shader_program or not self._shader_program.isLinked():
+        if self._bound:
             return
 
-        if self._bound:
+        if not self._shader_program or not self._shader_program.isLinked():
             return
 
         self._shader_program.bind()
