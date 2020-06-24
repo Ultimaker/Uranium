@@ -271,24 +271,25 @@ class RenderBatch:
             index_buffer.bind()
 
         self._shader.enableAttribute("a_vertex", "vector3f", 0)
-        offset = mesh.getVertexCount() * 3 * 4
+        vertex_count = mesh.getVertexCount()
+        offset = vertex_count * 3 * 4
 
         if mesh.hasNormals():
             self._shader.enableAttribute("a_normal", "vector3f", offset)
-            offset += mesh.getVertexCount() * 3 * 4
+            offset += vertex_count * 3 * 4
 
         if mesh.hasColors():
             self._shader.enableAttribute("a_color", "vector4f", offset)
-            offset += mesh.getVertexCount() * 4 * 4
+            offset += vertex_count * 4 * 4
 
         if mesh.hasUVCoordinates():
             self._shader.enableAttribute("a_uvs", "vector2f", offset)
-            offset += mesh.getVertexCount() * 2 * 4
+            offset += vertex_count * 2 * 4
 
         if mesh.hasIndices():
             if self._render_range is None:
                 if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3, self._gl.GL_UNSIGNED_INT, None)
                 else:
                     self._gl.glDrawElements(self._render_mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
             else:
@@ -297,7 +298,7 @@ class RenderBatch:
                 else:
                     self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
         else:
-            self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
+            self._gl.glDrawArrays(self._render_mode, 0, vertex_count)
 
         vertex_buffer.release()
 
