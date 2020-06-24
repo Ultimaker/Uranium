@@ -247,7 +247,6 @@ class RenderBatch:
             normal_matrix = Matrix(transformation.getData())
             normal_matrix.setRow(3, [0, 0, 0, 1])
             normal_matrix.setColumn(3, [0, 0, 0, 1])
-            normal_matrix.invert()
             normal_matrix.transpose()
 
         self._shader.updateBindings(
