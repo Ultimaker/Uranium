@@ -214,9 +214,9 @@ class QtRenderer(Renderer):
 
         self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader")) #type: ShaderProgram
 
-        self._render_passes.add(DefaultPass(self._viewport_width, self._viewport_height))
-        self._render_passes.add(SelectionPass(self._viewport_width, self._viewport_height))
-        self._render_passes.add(CompositePass(self._viewport_width, self._viewport_height))
+        self.addRenderPass(DefaultPass(self._viewport_width, self._viewport_height))
+        self.addRenderPass(SelectionPass(self._viewport_width, self._viewport_height))
+        self.addRenderPass(CompositePass(self._viewport_width, self._viewport_height))
 
         buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
         buffer.create()
