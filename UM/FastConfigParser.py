@@ -11,7 +11,7 @@ class FastConfigParser:
     It's probably nowhere near as robust and supports only a fraction of the functionality of the real deal.
     """
     header_regex = re.compile("\[(.*)\]\n([^\[]*)")
-    key_value_regex = re.compile("([^=\n]*) ? = ?(.*)")
+    key_value_regex = re.compile("([^=\n ]+) *= *([^\n]+)")
 
     def __init__(self, data: str) -> None:
         header_result = self.header_regex.findall(data)
