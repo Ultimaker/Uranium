@@ -600,6 +600,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             return
 
         provider.saveContainer(container) #type: ignore
+        container.setDirty(False)
         self.source_provider[container.getId()] = provider
 
     def saveDirtyContainers(self) -> None:

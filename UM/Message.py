@@ -49,7 +49,7 @@ class Message(QObject):
         from UM.Application import Application
         self._application = Application.getInstance()
         self._visible = False
-        self._text = text
+        self._text = text.replace("\n", "<br>")
         self._progress = progress  # If progress is set to -1, the progress is seen as indeterminate
         self._max_progress = 100  # type: float
         self._lifetime = lifetime
@@ -191,7 +191,7 @@ class Message(QObject):
             is internationalised.
         """
 
-        self._text = text
+        self._text = text.replace("\n", "<br>")
         self.textChanged.emit(self)
 
     def getText(self) -> str:

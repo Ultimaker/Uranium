@@ -447,9 +447,10 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], self.Version))
 
     # Recursively find a key in a dictionary
-    def _findInDict(self, dictionary: Dict[str, Any], key: str):
-        if key in dictionary: return dictionary[key]
-        for k, v in dictionary.items():
+    def _findInDict(self, dictionary: Dict[str, Any], key: str) -> Any:
+        if key in dictionary:
+            return dictionary[key]
+        for v in dictionary.values():
             if isinstance(v, dict):
                 item = self._findInDict(v, key)
                 if item is not None:

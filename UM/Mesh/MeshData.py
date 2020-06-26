@@ -426,6 +426,7 @@ def transformNormals(normals: numpy.ndarray, transformation: Matrix) -> numpy.nd
 
     # Re-normalize the normals, since the transformation can contain scaling.
     lengths = numpy.linalg.norm(data, axis = 1)
+    lengths[lengths == 0] = 1
     data[:, 0] /= lengths
     data[:, 1] /= lengths
     data[:, 2] /= lengths
@@ -525,7 +526,7 @@ def calculateNormalsFromVertices(vertices: numpy.ndarray, vertex_count: int) -> 
     start_time = time()
     # Numpy magic!
 
-    # Old way of doing it, asuming that each face has 3 unique verts
+    # Old way of doing it, assuming that each face has 3 unique verts
     # Then, take the cross product of each pair of vectors formed from a set of three vertices.
     # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
     # so in this case we perform the cross over a two arrays. The first array is built from the difference
@@ -536,13 +537,14 @@ def calculateNormalsFromVertices(vertices: numpy.ndarray, vertex_count: int) -> 
     n = numpy.cross(vertices[1:vertex_count:3] - vertices[:vertex_count:3],
                     vertices[2:vertex_count:3] - vertices[:vertex_count:3])
     # We then calculate the length for each normal and perform normalization on the normals.
-    l = numpy.linalg.norm(n, axis=1)
+    l = numpy.linalg.norm(n, axis = 1)
+    l[l == 0] = 1  # Prevent division by 0. These normals are lost, but if the normal is 0-length then the triangle won't be visible anyway.
     n[:, 0] /= l
     n[:, 1] /= l
     n[:, 2] /= l
     # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
     # every vertex.
-    normals = n.repeat(3, axis=0)
+    normals = n.repeat(3, axis = 0)
 
     end_time = time()
     Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)

@@ -204,6 +204,9 @@ class ContainerInterface:
     def isDirty(self) -> bool:
         pass
 
+    def setDirty(self, dirty: bool) -> None:
+        pass
+
     propertyChanged = None   # type: Signal
 
     metaDataChanged = None  # type: Signal
@@ -216,6 +219,9 @@ class DefinitionContainerInterface(ContainerInterface):
 
     def setProperty(self, key: str, property_name: str, property_value: Any, container: "ContainerInterface" = None, set_from_cache: bool = False) -> None:
         raise TypeError("Can't change properties in definition containers.")
+
+    def getInheritedFiles(self) -> List[str]:
+        raise NotImplementedError()
 
 
 @UM.Decorators.interface

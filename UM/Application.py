@@ -93,7 +93,7 @@ class Application:
         self._plugin_registry = None  # type: PluginRegistry
         self._container_registry_class = ContainerRegistry  # type: type
         self._container_registry = None  # type: ContainerRegistry
-        self._global_container_stack = None  # type: ContainerStack
+        self._global_container_stack = None  # type: Optional[ContainerStack]
 
         self._controller = None  # type: Controller
         self._backend = None  # type: Backend
@@ -258,7 +258,7 @@ class Application:
 
     workspaceLoaded = Signal()
 
-    def setGlobalContainerStack(self, stack: "ContainerStack") -> None:
+    def setGlobalContainerStack(self, stack: Optional["ContainerStack"]) -> None:
         if self._global_container_stack != stack:
             self._global_container_stack = stack
             self.globalContainerStackChanged.emit()

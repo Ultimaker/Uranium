@@ -108,4 +108,7 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     def isDirty(self):
         return True
 
+    def setDirty(self, dirty):
+        pass
+
     metaDataChanged = None  # type: Signal
