@@ -426,6 +426,7 @@ def transformNormals(normals: numpy.ndarray, transformation: Matrix) -> numpy.nd
 
     # Re-normalize the normals, since the transformation can contain scaling.
     lengths = numpy.linalg.norm(data, axis = 1)
+    lengths[lengths == 0] = 1
     data[:, 0] /= lengths
     data[:, 1] /= lengths
     data[:, 2] /= lengths
