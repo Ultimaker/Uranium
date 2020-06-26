@@ -8,6 +8,7 @@ from UM.Logger import Logger
 from UM.Resources import Resources
 from UM.Math.Vector import Vector
 from UM.Job import Job
+from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 
 from UM.View.GL.OpenGL import OpenGL
 
@@ -106,7 +107,8 @@ class Platform(SceneNode.SceneNode):
 
         node = job.getResult()
         if isinstance(node, list):  # Some model readers return lists of models. Some (e.g. STL) return a list SOMETIMES but not always.
-            node = node[0]
+            nodelist = [actual_node for subnode in node for actual_node in DepthFirstIterator(subnode) if actual_node.getMeshData()]
+            node = max(nodelist, key = lambda n: n.getMeshData().getFaceCount())  # Select the node with the most faces. Sometimes the actual node is a child node of something. We can only have one node as platform mesh.
         if node.getMeshData():
             self.setMeshData(node.getMeshData())
 
