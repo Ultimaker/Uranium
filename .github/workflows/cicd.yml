@@ -9,11 +9,5 @@ jobs:
     steps:
     - name: Checkout master
       uses: actions/checkout@v2
-    - name: Setup Python
-      uses: actions/setup-python@v2
-    - name: Lint Python code for undefined names
-      run: |
-        python3 -m pip install flake8
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
     - name: Build and test
       run: docker/build.sh
