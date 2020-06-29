@@ -306,10 +306,21 @@ class SettingDefinition:
         # First check for translated labels.
         keywords = kwargs.copy()
         if "i18n_label" in keywords:
-            matches_label = self._matches1l8nProperty("label", keywords["i18n_label"], keywords.get("i18n_catalog"))
-            if not matches_label:
+            if not self._matches1l8nProperty("label", keywords["i18n_label"], keywords.get("i18n_catalog")):
                 return False
             del keywords["i18n_label"]
+
+        # There is a special case where we want to filter on either the label and the description.
+        # For the sake of keeping this code simple, I've just hardcoded this option. If we ever want to have multiple
+        # keywords that can be searched as an optional filter (eg; value matches either paramA or paramB, we should
+        # consider refactoring this.
+        # Note that this match will be called a lot, so keep an eye out for performance
+        if "i18n_label|i18n_description" in keywords:
+            matches_label = self._matches1l8nProperty("label", keywords["i18n_label|i18n_description"], keywords.get("i18n_catalog"))
+            if not matches_label:
+                if not self._matches1l8nProperty("description", keywords["i18n_label|i18n_description"], keywords.get("i18n_catalog")):
+                    return False
+            del keywords["i18n_label|i18n_description"]
 
         if "i18n_catalog" in keywords:
             del keywords["i18n_catalog"]
