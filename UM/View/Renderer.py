@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Optional
+from typing import Optional, Dict
 
 from UM.SortedList import SortedListWithKey
 from UM.View.RenderPass import RenderPass #For typing.
@@ -21,6 +21,8 @@ class Renderer:
         super().__init__()
 
         self._render_passes = SortedListWithKey(key = lambda k: k.getPriority()) #type: SortedListWithKey
+
+        self._render_passes_by_key = {} # type: Dict[str, RenderPass]
 
     def beginRendering(self) -> None:
         """Signal the beginning of the rendering process.
@@ -54,6 +56,7 @@ class Renderer:
         :param render_pass: The render pass to add.
         """
         self._render_passes.add(render_pass)
+        self._render_passes_by_key[render_pass.getName()] = render_pass
 
     def removeRenderPass(self, render_pass: RenderPass) -> None:
         """Remove a render pass from the list of render passes to render.
@@ -62,6 +65,7 @@ class Renderer:
         """
         if render_pass in self._render_passes:
             self._render_passes.remove(render_pass)
+        del self._render_passes_by_key[render_pass.getName()]
 
     def getRenderPass(self, name: str) -> Optional[RenderPass]:
         """Get a render pass by name.
@@ -70,11 +74,8 @@ class Renderer:
 
         :return: The named render pass or None if not found.
         """
-        for render_pass in self._render_passes:
-            if render_pass.getName() == name:
-                return render_pass
 
-        return None
+        return self._render_passes_by_key.get(name)
 
     def getRenderPasses(self) -> SortedListWithKey:
         """Get the list of all render passes that should be rendered."""

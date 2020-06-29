@@ -388,7 +388,7 @@ class SceneNode:
                     transformed_vertices = numpy.concatenate((transformed_vertices, tv), axis = 0)
         else:
             if self._mesh_data:
-                transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation()).getVertices()
+                transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation(copy=False)).getVertices()
         return transformed_vertices
 
     def getMeshDataTransformedNormals(self) -> numpy.ndarray:
@@ -408,7 +408,7 @@ class SceneNode:
                     transformed_normals = numpy.concatenate((transformed_normals, tv), axis = 0)
         else:
             if self._mesh_data:
-                transformed_normals = self._mesh_data.getTransformed(self.getWorldTransformation()).getNormals()
+                transformed_normals = self._mesh_data.getTransformed(self.getWorldTransformation(copy = False)).getNormals()
         return transformed_normals
 
     def setMeshData(self, mesh_data: Optional[MeshData]) -> None:
@@ -508,7 +508,7 @@ class SceneNode:
     :param object: The object that triggered the change.
     """
 
-    def getWorldTransformation(self) -> Matrix:
+    def getWorldTransformation(self, copy = True) -> Matrix:
         """Computes and returns the transformation from world to local space.
 
         :returns: 4x4 transformation matrix
@@ -516,10 +516,11 @@ class SceneNode:
 
         if self._world_transformation is None:
             self._updateWorldTransformation()
+        if copy:
+            return self._world_transformation.copy()
+        return self._world_transformation
 
-        return self._world_transformation.copy()
-
-    def getLocalTransformation(self) -> Matrix:
+    def getLocalTransformation(self, copy = True) -> Matrix:
         """Returns the local transformation with respect to its parent. (from parent to local)
 
         :retuns transformation 4x4 (homogenous) matrix
@@ -527,8 +528,9 @@ class SceneNode:
 
         if self._transformation is None:
             self._updateLocalTransformation()
-
-        return self._transformation.copy()
+        if copy:
+            return self._transformation.copy()
+        return self._transformation
 
     def setTransformation(self, transformation: Matrix):
         self._transformation = transformation.copy() # Make a copy to ensure we never change the given transformation
@@ -832,7 +834,7 @@ class SceneNode:
 
     def _calculateAABB(self) -> None:
         if self._mesh_data:
-            aabb = self._mesh_data.getExtents(self.getWorldTransformation())
+            aabb = self._mesh_data.getExtents(self.getWorldTransformation(copy = False))
         else:  # If there is no mesh_data, use a boundingbox that encompasses the local (0,0,0)
             position = self.getWorldPosition()
             aabb = AxisAlignedBox(minimum = position, maximum = position)

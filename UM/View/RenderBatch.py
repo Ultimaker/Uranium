@@ -247,7 +247,6 @@ class RenderBatch:
             normal_matrix = Matrix(transformation.getData())
             normal_matrix.setRow(3, [0, 0, 0, 1])
             normal_matrix.setColumn(3, [0, 0, 0, 1])
-            normal_matrix.invert()
             normal_matrix.transpose()
 
         self._shader.updateBindings(
@@ -272,39 +271,25 @@ class RenderBatch:
             index_buffer.bind()
 
         self._shader.enableAttribute("a_vertex", "vector3f", 0)
-        offset = mesh.getVertexCount() * 3 * 4
+        vertex_count = mesh.getVertexCount()
+        offset = vertex_count * 3 * 4
 
         if mesh.hasNormals():
             self._shader.enableAttribute("a_normal", "vector3f", offset)
-            offset += mesh.getVertexCount() * 3 * 4
+            offset += vertex_count * 3 * 4
 
         if mesh.hasColors():
             self._shader.enableAttribute("a_color", "vector4f", offset)
-            offset += mesh.getVertexCount() * 4 * 4
+            offset += vertex_count * 4 * 4
 
         if mesh.hasUVCoordinates():
             self._shader.enableAttribute("a_uvs", "vector2f", offset)
-            offset += mesh.getVertexCount() * 2 * 4
-
-        for attribute_name in mesh.attributeNames():
-            attribute = mesh.getAttribute(attribute_name)
-            self._shader.enableAttribute(attribute["opengl_name"], attribute["opengl_type"], offset)
-            if attribute["opengl_type"] == "vector2f":
-                offset += mesh.getVertexCount() * 2 * 4
-            elif attribute["opengl_type"] == "vector4f":
-                offset += mesh.getVertexCount() * 4 * 4
-            elif attribute["opengl_type"] == "int":
-                offset += mesh.getVertexCount() * 4
-            elif attribute["opengl_type"] == "float":
-                offset += mesh.getVertexCount() * 4
-            else:
-                Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
-                self._shader.disableAttribute(attribute["opengl_name"])
+            offset += vertex_count * 2 * 4
 
         if mesh.hasIndices():
             if self._render_range is None:
                 if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3, self._gl.GL_UNSIGNED_INT, None)
                 else:
                     self._gl.glDrawElements(self._render_mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
             else:
@@ -313,15 +298,8 @@ class RenderBatch:
                 else:
                     self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
         else:
-            self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
+            self._gl.glDrawArrays(self._render_mode, 0, vertex_count)
 
-        self._shader.disableAttribute("a_vertex")
-        self._shader.disableAttribute("a_normal")
-        self._shader.disableAttribute("a_color")
-        self._shader.disableAttribute("a_uvs")
-        for attribute_name in mesh.attributeNames():
-            attribute = mesh.getAttribute(attribute_name)
-            self._shader.disableAttribute(attribute.get("opengl_name"))
         vertex_buffer.release()
 
         if index_buffer is not None:
