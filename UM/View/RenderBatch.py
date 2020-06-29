@@ -315,13 +315,6 @@ class RenderBatch:
         else:
             self._gl.glDrawArrays(self._render_mode, 0, vertex_count)
 
-        self._shader.disableAttribute("a_vertex")
-        self._shader.disableAttribute("a_normal")
-        self._shader.disableAttribute("a_color")
-        self._shader.disableAttribute("a_uvs")
-        for attribute_name in mesh.attributeNames():
-            attribute = mesh.getAttribute(attribute_name)
-            self._shader.disableAttribute(attribute.get("opengl_name"))
         vertex_buffer.release()
 
         if index_buffer is not None:
