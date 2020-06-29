@@ -165,6 +165,8 @@ class Theme(QObject):
         except UnicodeDecodeError:
             Logger.error("Theme file at {theme_full_path} is corrupt (invalid UTF-8 bytes).".format(theme_full_path = theme_full_path))
             return
+        except json.JSONDecodeError:
+            Logger.error("Theme file at {theme_full_path} is corrupt (invalid JSON syntax).".format(theme_full_path = theme_full_path))
 
         # Iteratively load inherited themes
         try:
