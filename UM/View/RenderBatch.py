@@ -286,6 +286,21 @@ class RenderBatch:
             self._shader.enableAttribute("a_uvs", "vector2f", offset)
             offset += vertex_count * 2 * 4
 
+        for attribute_name in mesh.attributeNames():
+            attribute = mesh.getAttribute(attribute_name)
+            self._shader.enableAttribute(attribute["opengl_name"], attribute["opengl_type"], offset)
+            if attribute["opengl_type"] == "vector2f":
+                offset += mesh.getVertexCount() * 2 * 4
+            elif attribute["opengl_type"] == "vector4f":
+                offset += mesh.getVertexCount() * 4 * 4
+            elif attribute["opengl_type"] == "int":
+                offset += mesh.getVertexCount() * 4
+            elif attribute["opengl_type"] == "float":
+                offset += mesh.getVertexCount() * 4
+            else:
+                Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
+                self._shader.disableAttribute(attribute["opengl_name"])
+
         if mesh.hasIndices():
             if self._render_range is None:
                 if self._render_mode == self.RenderMode.Triangles:
@@ -300,6 +315,13 @@ class RenderBatch:
         else:
             self._gl.glDrawArrays(self._render_mode, 0, vertex_count)
 
+        self._shader.disableAttribute("a_vertex")
+        self._shader.disableAttribute("a_normal")
+        self._shader.disableAttribute("a_color")
+        self._shader.disableAttribute("a_uvs")
+        for attribute_name in mesh.attributeNames():
+            attribute = mesh.getAttribute(attribute_name)
+            self._shader.disableAttribute(attribute.get("opengl_name"))
         vertex_buffer.release()
 
         if index_buffer is not None:
