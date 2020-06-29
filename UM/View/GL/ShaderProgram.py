@@ -198,9 +198,6 @@ class ShaderProgram:
 
         :note If the shader is not bound, this will bind the shader.
         """
-        if not self._shader_program:
-            return
-
         self.bind()
 
         if name not in self._attribute_indices:
@@ -210,16 +207,16 @@ class ShaderProgram:
         if attribute == -1:
             return
 
-        if type == "int":
+        if type == "vector3f":
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 3, stride) #GL_FLOAT
+        elif type == "vector2f":
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 2, stride)  # GL_FLOAT
+        elif type == "vector4f":
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 4, stride)  # GL_FLOAT
+        elif type == "int":
             self._shader_program.setAttributeBuffer(attribute, 0x1404, offset, 1, stride) #GL_INT
         elif type == "float":
             self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 1, stride) #GL_FLOAT
-        elif type == "vector2f":
-            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 2, stride) #GL_FLOAT
-        elif type == "vector3f":
-            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 3, stride) #GL_FLOAT
-        elif type == "vector4f":
-            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 4, stride) #GL_FLOAT
 
         self._shader_program.enableAttributeArray(attribute)
 
@@ -238,10 +235,10 @@ class ShaderProgram:
 
     def bind(self) -> None:
         """Bind the shader to use it for rendering."""
-        if not self._shader_program or not self._shader_program.isLinked():
+        if self._bound:
             return
 
-        if self._bound:
+        if not self._shader_program or not self._shader_program.isLinked():
             return
 
         self._shader_program.bind()
