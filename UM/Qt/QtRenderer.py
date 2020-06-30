@@ -138,7 +138,7 @@ class QtRenderer(Renderer):
         """Overrides Renderer::queueNode()"""
         batch = self.createRenderBatch(**kwargs)
 
-        batch.addItem(node.getWorldTransformation(copy = False), kwargs.get("mesh", node.getMeshData()), kwargs.pop("uniforms", None))
+        batch.addItem(node.getWorldTransformation(copy = False), kwargs.get("mesh", node.getMeshData()), kwargs.pop("uniforms", None), normal_transformation=node.getCachedNormalMatrix())
 
         self._batches.append(batch)
 

@@ -61,6 +61,9 @@ class SceneNode:
         # World transformation (from root to local)
         self._world_transformation = Matrix()  # type: Matrix
 
+        # This is used for rendering. Since we don't want to recompute it every time, we cache it in the node
+        self._cached_normal_matrix = Matrix()
+
         # Convenience "components" of the world_transformation
         self._derived_position = Vector()  # type: Vector
         self._derived_orientation = Quaternion()  # type: Quaternion
@@ -508,6 +511,18 @@ class SceneNode:
     :param object: The object that triggered the change.
     """
 
+    def _updateCachedNormalMatrix(self) -> None:
+        self._cached_normal_matrix = Matrix(self.getWorldTransformation(copy=False).getData())
+        self._cached_normal_matrix.setRow(3, [0, 0, 0, 1])
+        self._cached_normal_matrix.setColumn(3, [0, 0, 0, 1])
+        self._cached_normal_matrix.invert()
+        self._cached_normal_matrix.transpose()
+
+    def getCachedNormalMatrix(self) -> Matrix:
+        if self._cached_normal_matrix is None:
+            self._updateCachedNormalMatrix()
+        return self._cached_normal_matrix
+
     def getWorldTransformation(self, copy = True) -> Matrix:
         """Computes and returns the transformation from world to local space.
 
@@ -822,6 +837,7 @@ class SceneNode:
     def _updateTransformation(self) -> None:
         self._updateLocalTransformation()
         self._updateWorldTransformation()
+        self._updateCachedNormalMatrix()
 
     def _resetAABB(self) -> None:
         if not self._calculate_aabb:
