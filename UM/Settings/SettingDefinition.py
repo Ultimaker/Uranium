@@ -274,38 +274,53 @@ class SettingDefinition:
 
         return None
 
+    def _matches1l8nProperty(self, property_name: str, value: Any, catalog) -> bool:
+        try:
+            property_value = getattr(self, property_name)
+        except AttributeError:
+            # If we do not have the attribute, we do not match
+            return False
+
+        if catalog:
+            translated_key = "{key} {property_name}".format(key = self._key, property_name = property_name)
+            property_value = catalog.i18nc(translated_key, property_value)
+
+        if not isinstance(value, str):
+            return False
+        if value != property_value:
+            if "*" not in value:
+                return False
+
+            value = value.strip("* ").lower()
+            if value not in property_value.lower():
+                return False
+
+        return True
+
     def matchesFilter(self, **kwargs: Any) -> bool:
         """Check if this setting definition matches the provided criteria.
 
         :param kwargs: :type{dict} A dictionary of keyword arguments that need to match its attributes.
         """
 
-
         # First check for translated labels.
         keywords = kwargs.copy()
         if "i18n_label" in keywords:
-            try:
-                property_value = getattr(self, "label")
-            except AttributeError:
-                # If we do not have the attribute, we do not match
+            if not self._matches1l8nProperty("label", keywords["i18n_label"], keywords.get("i18n_catalog")):
                 return False
-
-            if "i18n_catalog" in keywords:
-                catalog = keywords["i18n_catalog"]
-                if catalog:
-                    property_value = catalog.i18nc(self._key + " label", property_value)
-
-            value = keywords["i18n_label"]
             del keywords["i18n_label"]
-            if not isinstance(value, str):
-                return False
-            if value != property_value:
-                if "*" not in value:
-                    return False
 
-                value = value.strip("* ").lower()
-                if value not in property_value.lower():
+        # There is a special case where we want to filter on either the label and the description.
+        # For the sake of keeping this code simple, I've just hardcoded this option. If we ever want to have multiple
+        # keywords that can be searched as an optional filter (eg; value matches either paramA or paramB, we should
+        # consider refactoring this.
+        # Note that this match will be called a lot, so keep an eye out for performance
+        if "i18n_label|i18n_description" in keywords:
+            matches_label = self._matches1l8nProperty("label", keywords["i18n_label|i18n_description"], keywords.get("i18n_catalog"))
+            if not matches_label:
+                if not self._matches1l8nProperty("description", keywords["i18n_label|i18n_description"], keywords.get("i18n_catalog")):
                     return False
+            del keywords["i18n_label|i18n_description"]
 
         if "i18n_catalog" in keywords:
             del keywords["i18n_catalog"]
