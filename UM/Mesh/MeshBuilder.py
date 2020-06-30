@@ -108,6 +108,9 @@ class MeshBuilder:
             pass
         # self._dataChanged()
 
+    def resetNormals(self):
+        self._normals = None
+
     def hasNormals(self):
         """Return whether this mesh has vertex normals."""
 
