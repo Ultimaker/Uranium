@@ -112,6 +112,22 @@ def test_removeContainer(container_registry):
     assert not container_registry.isLoaded("omgzomg")
 
 
+def test_removeNotLoadedContainer(container_registry):
+    # Removing a partial (only metadata) loaded container should not break
+    test_container = InstanceContainer("omgzomg")
+    container_registry.addContainer(test_container)
+    container_registry._containers["omgzomg"] = None  # Emulates as partial loaded container
+    assert container_registry.isLoaded("omgzomg")
+
+    def _onContainerRemoved(container: "ContainerInterface") -> None:
+        assert isinstance(container, InstanceContainer)
+        assert container.getName() == "omgzomg"
+
+    container_registry.containerRemoved.connect(_onContainerRemoved)
+    container_registry.removeContainer("omgzomg")
+    assert not container_registry.isLoaded("omgzomg")
+    
+    
 def test_renameContainer(container_registry):
     # Ensure that renaming an unknown container doesn't break
     container_registry.renameContainer("ContainerThatDoesntExist", "whatever")
