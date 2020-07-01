@@ -16,6 +16,7 @@ from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
 from UM.Resources import Resources
+from UM.Settings.EmptyInstanceContainer import EmptyInstanceContainer
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
 from UM.Settings.constant_instance_containers import empty_container
@@ -441,12 +442,10 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_id in self.metadata:
             if container is None:
                 # We're in a bit of a weird state now. We want to notify the rest of the code that the container
-                # has been deleted, but due to lazy loading, it hasnt even been loaded yet. The issues is that in order
-                # to notify the rest of the code, we need to actually *have* the container. So we need to load it
-                # in order to remove it...
-                provider = self.source_provider.get(container_id)
-                if provider:
-                    container = provider.loadContainer(container_id)
+                # has been deleted, but due to lazy loading, it hasn't been loaded yet. The issues is that in order
+                # to notify the rest of the code, we need to actually *have* the container. So an empty instance 
+                # container is created, which is emitted with the containerRemoved signal and contains the metadata
+                container = EmptyInstanceContainer(container_id)
             del self.metadata[container_id]
         if container_id in self.source_provider:
             if self.source_provider[container_id] is not None:
