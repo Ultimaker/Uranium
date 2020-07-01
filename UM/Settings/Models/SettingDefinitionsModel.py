@@ -213,7 +213,6 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     def setExpanded(self, expanded: List[str]) -> None:
         """Set the expanded property"""
-
         new_expanded = set()
         for item in expanded:
             if item == "*":
@@ -292,25 +291,29 @@ class SettingDefinitionsModel(QAbstractListModel):
         return self._container.findDefinitions(key = key)
 
     @pyqtSlot(str)
-    def expandRecursive(self, key: str) -> None:
+    def expandRecursive(self, key: str, *, emit_signal: bool = True ) -> None:
         """Show the children of a specified SettingDefinition and all children of those settings as well."""
 
         definitions = self._getDefinitionsByKey(key)
         if not definitions:
             return
-        self.expand(key)
+
+        self._expanded.add(key)
 
         for child in definitions[0].children:
-            self.expandRecursive(child.key)
+            self.expandRecursive(child.key, emit_signal = False)
+
+        if emit_signal:
+            self.expandedChanged.emit()
+            self._scheduleUpdateVisibleRows()
 
     #@deprecated("Use collapseRecursive instead.", "4.5")  # Commented out because these two decorators don't work together.
     @pyqtSlot(str)
     def collapse(self, key: str) -> None:
         return self.collapseRecursive(key)
 
-    ##  Hide the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
-    def collapseRecursive(self, key: str) -> None:
+    def collapseRecursive(self, key: str, *, emit_signal: bool = True) -> None:
         """Hide the children of a specified SettingDefinition and all children of those settings as well."""
 
         definitions = self._getDefinitionsByKey(key)
@@ -323,10 +326,11 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._expanded.remove(key)
 
         for child in definitions[0].children:
-            self.collapseRecursive(child.key)
+            self.collapseRecursive(child.key, emit_signal = False)
 
-        self.expandedChanged.emit()
-        self._scheduleUpdateVisibleRows()
+        if emit_signal:
+            self.expandedChanged.emit()
+            self._scheduleUpdateVisibleRows()
 
     @pyqtSlot()
     def collapseAllCategories(self) -> None:
