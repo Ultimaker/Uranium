@@ -9,6 +9,10 @@ class FastConfigParser:
     """
     This class is to replace the much slower configparser provided by Python itself.
     It's probably nowhere near as robust and supports only a fraction of the functionality of the real deal.
+
+    In it's current state it supports reading config headers and the key value pairs beneath it.
+    It also supports the contains syntax (So if the config has a header [Foo], "Foo" in config will be true) as well
+    as the getItem syntax config["foo"] returns a dict with the key value pairs in the header.
     """
     header_regex = re.compile("\[(.*)\]\n([^\[]*)")
     key_value_regex = re.compile("([^=\n ]+) *= *([^\n]+)")
