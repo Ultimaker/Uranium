@@ -10,6 +10,7 @@ from UM.Resources import Resources
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
+from UM.Settings.Interfaces import ContainerInterface
 
 from .MockContainer import MockContainer
 
