@@ -137,7 +137,7 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
 
 test_deserialize_data = [
     ("basic_instance.inst.cfg", {"metaData": {"name": "Basic"}}),
-    ("metadata_instance.inst.cfg", {"metaData": {"name": "Metadata", "author": "Ultimaker", "bool": "False", "integer": 6}}),
+    ("metadata_instance.inst.cfg", {"metaData": {"name": "Metadata", "author": "Ultimaker", "bool": "False", "integer": "6"}}),
     ("setting_values.inst.cfg", {"metaData": {"name": "Setting Values"}, "values": {"test_setting_0": 20, "test_setting_1": 20,"test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20}}),
 ]
 

@@ -22,25 +22,8 @@ class FastConfigParser:
             extracted_key_value_pairs = {}
 
             for key, value in self.key_value_regex.findall(content):
-                extracted_key_value_pairs[key] = self._convertValue(value)
+                extracted_key_value_pairs[key] = value
             self._parsed_data[header] = extracted_key_value_pairs
-
-    @staticmethod
-    def _convertValue(value: str) -> supported_data:
-        """
-        There could also be floats / ints in the data, so we try to convert these first.
-        :param value:
-        :return: The converted value if it could be casted to an int / float, the original if not.
-        """
-        try:
-            return int(value)
-        except ValueError:
-            pass
-        try:
-            return float(value)
-        except ValueError:
-            pass
-        return value
 
     def __contains__(self, key: str) -> bool:
         return key in self._parsed_data
