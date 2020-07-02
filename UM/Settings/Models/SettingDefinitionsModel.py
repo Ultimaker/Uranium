@@ -213,8 +213,12 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     def setExpanded(self, expanded: List[str]) -> None:
         """Set the expanded property"""
-
         new_expanded = set()
+
+        categories_list = []
+        for definition in self._definition_list:
+            if definition.type == "category":
+                categories_list.append(definition.key)
         for item in expanded:
             if item == "*":
                 for definition in self._definition_list:
@@ -222,11 +226,14 @@ class SettingDefinitionsModel(QAbstractListModel):
                         new_expanded.add(definition.key)
             else:
                 new_expanded.add(str(item))
+                if item in categories_list:
+                    new_expanded.update(self._expandRecursive(item))
 
         if new_expanded != self._expanded:
             self._expanded = new_expanded
             self.expandedChanged.emit()
             self._scheduleUpdateVisibleRows()
+        self._scheduleUpdateVisibleRows()
 
     expandedChanged = pyqtSignal()
     """Emitted whenever the expanded property changes"""
@@ -291,27 +298,54 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return self._container.findDefinitions(key = key)
 
+    def _expandRecursive(self, key: str) -> Set[str]:
+        definitions = self._getDefinitionsByKey(key)
+        if not definitions:
+            return set()
+
+        expanded_settings = {key}
+        for child in definitions[0].children:
+            expanded_settings.update(self._expandRecursive(child.key))
+
+        return expanded_settings
+
     @pyqtSlot(str)
-    def expandRecursive(self, key: str) -> None:
-        """Show the children of a specified SettingDefinition and all children of those settings as well."""
+    def expandRecursive(self, key: str, *, emit_signal: bool = True ) -> None:
+        """
+        Show the children of a specified SettingDefinition and all children of those settings as well.
+
+        :param key: Key of the setting to expand
+        :param emit_signal: Should signals be emitted when expanding. Can only be set as keyword argument.
+        :return:
+        """
 
         definitions = self._getDefinitionsByKey(key)
         if not definitions:
             return
-        self.expand(key)
+
+        self._expanded.add(key)
 
         for child in definitions[0].children:
-            self.expandRecursive(child.key)
+            self.expandRecursive(child.key, emit_signal = False)
+
+        if emit_signal:
+            self.expandedChanged.emit()
+            self._scheduleUpdateVisibleRows()
 
     #@deprecated("Use collapseRecursive instead.", "4.5")  # Commented out because these two decorators don't work together.
     @pyqtSlot(str)
     def collapse(self, key: str) -> None:
         return self.collapseRecursive(key)
 
-    ##  Hide the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
-    def collapseRecursive(self, key: str) -> None:
-        """Hide the children of a specified SettingDefinition and all children of those settings as well."""
+    def collapseRecursive(self, key: str, *, emit_signal: bool = True) -> None:
+        """
+        Hide the children of a specified SettingDefinition and all children of those settings as well.
+
+        :param key: Key of the setting to collapse
+        :param emit_signal: Should signals be emitted when collapsing. Can only be set as keyword argument.
+        :return:
+        """
 
         definitions = self._getDefinitionsByKey(key)
         if not definitions:
@@ -323,10 +357,11 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._expanded.remove(key)
 
         for child in definitions[0].children:
-            self.collapseRecursive(child.key)
+            self.collapseRecursive(child.key, emit_signal = False)
 
-        self.expandedChanged.emit()
-        self._scheduleUpdateVisibleRows()
+        if emit_signal:
+            self.expandedChanged.emit()
+            self._scheduleUpdateVisibleRows()
 
     @pyqtSlot()
     def collapseAllCategories(self) -> None:
