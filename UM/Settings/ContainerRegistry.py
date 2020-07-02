@@ -446,6 +446,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 # to notify the rest of the code, we need to actually *have* the container. So an empty instance 
                 # container is created, which is emitted with the containerRemoved signal and contains the metadata
                 container = EmptyInstanceContainer(container_id)
+                container.metaData = self.metadata[container_id]
             del self.metadata[container_id]
         if container_id in self.source_provider:
             if self.source_provider[container_id] is not None:
