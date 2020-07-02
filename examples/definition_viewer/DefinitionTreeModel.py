@@ -122,7 +122,7 @@ class DefinitionTreeModel(QAbstractItemModel):
 
         result = { "key": definition.key }
 
-        for name in UM.Settings.SettingDefinition.getPropertyNames():
+        for name in SettingDefinition.getPropertyNames():
             try:
                 result[name] = str(getattr(definition, name))
             except AttributeError:
