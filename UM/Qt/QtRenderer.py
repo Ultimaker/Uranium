@@ -1,11 +1,10 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
 from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLVertexArrayObject
-from typing import List, Optional, Tuple
+from typing import List, Tuple, Dict
 
-from UM.Application import Application
 import UM.Qt.QtApplication
 from UM.View.Renderer import Renderer
 from UM.Math.Vector import Vector
@@ -25,9 +24,6 @@ from UM.Logger import Logger
 
 MYPY = False
 if MYPY:
-    from UM.Controller import Controller
-    from UM.Scene.Scene import Scene
-    from UM.Scene.Camera import Camera
     from UM.Scene.SceneNode import SceneNode
     from UM.View.RenderPass import RenderPass
     from UM.View.GL.ShaderProgram import ShaderProgram
@@ -44,9 +40,6 @@ class QtRenderer(Renderer):
     def __init__(self) -> None:
         super().__init__()
 
-        self._controller = Application.getInstance().getController()  # type: Controller
-        self._scene = self._controller.getScene()  # type: Scene
-
         self._initialized = False  # type: bool
 
         self._light_position = Vector(0, 0, 0)  # type: Vector
@@ -57,14 +50,13 @@ class QtRenderer(Renderer):
         self._window_height = 0  # type: int
 
         self._batches = []  # type: List[RenderBatch]
-
+        self._named_batches = {}  # type: Dict[str, RenderBatch]
         self._quad_buffer = None  # type: QOpenGLBuffer
-
-        self._camera = None  # type: Optional[Camera]
 
     initialized = Signal()
 
-    def getPixelMultiplier(self) -> int:
+    @staticmethod
+    def getPixelMultiplier() -> int:
         """Get an integer multiplier that can be used to correct for screen DPI."""
 
         # Standard assumption for screen pixel density is 96 DPI. We use that as baseline to get
@@ -75,6 +67,14 @@ class QtRenderer(Renderer):
         """Get the list of render batches."""
 
         return self._batches
+
+    def addRenderBatch(self, render_batch, name = ""):
+        self._batches.append(render_batch)
+        if name:
+            self._named_batches[name] = render_batch
+
+    def getNamedBatch(self, name):
+        return self._named_batches.get(name)
 
     def addRenderPass(self, render_pass: "RenderPass") -> None:
         """Overridden from Renderer.
@@ -136,7 +136,13 @@ class QtRenderer(Renderer):
 
     def queueNode(self, node: "SceneNode", **kwargs) -> None:
         """Overrides Renderer::queueNode()"""
+        batch = self.createRenderBatch(**kwargs)
 
+        batch.addItem(node.getWorldTransformation(copy = False), kwargs.get("mesh", node.getMeshData()), kwargs.pop("uniforms", None), normal_transformation=node.getCachedNormalMatrix())
+
+        self._batches.append(batch)
+
+    def createRenderBatch(self, **kwargs):
         type = kwargs.pop("type", RenderBatch.RenderType.Solid)
         if kwargs.pop("transparent", False):
             type = RenderBatch.RenderType.Transparent
@@ -144,11 +150,7 @@ class QtRenderer(Renderer):
             type = RenderBatch.RenderType.Overlay
 
         shader = kwargs.pop("shader", self._default_material)
-        batch = RenderBatch(shader, type = type, **kwargs)
-
-        batch.addItem(node.getWorldTransformation(), kwargs.get("mesh", node.getMeshData()), kwargs.pop("uniforms", None))
-
-        self._batches.append(batch)
+        return RenderBatch(shader, type=type, **kwargs)
 
     def render(self) -> None:
         """Overrides Renderer::render()"""
@@ -173,6 +175,7 @@ class QtRenderer(Renderer):
         """Overrides Renderer::endRendering()"""
 
         self._batches.clear()
+        self._named_batches.clear()
 
     def renderFullScreenQuad(self, shader: "ShaderProgram") -> None:
         """Render a full screen quad (rectangle).
@@ -211,9 +214,9 @@ class QtRenderer(Renderer):
 
         self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader")) #type: ShaderProgram
 
-        self._render_passes.add(DefaultPass(self._viewport_width, self._viewport_height))
-        self._render_passes.add(SelectionPass(self._viewport_width, self._viewport_height))
-        self._render_passes.add(CompositePass(self._viewport_width, self._viewport_height))
+        self.addRenderPass(DefaultPass(self._viewport_width, self._viewport_height))
+        self.addRenderPass(SelectionPass(self._viewport_width, self._viewport_height))
+        self.addRenderPass(CompositePass(self._viewport_width, self._viewport_height))
 
         buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
         buffer.create()

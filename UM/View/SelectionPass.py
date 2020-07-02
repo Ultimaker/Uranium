@@ -98,12 +98,12 @@ class SelectionPass(RenderPass):
         selectable_objects = False
         for node in DepthFirstIterator(self._scene.getRoot()):
             if isinstance(node, ToolHandle):
-                tool_handle.addItem(node.getWorldTransformation(), mesh = node.getSelectionMesh())
+                tool_handle.addItem(node.getWorldTransformation(copy = False), mesh = node.getSelectionMesh())
                 continue
 
             if node.isSelectable() and node.getMeshData():
                 selectable_objects = True
-                batch.addItem(transformation = node.getWorldTransformation(), mesh = node.getMeshData(), uniforms = { "selection_color": self._getNodeColor(node)})
+                batch.addItem(transformation = node.getWorldTransformation(copy = False), mesh = node.getMeshData(), uniforms = { "selection_color": self._getNodeColor(node)}, normal_transformation=node.getCachedNormalMatrix())
 
         self.bind()
         if selectable_objects:
@@ -129,7 +129,7 @@ class SelectionPass(RenderPass):
 
             if node.isSelectable() and node.getMeshData():
                 selectable_objects = True
-                batch.addItem(transformation = node.getWorldTransformation(), mesh = node.getMeshData())
+                batch.addItem(transformation = node.getWorldTransformation(copy = False), mesh = node.getMeshData(), normal_transformation=node.getCachedNormalMatrix())
 
         self.bind()
         if selectable_objects:

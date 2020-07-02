@@ -354,6 +354,8 @@ class MeshData:
 
         The sorting assures that the order is always the same.
         """
+        if not self._attributes:
+            return []
 
         result = list(self._attributes.keys())
         result.sort()

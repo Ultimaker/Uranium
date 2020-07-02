@@ -25,3 +25,4 @@ class DefaultPass(RenderPass):
 
         self.release()
 
+
