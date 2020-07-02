@@ -309,10 +309,15 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return expanded_settings
 
-
     @pyqtSlot(str)
     def expandRecursive(self, key: str, *, emit_signal: bool = True ) -> None:
-        """Show the children of a specified SettingDefinition and all children of those settings as well."""
+        """
+        Show the children of a specified SettingDefinition and all children of those settings as well.
+
+        :param key: Key of the setting to expand
+        :param emit_signal: Should signals be emitted when expanding. Can only be set as keyword argument.
+        :return:
+        """
 
         definitions = self._getDefinitionsByKey(key)
         if not definitions:
@@ -334,7 +339,13 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     @pyqtSlot(str)
     def collapseRecursive(self, key: str, *, emit_signal: bool = True) -> None:
-        """Hide the children of a specified SettingDefinition and all children of those settings as well."""
+        """
+        Hide the children of a specified SettingDefinition and all children of those settings as well.
+
+        :param key: Key of the setting to collapse
+        :param emit_signal: Should signals be emitted when collapsing. Can only be set as keyword argument.
+        :return:
+        """
 
         definitions = self._getDefinitionsByKey(key)
         if not definitions:
