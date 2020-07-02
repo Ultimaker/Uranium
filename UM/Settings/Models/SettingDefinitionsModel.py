@@ -214,6 +214,11 @@ class SettingDefinitionsModel(QAbstractListModel):
     def setExpanded(self, expanded: List[str]) -> None:
         """Set the expanded property"""
         new_expanded = set()
+
+        categories_list = []
+        for definition in self._definition_list:
+            if definition.type == "category":
+                categories_list.append(definition.key)
         for item in expanded:
             if item == "*":
                 for definition in self._definition_list:
@@ -221,11 +226,14 @@ class SettingDefinitionsModel(QAbstractListModel):
                         new_expanded.add(definition.key)
             else:
                 new_expanded.add(str(item))
+                if item in categories_list:
+                    new_expanded.update(self._expandRecursive(item))
 
         if new_expanded != self._expanded:
             self._expanded = new_expanded
             self.expandedChanged.emit()
             self._scheduleUpdateVisibleRows()
+        self._scheduleUpdateVisibleRows()
 
     expandedChanged = pyqtSignal()
     """Emitted whenever the expanded property changes"""
@@ -289,6 +297,18 @@ class SettingDefinitionsModel(QAbstractListModel):
             return []
 
         return self._container.findDefinitions(key = key)
+
+    def _expandRecursive(self, key: str) -> Set[str]:
+        definitions = self._getDefinitionsByKey(key)
+        if not definitions:
+            return set()
+
+        expanded_settings = {key}
+        for child in definitions[0].children:
+            expanded_settings.update(self._expandRecursive(child.key))
+
+        return expanded_settings
+
 
     @pyqtSlot(str)
     def expandRecursive(self, key: str, *, emit_signal: bool = True ) -> None:
