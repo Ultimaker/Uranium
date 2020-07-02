@@ -6,6 +6,7 @@ import uuid
 
 from UM.PluginObject import PluginObject
 from UM.Settings.Interfaces import ContainerInterface
+from UM.Signal import Signal
 
 ##  Test container type to test adding new container types with.
 class ContainerTestPlugin(ContainerInterface, PluginObject):
