@@ -5,7 +5,8 @@ from UM.Resources import Resources
 import os
 
 required_headers = [("multi_line", ["general", "values", "metadata"]),
-                    ("spacing", ["whatever"])]
+                    ("spacing", ["whatever"]),
+                    ("weird_values", ["YAY_omg", "12"])]
 
 
 setting_values = [("multi_line",    {"values": {
@@ -22,7 +23,13 @@ setting_values = [("multi_line",    {"values": {
                                         "c": "3",
                                         "d": "4",
                                         "e": "5"
-                                    }})
+                                    }}),
+                  ("weird_values", {"YAY_omg": {
+                                        "the_value": "[10]",
+                                        "more_weirdness": "[]",
+                                        "weird_value": "[20,30]",
+                                        "even_more_weirdness": "[yay!]"
+                  }})
                   ]
 
 
@@ -43,6 +50,7 @@ class TestFastConfigParser:
         Resources.addSearchPath(cls.search_path)
         cls.data["multi_line"] = cls.readFromFile("multi_line.cfg")
         cls.data["spacing"] = cls.readFromFile("spacing.cfg")
+        cls.data["weird_values"] = cls.readFromFile("weird_values.cfg")
 
     @classmethod
     def teardown_class(cls):
