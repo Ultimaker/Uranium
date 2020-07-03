@@ -14,8 +14,8 @@ class FastConfigParser:
     It also supports the contains syntax (So if the config has a header [Foo], "Foo" in config will be true) as well
     as the getItem syntax config["foo"] returns a dict with the key value pairs in the header.
     """
-    header_regex = re.compile("\[(.*)\]\n([^\[]*)")
-    key_value_regex = re.compile("([^=\n ]+) *= *([^\n]+)")
+    header_regex = re.compile(r"\[(.*?)\]\n([^\[]*)")
+    key_value_regex = re.compile(r"([^=\n ]+) *= *(.*?)(?:(?=\s+(?:[^=\n \[]+) *= *)|(?=\[)|\Z)", re.S)
 
     def __init__(self, data: str) -> None:
         header_result = self.header_regex.findall(data)
@@ -24,9 +24,9 @@ class FastConfigParser:
 
         for header, content in header_result:
             extracted_key_value_pairs = {}
-
-            for key, value in self.key_value_regex.findall(content):
-                extracted_key_value_pairs[key] = value
+            for key, value in self.key_value_regex.findall(content.rstrip()):
+                # Multiline are stored with a tab, so we need to remove that again
+                extracted_key_value_pairs[key] = value.replace("\n\t", "\n")
             self._parsed_data[header] = extracted_key_value_pairs
 
     def __contains__(self, key: str) -> bool:
