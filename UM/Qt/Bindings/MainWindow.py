@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF
 from PyQt5.QtGui import QColor
-from PyQt5.QtQuick import QQuickItem, QQuickWindow
+from PyQt5.QtQuick import QQuickWindow
 
 from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
@@ -12,7 +12,10 @@ from UM.Application import Application
 from UM.Scene.Selection import Selection
 from UM.Signal import Signal, signalemitter
 from UM.Scene.Camera import Camera
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from PyQt5.QtQuick import QQuickItem
 
 
 @signalemitter
