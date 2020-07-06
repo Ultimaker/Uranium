@@ -54,3 +54,8 @@ add_test(
     NAME "code-style"
     COMMAND ${PYTHON_EXECUTABLE} run_mypy.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+
+add_test(
+    NAME "lint-python"
+    COMMAND ${PYTHON_EXECUTABLE} flake8 --count --select=E9,F63,F7,F82 --show-source --statistics WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
