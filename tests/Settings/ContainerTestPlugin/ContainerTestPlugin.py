@@ -1,12 +1,14 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Optional
+from typing import Any, Optional, TYPE_CHECKING
 import uuid
 
 from UM.PluginObject import PluginObject
 from UM.Settings.Interfaces import ContainerInterface
-from UM.Signal import Signal
+
+if TYPE_CHECKING:
+    from UM.Signal import Signal
 
 ##  Test container type to test adding new container types with.
 class ContainerTestPlugin(ContainerInterface, PluginObject):
