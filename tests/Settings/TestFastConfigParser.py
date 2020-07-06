@@ -28,7 +28,8 @@ setting_values = [("multi_line",    {"values": {
                                         "the_value": "[10]",
                                         "more_weirdness": "[]",
                                         "weird_value": "[20,30]",
-                                        "even_more_weirdness": "[yay!]"
+                                        "even_more_weirdness": "[yay!]",
+                                        "woah_weird": "=(200 if the_value != \"whatever\" or more_weirdness == \"derp\" else 0)"
                   }})
                   ]
 
