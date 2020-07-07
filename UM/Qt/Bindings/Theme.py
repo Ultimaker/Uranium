@@ -94,7 +94,7 @@ class Theme(QObject):
                             "id": theme_id,
                             "name": theme_name
                         })
-            except FileNotFoundError:
+            except EnvironmentError:
                 pass
         themes.sort(key = lambda k: k["name"])
 
