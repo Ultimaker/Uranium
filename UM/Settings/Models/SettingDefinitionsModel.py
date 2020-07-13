@@ -76,8 +76,6 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self.destroyed.connect(self._onDestroyed)
 
-        self.expandedChanged.connect(self.onExpandedChanged)
-
     showAncestorsChanged = pyqtSignal()
     """Emitted whenever the showAncestors property changes."""
 
@@ -603,10 +601,6 @@ class SettingDefinitionsModel(QAbstractListModel):
         """Force updating the model."""
 
         self._update()
-
-    def onExpandedChanged(self) -> None:
-        for row in range(len(self._row_index_list)):
-            self.dataChanged.emit(self.index(row, 0), self.index(row, 0), [self.ExpandedRole])
 
     # Update the internal list of definitions and the visibility mapping.
     #
