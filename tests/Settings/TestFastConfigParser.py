@@ -29,7 +29,9 @@ setting_values = [("multi_line",    {"values": {
                                         "more_weirdness": "[]",
                                         "weird_value": "[20,30]",
                                         "even_more_weirdness": "[yay!]",
-                                        "woah_weird": "=(200 if the_value != \"whatever\" or more_weirdness == \"derp\" else 0)"
+                                        "woah_weird": "=(200 if the_value != \"whatever\" or more_weirdness == \"derp\" else 0)",
+                                        "lesser_equal": "=60 if 1 <= 2 else 30",
+                                        "greater_equal": "=20 if 1 >= 2 else \"yay\""
                   }})
                   ]
 
