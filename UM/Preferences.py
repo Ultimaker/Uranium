@@ -157,7 +157,8 @@ class Preferences:
         except Exception as e:
             Logger.log("e", "Failed to write preferences to %s: %s", file, str(e))
 
-    preferenceChanged = Signal()
+    # A lot of things listen in on the preference changed signal, so always queue it for the next frame.
+    preferenceChanged = Signal(Signal.Queued)
 
     def _splitKey(self, key: str) -> Tuple[str, str]:
         group = "general"
