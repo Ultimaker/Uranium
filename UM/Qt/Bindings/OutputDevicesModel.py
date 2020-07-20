@@ -70,7 +70,7 @@ class OutputDevicesModel(ListModel):
             return
 
         self._items.clear()
-        devices = self._device_manager.getOutputDevices()
+        devices = list(self._device_manager.getOutputDevices())[:]  # Make a copy here, because we could discover devices during iteration.
         for device in devices:
             self._items.append({
                 "id": device.getId(),

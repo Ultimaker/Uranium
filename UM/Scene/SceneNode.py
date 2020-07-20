@@ -538,7 +538,7 @@ class SceneNode:
     def getLocalTransformation(self, copy = True) -> Matrix:
         """Returns the local transformation with respect to its parent. (from parent to local)
 
-        :retuns transformation 4x4 (homogenous) matrix
+        :returns transformation 4x4 (homogeneous) matrix
         """
 
         if self._transformation is None:
