@@ -389,10 +389,10 @@ class SettingPropertyProvider(QObject):
             pass
 
     def _containersChanged(self, container = None):
-        self._updateDelayed(container = container)
+        self._updateDelayed()
 
-    def _storeIndexChanged(self, container = None):
-        self._updateDelayed(container = container)
+    def _storeIndexChanged(self):
+        self._updateDelayed()
 
     def _updateStackLevels(self) -> None:
         """Updates the self._stack_levels field, which indicates at which levels in the stack the property is set."""
