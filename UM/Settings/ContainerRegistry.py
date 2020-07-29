@@ -394,10 +394,10 @@ class ContainerRegistry(ContainerRegistryInterface):
         Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
 
     @UM.FlameProfiler.profile
-    def addContainer(self, container: ContainerInterface) -> None:
+    def addContainer(self, container: ContainerInterface) -> bool:
         container_id = container.getId()
         if container_id in self._containers:
-            return
+            return True  # Container was already there, consider that a success
 
         if hasattr(container, "metaDataChanged"):
             container.metaDataChanged.connect(self._onContainerMetaDataChanged)
@@ -405,7 +405,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.metadata[container_id] = container.getMetaData()
         self._containers[container_id] = container
         if container_id not in self.source_provider:
-            self.source_provider[container_id] = None #Added during runtime.
+            self.source_provider[container_id] = None  # Added during runtime.
         self._clearQueryCacheByContainer(container)
 
         # containerAdded is a custom signal and can trigger direct calls to its subscribers. This should be avoided
@@ -414,6 +414,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         # We avoid the direct calls here to make sure that the subscribers do not need to take into account any max
         # recursion problem.
         self._application.callLater(self.containerAdded.emit, container)
+        return True
 
     @UM.FlameProfiler.profile
     def removeContainer(self, container_id: str) -> None:
