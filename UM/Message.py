@@ -39,10 +39,13 @@ class Message(QObject):
         :param lifetime: How long should the message be displayed (in seconds).
             if lifetime is 0, it will never automatically be destroyed.
         :param dismissible: Can the user dismiss the message?
-        :param title: Phrase that will be shown above the message
-        :param image_source: an absolute path where an image can be found to be displayed (QUrl.toLocalFile()) can be used for that.
-        :param image_caption: Text to be displayed below the image (or anywhere really, it's up tot the QML to handle that)
-        :param progress: Is there nay progress to be displayed? if -1, it's seen as indeterminate
+        :param title: Phrase that will be shown above the message.
+        :param image_source: an absolute path where an image can be found to be
+        displayed (QUrl.toLocalFile()) can be used for that.
+        :param image_caption: Text to be displayed below the image (or anywhere
+        really, it's up to the QML to handle that).
+        :param progress: Is there any progress to be displayed? if -1, it's seen
+        as indeterminate.
         """
 
         super().__init__(parent)

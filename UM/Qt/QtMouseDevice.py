@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import Qt, QEvent
@@ -53,7 +53,10 @@ class QtMouseDevice(InputDevice):
         return buttons
 
     def _normalizeCoordinates(self, x, y):
-        nx = 2.0 * (x / self._window.width()) - 1.0
-        ny = 2.0 * (y / self._window.height()) - 1.0
+        try:
+            nx = 2.0 * (x / self._window.width()) - 1.0
+            ny = 2.0 * (y / self._window.height()) - 1.0
+        except ZeroDivisionError:
+            return 0, 0
 
         return nx, ny
