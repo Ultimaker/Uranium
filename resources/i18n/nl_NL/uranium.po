@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2020-04-06 16:48+0200\n"
+"POT-Creation-Date: 2020-07-31 12:50+0200\n"
 "PO-Revision-Date: 2019-09-23 13:26+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Ultimaker <info@ultimaker.com>, Dutch <info@bothof.nl>\n"
@@ -149,8 +149,8 @@ msgstr "Er is een fout opgetreden tijdens het opslaan naar <filename>{0}</filena
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:147
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:150
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Fout"
@@ -165,12 +165,12 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Model Spiegelen"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:312
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:352
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr "Object plat op platform plaatsen..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:312
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:352
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr "Objectrotatie"
@@ -223,7 +223,7 @@ msgstr "Geen toegang tot update-informatie."
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:70
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:170
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Versie-upgrade"
@@ -300,16 +300,16 @@ msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "Als u de instellingen herstelt, worden alle huidige printers en profielen verwijderd. Weet u zeker dat u de instellingen wilt herstellen?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:59
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:785
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:58
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:783
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Alle Ondersteunde Typen ({0})"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:60
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:786
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:59
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:784
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -322,8 +322,6 @@ msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "Kan geen bestanden openen van het type <filename>{0}</filename>"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "Ongeldig bestand"
@@ -332,8 +330,14 @@ msgstr "Ongeldig bestand"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>"
-msgstr "Kan <filename>{0}</filename> niet laden"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 msgctxt "@info:title"
@@ -351,7 +355,7 @@ msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Object schalen"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:268
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:272
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -361,7 +365,7 @@ msgstr ""
 "Er zijn fouten opgetreden bij het deïnstalleren van de volgende packages:\n"
 "{packages}"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:270
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:274
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "Fouten bij het de-installeren"
@@ -392,12 +396,12 @@ msgstr ""
 "De invoegtoepassing is geïnstalleerd.\n"
 "Start de toepassing opnieuw om de invoegtoepassing te activeren."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:358
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:357
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
 msgstr "Plug-in {} is niet geladen omdat deze niet kon worden geverifieerd."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:458
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:457
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -452,13 +456,11 @@ msgid "Initializing package manager..."
 msgstr "Pakketbeheer initialiseren..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
-#: /home/trin/Gedeeld/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "Uw configuratie is mogelijk beschadigd."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:200
-#: /home/trin/Gedeeld/Projects/Uranium/UM/__init__.py:17
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr "Configuratiefouten"
@@ -483,28 +485,28 @@ msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "UI laden ..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:177
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:180
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Wilt u {filename} opnieuw laden?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:178
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:181
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Het bestand is gewijzigd"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:179
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Opnieuw laden"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:179
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Hiermee wordt het opnieuw laden van de bestanden vanaf de schijf geactiveerd."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:170
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
@@ -520,23 +522,6 @@ msgstr "Kan OpenGL niet initialiseren"
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is ondersteuning voor Framebuffer-objecten vereist. Controleer het stuurprogramma voor uw videokaart."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/__init__.py:15
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-"Would you like to reset to factory defaults?"
-msgstr ""
-"Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
-"- {profiles}\n"
-"Wilt u de standaardinstellingen herstellen?"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/__init__.py:18
-msgctxt "@info:button"
-msgid "Reset your configuration to factory defaults."
-msgstr "Herstel uw configuratie naar de standaardinstellingen."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
@@ -820,6 +805,24 @@ msgstr "Biedt een eenvoudige, solide rasterweergave."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Eenvoudige Weergave"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Kan <filename>{0}</filename> niet laden"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults?"
+#~ msgstr ""
+#~ "Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
+#~ "- {profiles}\n"
+#~ "Wilt u de standaardinstellingen herstellen?"
+
+#~ msgctxt "@info:button"
+#~ msgid "Reset your configuration to factory defaults."
+#~ msgstr "Herstel uw configuratie naar de standaardinstellingen."
 
 #~ msgctxt "description"
 #~ msgid "Example extension to instruct people on how to create Uranium extensions."

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2020-04-06 16:48+0200\n"
+"POT-Creation-Date: 2020-07-31 12:50+0200\n"
 "PO-Revision-Date: 2020-04-07 11:16+0200\n"
 "Last-Translator: DenyCZ <www.github.com/DenyCZ>\n"
 "Language-Team: DenyCZ <www.github.com/DenyCZ>\n"
@@ -149,8 +149,8 @@ msgstr "Nastala chyba při ukládání do <filename>{0}</filename>: <message>{1}
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:147
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:150
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Chyba"
@@ -165,12 +165,12 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Zrcadlit model"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:312
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:352
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr "Pokládám objekt na plocho na podložku..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:312
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:352
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr "Otáčení objektu"
@@ -223,7 +223,7 @@ msgstr "Selhalo nahrávání informací o aktualizacích."
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:70
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:170
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Aktualizace verze"
@@ -300,16 +300,16 @@ msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "Reset odstraní všechny vaše aktuální tiskárny a profily! Opravdu chcete resetovat?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:59
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:785
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:58
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:783
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Všechny podporované typy ({0})"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:60
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:786
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:59
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:784
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -322,8 +322,6 @@ msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "Nemohu otevřít soubory typu <filename>{0}</filename>"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "Neplatná složka"
@@ -332,8 +330,14 @@ msgstr "Neplatná složka"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>"
-msgstr "Chyba při nahrávání <filename>{0}</filename>"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 msgctxt "@info:title"
@@ -351,7 +355,7 @@ msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Škáluji objekt"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:268
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:272
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -361,7 +365,7 @@ msgstr ""
 "Nastaly chyby při odinstalaci následujících balíčků\n"
 "{packages}"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:270
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:274
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "Chyby při odinstalaci"
@@ -392,12 +396,12 @@ msgstr ""
 "Zásuvný modul byl nainstalován.\n"
 "Prosím restartujte aplikaci pro aktivaci zásuvného balíčku."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:358
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:357
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
 msgstr "Modul {} nebyl načten, protože nemohl být ověřen."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:458
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:457
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -455,13 +459,11 @@ msgid "Initializing package manager..."
 msgstr "Inicializuji správce zásuvných balíčků..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
-#: /home/trin/Gedeeld/Projects/Uranium/UM/__init__.py:16
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "Zdá se, že vaše konfigurace je poškozená."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:200
-#: /home/trin/Gedeeld/Projects/Uranium/UM/__init__.py:17
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr "Chyby v konfiguraci"
@@ -486,28 +488,28 @@ msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "Nahrávám UI..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:177
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:180
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Chcete znovu načíst {filename}?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:178
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:181
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Soubor byl upraven"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:179
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Znovu načíst"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:179
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Toto zapřičíní, že upravené soubory se znovu načtou z disku."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:170
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
@@ -523,23 +525,6 @@ msgstr "Selhání při inicializaci OpenGL"
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Kritické rozšíření OpenGL chybí. Tento program vyžaduje podporu pro Framebuffer objekty. Prosím zkontrolujte ovladače Vaší grafické karty."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/__init__.py:15
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-"Would you like to reset to factory defaults?"
-msgstr ""
-"Zdá se, že vaše konfigurace je poškozená. Něco se zdá být v nepořádku s následujícími profily:\n"
-"- {profiles}\n"
-"Chcete obnovit výchozí nastavení továrního nastavení?"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/__init__.py:18
-msgctxt "@info:button"
-msgid "Reset your configuration to factory defaults."
-msgstr "Resetovat vaší konfiguraci do továrního nastavení."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
@@ -824,6 +809,24 @@ msgstr "Poskytuje jednoduché zobrazení pevných sítí."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Jednoduchý pohled"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Chyba při nahrávání <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults?"
+#~ msgstr ""
+#~ "Zdá se, že vaše konfigurace je poškozená. Něco se zdá být v nepořádku s následujícími profily:\n"
+#~ "- {profiles}\n"
+#~ "Chcete obnovit výchozí nastavení továrního nastavení?"
+
+#~ msgctxt "@info:button"
+#~ msgid "Reset your configuration to factory defaults."
+#~ msgstr "Resetovat vaší konfiguraci do továrního nastavení."
 
 #~ msgctxt "description"
 #~ msgid "Example extension to instruct people on how to create Uranium extensions."
