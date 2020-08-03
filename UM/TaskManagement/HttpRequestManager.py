@@ -366,7 +366,7 @@ class HttpRequestManager(TaskManager):
         if request_data.reply is not None:
             error_string = request_data.reply.errorString()
 
-        if error == QNetworkReply.UnknownNetworkError:
+        if error == QNetworkReply.UnknownNetworkError or QNetworkReply.HostNotFoundError:
             self._setInternetReachable(False)
             # manager seems not always able to recover from a total loss of network access, so re-create it
             self._network_manager = QNetworkAccessManager(self)
