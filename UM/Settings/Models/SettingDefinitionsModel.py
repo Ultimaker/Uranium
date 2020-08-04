@@ -581,7 +581,6 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return self._role_names
 
-    @profile
     def _onVisibilityChanged(self) -> None:
         if self._visibility_handler:
             self._visible = self._visibility_handler.getVisible()
