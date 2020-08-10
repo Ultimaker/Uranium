@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import datetime
@@ -7,6 +7,7 @@ import os.path
 import re
 import shutil
 import tempfile
+import time  # To reduce chance of concurrency issues when deleting files if the OS is slow to register whether a file exists or not.
 from typing import Dict, Generator, List, Optional, Union, cast
 
 from UM.Logger import Logger
@@ -520,7 +521,15 @@ class Resources:
         # Remove "cache" if we copied it together with config
         suspected_cache_path = os.path.join(this_version_config_path, "cache")
         if os.path.exists(suspected_cache_path):
-            shutil.rmtree(suspected_cache_path)
+            try:
+                shutil.rmtree(suspected_cache_path)
+            except EnvironmentError:  # No rights to this directory or it gets deleted asynchronously.
+                try:
+                    time.sleep(1)
+                    shutil.rmtree(suspected_cache_path)  # Sometimes it seems to help to try again after a short while, to prevent concurrency issues.
+                except EnvironmentError:
+                    Logger.error("Failed to delete cache, cache might be outdated and lead to weird errors: {err}")
+                    pass
 
     @classmethod
     def copyVersionFolder(cls, src_path: str, dest_path: str) -> None:
