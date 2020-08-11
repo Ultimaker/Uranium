@@ -172,10 +172,10 @@ class PackageManager(QObject):
         with container_registry.lockFile():
             try:
                 # Load the user packages:
-                with open(cast(str, self._user_package_management_file_path), "r", encoding="utf-8") as f:
+                with open(cast(str, self._user_package_management_file_path), "r", encoding = "utf-8") as f:
                     try:
                         management_dict = json.load(f)
-                    except JSONDecodeError:
+                    except (JSONDecodeError, UnicodeDecodeError):
                         # The file got corrupted, ignore it. This happens extremely infrequently.
                         # The file will get overridden once a user downloads something.
                         return
