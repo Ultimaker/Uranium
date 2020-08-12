@@ -562,7 +562,11 @@ class PackageManager(QObject):
             if not os.path.exists(src_dir_path):
                 Logger.log("w", "The path %s does not exist, so not installing the files", src_dir_path)
                 continue
-            self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
+            try:
+                self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
+            except EnvironmentError as e:
+                Logger.log("e", "Can't install package due to EnvironmentError: {err}".format(err = str(e)))
+                continue
 
         # Remove the file
         try:
