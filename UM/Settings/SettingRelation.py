@@ -56,8 +56,9 @@ class SettingRelation:
 
     @property
     def target(self) -> SettingDefinition:
-        """The target of this relation."""
-
+        """
+        The setting that this relation is relating with.
+        """
         return self._target
 
     @property
