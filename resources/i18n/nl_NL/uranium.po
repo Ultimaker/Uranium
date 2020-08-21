@@ -331,13 +331,13 @@ msgstr "Ongeldig bestand"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr ""
+msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk beschadigd of ontoegankelijk."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Unable to Open File"
-msgstr ""
+msgstr "Kan bestand niet openen"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 msgctxt "@info:title"

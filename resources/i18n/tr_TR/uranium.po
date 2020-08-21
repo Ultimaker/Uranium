@@ -331,13 +331,13 @@ msgstr "Geçersiz Dosya"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr ""
+msgstr "<filename>{0}</filename> yüklenemedi. Dosya çökmüş veya erişilemiyor olabilir."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Unable to Open File"
-msgstr ""
+msgstr "Dosya Açılamıyor"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 msgctxt "@info:title"

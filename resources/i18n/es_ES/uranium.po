@@ -331,13 +331,13 @@ msgstr "Archivo no válido"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr ""
+msgstr "Error al cargar <filename>{0}</filename>. El archivo podría estar dañado o ser inaccesible."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Unable to Open File"
-msgstr ""
+msgstr "No se puede abrir el archivo"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 msgctxt "@info:title"

@@ -331,13 +331,13 @@ msgstr "유효하지 않은 파일"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr ""
+msgstr "<filename>{0}</filename>을(를) 로드하지 못했습니다 파일이 손상되었거나 액세스할 수 없습니다."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Unable to Open File"
-msgstr ""
+msgstr "파일을 열 수 없습니다."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 msgctxt "@info:title"
