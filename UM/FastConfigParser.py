@@ -34,3 +34,6 @@ class FastConfigParser:
 
     def __getitem__(self, key: str) -> Dict[str, supported_data]:
         return self._parsed_data[key]
+
+    def __iter__(self):
+        return iter(self._parsed_data)
