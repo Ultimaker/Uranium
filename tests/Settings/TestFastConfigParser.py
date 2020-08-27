@@ -32,7 +32,7 @@ setting_values = [("multi_line",    {"values": {
                                         "woah_weird": "=(200 if the_value != \"whatever\" or more_weirdness == \"derp\" else 0)",
                                         "lesser_equal": "=60 if 1 <= 2 else 30",
                                         "greater_equal": "=20 if 1 >= 2 else \"yay\"",
-                                        "key_value_in_string": "G1\n    ; speed_z = {speed_z}\n    speed_someting = 20\n    some_other_value = 25\n    speed_y = {speed_z}"
+                                        "key_value_in_string": "G1\n    ; speed_z = {speed_z}\n    speed_something = 20\n\tsome_other_value = 25\n    speed_y = {speed_z}"
                   }})
                   ]
 
