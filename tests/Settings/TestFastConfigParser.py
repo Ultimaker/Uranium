@@ -41,13 +41,13 @@ setting_values = [("multi_line",    {"values": {
 # Generate fuzz tests.
 random.seed(1337)
 fuzz_tests = []
-elements = ["a", "b", " ", "=", "\t", "\n", ";"]
+elements = "ab= \t\n;%<>\"'"  # Generate keys and values randomly from these elements.
 for test_no in range(1000):
     test = "[header]\n"  # Must have at least one header for ConfigParser.
     keys = set()  # Keys must be unique for ConfigParser.
     for key_no in range(6):
         key = ""
-        for element_no in range(random.randint(0, 4)):
+        for element_no in range(random.randint(0, 8)):
             key += random.choice(elements)
     for key in keys:
         value = ""
