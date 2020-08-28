@@ -18,10 +18,11 @@ class ActiveToolProxy(QObject):
         super().__init__(parent)
 
         self._active_tool = None
+        self._properties = {}
         Application.getInstance().getController().activeToolChanged.connect(self._onActiveToolChanged)
         self._onActiveToolChanged()
 
-        self._properties = { }
+
         self._properties_proxy = ContainerProxy.ContainerProxy(self._properties)
 
     activeToolChanged = pyqtSignal()

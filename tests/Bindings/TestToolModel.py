@@ -10,9 +10,9 @@ controller = MagicMock()
 def tool_model():
     mocked_application = MagicMock()
     mocked_application.getController = MagicMock(return_value = controller)
-
-    with patch("UM.Application.Application.getInstance", MagicMock(return_value = mocked_application)):
-        model = ToolModel()
+    with patch("UM.PluginRegistry.PluginRegistry.getInstance"):
+        with patch("UM.Application.Application.getInstance", MagicMock(return_value = mocked_application)):
+            model = ToolModel()
 
     return model
 
@@ -20,12 +20,14 @@ def tool_model():
 def test_onToolsChanged_visible_tool(tool_model):
     tool = MagicMock(getMetaData = MagicMock(return_value = {"visible": True}))
     controller.getAllTools = MagicMock(return_value = {"beep_tool": tool})
-    tool_model._onToolsChanged()
+    with patch("UM.PluginRegistry.PluginRegistry.getInstance"):
+        tool_model._onToolsChanged()
     assert len(tool_model.items) == 1
 
 
 def test_onToolsChanged_invisible_tool(tool_model):
     tool = MagicMock(getMetaData=MagicMock(return_value={"visible": False}))
     controller.getAllTools = MagicMock(return_value={"beep_tool": tool})
-    tool_model._onToolsChanged()
+    with patch("UM.PluginRegistry.PluginRegistry.getInstance"):
+        tool_model._onToolsChanged()
     assert len(tool_model.items) == 0
