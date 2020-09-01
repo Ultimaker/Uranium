@@ -137,20 +137,19 @@ class Polygon:
         """
         Scales this polygon around a certain origin point.
         :param factor: The scaling factor.
-        :param origin: Origin point around which to scale. As the scale factor
-        approaches 0, all coordinates will approach this origin point. As the
-        scale factor grows, all coordinates will move away from this origin
+        :param origin: Origin point around which to scale, 2D. As the scale
+        factor approaches 0, all coordinates will approach this origin point. As
+        the scale factor grows, all coordinates will move away from this origin
         point. If `None`, the 0,0 coordinate will be used.
         :return: A transformed polygon.
         """
         if origin is None:
-            origin = [0, 0, 0]
+            origin = [0, 0]
 
         transformation = numpy.identity(4) * factor  # Just the scaling matrix.
         delta_scale = factor - 1
         transformation[3][0] = delta_scale * -origin[0]
         transformation[3][1] = delta_scale * -origin[1]
-        transformation[3][2] = delta_scale * -origin[2]
         return Polygon(transformation @ self._points)
 
     def intersectionConvexHulls(self, other: "Polygon") -> "Polygon":
