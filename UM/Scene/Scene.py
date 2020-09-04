@@ -165,7 +165,7 @@ class Scene:
         try:
             if os.path.getsize(file_path) == 0:  # File is empty.
                 return
-        except FileNotFoundError:  # Or it doesn't exist any more.
+        except EnvironmentError:  # Or it doesn't exist any more, or we have no access any more.
             return
 
         # Multiple nodes may be loaded from the same file at different stages. Reload them all.
