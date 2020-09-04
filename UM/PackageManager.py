@@ -606,7 +606,7 @@ class PackageManager(QObject):
                         except:
                             Logger.logException("e", "Failed to load potential package.json file '%s' as text file.",
                                                 file_info.filename)
-        except zipfile.BadZipFile:
+        except (zipfile.BadZipFile, LookupError):  # Corrupt zip file, or unknown encoding.
             Logger.logException("e", "Failed to unpack the file %s", filename)
         return package_json
 
