@@ -15,7 +15,7 @@ class FastConfigParser:
     as the getItem syntax config["foo"] returns a dict with the key value pairs in the header.
     """
     header_regex = re.compile(r"\[(\w+?)\]\n(.*?)(?:(?=\n\[(?:\w+?)\])|\Z)", re.S)
-    key_value_regex = re.compile(r"([^=\n !]+) *= *(.*?)(?:(?=\s+(?:[^=\n !<>\[]+) *= *[^=])|(?=\n\[)|\Z)", re.S)
+    key_value_regex = re.compile(r"([^=\n !]+)[ \t]*=[ \t]*(.*?)(?:(?=\s+(?:^[^=\n\t !<>\[]+)[ \t]*=[ \t]*[^=])|(?=\n\[)|\Z)", flags = re.S|re.M)
 
     def __init__(self, data: str) -> None:
         header_result = self.header_regex.findall(data)
@@ -34,3 +34,6 @@ class FastConfigParser:
 
     def __getitem__(self, key: str) -> Dict[str, supported_data]:
         return self._parsed_data[key]
+
+    def __iter__(self):
+        return iter(self._parsed_data)
