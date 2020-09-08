@@ -584,6 +584,8 @@ class PackageManager(QObject):
             shutil.move(src_dir, dst_dir)
         except FileExistsError:
             Logger.log("w", "Not moving %s to %s as the destination already exists", src_dir, dst_dir)
+        except EnvironmentError as e:
+            Logger.log("e", "Can't install package, operating system is blocking it: {err}".format(err = str(e)))
 
     # Gets package information from the given file.
     def getPackageInfo(self, filename: str) -> Dict[str, Any]:
