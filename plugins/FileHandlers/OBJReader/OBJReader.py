@@ -18,7 +18,7 @@ class OBJReader(MeshReader):
 
     def _toAbsoluteIndex(self, max, data):
         """ Handle negative indices (those are relative to the position, so -2 is the second one before the face). """
-        return [index if index > 0 else (1 + max) - index for index in data]
+        return [index if index > 0 else 1 + max + index for index in data]
 
     def _read(self, file_name):
         scene_node = None
