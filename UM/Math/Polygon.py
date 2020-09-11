@@ -133,6 +133,30 @@ class Polygon:
         point_matrix += point_on_axis
         return Polygon(point_matrix.getA()[::-1])
 
+    def scale(self, factor: float, origin: Optional[List[float]] = None) -> "Polygon":
+        """
+        Scales this polygon around a certain origin point.
+        :param factor: The scaling factor.
+        :param origin: Origin point around which to scale, 2D. As the scale
+        factor approaches 0, all coordinates will approach this origin point. As
+        the scale factor grows, all coordinates will move away from this origin
+        point. If `None`, the 0,0 coordinate will be used.
+        :return: A transformed polygon.
+        """
+        if origin is None:
+            origin = [0, 0]
+
+        transformation = numpy.identity(3) * factor  # Just the scaling matrix.
+        delta_scale = factor - 1
+        transformation[2][0] = delta_scale * -origin[0]
+        transformation[2][1] = delta_scale * -origin[1]
+
+        # Apply that affine transformation to the point data.
+        point_data = numpy.lib.pad(self._points, ((0, 0), (0, 1)), "constant", constant_values = (1))  # Turn 3D to do an affine transformation.
+        point_data = point_data.dot(transformation)
+
+        return Polygon(point_data[:, :-1])  # Leave out the affine component.
+
     def intersectionConvexHulls(self, other: "Polygon") -> "Polygon":
         """Computes the intersection of the convex hulls of this and another
         polygon.
