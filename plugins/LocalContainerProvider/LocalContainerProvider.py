@@ -294,7 +294,13 @@ class LocalContainerProvider(ContainerProvider):
             # See CURA-4024.
             Logger.log("w", "The definition cache for definition {definition_id} failed to pickle.".format(definition_id = definition.getId()))
             if os.path.exists(cache_path):
-                os.remove(cache_path)  # The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
+                try:
+                    os.remove(cache_path)  # The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
+                except PermissionError:
+                    # Someone else is touching this file.
+                    Logger.log("w", "Unable to remove picked file as another process has access to it %s", cache_path)
+        except PermissionError:
+            Logger.log("w", "Cura didn't get permission to save the definition {definition_id}".format(definition_id = definition.getId()))
 
     def _updatePathCache(self) -> None:
         """Updates the cache of paths to containers.
