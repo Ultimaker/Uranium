@@ -121,6 +121,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         if name != self.getName():
             self._metadata["name"] = name
+            self._dirty = True
             self.nameChanged.emit()
             self.metaDataChanged.emit(self)
 
