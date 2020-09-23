@@ -9,6 +9,7 @@ import stat  # For setting file permissions correctly;
 import time
 import types
 import zipfile
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 
 from PyQt5.QtCore import QCoreApplication
@@ -587,17 +588,23 @@ class PluginRegistry(QObject):
         # Define a trusted plugin as either: already checked, correctly signed, or bundled with the application.
         if self._check_if_trusted and plugin_id not in self._checked_plugin_ids and not self.isBundledPlugin(plugin_id):
 
-            # NOTE: '__pychache__'s (+ subfolders) are deleted on startup _before_ load module:
+            # NOTE: '__pychache__'s (+ subfolders) and .qmlc files are deleted on startup _before_ load module:
             try:
-                cache_folders_to_empty = []  # List[str]
+                cache_folders_to_empty = []  # type: List[str]
+                cache_files_to_remove = []  # type: List[str]
                 for root, dirnames, filenames in os.walk(path, followlinks = True):
                     for dirname in dirnames:
                         if dirname == "__pycache__":
                             cache_folders_to_empty.append(os.path.join(root, dirname))
+                    for filename in filenames:
+                        if Path(filename).suffix == ".qmlc":
+                            cache_files_to_remove.append(os.path.join(root, filename))
                 for cache_folder in cache_folders_to_empty:
                     for root, dirnames, filenames in os.walk(cache_folder, followlinks = True):
                         for filename in filenames:
                             os.remove(os.path.join(root, filename))
+                for cache_file in cache_files_to_remove:
+                    os.remove(cache_file)
             except:  # Yes, we  do really want this on _every_ exception that might occur.
                 Logger.logException("e", "Removal of pycache for unbundled plugin '{0}' failed.".format(plugin_id))
                 self._distrusted_plugin_ids.append(plugin_id)
