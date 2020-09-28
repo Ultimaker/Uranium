@@ -1,7 +1,7 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Union, TYPE_CHECKING
+from typing import Union, TYPE_CHECKING, Optional
 from UM.Scene.SceneNode import SceneNode
 from UM.Math.Vector import Vector
 
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class RotateOperation(Operation.Operation):
     """Operation that rotates a scene node."""
 
-    def __init__(self, node: SceneNode, rotation: "Quaternion", rotate_around_point: Vector = Vector(0, 0, 0)) -> None:
+    def __init__(self, node: SceneNode, rotation: "Quaternion", rotate_around_point: Optional[Vector] = None) -> None:
         """Initialises the operation.
 
         :param node: The node to rotate.
@@ -35,10 +35,11 @@ class RotateOperation(Operation.Operation):
 
     def redo(self) -> None:
         """Redoes the rotation, rotating the node again."""
-
-        self._node.setPosition(-self._rotate_around_point)
+        if self._rotate_around_point:
+            self._node.setPosition(-self._rotate_around_point)
         self._node.rotate(self._rotation, SceneNode.TransformSpace.World)
-        self._node.setPosition(self._rotate_around_point)
+        if self._rotate_around_point:
+            self._node.setPosition(self._rotate_around_point)
 
     def mergeWith(self, other: "RotateOperation") -> Union[bool, "RotateOperation"]:
         """Merges this operation with another RotateOperation.
