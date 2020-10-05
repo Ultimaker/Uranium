@@ -346,6 +346,10 @@ class Trust:
                         if not self._verifyFile(name_on_disk, signature):
                             self._violation_handler("File '{0}' didn't match with checksum.".format(name_on_disk))
                             return False
+                    for dirname in dirnames:
+                        dir_full_path = os.path.join(path, dirname)
+                        if os.path.islink(dir_full_path) and not self._follow_symlinks:
+                            Logger.log("w", "Directory '{0}' is a symbolic link and will not be followed.".format(dir_full_path))
 
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
