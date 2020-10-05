@@ -91,7 +91,8 @@ class PluginRegistry(QObject):
             self._trust_checker = Trust.getInstance()
             # 'Trust.getInstance()' will raise an exception if anything goes wrong (e.g.: 'unable to read public key').
             # Any such exception is explicitly _not_ caught here, as the application should quit with a crash.
-            self._trust_checker.setFollowSymlinks(debug_mode)
+            if self._trust_checker:
+                self._trust_checker.setFollowSymlinks(debug_mode)
 
     def getCheckIfTrusted(self) -> bool:
         return self._check_if_trusted
