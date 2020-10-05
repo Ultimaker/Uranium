@@ -272,6 +272,8 @@ class Trust:
         """
 
         self._public_key = None  # type: Optional[RSAPublicKey]
+        self._follow_symlinks = False  # type: bool
+
         try:
             with open(public_key_filename, "rb") as file:
                 self._public_key = load_pem_public_key(file.read(), backend = default_backend())
@@ -327,7 +329,7 @@ class Trust:
 
                 # Loop over all files within the folder (excluding the signature file):
                 file_count = 0
-                for root, dirnames, filenames in os.walk(path, followlinks = True):
+                for root, dirnames, filenames in os.walk(path, followlinks = self._follow_symlinks):
                     for filename in filenames:
                         if filename == TrustBasics.getSignaturesLocalFilename() and root == path:
                             continue
@@ -394,6 +396,9 @@ class Trust:
         """
 
         return os.path.exists(TrustBasics.getSignaturePathForFile(filename))
+
+    def setFollowSymlinks(self, follow_symlinks: bool) -> None:
+        self._follow_symlinks = follow_symlinks
 
 
 class TrustException(Exception):

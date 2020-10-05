@@ -80,16 +80,18 @@ class PluginRegistry(QObject):
         self._supported_file_types = {"umplugin": "Uranium Plugin"} # type: Dict[str, str]
 
         self._check_if_trusted = False  # type: bool
+        self._debug_mode = False  # type: bool
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
         self._trust_checker = None  # type: Optional[Trust]
 
-    def setCheckIfTrusted(self, check_if_trusted: bool) -> None:
+    def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
         self._check_if_trusted = check_if_trusted
         if self._check_if_trusted:
             self._trust_checker = Trust.getInstance()
             # 'Trust.getInstance()' will raise an exception if anything goes wrong (e.g.: 'unable to read public key').
             # Any such exception is explicitly _not_ caught here, as the application should quit with a crash.
+            self._trust_checker.setFollowSymlinks(debug_mode)
 
     def getCheckIfTrusted(self) -> bool:
         return self._check_if_trusted
