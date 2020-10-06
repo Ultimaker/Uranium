@@ -83,6 +83,7 @@ class PluginRegistry(QObject):
         self._debug_mode = False  # type: bool
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
+        self._is_clean_hierarchy_cache = {}  # type: Dict[str, bool]
         self._trust_checker = None  # type: Optional[Trust]
 
     def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
@@ -564,6 +565,30 @@ class PluginRegistry(QObject):
 
         return plugin_ids
 
+    def _hasCleanHierarchy(self, location: str, path: str) -> bool:
+        """ Check if, from the plugin-root to the path, there aren't any 'loose' files, but everything is in in folders.
+
+        :param path:
+        :return: True if the hierarchy above this path, until the nearest plugin-folder, doesn't have 'direct' files.
+        """
+
+        up_location = os.path.dirname(os.path.abspath(location))
+        up_path = os.path.abspath(path)
+
+        if path not in self._is_clean_hierarchy_cache:
+            is_clean = True
+            while up_path != up_location and is_clean:
+                up_path = os.path.dirname(up_path)
+                for filename in os.listdir(up_path):
+                    abs_filename = os.path.abspath(os.path.join(up_path, filename))
+                    if os.path.isfile(abs_filename):
+                        is_clean = False
+                        Logger.logException("e", "Found file outside of plugin hierarchy %s", abs_filename)
+                        break
+            self._is_clean_hierarchy_cache[path] = is_clean
+
+        return self._is_clean_hierarchy_cache[path]
+
     def _findPlugin(self, plugin_id: str) -> Optional[types.ModuleType]:
         """Try to find a module implementing a plugin
 
@@ -614,7 +639,9 @@ class PluginRegistry(QObject):
                 return None
 
             # Do the actual check:
-            if self._trust_checker is not None and self._trust_checker.signedFolderCheck(path):
+            if self._trust_checker is not None \
+                    and self._hasCleanHierarchy(location, path) \
+                    and self._trust_checker.signedFolderCheck(path):
                 self._checked_plugin_ids.append(plugin_id)
             else:
                 self._distrusted_plugin_ids.append(plugin_id)
