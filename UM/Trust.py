@@ -327,6 +327,12 @@ class Trust:
                     Logger.logException("e", "Can't parse (folder) signature file '{0}'.".format(data_file))
                     return False
 
+                # Any filename outside of the plugin-root is a sure sign of tampering:
+                for key in signatures_json.keys():
+                    if ".." in key:
+                        Logger.logException("e", "Suspect key '{0}' in signature file '{1}'.".format(key, data_file))
+                        return False
+
                 # Loop over all files within the folder (excluding the signature file):
                 file_count = 0
                 for root, dirnames, filenames in os.walk(path, followlinks = self._follow_symlinks):
