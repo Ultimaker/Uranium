@@ -80,6 +80,7 @@ class PluginRegistry(QObject):
         self._supported_file_types = {"umplugin": "Uranium Plugin"} # type: Dict[str, str]
 
         self._check_if_trusted = False  # type: bool
+        self._clean_hierarchy_sent_messages = []  # type: List[str]
         self._debug_mode = False  # type: bool
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
@@ -217,12 +218,13 @@ class PluginRegistry(QObject):
 
                 # Otherwise, the file can never have a valid signature associated with it, so message and abort:
                 else:
-
                     Logger.error("Plugins in %s won't load: File that can't be verified: %s", abs_path, abs_file)
-                    message_text = i18n_catalog.i18nc("@error:untrusted",
-                                                      "Plugin {} was not loaded because it could not be verified.",
-                                                      abs_path)
-                    Message(text=message_text).show()
+                    if abs_path not in self._clean_hierarchy_sent_messages:
+                        self._clean_hierarchy_sent_messages.append(abs_path)
+                        message_text = i18n_catalog.i18nc("@error:untrusted",
+                                                          "Plugin {} was not loaded because it could not be verified.",
+                                                          abs_path)
+                        Message(text=message_text).show()
                     return False
 
         # All is well:
