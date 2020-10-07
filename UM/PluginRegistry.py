@@ -251,10 +251,9 @@ class PluginRegistry(QObject):
 
     #   Add a plugin location to the list of locations to search:
     def addPluginLocation(self, location: str) -> None:
-        abs_path = os.path.abspath(location)
-        if not os.path.isdir(abs_path):
-            Logger.warning("Plugin location {0} must be a folder.".format(abs_path))
-            return False
+        if not os.path.isdir(location):
+            Logger.warning("Plugin location {0} must be a folder.".format(location))
+            return
 
         self._plugin_locations.append(location)
 
