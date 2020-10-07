@@ -224,6 +224,8 @@ class PluginRegistry(QObject):
                         message_text = i18n_catalog.i18nc("@error:untrusted",
                                                           "Plugin {} was not loaded because it could not be verified.",
                                                           abs_path)
+                        # TODO: Message now has exactly the same string as for an unverified plugin, rather than a
+                        #       folder which contains other plugins, because of the string freeze in the current branch.
                         Message(text=message_text).show()
                     return False
 
