@@ -21,7 +21,7 @@ from UM.Platform import Platform
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.PluginObject import PluginObject  # For type hinting
 from UM.Resources import Resources
-from UM.Trust import Trust, TrustException
+from UM.Trust import Trust, TrustBasics, TrustException
 from UM.Version import Version
 from UM.i18n import i18nCatalog
 
@@ -172,6 +172,62 @@ class PluginRegistry(QObject):
             # There is no need to crash the application for this, but it is a failure that we want to log.
             Logger.logException("e", "Unable to save the plugin data.")
 
+    def _isPathInLocation(self, location: str, path: str):
+        try:
+            is_in_path = os.path.commonpath([location, path]).startswith(location)
+        except ValueError:
+            is_in_path = False
+        return is_in_path
+
+    def _verifyCleanHierarchy(self, abs_path: str) -> bool:
+        """ Only trust plugins if not checking or when there are no other files (not in the exceptions) in parent-root.
+        :param abs_path: The path to check for violations.
+        :return: True if the hierarchy of the abs_path and below can potentially be trusted.
+        """
+
+        # Don't check plugins if not in a 'security scenario'. Hobbyists must be able to tinker without signing.
+        if not self._check_if_trusted:
+            return True
+
+        install_prefix = os.path.abspath(self._application.getInstallPrefix())
+
+        # Put the parent-root on the work-list:
+        worklist = [abs_path]
+        while worklist:
+            current_dir = worklist.pop()
+
+            # If the directory under scrutiny is a signed folder, bundled, or in the ignore list, it's ok:
+            has_signature_file = os.path.isfile(os.path.join(current_dir, TrustBasics.getSignaturesLocalFilename()))
+            is_bundled = self._isPathInLocation(install_prefix, current_dir)
+            in_ignore_list = os.path.basename(current_dir) in plugin_path_ignore_list
+            if has_signature_file or is_bundled or in_ignore_list:
+                continue
+
+            # Otherwise, for all files in the current directory:
+            for file in os.listdir(current_dir):
+                abs_file = os.path.join(current_dir, file)
+
+                # If the file is a sub-folder, put it on the work-list to be investigated in a later iteration:
+                if os.path.isdir(abs_file):
+                    worklist.append(abs_file)
+
+                # (Assume that there can be filenames in the ignore-list as well):
+                elif file in plugin_path_ignore_list:
+                    continue
+
+                # Otherwise, the file can never have a valid signature associated with it, so message and abort:
+                else:
+
+                    Logger.error("Plugins in %s won't load: File that can't be verified: %s", abs_path, abs_file)
+                    message_text = i18n_catalog.i18nc("@error:untrusted",
+                                                      "Plugin {} was not loaded because it could not be verified.",
+                                                      abs_path)
+                    Message(text=message_text).show()
+                    return False
+
+        # All is well:
+        return True
+
     # TODO:
     # - [ ] Improve how metadata is stored. It should not be in the 'plugin' prop
     #       of the dictionary item.
@@ -191,7 +247,11 @@ class PluginRegistry(QObject):
 
     #   Add a plugin location to the list of locations to search:
     def addPluginLocation(self, location: str) -> None:
-        #TODO: Add error checking!
+        abs_path = os.path.abspath(location)
+        if not os.path.isdir(abs_path):
+            Logger.warning("Plugin location {0} must be a folder.".format(abs_path))
+            return False
+
         self._plugin_locations.append(location)
 
     #   Check if all required plugins are loaded:
@@ -321,11 +381,7 @@ class PluginRegistry(QObject):
         # Go through all plugin locations and check if the given plugin is located in the installation path.
         is_bundled = False
         for plugin_dir in self._plugin_locations:
-            try:
-                is_in_installation_path = os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
-            except ValueError:
-                is_in_installation_path = False
-            if not is_in_installation_path:
+            if not self._isPathInLocation(install_prefix, plugin_dir):
                 # To prevent the situation in a 'trusted' env. that the user-folder has a supposedly 'bundled' plugin:
                 if self._check_if_trusted:
                     result = self._locatePlugin(plugin_id, plugin_dir)
@@ -575,6 +631,8 @@ class PluginRegistry(QObject):
             return self._found_plugins[plugin_id]
         location = None
         for folder in self._plugin_locations:
+            if not self._verifyCleanHierarchy(folder):
+                continue
             location = self._locatePlugin(plugin_id, folder)
             if location:
                 break
