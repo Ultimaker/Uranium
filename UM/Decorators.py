@@ -10,7 +10,15 @@ from typing import Callable, Any
 import time
 
 
-def deprecated(message, since = "Unknown"): #pylint: disable=bad-whitespace
+class Deprecated:
+    def __init__(self, class_name, message, since = "Unknown"):
+        warning = "{0} is deprecated (since {1}): {2}".format(class_name, since, message)
+        Logger.log("w_once", warning)
+        warnings.warn(warning, DeprecationWarning, stacklevel = 2)
+    pass
+
+
+def deprecated(message, since = "Unknown"):  # pylint: disable=bad-whitespace
     """Decorator that can be used to indicate a method has been deprecated
 
     :param message: The message to display when the method is called. Should include a suggestion about what to use.
