@@ -467,6 +467,19 @@ class ScaleTool(Tool):
         result._data[:3, :3] = U.dot(Vh)
         return result
 
+    def _getExtents(self, node, matrix):
+        extents = None
+        modified_matrix = matrix.multiply(node.getLocalTransformation(), copy = True)
+        if node.getMeshData():
+            extents = node.getMeshData().getExtents(modified_matrix)
+
+        for child in node.getChildren():
+            if extents is None:
+                extents = self._getExtents(child, modified_matrix)
+            else:
+                extents = extents + self._getExtents(child, modified_matrix)
+        return extents
+
     def _getRotatedExtents(self, node, with_translation = False):
         # The rotation matrix that we get back from our own decompose isn't quite correct for some reason.
         # It seems that it does not "draw the line" between scale, rotate & skew quite correctly in all cases.
@@ -486,12 +499,8 @@ class ScaleTool(Tool):
 
         for child in node.getChildren():
             # We want the children with their (local) translation, as this influences the size of the AABB.
-
-            child_matrix = rotated_matrix.copy()
-            child_matrix = child_matrix.multiply(child.getLocalTransformation())
-
             if extents is None:
-                extents = child.getMeshData().getExtents(child_matrix)
+                extents = self._getExtents(child, rotated_matrix)
             else:
-                extents = extents + child.getMeshData().getExtents(child_matrix)
+                extents = extents + self._getExtents(child, rotated_matrix)
         return extents
