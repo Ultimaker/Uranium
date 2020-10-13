@@ -173,7 +173,7 @@ class PluginRegistry(QObject):
             # There is no need to crash the application for this, but it is a failure that we want to log.
             Logger.logException("e", "Unable to save the plugin data.")
 
-    def _isPathInLocation(self, location: str, path: str):
+    def _isPathInLocation(self, location: str, path: str) -> bool:
         try:
             is_in_path = os.path.commonpath([location, path]).startswith(location)
         except ValueError:
