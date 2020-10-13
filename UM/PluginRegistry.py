@@ -197,11 +197,10 @@ class PluginRegistry(QObject):
         while worklist:
             current_dir = worklist.pop()
 
-            # If the directory under scrutiny is a signed folder, bundled, or in the ignore list, it's ok:
+            # If the directory under scrutiny is a signed folder or bundled, it's ok:
             has_signature_file = os.path.isfile(os.path.join(current_dir, TrustBasics.getSignaturesLocalFilename()))
             is_bundled = self._isPathInLocation(install_prefix, current_dir)
-            in_ignore_list = os.path.basename(current_dir) in plugin_path_ignore_list
-            if has_signature_file or is_bundled or in_ignore_list:
+            if has_signature_file or is_bundled:
                 continue
 
             # Otherwise it's outside of the trusted area, and needs to be checked whether stray file/folder or plugin:
@@ -211,10 +210,6 @@ class PluginRegistry(QObject):
                 # If the file is a sub-folder, put it on the work-list to be investigated in a later iteration:
                 if os.path.isdir(abs_file):
                     worklist.append(abs_file)
-
-                # (Assume that there can be filenames in the ignore-list as well):
-                elif file in plugin_path_ignore_list:
-                    continue
 
                 # Otherwise, the file can never have a valid signature associated with it, so message and abort:
                 else:
