@@ -294,7 +294,7 @@ class ScaleTool(Tool):
 
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().x), 4))
+            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).x), 4))
 
         return 1.0
 
@@ -306,7 +306,7 @@ class ScaleTool(Tool):
 
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().y), 4))
+            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).y), 4))
 
         return 1.0
 
@@ -318,7 +318,7 @@ class ScaleTool(Tool):
 
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().z), 4))
+            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).z), 4))
 
         return 1.0
 
@@ -386,7 +386,7 @@ class ScaleTool(Tool):
 
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
+            obj_scale = self._getScaleInWorldCoordinates(obj)
             if round(float(obj_scale.x), 4) != scale:
                 scale_factor = abs(scale / obj_scale.x)
                 if self._non_uniform_scale:
@@ -404,7 +404,7 @@ class ScaleTool(Tool):
 
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
+            obj_scale = self._getScaleInWorldCoordinates(obj)
             if round(float(obj_scale.y), 4) != scale:
                 scale_factor = abs(scale / obj_scale.y)
                 if self._non_uniform_scale:
@@ -422,7 +422,7 @@ class ScaleTool(Tool):
 
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
+            obj_scale = self._getScaleInWorldCoordinates(obj)
             if round(float(obj_scale.z), 4) != scale:
                 scale_factor = abs(scale / obj_scale.z)
                 if self._non_uniform_scale:
@@ -467,6 +467,19 @@ class ScaleTool(Tool):
         result._data[:3, :3] = U.dot(Vh)
         return result
 
+    def _getExtents(self, node, matrix):
+        extents = None
+        modified_matrix = matrix.multiply(node.getLocalTransformation(), copy = True)
+        if node.getMeshData():
+            extents = node.getMeshData().getExtents(modified_matrix)
+
+        for child in node.getChildren():
+            if extents is None:
+                extents = self._getExtents(child, modified_matrix)
+            else:
+                extents = extents + self._getExtents(child, modified_matrix)
+        return extents
+
     def _getRotatedExtents(self, node, with_translation = False):
         # The rotation matrix that we get back from our own decompose isn't quite correct for some reason.
         # It seems that it does not "draw the line" between scale, rotate & skew quite correctly in all cases.
@@ -477,16 +490,17 @@ class ScaleTool(Tool):
         # In order to remedy this, we use singular value decomposition.
         # SVD solves a = U s V.H for us, where A is the matrix. U and V.h are Rotation matrices and s holds the scale.
         extents = None
+        rotated_matrix = self._getSVDRotationFromMatrix(node.getWorldTransformation())
         if node.getMeshData():
-            rotated_matrix = self._getSVDRotationFromMatrix(node.getWorldTransformation())
             if with_translation:
                 rotated_matrix._data[:3, 3] = node.getPosition().getData()
 
             extents = node.getMeshData().getExtents(rotated_matrix)
+
         for child in node.getChildren():
             # We want the children with their (local) translation, as this influences the size of the AABB.
             if extents is None:
-                extents = self._getRotatedExtents(child, with_translation = True)
+                extents = self._getExtents(child, rotated_matrix)
             else:
-                extents = extents + self._getRotatedExtents(child, with_translation = True)
+                extents = extents + self._getExtents(child, rotated_matrix)
         return extents
