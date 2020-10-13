@@ -217,7 +217,7 @@ class PluginRegistry(QObject):
                     if abs_path not in self._clean_hierarchy_sent_messages:
                         self._clean_hierarchy_sent_messages.append(abs_path)
                         message_text = i18n_catalog.i18nc("@error:untrusted",
-                                                          "Plugin {} was not loaded because it could not be verified.",
+                                                          "Plugin {} was not loaded because it tried to load files outside of the trusted context",
                                                           abs_path)
                         # TODO: Message now has exactly the same string as for an unverified plugin, rather than a
                         #       folder which contains other plugins, because of the string freeze in the current branch.
