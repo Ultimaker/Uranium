@@ -39,17 +39,20 @@ class Message(QObject):
         :param lifetime: How long should the message be displayed (in seconds).
             if lifetime is 0, it will never automatically be destroyed.
         :param dismissible: Can the user dismiss the message?
-        :param title: Phrase that will be shown above the message
-        :param image_source: an absolute path where an image can be found to be displayed (QUrl.toLocalFile()) can be used for that.
-        :param image_caption: Text to be displayed below the image (or anywhere really, it's up tot the QML to handle that)
-        :param progress: Is there nay progress to be displayed? if -1, it's seen as indeterminate
+        :param title: Phrase that will be shown above the message.
+        :param image_source: an absolute path where an image can be found to be
+        displayed (QUrl.toLocalFile()) can be used for that.
+        :param image_caption: Text to be displayed below the image (or anywhere
+        really, it's up to the QML to handle that).
+        :param progress: Is there any progress to be displayed? if -1, it's seen
+        as indeterminate.
         """
 
         super().__init__(parent)
         from UM.Application import Application
         self._application = Application.getInstance()
         self._visible = False
-        self._text = text
+        self._text = text.replace("\n", "<br>")
         self._progress = progress  # If progress is set to -1, the progress is seen as indeterminate
         self._max_progress = 100  # type: float
         self._lifetime = lifetime
@@ -164,9 +167,9 @@ class Message(QObject):
 
     def getActions(self) -> List[Dict[str, Union[str, int]]]:
         """Get the list of actions to display buttons for on the message.
-        
+
         Each action is a dictionary with the elements provided in ``addAction``.
-        
+
         :return: A list of actions.
         """
 
@@ -186,17 +189,17 @@ class Message(QObject):
 
     def setText(self, text: str) -> None:
         """Changes the text on the message.
-        
+
         :param text: The new text for the message. Please ensure that this text
             is internationalised.
         """
 
-        self._text = text
+        self._text = text.replace("\n", "<br>")
         self.textChanged.emit(self)
 
     def getText(self) -> str:
         """Returns the text in the message.
-        
+
         :return: The text in the message.
         """
 
@@ -204,7 +207,7 @@ class Message(QObject):
 
     def setMaxProgress(self, max_progress: float) -> None:
         """Sets the maximum numerical value of the progress bar on the message.
-        
+
         If the reported progress hits this number, the bar will appear filled.
         """
 
@@ -212,11 +215,11 @@ class Message(QObject):
 
     def getMaxProgress(self) -> float:
         """Gets the maximum value of the progress bar on the message.
-        
+
         Note that this is not the _current_ value of the progress bar!
-        
+
         :return: The maximum value of the progress bar on the message.
-        
+
         :see getProgress
         """
 
@@ -224,7 +227,7 @@ class Message(QObject):
 
     def setProgress(self, progress: Optional[float]) -> None:
         """Changes the state of the progress bar.
-        
+
         :param progress: The new progress to display to the user. This should be
         between 0 and the value of `getMaxProgress()`. None to remove the progressbar
         """
@@ -240,7 +243,7 @@ class Message(QObject):
 
     def getProgress(self) -> Optional[float]:
         """Returns the current progress.
-        
+
         This should be a value between 0 and the value of ``getMaxProgress()``.
         If no progress is set (because the message doesn't have it) None is returned
         """
@@ -249,7 +252,7 @@ class Message(QObject):
 
     def setTitle(self, title: str) -> None:
         """Changes the message title.
-        
+
         :param title: The new title for the message. Please ensure that this text
         is internationalised.
         """
@@ -259,7 +262,7 @@ class Message(QObject):
 
     def getTitle(self) -> Optional[str]:
         """Returns the message title.
-        
+
         :return: The message title.
         """
 
@@ -267,7 +270,7 @@ class Message(QObject):
 
     def hide(self, send_signal = True) -> None:
         """Hides this message.
-        
+
         While the message object continues to exist in memory, it appears to the
         user that it is gone.
         """

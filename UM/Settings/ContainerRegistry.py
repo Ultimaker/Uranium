@@ -16,6 +16,7 @@ from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
 from UM.Resources import Resources
+from UM.Settings.EmptyInstanceContainer import EmptyInstanceContainer
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
 from UM.Settings.constant_instance_containers import empty_container
@@ -34,7 +35,7 @@ if TYPE_CHECKING:
 @signalemitter
 class ContainerRegistry(ContainerRegistryInterface):
     """Central class to manage all setting providers.
-    
+
     This class aggregates all data from all container providers. If only the
     metadata is used, it requests the metadata lazily from the providers. If
     more than that is needed, the entire container is requested from the
@@ -104,7 +105,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]:
         """Find all DefinitionContainer objects matching certain criteria.
-        
+
         :param dict kwargs: A dictionary of keyword arguments containing
         keys and values that need to match the metadata of the
         DefinitionContainer. An asterisk in the values can be used to denote a
@@ -115,7 +116,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def findDefinitionContainersMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
         """Get the metadata of all definition containers matching certain criteria.
-        
+
         :param kwargs: A dictionary of keyword arguments containing keys and
         values that need to match the metadata. An asterisk in the values can be
         used to denote a wildcard.
@@ -127,7 +128,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def findInstanceContainers(self, **kwargs: Any) -> List[InstanceContainer]:
         """Find all InstanceContainer objects matching certain criteria.
-        
+
         :param kwargs: A dictionary of keyword arguments containing
         keys and values that need to match the metadata of the
         InstanceContainer. An asterisk in the values can be used to denote a
@@ -138,7 +139,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def findInstanceContainersMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
         """Find the metadata of all instance containers matching certain criteria.
-        
+
         :param kwargs: A dictionary of keyword arguments containing keys and
         values that need to match the metadata. An asterisk in the values can be
         used to denote a wildcard.
@@ -150,7 +151,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def findContainerStacks(self, **kwargs: Any) -> List[ContainerStack]:
         """Find all ContainerStack objects matching certain criteria.
-        
+
         :param kwargs: A dictionary of keyword arguments containing
         keys and values that need to match the metadata of the ContainerStack.
         An asterisk in the values can be used to denote a wildcard.
@@ -160,7 +161,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def findContainerStacksMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
         """Find the metadata of all container stacks matching certain criteria.
-        
+
         :param kwargs: A dictionary of keyword arguments containing keys and
         values that need to match the metadata. An asterisk in the values can be
         used to denote a wildcard.
@@ -173,13 +174,13 @@ class ContainerRegistry(ContainerRegistryInterface):
     @UM.FlameProfiler.profile
     def findContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
         """Find all container objects matching certain criteria.
-        
+
         :param container_type: If provided, return only objects that are
         instances or subclasses of container_type.
         :param kwargs: A dictionary of keyword arguments containing
         keys and values that need to match the metadata of the container. An
         asterisk can be used to denote a wildcard.
-        
+
         :return: A list of containers matching the search criteria, or an empty
         list if nothing was found.
         """
@@ -213,7 +214,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[Dict[str, Any]]:
         """Find the metadata of all container objects matching certain criteria.
-        
+
         :param container_type: If provided, return only objects that are
         instances or subclasses of ``container_type``.
         :param kwargs: A dictionary of keyword arguments containing keys and
@@ -259,13 +260,13 @@ class ContainerRegistry(ContainerRegistryInterface):
     def findDirtyContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
         """Specialized find function to find only the modified container objects
         that also match certain criteria.
-        
+
         This is faster than the normal find methods since it won't ever load all
         containers, but only the modified ones. Since containers must be fully
         loaded before they are modified, you are guaranteed that any operations
         on the resulting containers will not trigger additional containers to
         load lazily.
-        
+
         :param kwargs: A dictionary of keyword arguments containing
         keys and values that need to match the metadata of the container. An
         asterisk can be used to denote a wildcard.
@@ -305,7 +306,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def isReadOnly(self, container_id: str) -> bool:
         """Returns whether a profile is read-only or not.
-        
+
         Whether it is read-only depends on the source where the container is
         obtained from.
         :return: True if the container is read-only, or False if it can be
@@ -329,7 +330,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def isLoaded(self, container_id: str) -> bool:
         """Returns whether a container is completely loaded or not.
-        
+
         If only its metadata is known, it is not yet completely loaded.
         :return: True if all data about this container is known, False if only
         metadata is known or the container is completely unknown.
@@ -365,7 +366,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def load(self) -> None:
         """Load all available definition containers, instance containers and
         container stacks.
-        
+
         :note This method does not clear the internal list of containers. This means that any containers
         that were already added when the first call to this method happened will not be re-added.
         """
@@ -393,10 +394,10 @@ class ContainerRegistry(ContainerRegistryInterface):
         Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
 
     @UM.FlameProfiler.profile
-    def addContainer(self, container: ContainerInterface) -> None:
+    def addContainer(self, container: ContainerInterface) -> bool:
         container_id = container.getId()
         if container_id in self._containers:
-            return
+            return True  # Container was already there, consider that a success
 
         if hasattr(container, "metaDataChanged"):
             container.metaDataChanged.connect(self._onContainerMetaDataChanged)
@@ -404,7 +405,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.metadata[container_id] = container.getMetaData()
         self._containers[container_id] = container
         if container_id not in self.source_provider:
-            self.source_provider[container_id] = None #Added during runtime.
+            self.source_provider[container_id] = None  # Added during runtime.
         self._clearQueryCacheByContainer(container)
 
         # containerAdded is a custom signal and can trigger direct calls to its subscribers. This should be avoided
@@ -413,6 +414,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         # We avoid the direct calls here to make sure that the subscribers do not need to take into account any max
         # recursion problem.
         self._application.callLater(self.containerAdded.emit, container)
+        return True
 
     @UM.FlameProfiler.profile
     def removeContainer(self, container_id: str) -> None:
@@ -441,12 +443,11 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_id in self.metadata:
             if container is None:
                 # We're in a bit of a weird state now. We want to notify the rest of the code that the container
-                # has been deleted, but due to lazy loading, it hasnt even been loaded yet. The issues is that in order
-                # to notify the rest of the code, we need to actually *have* the container. So we need to load it
-                # in order to remove it...
-                provider = self.source_provider.get(container_id)
-                if provider:
-                    container = provider.loadContainer(container_id)
+                # has been deleted, but due to lazy loading, it hasn't been loaded yet. The issues is that in order
+                # to notify the rest of the code, we need to actually *have* the container. So an empty instance 
+                # container is created, which is emitted with the containerRemoved signal and contains the metadata
+                container = EmptyInstanceContainer(container_id)
+                container.metaData = self.metadata[container_id]
             del self.metadata[container_id]
         if container_id in self.source_provider:
             if self.source_provider[container_id] is not None:
@@ -500,10 +501,10 @@ class ContainerRegistry(ContainerRegistryInterface):
     @UM.FlameProfiler.profile
     def uniqueName(self, original: str) -> str:
         """Creates a new unique name for a container that doesn't exist yet.
-        
+
         It tries if the original name you provide exists, and if it doesn't
         it'll add a "        1" or "        2" after the name to make it unique.
-        
+
         :param original: The original name that may not be unique.
         :return: A unique name that looks a lot like the original but may have
         a number behind it to make it unique.
@@ -532,7 +533,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def addContainerType(cls, container: "PluginObject") -> None:
         """Add a container type that will be used to serialize/deserialize containers.
-        
+
         :param container: An instance of the container type to add.
         """
 
@@ -556,9 +557,9 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def getMimeTypeForContainer(cls, container_type: type) -> Optional[MimeType]:
         """Retrieve the mime type corresponding to a certain container type
-        
+
         :param container_type: The type of container to get the mime type for.
-        
+
         :return: A MimeType object that matches the mime type of the container or None if not found.
         """
 
@@ -573,9 +574,9 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def getContainerForMimeType(cls, mime_type):
         """Get the container type corresponding to a certain mime type.
-        
+
         :param mime_type: The mime type to get the container type for.
-        
+
         :return: A class object of a container type that corresponds to the specified mime type or None if not found.
         """
 
@@ -584,7 +585,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def getContainerTypes(cls):
         """Get all the registered container types
-        
+
         :return: A dictionary view object that provides access to the container types.
         The key is the plugin ID, the value the container type.
         """
@@ -600,6 +601,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             return
 
         provider.saveContainer(container) #type: ignore
+        container.setDirty(False)
         self.source_provider[container.getId()] = provider
 
     def saveDirtyContainers(self) -> None:
@@ -612,53 +614,6 @@ class ContainerRegistry(ContainerRegistryInterface):
 
             for stack in self.findContainerStacks():
                 self.saveContainer(stack)
-
-    # Load a binary cached version of a DefinitionContainer
-    def _loadCachedDefinition(self, definition_id: str, path: str) -> None:
-        try:
-            cache_path = Resources.getPath(Resources.Cache, "definitions", self._application.getVersion(), definition_id)
-
-            cache_mtime = os.path.getmtime(cache_path)
-            definition_mtime = os.path.getmtime(path)
-
-            if definition_mtime > cache_mtime:
-                # The definition is newer than the cached version, so ignore the cached version.
-                Logger.log("d", "Definition file %s is newer than cache, ignoring cached version", path)
-                return None
-
-            with open(cache_path, "rb") as f:
-                definition = pickle.load(f)
-
-            for file_path in definition.getInheritedFiles():
-                if os.path.getmtime(file_path) > cache_mtime:
-                    return None
-
-            return definition
-        except FileNotFoundError:
-            return None
-        except Exception as e:
-            # We could not load a cached version for some reason. Ignore it.
-            Logger.logException("d", "Could not load cached definition for {path}: {err}".format(path = path, err = str(e)))
-            return None
-
-    # Store a cached version of a DefinitionContainer
-    def _saveCachedDefinition(self, definition: DefinitionContainer):
-        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self._application.getVersion(), definition.id)
-
-        # Ensure the cache path exists
-        os.makedirs(os.path.dirname(cache_path), exist_ok = True)
-
-        try:
-            with open(cache_path, "wb") as f:
-                pickle.dump(definition, f, pickle.HIGHEST_PROTOCOL)
-        except RecursionError:
-            #Sometimes a recursion error in pickling occurs here.
-            #The cause is unknown. It must be some circular reference in the definition instances or definition containers.
-            #Instead of saving a partial cache and raising an exception, simply fail to save the cache.
-            #See CURA-4024.
-            Logger.log("w", "The definition cache for definition {definition_id} failed to pickle.".format(definition_id = definition.getId()))
-            if os.path.exists(cache_path):
-                os.remove(cache_path) #The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
 
     # Clear the internal query cache
     def _clearQueryCache(self, *args: Any, **kwargs: Any) -> None:
@@ -684,7 +639,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def _onContainerMetaDataChanged(self, *args: ContainerInterface, **kwargs: Any) -> None:
         """Called when any container's metadata changed.
-        
+
         This function passes it on to the containerMetaDataChanged signal. Sadly
         that doesn't work automatically between pyqtSignal and UM.Signal.
         """
@@ -696,7 +651,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def _isMetadataValid(self, metadata: Optional[Dict[str, Any]]) -> bool:
         """Validate a metadata object.
-        
+
         If the metadata is invalid, the container is not allowed to be in the
         registry.
         :param metadata: A metadata object.

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
@@ -12,13 +12,13 @@ from UM.Math.Matrix import Matrix
 
 class Quaternion:
     """Unit Quaternion class based on numpy arrays.
-    
+
     This class represents a Unit quaternion that can be used for rotations.
-    
+
     :note The operations that modify this quaternion will ensure the length
     of the quaternion remains 1. This is done to make this class simpler
     to use.
-    
+
     """
 
     EPS = numpy.finfo(float).eps * 4.0
@@ -48,7 +48,7 @@ class Quaternion:
 
     def setByAngleAxis(self, angle: float, axis: Vector) -> None:
         """Set quaternion by providing rotation about an axis.
-        
+
         :param angle: :type{float} Angle in radians
         :param axis: :type{Vector} Axis of rotation
         """
@@ -238,7 +238,7 @@ class Quaternion:
     @staticmethod
     def rotationTo(v1, v2):
         """Returns a quaternion representing the rotation from vector 1 to vector 2.
-        
+
         :param v1: :type{Vector} The vector to rotate from.
         :param v2: :type{Vector} The vector to rotate to.
         """
@@ -248,7 +248,6 @@ class Quaternion:
         if d >= 1.0:
             return Quaternion() # Vectors are equal, no rotation needed.
 
-        q = None
         if Float.fuzzyCompare(d, -1.0, 1e-6):
             axis = Vector.Unit_X.cross(v1)
 

@@ -191,6 +191,7 @@ ListView
                 color: UM.Theme.getColor("text")
                 font: UM.Theme.getFont("large_bold")
                 height: contentHeight
+                linkColor: UM.Theme.getColor("text_link")
             }
         }
 
@@ -223,6 +224,7 @@ ListView
             font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap
             renderType: Text.NativeRendering
+            linkColor: UM.Theme.getColor("text_link")
         }
 
         CheckBox

@@ -57,7 +57,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def __init__(self, stack_id: str) -> None:
         """Constructor
-        
+
         :param stack_id: A unique, machine readable/writable ID.
         """
 
@@ -97,7 +97,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getId(self) -> str:
         """:copydoc ContainerInterface::getId
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -107,7 +107,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getName(self) -> str:
         """:copydoc ContainerInterface::getName
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -115,12 +115,13 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def setName(self, name: str) -> None:
         """Set the name of this stack.
-        
+
         :param name: The new name of the stack.
         """
 
         if name != self.getName():
             self._metadata["name"] = name
+            self._dirty = True
             self.nameChanged.emit()
             self.metaDataChanged.emit(self)
 
@@ -131,7 +132,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def isReadOnly(self) -> bool:
         """:copydoc ContainerInterface::isReadOnly
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -147,7 +148,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getMetaData(self) -> Dict[str, Any]:
         """:copydoc ContainerInterface::getMetaData
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -176,7 +177,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
         """:copydoc ContainerInterface::getMetaDataEntry
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -214,15 +215,15 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
         """:copydoc ContainerInterface::getProperty
-        
+
         Reimplemented from ContainerInterface.
-        
+
         getProperty will start at the top of the stack and try to get the property
         specified. If that container returns no value, the next container on the
         stack will be tried and so on until the bottom of the stack is reached.
         If a next stack is defined for this stack it will then try to get the
         value from that stack. If no next stack is defined, None will be returned.
-        
+
         Note that if the property value is a function, this method will return the
         result of evaluating that property with the current stack. If you need the
         actual function, use getRawProperty()
@@ -240,10 +241,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getRawProperty(self, key: str, property_name: str, *, context: Optional[PropertyEvaluationContext] = None, use_next: bool = True, skip_until_container: Optional[ContainerInterface] = None) -> Any:
         """Retrieve a property of a setting by key and property name.
-        
+
         This method does the same as getProperty() except it does not perform any
         special handling of the result, instead the raw stored value is returned.
-        
+
         :param key: The key to get the property value of.
         :param property_name: The name of the property to get the value of.
         :param use_next: True if the value should be retrieved from the next
@@ -251,10 +252,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         :param skip_until_container: A container ID to skip to. If set, it will
         be as if all containers above the specified container are empty. If the
         container is not in the stack, it'll try to find it in the next stack.
-        
+
         :return: The raw property value of the property, or None if not found. Note that
         the value might be a SettingFunction instance.
-        
+
         """
 
 
@@ -289,9 +290,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def hasProperty(self, key: str, property_name: str) -> bool:
         """:copydoc ContainerInterface::hasProperty
-        
+
         Reimplemented from ContainerInterface.
-        
+
         hasProperty will check if any of the containers in the stack has the
         specified property. If it does, it stops and returns True. If it gets to
         the end of the stack, it returns False.
@@ -313,9 +314,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         """:copydoc ContainerInterface::serialize
-        
+
         Reimplemented from ContainerInterface
-        
+
         TODO: Expand documentation here, include the fact that this should _not_ include all containers
         """
 
@@ -346,7 +347,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     @classmethod
     def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
         """Deserializes the given data and checks if the required fields are present.
-        
+
         The profile upgrading code depends on information such as "configuration_type" and "version", which come from
         the serialized data. Due to legacy problem, those data may not be available if it comes from an ancient Cura.
         """
@@ -389,9 +390,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         """:copydoc ContainerInterface::deserialize
-        
+
         Reimplemented from ContainerInterface
-        
+
         TODO: Expand documentation here, include the fact that this should _not_ include all containers
         """
 
@@ -452,10 +453,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
         """Gets the metadata of a container stack from a serialised format.
-        
+
         This parses the entire CFG document and only extracts the metadata from
         it.
-        
+
         :param serialized: A CFG document, serialised as a string.
         :param container_id: The ID of the container that we're getting the
         metadata of, as obtained from the file name.
@@ -485,10 +486,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getAllKeys(self) -> Set[str]:
         """Get all keys known to this container stack.
-        
+
         In combination with getProperty(), you can obtain the current property
         values of all settings.
-        
+
         :return: A set of all setting keys in this container stack.
         """
 
@@ -502,7 +503,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getContainers(self) -> List[ContainerInterface]:
         """Get a list of all containers in this stack.
-        
+
         Note that it returns a shallow copy of the container list, as it's only allowed to change the order or entries
         in this list by the proper functions.
         :return: A list of all containers in this stack.
@@ -515,11 +516,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getContainer(self, index: int) -> ContainerInterface:
         """Get a container by index.
-        
+
         :param index: The index of the container to get.
-        
+
         :return: The container at the specified index.
-        
+
         :exception IndexError: Raised when the specified index is out of bounds.
         """
 
@@ -529,9 +530,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getTop(self) -> Optional[ContainerInterface]:
         """Get the container at the top of the stack.
-        
+
         This is a convenience method that will always return the top of the stack.
-        
+
         :return: The container at the top of the stack, or None if no containers have been added.
         """
 
@@ -542,9 +543,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getBottom(self) -> Optional[ContainerInterface]:
         """Get the container at the bottom of the stack.
-        
+
         This is a convenience method that will always return the bottom of the stack.
-        
+
         :return: The container at the bottom of the stack, or None if no containers have been added.
         """
 
@@ -555,7 +556,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getPath(self) -> str:
         """:copydoc ContainerInterface::getPath.
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -563,7 +564,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def setPath(self, path: str) -> None:
         """:copydoc ContainerInterface::setPath
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -588,7 +589,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     @UM.FlameProfiler.profile
     def findContainer(self, criteria: Dict[str, Any] = None, container_type: type = None, **kwargs: Any) -> Optional[ContainerInterface]:
         """Find a container matching certain criteria.
-        
+
         :param criteria: A dictionary containing key and value pairs that need to
         match the container. Note that the value of "*" can be used as a wild
         card. This will ensure that any container that has the specified key in
@@ -625,7 +626,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def addContainer(self, container: ContainerInterface) -> None:
         """Add a container to the top of the stack.
-        
+
         :param container: The container to add to the stack.
         """
 
@@ -633,7 +634,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def insertContainer(self, index: int, container: ContainerInterface) -> None:
         """Insert a container into the stack.
-        
+
         :param index: The index of to insert the container at.
         A negative index counts from the bottom
         :param container: The container to add to the stack.
@@ -649,11 +650,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def replaceContainer(self, index: int, container: ContainerInterface, postpone_emit: bool = False) -> None:
         """Replace a container in the stack.
-        
+
         :param index: :type{int} The index of the container to replace.
         :param container: The container to replace the existing entry with.
         :param postpone_emit:  During stack manipulation you may want to emit later.
-        
+
         :exception IndexError: Raised when the specified index is out of bounds.
         :exception Exception: when trying to replace container ContainerStack.
         """
@@ -675,9 +676,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def removeContainer(self, index: int = 0) -> None:
         """Remove a container from the stack.
-        
+
         :param index: :type{int} The index of the container to remove.
-        
+
         :exception IndexError: Raised when the specified index is out of bounds.
         """
 
@@ -694,10 +695,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def getNextStack(self) -> Optional["ContainerStack"]:
         """Get the next stack
-        
+
         The next stack is the stack that is searched for a setting value if the
         bottom of the stack is reached when searching for a value.
-        
+
         :return: :type{ContainerStack} The next stack or None if not set.
         """
 
@@ -705,7 +706,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def setNextStack(self, stack: "ContainerStack", connect_signals: bool = True) -> None:
         """Set the next stack
-        
+
         :param stack: :type{ContainerStack} The next stack to set. Can be None.
         Raises Exception when trying to set itself as next stack (to prevent infinite loops)
         :sa getNextStack

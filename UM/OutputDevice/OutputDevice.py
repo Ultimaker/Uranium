@@ -11,17 +11,17 @@ from UM.Signal import Signal, signalemitter
 @signalemitter
 class OutputDevice():
     """Base class for output devices.
-    
+
     This class provides a base class for output devices. An output device can be
     anything we want to output to, like a local file, an USB connected printer but
     also an HTTP web service.
-    
+
     Each subclass must implement requestWrite(). requestWrite() is expected to raise
     errors from OutputDeviceError when certain conditions occur, like insufficient
     permissions. For the rest, output device subclasses are completely free to implement
     writing however they want, though you should emit writeStarted and related signals
     whenever certain events happen related to the write process.
-    
+
     For example, when implementing a web service as output device, it would be completely
     acceptable to show a login dialog when calling requestWrite() if there are no saved
     login credentials.
@@ -51,7 +51,7 @@ class OutputDevice():
 
     def setName(self, name: str) -> None:
         """Set the human-readable name of this device.
-        
+
         :param name: The new name of this device.
         """
 
@@ -61,7 +61,7 @@ class OutputDevice():
 
     def getShortDescription(self) -> str:
         """Get a short description for this device.
-        
+
         The short description can be used as a button label or similar
         and should thus be only a few words at most. For example,
         "Save to File", "Print with USB".
@@ -71,7 +71,7 @@ class OutputDevice():
 
     def setShortDescription(self, description: str) -> None:
         """Set the short description for this device.
-        
+
         :param description: The new short description to set.
         """
 
@@ -81,7 +81,7 @@ class OutputDevice():
 
     def getDescription(self) -> str:
         """Get a full description for this device.
-        
+
         The full description describes what would happen when writing
         to this device. For example, "Save to Removable Drive /media/sdcard",
         "Upload to YouMagine with account User".
@@ -91,7 +91,7 @@ class OutputDevice():
 
     def setDescription(self, description: str) -> None:
         """Set the full description for this device.
-        
+
         :param description: The description of this device.
         """
 
@@ -101,7 +101,7 @@ class OutputDevice():
 
     def getIconName(self) -> str:
         """Get the name of an icon that can be used to identify this device.
-        
+
         This icon should be available in the theme.
         """
 
@@ -109,7 +109,7 @@ class OutputDevice():
 
     def setIconName(self, name: str) -> None:
         """Set the name of an icon to identify this device.
-        
+
         :param name: The name of the icon to use.
         """
 
@@ -119,7 +119,7 @@ class OutputDevice():
 
     def getPriority(self) -> int:
         """The priority of this device.
-        
+
         Priority indicates which device is most likely to be used as the
         default device to write to. It should be a number and higher numbers
         indicate that the device should be preferred over devices with
@@ -130,7 +130,7 @@ class OutputDevice():
 
     def setPriority(self, priority: int) -> None:
         """Set the priority of this device.
-        
+
         :param priority: The priority to use.
         """
 
@@ -142,12 +142,12 @@ class OutputDevice():
                      file_handler: Optional[FileHandler] = None, filter_by_machine: bool = False,
                      **kwargs: str) -> None:
         """Request performing a write operation on this device.
-        
+
         This method should be implemented by subclasses. It should write the
         given SceneNode forest to a destination relevant for the device. It is
         recommended to perform the actual writing asynchronously and rely on
         the write signals to properly indicate state.
-        
+
         :param nodes: A collection of scene nodes that should be written to the
         device.
         :param file_name: A suggestion for the file name to write

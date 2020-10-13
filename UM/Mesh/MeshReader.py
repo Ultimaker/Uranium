@@ -14,7 +14,7 @@ class MeshReader(FileReader):
     def read(self, file_name: str) -> Union[SceneNode, List[SceneNode]]:
         """Read mesh data from file and returns a node that contains the data 
         Note that in some cases you can get an entire scene of nodes in this way (eg; 3MF)
-        
+
         :return: node :type{SceneNode} or :type{list(SceneNode)} The SceneNode or SceneNodes read from file.
         """
 

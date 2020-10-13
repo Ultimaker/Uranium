@@ -13,7 +13,7 @@ from UM.Settings.DefinitionContainer import DefinitionContainer
 
 class ContainerPropertyProvider(QObject):
     """This class provides the value and change notifications for the properties of a single setting
-    
+
     This class provides the property values through QObject dynamic properties so that they
     are available from QML.
     """
@@ -102,7 +102,7 @@ class ContainerPropertyProvider(QObject):
     @pyqtSlot(str, "QVariant")
     def setPropertyValue(self, property_name, property_value):
         """Set the value of a property.
-        
+
         :param property_name: The name of the property to set.
         :param property_value: The value of the property to set.
         """

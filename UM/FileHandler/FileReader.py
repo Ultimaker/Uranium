@@ -24,7 +24,7 @@ class FileReader(PluginObject):
 
     def acceptsFile(self, file_name):
         """Returns true if file_name can be processed by this plugin.
-        
+
         :return: boolean indication if this plugin accepts the file specified.
         """
 
@@ -39,7 +39,7 @@ class FileReader(PluginObject):
         """Executed before reading the file. This is used, for example, to display an import
         configuration dialog. If a plugin displays such a dialog,
         this function should block until it has been closed.
-        
+
         :return: indicating if the user accepted or canceled the dialog.
         """
 
@@ -47,7 +47,7 @@ class FileReader(PluginObject):
 
     def read(self, file_name):
         """Read mesh data from file and returns a node that contains the data
-        
+
         :return: data read.
         """
 

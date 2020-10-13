@@ -22,11 +22,11 @@ class LayFlatOperation(Operation.Operation):
 
     def __init__(self, node, orientation = None):
         """Creates the operation.
-        
+
         An optional orientation may be added if the answer of this lay flat
         operation is already known. This may occur if two lay flat operations
         are combined.
-        
+
         :param node: The scene node to apply the operation on.
         :param orientation: A pre-calculated result orientation.
         """
@@ -45,7 +45,7 @@ class LayFlatOperation(Operation.Operation):
 
     def process(self):
         """Computes some orientation to hopefully lay the object flat.
-        
+
         No promises! This algorithm finds the lowest three vertices and lays
         them flat. This is a rather naive heuristic, but fast and practical.
         """
@@ -116,10 +116,10 @@ class LayFlatOperation(Operation.Operation):
 
     def _emitProgress(self, progress):
         """Increments the progress.
-        
+
         This lets the progress bar update to give the user an impression of how
         long he still has to wait.
-        
+
         :param progress: The amount of progress made since the last emission.
         """
 
@@ -146,13 +146,13 @@ class LayFlatOperation(Operation.Operation):
 
     def mergeWith(self, other):
         """Merge this lay flat operation with another lay flat operation.
-        
+
         If multiple lay flat operations are executed in sequence, the user needs
         to press undo only once to undo them all.
-        
+
         You should ONLY merge a lay flat operation with an older operation. It
         is NOT symmetric.
-        
+
         :param other: The lay flat operation to merge this operation with. The
         specified operation must be an older operation than this operation.
         :return: True if the merge was successful, or False otherwise.

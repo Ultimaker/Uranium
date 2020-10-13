@@ -26,7 +26,7 @@ class MirrorTool(Tool):
 
     def event(self, event):
         """Handle mouse and keyboard events
-        
+
         :param event: type(Event)
         """
 

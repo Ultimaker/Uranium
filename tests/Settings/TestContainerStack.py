@@ -151,7 +151,7 @@ def test_deserializeMetadata():
         name = Test
         id = testid
         version = {version}
-        
+
         [metadata]
         foo = bar
         """.format(version=ContainerStack.Version)

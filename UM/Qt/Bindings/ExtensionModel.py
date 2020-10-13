@@ -12,19 +12,19 @@ class ExtensionModel(ListModel):
     NameRole = Qt.UserRole + 1
     ActionsRole = Qt.UserRole + 2
     ExtensionRole = Qt.UserRole + 3
-    
+
     def __init__(self, parent = None):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.ActionsRole, "actions")
         self.addRoleName(self.ExtensionRole, "extension")
         self._updateExtensionList()
-    
+
     def _updateExtensionList(self):
         # Active_plugins = self._plugin_registry.getActivePlugins()
         for extension in Application.getInstance().getExtensions():
             meta_data = Application.getInstance().getPluginRegistry().getMetaData(extension.getPluginId())
-            
+
             if "plugin" in meta_data:
                 menu_name = extension.getMenuName()
 
@@ -45,7 +45,7 @@ class ExtensionModel(ListModel):
         if len(options) != 0:
             return model
         return None
-    
+
     @pyqtSlot(str, str)
     def subMenuTriggered(self, extension_name, option_name):
         for item in self._items:

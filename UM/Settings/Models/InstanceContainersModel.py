@@ -80,7 +80,7 @@ class InstanceContainersModel(ListModel):
 
     def _recomputeItems(self) -> Generator[Dict[str, Any], None, None]:
         """Computes the items that need to be in this list model.
-        
+
         This does not set the items in the list itself. It is intended to be
         overwritten by subclasses that add their own roles to the model.
         """
@@ -109,9 +109,9 @@ class InstanceContainersModel(ListModel):
 
     def _fetchInstanceContainers(self) -> Tuple[Dict[str, InstanceContainer], Dict[str, Dict[str, Any]]]:
         """Fetch the list of containers to display.
-        
+
         This method is intended to be overridable by subclasses.
-        
+
         :return: A tuple of an ID-to-instance mapping that includes all fully loaded containers, and
         an ID-to-metadata mapping that includes the containers of which only the metadata is known.
         """
@@ -155,7 +155,7 @@ class InstanceContainersModel(ListModel):
 
     def setFilterList(self, filter_list: List[Dict[str, str]]) -> None:
         """Set a list of filters to use when fetching containers.
-        
+
         :param filter_list: List of filter dicts to fetch multiple sets of
         containers. The final result is the union of these sets.
         """
@@ -174,7 +174,7 @@ class InstanceContainersModel(ListModel):
         """Gets a list of the possible file filters that the plugins have registered they can read or write.
         The convenience meta-filters "All Supported Types" and "All Files" are added when listing readers,
         but not when listing writers.
-        
+
         :param io_type: Name of the needed IO type
         :return: A list of strings indicating file name filters for a file dialog.
         """

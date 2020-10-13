@@ -7,7 +7,7 @@ from collections import deque
 from threading import RLock
 from typing import Callable, cast, Dict, Set, Union, Optional, Any
 
-from PyQt5.QtCore import QObject, QUrl, Qt
+from PyQt5.QtCore import QObject, QUrl, Qt, pyqtSignal, pyqtProperty
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from UM.Logger import Logger
@@ -73,13 +73,15 @@ class HttpRequestManager(TaskManager):
 
     __instance = None  # type: Optional[HttpRequestManager]
 
+    internetReachableChanged = pyqtSignal(bool)
+
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "HttpRequestManager":
         if cls.__instance is None:
             cls.__instance = cls(*args, **kwargs)
         return cls.__instance
 
-    def __init__(self, max_concurrent_requests: int = 10, parent: Optional["QObject"] = None,
+    def __init__(self, max_concurrent_requests: int = 4, parent: Optional["QObject"] = None,
                  enable_request_benchmarking: bool = False) -> None:
         if HttpRequestManager.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
@@ -89,6 +91,7 @@ class HttpRequestManager(TaskManager):
 
         self._network_manager = QNetworkAccessManager(self)
         self._account_manager = None
+        self._is_internet_reachable = True
 
         # All the requests that have been issued to the QNetworkManager are considered as running concurrently. This
         # number defines the max number of requests that will be issued to the QNetworkManager.
@@ -107,6 +110,10 @@ class HttpRequestManager(TaskManager):
         # Enabling benchmarking will make the manager to time how much time it takes for a request from start to finish
         # and log them.
         self._enable_request_benchmarking = enable_request_benchmarking
+
+    @pyqtProperty(bool, notify = internetReachableChanged)
+    def isInternetReachable(self) -> bool:
+        return self._is_internet_reachable
 
     # Public API for creating an HTTP GET request.
     # Returns an HttpRequestData instance that represents this request.
@@ -314,14 +321,11 @@ class HttpRequestManager(TaskManager):
                 # Do nothing if there's no more requests to process
                 if not self._request_queue:
                     self._process_requests_scheduled = False
-                    Logger.log("d", "No more requests to process, stop")
                     return
 
                 # Do not exceed the max request limit
                 if len(self._requests_in_progress) >= self._max_concurrent_requests:
                     self._process_requests_scheduled = False
-                    Logger.log("d", "The in-progress requests has reached the limit %s, stop",
-                               self._max_concurrent_requests)
                     return
 
                 # Fetch the next request and process
@@ -343,8 +347,6 @@ class HttpRequestManager(TaskManager):
         reply = method(*args)
         request_data.reply = reply
 
-        Logger.log("i", "Request [%s] started", request_data.request_id)
-
         # Connect callback signals
         reply.error.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.QueuedConnection)
         reply.finished.connect(lambda rd = request_data: self._onRequestFinished(rd), type = Qt.QueuedConnection)
@@ -363,6 +365,12 @@ class HttpRequestManager(TaskManager):
         error_string = None
         if request_data.reply is not None:
             error_string = request_data.reply.errorString()
+
+        if error == QNetworkReply.UnknownNetworkError or QNetworkReply.HostNotFoundError:
+            self._setInternetReachable(False)
+            # manager seems not always able to recover from a total loss of network access, so re-create it
+            self._network_manager = QNetworkAccessManager(self)
+
         Logger.log("d", "%s got an error %s, %s", request_data, error, error_string)
 
         with self._request_lock:
@@ -384,7 +392,6 @@ class HttpRequestManager(TaskManager):
 
         # Schedule the error callback if there is one
         if request_data.error_callback is not None:
-            Logger.log("d", "%s error callback scheduled", request_data)
             self.callLater(0, request_data.error_callback, request_data.reply, error)
 
         # Continue to process the next request
@@ -399,13 +406,17 @@ class HttpRequestManager(TaskManager):
         # We do nothing if the request was aborted or and error was detected because an error callback will also
         # be triggered by Qt.
         reply = request_data.reply
-        if reply is not None and reply.error() != QNetworkReply.NoError:
-            if reply.error() == QNetworkReply.OperationCanceledError:
-                Logger.log("d", "%s was aborted, do nothing", request_data)
-            # stop processing for any kind of error
-            return
+        if reply is not None:
+            reply_error = reply.error()  # error() must only be called once
+            if reply_error != QNetworkReply.NoError:
+                if reply_error == QNetworkReply.OperationCanceledError:
+                    Logger.log("d", "%s was aborted, do nothing", request_data)
 
-        Logger.log("i", "Request [%s] finished.", request_data.request_id)
+                # stop processing for any kind of error
+                return
+
+        # No error? Internet is reachable
+        self._setInternetReachable(True)
 
         if self._enable_request_benchmarking:
             time_spent = None  # type: Optional[float]
@@ -441,3 +452,8 @@ class HttpRequestManager(TaskManager):
 
         # Continue to process the next request
         self._processNextRequestsInQueue()
+
+    def _setInternetReachable(self, reachable: bool):
+        if reachable != self._is_internet_reachable:
+            self._is_internet_reachable = reachable
+            self.internetReachableChanged.emit(reachable)

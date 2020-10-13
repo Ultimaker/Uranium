@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import functools  # For partial to update files that were changed.
@@ -25,7 +25,7 @@ i18n_catalog = i18nCatalog("uranium")
 @signalemitter
 class Scene:
     """Container object for the scene graph
-    
+
     The main purpose of this class is to provide the root SceneNode.
     """
 
@@ -116,15 +116,15 @@ class Scene:
 
     sceneChanged = Signal()
     """Signal that is emitted whenever something in the scene changes.
-    
+
     :param object: The object that triggered the change.
     """
 
     def findObject(self, object_id: int) -> Optional["SceneNode"]:
         """Find an object by id.
-        
+
         :param object_id: The id of the object to search for, as returned by the python id() method.
-        
+
         :return: The object if found, or None if not.
         """
 
@@ -162,7 +162,10 @@ class Scene:
     def _onFileChanged(self, file_path: str) -> None:
         """Triggered whenever a file is changed that we currently have loaded."""
 
-        if not os.path.isfile(file_path) or os.path.getsize(file_path) == 0:  # File doesn't exist any more, or it is empty
+        try:
+            if os.path.getsize(file_path) == 0:  # File is empty.
+                return
+        except EnvironmentError:  # Or it doesn't exist any more, or we have no access any more.
             return
 
         # Multiple nodes may be loaded from the same file at different stages. Reload them all.
@@ -207,7 +210,7 @@ class Scene:
 
     def _reloadJobFinished(self, replaced_node: SceneNode, job: ReadMeshJob) -> None:
         """Triggered when reloading has finished.
-        
+
         This then puts the resulting mesh data in the node.
         """
 

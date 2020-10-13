@@ -4,7 +4,7 @@
 
 def parseBool(value):
     """Convert a value to a boolean
-    
+
     :param :type{bool|str|int} any value.
     :return: :type{bool}
     """

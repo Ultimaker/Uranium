@@ -22,10 +22,10 @@ from UM.Settings.Validator import Validator
 
 class SettingPropertyProvider(QObject):
     """This class provides the value and change notifications for the properties of a single setting
-    
+
     Since setting values and other properties are provided by a stack, we need some way to
     query the stack from QML to provide us with those values. This class takes care of that.
-    
+
     This class provides the property values through QObject dynamic properties so that they
     are available from QML.
     """
@@ -182,7 +182,7 @@ class SettingPropertyProvider(QObject):
     @pyqtSlot(str, "QVariant")
     def setPropertyValue(self, property_name, property_value):
         """Set the value of a property.
-        
+
         :param stack_index: At which level in the stack should this property be set?
         :param property_name: The name of the property to set.
         :param property_value: The value of the property to set.
@@ -388,10 +388,10 @@ class SettingPropertyProvider(QObject):
             pass
 
     def _containersChanged(self, container = None):
-        self._updateDelayed(container = container)
+        self._updateDelayed()
 
-    def _storeIndexChanged(self, container = None):
-        self._updateDelayed(container = container)
+    def _storeIndexChanged(self):
+        self._updateDelayed()
 
     def _updateStackLevels(self) -> None:
         """Updates the self._stack_levels field, which indicates at which levels in the stack the property is set."""

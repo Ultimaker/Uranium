@@ -17,7 +17,7 @@ class InputDevice(PluginObject):
 
     event = Signal()
     """Emitted whenever the device produces an event.
-    
+
     All actions performed with the device should be seen as an event.
     :param event: The event that is emitted.
     """

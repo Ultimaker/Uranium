@@ -33,10 +33,10 @@ class FileLogger(LogOutput):
             self._logger.addHandler(file_handler)
         else:
             pass  # TODO, add handling
-    
+
     def log(self, log_type: str, message: str) -> None:
         """Log message to file. 
-        
+
         :param log_type: "e" (error), "i"(info), "d"(debug), "w"(warning) or "c"(critical) (can postfix with "_once")
         :param message: String containing message to be logged
         """

@@ -66,10 +66,10 @@ class Preferences:
 
     def setDefault(self, key: str, default_value: Any) -> None:
         """Changes the default value of a preference.
-        
+
         If the preference is currently set to the old default, the value of the
         preference will be set to the new default.
-        
+
         :param key: The key of the preference to set the default of.
         :param default_value: The new default value of the preference.
         """
@@ -157,7 +157,8 @@ class Preferences:
         except Exception as e:
             Logger.log("e", "Failed to write preferences to %s: %s", file, str(e))
 
-    preferenceChanged = Signal()
+    # A lot of things listen in on the preference changed signal, so always queue it for the next frame.
+    preferenceChanged = Signal(Signal.Queued)
 
     def _splitKey(self, key: str) -> Tuple[str, str]:
         group = "general"
@@ -205,8 +206,8 @@ class Preferences:
         self._parser = configparser.ConfigParser(interpolation = None)
         try:
             self._parser.read_string(updated_preferences)
-        except configparser.MissingSectionHeaderError:
-            Logger.log("w", "Could not deserialize preferences from loaded project")
+        except (configparser.MissingSectionHeaderError, configparser.DuplicateOptionError, configparser.DuplicateSectionError, configparser.ParsingError, configparser.InterpolationError) as e:
+            Logger.log("w", "Could not deserialize preferences file: {error}".format(error = str(e)))
             self._parser = None
             return
         has_version = "general" in self._parser and "version" in self._parser["general"]

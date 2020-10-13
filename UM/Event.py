@@ -121,7 +121,7 @@ class WheelEvent(MouseEvent):
 
     def __init__(self, horizontal: int, vertical: int, x: int = 0, y: int = 0) -> None:
         """Create a new scroll wheel event.
-        
+
         :param horizontal: How far the scroll wheel scrolled horizontally, in
                eighths of a degree. To the right is positive. To the left is negative.
         :param vertical: How far the scroll wheel scrolled vertically, in eighths
@@ -136,7 +136,7 @@ class WheelEvent(MouseEvent):
     def horizontal(self) -> int:
         """How far the scroll wheel was scrolled horizontally, in eighths of a
         degree.
-        
+
         To the right is positive. To the left is negative.
         """
 
@@ -146,7 +146,7 @@ class WheelEvent(MouseEvent):
     def vertical(self) -> int:
         """How far the scroll wheel was scrolled vertically, in eighths of a
         degree.
-        
+
         Up is positive. Down is negative.
         """
 
@@ -155,12 +155,12 @@ class WheelEvent(MouseEvent):
 
 class KeyEvent(Event):
     """Event regarding the keyboard.
-    
+
     These events are raised when anything changes in the keyboard state. They
     keep track of the event type that was given by Qt, for instance whether it
     was a KeyPressEvent or a KeyReleaseEvent, and they keep track of which key
     it was.
-    
+
     Only the special keys are tracked (Shirt, Space, Escape, etc.), not the
     normal letter keys.
     """
@@ -192,7 +192,7 @@ class KeyEvent(Event):
     @property
     def key(self) -> int:
         """Which key was pressed.
-        
+
         Compare this with `KeyEvent.AltKey`, `KeyEvent.EnterKey`, etc.
         """
 

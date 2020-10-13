@@ -14,7 +14,7 @@ from typing import List
 @signalemitter
 class OperationStack():
     """A stack of operations.
-    
+
     This maintains the history of operations, which allows for undoing and
     re-doing these operations.
     """
@@ -39,14 +39,14 @@ class OperationStack():
 
     def push(self, operation):
         """Push an operation on the stack.
-        
+
         This will perform the following things in sequence:
         - If the current index is pointing to an item lower in the stack than
         the top, remove all operations from the current index to the top.
         - Append the operation to the stack.
         - Call redo() on the operation.
         - Perform merging of operations.
-        
+
         :param operation: :type{Operation} The operation to push onto the stack.
         """
 
@@ -73,7 +73,7 @@ class OperationStack():
 
     def undo(self):
         """Undo the current operation.
-        
+
         This will call undo() on the current operation and decrement the current index.
         """
 
@@ -85,7 +85,7 @@ class OperationStack():
 
     def redo(self):
         """Redo the next operation.
-        
+
         This will call redo() on the current operation and increment the current index.
         """
 
@@ -98,9 +98,9 @@ class OperationStack():
 
     def getOperations(self):
         """Get the list of operations in the stack.
-        
+
         The end of the list represents the more recent operations.
-        
+
         :return: A list of the operations on the stack, in order.
         """
 
@@ -109,7 +109,7 @@ class OperationStack():
 
     def canUndo(self):
         """Whether we can undo any more operations.
-        
+
         :return: True if we can undo any more operations, or False otherwise.
         """
 
@@ -117,7 +117,7 @@ class OperationStack():
 
     def canRedo(self):
         """Whether we can redo any more operations.
-        
+
         :return: True if we can redo any more operations, or False otherwise.
         """
 
@@ -128,7 +128,7 @@ class OperationStack():
 
     def _doMerge(self):
         """Merges two operations at the current position in the stack.
-        
+
         This merges the "most recent" operation with the one before it. The
         "most recent" operation is the one that would be undone if the user
         would trigger an undo, i.e. the one at _current_index.

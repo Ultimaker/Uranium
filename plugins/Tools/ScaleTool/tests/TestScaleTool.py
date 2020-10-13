@@ -81,7 +81,8 @@ def test_objectWidthDepthHeight(scale_tool):
 def test_objectWidthDepthHeight_noSelection(scale_tool):
     # If no object is selected, we should get some sane defaults.
     selection = MagicMock()
-    selection.hasSelection = MagicMock(return_value=False)
+    selection.hasSelection = MagicMock(return_value = False)
+    selection.getSelectedObject = MagicMock(return_value = None)
     with patch("ScaleTool.Selection", selection):
         assert scale_tool.getObjectWidth() == 0
         assert scale_tool.getObjectHeight() == 0

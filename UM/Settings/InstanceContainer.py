@@ -10,6 +10,7 @@ from typing import Any, cast, Dict, List, Optional, Set, Tuple
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlEngine #To take ownership of this class ourselves.
 
+from UM.FastConfigParser import FastConfigParser
 from UM.Trust import Trust
 from UM.Decorators import override
 from UM.Settings.Interfaces import DefinitionContainerInterface
@@ -21,7 +22,7 @@ from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.SettingInstance import SettingInstance
-
+import re
 
 class InvalidInstanceError(Exception):
     pass
@@ -49,10 +50,13 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     """A container for SettingInstance objects."""
 
     Version = 4
+    version_regex = re.compile("\nversion ?= ?(\d+)")
+    setting_version_regex = re.compile("\nsetting_version ?= ?(\d+)")
+    type_regex = re.compile("\ntype ?= ?(\w+)")
 
     def __init__(self, container_id: str, parent: QObject = None, *args: Any, **kwargs: Any) -> None:
         """Constructor
-        
+
         :param container_id: A unique, machine readable/writable ID for this container.
         """
 
@@ -142,7 +146,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getId(self) -> str:
         """:copydoc ContainerInterface::getId
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -162,7 +166,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getPath(self) -> str:
         """:copydoc ContainerInterface::getPath.
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -170,7 +174,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setPath(self, path: str) -> None:
         """:copydoc ContainerInterface::setPath
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -178,7 +182,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getName(self) -> str:
         """:copydoc ContainerInterface::getName
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -215,7 +219,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getMetaData(self) -> Dict[str, Any]:
         """:copydoc ContainerInterface::getMetaData
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -243,7 +247,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getMetaDataEntry(self, entry: str, default = None) -> Any:
         """:copydoc ContainerInterface::getMetaDataEntry
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -251,10 +255,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setMetaDataEntry(self, key: str, value: Any) -> None:
         """Set a metadata entry to a certain value.
-        
+
         :param key: The key of the metadata entry to set.
         :param value: The new value of the metadata.
-        
+
         :note This does nothing if the key is not already added to the metadata.
         """
 
@@ -276,7 +280,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
         """:copydoc ContainerInterface::getProperty
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -294,7 +298,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def hasProperty(self, key: str, property_name: str) -> bool:
         """:copydoc ContainerInterface::hasProperty
-        
+
         Reimplemented from ContainerInterface.
         """
 
@@ -337,11 +341,11 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setProperty(self, key: str, property_name: str, property_value: Any, container: ContainerInterface = None, set_from_cache: bool = False) -> None:
         """Set the value of a property of a SettingInstance.
-        
+
         This will set the value of the specified property on the SettingInstance corresponding to key.
         If no instance has been created for the specified key, a new one will be created and inserted
         into this instance.
-        
+
         :param key: The key of the setting to set a property of.
         :param property_name:  The name of the property to set.
         :param property_value: The new value of the property.
@@ -349,7 +353,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         updates. Defaults to None, which means use the current container.
         :param set_from_cache: Flag to indicate that the property was set from cache. This triggers the behavior that
         the read_only and setDirty are ignored.
-        
+
         :note If no definition container is set for this container, new instances cannot be created and this method
         will do nothing.
         """
@@ -406,10 +410,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def duplicate(self, new_id: str, new_name: str = None) -> "InstanceContainer":
         """Create a new InstanceContainer with the same contents as this container
-        
+
         :param new_id: The new ID of the container
         :param new_name: The new name of the container. Defaults to None to indicate the name should not change.
-        
+
         :return: A new InstanceContainer with the same contents as this container.
         """
 
@@ -440,7 +444,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         """:copydoc ContainerInterface::serialize
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -480,11 +484,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return stream.getvalue()
 
     @classmethod
-    def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
+    def _readAndValidateSerialized(cls, serialized: str) -> FastConfigParser:
         # Disable comments in the ini files, so text values can start with a ;
         # without being removed as a comment
-        parser = configparser.ConfigParser(interpolation = None, comment_prefixes = ())
-        parser.read_string(serialized)
+        parser = FastConfigParser(serialized)
 
         has_general = "general" in parser
         has_version = has_general and "version" in parser["general"]
@@ -503,32 +506,36 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     @classmethod
     def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
-        configuration_type = None
-        try:
-            parser = cls._readAndValidateSerialized(serialized)
-            configuration_type = parser["metadata"].get("type")
-        except InvalidInstanceError as iie:
-            raise iie
-        except Exception as e:
-            Logger.log("d", "Could not get configuration type: %s", e)
+        regex_result = cls.type_regex.search(serialized)
+        configuration_type = ""
+        if regex_result is not None:
+            configuration_type = str(regex_result.groups()[-1])
+
         return configuration_type
 
     @classmethod
-    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
-        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
-        if configuration_type is None:
-            Logger.log("w", "Could not determine configuration type.")
-            return None
-        # get version
-        version = None
-        try:
-            import UM.VersionUpgradeManager
-            version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
-                                                                                                  serialized)
-        except Exception as e:
-            #Logger.log("d", "Could not get version from serialized: %s", e)
-            pass
-        return version
+    def getVersionFromSerialized(cls, serialised: str) -> int:
+        """
+        Gets the version number from a config file.
+
+        In all config files that concern this version upgrade, the version number is stored in general/version, so get
+        the data from that key.
+
+        :param serialised: The contents of a config file.
+        :return: The version number of that config file.
+        """
+        format_version = 1
+        setting_version = 0
+
+        regex_result = cls.version_regex.search(serialised)
+        if regex_result is not None:
+            format_version = int(regex_result.groups()[-1])
+
+        regex_result = cls.setting_version_regex.search(serialised)
+        if regex_result is not None:
+            setting_version = int(regex_result.groups()[-1])
+
+        return format_version * 1000000 + setting_version
 
     @override(ContainerInterface)
     def _trustHook(self, file_name: Optional[str]) -> bool:
@@ -545,7 +552,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                 common_path = os.path.commonpath([install_prefix, file_name])
             except ValueError:
                 common_path = ""
-            if common_path is "" or not common_path.startswith(install_prefix):
+            if common_path == "" or not common_path.startswith(install_prefix):
                 if trust_instance.signatureFileExistsFor(file_name):
                     _containerRegistry.setExplicitReadOnly(self.getId())  # TODO???: self._read_only = True
                     if not trust_instance.signedFileCheck(file_name):
@@ -554,7 +561,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         """:copydoc ContainerInterface::deserialize
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -593,10 +600,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
         """Gets the metadata of an instance container from a serialised format.
-        
+
         This parses the entire CFG document and only extracts the metadata from
         it.
-        
+
         :param serialized: A CFG document, serialised as a string.
         :param container_id: The ID of the container to get the metadata of, as obtained from the file name.
         :return: A dictionary of metadata that was in the CFG document in a singleton list. If anything went
@@ -604,8 +611,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         """
 
         serialized = cls._updateSerialized(serialized)  # Update to most recent version.
-        parser = configparser.ConfigParser(interpolation = None)
-        parser.read_string(serialized)
+        parser = FastConfigParser(serialized)
 
         metadata = {
             "id": container_id,
@@ -636,7 +642,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def findInstances(self, **kwargs: Any) -> List[SettingInstance]:
         """Find instances matching certain criteria.
-        
+
         :param kwargs: A dictionary of keyword arguments with key-value pairs that should match properties of the instances.
         """
 
@@ -730,7 +736,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setDefinition(self, definition_id: str) -> None:
         """Set the DefinitionContainer to use for new instance creation.
-        
+
         Since SettingInstance needs a SettingDefinition to work properly, we need some
         way of figuring out what SettingDefinition to use when creating a new SettingInstance.
         """
@@ -751,8 +757,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def __str__(self) -> str:
         """Simple string representation for debugging."""
-
-        return "<InstanceContainer '{container_id}' ('{name}')>".format(container_id = self.getId(), name = self.getName())
+        return "<InstContainer '{container_id}'>".format(container_id = self.getId())
 
     def __repr__(self) -> str:
         return str(self)

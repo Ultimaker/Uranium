@@ -90,7 +90,7 @@ class RenderBatch:
             self._blend_mode = self.BlendMode.NoBlending if self._render_type == self.RenderType.Solid else self.BlendMode.Normal
         self._state_setup_callback = kwargs.get("state_setup_callback", None)
         self._state_teardown_callback = kwargs.get("state_teardown_callback", None)
-        self._items = []  # type: List[Dict[str, Union[MeshData, Matrix, Dict[str, Any]]]]
+        self._items = []  # type: List[Dict[str, Union[MeshData, Matrix, Dict[str, Any], None]]]
 
         self._view_matrix = None  # type: Optional[Matrix]
         self._projection_matrix = None  # type: Optional[Matrix]
@@ -150,7 +150,7 @@ class RenderBatch:
 
         return False
 
-    def addItem(self, transformation: Optional[Matrix], mesh: Optional[MeshData], uniforms = None):
+    def addItem(self, transformation: Optional[Matrix], mesh: Optional[MeshData], uniforms = None, normal_transformation: Optional[Matrix] = None):
         """Add an item to render to this batch.
 
         :param transformation: The transformation matrix to use for rendering the item.
@@ -165,7 +165,7 @@ class RenderBatch:
             Logger.log("w", "Tried to add an item to batch without mesh")
             return
 
-        self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms})
+        self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms, "normal_transformation": normal_transformation})
 
     def render(self, camera: Optional[Camera]):
         """Render the batch.
@@ -242,8 +242,8 @@ class RenderBatch:
         if mesh.getVertexCount() == 0:
             return
 
-        normal_matrix = None
-        if mesh.hasNormals():
+        normal_matrix = item["normal_transformation"]
+        if mesh.hasNormals() and normal_matrix is None:
             normal_matrix = Matrix(transformation.getData())
             normal_matrix.setRow(3, [0, 0, 0, 1])
             normal_matrix.setColumn(3, [0, 0, 0, 1])
@@ -272,19 +272,20 @@ class RenderBatch:
             index_buffer.bind()
 
         self._shader.enableAttribute("a_vertex", "vector3f", 0)
-        offset = mesh.getVertexCount() * 3 * 4
+        vertex_count = mesh.getVertexCount()
+        offset = vertex_count * 3 * 4
 
         if mesh.hasNormals():
             self._shader.enableAttribute("a_normal", "vector3f", offset)
-            offset += mesh.getVertexCount() * 3 * 4
+            offset += vertex_count * 3 * 4
 
         if mesh.hasColors():
             self._shader.enableAttribute("a_color", "vector4f", offset)
-            offset += mesh.getVertexCount() * 4 * 4
+            offset += vertex_count * 4 * 4
 
         if mesh.hasUVCoordinates():
             self._shader.enableAttribute("a_uvs", "vector2f", offset)
-            offset += mesh.getVertexCount() * 2 * 4
+            offset += vertex_count * 2 * 4
 
         for attribute_name in mesh.attributeNames():
             attribute = mesh.getAttribute(attribute_name)
@@ -304,7 +305,7 @@ class RenderBatch:
         if mesh.hasIndices():
             if self._render_range is None:
                 if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3, self._gl.GL_UNSIGNED_INT, None)
                 else:
                     self._gl.glDrawElements(self._render_mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
             else:
@@ -313,15 +314,8 @@ class RenderBatch:
                 else:
                     self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
         else:
-            self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
+            self._gl.glDrawArrays(self._render_mode, 0, vertex_count)
 
-        self._shader.disableAttribute("a_vertex")
-        self._shader.disableAttribute("a_normal")
-        self._shader.disableAttribute("a_color")
-        self._shader.disableAttribute("a_uvs")
-        for attribute_name in mesh.attributeNames():
-            attribute = mesh.getAttribute(attribute_name)
-            self._shader.disableAttribute(attribute.get("opengl_name"))
         vertex_buffer.release()
 
         if index_buffer is not None:

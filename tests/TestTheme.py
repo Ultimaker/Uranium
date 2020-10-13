@@ -56,4 +56,4 @@ def test_knownImage(theme):
 
 
 def test_unknownImage(theme):
-    assert theme.getImage("BoringBusinessPictureWhichIsAboslutelyNotAKitten") == QUrl()
+    assert theme.getImage("BoringBusinessPictureWhichIsAbsolutelyNotAKitten") == QUrl()

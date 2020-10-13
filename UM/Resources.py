@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import datetime
@@ -7,6 +7,7 @@ import os.path
 import re
 import shutil
 import tempfile
+import time  # To reduce chance of concurrency issues when deleting files if the OS is slow to register whether a file exists or not.
 from typing import Dict, Generator, List, Optional, Union, cast
 
 from UM.Logger import Logger
@@ -65,14 +66,14 @@ class Resources:
     @classmethod
     def getPath(cls, resource_type: int, *args) -> str:
         """Get the path to a certain resource file
-        
+
         :param resource_type: :type{int} The type of resource to retrieve a path for.
         :param args: Arguments that are appended to the location to locate the correct file.
-        
+
         :return: An absolute path to a file.
             If a file exists in any storage path, it is returned without searching other paths.
             If multiple files are found the first found is returned.
-        
+
         :exception FileNotFoundError: Raised when the file could not be found.
         """
 
@@ -92,9 +93,9 @@ class Resources:
     @classmethod
     def getAllResourcesOfType(cls, resource_type: int) -> List[str]:
         """Get a list of paths to all resources of a certain resource type.
-        
+
         :param resource_type: The resource type to get the paths for.
-        
+
         :return: A list of absolute paths to resources of the specified type.
         """
 
@@ -124,12 +125,12 @@ class Resources:
     @classmethod
     def getStoragePath(cls, resource_type: int, *args) -> str:
         """Get the path that can be used to write a certain resource file.
-        
+
         :param resource_type: The type of resource to retrieve a path for.
         :param args: Arguments that are appended to the location for the correct path.
-        
+
         :return: A path that can be used to write the file.
-        
+
         :note This method does not check whether a given file exists.
         """
 
@@ -138,10 +139,10 @@ class Resources:
     @classmethod
     def getAllPathsForType(cls, resource_type: int) -> List[str]:
         """Return a list of paths for a certain resource type.
-        
+
         :param resource_type: The type of resource to retrieve.
         :return: A list of absolute paths where the resource type can be found.
-        
+
         :exception TypeError Raised when type is an unknown value.
         """
 
@@ -163,10 +164,10 @@ class Resources:
     @classmethod
     def getStoragePathForType(cls, resource_type: int) -> str:
         """Return a path where a certain resource type can be stored.
-        
+
         :param type: The type of resource to store.
         :return: An absolute path where the given resource type can be stored.
-        
+
         :exception UnsupportedStorageTypeError Raised when writing type is not supported.
         """
 
@@ -195,7 +196,7 @@ class Resources:
     @classmethod
     def addSearchPath(cls, path: str) -> None:
         """Add a path relative to which resources should be searched for.
-        
+
         :param path: The path to add.
         """
 
@@ -212,7 +213,7 @@ class Resources:
     @classmethod
     def addType(cls, resource_type: int, path: str) -> None:
         """Add a custom resource type that can be located.
-        
+
         :param resource_type: An integer that can be used to identify the type. Should be greater than UserType.
         :param path: The path relative to the search paths where resources of this type can be found./
         """
@@ -228,7 +229,7 @@ class Resources:
     @classmethod
     def addStorageType(cls, resource_type: int, path: str) -> None:
         """Add a custom storage path for a resource type.
-        
+
         :param resource_type: The type to add a storage path for.
         :param path: The path to add as storage path. Should be relative to the resources storage path.
         """
@@ -242,7 +243,7 @@ class Resources:
     @classmethod
     def getConfigStoragePath(cls) -> str:
         """Gets the configuration storage path.
-        
+
         This is where the application stores user configuration, such as
         preferences.
         """
@@ -254,7 +255,7 @@ class Resources:
     @classmethod
     def getDataStoragePath(cls) -> str:
         """Gets the data storage path.
-        
+
         This is where the application stores user files, such as profiles.
         """
 
@@ -265,7 +266,7 @@ class Resources:
     @classmethod
     def getCacheStoragePath(cls) -> str:
         """Gets the cache storage path.
-        
+
         This is where the application stores cache files.
         """
 
@@ -276,7 +277,7 @@ class Resources:
     @classmethod
     def getSearchPaths(cls) -> Generator[str, None, None]:
         """Gets the search paths for resources.
-        
+
         :return: A sequence of paths where resources might be.
         """
 
@@ -301,7 +302,7 @@ class Resources:
     def factoryReset(cls) -> None:
         """Performs a factory reset, compressing the current state of configuration
         into an archive and emptying the resource folders.
-        
+
         When calling this function, be sure to quit the application immediately
         afterwards, lest the save function write the configuration anew.
         """
@@ -520,7 +521,15 @@ class Resources:
         # Remove "cache" if we copied it together with config
         suspected_cache_path = os.path.join(this_version_config_path, "cache")
         if os.path.exists(suspected_cache_path):
-            shutil.rmtree(suspected_cache_path)
+            try:
+                shutil.rmtree(suspected_cache_path)
+            except EnvironmentError:  # No rights to this directory or it gets deleted asynchronously.
+                try:
+                    time.sleep(1)
+                    shutil.rmtree(suspected_cache_path)  # Sometimes it seems to help to try again after a short while, to prevent concurrency issues.
+                except EnvironmentError:
+                    Logger.error("Failed to delete cache, cache might be outdated and lead to weird errors: {err}")
+                    pass
 
     @classmethod
     def copyVersionFolder(cls, src_path: str, dest_path: str) -> None:

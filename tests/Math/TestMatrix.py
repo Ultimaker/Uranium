@@ -20,7 +20,7 @@ class TestMatrix(unittest.TestCase):
 
     def test_setByQuaternion(self):
         pass
-    
+
     def test_multiply(self):
         temp_matrix = Matrix()
         temp_matrix.setByTranslation(Vector(10,10,10))
@@ -37,7 +37,7 @@ class TestMatrix(unittest.TestCase):
         result = temp_matrix.multiply(temp_matrix2, copy=True)
         assert temp_matrix != result 
         numpy.testing.assert_array_almost_equal(result.getData(), numpy.array([[0.5, 0, 0, 10], [0, 0.5, 0, 10], [0, 0, 0.5, 10], [0, 0, 0, 1]]))
-    
+
     def test_preMultiply(self):
         temp_matrix = Matrix()
         temp_matrix.setByTranslation(Vector(10,10,10))

@@ -34,7 +34,7 @@ class BackendProxy(QObject):
     @pyqtProperty(int, notify = backendStateChange)
     def state(self):
         """Returns the current state of processing of the backend.
-        
+
         :return: :type{IntEnum} The current state of the backend.
         """
 

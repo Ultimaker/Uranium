@@ -23,7 +23,7 @@ class DurationFormat(QObject):
 
 class Duration(QObject):
     """A class representing a time duration.
-    
+
     This is primarily used as a value type to QML so we can report things
     like "How long will this print take" without needing a bunch of logic
     in the QML.
@@ -31,7 +31,7 @@ class Duration(QObject):
 
     def __init__(self, duration: Optional[int] = None, parent = None) -> None:
         """Create a duration object.
-        
+
         :param duration: The duration in seconds. If this is None (the default), an invalid Duration object will be created.
         :param parent: The QObject parent.
         """
@@ -74,7 +74,7 @@ class Duration(QObject):
 
     def setDuration(self, duration: int) -> None:
         """Set the duration in seconds.
-        
+
         This will convert the given amount of seconds into an amount of days, hours, minutes and seconds.
         Note that this is mostly a workaround for issues with PyQt, as a value type this class should not
         really have a setter.
@@ -109,7 +109,7 @@ class Duration(QObject):
     def getDisplayString(self, display_format = DurationFormat.Format.Short):
         """Get a string representation of this object that can be used to display
         in interfaces.
-        
+
         This is not called toString() primarily because that conflicts with
         JavaScript's toString().
         :return: A human-readable string representation of this duration.
@@ -136,7 +136,7 @@ class Duration(QObject):
 
     def __int__(self):
         """Get an integer representation of this duration.
-        
+
         The integer contains the number of seconds in the duration. Convert it
         back to a Duration instance by providing the number of seconds to the
         constructor.

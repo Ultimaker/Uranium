@@ -51,7 +51,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def __init__(self, container_id: str, i18n_catalog: i18nCatalog = None, parent: QObject = None, *args, **kwargs) -> None:
         """Constructor
-        
+
         :param container_id: A unique, machine readable/writable ID for this container.
         """
 
@@ -95,7 +95,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def getId(self) -> str:
         """:copydoc ContainerInterface::getId
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -105,7 +105,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def getName(self) -> str:
         """:copydoc ContainerInterface::getName
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -115,7 +115,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def isReadOnly(self) -> bool:
         """:copydoc ContainerInterface::isReadOnly
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -128,7 +128,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def getPath(self) -> str:
         """:copydoc ContainerInterface::getPath.
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -136,7 +136,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def setPath(self, path: str) -> None:
         """:copydoc ContainerInterface::setPath
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -144,7 +144,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def getMetaData(self) -> Dict[str, Any]:
         """:copydoc ContainerInterface::getMetaData
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -158,13 +158,13 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def getInheritedFiles(self) -> List[str]:
         """Gets all ancestors of this definition container.
-        
+
         This returns the definition in the "inherits" property of this
         container, and the definition in its "inherits" property, and so on. The
         ancestors are returned in order from parent to
         grand-grand-grand-...-grandparent, normally ending in a "root"
         container.
-        
+
         :return: A list of ancestors, in order from near ancestor to the root.
         """
 
@@ -172,7 +172,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def getAllKeys(self) -> Set[str]:
         """:copydoc DefinitionContainerInterface::getAllKeys
-        
+
         :return: A set of all keys of settings in this container.
         """
 
@@ -183,7 +183,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
         """:copydoc ContainerInterface::getMetaDataEntry
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -191,7 +191,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
         """:copydoc ContainerInterface::getProperty
-        
+
         Reimplemented from ContainerInterface.
         """
 
@@ -209,7 +209,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def hasProperty(self, key: str, property_name: str, ignore_inherited: bool = False) -> Any:
         """:copydoc ContainerInterface::hasProperty
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -227,10 +227,10 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def serialize(self, ignored_metadata_keys: Optional[Set[str]] = None) -> str:
         """:copydoc ContainerInterface::serialize
-        
+
         TODO: This implementation flattens the definition container, since the
         data about inheritance and overrides was lost when deserialising.
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -305,7 +305,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def addDefinition(self, definition: SettingDefinition) -> None:
         """Add a setting definition instance if it doesn't exist yet.
-        
+
         Warning: this might not work when there are relationships higher up in the stack.
         """
 
@@ -316,7 +316,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         """:copydoc ContainerInterface::deserialize
-        
+
         Reimplemented from ContainerInterface
         """
 
@@ -346,10 +346,10 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     @classmethod
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
         """Gets the metadata of a definition container from a serialised format.
-        
+
         This parses the entire JSON document and only extracts the metadata from
         it.
-        
+
         :param serialized: A JSON document, serialised as a string.
         :param container_id: The ID of the container (as obtained from the file name).
 
@@ -387,7 +387,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def findDefinitions(self, **kwargs: Any) -> List[SettingDefinition]:
         """Find definitions matching certain criteria.
-        
+
         :param kwargs: A dictionary of keyword arguments containing key-value pairs which should match properties of
         the definition.
         """
@@ -447,9 +447,10 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], self.Version))
 
     # Recursively find a key in a dictionary
-    def _findInDict(self, dictionary: Dict[str, Any], key: str):
-        if key in dictionary: return dictionary[key]
-        for k, v in dictionary.items():
+    def _findInDict(self, dictionary: Dict[str, Any], key: str) -> Any:
+        if key in dictionary:
+            return dictionary[key]
+        for v in dictionary.values():
             if isinstance(v, dict):
                 item = self._findInDict(v, key)
                 if item is not None:
@@ -522,8 +523,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def __str__(self) -> str:
         """Simple short string representation for debugging purposes."""
-
-        return "<DefinitionContainer '{definition_id}' ('{name}')>".format(definition_id = self.getId(), name = self.getName())
+        return "<DefContainer '{definition_id}'>".format(definition_id = self.getId())
 
     def __repr__(self) -> str:
         return str(self)

@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 class Matrix:
     """This class is a 4x4 homogeneous matrix wrapper around numpy.
-    
+
     Heavily based (in most cases a straight copy with some refactoring) on the excellent
     'library' Transformations.py created by Christoph Gohlke.
     """

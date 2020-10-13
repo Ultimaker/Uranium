@@ -15,9 +15,9 @@ class Polygon:
     @staticmethod
     def approximatedCircle(radius):
         """Return vertices from an approximate circle.
-        
+
         An octagon is returned, which comes close enough to a circle.
-        
+
         :param radius: The radius of the circle.
         :return: A polygon that approximates a circle.
         """
@@ -50,10 +50,10 @@ class Polygon:
 
     def __repr__(self):
         """Gives a debugging representation of the polygon.
-        
+
         This lists the polygon's coordinates, like so::
         [[0,0], [1,3], [3,0]]
-        
+
         :return: A representation of the polygon that is useful for debugging.
         """
 
@@ -68,7 +68,7 @@ class Polygon:
 
     def project(self, normal) -> Tuple[float, float]:
         """Project this polygon on a line described by a normal.
-        
+
         :param normal: The normal to project on.
         :return: A tuple describing the line segment of this Polygon projected on to the infinite line described by normal.
         The first element is the minimum value, the second the maximum.
@@ -86,7 +86,7 @@ class Polygon:
 
     def translate(self, x: float = 0, y: float = 0) -> "Polygon":
         """Moves the polygon by a fixed offset.
-        
+
         :param x: The distance to move along the X-axis.
         :param y: The distance to move along the Y-axis.
         """
@@ -98,7 +98,7 @@ class Polygon:
 
     def mirror(self, point_on_axis: List[float], axis_direction: List[float]) -> "Polygon":
         """Mirrors this polygon across the specified axis.
-        
+
         :param point_on_axis: A point on the axis to mirror across.
         :param axis_direction: The direction vector of the axis to mirror across.
         """
@@ -133,10 +133,34 @@ class Polygon:
         point_matrix += point_on_axis
         return Polygon(point_matrix.getA()[::-1])
 
+    def scale(self, factor: float, origin: Optional[List[float]] = None) -> "Polygon":
+        """
+        Scales this polygon around a certain origin point.
+        :param factor: The scaling factor.
+        :param origin: Origin point around which to scale, 2D. As the scale
+        factor approaches 0, all coordinates will approach this origin point. As
+        the scale factor grows, all coordinates will move away from this origin
+        point. If `None`, the 0,0 coordinate will be used.
+        :return: A transformed polygon.
+        """
+        if origin is None:
+            origin = [0, 0]
+
+        transformation = numpy.identity(3) * factor  # Just the scaling matrix.
+        delta_scale = factor - 1
+        transformation[2][0] = delta_scale * -origin[0]
+        transformation[2][1] = delta_scale * -origin[1]
+
+        # Apply that affine transformation to the point data.
+        point_data = numpy.lib.pad(self._points, ((0, 0), (0, 1)), "constant", constant_values = (1))  # Turn 3D to do an affine transformation.
+        point_data = point_data.dot(transformation)
+
+        return Polygon(point_data[:, :-1])  # Leave out the affine component.
+
     def intersectionConvexHulls(self, other: "Polygon") -> "Polygon":
         """Computes the intersection of the convex hulls of this and another
         polygon.
-        
+
         :param other: The other polygon to intersect convex hulls with.
         :return: The intersection of the two polygons' convex hulls.
         """
@@ -184,7 +208,7 @@ class Polygon:
 
     def intersectsPolygon(self, other: "Polygon") -> Optional[Tuple[float, float]]:
         """Check to see whether this polygon intersects with another polygon.
-        
+
         :param other: :type{Polygon} The polygon to check for intersection.
         :return: A tuple of the x and y distance of intersection, or None if no intersection occured.
         """
@@ -231,11 +255,12 @@ class Polygon:
 
     def getMinkowskiSum(self, other: "Polygon") -> "Polygon":
         """Perform a Minkowski sum of this polygon with another polygon.
-        
+
         :param other: The polygon to perform a Minkowski sum with.
         :return: :type{Polygon} The Minkowski sum of this polygon with other.
         """
-
+        if len(self._points) == 0 or len(other._points) == 0:  # Summing an empty polygon with a certain kernel, or summing a normal polygon with an empty polygon, would crash Numpy down below.
+            return Polygon(self._points)
         points = numpy.zeros((len(self._points) * len(other._points), 2))
         for n in range(0, len(self._points)):
             for m in range(0, len(other._points)):
@@ -245,10 +270,10 @@ class Polygon:
 
     def getMinkowskiHull(self, other: "Polygon") -> "Polygon":
         """Create a Minkowski hull from this polygon and another polygon.
-        
+
         The Minkowski hull is the convex hull around the Minkowski sum of this
         polygon with other.
-        
+
         :param other: :type{Polygon} The Polygon to do a Minkowski addition with.
         :return: The convex hull around the Minkowski sum of this Polygon with other
         """
@@ -258,10 +283,10 @@ class Polygon:
 
     def isInside(self, point) -> bool:
         """Whether the specified point is inside this polygon.
-        
+
         If the point is exactly on the border or on a vector, it does not count
         as being inside the polygon.
-        
+
         :param point: The point to check of whether it is inside.
         :return: True if it is inside, or False otherwise.
         """

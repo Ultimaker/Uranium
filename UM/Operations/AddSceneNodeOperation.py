@@ -15,11 +15,11 @@ class AddSceneNodeOperation(Operation):
 
     def __init__(self, node: SceneNode, parent: Optional[SceneNode]) -> None:
         """Creates the scene node operation.
-        
+
         This saves the node and its parent to be able to search for the node to
         remove the node if we want to undo, and to be able to re-do the adding
         of the node.
-        
+
         :param node: The node to add to the scene.
         :param parent: The parent of the new node.
         """
@@ -31,7 +31,7 @@ class AddSceneNodeOperation(Operation):
 
     def undo(self) -> None:
         """Reverses the operation of adding a scene node.
-        
+
         This removes the scene node again.
         """
 

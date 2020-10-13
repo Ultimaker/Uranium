@@ -5,7 +5,7 @@ import base64
 import json
 import os
 from pathlib import Path
-from typing import Callable, Optional, Tuple
+from typing import Callable, Optional, Tuple, List
 
 # Note that we unfortunately need to use 'hazmat' code, as there apparently is no way to do what we want otherwise.
 # (Even if what we want should be relatively commonplace in security.)
@@ -213,6 +213,30 @@ class TrustBasics:
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Save private/public key to '{0}','{1}' failed.".format(private_path, public_path))
+        return False
+
+    @staticmethod
+    def removeCached(path: str) -> bool:
+        try:
+            cache_folders_to_empty = []  # type: List[str]
+            cache_files_to_remove = []  # type: List[str]
+            for root, dirnames, filenames in os.walk(path, followlinks=True):
+                for dirname in dirnames:
+                    if dirname == "__pycache__":
+                        cache_folders_to_empty.append(os.path.join(root, dirname))
+                for filename in filenames:
+                    if Path(filename).suffix == ".qmlc":
+                        cache_files_to_remove.append(os.path.join(root, filename))
+            for cache_folder in cache_folders_to_empty:
+                for root, dirnames, filenames in os.walk(cache_folder, followlinks=True):
+                    for filename in filenames:
+                        os.remove(os.path.join(root, filename))
+            for cache_file in cache_files_to_remove:
+                os.remove(cache_file)
+            return True
+
+        except:  # Yes, we  do really want this on _every_ exception that might occur.
+            Logger.logException("e", "Removal of pycache for unbundled path '{0}' failed.".format(path))
         return False
 
 

@@ -36,11 +36,11 @@ plugin_path_ignore_list = ["__pycache__", "tests", ".git"]
 
 class PluginRegistry(QObject):
     """A central object to dynamically load modules as plugins.
-    
+
     The PluginRegistry class can load modules dynamically and use
     them as plugins. Each plugin module is expected to be a directory with
     and `__init__` file defining a `getMetaData` and a `register` function.
-    
+
     For more details, see the [plugins] file.
 
     [plugins]: docs/plugins.md
@@ -605,16 +605,20 @@ class PluginRegistry(QObject):
             paths = self._plugin_locations
 
         for folder in paths:
-            if not os.path.isdir(folder):
-                continue
+            try:
+                if not os.path.isdir(folder):
+                    continue
 
-            for file in os.listdir(folder):
-                filepath = os.path.join(folder, file)
-                if os.path.isdir(filepath):
-                    if os.path.isfile(os.path.join(filepath, "__init__.py")):
-                        plugin_ids.append(file)
-                    else:
-                        plugin_ids += self._findInstalledPlugins([filepath])
+                for file in os.listdir(folder):
+                    filepath = os.path.join(folder, file)
+                    if os.path.isdir(filepath):
+                        if os.path.isfile(os.path.join(filepath, "__init__.py")):
+                            plugin_ids.append(file)
+                        else:
+                            plugin_ids += self._findInstalledPlugins([filepath])
+            except EnvironmentError as err:
+                Logger.warning("Unable to read folder {folder}: {err}".format(folder = folder, err = err))
+                continue
 
         return plugin_ids
 
@@ -647,25 +651,8 @@ class PluginRegistry(QObject):
         # Define a trusted plugin as either: already checked, correctly signed, or bundled with the application.
         if self._check_if_trusted and plugin_id not in self._checked_plugin_ids and not self.isBundledPlugin(plugin_id):
 
-            # NOTE: '__pychache__'s (+ subfolders) and .qmlc files are deleted on startup _before_ load module:
-            try:
-                cache_folders_to_empty = []  # type: List[str]
-                cache_files_to_remove = []  # type: List[str]
-                for root, dirnames, filenames in os.walk(path, followlinks = True):
-                    for dirname in dirnames:
-                        if dirname == "__pycache__":
-                            cache_folders_to_empty.append(os.path.join(root, dirname))
-                    for filename in filenames:
-                        if Path(filename).suffix == ".qmlc":
-                            cache_files_to_remove.append(os.path.join(root, filename))
-                for cache_folder in cache_folders_to_empty:
-                    for root, dirnames, filenames in os.walk(cache_folder, followlinks = True):
-                        for filename in filenames:
-                            os.remove(os.path.join(root, filename))
-                for cache_file in cache_files_to_remove:
-                    os.remove(cache_file)
-            except:  # Yes, we  do really want this on _every_ exception that might occur.
-                Logger.logException("e", "Removal of pycache for unbundled plugin '{0}' failed.".format(plugin_id))
+            # NOTE: '__pychache__'s (+ subfolders) are deleted on startup _before_ load module:
+            if not TrustBasics.removeCached(path):
                 self._distrusted_plugin_ids.append(plugin_id)
                 return None
 
@@ -775,9 +762,15 @@ class PluginRegistry(QObject):
             except UnicodeDecodeError:
                 Logger.logException("e", "The plug-in metadata file for plug-in {plugin_id} is corrupt.".format(plugin_id = plugin_id))
                 raise InvalidMetaDataError(plugin_id)
+            except EnvironmentError as e:
+                Logger.logException("e", "Can't open the metadata file for plug-in {plugin_id}: {err}".format(plugin_id = plugin_id, err = str(e)))
+                raise InvalidMetaDataError(plugin_id)
 
         except AttributeError as e:
-            Logger.log("e", "An error occurred getting metadata from plugin %s: %s", plugin_id, str(e))
+            Logger.log("e", "Plug-in {plugin_id} has no getMetaData function to get metadata of the plug-in: {err}".format(plugin_id = plugin_id, err = str(e)))
+            raise InvalidMetaDataError(plugin_id)
+        except TypeError as e:
+            Logger.log("e", "Plug-in {plugin_id} has a getMetaData function with the wrong signature: {err}".format(plugin_id = plugin_id, err = str(e)))
             raise InvalidMetaDataError(plugin_id)
 
         if not meta_data:
@@ -854,7 +847,7 @@ class PluginRegistry(QObject):
 
     def getPluginPath(self, plugin_id: str) -> Optional[str]:
         """Get the path to a plugin.
-        
+
         :param plugin_id: The PluginObject.getPluginId() of the plugin.
         :return: The absolute path to the plugin or an empty string if the plugin could not be found.
         """
@@ -876,17 +869,17 @@ class PluginRegistry(QObject):
     @classmethod
     def addType(cls, plugin_type: str, register_function: Callable[[Any], None]) -> None:
         """Add a new plugin type.
-        
+
         This function is used to add new plugin types. Plugin types are simple
         string identifiers that match a certain plugin to a registration function.
-        
+
         The callable `register_function` is responsible for handling the object.
         Usually it will add the object to a list of objects in the relevant class.
         For example, the plugin type 'tool' has Controller::addTool as register
         function.
-        
+
         `register_function` will be called every time a plugin of `type` is loaded.
-        
+
         :param plugin_type: The name of the plugin type to add.
         :param register_function: A callable that takes an object as parameter.
         """
@@ -896,7 +889,7 @@ class PluginRegistry(QObject):
     @classmethod
     def removeType(cls, plugin_type: str) -> None:
         """Remove a plugin type.
-        
+
         :param plugin_type: The plugin type to remove.
         """
 

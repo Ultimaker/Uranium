@@ -1,5 +1,6 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 from typing import Optional
 
 from PyQt5.QtCore import Qt
@@ -35,7 +36,7 @@ i18n_catalog = i18nCatalog("uranium")
 
 class RotateTool(Tool):
     """Provides the tool to rotate meshes and groups
-    
+
     The tool exposes a ToolHint to show the rotation angle of the current operation
     """
 
@@ -58,12 +59,15 @@ class RotateTool(Tool):
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported", "SelectFaceToLayFlatMode")
         self._saved_node_positions = []
 
+        self._active_widget = None  # type: Optional[RotateToolHandle.ExtraWidgets]
+        self._widget_click_start = 0
+
         self._select_face_mode = False
         Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
 
     def event(self, event):
         """Handle mouse and keyboard events
-        
+
         :param event: type(Event)
         """
 
@@ -85,6 +89,12 @@ class RotateTool(Tool):
             id = self._selection_pass.getIdAtPosition(event.x, event.y)
             if not id:
                 return False
+
+            if id in self._handle.getExtraWidgetsColorMap():
+                self._active_widget = self._handle.ExtraWidgets(id)
+                self._widget_click_start = time.monotonic()
+                # Continue as if the picked widget is the appropriate axis
+                id = math.floor((self._active_widget.value - self._active_widget.XPositive90.value) / 2) + self._handle.XAxis
 
             if self._handle.isAxis(id):
                 self.setLockedAxis(id)
@@ -145,7 +155,7 @@ class RotateTool(Tool):
                 if angle == 0:
                     return False
 
-            rotation = None
+            rotation = Quaternion()
             if self.getLockedAxis() == ToolHandle.XAxis:
                 direction = 1 if Vector.Unit_X.dot(drag_start.cross(drag_end)) > 0 else -1
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_X)
@@ -181,6 +191,36 @@ class RotateTool(Tool):
             return True
 
         if event.type == Event.MouseReleaseEvent:
+            if self._active_widget != None and time.monotonic() - self._widget_click_start < 0.2:
+                id = self._selection_pass.getIdAtPosition(event.x, event.y)
+
+                if id in self._handle.getExtraWidgetsColorMap() and self._active_widget == self._handle.ExtraWidgets(id):
+                    axis = math.floor((self._active_widget.value - self._active_widget.XPositive90.value) / 2)
+
+                    angle = math.radians(-90 if self._active_widget.value - 2 * axis else 90)
+                    axis +=  self._handle.XAxis
+
+                    rotation = Quaternion()
+                    if axis == ToolHandle.XAxis:
+                        rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_X)
+                    elif axis == ToolHandle.YAxis:
+                        rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_Y)
+                    else:
+                        rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_Z)
+
+
+                    # Rotate around the saved centeres of all selected nodes
+                    if len(self._saved_node_positions) > 1:
+                        op = GroupedOperation()
+                        for node, position in self._saved_node_positions:
+                            op.addOperation(RotateOperation(node, rotation, rotate_around_point = position))
+                        op.push()
+                    else:
+                        for node, position in self._saved_node_positions:
+                            RotateOperation(node, rotation, rotate_around_point=position).push()
+
+            self._active_widget = None  # type: Optional[RotateToolHandle.ExtraWidgets]
+
             # Finish a rotate operation
             if self.getDragPlane():
                 self.setDragPlane(None)
@@ -233,7 +273,7 @@ class RotateTool(Tool):
 
     def getToolHint(self):
         """Return a formatted angle of the current rotate operation
-        
+
         :return: type(String) fully formatted string showing the angle by which the mesh(es) are rotated
         """
 
@@ -241,7 +281,7 @@ class RotateTool(Tool):
 
     def getSelectFaceSupported(self) -> bool:
         """Get whether the select face feature is supported.
-        
+
         :return: True if it is supported, or False otherwise.
         """
         # Use a dummy postfix, since an equal version with a postfix is considered smaller normally.
@@ -249,7 +289,7 @@ class RotateTool(Tool):
 
     def getRotationSnap(self):
         """Get the state of the "snap rotation to N-degree increments" option
-        
+
         :return: type(Boolean)
         """
 
@@ -257,7 +297,7 @@ class RotateTool(Tool):
 
     def setRotationSnap(self, snap):
         """Set the state of the "snap rotation to N-degree increments" option
-        
+
         :param snap: type(Boolean)
         """
 
@@ -304,7 +344,7 @@ class RotateTool(Tool):
 
     def layFlat(self):
         """Initialise and start a LayFlatOperation
-        
+
         Note: The LayFlat functionality is mostly used for 3d printing and should probably be moved into the Cura project
         """
 
@@ -337,7 +377,7 @@ class RotateTool(Tool):
 
     def _layFlatProgress(self, iterations: int):
         """Called while performing the LayFlatOperation so progress can be shown
-        
+
         Note that the LayFlatOperation rate-limits these callbacks to prevent the UI from being flooded with property change notifications,
         :param iterations: type(int) number of iterations performed since the last callback
         """
@@ -348,7 +388,7 @@ class RotateTool(Tool):
 
     def _layFlatFinished(self, job):
         """Called when the LayFlatJob is done running all of its LayFlatOperations
-        
+
         :param job: type(LayFlatJob)
         """
 
@@ -361,7 +401,7 @@ class RotateTool(Tool):
 
 class LayFlatJob(Job):
     """A LayFlatJob bundles multiple LayFlatOperations for multiple selected objects
-    
+
     The job is executed on its own thread, processing each operation in order, so it does not lock up the GUI.
     """
 

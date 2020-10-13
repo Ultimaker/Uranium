@@ -17,7 +17,7 @@ class SceneNodeDecorator:
     def __init__(self, node: Optional["SceneNode"] = None) -> None:
         super().__init__()
         self._node = node  # type: Optional["SceneNode"]
-        
+
     def setNode(self, node: "SceneNode") -> None:
         self._node = node
 

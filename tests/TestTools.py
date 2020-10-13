@@ -12,10 +12,15 @@ from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
 
 
-def test_exposedProperties():
+def createTool(tool_id):
+    with patch("UM.Application.Application.getInstance"):
+        result = Tool()
+    result.setPluginId(tool_id)
+    return result
 
-    test_tool_1 = Tool()
-    test_tool_1.setPluginId("test_tool_1")
+
+def test_exposedProperties():
+    test_tool_1 = createTool("test_tool_1")
 
     test_tool_1.setExposedProperties("bla", "omg", "zomg")
     assert test_tool_1.getExposedProperties() == ["bla", "omg", "zomg"]
@@ -29,7 +34,7 @@ test_validate_data = [
 
 @pytest.mark.parametrize("data", test_validate_data)
 def test_getAndSet(data):
-    test_tool = Tool()
+    test_tool = createTool("whatever")
     # Attempt to set the value
     getattr(test_tool, "set" + data["attribute"])(data["value"])
 
@@ -38,8 +43,7 @@ def test_getAndSet(data):
 
 
 def test_toolEnabledChanged():
-    test_tool_1 = Tool()
-    test_tool_1.setPluginId("test_tool_1")
+    test_tool_1 = createTool("test_tool_1")
     assert test_tool_1.getEnabled()
 
     # Fake the signal from the controller
@@ -51,14 +55,13 @@ def test_toolEnabledChanged():
 
 
 def test_getShortcutKey():
-    test_tool_1 = Tool()
+    test_tool_1 = createTool("whatever!")
     # Test coverage is magic. It should be None by default.
     assert test_tool_1.getShortcutKey() is None
 
 
 def test_getDragVector():
-    test_tool_1 = Tool()
-    test_tool_1.setPluginId("test_tool_1")
+    test_tool_1 = createTool("test_tool_1")
 
     # No drag plane set
     assert test_tool_1.getDragVector(0, 0) is None
@@ -68,24 +71,27 @@ def test_getDragVector():
 
 
 def test_getDragStart():
-    test_tool_1 = Tool()
+    test_tool_1 = createTool("whatever")
     # Test coverage is magic. It should be None by default.
     assert test_tool_1.getDragStart() is None
 
 
 def test_getController():
-    test_tool_1 = Tool()
+    test_tool_1 = createTool("whatever")
     # Test coverage is magic. It should not be None by default, since the application provided one
     assert test_tool_1.getController() is not None
 
+
 def test_setLockedAxis():
-    test_tool_1 = Tool()
-    test_tool_handle_1 = ToolHandle()
+    test_tool_1 = createTool("whatever")
+    with patch("UM.Application.Application.getInstance"):
+        test_tool_handle_1 = ToolHandle()
     test_tool_handle_1._enabled = True
     test_tool_handle_1._auto_scale = False
     # Pretend like the toolhandle actually got rendered at least once
     with patch("UM.View.GL.OpenGL.OpenGL.getInstance"):
-        test_tool_handle_1.render(None)
+        with patch("UM.Resources.Resources.getPath"):
+            test_tool_handle_1.render(None)
 
     # Needs to start out with Nothing locked
     assert test_tool_1.getLockedAxis() == ToolHandle.NoAxis
@@ -103,7 +109,7 @@ def test_setLockedAxis():
 def test_getSelectedObjectsWithoutSelectedAncestors():
     scene_node_1 = SceneNode()
     Selection.add(scene_node_1)
-    test_tool_1 = Tool()
+    test_tool_1 = createTool("whatever")
     assert test_tool_1._getSelectedObjectsWithoutSelectedAncestors() == [scene_node_1]
 
 

@@ -12,10 +12,10 @@ class Version:
 
     def __init__(self, version: Union[str, bytes, int, "Version", List[Union[int, str, bytes]]]) -> None:
         """Constructs the version instance from a string representing the version.
-        
+
         The string representation may have dashes or underscores that separate
         the major, minor and revision version numbers. All text is ignored.
-        
+
         :param version: A string or bytes representing a version number.
         """
 
@@ -62,7 +62,7 @@ class Version:
 
     def getMajor(self) -> int:
         """Gets the major version number.
-        
+
         The major version number is the first number of the version: "3" in the
         version "3.2.8".
         """
@@ -71,7 +71,7 @@ class Version:
 
     def getMinor(self) -> int:
         """Gets the minor version number.
-        
+
         The minor version number is the second number of the version: "2" in the
         version "3.2.8".
         """
@@ -80,7 +80,7 @@ class Version:
 
     def getRevision(self) -> int:
         """Gets the revision or patch version number.
-        
+
         The revision version number is the third number of the version: "8" in
         the version "3.2.8".
         """
@@ -89,7 +89,7 @@ class Version:
 
     def getPostfixType(self) -> str:
         """Gets the postfix type.
-        
+
         The postfix type is the name of the postfix, e.g. "alpha" in the version "1.2.3-alpha.4"
         """
 
@@ -97,7 +97,7 @@ class Version:
 
     def getPostfixVersion(self) -> int:
         """Gets the postfix version number.
-        
+
         The postfix version is the last number, e.g. "4" in the version "1.2.3-alpha.4"
         """
 
@@ -110,7 +110,7 @@ class Version:
 
     def __gt__(self, other: Union["Version", str]) -> bool:
         """Indicates whether this version is later than the specified version.
-        
+
         Implements the > operator.
 
         :param other: Either another version object or a string representing one.
@@ -125,7 +125,7 @@ class Version:
 
     def __lt__(self, other: Union["Version", str]) -> bool:
         """Indicates whether this version is earlier than the specified version.
-        
+
         Implements the < operator.
 
         :param other: Either another version object or a string representing one.
@@ -168,7 +168,7 @@ class Version:
 
     def __eq__(self, other: object) -> bool:
         """Indicates whether this version is equal to the specified version.
-        
+
         Implements the == operator.
 
         :param other: Either another version object or a string representing one.
@@ -191,7 +191,7 @@ class Version:
     def __ge__(self, other: Union["Version", str]) -> bool:
         """Indicates whether this version is later or equal to the specified
         version.
-        
+
         Implements the >= operator.
 
         :param other: Either another version object or a string representing one.
@@ -202,7 +202,7 @@ class Version:
     def __le__(self, other: Union["Version", str]) -> bool:
         """Indicates whether this version is earlier or equal to the specified
         version.
-        
+
         Implements the <= operator.
 
         :param other: Either another version object or a string representing one.
@@ -213,7 +213,7 @@ class Version:
     def __str__(self) -> str:
         """Returns a string representation containing the major, minor and revision
         number.
-        
+
         Such as "3.2.8".
         """
 

@@ -164,16 +164,16 @@ class Selection:
     @classmethod
     def applyOperation(cls, operation, *args, **kwargs):
         """Apply an operation to the entire selection
-        
+
         This will create and push an operation onto the operation stack. Dependent
         on whether there is one item selected or multiple it will be just the
         operation or a grouped operation containing the operation for each selected
         node.
-        
+
         :param operation: :type{Class} The operation to create and push. It should take a SceneNode as first positional parameter.
         :param args: The additional positional arguments passed along to the operation constructor.
         :param kwargs: The additional keyword arguments that will be passed along to the operation constructor.
-        
+
         :return: list of instantiated operations
         """
 

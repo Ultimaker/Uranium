@@ -23,7 +23,7 @@ if MYPY:
 @signalemitter
 class Controller:
     """Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
-    
+
     The different types of views / tools / inputs are defined by plugins.
     :sa View
     :sa Tool
@@ -361,14 +361,14 @@ class Controller:
 
     toolOperationStarted = Signal()
     """Emitted whenever a tool starts a longer operation.
-    
+
     :param tool: The tool that started the operation.
     :sa Tool::startOperation
     """
 
     toolOperationStopped = Signal()
     """Emitted whenever a tool stops a longer operation.
-    
+
     :param tool: The tool that stopped the operation.
     :sa Tool::stopOperation
     """

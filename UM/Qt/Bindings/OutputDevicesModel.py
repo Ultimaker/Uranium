@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
@@ -11,10 +11,10 @@ from PyQt5.QtQml import QQmlEngine
 
 class OutputDevicesModel(ListModel):
     """A list model providing a list of all registered OutputDevice instances.
-    
+
     This list model wraps OutputDeviceManager's list of OutputDevice instances.
     Additionally it provides a function to set OutputDeviceManager's active device.
-    
+
     Exposes the following roles:
     * id - The device ID
     * name - The human-readable name of the device
@@ -22,7 +22,7 @@ class OutputDevicesModel(ListModel):
     * description - The full description of the device
     * icon_name - The name of the icon used to identify the device
     * priority - The device priority
-    
+
     """
 
     IdRole = Qt.UserRole + 1
@@ -70,7 +70,7 @@ class OutputDevicesModel(ListModel):
             return
 
         self._items.clear()
-        devices = self._device_manager.getOutputDevices()
+        devices = list(self._device_manager.getOutputDevices())[:]  # Make a copy here, because we could discover devices during iteration.
         for device in devices:
             self._items.append({
                 "id": device.getId(),

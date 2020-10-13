@@ -8,14 +8,14 @@ from . import Operation
 
 class TranslateOperation(Operation.Operation):
     """An operation that moves a scene node.
-    
+
     This has nothing to do with languages. It is a linear transformation on
     geometry.
     """
 
     def __init__(self, node, translation, set_position = False):
         """Initialises this TranslateOperation.
-        
+
         :param node: The node to translate.
         :param translation: A translation matrix to transform the node by.
         :param set_position:: Whether to change the position (True) or add the
@@ -43,13 +43,13 @@ class TranslateOperation(Operation.Operation):
 
     def mergeWith(self, other):
         """Merges this operation with another translate operation.
-        
+
         This prevents the user from having to undo multiple operations if they
         were not his operations.
-        
+
         You should ONLY merge this operation with an older operation. It is NOT
         symmetric.
-        
+
         :param other: The older translate operation to merge this operation with.
         """
 
@@ -64,7 +64,7 @@ class TranslateOperation(Operation.Operation):
 
     def __repr__(self):
         """Returns a programmer-readable representation of this operation.
-        
+
         :return: A programmer-readable representation of this operation.
         """
 

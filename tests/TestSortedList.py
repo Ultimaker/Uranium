@@ -598,4 +598,3 @@ def test_check():
     with pytest.raises(AssertionError):
         slt._check()
 
-        

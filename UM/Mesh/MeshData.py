@@ -36,14 +36,14 @@ Reuse = object()
 
 class MeshData:
     """Class to hold a list of verts and possibly how (and if) they are connected.
-    
+
     This class stores three numpy arrays that contain the data for a mesh. Vertices
     are stored as a two-dimensional array of floats with the rows being individual
     vertices and the three columns being the X, Y and Z components of the vertices.
     Normals are stored in the same manner and kept in sync with the vertices. Indices
     are stored as a two-dimensional array of integers with the rows being the individual
     faces and the three columns being the indices that refer to the individual vertices.
-    
+
     attributes: a dict with {"value", "opengl_type", "opengl_name"} type in vector2f, vector3f, uniforms, ...
     """
 
@@ -84,7 +84,7 @@ class MeshData:
 
     def __del__(self):
         """Triggered when this file is deleted.
-        
+
         The file will then no longer be watched for changes.
         """
 
@@ -207,7 +207,7 @@ class MeshData:
 
     def getExtents(self, matrix: Optional[Matrix] = None) -> Optional[AxisAlignedBox]:
         """Get the extents of this mesh.
-        
+
         :param matrix: The transformation matrix from model to world coordinates.
         """
 
@@ -229,7 +229,7 @@ class MeshData:
 
     def getVerticesAsByteArray(self) -> Optional[bytes]:
         """Get all vertices of this mesh as a bytearray
-        
+
         :return: A bytearray object with 3 floats per vertex.
         """
 
@@ -239,7 +239,7 @@ class MeshData:
 
     def getNormalsAsByteArray(self) -> Optional[bytes]:
         """Get all normals of this mesh as a bytearray
-        
+
         :return: A bytearray object with 3 floats per normal.
         """
 
@@ -249,7 +249,7 @@ class MeshData:
 
     def getIndicesAsByteArray(self) -> Optional[bytes]:
         """Get all indices as a bytearray
-        
+
         :return: A bytearray object with 3 ints per face.
         """
 
@@ -277,7 +277,7 @@ class MeshData:
 
     def getConvexHull(self) -> Optional[scipy.spatial.ConvexHull]:
         """Gets the Convex Hull of this mesh
-        
+
         :return: :type{scipy.spatial.ConvexHull}
         """
 
@@ -288,7 +288,7 @@ class MeshData:
 
     def getConvexHullVertices(self) -> Optional[numpy.ndarray]:
         """Gets the convex hull points
-        
+
         :return: :type{numpy.ndarray} the vertices which describe the convex hull
         """
 
@@ -301,7 +301,7 @@ class MeshData:
 
     def getConvexHullTransformedVertices(self, transformation: Matrix) -> Optional[numpy.ndarray]:
         """Gets transformed convex hull points
-        
+
         :return: :type{numpy.ndarray} the vertices which describe the convex hull
         """
 
@@ -313,7 +313,7 @@ class MeshData:
 
     def getFacePlane(self, face_id: int) -> Tuple[numpy.ndarray, numpy.ndarray]:
         """Gets the plane the supplied face lies in. The resultant plane is specified by a point and a normal.
-        
+
         :param face_id: :type{int} The index of the face (not the flattened indices).
         :return: :type{Tuple[numpy.ndarray, numpy.ndarray]} A plane, the 1st vector is the center, the 2nd the normal.
         """
@@ -325,7 +325,7 @@ class MeshData:
 
     def getFaceNodes(self, face_id: int) -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]:
         """Gets the node vectors of the supplied face.
-        
+
         :param face_id: :type{int} The index of the face (not the flattened indices).
         :return: :type{Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]} Tuple of all three local vectors. 
         """
@@ -354,6 +354,8 @@ class MeshData:
 
         The sorting assures that the order is always the same.
         """
+        if not self._attributes:
+            return []
 
         result = list(self._attributes.keys())
         result.sort()
@@ -388,7 +390,7 @@ class MeshData:
 
 def transformVertices(vertices: numpy.ndarray, transformation: Matrix) -> numpy.ndarray:
     """Transform an array of vertices using a matrix
-    
+
     :param vertices: :type{numpy.ndarray} array of 3D vertices
     :param transformation: a 4x4 matrix
     :return: :type{numpy.ndarray} the transformed vertices
@@ -403,11 +405,11 @@ def transformVertices(vertices: numpy.ndarray, transformation: Matrix) -> numpy.
 
 def transformNormals(normals: numpy.ndarray, transformation: Matrix) -> numpy.ndarray:
     """Transform an array of normals using a matrix
-    
+
     :param normals: :type{numpy.ndarray} array of 3D normals
     :param transformation: a 4x4 matrix
     :return: :type{numpy.ndarray} the transformed normals
-    
+
     :note This assumes the normals are untranslated unit normals, and returns the same.
     """
 
@@ -426,6 +428,7 @@ def transformNormals(normals: numpy.ndarray, transformation: Matrix) -> numpy.nd
 
     # Re-normalize the normals, since the transformation can contain scaling.
     lengths = numpy.linalg.norm(data, axis = 1)
+    lengths[lengths == 0] = 1
     data[:, 0] /= lengths
     data[:, 1] /= lengths
     data[:, 2] /= lengths
@@ -435,7 +438,7 @@ def transformNormals(normals: numpy.ndarray, transformation: Matrix) -> numpy.nd
 
 def roundVertexArray(vertices: numpy.ndarray, unit: float) -> numpy.ndarray:
     """Round an array of vertices off to the nearest multiple of unit
-    
+
     :param vertices: :type{numpy.ndarray} the source array of vertices
     :param unit: :type{float} the unit to scale the vertices to
     :return: :type{numpy.ndarray} the rounded vertices
@@ -448,7 +451,7 @@ def roundVertexArray(vertices: numpy.ndarray, unit: float) -> numpy.ndarray:
 
 def uniqueVertices(vertices: numpy.ndarray) -> numpy.ndarray:
     """Extract the unique vectors from an array of vectors
-    
+
     :param vertices: :type{numpy.ndarray} the source array of vertices
     :return: :type{numpy.ndarray} the array of unique vertices
     """
@@ -461,7 +464,7 @@ def uniqueVertices(vertices: numpy.ndarray) -> numpy.ndarray:
 
 def approximateConvexHull(vertex_data: numpy.ndarray, target_count: int) -> Optional[scipy.spatial.ConvexHull]:
     """Compute an approximation of the convex hull of an array of vertices
-    
+
     :param vertices: :type{numpy.ndarray} the source array of vertices
     :param target_count: :type{int} the maximum number of vertices which may be in the result
     :return: :type{scipy.spatial.ConvexHull} the convex hull or None if the input was degenerate
@@ -516,7 +519,7 @@ def createConvexHull(vertex_data: numpy.ndarray) -> scipy.spatial.ConvexHull:
 
 def calculateNormalsFromVertices(vertices: numpy.ndarray, vertex_count: int) -> numpy.ndarray:
     """Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
-    
+
     :param vertices: :type{narray} list of vertices as a 1D list of float triples
     :param vertex_count: :type{integer} the number of vertices to use in the vertices array
     :return: :type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
@@ -525,7 +528,7 @@ def calculateNormalsFromVertices(vertices: numpy.ndarray, vertex_count: int) -> 
     start_time = time()
     # Numpy magic!
 
-    # Old way of doing it, asuming that each face has 3 unique verts
+    # Old way of doing it, assuming that each face has 3 unique verts
     # Then, take the cross product of each pair of vectors formed from a set of three vertices.
     # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
     # so in this case we perform the cross over a two arrays. The first array is built from the difference
@@ -536,13 +539,14 @@ def calculateNormalsFromVertices(vertices: numpy.ndarray, vertex_count: int) -> 
     n = numpy.cross(vertices[1:vertex_count:3] - vertices[:vertex_count:3],
                     vertices[2:vertex_count:3] - vertices[:vertex_count:3])
     # We then calculate the length for each normal and perform normalization on the normals.
-    l = numpy.linalg.norm(n, axis=1)
+    l = numpy.linalg.norm(n, axis = 1)
+    l[l == 0] = 1  # Prevent division by 0. These normals are lost, but if the normal is 0-length then the triangle won't be visible anyway.
     n[:, 0] /= l
     n[:, 1] /= l
     n[:, 2] /= l
     # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
     # every vertex.
-    normals = n.repeat(3, axis=0)
+    normals = n.repeat(3, axis = 0)
 
     end_time = time()
     Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
@@ -551,7 +555,7 @@ def calculateNormalsFromVertices(vertices: numpy.ndarray, vertex_count: int) -> 
 
 def calculateNormalsFromIndexedVertices(vertices: numpy.ndarray, indices: numpy.ndarray, face_count: int) -> numpy.ndarray:
     """Calculate the normals of this mesh of triagles using indexes.
-    
+
     :param vertices: :type{narray} list of vertices as a 1D list of float triples
     :param indices: :type{narray} list of indices as a 1D list of integers
     :param face_count: :type{integer} the number of triangles defined by the indices array

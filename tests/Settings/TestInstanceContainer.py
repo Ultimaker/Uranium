@@ -186,23 +186,16 @@ def test__readAndValidateSerialisedWithInvalidData():
     with pytest.raises(UM.Settings.InstanceContainer.InvalidInstanceError):
         UM.Settings.InstanceContainer.InstanceContainer._readAndValidateSerialized("")
 
-
-def test_getConfigurationTypeFromSerializedWithInvalidData():
-    with pytest.raises(UM.Settings.InstanceContainer.InvalidInstanceError):
-        UM.Settings.InstanceContainer.InstanceContainer.getConfigurationTypeFromSerialized("")
-    assert UM.Settings.InstanceContainer.InstanceContainer.getConfigurationTypeFromSerialized("[general]\n definition = nope\n version=12") is None
-
-
 def test_deserializeWithInvalidData():
     instance_container = UM.Settings.InstanceContainer.InstanceContainer("")
 
     # Version is not an integer
     with pytest.raises(UM.Settings.InstanceContainer.IncorrectInstanceVersionError):
-        instance_container.deserialize("[general]\n definition = nope\n version=Turtles")
+        instance_container.deserialize("[general]\ndefinition = nope\nversion=Turtles")
 
     # Version is not the correct one (but does have the correct format
     with pytest.raises(UM.Settings.InstanceContainer.IncorrectInstanceVersionError):
-        instance_container.deserialize("[general]\n definition = nope\n version=9001")
+        instance_container.deserialize("[general]\ndefinition = nope\nversion=9001")
 
 
 def test_deserializeMetadataInvalid():

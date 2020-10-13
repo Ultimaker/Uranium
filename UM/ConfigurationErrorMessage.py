@@ -16,7 +16,7 @@ i18n_catalog = i18nCatalog("uranium")
 
 class ConfigurationErrorMessage(Message):
     """This is a specialised message that shows errors in the configuration.
-    
+
     This class coalesces all errors in the configuration. Whenever there are new
     errors the message gets updated (and shown if it was hidden).
     """

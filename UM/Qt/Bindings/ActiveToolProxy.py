@@ -18,10 +18,11 @@ class ActiveToolProxy(QObject):
         super().__init__(parent)
 
         self._active_tool = None
+        self._properties = {}
         Application.getInstance().getController().activeToolChanged.connect(self._onActiveToolChanged)
         self._onActiveToolChanged()
 
-        self._properties = { }
+
         self._properties_proxy = ContainerProxy.ContainerProxy(self._properties)
 
     activeToolChanged = pyqtSignal()
@@ -56,7 +57,7 @@ class ActiveToolProxy(QObject):
     @pyqtSlot(str, QVariant)
     def triggerActionWithData(self, action: str, data: Any):
         """Triggers one of the tools' actions and provides additional parameters to the action.
-        
+
         The additional data is passed as a parameter to the function call of the
         action.
         :param action: The action to trigger.

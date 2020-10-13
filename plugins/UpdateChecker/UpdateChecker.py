@@ -15,7 +15,7 @@ i18n_catalog = i18nCatalog("uranium")
 
 class UpdateChecker(Extension):
     """This Extension checks for new versions of the application based on the application name and the version number.
-    
+
     The plugin is currently only usable for applications maintained by Ultimaker. But it should be relatively easy
     to change it to work for other applications.
     """
@@ -37,10 +37,10 @@ class UpdateChecker(Extension):
 
     def checkNewVersion(self, silent = False, display_same_version = True):
         """Connect with software.ultimaker.com, load latest.json and check version info.
-        
+
         If the version info is higher then the current version, spawn a message to
         allow the user to download it.
-        
+
         :param silent: Suppresses messages other than "new version found"
         messages. This is used when checking for a new version at startup.
         :param display_same_version: Whether to display the same update message
@@ -57,7 +57,7 @@ class UpdateChecker(Extension):
 
     def _onActionTriggered(self, message, action):
         """Callback function for the "download" button on the update notification.
-        
+
         This function is here is because the custom Signal in Uranium keeps a list of weak references to its
         connections, so the callback functions need to be long-lived. The UpdateCheckerJob is short-lived so
         this function cannot be there.

@@ -18,7 +18,7 @@ from typing import Optional, Union
 
 class MeshBuilder:
     """Builds new meshes by adding primitives.
-    
+
     This class functions in much the same way as a normal StringBuilder would.
     Each instance of MeshBuilder creates one mesh. This mesh starts empty, but
     you can add primitives to it via the various methods of this class. The
@@ -42,7 +42,7 @@ class MeshBuilder:
 
     def build(self) -> MeshData:
         """Build a MeshData object.
-        
+
         :return: A Mesh data.
         """
 
@@ -108,6 +108,9 @@ class MeshBuilder:
             pass
         # self._dataChanged()
 
+    def resetNormals(self):
+        self._normals = None
+
     def hasNormals(self):
         """Return whether this mesh has vertex normals."""
 
@@ -165,11 +168,11 @@ class MeshBuilder:
 
     def reserveFaceCount(self, num_faces: Union[int, float]) -> None:
         """Set the amount of faces before loading data to the mesh.
-        
+
         This way we can create the array before we fill it. This method will reserve
         `(num_faces * 3)` amount of space for vertices, `(num_faces * 3)` amount of space
         for normals and `num_faces` amount of space for indices.
-        
+
         :param num_faces: Number of faces for which memory must be reserved.
         """
 
@@ -186,11 +189,11 @@ class MeshBuilder:
 
     def reserveVertexCount(self, num_vertices):
         """Preallocate space for vertices before loading data to the mesh.
-        
+
         This way we can create the array before we fill it. This method will reserve
         `num_vertices` amount of space for vertices. It deletes any existing normals
         and indices but does not reserve space for them.
-        
+
         :param num_vertices: Number of verts to be reserved.
         """
 
@@ -203,11 +206,11 @@ class MeshBuilder:
 
     def reserveFaceAndVertexCount(self, num_faces, num_vertices):
         """Set the amount of faces and vertices before loading data to the mesh.
-        
+
         This way we can create the array before we fill it. This method will reserve
         `num_vertices` amount of space for vertices, `num_vertices` amount of space
         for colors and `num_faces` amount of space for indices.
-        
+
         :param num_faces: Number of faces for which memory must be reserved.
         :param num_vertices: Number of vertices for which memory must be reserved.
         """
@@ -310,21 +313,21 @@ class MeshBuilder:
 
     def addFaceWithNormals(self,x0, y0, z0, nx0, ny0, nz0, x1, y1, z1, nx1, ny1, nz1, x2, y2, z2, nx2, ny2, nz2):
         """Add a face by providing three vertices and the normals that go with those vertices.
-        
+
         :param x0: The X coordinate of the first vertex.
         :param y0: The Y coordinate of the first vertex.
         :param z0: The Z coordinate of the first vertex.
         :param nx0: The X coordinate of the normal of the first vertex.
         :param ny0: The Y coordinate of the normal of the first vertex.
         :param nz0: The Z coordinate of the normal of the first vertex.
-        
+
         :param x1: The X coordinate of the second vertex.
         :param y1: The Y coordinate of the second vertex.
         :param z1: The Z coordinate of the second vertex.
         :param nx1: The X coordinate of the normal of the second vertex.
         :param ny1: The Y coordinate of the normal of the second vertex.
         :param nz1: The Z coordinate of the normal of the second vertex.
-        
+
         :param x2: The X coordinate of the third vertex.
         :param y2: The Y coordinate of the third vertex.
         :param z2: The Z coordinate of the third vertex.
@@ -350,7 +353,7 @@ class MeshBuilder:
 
     def setVertexColor(self, index, color):
         """Sets the color for a vertex
-        
+
         :param index: :type{int} the index of the vertex in the vertices array.
         :param color: :type{UM.Math.Color} the color of the vertex.
         """
@@ -401,7 +404,7 @@ class MeshBuilder:
     def addFacesWithColor(self, vertices, indices, colors):
         """Add faces defined by indices into vertices with vetex colors defined by colors
         Assumes vertices and colors have the same length.
-        
+
         :param vertices: is a numpy array where each row corresponds to a 3D point used to define the faces.
         :param indices: consists of row triplet indices into the input :p vertices to build up the triangular faces.
         :param colors: defines the color of each vertex in :p vertices.
@@ -413,7 +416,7 @@ class MeshBuilder:
 
         self._indices[self._face_count:(self._face_count + len(indices)), :] = self._vertex_count + indices 
         self._face_count += len(indices)
-        
+
         end_index = self._vertex_count + len(vertices)    
         self._colors[self._vertex_count:end_index, :] = colors
         self._vertices[self._vertex_count:end_index, :] = vertices
@@ -428,7 +431,7 @@ class MeshBuilder:
 
     def calculateNormals(self, fast=False):
         """Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
-        
+
         Keyword arguments:
         - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
         is stored as a set of three unique vertices.
@@ -444,7 +447,7 @@ class MeshBuilder:
 
     def addLine(self, v0, v1, color = None):
         """Adds a 3-dimensional line to the mesh of this mesh builder.
-        
+
         :param v0: One endpoint of the line to add.
         :param v1: The other endpoint of the line to add.
         :param color: (Optional) The colour of the line, if any. If no colour is
@@ -460,7 +463,7 @@ class MeshBuilder:
 
     def addFace(self, v0, v1, v2, normal = None, color = None):
         """Adds a triangle to the mesh of this mesh builder.
-        
+
         :param v0: The first corner of the triangle.
         :param v1: The second corner of the triangle.
         :param v2: The third corner of the triangle.
@@ -489,10 +492,10 @@ class MeshBuilder:
 
     def addQuad(self, v0, v1, v2, v3, normal = None, color = None):
         """Add a quadrilateral to the mesh of this mesh builder.
-        
+
         The quadrilateral will be constructed as two triangles. v0 and v2 are
         the two vertices across the diagonal of the quadrilateral.
-        
+
         :param v0: The first corner of the quadrilateral.
         :param v1: The second corner of the quadrilateral.
         :param v2: The third corner of the quadrilateral.
@@ -516,10 +519,10 @@ class MeshBuilder:
 
     def addCube(self, width, height, depth, center = Vector(0, 0, 0), color = None):
         """Add a rectangular cuboid to the mesh of this mesh builder.
-        
+
         A rectangular cuboid is a square block with arbitrary width, height and
         depth.
-        
+
         :param width: The size of the rectangular cuboid in the X dimension.
         :param height: The size of the rectangular cuboid in the Y dimension.
         :param depth: The size of the rectangular cuboid in the Z dimension.
@@ -580,9 +583,9 @@ class MeshBuilder:
 
     def addArc(self, radius, axis, angle = math.pi * 2, center = Vector(0, 0, 0), sections = 32, color = None):
         """Add an arc to the mesh of this mesh builder.
-        
+
         An arc is a curve that is also a segment of a circle.
-        
+
         :param radius: The radius of the circle this arc is a segment of.
         :param axis: The axis perpendicular to the plane on which the arc lies.
         :param angle: (Optional) The length of the arc, in radians. If not
@@ -621,10 +624,10 @@ class MeshBuilder:
 
     def addDonut(self, inner_radius, outer_radius, width, center = Vector(0, 0, 0), sections = 32, color = None, angle = 0, axis = Vector.Unit_Y):
         """Adds a torus to the mesh of this mesh builder.
-        
+
         The torus is the shape of a doughnut. This doughnut is delicious and
         moist, but not very healthy.
-        
+
         :param inner_radius: The radius of the hole inside the torus. Must be
         smaller than outer_radius.
         :param outer_radius: The radius of the outside of the torus. Must be
@@ -702,7 +705,7 @@ class MeshBuilder:
 
     def addPyramid(self, width, height, depth, angle = 0, axis = Vector.Unit_Y, center = Vector(0, 0, 0), color = None):
         """Adds a pyramid to the mesh of this mesh builder.
-        
+
         :param width: The width of the base of the pyramid.
         :param height: The height of the pyramid (from base to notch).
         :param depth: The depth of the base of the pyramid.

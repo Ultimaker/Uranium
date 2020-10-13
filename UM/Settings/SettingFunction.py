@@ -40,7 +40,7 @@ class SettingFunction:
     """
     def __init__(self, expression: str) -> None:
         """Constructor.
-        
+
         :param expression: The Python code this function should evaluate.
         """
         super().__init__()
@@ -72,7 +72,7 @@ class SettingFunction:
 
     def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Any:
         """Call the actual function to calculate the value.
-        
+
         :param value_provider: The container from which to get setting values in the formula.
         :param context: The context in which the call needs to be executed
         """
@@ -121,7 +121,7 @@ class SettingFunction:
 
     def isValid(self) -> bool:
         """Returns whether the function is ready to be executed.
-        
+
         :return: True if the function is valid, or False if it's not.
         """
 
@@ -129,7 +129,7 @@ class SettingFunction:
 
     def getUsedSettingKeys(self) -> FrozenSet[str]:
         """Retrieve a set of the keys (strings) of all the settings used in this function.
-        
+
         :return: A set of the keys (strings) of all the settings used in this functions.
         """
 
@@ -143,7 +143,7 @@ class SettingFunction:
 
     def __getstate__(self) -> Dict[str, Any]:
         """To support Pickle
-        
+
         Pickle does not support the compiled code, so instead remove it from the state.
         We can re-compile it later on anyway.
         """
@@ -159,7 +159,7 @@ class SettingFunction:
     @classmethod
     def registerOperator(cls, name: str, operator: Callable) -> None:
         """Expose a custom function to the code executed by SettingFunction
-        
+
         :param name: What identifier to use in the executed code.
         :param operator: A callable that implements the actual logic to execute.
         """
@@ -229,7 +229,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
 
     def visit_Str(self, node: ast.Str) -> None:
         """This one is used before Python 3.8 to visit string types.
-        
+
         visit_Str will be marked as deprecated from Python 3.8 and onwards.
         """
         # The blacklisting is done just in case (All function calls should be whitelisted. The blacklist is to make
@@ -244,6 +244,8 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
 
     def visit_Subscript(self, node: ast.Index):
         if type(node.value) == ast.Str:
+            raise IllegalMethodError("Indexing on strings is not allowed")
+        if type(node.value) == getattr(ast, "Constant", None) and isinstance(getattr(node.value, "value", None), str):
             raise IllegalMethodError("Indexing on strings is not allowed")
         for child_node in ast.iter_child_nodes(node):
             self.visit(child_node)

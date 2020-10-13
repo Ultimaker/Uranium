@@ -77,7 +77,11 @@ class Backend(PluginObject):
 
         # Double check that the old process is indeed killed.
         if self._process is not None:
-            self._process.terminate()
+            try:
+                self._process.terminate()
+            except PermissionError:
+                Logger.log("e", "Unable to kill running engine. Access is denied.")
+                return
             Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
 
         self._process = self._runEngineProcess(command)
@@ -113,7 +117,7 @@ class Backend(PluginObject):
             while len(self._backend_log) >= self._backend_log_max_lines:
                 del(self._backend_log[0])
         return self._backend_log
-    
+
     def getEngineCommand(self):
         """Get the command used to start the backend executable """
 
@@ -203,7 +207,7 @@ class Backend(PluginObject):
             return
 
         self._message_handlers[message.getTypeName()](message)
-    
+
     def _onSocketError(self, error):
         """Private socket error handler"""
 
@@ -239,7 +243,7 @@ class Backend(PluginObject):
         self._socket.stateChanged.connect(self._onSocketStateChanged)
         self._socket.messageReceived.connect(self._onMessageReceived)
         self._socket.error.connect(self._onSocketError)
-        
+
         if Platform.isWindows():
             # On Windows, the Protobuf DiskSourceTree does stupid things with paths.
             # So convert to forward slashes here so it finds the proto file properly.

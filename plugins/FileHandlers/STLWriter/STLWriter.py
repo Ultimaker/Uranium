@@ -14,7 +14,7 @@ catalog = i18nCatalog("uranium")
 class STLWriter(MeshWriter):
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
         """Write the specified sequence of nodes to a stream in the STL format.
-        
+
         :param stream: The output stream to write to.
         :param nodes: A sequence of scene nodes to write to the output stream.
         :param mode: The output mode to use for writing scene nodes. Text mode

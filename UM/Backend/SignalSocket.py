@@ -48,7 +48,7 @@ class _SocketListener(Arcus.SocketListener):
             # For some reason, every so often, it seems to feel that the attribute stateChangedCallback doesn't exist.
             # Ignoring this prevents crashes.
             pass
-        
+
     def messageReceived(self):
         if self.messageReceivedCallback:
             self.messageReceivedCallback()

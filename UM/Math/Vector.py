@@ -17,7 +17,7 @@ numpy.seterr(divide="ignore")
 
 class Vector:
     """Simple 3D-vector class based on numpy arrays.
-    
+
     This class represents an immutable 3-dimensional vector.
     """
 
@@ -84,7 +84,7 @@ class Vector:
         dot = numpy.sum(v0 * v1)
         dot /= self._normalizeVector(v0) * self._normalizeVector(v1)
         return numpy.arccos(numpy.fabs(dot))
-    
+
     def normalized(self) -> "Vector":
         l = self.length()
         if l != 0:
@@ -138,7 +138,7 @@ class Vector:
 
     def scale(self, other: "Vector") -> "Vector":
         """Scale a vector by another vector.
-        
+
         This will do a component-wise multiply of the two vectors.
         """
 
@@ -153,7 +153,7 @@ class Vector:
 
     def equals(self, other: "Vector", epsilon: float = 1e-6) -> bool:
         """Compares this vector to another vector.
-        
+
         :param epsilon: optional tolerance value for the comparision.
         :returns: True if the two vectors are the same.
         """

@@ -35,16 +35,16 @@ class Logger:
     @classmethod
     def log(cls, log_type: str, message: str, *args, **kwargs):
         """Send a message of certain type to all loggers to be handled.
-        
+
         This method supports placeholders in either str.format() style or % style. For more details see
         the respective Python documentation pages.
-        
+
         Note that only str.format() supports keyword argument placeholders. Additionally, if str.format()
         makes any changes, % formatting will not be applied.
-        
+
         :param log_type: Values must be; 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning).
         :param message: containing message to be logged
-        
+
         :param args: List of placeholder replacements that will be passed to str.format() or %.
         :param kwargs: List of placeholder replacements that will be passed to str.format().
         """
@@ -95,10 +95,10 @@ class Logger:
     @classmethod
     def logException(cls, log_type: str, message: str, *args):
         """Logs that an exception occurs.
-        
+
         It'll include the traceback of the exception in the log message. The
         traceback is obtained from the current execution state.
-        
+
         :param log_type: The importance level of the log (warning, info, etc.).
         :param message: The message to go along with the exception.
         """
@@ -145,7 +145,7 @@ class LogOutput(PluginObject):
 
     def __init__(self) -> None:
         """Create the log output.
-        
+
         This is called during the plug-in loading stage.
         """
 
@@ -154,14 +154,14 @@ class LogOutput(PluginObject):
 
     def log(self, log_type: str, message: str) -> None:
         """Log a message.
-        
+
         The possible message types are:
         - "d", debug
         - "i", info
         - "w", warning
         - "e", error
         - "c", critical
-        
+
         :param log_type: A value describing the type of message.
         :param message: The message to log.
         :exception NotImplementedError:
