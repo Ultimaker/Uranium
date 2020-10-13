@@ -296,6 +296,8 @@ class Trust:
         """
 
         self._public_key = None  # type: Optional[RSAPublicKey]
+        self._follow_symlinks = False  # type: bool
+
         try:
             with open(public_key_filename, "rb") as file:
                 self._public_key = load_pem_public_key(file.read(), backend = default_backend())
@@ -349,9 +351,15 @@ class Trust:
                     Logger.logException("e", "Can't parse (folder) signature file '{0}'.".format(data_file))
                     return False
 
+                # Any filename outside of the plugin-root is a sure sign of tampering:
+                for key in signatures_json.keys():
+                    if ".." in key:
+                        Logger.logException("e", "Suspect key '{0}' in signature file '{1}'.".format(key, data_file))
+                        return False
+
                 # Loop over all files within the folder (excluding the signature file):
                 file_count = 0
-                for root, dirnames, filenames in os.walk(path, followlinks = True):
+                for root, dirnames, filenames in os.walk(path, followlinks = self._follow_symlinks):
                     for filename in filenames:
                         if filename == TrustBasics.getSignaturesLocalFilename() and root == path:
                             continue
@@ -368,6 +376,10 @@ class Trust:
                         if not self._verifyFile(name_on_disk, signature):
                             self._violation_handler("File '{0}' didn't match with checksum.".format(name_on_disk))
                             return False
+                    for dirname in dirnames:
+                        dir_full_path = os.path.join(path, dirname)
+                        if os.path.islink(dir_full_path) and not self._follow_symlinks:
+                            Logger.log("w", "Directory '{0}' is a symbolic link and will not be followed.".format(dir_full_path))
 
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
@@ -418,6 +430,9 @@ class Trust:
         """
 
         return os.path.exists(TrustBasics.getSignaturePathForFile(filename))
+
+    def setFollowSymlinks(self, follow_symlinks: bool) -> None:
+        self._follow_symlinks = follow_symlinks
 
 
 class TrustException(Exception):
