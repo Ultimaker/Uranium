@@ -204,7 +204,7 @@ class PluginRegistry(QObject):
             if has_signature_file or is_bundled or in_ignore_list:
                 continue
 
-            # Otherwise, for all files in the current directory:
+            # Otherwise it's outside of the trusted area, and needs to be checked whether stray file/folder or plugin:
             for file in os.listdir(current_dir):
                 abs_file = os.path.join(current_dir, file)
 
