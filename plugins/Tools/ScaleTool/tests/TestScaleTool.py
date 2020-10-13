@@ -4,6 +4,7 @@ import sys
 import os
 
 from UM.Math.AxisAlignedBox import AxisAlignedBox
+from UM.Math.Matrix import Matrix
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from UM.Math.Vector import Vector
@@ -62,8 +63,12 @@ def createMockedSelectionWithBoundingBox(min_size, max_size):
     return selection
 
 def createMockedSelectionWithScale(scale):
-    selection = MagicMock()
-    node = MagicMock()
+    selection = MagicMock(name = "mocked_selection")
+    node = MagicMock(name = "mocked_node")
+
+    matrix = Matrix()
+    matrix.compose(scale = scale)
+    node.getWorldTransformation = MagicMock(return_value = matrix)
     node.getScale = MagicMock(return_value=scale)
     selection.hasSelection = MagicMock(return_value=True)
     selection.getSelectedObject = MagicMock(return_value=node)
@@ -91,7 +96,9 @@ def test_objectWidthDepthHeight_noSelection(scale_tool):
 
 def test_objectSize(scale_tool):
     selection = createMockedSelectionWithScale(Vector(2, 3, 4))
+    scale_tool._getScaleInWorldCoordinates = MagicMock(return_value = Vector(2,3,4))
     with patch("ScaleTool.Selection", selection):
+
         assert scale_tool.getScaleX() == 2.0
         assert scale_tool.getScaleY() == 3.0
         assert scale_tool.getScaleZ() == 4.0
@@ -101,6 +108,7 @@ def test_objectSize_noSelection(scale_tool):
     # If no object is selected, we should get some sane defaults.
     selection = MagicMock()
     selection.hasSelection = MagicMock(return_value=False)
+    scale_tool._getScaleInWorldCoordinates = MagicMock(return_value=Vector(1, 1, 1))
     with patch("ScaleTool.Selection", selection):
         assert scale_tool.getScaleX() == 1.0
         assert scale_tool.getScaleY() == 1.0
@@ -157,7 +165,7 @@ def test_setObjectDepth(scale_tool):
 
 def test_setScaleX(scale_tool):
     selection = createMockedSelectionWithScale(Vector(1, 1, 1))
-
+    scale_tool._getScaleInWorldCoordinates = MagicMock(return_value=Vector(1, 1, 1))
     scale_tool._scaleSelectedNodes = MagicMock()  # Not the function under test, so isolate it.
     with patch("ScaleTool.Selection", selection):
         scale_tool.setScaleX(90)
@@ -173,7 +181,7 @@ def test_setScaleX(scale_tool):
 
 def test_setScaleY(scale_tool):
     selection = createMockedSelectionWithScale(Vector(10, 10, 10))
-
+    scale_tool._getScaleInWorldCoordinates = MagicMock(return_value=Vector(10, 10, 10))
     scale_tool._scaleSelectedNodes = MagicMock()  # Not the function under test, so isolate it.
     with patch("ScaleTool.Selection", selection):
         scale_tool.setScaleY(20)
@@ -190,7 +198,7 @@ def test_setScaleY(scale_tool):
 
 def test_setScaleZ(scale_tool):
     selection = createMockedSelectionWithScale(Vector(10, 10, 10))
-
+    scale_tool._getScaleInWorldCoordinates = MagicMock(return_value=Vector(10, 10, 10))
     scale_tool._scaleSelectedNodes = MagicMock()  # Not the function under test, so isolate it.
     with patch("ScaleTool.Selection", selection):
         scale_tool.setScaleZ(5)
