@@ -18,6 +18,8 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Signal import Signal, signalemitter
 from UM.i18n import i18nCatalog
 from UM.Platform import Platform
+if Platform.isWindows():
+    from PyQt5.QtCore import QEventLoop  # Windows fix for using file watcher on removable devices.
 
 i18n_catalog = i18nCatalog("uranium")
 
@@ -145,9 +147,10 @@ class Scene:
         :param file_path: The path to the file that must be watched.
         """
 
-        # The QT 5.10.0 issue, only on Windows. Cura crashes after loading a stl file from USB/sd-card/Cloud-based drive
-        if not Platform.isWindows():
-            self._file_watcher.addPath(file_path)
+        # File watcher causes cura to crash on windows if threaded from removable device (usb, ...). Create QEventLoop earlier to fix this.
+        if Platform.isWindows():
+            QEventLoop()
+        self._file_watcher.addPath(file_path)
 
     def removeWatchedFile(self, file_path: str) -> None:
         """Remove a file so that it will no longer be watched for changes.
@@ -155,9 +158,7 @@ class Scene:
         :param file_path: The path to the file that must no longer be watched.
         """
 
-        # The QT 5.10.0 issue, only on Windows. Cura crashes after loading a stl file from USB/sd-card/Cloud-based drive
-        if not Platform.isWindows():
-            self._file_watcher.removePath(file_path)
+        self._file_watcher.removePath(file_path)
 
     def _onFileChanged(self, file_path: str) -> None:
         """Triggered whenever a file is changed that we currently have loaded."""
