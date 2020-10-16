@@ -52,6 +52,8 @@ class PluginRegistry(QObject):
         PluginRegistry.__instance = self
 
         super().__init__(parent)
+        self.preloaded_plugins = []  # List of plug-in names that must be loaded before the rest, if the plug-ins are available. They are loaded in this order too.
+
         self._application = application  # type: Application
         self._api_version = application.getAPIVersion()  # type: Version
 
@@ -404,9 +406,17 @@ class PluginRegistry(QObject):
         """
 
         start_time = time.time()
+
+        # First load all of the pre-loaded plug-ins.
+        for preloaded_plugin in self.preloaded_plugins:
+            self.loadPlugin(preloaded_plugin)
+
         # Get a list of all installed plugins:
         plugin_ids = self._findInstalledPlugins()
         for plugin_id in plugin_ids:
+            if plugin_id in self.preloaded_plugins:
+                continue  # Already loaded this before.
+
             # Get the plugin metadata:
             try:
                 plugin_metadata = self.getMetaData(plugin_id)
