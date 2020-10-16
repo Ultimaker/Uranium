@@ -52,7 +52,7 @@ class PluginRegistry(QObject):
         PluginRegistry.__instance = self
 
         super().__init__(parent)
-        self.preloaded_plugins = []  # List of plug-in names that must be loaded before the rest, if the plug-ins are available. They are loaded in this order too.
+        self.preloaded_plugins = []  # type: List[str]  # List of plug-in names that must be loaded before the rest, if the plug-ins are available. They are loaded in this order too.
 
         self._application = application  # type: Application
         self._api_version = application.getAPIVersion()  # type: Version
