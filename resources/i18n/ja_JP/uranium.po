@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.7\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2020-07-31 12:50+0200\n"
+"POT-Creation-Date: 2020-10-19 13:16+0200\n"
 "PO-Revision-Date: 2020-08-21 13:40+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, Brule <jason@brule.co.jp>, Japanese <info@bothof.nl>\n"
@@ -301,7 +301,7 @@ msgid "Reset will remove all your current printers and profiles! Are you sure yo
 msgstr "リセットすると、現在のプリンターおよびプロファイルがすべて削除されます。本当にリセットしてよろしいですか？"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:58
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:783
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:844
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -309,7 +309,7 @@ msgid "All Supported Types ({0})"
 msgstr "すべてのサポートのタイプ ({0})"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:59
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:784
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:845
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -387,7 +387,12 @@ msgctxt "@info:title"
 msgid "Updating error"
 msgstr "アップデートエラー"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:301
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:220
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:363
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -396,12 +401,12 @@ msgstr ""
 "プラグインがインストールされました。\n"
 "アプリケーションを再起動して、プラグインをアクティベートしてください。"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:357
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:416
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
 msgstr "プラグイン{}は検証できなかったため、読み込まれていません。"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:457
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:516
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -485,23 +490,23 @@ msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "UIをロード中..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:180
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:181
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "{filename}を再ロードしますか？"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:181
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "ファイルが変更されました"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:183
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "再ロード"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:183
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "これにより変更したファイルをディスクから再ロードします。"
