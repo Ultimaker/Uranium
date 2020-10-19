@@ -3,6 +3,7 @@
 from typing import Optional, Tuple, List, Union
 
 import numpy
+import math
 import scipy.spatial
 
 from UM.Logger import Logger
@@ -13,7 +14,7 @@ class Polygon:
     """A class representing an immutable arbitrary 2-dimensional polygon."""
 
     @staticmethod
-    def approximatedCircle(radius):
+    def approximatedCircle(radius, num_segments = 8):
         """Return vertices from an approximate circle.
 
         An octagon is returned, which comes close enough to a circle.
@@ -22,16 +23,13 @@ class Polygon:
         :return: A polygon that approximates a circle.
         """
 
-        return Polygon(points = numpy.array([
-            [-radius, 0],
-            [-radius * 0.707, radius * 0.707],
-            [0, radius],
-            [radius * 0.707, radius * 0.707],
-            [radius, 0],
-            [radius * 0.707, -radius * 0.707],
-            [0, -radius],
-            [-radius * 0.707, -radius * 0.707]
-        ], numpy.float32))
+        step = 2 * math.pi / num_segments
+
+        points = []
+        for i in range(0, num_segments):
+            points.append([radius * math.cos(i * step), radius * math.sin(i * step)])
+
+        return Polygon(points = numpy.array(points, numpy.float32))
 
     def __init__(self, points: Optional[Union[numpy.ndarray, List]] = None):
         self._points = NumPyUtil.immutableNDArray(points)
