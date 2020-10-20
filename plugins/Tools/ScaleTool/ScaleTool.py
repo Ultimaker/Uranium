@@ -496,11 +496,11 @@ class ScaleTool(Tool):
                 rotated_matrix._data[:3, 3] = node.getPosition().getData()
 
             extents = node.getMeshData().getExtents(rotated_matrix)
-
-        for child in node.getChildren():
-            # We want the children with their (local) translation, as this influences the size of the AABB.
-            if extents is None:
-                extents = self._getExtents(child, rotated_matrix)
-            else:
-                extents = extents + self._getExtents(child, rotated_matrix)
+        if node.callDecoration("isGroup"):
+            for child in node.getChildren():
+                # We want the children with their (local) translation, as this influences the size of the AABB.
+                if extents is None:
+                    extents = self._getExtents(child, rotated_matrix)
+                else:
+                    extents = extents + self._getExtents(child, rotated_matrix)
         return extents
