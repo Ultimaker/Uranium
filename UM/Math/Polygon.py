@@ -27,7 +27,7 @@ class Polygon:
 
         points = []
         for i in range(0, num_segments):
-            points.append([radius * math.cos(i * step), radius * math.sin(i * step)])
+            points.append([radius * -math.cos(i * step), radius * math.sin(i * step)])
 
         return Polygon(points = numpy.array(points, numpy.float32))
 
