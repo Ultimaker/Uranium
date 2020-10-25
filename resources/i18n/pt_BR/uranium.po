@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.7\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2020-07-31 12:50+0200\n"
-"PO-Revision-Date: 2020-08-16 20:30+0100\n"
+"POT-Creation-Date: 2020-10-19 13:16+0200\n"
+"PO-Revision-Date: 2020-10-25 08:30+0100\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -300,7 +300,7 @@ msgid "Reset will remove all your current printers and profiles! Are you sure yo
 msgstr "Restaurar removerá todas as suas impressoras e perfis atuais! Tem certeza que quer restaurar?"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:58
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:783
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:844
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -308,7 +308,7 @@ msgid "All Supported Types ({0})"
 msgstr "Todos os Tipos Suportados ({0})"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:59
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:784
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:845
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -386,7 +386,12 @@ msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Erro ao atualizar"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:301
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:220
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
+msgstr "O complemento {} não foi carregado por tentar carregar arquivos fora do contexto confiável"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:363
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -395,19 +400,19 @@ msgstr ""
 "O complemento foi instalado.\n"
 "Por favor reinicie a aplicação para ativar o complemento."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:357
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:416
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
 msgstr "Complemento {} não foi carregado porque não pôde ser verificado."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:457
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:516
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
 msgstr ""
-"O plugin foi removido.\n"
+"O complemento foi removido.\n"
 "Por favor reinicie {0} para finalizar a desinstalação."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
@@ -484,23 +489,23 @@ msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "Carregando UI..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:180
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:181
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Gostaria de recarregar {filename}?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:181
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Arquivo foi modificado"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:183
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Recarregar"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:183
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Isto irá fazer com que arquivos modificados sejam recarregados do disco."
