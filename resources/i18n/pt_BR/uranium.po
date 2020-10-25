@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.7\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2020-10-19 13:16+0200\n"
-"PO-Revision-Date: 2020-08-16 20:30+0100\n"
+"PO-Revision-Date: 2020-10-25 08:30+0100\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -389,7 +389,7 @@ msgstr "Erro ao atualizar"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:220
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
-msgstr ""
+msgstr "O complemento {} não foi carregado por tentar carregar arquivos fora do contexto confiável"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:363
 msgctxt "@info:status"
@@ -412,7 +412,7 @@ msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
 msgstr ""
-"O plugin foi removido.\n"
+"O complemento foi removido.\n"
 "Por favor reinicie {0} para finalizar a desinstalação."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
