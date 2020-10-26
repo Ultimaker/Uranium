@@ -511,9 +511,13 @@ def createConvexHull(vertex_data: numpy.ndarray) -> scipy.spatial.ConvexHull:
     try:
         hull_result = scipy.spatial.ConvexHull(vertex_data)
     except scipy.spatial.qhull.QhullError:
-        # Can get an error when the model is lower dimensional, use "QJ" is make it full dimensional
-        Logger.log("w", "Loaded model is low-dimensional, apply QJ to make it full dimensional")
-        hull_result = scipy.spatial.ConvexHull(vertex_data, qhull_options="QJ")
+        # Sometimes you can get an error when the model is lower dimensional. Try using "QJ" is make it full-dimensional.
+        Logger.log("w", "Loaded model may be low-dimensional, apply QJ to make it full dimensional.")
+        try:
+            hull_result = scipy.spatial.ConvexHull(vertex_data, qhull_options="QJ")
+        except scipy.spatial.qhull.QhullError as e:
+            Logger.log("e", "Couldn't construct convex hull around mesh (using faux hull instead): {err}".format(err = str(e)))
+            hull_result = scipy.spatial.ConvexHull(numpy.array([[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]))  # Cube, known to always succeed.
     return hull_result
 
 
