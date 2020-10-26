@@ -635,7 +635,7 @@ class PackageManager(QObject):
         except zipfile.BadZipFile as e:
             Logger.error("Package is corrupt: {err}".format(err = str(e)))
             license_string = None
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, LookupError):
             Logger.error("Package filenames are not UTF-8 encoded! Encoding unknown.")
             license_string = None
         return license_string
