@@ -166,7 +166,7 @@ class MeshBuilder:
     def setFileName(self, file_name: Optional[str]) -> None:
         self._file_name = file_name
 
-    def reserveFaceCount(self, num_faces: Union[int, float]) -> None:
+    def reserveFaceCount(self, num_faces: int) -> None:
         """Set the amount of faces before loading data to the mesh.
 
         This way we can create the array before we fill it. This method will reserve

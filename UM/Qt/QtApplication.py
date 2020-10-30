@@ -234,6 +234,7 @@ class QtApplication(QApplication, Application):
             Logger.log("i", "The preferences file '%s' cannot be found, will use default values",
                        self._preferences_filename)
             self._preferences_filename = Resources.getStoragePath(Resources.Preferences, self._app_name + ".cfg")
+        Logger.info("Completed loading preferences.")
 
         # FIXME: This is done here because we now use "plugins.json" to manage plugins instead of the Preferences file,
         # but the PluginRegistry will still import data from the Preferences files if present, such as disabled plugins,
@@ -268,6 +269,7 @@ class QtApplication(QApplication, Application):
                     self._tray_icon = QIcon(Resources.getPath(Resources.Images, self._tray_icon_name))
                     self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
                     self._tray_icon_widget.setVisible(False)
+                    Logger.info("Created system tray icon.")
                 except FileNotFoundError:
                     Logger.log("w", "Could not find the icon %s", self._tray_icon_name)
 

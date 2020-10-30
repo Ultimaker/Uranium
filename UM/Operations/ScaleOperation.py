@@ -80,7 +80,7 @@ class ScaleOperation(Operation.Operation):
                 scale_factor = scale_factor.set(z=scale_factor.z / current_scale.z)
 
             self._node.setPosition(-self._scale_around_point) #If scaling around a point, shift that point to the axis origin first and shift it back after performing the transformation.
-            self._node.scale(scale_factor, SceneNode.TransformSpace.Parent)
+            self._node.scale(scale_factor, SceneNode.TransformSpace.World)
             self._node.setPosition(self._scale_around_point)
             new_scale = self._node.getScale()
             if self._snap:

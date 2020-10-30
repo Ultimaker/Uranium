@@ -67,7 +67,7 @@ Item
         checked: UM.ActiveTool.properties.getValue("SelectFaceToLayFlatMode")
         onClicked: UM.ActiveTool.setProperty("SelectFaceToLayFlatMode", !checked)
 
-        visible: UM.ActiveTool.properties.getValue("SelectFaceSupported");
+        visible: UM.ActiveTool.properties.getValue("SelectFaceSupported") == true //Might be undefined if we're switching away from the RotateTool!
     }
 
     CheckBox
