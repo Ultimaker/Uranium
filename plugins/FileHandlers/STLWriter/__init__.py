@@ -11,13 +11,13 @@ def getMetaData():
         "mesh_writer": {
             "output": [
                 {
-                    "mime_type": "model/x.stl-ascii",
+                    "mime_type": "model/stl",
                     "mode": STLWriter.STLWriter.OutputMode.TextMode,
                     "extension": "stl",
                     "description": i18n_catalog.i18nc("@item:inlistbox", "STL File (ASCII)")
                 },
                 {
-                    "mime_type": "model/x.stl-binary",
+                    "mime_type": "model/stl",
                     "mode": STLWriter.STLWriter.OutputMode.BinaryMode,
                     "extension": "stl",
                     "description": i18n_catalog.i18nc("@item:inlistbox", "STL File (Binary)")
