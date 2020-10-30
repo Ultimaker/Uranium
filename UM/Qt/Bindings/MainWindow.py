@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF
@@ -265,9 +265,9 @@ class MainWindow(QQuickWindow):
         if self.windowState() in (Qt.WindowNoState, Qt.WindowMaximized):
             self._preferences.setValue("general/window_state", self.windowState())
 
-    def _updateViewportGeometry(self, width: int, height: int):
-        view_width = width * self._viewport_rect.width()
-        view_height = height * self._viewport_rect.height()
+    def _updateViewportGeometry(self, width: int, height: int) -> None:
+        view_width = round(width * self._viewport_rect.width())
+        view_height = round(height * self._viewport_rect.height())
 
         for camera in self._app.getController().getScene().getAllCameras():
             camera.setWindowSize(width, height)
@@ -277,5 +277,3 @@ class MainWindow(QQuickWindow):
 
         self._app.getRenderer().setViewportSize(view_width, view_height)
         self._app.getRenderer().setWindowSize(width, height)
-
-
