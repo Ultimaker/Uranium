@@ -187,6 +187,9 @@ class PackageManager(QObject):
             except FileNotFoundError:
                 Logger.log("i", "User package management file %s doesn't exist, do nothing", self._user_package_management_file_path)
                 return
+            except EnvironmentError:
+                Logger.warning("User package management file is inaccessible! Can't see if we need to install packages!")
+                return
 
         # For packages that become bundled in the new releases, but a lower version was installed previously, we need
         # to remove the old lower version that's installed in the user's folder.
