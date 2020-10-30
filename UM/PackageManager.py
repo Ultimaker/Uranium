@@ -249,7 +249,7 @@ class PackageManager(QObject):
         container_registry = self._application.getContainerRegistry()
         with container_registry.lockFile():
             try:
-                with open(cast(str,self._user_package_management_file_path), "w", encoding = "utf-8") as f:
+                with open(cast(str, self._user_package_management_file_path), "w", encoding = "utf-8") as f:
                     data_dict = {"version": PackageManager.Version,
                                  "installed": self._installed_package_dict,
                                  "to_remove": list(self._to_remove_package_set),
