@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
@@ -333,7 +333,7 @@ class ShaderProgram:
             self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(value))
         elif type(value) is Color:
             self._shader_program.setUniformValue(uniform,
-                QColor(value.r * 255, value.g * 255, value.b * 255, value.a * 255))
+                QColor(round(value.r * 255), round(value.g * 255), round(value.b * 255), round(value.a * 255)))
         elif type(value) is list and type(value[0]) is list and len(value[0]) == 4:
             self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(Matrix(value)))
         elif type(value) is list and len(value) == 2:
