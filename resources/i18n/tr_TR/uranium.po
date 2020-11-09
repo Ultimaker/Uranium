@@ -390,7 +390,7 @@ msgstr "Güncelleme hatası"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:220
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
-msgstr ""
+msgstr "{} eklentisi güvenilir bağlam dışında dosya yüklemeyi denediğinden yüklenmedi"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:363
 msgctxt "@info:status"
