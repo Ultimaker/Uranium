@@ -390,7 +390,7 @@ msgstr "Fehler beim Aktualisieren"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:220
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
-msgstr ""
+msgstr "Plugin {} wurde nicht geladen, weil es versucht hat, Dateien außerhalb des vertrauenswürdigen Kontexts zu laden"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:363
 msgctxt "@info:status"
