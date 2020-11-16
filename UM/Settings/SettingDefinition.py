@@ -613,7 +613,11 @@ class SettingDefinition:
 
         convert_function = cls.__type_definitions[type_name]["from"]
         if convert_function:
-            return convert_function(value)
+            try:
+                return convert_function(value)
+            except Exception as err:
+                Logger.log("e", "UM.Settings: Error converting from %s with value %s: %s", type_name, str(value), err)
+                raise
 
         return value
 
