@@ -11,6 +11,7 @@ from UM.Math.Plane import Plane
 from UM.Math.Quaternion import Quaternion
 from UM.Math.Vector import Vector
 from UM.Message import Message
+from UM.Operations.GravityOperation import GravityOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
 from UM.Operations.RotateOperation import RotateOperation
@@ -266,10 +267,12 @@ class RotateTool(Tool):
             return
 
         rotate_operation = RotateOperation(current_node, rotation_quaternion, rotation_point_vector)
+        gravity_operation = GravityOperation(current_node)
         operation.addOperation(rotate_operation)
+        operation.addOperation(gravity_operation)
         operation.push()
 
-        # NOTE: We might want to consider unchecking the select-face button afterthe operation is done.
+        # NOTE: We might want to consider unchecking the select-face button after the operation is done.
 
     def getToolHint(self):
         """Return a formatted angle of the current rotate operation
