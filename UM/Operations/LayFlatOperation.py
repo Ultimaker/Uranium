@@ -44,6 +44,8 @@ class LayFlatOperation(Operation.Operation):
         else:
             self._new_orientation = self._old_orientation
 
+        self._gravity_operation = None
+
     def process(self):
         """Computes some orientation to hopefully lay the object flat.
 
@@ -137,13 +139,16 @@ class LayFlatOperation(Operation.Operation):
         """Undoes this lay flat operation."""
 
         self._node.setOrientation(self._old_orientation) #Restore saved orientation.
+        self._gravity_operation.undo()
 
     def redo(self):
         """Re-does this lay flat operation."""
 
         if self._new_orientation: #Only if the orientation was finished calculating.
             self._node.setOrientation(self._new_orientation)
-            GravityOperation(self._node).redo()
+            if self._gravity_operation is None:
+                self._gravity_operation = GravityOperation(self._node)
+            self._gravity_operation.redo()
 
     def mergeWith(self, other):
         """Merge this lay flat operation with another lay flat operation.
