@@ -19,8 +19,8 @@ from . import SettingFunction
 from .SettingDefinition import SettingDefinition
 
 # Helper functions for SettingInstance tracing
-def _traceSetProperty(instance: "SettingInstance", property_name: str, property_value: Any, container: ContainerInterface) -> None:
-    Logger.log("d", "Set property '{0}' of '{1}' to '{2}', updating using values from {3}".format(property_name, instance, property_value, container))
+def _traceSetProperty(instance: "SettingInstance", property_name: str, property_value: Any, container: ContainerInterface, emit_signals: bool) -> None:
+    Logger.log("d", "Set property '{0}' of '{1}' to '{2}', updating using values from {3}, emit signals {4}".format(property_name, instance, property_value, container, emit_signals))
 
 def _traceUpdateProperty(instance: "SettingInstance", property_name: str, container: ContainerInterface) -> None:
     Logger.log("d", "Updating property '{0}' of '{1}' using container {2}".format(property_name, instance, container))
