@@ -25,7 +25,7 @@ def _traceSetProperty(instance: "SettingInstance", property_name: str, property_
 def _traceUpdateProperty(instance: "SettingInstance", property_name: str, container: ContainerInterface) -> None:
     Logger.log("d", "Updating property '{0}' of '{1}' using container {2}".format(property_name, instance, container))
 
-def _traceRelations(instance: "SettingInstance", container: ContainerInterface) -> None:
+def _traceRelations(instance: "SettingInstance", container: ContainerInterface, emit_signals: bool) -> None:
     Logger.log("d", "Updating relations of '{0}'", instance)
 
     property_names = SettingDefinition.getPropertyNames()
