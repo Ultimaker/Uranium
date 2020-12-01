@@ -433,6 +433,8 @@ class ScaleTool(Tool):
                 self._scaleSelectedNodes(scale_vector)
 
     def _scaleSelectedNodes(self, scale_vector: Vector) -> None:
+        if scale_vector.length() == 0.0:
+            return
         selected_nodes = self._getSelectedObjectsWithoutSelectedAncestors()
         if len(selected_nodes) > 1:
             op = GroupedOperation()
