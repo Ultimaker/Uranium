@@ -176,14 +176,14 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     def i18nIsRightToLeft(self):
         """Returns true if the language is right to left language. 
 
-        it uses the following message in the language file 
-        msgctxt "@language:direction"
-        msgid "ltr"
-        msgstr "rtl
-
+        It uses the variable Language-Direction in the language metadata to detrmine direction
+        if direction not specified it will default to false
+        
         :return: True if the language is right to left otherwise False 
         """
-        return self.i18nc("@language:direction","ltr")=="rtl"
+        if(self.__translation is not None):
+            return self.__translation.info().get("Language-Direction","ltr")=="rtl"
+        return False
 
     def _replaceTags(self, string: str) -> str:
         """Replace formatting tags in the string with globally-defined replacement
