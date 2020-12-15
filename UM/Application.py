@@ -7,6 +7,7 @@ import sys
 import threading
 
 from UM.Controller import Controller
+from UM.FileProvider import FileProvider
 from UM.Message import Message #For typing.
 from UM.PackageManager import PackageManager
 from UM.PluginRegistry import PluginRegistry
@@ -85,6 +86,7 @@ class Application:
         self._preferences = None  # type: Preferences
 
         self._extensions = []  # type: List[Extension]
+        self._file_providers = []  # type: List[FileProvider]
         self._required_plugins = []  # type: List[str]
 
         self._package_manager_class = PackageManager  # type: type
@@ -173,6 +175,7 @@ class Application:
         PluginRegistry.addType("backend", self.setBackend)
         PluginRegistry.addType("logger", Logger.addLogger)
         PluginRegistry.addType("extension", self.addExtension)
+        PluginRegistry.addType("file_provider", self.addFileProvider)
 
         self._preferences = Preferences()
         self._preferences.addPreference("general/language", self._default_language)
@@ -449,6 +452,12 @@ class Application:
 
     def getExtensions(self) -> List["Extension"]:
         return self._extensions
+
+    def addFileProvider(self, file_provider: "FileProvider") -> None:
+        self._file_providers.append(file_provider)
+
+    def getFileProviders(self) -> List["FileProvider"]:
+        return self._file_providers
 
     # Returns the path to the folder of the app itself, e.g.: '/root/blah/programs/Cura'.
     @staticmethod
