@@ -599,6 +599,7 @@ class QtApplication(QApplication, Application):
         self._workspace_metadata_storage.clear()
         self.deleteAll()
         self.workspaceLoaded.emit("")
+        self.getController().getScene().clearMetaData()
 
     def getMeshFileHandler(self) -> MeshFileHandler:
         """Get the MeshFileHandler of this application."""
