@@ -1,7 +1,8 @@
 import copy
-from unittest.mock import patch, MagicMock
-import pytest
+import json
+from unittest.mock import MagicMock
 import os
+import pytest
 import random
 import tempfile
 
@@ -79,14 +80,8 @@ class TestTrust:
         # Oh noes! Someone changed the file!
         with open(filepath_signed, "w") as file:
             file.write("\nPay 10 Golden Talents To Get Your Data Back Or Else\n")
-        assert not trust_instance.signedFolderCheck(filepath_signed)
-        assert violation_callback.call_count == 1
-        violation_callback.reset_mock()
-
-        # If one file is missing, the entire folder isn't considered to be signed.
-        os.remove(filepath_signed)
-        assert not trust_instance.signedFolderCheck(filepath_signed)
-        assert violation_callback.call_count == 1
+        assert not trust_instance.signedFileCheck(filepath_signed)
+        assert violation_callback.call_count > 0
         violation_callback.reset_mock()
 
     def test_signFolderAndVerify(self, init_trust):
@@ -116,7 +111,23 @@ class TestTrust:
         violation_callback.reset_mock()
         trust_instance._public_key = public_key
 
-        # Any modification will should also invalidate it.
+        # Hecking around with the signature file should also be discouraged.
+        signatures_file = os.path.join(folderpath_signed, TrustBasics.getSignaturesLocalFilename())
+        with open(signatures_file, "r", encoding = "utf-8") as sigfile:
+            sig_json = json.load(sigfile)
+        restore_json = copy.copy(sig_json)
+        sig_json[TrustBasics.getRootSignedManifestKey()] = "HAHAHAHA"
+        os.remove(signatures_file)
+        with open(signatures_file, "w", encoding = "utf-8") as sigfile:
+            json.dump(sig_json, sigfile, indent = 2)
+        assert not trust_instance.signedFolderCheck(folderpath_signed)
+        assert violation_callback.call_count > 0
+        violation_callback.reset_mock()
+        os.remove(signatures_file)
+        with open(signatures_file, "w", encoding = "utf-8") as sigfile:
+            json.dump(restore_json, sigfile, indent = 2)
+
+        # Any modification should also invalidate it.
         filepath = os.path.join(folderpath_signed, _subfolder_names[0], _file_names[1])
         with open(filepath, "w") as file:
             file.write("\nAlice and Bob will never notice this! Hehehehe.\n")
@@ -124,6 +135,7 @@ class TestTrust:
         assert violation_callback.call_count > 0
         violation_callback.reset_mock()
 
+        # Any missing files should also be registered.
         os.remove(filepath)
         assert not trust_instance.signedFolderCheck(folderpath_signed)
         assert violation_callback.call_count == 1
