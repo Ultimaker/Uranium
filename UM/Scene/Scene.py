@@ -4,7 +4,7 @@
 import functools  # For partial to update files that were changed.
 import os.path  # To watch files for changes.
 import threading
-from typing import Callable, List, Optional, Set
+from typing import Callable, List, Optional, Set, Any
 
 from PyQt5.QtCore import QFileSystemWatcher  # To watch files for changes.
 
@@ -48,6 +48,17 @@ class Scene:
 
         self._reload_message = None  # type: Optional[Message]
         self._callbacks = set() # type: Set[Callable] # Need to keep these in memory. This is a memory leak every time you refresh, but a tiny one.
+
+        self._metadata = {}
+
+    def setMetaDataEntry(self, key: str, entry: Any) -> None:
+        self._metadata[key] = entry
+
+    def clearMetaData(self):
+        self._metadata = {}
+
+    def getMetaData(self):
+        return self._metadata.copy()
 
     def _connectSignalsRoot(self) -> None:
         self._root.transformationChanged.connect(self.sceneChanged)
