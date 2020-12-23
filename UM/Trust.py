@@ -406,7 +406,8 @@ class Trust:
                 if self_sign is None:
                     self._violation_handler("Signature file '{0}' is not a self-signed manifest.".format(data_file))
                     return False
-                if not self._verifyHash(TrustBasics.getSelfSignHash(signatures_json), self_sign):
+                shash = TrustBasics.getSelfSignHash(signatures_json)
+                if shash is None or not self._verifyHash(shash, self_sign):
                     self._violation_handler("Suspect self-sign in signature-file '{0}'.".format(data_file))
                     return False
 
