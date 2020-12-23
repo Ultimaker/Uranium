@@ -137,14 +137,14 @@ class TrustBasics:
         return None
 
     @classmethod
-    def getSelfSignHash(cls, signatures: Dict[str, str]) -> str:
+    def getSelfSignHash(cls, signatures: Dict[str, str]) -> Optional[str]:
         """ Make a hash for the signature 'file' itself, where the file is represented as a dictionary here.
 
         :param signatures: A dictionary of (filename, file-hash-signature) pairs.
         :return: A hash, which can be used for creating or checking against a self-signed manifest.
         """
 
-        concat = "".join(["" + key + "" + signatures.get(key) for key in sorted(signatures.keys())])
+        concat = "".join([str(key) + str(signatures.get(key)) for key in sorted(signatures.keys())])
         if concat is None or len(concat) < 1:
             return None
         hasher = hashes.Hash(cls.__hash_algorithm, backend=default_backend())
@@ -392,22 +392,22 @@ class Trust:
                 json_data = json.load(data_file)
                 signatures_json = json_data.get(TrustBasics.getRootSignatureCategory(), None)
                 if signatures_json is None:
-                    Logger.logException("e", "Can't parse (folder) signature file '{0}'.".format(data_file))
+                    self._violation_handler("Can't parse (folder) signature file '{0}'.".format(data_file))
                     return False
 
                 # Any filename outside of the plugin-root is a sure sign of tampering:
                 for key in signatures_json.keys():
                     if ".." in key:
-                        Logger.logException("e", "Suspect key '{0}' in signature file '{1}'.".format(key, data_file))
+                        self._violation_handler("Suspect key '{0}' in signature file '{1}'.".format(key, data_file))
                         return False
 
                 # Check if the signing file itself has been tampered with:
                 self_sign = json_data.get(TrustBasics.getRootSignedManifestKey(), None)
                 if self_sign is None:
-                    Logger.logException("e", "Signature file '{0}' is not a self-signed manifest.".format(data_file))
+                    self._violation_handler("Signature file '{0}' is not a self-signed manifest.".format(data_file))
                     return False
                 if not self._verifyHash(TrustBasics.getSelfSignHash(signatures_json), self_sign):
-                    Logger.logException("e", "Suspect self-sign in signature-file '{0}'.".format(data_file))
+                    self._violation_handler("Suspect self-sign in signature-file '{0}'.".format(data_file))
                     return False
 
                 # Loop over all files within the folder (excluding the signature file):
@@ -432,7 +432,7 @@ class Trust:
                     for dirname in dirnames:
                         dir_full_path = os.path.join(path, dirname)
                         if os.path.islink(dir_full_path) and not self._follow_symlinks:
-                            Logger.log("w", "Directory '{0}' is a symbolic link and will not be followed.".format(dir_full_path))
+                            Logger.log("w", "Directory symbolic link '{0}' will not be followed.".format(dir_full_path))
 
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
