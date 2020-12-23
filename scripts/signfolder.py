@@ -63,8 +63,14 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
                     return False
                 signatures[name_in_data] = signature
 
+        # Make the self-signature for the whole 'self-signed' aspect of the manifest:
+        self_signature = TrustBasics.getHashSignature(TrustBasics.getSelfSignHash(signatures), private_key)
+
         # Save signatures to json:
-        wrapped_signatures = {TrustBasics.getRootSignatureCategory(): signatures}
+        wrapped_signatures = {
+            TrustBasics.getRootSignatureCategory(): signatures,
+            TrustBasics.getRootSignedManifestKey(): self_signature
+        }
 
         json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
         with open(json_filename, "w", encoding = "utf-8") as data_file:

@@ -5,7 +5,7 @@ import base64
 import json
 import os
 from pathlib import Path
-from typing import Callable, Optional, Tuple, List
+from typing import Callable, Dict, Optional, Tuple, List
 
 # Note that we unfortunately need to use 'hazmat' code, as there apparently is no way to do what we want otherwise.
 # (Even if what we want should be relatively commonplace in security.)
@@ -33,6 +33,7 @@ class TrustBasics:
     # For (in) directories (plugins for example):
     __signatures_relative_filename = "signature.json"
     __root_signatures_category = "root_signatures"
+    __root_signed_manifest_key = "root_manifest_signature"
 
     # For(/next to) single files:
     __signature_filename_extension = ".signature"
@@ -71,6 +72,15 @@ class TrustBasics:
         """
 
         return cls.__root_signatures_category
+
+    @classmethod
+    def getRootSignedManifestKey(cls) -> str:
+        """'Signed folder' scenario: This is the (json-)key for the hash that (self-)signs the signing file.
+
+        :return: The json 'name' for the key that contains the signature that signs all others' in the file.
+        """
+
+        return cls.__root_signed_manifest_key
 
     @classmethod
     def getSignaturePathForFile(cls, filename: str) -> str:
@@ -127,6 +137,45 @@ class TrustBasics:
         return None
 
     @classmethod
+    def getSelfSignHash(cls, signatures: Dict[str, str]) -> str:
+        """ Make a hash for the signature 'file' itself, where the file is represented as a dictionary here.
+
+        :param signatures: A dictionary of (filename, file-hash-signature) pairs.
+        :return: A hash, which can be used for creating or checking against a self-signed manifest.
+        """
+
+        concat = "".join(["" + key + "" + signatures.get(key) for key in sorted(signatures.keys())])
+        if concat is None or len(concat) < 1:
+            return None
+        hasher = hashes.Hash(cls.__hash_algorithm, backend=default_backend())
+        hasher.update(concat.encode())
+        return base64.b64encode(hasher.finalize()).decode("utf-8")
+
+    @classmethod
+    def getHashSignature(cls, shash: str, private_key: RSAPrivateKey, err_info: Optional[str] = None) -> Optional[str]:
+        """ Creates the signature for the provided hash, given a private key.
+
+        :param shash: The provided string.
+        :param private_key: The private key used for signing.
+        :param err_info: Some optional extra info to be printed on error (for ex.: a filename the data came from).
+        :return: The signature if successful, 'None' otherwise.
+        """
+
+        try:
+            hash_bytes = base64.b64decode(shash)
+            signature_bytes = private_key.sign(
+                hash_bytes,
+                padding.PSS(mgf=padding.MGF1(cls.__hash_algorithm), salt_length=padding.PSS.MAX_LENGTH),
+                Prehashed(cls.__hash_algorithm)
+            )
+            return base64.b64encode(signature_bytes).decode("utf-8")
+        except:  # Yes, we  do really want this on _every_ exception that might occur.
+            if err_info is None:
+                err_info = "HASH:" + shash
+            Logger.logException("e", "Couldn't sign '{0}', no signature generated.".format(err_info))
+        return None
+
+    @classmethod
     def getFileSignature(cls, filename: str, private_key: RSAPrivateKey) -> Optional[str]:
         """Creates the signature for the (hash of the) provided file, given a private key.
 
@@ -138,17 +187,7 @@ class TrustBasics:
         file_hash = cls.getFileHash(filename)
         if file_hash is None:
             return None
-        try:
-            file_hash_bytes = base64.b64decode(file_hash)
-            signature_bytes = private_key.sign(
-                file_hash_bytes,
-                padding.PSS(mgf = padding.MGF1(cls.__hash_algorithm), salt_length = padding.PSS.MAX_LENGTH),
-                Prehashed(cls.__hash_algorithm)
-            )
-            return base64.b64encode(signature_bytes).decode("utf-8")
-        except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Couldn't sign '{0}', no signature generated.".format(filename))
-        return None
+        return cls.getHashSignature(file_hash, private_key, filename)
 
     @staticmethod
     def generateNewKeyPair() -> Tuple[RSAPrivateKeyWithSerialization, RSAPublicKey]:
@@ -313,25 +352,30 @@ class Trust:
 
         self._violation_handler = violation_handler  # type: Callable[[str], None]
 
-    def _verifyFile(self, filename: str, signature: str) -> bool:
+    def _verifyHash(self, shash: str, signature: str, err_info: Optional[str] = None) -> bool:
         if self._public_key is None:
-            return False
-        file_hash = TrustBasics.getFileHash(filename)
-        if file_hash is None:
             return False
         try:
             signature_bytes = base64.b64decode(signature)
-            file_hash_bytes = base64.b64decode(file_hash)
+            hash_bytes = base64.b64decode(shash)
             self._public_key.verify(
                 signature_bytes,
-                file_hash_bytes,
+                hash_bytes,
                 padding.PSS(mgf = padding.MGF1(TrustBasics.getHashAlgorithm()), salt_length = padding.PSS.MAX_LENGTH),
                 Prehashed(TrustBasics.getHashAlgorithm())
             )
             return True
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            self._violation_handler("Couldn't verify '{0}' with supplied signature.".format(filename))
+            if err_info is None:
+                err_info = "HASH:" + shash
+            self._violation_handler("Couldn't verify '{0}' with supplied signature.".format(err_info))
         return False
+
+    def _verifyFile(self, filename: str, signature: str) -> bool:
+        file_hash = TrustBasics.getFileHash(filename)
+        if file_hash is None:
+            return False
+        return self._verifyHash(file_hash, signature, filename)
 
     def signedFolderCheck(self, path: str) -> bool:
         """In the 'singed folder' case, check whether the folder is signed according to the Trust-objects' public key.
@@ -356,6 +400,15 @@ class Trust:
                     if ".." in key:
                         Logger.logException("e", "Suspect key '{0}' in signature file '{1}'.".format(key, data_file))
                         return False
+
+                # Check if the signing file itself has been tampered with:
+                self_sign = json_data.get(TrustBasics.getRootSignedManifestKey(), None)
+                if self_sign is None:
+                    Logger.logException("e", "Signature file '{0}' is not a self-signed manifest.".format(data_file))
+                    return False
+                if not self._verifyHash(TrustBasics.getSelfSignHash(signatures_json), self_sign):
+                    Logger.logException("e", "Suspect self-sign in signature-file '{0}'.".format(data_file))
+                    return False
 
                 # Loop over all files within the folder (excluding the signature file):
                 file_count = 0
