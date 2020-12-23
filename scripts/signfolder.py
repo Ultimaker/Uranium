@@ -39,6 +39,7 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
     :return: Whether a valid signature file has been generated and saved.
     """
 
+    path = path if path not in ["", "."] else os.getcwd()
     password = None if optional_password == "" else optional_password
     private_key = TrustBasics.loadPrivateKey(private_key_path, password)
     if private_key is None:
