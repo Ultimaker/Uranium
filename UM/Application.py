@@ -11,6 +11,7 @@ from UM.FileProvider import FileProvider
 from UM.Message import Message #For typing.
 from UM.PackageManager import PackageManager
 from UM.PluginRegistry import PluginRegistry
+from UM.Qt.Bindings.FileProviderModel import FileProviderModel
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
@@ -96,6 +97,8 @@ class Application:
         self._container_registry_class = ContainerRegistry  # type: type
         self._container_registry = None  # type: ContainerRegistry
         self._global_container_stack = None  # type: Optional[ContainerStack]
+
+        self._file_provider_model = FileProviderModel(parent = self)  # type: Optional[FileProviderModel]
 
         self._controller = None  # type: Controller
         self._backend = None  # type: Backend
