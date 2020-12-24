@@ -139,6 +139,15 @@ class Matrix:
 
         self._data = numpy.linalg.inv(self._data)
 
+    def pseudoinvert(self) -> None:
+        """
+        Invert the matrix in-place with a pseudoinverse.
+
+        The pseudoinverse is guaranteed to succeed, but if the matrix was singular is not a true inverse. Just something
+        that approaches the inverse.
+        """
+        self._data = numpy.linalg.pinv(self._data)
+
     def getInverse(self) -> "Matrix":
         """Return a inverted copy of the matrix.
         :returns: The invertex matrix.
