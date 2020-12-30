@@ -52,17 +52,17 @@ class FileProviderModel(ListModel):
         for file_provider in self._application.getFileProviders():
             meta_data = self._application.getPluginRegistry().getMetaData(file_provider.getPluginId())
 
-            if "plugin" in meta_data and file_provider.isEnabled():
-                menu_item_name = file_provider.getMenuItemName()
+            if "plugin" in meta_data and file_provider.enabled:
+                menu_item_name = file_provider.menu_item_name
 
                 if not menu_item_name:
                     menu_item_name = meta_data["plugin"].get("name", None)
 
                 self.appendItem({
                     "name": menu_item_name,
-                    "displayText" : file_provider.getMenuItemDisplayText(),
+                    "displayText" : file_provider.menu_item_display_text,
                     "fileProvider": file_provider,
-                    "shortcut": file_provider.getShortcut()
+                    "shortcut": file_provider.shortcut
                 })
 
     @pyqtSlot(str)

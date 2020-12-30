@@ -19,59 +19,27 @@ class FileProvider(PluginObject):
 
     def __init__(self) -> None:
         super().__init__()
-        self._menu_item_display_text = None  # type: Optional[str]
-        self._menu_item_name = None  # type: Optional[str]
-        self._shortcut = None  # type: Optional[str]
-        self._enabled = True
 
-    def setMenuItemDisplayText(self, display_text: str) -> None:
-        """Set the text that will be displayed as an option in the Open File(s) menu.
-
-        :param display_text: The text that represents the file provider in the Open File(s) menu.
+        self.menu_item_display_text = None  # type: Optional[str]
+        """
+        Text that will be displayed as an option in the Open File(s) menu.
         """
 
-        self._menu_item_display_text = display_text
-
-    def getMenuItemDisplayText(self) -> Optional[str]:
-        """Get the text that represents the file provider in the Open File(s) menu."""
-
-        return self._menu_item_display_text
-
-    def setMenuItemName(self, name: str) -> None:
-        """Set the name of the file provider."""
-
-        self._menu_item_name = name
-
-    def getMenuItemName(self) -> Optional[str]:
-        """Get the name of the file provider"""
-
-        return self._menu_item_name
-
-    def setShortcut(self, shortcut: str) -> None:
-        """Set the shortcut that triggers this file provider
-
-        :param shortcut: The shortcut that triggers the file provider
+        self.menu_item_name = None  # type: Optional[str]
+        """
+        Name of the file provider.
         """
 
-        self._shortcut = shortcut
+        self.shortcut = None  # type: Optional[str]
+        """
+        Shortcut key combination (e.g. "Ctrl+O").
+        """
 
-    def getShortcut(self) -> Optional[str]:
-        """Get the shortcut that triggers this file provider"""
-
-        return self._shortcut
+        self.enabled = True
+        """
+        If the provider is not enabled, it should not be displayed in the interface.
+        """
 
     def run(self) -> None:
         """Call function associated with the file provider"""
         raise NotImplementedError
-
-    def setEnabled(self, enabled):
-        """Sets the status of the file provider. If a file provider is disabled, it won't appear in the Open File(s)
-        submenu."""
-
-        self._enabled = enabled
-        self.enabledChanged.emit()
-
-    def isEnabled(self) -> bool:
-        """Gets the enabled status of the file provider."""
-
-        return self._enabled
