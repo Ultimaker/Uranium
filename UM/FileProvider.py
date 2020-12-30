@@ -25,11 +25,6 @@ class FileProvider(PluginObject):
         Text that will be displayed as an option in the Open File(s) menu.
         """
 
-        self.menu_item_name = None  # type: Optional[str]
-        """
-        Name of the file provider.
-        """
-
         self.shortcut = None  # type: Optional[str]
         """
         Shortcut key combination (e.g. "Ctrl+O").

@@ -50,16 +50,13 @@ class FileProviderModel(ListModel):
         })
 
         for file_provider in self._application.getFileProviders():
-            meta_data = self._application.getPluginRegistry().getMetaData(file_provider.getPluginId())
+            plugin_id = file_provider.getPluginId()
+            meta_data = self._application.getPluginRegistry().getMetaData(plugin_id)
 
             if "plugin" in meta_data and file_provider.enabled:
-                menu_item_name = file_provider.menu_item_name
-
-                if not menu_item_name:
-                    menu_item_name = meta_data["plugin"].get("name", None)
 
                 self.appendItem({
-                    "name": menu_item_name,
+                    "name": plugin_id,
                     "displayText" : file_provider.menu_item_display_text,
                     "fileProvider": file_provider,
                     "shortcut": file_provider.shortcut
