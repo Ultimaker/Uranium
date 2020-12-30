@@ -4,6 +4,7 @@ from typing import Union, List
 
 import UM.Application
 from UM.FileHandler.FileReader import FileReader
+from UM.FileHandler.FileHandler import resolveAnySymlink
 from UM.Scene.SceneNode import SceneNode
 
 
@@ -18,6 +19,7 @@ class MeshReader(FileReader):
         :return: node :type{SceneNode} or :type{list(SceneNode)} The SceneNode or SceneNodes read from file.
         """
 
+        file_name = resolveAnySymlink(file_name)
         result = self._read(file_name)
         UM.Application.Application.getInstance().getController().getScene().addWatchedFile(file_name)
         return result
