@@ -52,6 +52,7 @@ class QtRenderer(Renderer):
         self._batches = []  # type: List[RenderBatch]
         self._named_batches = {}  # type: Dict[str, RenderBatch]
         self._quad_buffer = None  # type: QOpenGLBuffer
+        self._vao = None  # type: Optional[QOpenGLVertexArrayObject]
 
     initialized = Signal()
 
@@ -190,9 +191,13 @@ class QtRenderer(Renderer):
         shader.setUniformValue("u_modelViewProjectionMatrix", Matrix())
 
         if OpenGLContext.properties["supportsVertexArrayObjects"]:
-            vao = QOpenGLVertexArrayObject()
-            vao.create()
-            vao.bind()
+            if self._vao is None:
+                self._vao = QOpenGLVertexArrayObject()
+                self._vao.create()
+            if self._vao is None or not self._vao.isCreated():
+                Logger.log("e", "QtRenderer: VAO not created.")
+            else:
+                self._vao.bind()
 
         self._quad_buffer.bind()
 

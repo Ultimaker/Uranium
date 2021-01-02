@@ -96,6 +96,7 @@ class RenderBatch:
         self._projection_matrix = None  # type: Optional[Matrix]
 
         self._gl = OpenGL.getInstance().getBindingsObject()
+        self._vao = None  # type: Optional[QOpenGLVertexArrayObject]
 
     @property
     def renderType(self):
@@ -219,12 +220,13 @@ class RenderBatch:
         # When the same buffers are used elsewhere, one can bind this VertexArrayObject to
         # the context instead of uploading all buffers again.
         if OpenGLContext.properties["supportsVertexArrayObjects"]:
-            vao = QOpenGLVertexArrayObject()
-            vao.create()
-            if not vao.isCreated():
+            if self._vao is None:
+                self._vao = QOpenGLVertexArrayObject()
+                self._vao.create()
+            if self._vao is None or not self._vao.isCreated():
                 Logger.log("e", "VAO not created. Hell breaks loose")
             else:
-                vao.bind()
+                self._vao.bind()
 
         for item in self._items:
             self._renderItem(item)
