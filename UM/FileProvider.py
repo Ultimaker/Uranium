@@ -1,12 +1,13 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from PyQt5.QtCore import pyqtSignal
+
+from PyQt5.QtCore import pyqtSignal, QObject
 
 from UM.PluginObject import PluginObject
 from typing import Optional
 
 
-class FileProvider(PluginObject):
+class FileProvider(PluginObject, QObject):
     """Base class for plugins that aim to provide a file to Cura in an alternate fashion, other than using the local file
     explorer.
 
@@ -18,7 +19,8 @@ class FileProvider(PluginObject):
     in the Open File(s) submenu"""
 
     def __init__(self) -> None:
-        super().__init__()
+        PluginObject.__init__(self)
+        QObject.__init__(self)
 
         self.menu_item_display_text = None  # type: Optional[str]
         """
