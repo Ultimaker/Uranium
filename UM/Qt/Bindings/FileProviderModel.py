@@ -68,3 +68,16 @@ class FileProviderModel(ListModel):
                     # Yes, we really want a broad exception here. These items are always plugins, and those should be
                     # kept from crashing the main application as much as possible.
                     Logger.logException("w", "Failed to activate the file provider '{}'".format(file_provider_name))
+
+    @pyqtSlot()
+    def triggerFirst(self):
+        """
+        Safely triggers the run function of the first file provider.
+        """
+        if not self._items:
+            Logger.error("There are no file providers to open files with.")
+            return
+        try:
+            self._items[0]["fileProvider"].run()
+        except Exception:  # Catch all exceptions from plug-in calls for safety.
+            Logger.logException("w", "Failed to activate the file provider {provider_name}".format(provider_name = self._items[0]["name"]))
