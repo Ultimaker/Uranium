@@ -80,4 +80,4 @@ class FileProviderModel(ListModel):
         try:
             self._items[0]["fileProvider"].run()
         except Exception:  # Catch all exceptions from plug-in calls for safety.
-            Logger.logException("w", "Failed to activate the file provider {provider_name}".format(provider_name = self._items[0]["name"]))
+            Logger.logException("w", "Failed to activate the file provider '{provider_name}'".format(provider_name = self._items[0]["name"]))
