@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Callable, Optional
 
@@ -39,15 +39,6 @@ class FileProviderModel(ListModel):
         Updates the FileProviderModel to contain only the enabled file providers.
         """
         self.clear()
-
-        # Always add the local file provider to the list. Since it is not really a plugin, fake an entry in the file providers
-        # list and handle it in the front-end by triggering the openAction when that item is selected
-        self.appendItem({
-            "name"         : "LocalFileProvider",
-            "displayText"  : "From Disk",
-            "fileProvider" : None,  # it's not loaded via a plugin, so its FileProvider is empty
-            "shortcut"     : "Ctrl+O"
-        })
 
         for file_provider in self._application.getFileProviders():
             plugin_id = file_provider.getPluginId()
