@@ -32,6 +32,8 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
       }
     }
 
+    See also 'Trust.py' in the main library and the related scripts; 'createkeypair.py', 'signfile.py' in this folder.
+
     :param private_key_path: Path to the file containing the private key.
     :param path: The folder to be signed.
     :param ignore_folders: Local cache folders (that should be deleted on restart of the app) can be ignored.
