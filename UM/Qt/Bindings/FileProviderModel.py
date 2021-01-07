@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Callable, Optional
 
@@ -40,6 +40,15 @@ class FileProviderModel(ListModel):
         """
         self.clear()
 
+        # Always add the local file provider to the list. Since it is not really a plugin, fake an entry in the file providers
+        # list and handle it in the front-end by triggering the openAction when that item is selected
+        self.appendItem({
+            "name"         : "LocalFileProvider",
+            "displayText"  : "From Disk",
+            "fileProvider" : None,  # it's not loaded via a plugin, so its FileProvider is empty
+            "shortcut"     : "Ctrl+O"
+        })
+
         for file_provider in self._application.getFileProviders():
             plugin_id = file_provider.getPluginId()
             meta_data = self._application.getPluginRegistry().getMetaData(plugin_id)
@@ -68,16 +77,3 @@ class FileProviderModel(ListModel):
                     # Yes, we really want a broad exception here. These items are always plugins, and those should be
                     # kept from crashing the main application as much as possible.
                     Logger.logException("w", "Failed to activate the file provider '{}'".format(file_provider_name))
-
-    @pyqtSlot()
-    def triggerFirst(self):
-        """
-        Safely triggers the run function of the first file provider.
-        """
-        if not self._items:
-            Logger.error("There are no file providers to open files with.")
-            return
-        try:
-            self._items[0]["fileProvider"].run()
-        except Exception:  # Catch all exceptions from plug-in calls for safety.
-            Logger.logException("w", "Failed to activate the file provider '{provider_name}'".format(provider_name = self._items[0]["name"]))
