@@ -319,15 +319,10 @@ class QtApplication(QApplication, Application):
         return self.getFileProviders()
 
     def _onJobFinished(self, job: Job) -> None:
-        if isinstance(job, WriteFileJob):
-            if not job.getResult() or not job.getAddToRecentFiles():
-                # For a write file job, if it failed or it doesn't need to be added to the recent files list, we do not
-                # add it.
-                return
-        elif (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
+        if isinstance(job, WriteFileJob) and not job.getResult():
             return
 
-        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)):
+        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)) and job.getAddToRecentFiles():
             self.addFileToRecentFiles(job.getFileName())
 
     def addFileToRecentFiles(self, file_name: str) -> None:
