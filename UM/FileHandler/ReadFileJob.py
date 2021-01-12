@@ -17,14 +17,18 @@ i18n_catalog = i18nCatalog("uranium")
 class ReadFileJob(Job):
     """A Job subclass that performs file loading."""
 
-    def __init__(self, filename: str, handler: Optional[FileHandler] = None) -> None:
+    def __init__(self, filename: str, handler: Optional[FileHandler] = None, add_to_recent_files: bool = True) -> None:
         super().__init__()
         self._filename = filename
         self._handler = handler
         self._loading_message = None  # type: Optional[Message]
+        self._add_to_recent_files = add_to_recent_files
 
     def getFileName(self):
         return self._filename
+
+    def getAddToRecentFiles(self):
+        return self._add_to_recent_files
 
     def run(self) -> None:
         from UM.Mesh.MeshReader import MeshReader

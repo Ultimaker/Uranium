@@ -19,8 +19,8 @@ class ReadMeshJob(ReadFileJob):
     The result of this Job is a MeshData object.
     """
 
-    def __init__(self, filename: str) -> None:
-        super().__init__(filename)
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         from UM.Qt.QtApplication import QtApplication
         self._application = QtApplication.getInstance()
         self._handler = QtApplication.getInstance().getMeshFileHandler()
