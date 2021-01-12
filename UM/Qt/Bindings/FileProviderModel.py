@@ -14,13 +14,13 @@ class FileProviderModel(ListModel):
     FileProviderRole = Qt.UserRole + 3
     ShortcutRole = Qt.UserRole + 4
 
-    def __init__(self, parent = None):
+    def __init__(self, application = None, parent = None):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.DisplayTextRole, "displayText")
         self.addRoleName(self.FileProviderRole, "fileProvider")
         self.addRoleName(self.ShortcutRole, "shortcut")
-        self._application = parent
+        self._application = application
 
     def initialize(self, file_provider_enabled_call_function: Optional[Callable]) -> None:
         """

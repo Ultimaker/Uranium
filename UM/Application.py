@@ -98,7 +98,7 @@ class Application:
         self._container_registry = None  # type: ContainerRegistry
         self._global_container_stack = None  # type: Optional[ContainerStack]
 
-        self._file_provider_model = FileProviderModel(parent = self)  # type: Optional[FileProviderModel]
+        self._file_provider_model = FileProviderModel(application = self)  # type: Optional[FileProviderModel]
 
         self._controller = None  # type: Controller
         self._backend = None  # type: Backend
