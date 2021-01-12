@@ -3,7 +3,7 @@
 
 from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
 
-from UM.Qt.Bindings import StageModel
+from UM.Qt.Bindings import StageModel, FileProviderModel
 from UM.Qt.Duration import Duration, DurationFormat
 
 from . import MainWindow
@@ -111,6 +111,9 @@ class Bindings:
 
         # Additions after 4.6
         qmlRegisterSingletonType(Utilities.UrlUtil, "UM", 1, 5, "UrlUtil", Utilities.createUrlUtil)
+
+        # Additions after 4.9
+        qmlRegisterType(FileProviderModel.FileProviderModel, "UM", 1, 6, "FileProviderModel")
 
     @staticmethod
     def addRegisterType(class_type: type, qml_import_name: str, major_version: int, minor_version: int, class_name: str) -> None:
