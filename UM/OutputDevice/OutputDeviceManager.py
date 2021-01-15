@@ -59,6 +59,7 @@ class OutputDeviceManager:
         super().__init__()
 
         self._output_devices = {}  # type: Dict[str, OutputDevice]
+        self._project_output_devices = {}  # type: Dict[str, OutputDevice]
         self._plugins = {}  # type: Dict[str, OutputDevicePlugin]
         self._active_device = None  # type: Optional[OutputDevice]
         self._active_device_override = False
@@ -111,6 +112,14 @@ class OutputDeviceManager:
 
         return self._output_devices.values()
 
+    def getProjectOutputDevices(self):
+        """Get a list of all registered output devices.
+
+        :return: :type{list} A list of all registered output devices.
+        """
+
+        return self._project_output_devices.values()
+
     def getOutputDeviceIds(self):
         """Get a list of all IDs of registered output devices.
 
@@ -118,6 +127,14 @@ class OutputDeviceManager:
         """
 
         return self._output_devices.keys()
+
+    def getProjectOutputDeviceIds(self):
+        """Get a list of all IDs of registered output devices.
+
+        :return: :type{list} A list of all registered output device ids.
+        """
+
+        return self._project_output_devices.keys()
 
     def getOutputDevice(self, device_id: str) -> Optional["OutputDevice"]:
         """Get an output device by ID.
@@ -128,8 +145,20 @@ class OutputDeviceManager:
 
         return self._output_devices.get(device_id, None)
 
+    def getProjectOutputDevice(self, device_id: str) -> Optional["OutputDevice"]:
+        """Get a project output device by ID.
+
+        :param device_id: The ID of the device to retrieve.
+        :return: :type{OutputDevice} The project output device corresponding to the ID or None if not found.
+        """
+
+        return self._project_output_devices.get(device_id, None)
+
     outputDevicesChanged = Signal()
     """Emitted whenever an output device is added or removed."""
+
+    projectOutputDevicesChanged = Signal()
+    """Emitted whenever an output device that can handle project files is added or removed."""
 
     def start(self) -> None:
         for plugin_id, plugin in self._plugins.items():
@@ -159,7 +188,7 @@ class OutputDeviceManager:
             except Exception:
                 Logger.logException("e", "Exception refreshConnections OutputDevicePlugin %s", plugin.getPluginId())
 
-    def addOutputDevice(self, device: "OutputDevice") -> None:
+    def addOutputDevice(self, device: "OutputDevice", is_project_output_device: bool = False) -> None:
         """Add and register an output device.
 
         :param :type{OutputDevice} The output device to add.
@@ -172,12 +201,19 @@ class OutputDeviceManager:
             return
 
         self._output_devices[device.getId()] = device
+
+        if is_project_output_device:
+            self._project_output_devices[device.getId()] = device
+
         device.writeStarted.connect(self.writeStarted)
         device.writeProgress.connect(self.writeProgress)
         device.writeFinished.connect(self.writeFinished)
         device.writeError.connect(self.writeError)
         device.writeSuccess.connect(self.writeSuccess)
         self.outputDevicesChanged.emit()
+
+        if is_project_output_device:
+            self.projectOutputDevicesChanged.emit()
 
         if not self._active_device or not self._active_device_override:
             self._active_device = self._findHighestPriorityDevice()
@@ -197,13 +233,20 @@ class OutputDeviceManager:
             return False
 
         device = self._output_devices[device_id]
+
+        if device is None:
+            device = self._project_output_devices[device_id]
+
         del self._output_devices[device_id]
+        if device_id in self._project_output_devices:
+            del self._project_output_devices[device_id]
         device.writeStarted.disconnect(self.writeStarted)
         device.writeProgress.disconnect(self.writeProgress)
         device.writeFinished.disconnect(self.writeFinished)
         device.writeError.disconnect(self.writeError)
         device.writeSuccess.disconnect(self.writeSuccess)
         self.outputDevicesChanged.emit()
+        self.projectOutputDevicesChanged.emit()
 
         if self._active_device is not None and self._active_device.getId() == device_id:
             self._write_in_progress = False
