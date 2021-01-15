@@ -73,7 +73,7 @@ class ReadFileJob(Job):
         finally:
             end_time = time.time()
             Logger.log("d", "Loading file took %0.1f seconds", end_time - begin_time)
-            if self._result is None:
+            if not self._result:
                 self._loading_message.hide()
                 result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible.", self._filename), lifetime = 0, title = i18n_catalog.i18nc("@info:title", "Unable to Open File"))
                 result_message.show()
