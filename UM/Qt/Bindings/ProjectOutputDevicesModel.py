@@ -1,10 +1,13 @@
 # Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import List
+
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtQml import QQmlEngine
 
 from UM.Application import Application
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
+from UM.OutputDevice.ProjectOutputDevice import ProjectOutputDevice
 from UM.Qt.ListModel import ListModel
 
 
@@ -21,6 +24,7 @@ class ProjectOutputDevicesModel(ListModel):
     IdRole = Qt.UserRole + 1
     NameRole = Qt.UserRole + 2
     PriorityRole = Qt.UserRole + 3
+    ShortcutRole = Qt.UserRole + 4
 
     projectOutputDevicesChanged = pyqtSignal()
 
@@ -33,6 +37,7 @@ class ProjectOutputDevicesModel(ListModel):
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.PriorityRole, "priority")
+        self.addRoleName(self.ShortcutRole, "shortcut")
 
         self._device_manager.projectOutputDevicesChanged.connect(self._update)
         self._update()
@@ -42,12 +47,14 @@ class ProjectOutputDevicesModel(ListModel):
         self.clear()
         items = []
 
-        devices = list(self._device_manager.getProjectOutputDevices())[:]  # Make a copy here, because we could discover devices during iteration.
+        # Make a copy here, because we could discover devices during iteration.
+        devices = [device for device in self._device_manager.getProjectOutputDevices() if device.enabled]  # type: List[ProjectOutputDevice]
         for device in devices:
             items.append({
                 "id": device.getId(),
-                "name": device.getName(),
-                "priority": device.getPriority()
+                "name": device.menu_entry_text,
+                "priority": device.getPriority(),
+                "shortcut": device.shortcut
             })
 
         items.sort(key = lambda i: -i["priority"])
