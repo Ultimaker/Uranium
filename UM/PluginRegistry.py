@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import imp
@@ -538,7 +538,10 @@ class PluginRegistry(QObject):
             del self.bundled_plugin_cache[plugin_id]
 
         Logger.log("i", "Attempting to remove plugin '%s' from directory '%s'", plugin_id, plugin_path)
-        shutil.rmtree(plugin_path)
+        try:
+            shutil.rmtree(plugin_path)
+        except EnvironmentError as e:
+            Logger.error("Unable to remove plug-in {plugin_id}: {err}".format(plugin_id = plugin_id, err = str(e)))
 
 #===============================================================================
 # PRIVATE METHODS
