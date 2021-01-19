@@ -17,8 +17,8 @@ class ProjectOutputDevice(QObject, OutputDevice):
     """
 
     enabledChanged = pyqtSignal()
-    """Signal which informs whether the file provider has been enabled or disabled, so that it can be removed or added
-    in the 'File->Save Project...' submenu"""
+    """Signal which informs whether the project output device has been enabled or disabled, so that it can be added or removed 
+     from the 'File->Save Project...' submenu"""
 
     def __init__(self, device_id: str, parent = None, **kwargs):
         super().__init__(device_id = device_id, parent = parent)
