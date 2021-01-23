@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, QUrl #For typing.
@@ -35,7 +35,7 @@ class WorkspaceFileHandler(FileHandler):
     def _readLocalFile(self, file: QUrl) -> None:
         from UM.FileHandler.ReadFileJob import ReadFileJob
         filename = file.toLocalFile()
-        job = ReadFileJob(filename, handler = self, add_to_recent_files = self.getAddToRecentFilesHint(filename))
+        job = ReadFileJob(filename, handler = self, add_to_recent_files = self.getAddToRecentFilesHint(file))
         job.finished.connect(self._readWorkspaceFinished)
         job.start()
 

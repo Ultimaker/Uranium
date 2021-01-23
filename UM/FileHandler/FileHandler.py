@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING, cast
@@ -76,6 +76,7 @@ class FileHandler(QObject):
     def getAddToRecentFilesHint(self, file: QUrl) -> bool:
         return file in self._add_to_recent_files_hints
 
+    @pyqtSlot(QUrl, bool)
     @pyqtSlot(QUrl)
     def readLocalFile(self, file: QUrl, add_to_recent_files_hint: bool = True) -> None:
         if not file.isValid():
