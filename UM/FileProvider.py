@@ -40,3 +40,7 @@ class FileProvider(PluginObject, QObject):
     def run(self) -> None:
         """Call function associated with the file provider"""
         raise NotImplementedError
+
+    def getPriority(self) -> int:
+        """Where it should be sorted in lists, or which should be tried first."""
+        return -1
