@@ -446,7 +446,7 @@ class QtApplication(QApplication, Application):
     @property
     def isVisible(self) -> bool:
         if self._main_window is not None:
-            return self._main_window.visible #type: ignore #MyPy doesn't realise that self._main_window cannot be None here.
+            return self._main_window.isVisible()  #type: ignore #MyPy doesn't realise that self._main_window cannot be None here.
         return False
 
     def getTheme(self) -> Optional[Theme]:
