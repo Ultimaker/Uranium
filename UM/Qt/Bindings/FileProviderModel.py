@@ -47,7 +47,7 @@ class FileProviderModel(ListModel):
             "displayText"  : "From Disk",
             "fileProvider" : None,  # it's not loaded via a plugin, so its FileProvider is empty
             "shortcut"     : "Ctrl+O",
-            "priority"     : 0,
+            "priority"     : 99,  # Assign a high value to make sure it appears on top in the File->Open File(s) submenu
         })
 
         for file_provider in self._application.getFileProviders():
