@@ -37,10 +37,11 @@ class FileProvider(PluginObject, QObject):
         If the provider is not enabled, it should not be displayed in the interface.
         """
 
+        self.priority = 0
+        """
+        Where it should be sorted in lists, or which should be tried first.
+        """
+
     def run(self) -> None:
         """Call function associated with the file provider"""
         raise NotImplementedError
-
-    def getPriority(self) -> int:
-        """Where it should be sorted in lists, or which should be tried first."""
-        return -1

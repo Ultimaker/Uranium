@@ -61,7 +61,7 @@ class FileProviderModel(ListModel):
                     "displayText" : file_provider.menu_item_display_text,
                     "fileProvider": file_provider,
                     "shortcut": file_provider.shortcut,
-                    "priority": file_provider.getPriority(),
+                    "priority": file_provider.priority,
                 })
 
         self.sort(lambda x: -float(x["priority"]))
