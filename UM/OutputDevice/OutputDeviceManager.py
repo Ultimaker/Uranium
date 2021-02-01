@@ -7,10 +7,10 @@ from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
-from .ProjectOutputDevice import ProjectOutputDevice
 
 if TYPE_CHECKING:
     from UM.OutputDevice.OutputDevice import OutputDevice
+    from UM.OutputDevice.ProjectOutputDevice import ProjectOutputDevice
     from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 
 
@@ -124,7 +124,7 @@ class OutputDeviceManager:
     activeDeviceChanged = Signal()
     """Emitted whenever the active device changes."""
 
-    def getOutputDevices(self) -> ValuesView[OutputDevice]:
+    def getOutputDevices(self) -> ValuesView["OutputDevice"]:
         """Get a list of all registered output devices.
 
         :return: :type{list} A list of all registered output devices.
@@ -132,7 +132,7 @@ class OutputDeviceManager:
 
         return self._output_devices.values()
 
-    def getProjectOutputDevices(self) -> ValuesView[ProjectOutputDevice]:
+    def getProjectOutputDevices(self) -> ValuesView["ProjectOutputDevice"]:
         """Get a list of all registered output devices.
 
         :return: :type{list} A list of all registered output devices.
