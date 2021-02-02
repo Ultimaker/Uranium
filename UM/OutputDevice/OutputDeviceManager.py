@@ -17,17 +17,12 @@ if TYPE_CHECKING:
 class ManualDeviceAdditionAttempt(Enum):
     """
     Used internally to determine plugins capable of 'manual' addition of devices, see also [add|remove]ManualDevice below.
-
-    Values:
-     * NO       = 0: The plugin can't add a device 'manually' (or at least not with the given parameters).
-     * POSSIBLE = 1: The plugin will try to add the (specified) device 'manually', unless another plugin has priority.
-     * PRIORITY = 2: The plugin has determined by the specified parameters that it's responsible for adding this device and thus has priority.
-     If this fails, the plugins that replied 'POSSIBLE' will be tried.
-     NOTE: This last value should be used with great care!
     """
-    NO = 0,
-    POSSIBLE = 1,
-    PRIORITY = 2
+    NO = 0,        # The plugin can't add a device 'manually' (or at least not with the given parameters).
+    POSSIBLE = 1,  # The plugin will try to add the (specified) device 'manually', unless another plugin has priority.
+    PRIORITY = 2   # The plugin has determined by the specified parameters that it's responsible for adding this device
+                   #     and thus has priority. If this fails, the plugins that replied 'POSSIBLE' will be tried.
+                   #     NOTE: This last value should be used with great care!
 
 
 @signalemitter
