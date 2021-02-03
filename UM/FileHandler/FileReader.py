@@ -52,3 +52,13 @@ class FileReader(PluginObject):
         """
 
         raise NotImplementedError("Reader plugin was not correctly implemented, no read was specified")
+
+    def emptyFileHintSet(self):
+        """ Some files can be perfectly valid, but empty. It's useful to separate these cases separately (in UX).
+        The default result of this is false, meaning that an empty file of a plugin that doesn't override this
+        will result in the user getting shown a less specific error.
+
+        :return: Might be true if the file is empty but otherwise valid, but can default to false in any case.
+        """
+
+        return False
