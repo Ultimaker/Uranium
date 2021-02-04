@@ -73,8 +73,10 @@ class ReadFileJob(Job):
         finally:
             end_time = time.time()
             Logger.log("d", "Loading file took %0.1f seconds", end_time - begin_time)
-            if not self._result:
-                self._loading_message.hide()
+            self._loading_message.hide()
+            if reader.emptyFileHintSet():
+                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "There where no models in <filename>{0}</filename>.", self._filename), lifetime=0, title=i18n_catalog.i18nc("@info:title", "No Models in File"))
+                result_message.show()
+            elif not self._result:
                 result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models.", self._filename), lifetime = 0, title = i18n_catalog.i18nc("@info:title", "Unable to Open File"))
                 result_message.show()
-            self._loading_message.hide()
