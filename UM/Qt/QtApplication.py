@@ -8,6 +8,8 @@ from typing import List
 from typing import Any, cast, Dict, Optional
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+
+from UM.FileProvider import FileProvider
 from UM.FlameProfiler import pyqtSlot
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
@@ -310,16 +312,17 @@ class QtApplication(QApplication, Application):
     def recentFiles(self) -> List[QUrl]:
         return self._recent_files
 
+    fileProvidersChanged = pyqtSignal()
+
+    @pyqtProperty("QVariantList", notify = fileProvidersChanged)
+    def fileProviders(self) -> List[FileProvider]:
+        return self.getFileProviders()
+
     def _onJobFinished(self, job: Job) -> None:
-        if isinstance(job, WriteFileJob):
-            if not job.getResult() or not job.getAddToRecentFiles():
-                # For a write file job, if it failed or it doesn't need to be added to the recent files list, we do not
-                # add it.
-                return
-        elif (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
+        if isinstance(job, WriteFileJob) and not job.getResult():
             return
 
-        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)):
+        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)) and job.getAddToRecentFiles():
             self.addFileToRecentFiles(job.getFileName())
 
     def addFileToRecentFiles(self, file_name: str) -> None:
@@ -443,7 +446,7 @@ class QtApplication(QApplication, Application):
     @property
     def isVisible(self) -> bool:
         if self._main_window is not None:
-            return self._main_window.visible #type: ignore #MyPy doesn't realise that self._main_window cannot be None here.
+            return self._main_window.isVisible()  #type: ignore #MyPy doesn't realise that self._main_window cannot be None here.
         return False
 
     def getTheme(self) -> Optional[Theme]:

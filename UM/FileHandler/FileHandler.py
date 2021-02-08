@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING, cast
@@ -37,6 +37,8 @@ class FileHandler(QObject):
         self._writer_type = writer_type # type: str
         self._reader_type = reader_type # type: str
 
+        self._add_to_recent_files_hints = [] # type: List[QUrl]
+
         PluginRegistry.addType(self._writer_type, self.addWriter)
         PluginRegistry.addType(self._reader_type, self.addReader)
 
@@ -71,10 +73,17 @@ class FileHandler(QObject):
 
         return file_types
 
+    @pyqtSlot(QUrl, result = bool)
+    def getAddToRecentFilesHint(self, file: QUrl) -> bool:
+        return file in self._add_to_recent_files_hints
+
+    @pyqtSlot(QUrl, bool)
     @pyqtSlot(QUrl)
-    def readLocalFile(self, file: QUrl) -> None:
+    def readLocalFile(self, file: QUrl, add_to_recent_files_hint: bool = True) -> None:
         if not file.isValid():
             return
+        if add_to_recent_files_hint:
+            self._add_to_recent_files_hints.append(file)
         self._readLocalFile(file)
 
     def _readLocalFile(self, file: QUrl) -> None:

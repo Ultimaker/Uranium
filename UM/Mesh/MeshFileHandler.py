@@ -65,7 +65,8 @@ class MeshFileHandler(FileHandler):
     def _readLocalFile(self, file):
         # We need to prevent circular dependency, so do some just in time importing.
         from UM.Mesh.ReadMeshJob import ReadMeshJob
-        job = ReadMeshJob(file.toLocalFile())
+        filename = file.toLocalFile()
+        job = ReadMeshJob(filename, add_to_recent_files = self.getAddToRecentFilesHint(filename))
         job.finished.connect(self._readMeshFinished)
         job.start()
 

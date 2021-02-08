@@ -15,6 +15,8 @@ DEFAULT_PASSWORD = ""
 def createAndStoreNewKeyPair(private_filename: str, public_filename: str, optional_password: Optional[str]) -> None:
     """Creates a new public and private key, and saves them to the provided filenames.
 
+    See also 'Trust.py' in the main library and the related scripts; 'signfile.py', 'signfolder.py' in this folder.
+
     :param private_filename: Filename to save the private key to.
     :param public_filename: Filename to save the public key to.
     :param optional_password: Private keys can have a password (or not).

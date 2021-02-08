@@ -515,7 +515,7 @@ class SceneNode:
         self._cached_normal_matrix = Matrix(self.getWorldTransformation(copy=False).getData())
         self._cached_normal_matrix.setRow(3, [0, 0, 0, 1])
         self._cached_normal_matrix.setColumn(3, [0, 0, 0, 1])
-        self._cached_normal_matrix.invert()
+        self._cached_normal_matrix.pseudoinvert()
         self._cached_normal_matrix.transpose()
 
     def getCachedNormalMatrix(self) -> Matrix:
