@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
-from PyQt5.QtCore import QObject #For typing.
+from PyQt5.QtCore import QObject, QUrl  # For typing.
 
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
@@ -62,11 +62,11 @@ class MeshFileHandler(FileHandler):
         Logger.log("w", "Unable to read file %s", file_name)
         return None  # unable to read
 
-    def _readLocalFile(self, file):
+    def _readLocalFile(self, file: QUrl, add_to_recent_files_hint: bool = True):
         # We need to prevent circular dependency, so do some just in time importing.
         from UM.Mesh.ReadMeshJob import ReadMeshJob
         filename = file.toLocalFile()
-        job = ReadMeshJob(filename, add_to_recent_files = self.getAddToRecentFilesHint(filename))
+        job = ReadMeshJob(filename, add_to_recent_files = add_to_recent_files_hint)
         job.finished.connect(self._readMeshFinished)
         job.start()
 

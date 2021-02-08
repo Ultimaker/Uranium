@@ -32,10 +32,10 @@ class WorkspaceFileHandler(FileHandler):
 
         return results
 
-    def _readLocalFile(self, file: QUrl) -> None:
+    def _readLocalFile(self, file: QUrl, add_to_recent_files_hint: bool = True) -> None:
         from UM.FileHandler.ReadFileJob import ReadFileJob
         filename = file.toLocalFile()
-        job = ReadFileJob(filename, handler = self, add_to_recent_files = self.getAddToRecentFilesHint(file))
+        job = ReadFileJob(filename, handler = self, add_to_recent_files = add_to_recent_files_hint)
         job.finished.connect(self._readWorkspaceFinished)
         job.start()
 
