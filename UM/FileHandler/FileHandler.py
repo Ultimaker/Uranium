@@ -73,10 +73,6 @@ class FileHandler(QObject):
 
         return file_types
 
-    @pyqtSlot(QUrl, result = bool)
-    def getAddToRecentFilesHint(self, file: QUrl) -> bool:
-        return file in self._add_to_recent_files_hints
-
     @pyqtSlot(QUrl, bool)
     @pyqtSlot(QUrl)
     def readLocalFile(self, file: QUrl, add_to_recent_files_hint: bool = True) -> None:
