@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
@@ -47,6 +47,7 @@ class SceneNode:
 
         self._children = []     # type: List[SceneNode]
         self._mesh_data = None  # type: Optional[MeshData]
+        self.metadata = {}     # type: Dict[str, Any]
 
         # Local transformation (from parent to local)
         self._transformation = Matrix()  # type: Matrix
