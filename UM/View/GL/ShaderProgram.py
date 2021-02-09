@@ -64,7 +64,14 @@ class ShaderProgram:
         # Hashtags should not be ignored, they are part of GLSL.
         parser = configparser.ConfigParser(interpolation = None, comment_prefixes = (';', ))
         parser.optionxform = lambda option: option
-        parser.read(file_name)
+        try:
+            parser.read(file_name)
+        except EnvironmentError:
+            raise InvalidShaderProgramError("{0} can't be opened for reading.".format(file_name))
+        except UnicodeDecodeError:
+            raise InvalidShaderProgramError("{0} contains invalid UTF-8 code. File corrupted?".format(file_name))
+        except configparser.Error as e:
+            raise InvalidShaderProgramError("{file_name} has broken config file syntax: {err}".format(file_name = file_name, err = str(e)))
 
         if "shaders" not in parser:
             raise InvalidShaderProgramError("{0} is missing section [shaders]".format(file_name))
