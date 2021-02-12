@@ -77,6 +77,8 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self.destroyed.connect(self._onDestroyed)
 
+        self.expandedChanged.connect(self._onExpandedChanged)
+
     showAncestorsChanged = pyqtSignal()
     """Emitted whenever the showAncestors property changes."""
 
@@ -580,6 +582,11 @@ class SettingDefinitionsModel(QAbstractListModel):
         """Reimplemented from QAbstractListModel"""
 
         return self._role_names
+
+    def _onExpandedChanged(self) -> None:
+        # required to show settings/categories are expanded or collapsed
+        for row in range(len(self._row_index_list)):
+            self.dataChanged.emit(self.index(row, 0), self.index(row, 0), [self.ExpandedRole])
 
     def _onVisibilityChanged(self) -> None:
         if self._visibility_handler:
