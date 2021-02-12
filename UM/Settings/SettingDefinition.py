@@ -615,8 +615,8 @@ class SettingDefinition:
         if convert_function:
             try:
                 return convert_function(value)
-            except Exception as err:
-                Logger.log("e", "UM.Settings: Error converting from %s with value %s: %s", type_name, str(value), err)
+            except Exception:
+                Logger.logException("w", "UM.Settings: Error converting from %s with value %s: %s", type_name, str(value))
                 raise
 
         return value

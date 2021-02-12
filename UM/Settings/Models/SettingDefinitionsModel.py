@@ -242,7 +242,6 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtProperty("QStringList", fset = setExpanded, notify = expandedChanged)
     def expanded(self) -> List[str]:
         """This property indicates which settings should never be visibile."""
-
         return list(self._expanded)
 
     visibleCountChanged = pyqtSignal()
