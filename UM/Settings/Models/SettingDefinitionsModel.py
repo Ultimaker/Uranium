@@ -586,7 +586,9 @@ class SettingDefinitionsModel(QAbstractListModel):
     def _onExpandedChanged(self) -> None:
         # required to show settings/categories are expanded or collapsed
         for row in range(len(self._row_index_list)):
-            self.dataChanged.emit(self.index(row, 0), self.index(row, 0), [self.ExpandedRole])
+            definition = self._definition_list[self._row_index_list[row]]
+            if definition.type == "category":
+                self.dataChanged.emit(self.index(row, 0), self.index(row, 0), [self.ExpandedRole])
 
     def _onVisibilityChanged(self) -> None:
         if self._visibility_handler:
