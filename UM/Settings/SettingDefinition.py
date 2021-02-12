@@ -613,7 +613,11 @@ class SettingDefinition:
 
         convert_function = cls.__type_definitions[type_name]["from"]
         if convert_function:
-            return convert_function(value)
+            try:
+                return convert_function(value)
+            except Exception as err:
+                Logger.log("e", "UM.Settings: Error converting from %s with value %s: %s", type_name, str(value), err)
+                raise
 
         return value
 
@@ -748,7 +752,7 @@ class SettingDefinition:
         # An enumeration
         "enum": {"from": None, "to": None, "validator": None},
         # A floating point value
-        "float": {"from": lambda v: str(round(v, 4)) if v is not None else "", "to": _toFloatConversion, "validator": Validator},
+        "float": {"from": lambda v: str(round(float(v), 4)) if v is not None else "", "to": _toFloatConversion, "validator": Validator},
         # A list of 2D points
         "polygon": {"from": str, "to": ast.literal_eval, "validator": None},
         # A list of polygons

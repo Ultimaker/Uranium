@@ -73,7 +73,7 @@ def test_valueChanges(container_registry):
     setting_property_provider._update()
     assert setting_property_provider.watchedProperties == ["enabled", "value", "validationState"]
     assert setting_property_provider.properties.value("enabled") == "False"
-    assert setting_property_provider.properties.value("value") == "20"
+    assert setting_property_provider.properties.value("value") == "20.0"
 
     # Validator state is a special property that gets added based on the type and the value
     assert setting_property_provider.properties.value("validationState") == str(ValidatorState.Valid)
