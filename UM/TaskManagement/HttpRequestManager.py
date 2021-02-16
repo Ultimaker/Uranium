@@ -371,7 +371,7 @@ class HttpRequestManager(TaskManager):
             # manager seems not always able to recover from a total loss of network access, so re-create it
             self._network_manager = QNetworkAccessManager(self)
 
-        Logger.log("d", "%s got an error %s, %s", request_data, error, error_string)
+        Logger.log("d", "%s got an QNetworkReplyError %s, %s", request_data, error, error_string)
 
         with self._request_lock:
             # Safeguard: make sure that we have the reply in the currently in-progress requests set
