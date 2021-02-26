@@ -66,10 +66,7 @@ def isTriangleInMesh(triangle, mesh_data):
     :return: True if the triangle is present in the mesh, or False if it isn't.
     """
     vertices = mesh_data.getVertices()
-    print("TRYING TO FIND TRIANGLE", triangle)
     for face in mesh_data.getIndices():
-        print("Face ", face)
-        print("---- ", vertices[face[0]], vertices[face[1]], vertices[face[2]])
         for rotation in (0, 1, 2):  # Doesn't matter where the triangle starts. Try all 3 rotations.
             if list(vertices[face[0]]) == triangle[(0 + rotation) % 3] and list(vertices[face[1]]) == triangle[(1 + rotation) % 3] and list(vertices[face[2]]) == triangle[(2 + rotation) % 3]:
                 return True
