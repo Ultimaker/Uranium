@@ -610,10 +610,9 @@ class PluginRegistry(QObject):
         if len(locations) > 1:
             # We found multiple versions of the plugin. Let's find out which one to load!
             highest_version = Version(0)
-            final_location = None
 
             for loc in locations:
-                meta_data = {}
+                meta_data = {}  # type: Dict[str, Any]
                 plugin_location = os.path.join(loc, plugin_id)
                 metadata_file = os.path.join(plugin_location, "plugin.json")
                 try:
