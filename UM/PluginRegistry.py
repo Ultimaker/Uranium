@@ -597,17 +597,35 @@ class PluginRegistry(QObject):
 
         if plugin_id in self._found_plugins:
             return self._found_plugins[plugin_id]
-        location = None
+        locations = []
         for folder in self._plugin_locations:
             location = self._locatePlugin(plugin_id, folder)
             if location:
-                break
+                locations.append(location)
 
-        if not location:
+        if not locations:
             return None
+        final_location = locations[0]
 
+        if len(locations) > 1:
+            # We found multiple versions of the plugin. Let's find out which one to load!
+            highest_version = Version(0)
+
+            for loc in locations:
+                meta_data = {}  # type: Dict[str, Any]
+                plugin_location = os.path.join(loc, plugin_id)
+                metadata_file = os.path.join(plugin_location, "plugin.json")
+                try:
+                    with open(metadata_file, "r", encoding="utf-8") as file_stream:
+                        self._parsePluginInfo(plugin_id, file_stream.read(), meta_data)
+                except:
+                    pass
+                current_version = Version(meta_data["plugin"]["version"])
+                if current_version > highest_version:
+                    highest_version = current_version
+                    final_location = loc
         try:
-            file, path, desc = imp.find_module(plugin_id, [location])
+            file, path, desc = imp.find_module(plugin_id, [final_location])
         except Exception:
             Logger.logException("e", "Import error when importing %s", plugin_id)
             return None
