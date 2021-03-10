@@ -24,8 +24,8 @@ catalog = i18nCatalog("uranium")
 class LocalFileOutputDevice(ProjectOutputDevice):
     """Implements an OutputDevice that supports saving to arbitrary local files."""
 
-    def __init__(self, parent = None):
-        super().__init__(device_id = "local_file", parent = parent)
+    def __init__(self, add_to_output_devices: bool = True, parent = None):
+        super().__init__(device_id = "local_file", add_to_output_devices = add_to_output_devices, parent = parent)
 
         self.setName(catalog.i18nc("@item:inmenu", "Local File"))
         self.setShortDescription(catalog.i18nc("@action:button Preceded by 'Ready to'.", "Save to File"))
