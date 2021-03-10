@@ -110,13 +110,20 @@ class Application:
 
         self._app_install_dir = self.getInstallPrefix()  # type: str
 
+        # Intended for keeping plugin workspace metadata that is going to be saved in workspace files
         self._workspace_metadata_storage = WorkspaceMetadataStorage()  # type: WorkspaceMetadataStorage
+
+        # Intended for keeping plugin workspace information that is only temporary
+        self._current_workspace_information = WorkspaceMetadataStorage()  # type: WorkspaceMetadataStorage
 
     def getAPIVersion(self) -> "Version":
         return self._api_version
 
     def getWorkspaceMetadataStorage(self) -> WorkspaceMetadataStorage:
         return self._workspace_metadata_storage
+
+    def getCurrentWorkspaceInformation(self) -> WorkspaceMetadataStorage:
+        return self._current_workspace_information
 
     # Adds the command line options that can be parsed by the command line parser.
     # Can be overridden to add additional command line options to the parser.
