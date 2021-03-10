@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Workspace.WorkspaceMetadataStorage import WorkspaceMetadataStorage
@@ -27,10 +27,27 @@ def test_setMultipleEntriesToStore():
     assert metadata["bloop2"] == 32
 
 
-def test_getUnknownEntry():
+def test_getUnknownPluginEntry():
     storage = WorkspaceMetadataStorage()
     storage.setEntryToStore("test", "bloop", 12)
     assert storage.getPluginMetadata("unknown") == {}
+
+
+def test_getKnownPluginsKnownEntry():
+    storage = WorkspaceMetadataStorage()
+    storage.setEntryToStore("test", "bloop", 12)
+    assert storage.getPluginMetadataEntry("test", "bloop") == 12
+
+
+def test_getKnownPluginsUnknownEntry():
+    storage = WorkspaceMetadataStorage()
+    storage.setEntryToStore("test", "bloop", 12)
+    assert storage.getPluginMetadataEntry("test", "blorp") is None
+
+
+def test_getUnknownPluginsUnknownEntry():
+    storage = WorkspaceMetadataStorage()
+    assert storage.getPluginMetadataEntry("unknown", "blorp") is None
 
 
 def test_setAllDataAndClear():

@@ -37,5 +37,8 @@ class WorkspaceMetadataStorage:
     def getPluginMetadata(self, plugin_id: str) -> Dict[str, JSONType]:
         return self._data[plugin_id]
 
+    def getPluginMetadataEntry(self, plugin_id: str, key: str) -> Dict[str, JSONType]:
+        return self._data[plugin_id].get(key)
+
     def clear(self) -> None:
         self._data = defaultdict(dict)
