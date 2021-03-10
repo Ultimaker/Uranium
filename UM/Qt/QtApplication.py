@@ -600,7 +600,7 @@ class QtApplication(QApplication, Application):
     @pyqtSlot()
     def resetWorkspace(self) -> None:
         self._workspace_metadata_storage.clear()
-        self._workspace_information.clear()
+        self._current_workspace_information.clear()
         self.deleteAll()
         self.workspaceLoaded.emit("")
         self.getController().getScene().clearMetaData()
