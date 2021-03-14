@@ -330,6 +330,13 @@ class ShaderProgram:
 
         del self._attribute_bindings[key]
 
+    def getReferenceKey(self) -> str:
+        """ Uniquely identify this specific shader-object with a string.
+        """
+        if not hasattr(self, "_reference_key"):
+            self._reference_key = str(id(self))
+        return self._reference_key
+
     def _matrixToQMatrix4x4(self, m):
         return QMatrix4x4(m.getData().flatten())
 

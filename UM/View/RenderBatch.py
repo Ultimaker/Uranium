@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import List, Dict, Union, Optional, Any
 
@@ -257,9 +257,8 @@ class RenderBatch:
 
     def _vertexBuffersSetup(self, mesh: Any):
         # See if the mesh has already been stored to the GPU:
-        vao = mesh.getCachedUserValue("vao")
+        vao = mesh.getCachedUserValue(self._shader.getReferenceKey())
         if not vao is None:
-            self._setMeshAttributes(mesh)
             return vao
 
         # Initialize VAO (VertexArrayObjecy). On activation, this will wrap around the other vertex/index buffers.
@@ -287,24 +286,18 @@ class RenderBatch:
             index_buffer.bind()
 
         self._setMeshAttributes(mesh)
-        vao.release()
-
-        # Make sure the VBO and IBO don't mess with anything else in case this method gets called elsewhere at some point:
-        vertex_buffer.release()
-        if index_buffer is not None:
-            index_buffer.release()
 
         # Cache and return:
-        mesh.setCachedUserValue("vao", vao)
+        mesh.setCachedUserValue(self._shader.getReferenceKey(), vao)
+        vao.release()
         return vao
 
     def _renderItem(self, item: Dict[str, Any]):
-        transformation = item["transformation"]
         mesh = item["mesh"]
-
         if mesh.getVertexCount() == 0:
             return
 
+        transformation = item["transformation"]
         normal_matrix = item["normal_transformation"]
         if mesh.hasNormals() and normal_matrix is None:
             normal_matrix = Matrix(transformation.getData())
