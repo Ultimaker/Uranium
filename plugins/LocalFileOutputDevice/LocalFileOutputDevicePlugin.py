@@ -19,7 +19,7 @@ class LocalFileOutputDevicePlugin(OutputDevicePlugin):
         Application.getInstance().getPreferences().addPreference("local_file/dialog_save_path", "")
 
     def start(self):
-        self.getOutputDeviceManager().addProjectOutputDevice(LocalFileOutputDevice(), add_to_output_devices = True)
+        self.getOutputDeviceManager().addProjectOutputDevice(LocalFileOutputDevice(add_to_output_devices = True))
 
     def stop(self):
         self.getOutputDeviceManager().removeProjectOutputDevice("local_file")
