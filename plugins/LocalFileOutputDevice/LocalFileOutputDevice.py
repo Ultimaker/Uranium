@@ -55,7 +55,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         # Set up and display file dialog
         dialog = QFileDialog()
 
-        dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
+        dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to Disk"))
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
 
