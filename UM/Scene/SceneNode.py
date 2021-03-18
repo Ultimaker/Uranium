@@ -466,7 +466,12 @@ class SceneNode:
         child.childrenChanged.disconnect(self.childrenChanged)
         child.meshDataChanged.disconnect(self.meshDataChanged)
 
-        self._children.remove(child)
+        try:
+            self._children.remove(child)
+        except ValueError:  # Could happen that the child was removed asynchronously by a different thread. Don't crash by removing it twice.
+            pass
+        # But still update the AABB and such.
+
         child._parent = None
         child._transformChanged()
         child.parentChanged.emit(self)
