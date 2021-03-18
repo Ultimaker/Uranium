@@ -166,6 +166,12 @@ class PackageManager(QObject):
             except UnicodeDecodeError:
                 Logger.logException("e", "Can't decode package management files. File is corrupt.")
                 return
+            except FileNotFoundError:
+                Logger.error("Package management file {search_path} doesn't exist.".format(search_path = search_path))
+                return
+            except EnvironmentError as e:
+                Logger.error("Unable to read package management file {search_path}: {err}".format(search_path = search_path, err = str(e)))
+                return
 
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
         container_registry = self._application.getContainerRegistry()
