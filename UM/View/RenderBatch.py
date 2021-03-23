@@ -196,7 +196,7 @@ class RenderBatch:
             self._gl.glDisable(self._gl.GL_BLEND)
         elif self._blend_mode == self.BlendMode.Normal:
             self._gl.glEnable(self._gl.GL_BLEND)
-            self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
+            self._gl.glBlendFunc(self._gl.GL_ONE, self._gl.GL_ONE_MINUS_SRC_ALPHA)
         elif self._blend_mode == self.BlendMode.Additive:
             self._gl.glEnable(self._gl.GL_BLEND)
             self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE)
