@@ -56,7 +56,9 @@ fragment =
         lowp vec4 texture = texture2D(u_texture, v_uvs);
         final_color = mix(final_color, texture, texture.a);
 
-        gl_FragColor = final_color;
+        //Premultiply the alpha component into the colour. Combine this with additive blending.
+        //See https://apoorvaj.io/alpha-compositing-opengl-blending-and-premultiplied-alpha/ for a layout of theory.
+        gl_FragColor = final_color * u_opacity;
     }
 
 vertex41core =
@@ -119,7 +121,9 @@ fragment41core =
         lowp vec4 texture = texture(u_texture, v_uvs);
         final_color = mix(final_color, texture, texture.a);
 
-        frag_color = final_color;
+        //Premultiply the alpha component into the colour. Combine this with additive blending.
+        //See https://apoorvaj.io/alpha-compositing-opengl-blending-and-premultiplied-alpha/ for a layout of theory.
+        frag_color = final_color * u_opacity;
     }
 
 [defaults]
