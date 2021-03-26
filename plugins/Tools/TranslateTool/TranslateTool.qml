@@ -108,6 +108,14 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("X", modified_text);
             }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    xText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
+                    xText = 0;
+                }
+            }
             Keys.onBacktabPressed: selectTextInTextfield(zTextField)
             Keys.onTabPressed: selectTextInTextfield(yTextField)
         }
@@ -130,6 +138,15 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("Y", modified_text);
             }
+
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    yText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
+                    yText = 0;
+                }
+            }
             Keys.onBacktabPressed: selectTextInTextfield(xTextField)
             Keys.onTabPressed: selectTextInTextfield(zTextField)
         }
@@ -150,6 +167,15 @@ Item
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 UM.ActiveTool.setProperty("Z", modified_text);
+            }
+
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    zText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
+                    zText = 0;
+                }
             }
             Keys.onBacktabPressed: selectTextInTextfield(yTextField)
             Keys.onTabPressed: selectTextInTextfield(xTextField)
@@ -220,7 +246,10 @@ Item
     {
         target: base
         property: "xText"
-        value: base.roundFloat(UM.ActiveTool.properties.getValue("X"), 4)
+        value:
+        {
+            return base.roundFloat(UM.ActiveTool.properties.getValue("X"), 4)
+        }
     }
 
     Binding
