@@ -494,6 +494,9 @@ class QtApplication(QApplication, Application):
         except Exception as e:
             Logger.log("e", "Exception while closing backend: %s", repr(e))
 
+        if self._qml_engine:
+            self._qml_engine.deleteLater()
+
         if self._tray_icon_widget:
             self._tray_icon_widget.deleteLater()
 
@@ -661,4 +664,3 @@ class _QtFunctionEvent(QEvent):
     def __init__(self, fevent: QEvent) -> None:
         super().__init__(self.QtFunctionEvent)
         self._function_event = fevent
-
