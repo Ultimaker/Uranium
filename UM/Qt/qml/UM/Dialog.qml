@@ -1,9 +1,9 @@
 // Copyright (c) 2017 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
-import QtQuick 2.10
-import QtQuick.Window 2.2
-import QtQuick.Layouts 1.3
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Layouts 1.15
 
 import UM 1.0 as UM
 
