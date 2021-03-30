@@ -220,7 +220,7 @@ class Backend(PluginObject):
             Logger.log("d", "Socket debug: %s", str(error))
             return
         else:
-            Logger.log("w", "Unhandled socket error %s", str(error))
+            Logger.log("w", "Unhandled socket error %s", str(error.getErrorCode()))
 
         self._createSocket()
 

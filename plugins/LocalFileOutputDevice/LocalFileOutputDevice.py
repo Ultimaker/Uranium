@@ -15,21 +15,25 @@ from UM.Mesh.MeshWriter import MeshWriter
 from UM.Message import Message
 from UM.OutputDevice import OutputDeviceError
 from UM.OutputDevice.OutputDevice import OutputDevice
+from UM.OutputDevice.ProjectOutputDevice import ProjectOutputDevice
 from UM.i18n import i18nCatalog
 
 catalog = i18nCatalog("uranium")
 
 
-class LocalFileOutputDevice(OutputDevice):
+class LocalFileOutputDevice(ProjectOutputDevice):
     """Implements an OutputDevice that supports saving to arbitrary local files."""
 
-    def __init__(self):
-        super().__init__("local_file")
+    def __init__(self, add_to_output_devices: bool = True, parent = None):
+        super().__init__(device_id = "local_file", add_to_output_devices = add_to_output_devices, parent = parent)
 
         self.setName(catalog.i18nc("@item:inmenu", "Local File"))
-        self.setShortDescription(catalog.i18nc("@action:button Preceded by 'Ready to'.", "Save to File"))
-        self.setDescription(catalog.i18nc("@info:tooltip", "Save to File"))
+        self.setShortDescription(catalog.i18nc("@action:button Preceded by 'Ready to'.", "Save to Disk"))
+        self.setDescription(catalog.i18nc("@info:tooltip", "Save to Disk"))
         self.setIconName("save")
+
+        self.shortcut = "Ctrl+S"
+        self.menu_entry_text = "To Disk"
 
         self._writing = False
 
@@ -51,7 +55,7 @@ class LocalFileOutputDevice(OutputDevice):
         # Set up and display file dialog
         dialog = QFileDialog()
 
-        dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
+        dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to Disk"))
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
 

@@ -8,6 +8,8 @@ from typing import List
 from typing import Any, cast, Dict, Optional
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+
+from UM.FileProvider import FileProvider
 from UM.FlameProfiler import pyqtSlot
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
@@ -222,8 +224,8 @@ class QtApplication(QApplication, Application):
             self._preferences.deserialize(serialized)
             self._preferences.setValue("general/plugins_to_remove", "")
             self._preferences.writeToFile(preferences_filename)
-        except (FileNotFoundError, UnicodeDecodeError):
-            Logger.log("i", "The preferences file cannot be found or it is corrupted, so we will use default values")
+        except (EnvironmentError, UnicodeDecodeError):
+            Logger.log("i", "The preferences file cannot be opened or it is corrupted, so we will use default values")
 
         self.processEvents()
         # Force the configuration file to be written again since the list of plugins to remove maybe changed
@@ -234,6 +236,7 @@ class QtApplication(QApplication, Application):
             Logger.log("i", "The preferences file '%s' cannot be found, will use default values",
                        self._preferences_filename)
             self._preferences_filename = Resources.getStoragePath(Resources.Preferences, self._app_name + ".cfg")
+        Logger.info("Completed loading preferences.")
 
         # FIXME: This is done here because we now use "plugins.json" to manage plugins instead of the Preferences file,
         # but the PluginRegistry will still import data from the Preferences files if present, such as disabled plugins,
@@ -268,6 +271,7 @@ class QtApplication(QApplication, Application):
                     self._tray_icon = QIcon(Resources.getPath(Resources.Images, self._tray_icon_name))
                     self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
                     self._tray_icon_widget.setVisible(False)
+                    Logger.info("Created system tray icon.")
                 except FileNotFoundError:
                     Logger.log("w", "Could not find the icon %s", self._tray_icon_name)
 
@@ -308,16 +312,17 @@ class QtApplication(QApplication, Application):
     def recentFiles(self) -> List[QUrl]:
         return self._recent_files
 
+    fileProvidersChanged = pyqtSignal()
+
+    @pyqtProperty("QVariantList", notify = fileProvidersChanged)
+    def fileProviders(self) -> List[FileProvider]:
+        return self.getFileProviders()
+
     def _onJobFinished(self, job: Job) -> None:
-        if isinstance(job, WriteFileJob):
-            if not job.getResult() or not job.getAddToRecentFiles():
-                # For a write file job, if it failed or it doesn't need to be added to the recent files list, we do not
-                # add it.
-                return
-        elif (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
+        if isinstance(job, WriteFileJob) and not job.getResult():
             return
 
-        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)):
+        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)) and job.getAddToRecentFiles():
             self.addFileToRecentFiles(job.getFileName())
 
     def addFileToRecentFiles(self, file_name: str) -> None:
@@ -441,7 +446,7 @@ class QtApplication(QApplication, Application):
     @property
     def isVisible(self) -> bool:
         if self._main_window is not None:
-            return self._main_window.visible #type: ignore #MyPy doesn't realise that self._main_window cannot be None here.
+            return self._main_window.isVisible()  #type: ignore #MyPy doesn't realise that self._main_window cannot be None here.
         return False
 
     def getTheme(self) -> Optional[Theme]:
@@ -488,6 +493,9 @@ class QtApplication(QApplication, Application):
             self.getBackend().close()
         except Exception as e:
             Logger.log("e", "Exception while closing backend: %s", repr(e))
+
+        if self._qml_engine:
+            self._qml_engine.deleteLater()
 
         if self._tray_icon_widget:
             self._tray_icon_widget.deleteLater()
@@ -595,8 +603,10 @@ class QtApplication(QApplication, Application):
     @pyqtSlot()
     def resetWorkspace(self) -> None:
         self._workspace_metadata_storage.clear()
+        self._current_workspace_information.clear()
         self.deleteAll()
         self.workspaceLoaded.emit("")
+        self.getController().getScene().clearMetaData()
 
     def getMeshFileHandler(self) -> MeshFileHandler:
         """Get the MeshFileHandler of this application."""
@@ -654,4 +664,3 @@ class _QtFunctionEvent(QEvent):
     def __init__(self, fevent: QEvent) -> None:
         super().__init__(self.QtFunctionEvent)
         self._function_event = fevent
-

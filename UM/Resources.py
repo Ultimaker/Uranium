@@ -536,7 +536,11 @@ class Resources:
         Logger.log("i", "Copying directory from '%s' to '%s'", src_path, dest_path)
         # we first copy everything to a temporary folder, and then move it to the new folder
         base_dir_name = os.path.basename(src_path)
-        temp_root_dir_path = tempfile.mkdtemp("cura-copy")
+        try:
+            temp_root_dir_path = tempfile.mkdtemp("cura-copy")
+        except FileNotFoundError:  # Tempfile throws this error saying that it can't create a temp file on any of a series of possible locations.
+            Logger.log("e", "Unable to copy configuration from old version: No access rights or storage is full.")
+            return
         temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
         # src -> temp -> dest
         try:

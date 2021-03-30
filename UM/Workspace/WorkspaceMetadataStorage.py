@@ -8,9 +8,6 @@ basic_metadata_type = Union[str, int, float, bool, None]
 full_metadata_type = Union[List[basic_metadata_type], basic_metadata_type, Dict[str, basic_metadata_type]]
 
 
-from typing import Union, Dict, List
-
-
 # modified from Original source: https://github.com/python/mypy/issues/731#issuecomment-539905783
 # The recursive type doesn't seem to work for us. MyPy crashes with it. So this limits the type to 3 levels deep nesting.
 JSONPrimitive = Union[str, int, bool, None]
@@ -21,9 +18,7 @@ JSONType = Union[JSONPrimitive, Dict[str, JSONTypeLevel2], List[JSONTypeLevel2]]
 
 class WorkspaceMetadataStorage:
     #  The WorkspaceMetadataStorage, as the name implies, allows for plugins to store (and retrieve) extra information
-    #   to a workspace. When a workspace is stored, all workspace readers will need to ensure that the workspace data
-    #   is correctly stored to file. The same also holds when loading a workspace; the existing data will be cleared
-    #   and replaced with the data recovered from the file (if any)
+    #  to a workspace.
     def __init__(self) -> None:
         # We allow for a set of key value pairs to be stored per plugin.
         self._data = defaultdict(dict)  # type: Dict[str, Dict[str, JSONType]]
@@ -39,6 +34,9 @@ class WorkspaceMetadataStorage:
 
     def getPluginMetadata(self, plugin_id: str) -> Dict[str, JSONType]:
         return self._data[plugin_id]
+
+    def getPluginMetadataEntry(self, plugin_id: str, key: str) -> JSONType:
+        return self._data[plugin_id].get(key)
 
     def clear(self) -> None:
         self._data = defaultdict(dict)

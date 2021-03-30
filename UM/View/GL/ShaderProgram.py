@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
@@ -64,7 +64,14 @@ class ShaderProgram:
         # Hashtags should not be ignored, they are part of GLSL.
         parser = configparser.ConfigParser(interpolation = None, comment_prefixes = (';', ))
         parser.optionxform = lambda option: option
-        parser.read(file_name)
+        try:
+            parser.read(file_name)
+        except EnvironmentError:
+            raise InvalidShaderProgramError("{0} can't be opened for reading.".format(file_name))
+        except UnicodeDecodeError:
+            raise InvalidShaderProgramError("{0} contains invalid UTF-8 code. File corrupted?".format(file_name))
+        except configparser.Error as e:
+            raise InvalidShaderProgramError("{file_name} has broken config file syntax: {err}".format(file_name = file_name, err = str(e)))
 
         if "shaders" not in parser:
             raise InvalidShaderProgramError("{0} is missing section [shaders]".format(file_name))
@@ -333,7 +340,7 @@ class ShaderProgram:
             self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(value))
         elif type(value) is Color:
             self._shader_program.setUniformValue(uniform,
-                QColor(value.r * 255, value.g * 255, value.b * 255, value.a * 255))
+                QColor(round(value.r * 255), round(value.g * 255), round(value.b * 255), round(value.a * 255)))
         elif type(value) is list and type(value[0]) is list and len(value[0]) == 4:
             self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(Matrix(value)))
         elif type(value) is list and len(value) == 2:

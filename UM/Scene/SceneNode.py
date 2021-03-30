@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
@@ -47,6 +47,7 @@ class SceneNode:
 
         self._children = []     # type: List[SceneNode]
         self._mesh_data = None  # type: Optional[MeshData]
+        self.metadata = {}     # type: Dict[str, Any]
 
         # Local transformation (from parent to local)
         self._transformation = Matrix()  # type: Matrix
@@ -465,7 +466,12 @@ class SceneNode:
         child.childrenChanged.disconnect(self.childrenChanged)
         child.meshDataChanged.disconnect(self.meshDataChanged)
 
-        self._children.remove(child)
+        try:
+            self._children.remove(child)
+        except ValueError:  # Could happen that the child was removed asynchronously by a different thread. Don't crash by removing it twice.
+            pass
+        # But still update the AABB and such.
+
         child._parent = None
         child._transformChanged()
         child.parentChanged.emit(self)
@@ -515,7 +521,7 @@ class SceneNode:
         self._cached_normal_matrix = Matrix(self.getWorldTransformation(copy=False).getData())
         self._cached_normal_matrix.setRow(3, [0, 0, 0, 1])
         self._cached_normal_matrix.setColumn(3, [0, 0, 0, 1])
-        self._cached_normal_matrix.invert()
+        self._cached_normal_matrix.pseudoinvert()
         self._cached_normal_matrix.transpose()
 
     def getCachedNormalMatrix(self) -> Matrix:

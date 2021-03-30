@@ -7,6 +7,7 @@ import platform
 import struct
 
 import numpy
+from typing import cast
 
 from UM.Job import Job
 from UM.Logger import Logger
@@ -134,7 +135,7 @@ class STLReader(MeshReader):
                 if "vertex" in line:
                     num_verts += 1
 
-        mesh_builder.reserveFaceCount(num_verts / 3)
+        mesh_builder.reserveFaceCount(int(num_verts / 3))
         f.seek(0, os.SEEK_SET)
         vertex = 0
         face = [None, None, None]
@@ -163,7 +164,7 @@ class STLReader(MeshReader):
         f.read(80)  # Skip the header
 
         try:
-            num_faces = struct.unpack("<I", f.read(4))[0]
+            num_faces = cast(int, struct.unpack("<I", f.read(4))[0])
         except struct.error:  # Can't unpack it if the file didn't have 4 bytes in it.
             return False
         # On ascii files, the num_faces will be big, due to 4 ascii bytes being seen as an unsigned int.

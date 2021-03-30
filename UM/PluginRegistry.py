@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import imp
@@ -9,6 +9,7 @@ import stat  # For setting file permissions correctly;
 import time
 import types
 import zipfile
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 
 from PyQt5.QtCore import QCoreApplication
@@ -20,7 +21,7 @@ from UM.Platform import Platform
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.PluginObject import PluginObject  # For type hinting
 from UM.Resources import Resources
-from UM.Trust import Trust, TrustException, TrustBasics
+from UM.Trust import Trust, TrustBasics, TrustException
 from UM.Version import Version
 from UM.i18n import i18nCatalog
 
@@ -51,6 +52,8 @@ class PluginRegistry(QObject):
         PluginRegistry.__instance = self
 
         super().__init__(parent)
+        self.preloaded_plugins = []  # type: List[str]  # List of plug-in names that must be loaded before the rest, if the plug-ins are available. They are loaded in this order too.
+
         self._application = application  # type: Application
         self._api_version = application.getAPIVersion()  # type: Version
 
@@ -79,16 +82,20 @@ class PluginRegistry(QObject):
         self._supported_file_types = {"umplugin": "Uranium Plugin"} # type: Dict[str, str]
 
         self._check_if_trusted = False  # type: bool
+        self._clean_hierarchy_sent_messages = []  # type: List[str]
+        self._debug_mode = False  # type: bool
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
         self._trust_checker = None  # type: Optional[Trust]
 
-    def setCheckIfTrusted(self, check_if_trusted: bool) -> None:
+    def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
         self._check_if_trusted = check_if_trusted
         if self._check_if_trusted:
             self._trust_checker = Trust.getInstance()
             # 'Trust.getInstance()' will raise an exception if anything goes wrong (e.g.: 'unable to read public key').
             # Any such exception is explicitly _not_ caught here, as the application should quit with a crash.
+            if self._trust_checker:
+                self._trust_checker.setFollowSymlinks(debug_mode)
 
     def getCheckIfTrusted(self) -> bool:
         return self._check_if_trusted
@@ -168,6 +175,13 @@ class PluginRegistry(QObject):
             # There is no need to crash the application for this, but it is a failure that we want to log.
             Logger.logException("e", "Unable to save the plugin data.")
 
+    def _isPathInLocation(self, location: str, path: str) -> bool:
+        try:
+            is_in_path = os.path.commonpath([location, path]).startswith(location)
+        except ValueError:
+            is_in_path = False
+        return is_in_path
+
     # TODO:
     # - [ ] Improve how metadata is stored. It should not be in the 'plugin' prop
     #       of the dictionary item.
@@ -187,7 +201,10 @@ class PluginRegistry(QObject):
 
     #   Add a plugin location to the list of locations to search:
     def addPluginLocation(self, location: str) -> None:
-        #TODO: Add error checking!
+        if not os.path.isdir(location):
+            Logger.warning("Plugin location {0} must be a folder.".format(location))
+            return
+
         self._plugin_locations.append(location)
 
     #   Check if all required plugins are loaded:
@@ -317,11 +334,7 @@ class PluginRegistry(QObject):
         # Go through all plugin locations and check if the given plugin is located in the installation path.
         is_bundled = False
         for plugin_dir in self._plugin_locations:
-            try:
-                is_in_installation_path = os.path.commonpath([install_prefix, plugin_dir]).startswith(install_prefix)
-            except ValueError:
-                is_in_installation_path = False
-            if not is_in_installation_path:
+            if not self._isPathInLocation(install_prefix, plugin_dir):
                 # To prevent the situation in a 'trusted' env. that the user-folder has a supposedly 'bundled' plugin:
                 if self._check_if_trusted:
                     result = self._locatePlugin(plugin_id, plugin_dir)
@@ -337,6 +350,7 @@ class PluginRegistry(QObject):
                 break
         self._bundled_plugin_cache[plugin_id] = is_bundled
         return is_bundled
+
     def loadPlugins(self, metadata: Optional[Dict[str, Any]] = None) -> None:
         """Load all plugins matching a certain set of metadata
 
@@ -345,9 +359,17 @@ class PluginRegistry(QObject):
         """
 
         start_time = time.time()
+
+        # First load all of the pre-loaded plug-ins.
+        for preloaded_plugin in self.preloaded_plugins:
+            self.loadPlugin(preloaded_plugin)
+
         # Get a list of all installed plugins:
         plugin_ids = self._findInstalledPlugins()
         for plugin_id in plugin_ids:
+            if plugin_id in self.preloaded_plugins:
+                continue  # Already loaded this before.
+
             # Get the plugin metadata:
             try:
                 plugin_metadata = self.getMetaData(plugin_id)
@@ -516,7 +538,10 @@ class PluginRegistry(QObject):
             del self.bundled_plugin_cache[plugin_id]
 
         Logger.log("i", "Attempting to remove plugin '%s' from directory '%s'", plugin_id, plugin_path)
-        shutil.rmtree(plugin_path)
+        try:
+            shutil.rmtree(plugin_path)
+        except EnvironmentError as e:
+            Logger.error("Unable to remove plug-in {plugin_id}: {err}".format(plugin_id = plugin_id, err = str(e)))
 
 #===============================================================================
 # PRIVATE METHODS
@@ -572,17 +597,35 @@ class PluginRegistry(QObject):
 
         if plugin_id in self._found_plugins:
             return self._found_plugins[plugin_id]
-        location = None
+        locations = []
         for folder in self._plugin_locations:
             location = self._locatePlugin(plugin_id, folder)
             if location:
-                break
+                locations.append(location)
 
-        if not location:
+        if not locations:
             return None
+        final_location = locations[0]
 
+        if len(locations) > 1:
+            # We found multiple versions of the plugin. Let's find out which one to load!
+            highest_version = Version(0)
+
+            for loc in locations:
+                meta_data = {}  # type: Dict[str, Any]
+                plugin_location = os.path.join(loc, plugin_id)
+                metadata_file = os.path.join(plugin_location, "plugin.json")
+                try:
+                    with open(metadata_file, "r", encoding="utf-8") as file_stream:
+                        self._parsePluginInfo(plugin_id, file_stream.read(), meta_data)
+                except:
+                    pass
+                current_version = Version(meta_data["plugin"]["version"])
+                if current_version > highest_version:
+                    highest_version = current_version
+                    final_location = loc
         try:
-            file, path, desc = imp.find_module(plugin_id, [location])
+            file, path, desc = imp.find_module(plugin_id, [final_location])
         except Exception:
             Logger.logException("e", "Import error when importing %s", plugin_id)
             return None

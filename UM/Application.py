@@ -7,9 +7,11 @@ import sys
 import threading
 
 from UM.Controller import Controller
+from UM.FileProvider import FileProvider
 from UM.Message import Message #For typing.
 from UM.PackageManager import PackageManager
 from UM.PluginRegistry import PluginRegistry
+from UM.Qt.Bindings.FileProviderModel import FileProviderModel
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
@@ -85,6 +87,7 @@ class Application:
         self._preferences = None  # type: Preferences
 
         self._extensions = []  # type: List[Extension]
+        self._file_providers = []  # type: List[FileProvider]
         self._required_plugins = []  # type: List[str]
 
         self._package_manager_class = PackageManager  # type: type
@@ -94,6 +97,8 @@ class Application:
         self._container_registry_class = ContainerRegistry  # type: type
         self._container_registry = None  # type: ContainerRegistry
         self._global_container_stack = None  # type: Optional[ContainerStack]
+
+        self._file_provider_model = FileProviderModel(application = self)  # type: Optional[FileProviderModel]
 
         self._controller = None  # type: Controller
         self._backend = None  # type: Backend
@@ -105,13 +110,24 @@ class Application:
 
         self._app_install_dir = self.getInstallPrefix()  # type: str
 
+        # Intended for keeping plugin workspace metadata that is going to be saved in and retrieved from workspace files.
+        # When the workspace is stored, all workspace readers will need to ensure that the workspace metadata is correctly
+        # stored to the output file. The same also holds when loading a workspace; the existing data will be cleared
+        # and replaced with the data recovered from the file (if any).
         self._workspace_metadata_storage = WorkspaceMetadataStorage()  # type: WorkspaceMetadataStorage
+
+        # Intended for keeping plugin workspace information that is only temporary. The information added in this structure
+        # is NOT saved to and retrieved from workspace files.
+        self._current_workspace_information = WorkspaceMetadataStorage()  # type: WorkspaceMetadataStorage
 
     def getAPIVersion(self) -> "Version":
         return self._api_version
 
     def getWorkspaceMetadataStorage(self) -> WorkspaceMetadataStorage:
         return self._workspace_metadata_storage
+
+    def getCurrentWorkspaceInformation(self) -> WorkspaceMetadataStorage:
+        return self._current_workspace_information
 
     # Adds the command line options that can be parsed by the command line parser.
     # Can be overridden to add additional command line options to the parser.
@@ -173,6 +189,7 @@ class Application:
         PluginRegistry.addType("backend", self.setBackend)
         PluginRegistry.addType("logger", Logger.addLogger)
         PluginRegistry.addType("extension", self.addExtension)
+        PluginRegistry.addType("file_provider", self.addFileProvider)
 
         self._preferences = Preferences()
         self._preferences.addPreference("general/language", self._default_language)
@@ -449,6 +466,12 @@ class Application:
 
     def getExtensions(self) -> List["Extension"]:
         return self._extensions
+
+    def addFileProvider(self, file_provider: "FileProvider") -> None:
+        self._file_providers.append(file_provider)
+
+    def getFileProviders(self) -> List["FileProvider"]:
+        return self._file_providers
 
     # Returns the path to the folder of the app itself, e.g.: '/root/blah/programs/Cura'.
     @staticmethod

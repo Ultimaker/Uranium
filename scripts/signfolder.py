@@ -19,18 +19,30 @@ DEFAULT_PASSWORD = ""
 def signFolder(private_key_path: str, path: str, ignore_folders: List[str], optional_password: Optional[str]) -> bool:
     """Generate a signature for a folder (given a private key) and save it to a json signature file within that folder.
 
-    - The signature file itself will not be signed.
+    - The signature file itself will be signed, this is saved in the 'root_manifest_signature'.
+      This happens in a slightly different way in comparison to the other files:
+      The key in this case is the hash of the alphabetized*, concatenated** name/hash pairs.
+      (Not the entire file: as the self-sign is included in the manifest, this would cause an infinite recursion).
+      *)  Where the name is the key as it appears in 'root-signatures', so 'src/b.py' will go _after_ 'c', because c < s
+      **) For all keys in 'root-signatures': key0/hash0/key1/hash1/key2/hash2/... (without the slashes!)
     - On validation, any 'extra' files not in the ignored (cache) folders should also trigger failure.
-    - Be careful, symlinks will be followed!
+    - Be careful, check if symlinks have been followed after signing!
 
     A json signature file for a folder looks like this:
     {
+      "root_manifest_signature": "...<key in base-64>...",
       "root_signatures": {
         "text.txt": "...<key in base-64>...",
         "img.png": "...<key in base-64>...",
         "subfolder/text.txt": "...<key in base-64>..."
       }
     }
+
+    Note that, within the file, the order of keys is not guaranteed: 'root_manifest_signature' may appear before or
+    after 'root_signatures', and the order of keys within 'root_signatures' can be anything as long as the right hashes
+    are associated with the right keys.
+
+    See also 'Trust.py' in the main library and the related scripts; 'createkeypair.py', 'signfile.py' in this folder.
 
     :param private_key_path: Path to the file containing the private key.
     :param path: The folder to be signed.
@@ -39,6 +51,7 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
     :return: Whether a valid signature file has been generated and saved.
     """
 
+    path = path if path not in ["", "."] else os.getcwd()
     password = None if optional_password == "" else optional_password
     private_key = TrustBasics.loadPrivateKey(private_key_path, password)
     if private_key is None:
@@ -63,8 +76,14 @@ def signFolder(private_key_path: str, path: str, ignore_folders: List[str], opti
                     return False
                 signatures[name_in_data] = signature
 
+        # Make the self-signature for the whole 'self-signed' aspect of the manifest:
+        self_signature = TrustBasics.getHashSignature(TrustBasics.getSelfSignHash(signatures), private_key)
+
         # Save signatures to json:
-        wrapped_signatures = {TrustBasics.getRootSignatureCategory(): signatures}
+        wrapped_signatures = {
+            TrustBasics.getRootSignatureCategory(): signatures,
+            TrustBasics.getRootSignedManifestKey(): self_signature
+        }
 
         json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
         with open(json_filename, "w", encoding = "utf-8") as data_file:

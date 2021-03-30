@@ -103,7 +103,7 @@ class PointingRectangle(QQuickItem):
         vertex_data[5].set(0, 0)
         vertex_data[6].set(0, 0)
 
-        target_offset = self._target - QPoint(self.x(), self.y())
+        target_offset = self._target - QPoint(round(self.x()), round(self.y()))
 
         arrow_on_side = -1 # no arrow
         arrow_size = 0

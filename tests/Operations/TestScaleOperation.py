@@ -22,13 +22,3 @@ def test_addScale():
     op2 = ScaleOperation(node, Vector(1, 2, 3), add_scale = True)
     op2.redo()
     assert node.getScale() == Vector(2, 4, 6)
-
-
-def test_relativeScale():
-    node = SceneNode()
-    op = ScaleOperation(node, Vector(2, 2, 2), set_scale=True)
-    op.redo()
-
-    op2 = ScaleOperation(node, Vector(1, 2, 3), relative_scale=True)
-    op2.redo()
-    assert node.getScale() == Vector(3, 4, 5)

@@ -1,7 +1,7 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, QUrl #For typing.
+from PyQt5.QtCore import QObject, QUrl, pyqtSignal, pyqtProperty, pyqtSlot  # For typing.
 from typing import Optional
 
 from UM.Logger import Logger
@@ -21,6 +21,19 @@ class WorkspaceFileHandler(FileHandler):
     def __init__(self, application: "QtApplication", writer_type: str = "workspace_writer", reader_type: str = "workspace_reader", parent: QObject = None) -> None:
         super().__init__(application, writer_type, reader_type, parent)
         self.workspace_reader = None  # type: Optional[WorkspaceReader]
+        self._enabled = True
+        self.enabledChanged.emit()
+
+    enabledChanged = pyqtSignal()
+
+    def setEnabled(self, enabled: bool) -> None:
+        if self._enabled != enabled:
+            self._enabled = enabled
+            self.enabledChanged.emit()
+
+    @pyqtProperty(bool, notify = enabledChanged)
+    def enabled(self):
+        return self._enabled
 
     def readerRead(self, reader: WorkspaceReader, file_name: str, **kwargs):
         self.workspace_reader = reader
@@ -32,9 +45,10 @@ class WorkspaceFileHandler(FileHandler):
 
         return results
 
-    def _readLocalFile(self, file: QUrl) -> None:
+    def _readLocalFile(self, file: QUrl, add_to_recent_files_hint: bool = True) -> None:
         from UM.FileHandler.ReadFileJob import ReadFileJob
-        job = ReadFileJob(file.toLocalFile(), handler = self)
+        filename = file.toLocalFile()
+        job = ReadFileJob(filename, handler = self, add_to_recent_files = add_to_recent_files_hint)
         job.finished.connect(self._readWorkspaceFinished)
         job.start()
 

@@ -58,7 +58,8 @@ class UpdateCheckerJob(Job):
             reader = codecs.getreader("utf-8")
             data = json.load(reader(latest_version_file))
             try:
-                if Application.getInstance().getVersion() != "master":
+                app_version = Application.getInstance().getVersion()
+                if app_version != "master" and app_version > Version([0, 0, 0]):
                     local_version = Version(Application.getInstance().getVersion())
                 else:
                     if not self.silent:

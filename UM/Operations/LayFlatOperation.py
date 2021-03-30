@@ -1,8 +1,9 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import Operation
 
+from UM.Operations.GravityOperation import GravityOperation
 from UM.Scene.SceneNode import SceneNode
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
@@ -42,6 +43,8 @@ class LayFlatOperation(Operation.Operation):
             self._new_orientation = orientation #Orientation after laying it flat.
         else:
             self._new_orientation = self._old_orientation
+
+        self._gravity_operation = None
 
     def process(self):
         """Computes some orientation to hopefully lay the object flat.
@@ -136,13 +139,16 @@ class LayFlatOperation(Operation.Operation):
         """Undoes this lay flat operation."""
 
         self._node.setOrientation(self._old_orientation) #Restore saved orientation.
+        self._gravity_operation.undo()
 
     def redo(self):
         """Re-does this lay flat operation."""
 
         if self._new_orientation: #Only if the orientation was finished calculating.
             self._node.setOrientation(self._new_orientation)
-            pass
+            if self._gravity_operation is None:
+                self._gravity_operation = GravityOperation(self._node)
+            self._gravity_operation.redo()
 
     def mergeWith(self, other):
         """Merge this lay flat operation with another lay flat operation.

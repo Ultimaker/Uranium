@@ -48,12 +48,17 @@ class OBJReader(MeshReader):
                     parts = [i for i in map(lambda p: p.split("/"), parts)]
                     for idx in range(1, len(parts) - 2):
                         data = self._toAbsoluteIndex(len(vertex_list), [int(parts[1][0]), int(parts[idx + 1][0]), int(parts[idx + 2][0])])
-                        if len(parts[1]) > 1:
-                            if parts[1][1] and parts[idx + 1][1] and parts[idx + 2][1]:
-                                data += self._toAbsoluteIndex(len(normal_list), [int(parts[1][1]), int(parts[idx + 1][1]), int(parts[idx + 2][1])])
 
-                            if len(parts[1]) > 2:
-                                data += self._toAbsoluteIndex(len(uv_list), [int(parts[1][2]), int(parts[idx + 1][2]), int(parts[idx + 2][2])])
+                        if len(parts[1]) > 1 and parts[1][1] and parts[idx + 1][1] and parts[idx + 2][1]:
+                            data += self._toAbsoluteIndex(len(normal_list), [int(parts[1][1]), int(parts[idx + 1][1]), int(parts[idx + 2][1])])
+                        else:
+                            data += [0, 0, 0]
+
+                        if len(parts[1]) > 2:
+                            data += self._toAbsoluteIndex(len(uv_list), [int(parts[1][2]), int(parts[idx + 1][2]), int(parts[idx + 2][2])])
+                        else:
+                            data += [0, 0, 0]
+
                         face_list.append(data)
                 elif parts[0] == "v":
                     vertex_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
@@ -73,23 +78,13 @@ class OBJReader(MeshReader):
                 j = face[1] - 1
                 k = face[2] - 1
 
-                if len(face) > 3:
-                    ui = face[3] - 1
-                    uj = face[4] - 1
-                    uk = face[5] - 1
-                else:
-                    ui = -1
-                    uj = -1
-                    uk = -1
+                ui = face[3] - 1
+                uj = face[4] - 1
+                uk = face[5] - 1
 
-                if len(face) > 6:
-                    ni = face[6] - 1
-                    nj = face[7] - 1
-                    nk = face[8] - 1
-                else:
-                    ni = -1
-                    nj = -1
-                    nk = -1
+                ni = face[6] - 1
+                nj = face[7] - 1
+                nk = face[8] - 1
 
                 if i < 0 or i >= num_vertices:
                     i = 0

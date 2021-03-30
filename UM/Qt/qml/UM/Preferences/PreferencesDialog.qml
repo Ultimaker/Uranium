@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2020 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
@@ -22,6 +22,10 @@ Dialog
     height: minimumHeight
 
     property int currentPage: 0;
+    onCurrentPageChanged:
+    {
+        pagesList.selection.select(currentPage);
+    }
 
     Item
     {
@@ -119,9 +123,6 @@ Dialog
 
     function setPage(index)
     {
-        pagesList.selection.clear();
-        pagesList.selection.select(index);
-
         stackView.replace(configPagesModel.get(index).item);
 
         base.currentPage = index
@@ -147,7 +148,6 @@ Dialog
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
         insertPage(0, catalog.i18nc("@title:tab", "General"), Qt.resolvedUrl("GeneralPage.qml"));
         insertPage(1, catalog.i18nc("@title:tab", "Settings"), Qt.resolvedUrl("SettingVisibilityPage.qml"));
-
-        setPage(0)
+        base.currentPage = 0;
     }
 }

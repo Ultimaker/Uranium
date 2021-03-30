@@ -1,4 +1,4 @@
-// Copyright (c) 2018 Ultimaker B.V.
+// Copyright (c) 2020 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.4
@@ -15,6 +15,7 @@ MouseArea
     property string text: ""
 
     hoverEnabled: _root.enabled
+    acceptedButtons: Qt.NoButton
 
     onExited: Tooltip.hideText()
     onCanceled: Tooltip.hideText()
