@@ -348,7 +348,7 @@ ListView
                     Connections
                     {
                         target: actionButton.item
-                        onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
+                        function onClicked() { base.model.actionTriggered(message.model_id, modelData.action_id) }
                     }
                 }
             }
@@ -417,7 +417,7 @@ ListView
                     Connections
                     {
                         target: actionButton.item
-                        onClicked: base.model.actionTriggered(message.model_id, modelData.action_id)
+                        function onClicked() { base.model.actionTriggered(message.model_id, modelData.action_id) }
                     }
                 }
             }
