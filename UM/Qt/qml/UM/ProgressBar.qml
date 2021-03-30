@@ -1,8 +1,8 @@
 // Copyright (c) 2019 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
-import QtQuick 2.10
-import QtQuick.Controls 2.3 as Controls
+import QtQuick 2.15
+import QtQuick.Controls 2.15 as Controls
 
 import UM 1.3 as UM
 
