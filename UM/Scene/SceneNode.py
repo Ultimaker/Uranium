@@ -375,7 +375,7 @@ class SceneNode:
 
         return MeshData(vertices = self.getMeshDataTransformedVertices(), normals = self.getMeshDataTransformedNormals())
 
-    def getMeshDataTransformedVertices(self) -> numpy.ndarray:
+    def getMeshDataTransformedVertices(self) -> Optional[numpy.ndarray]:
         """Get the transformed vertices from this scene node/object, based on the transformation of scene nodes wrt root.
 
         If this node is a group, it will recursively concatenate all child nodes/objects.
@@ -395,7 +395,7 @@ class SceneNode:
                 transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation(copy=False)).getVertices()
         return transformed_vertices
 
-    def getMeshDataTransformedNormals(self) -> numpy.ndarray:
+    def getMeshDataTransformedNormals(self) -> Optional[numpy.ndarray]:
         """Get the transformed normals from this scene node/object, based on the transformation of scene nodes wrt root.
 
         If this node is a group, it will recursively concatenate all child nodes/objects.

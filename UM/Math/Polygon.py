@@ -32,7 +32,8 @@ class Polygon:
         return Polygon(points = numpy.array(points, numpy.float32))
 
     def __init__(self, points: Optional[Union[numpy.ndarray, List]] = None):
-        self._points = NumPyUtil.immutableNDArray(points)
+        if points is not None:
+            self._points = NumPyUtil.immutableNDArray(points)
 
     def __eq__(self, other):
         if self is other:
@@ -61,7 +62,7 @@ class Polygon:
     def isValid(self) -> bool:
         return bool(self._points is not None and len(self._points) >= 3)
 
-    def getPoints(self) -> numpy.array:
+    def getPoints(self) -> numpy.ndarray:
         return self._points
 
     def project(self, normal) -> Tuple[float, float]:
