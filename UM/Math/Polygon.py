@@ -34,6 +34,8 @@ class Polygon:
     def __init__(self, points: Optional[Union[numpy.ndarray, List]] = None):
         if points is not None:
             self._points = NumPyUtil.immutableNDArray(points)
+        else:
+            self._points = NumPyUtil.immutableNDArray([])
 
     def __eq__(self, other):
         if self is other:
