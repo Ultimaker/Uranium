@@ -110,7 +110,7 @@ def _runHttpServer() -> "threading.Thread":
     def _runServer():
         site = server.Site(RootResource())
         reactor.listenTCP(8080, site)
-        reactor.run()
+        reactor.run(installSignalHandlers= 0)
 
     t = threading.Thread(target = _runServer)
     t.start()
