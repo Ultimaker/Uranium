@@ -339,7 +339,7 @@ class Trust:
 
         try:
             with open(public_key_filename, "rb") as file:
-                self._public_key = load_pem_public_key(file.read(), backend = default_backend())
+                self._public_key = cast(RSAPublicKey, load_pem_public_key(file.read(), backend = default_backend()))
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             self._public_key = None
             raise Exception("e", "Couldn't load public-key '{0}'.".format(public_key_filename))
