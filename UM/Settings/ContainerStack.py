@@ -53,7 +53,7 @@ MimeTypeDatabase.addMimeType(
 class ContainerStack(QObject, ContainerInterface, PluginObject):
     """A stack of setting containers to handle setting value retrieval."""
 
-    Version = 4  # type: int
+    Version = 5  # type: int
 
     def __init__(self, stack_id: str) -> None:
         """Constructor
