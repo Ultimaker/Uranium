@@ -27,7 +27,7 @@ class Preferences:
     The application preferences can be gotten from the getPreferences() function in Application
     """
 
-    Version = 6
+    Version = 7
 
     def __init__(self) -> None:
         super().__init__()
