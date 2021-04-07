@@ -51,7 +51,7 @@ class Matrix:
     # axis sequences for Euler angles
     _NEXT_AXIS = [1, 2, 0, 1]
 
-    def __init__(self, data: Optional[Union[List[List[float]], numpy.array]] = None) -> None:
+    def __init__(self, data: Optional[Union[List[List[float]], numpy.ndarray]] = None) -> None:
         if data is None:
             self._data = numpy.identity(4, dtype = numpy.float64)
         else:
@@ -213,7 +213,7 @@ class Matrix:
 
         sina = math.sin(angle)
         cosa = math.cos(angle)
-        direction_data = self._unitVector(direction.getData())
+        direction_data = cast(numpy.ndarray, self._unitVector(direction.getData()))
         # rotation matrix around unit vector
         R = numpy.diag([cosa, cosa, cosa])
         R += numpy.outer(direction_data, direction_data) * (1.0 - cosa)
@@ -225,8 +225,8 @@ class Matrix:
         M[:3, :3] = R
         if point is not None:
             # rotation not around origin
-            point = numpy.array(point[:3], dtype = numpy.float64, copy=False)
-            M[:3, 3] = point - numpy.dot(R, point)
+            point2 = numpy.array(point[:3], dtype = numpy.float64, copy=False)
+            M[:3, 3] = point2 - numpy.dot(R, point2)
         self._data = M
 
     def compose(self, scale: Vector = None, shear: Vector = None, angles: Vector = None, translate: Vector = None, perspective: Vector = None, mirror: Vector = None) -> None:
@@ -513,7 +513,7 @@ class Matrix:
 
         return Vector(data = T), Matrix(data=Rmat), Vector(data = numpy.array([sx, sy, sz])), Vector(data=numpy.array([sxy, sxz, syz]))
 
-    def _unitVector(self, data: numpy.array, axis: Optional[int] = None, out: Optional[numpy.array] = None) -> numpy.array:
+    def _unitVector(self, data: numpy.ndarray, axis: Optional[int] = None, out: Optional[numpy.ndarray] = None) -> Optional[numpy.ndarray]:
         """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
         >>> matrix = Matrix()
         >>> v0 = numpy.random.random(3)
@@ -554,6 +554,7 @@ class Matrix:
         data /= length
         if out is None:
             return data
+        return None
 
     def __repr__(self) -> str:
         return "Matrix( {0} )".format(self._data)

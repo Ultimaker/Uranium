@@ -6,7 +6,7 @@ import numpy.linalg
 import math
 from UM.Math.Float import Float
 
-from typing import Optional, Any, TYPE_CHECKING
+from typing import Optional, Any, TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
     from UM.Math.Matrix import Matrix
@@ -98,7 +98,7 @@ class Vector:
 
         data = numpy.array(data, dtype = numpy.float64, copy = True)
         if data.ndim == 1:
-            return math.sqrt(numpy.dot(data, data))
+            return numpy.array([math.sqrt(numpy.dot(data, data))])
         data *= data
         out = numpy.atleast_1d(numpy.sum(data))
         numpy.sqrt(out, out)
@@ -121,7 +121,7 @@ class Vector:
         d[2] = self._data[2]
         d[3] = 1.0
 
-        d = d.dot(matrix.getData())
+        d = cast(numpy.ndarray, d.dot(matrix.getData()))
 
         return Vector(d[0], d[1], d[2])
 
@@ -132,7 +132,7 @@ class Vector:
         d[2] = self._data[2]
         d[3] = 1.0
 
-        d = matrix.getData().dot(d)
+        d = cast(numpy.ndarray, matrix.getData().dot(d))
 
         return Vector(d[0], d[1], d[2])
 

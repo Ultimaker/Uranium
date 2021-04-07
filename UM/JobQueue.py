@@ -43,7 +43,7 @@ class JobQueue:
         if thread_count <= 0:
             thread_count = 1  # Assume we can run at least one thread in parallel (as well as the main thread).
 
-        self._threads = [_Worker(self) for t in range(thread_count)]
+        self._threads = [_Worker(self, name = "JobQueWorker [%s]" % t) for t in range(thread_count)]
 
         self._semaphore = threading.Semaphore(0)    # type: threading.Semaphore
         self._jobs = []                             # type: List[Job]
@@ -113,8 +113,9 @@ class JobQueue:
 class _Worker(threading.Thread):
     """A worker thread that can process jobs from the JobQueue."""
 
-    def __init__(self, queue: JobQueue) -> None:
-        super().__init__()
+    def __init__(self, queue: JobQueue, name = None) -> None:
+        super().__init__(name = name)
+        self._name = name
         self._queue = queue
 
     def run(self) -> None:
@@ -131,7 +132,7 @@ class _Worker(threading.Thread):
             try:
                 job.run()
             except Exception as e:
-                Logger.logException("e", "Job %s caused an exception", str(job))
+                Logger.logException("e", "Job %s caused an exception on worker %s", str(job), self._name)
                 job.setError(e)
 
             job._running = False
