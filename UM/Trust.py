@@ -5,7 +5,7 @@ import base64
 import json
 import os
 from pathlib import Path
-from typing import Callable, Dict, Optional, Tuple, List
+from typing import Callable, Dict, Optional, Tuple, List, cast
 
 # Note that we unfortunately need to use 'hazmat' code, as there apparently is no way to do what we want otherwise.
 # (Even if what we want should be relatively commonplace in security.)
@@ -212,7 +212,7 @@ class TrustBasics:
             password_bytes = None if optional_password is None else optional_password.encode()
             with open(private_filename, "rb") as file:
                 private_key = load_pem_private_key(file.read(), backend=default_backend(), password=password_bytes)
-                return private_key
+                return cast(RSAPrivateKey, private_key)
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Couldn't load private-key.")
         return None
@@ -339,7 +339,7 @@ class Trust:
 
         try:
             with open(public_key_filename, "rb") as file:
-                self._public_key = load_pem_public_key(file.read(), backend = default_backend())
+                self._public_key = cast(RSAPublicKey, load_pem_public_key(file.read(), backend = default_backend()))
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             self._public_key = None
             raise Exception("e", "Couldn't load public-key '{0}'.".format(public_key_filename))

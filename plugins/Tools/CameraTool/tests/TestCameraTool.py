@@ -6,6 +6,13 @@ import os
 from UM.Event import MouseEvent
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+# Workaround for a race condition on certain systems where there
+# is a race condition between Arcus and PyQt. Importing Arcus
+# first seems to prevent Sip from going into a state where it
+# tries to create PyQt objects on a non-main thread.
+import Arcus  # @UnusedImport
+
 from UM.Math.Vector import Vector
 import CameraTool
 import pytest

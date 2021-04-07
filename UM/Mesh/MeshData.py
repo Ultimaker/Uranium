@@ -235,7 +235,7 @@ class MeshData:
 
         if self._vertices is None:
             return None
-        return self._vertices.tostring()
+        return self._vertices.tobytes()
 
     def getNormalsAsByteArray(self) -> Optional[bytes]:
         """Get all normals of this mesh as a bytearray
@@ -245,7 +245,7 @@ class MeshData:
 
         if self._normals is None:
             return None
-        return self._normals.tostring()
+        return self._normals.tobytes()
 
     def getIndicesAsByteArray(self) -> Optional[bytes]:
         """Get all indices as a bytearray
@@ -255,17 +255,17 @@ class MeshData:
 
         if self._indices is None:
             return None
-        return self._indices.tostring()
+        return self._indices.tobytes()
 
     def getColorsAsByteArray(self) -> Optional[bytes]:
         if self._colors is None:
             return None
-        return self._colors.tostring()
+        return self._colors.tobytes()
 
     def getUVCoordinatesAsByteArray(self) -> Optional[bytes]:
         if self._uvs is None:
             return None
-        return self._uvs.tostring()
+        return self._uvs.tobytes()
 
     def _computeConvexHull(self) -> None:
         """Convex hull handling"""
