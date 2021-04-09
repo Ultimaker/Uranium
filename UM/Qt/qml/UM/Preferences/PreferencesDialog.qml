@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Ultimaker B.V.
+// Copyright (c) 2021 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
@@ -24,6 +24,7 @@ Dialog
     property int currentPage: 0;
     onCurrentPageChanged:
     {
+        pagesList.selection.clear();
         pagesList.selection.select(currentPage);
     }
 

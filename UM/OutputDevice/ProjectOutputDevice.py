@@ -7,11 +7,13 @@ from PyQt5.QtCore import pyqtSignal, QObject
 
 from UM.Application import Application
 from UM.OutputDevice.OutputDevice import OutputDevice
+from UM.Signal import signalemitter
 from UM.i18n import i18nCatalog
 
 catalog = i18nCatalog("uranium")
 
 
+@signalemitter
 class ProjectOutputDevice(QObject, OutputDevice):
     """
     Extends the OutputDevice class for OutputeDevices that support saving project files.
