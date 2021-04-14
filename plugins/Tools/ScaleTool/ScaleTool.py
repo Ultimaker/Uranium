@@ -1,10 +1,11 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import List, Tuple, TYPE_CHECKING, Optional
 
 from PyQt5.QtCore import Qt
 
 from UM.Event import Event, MouseEvent, KeyEvent
+from UM.Logger import Logger
 from UM.Math.Float import Float
 from UM.Math.Matrix import Matrix
 from UM.Math.Plane import Plane
@@ -465,8 +466,11 @@ class ScaleTool(Tool):
     def _getSVDRotationFromMatrix(self, matrix):
         result = Matrix()
         rotation_data = matrix.getData()[:3, :3]
-        U, s, Vh = scipy.linalg.svd(rotation_data)
-        result._data[:3, :3] = U.dot(Vh)
+        try:
+            U, s, Vh = scipy.linalg.svd(rotation_data)
+            result._data[:3, :3] = U.dot(Vh)
+        except ValueError as ex:
+            Logger.log("e", "Could not perform SVD for matrix {} because {}.".format(str(rotation_data), str(ex)))
         return result
 
     def _getExtents(self, node, matrix):
