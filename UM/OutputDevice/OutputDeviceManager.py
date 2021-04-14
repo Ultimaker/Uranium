@@ -262,12 +262,13 @@ class OutputDeviceManager:
         self._project_output_devices[device.getId()] = device
         device.enabledChanged.connect(self.projectOutputDevicesChanged.emit)
 
-        if device.add_to_output_devices and device.enabled:
-            self.addOutputDevice(device)
-        else:
-            # Call the connectWriteSignalsToDevice(..) only if addOutputDevice(..) function hasn't been called already
-            # to avoid connecting the signals twice
-            self.connectWriteSignalsToDevice(device)
+        if device.enabled:
+            if device.add_to_output_devices:
+                self.addOutputDevice(device)
+            else:
+                # Call the connectWriteSignalsToDevice(..) only if addOutputDevice(..) function hasn't been called already
+                # to avoid connecting the signals twice
+                self.connectWriteSignalsToDevice(device)
 
         self.projectOutputDevicesChanged.emit()
 
