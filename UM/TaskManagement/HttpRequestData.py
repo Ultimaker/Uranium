@@ -70,7 +70,7 @@ class HttpRequestData(QObject):
         self._timeout_timer = QTimer(parent = self)
         if self._timeout is not None:
             self._timeout_timer.setSingleShot(True)
-            timeout_check_interval = self._timeout * 1000 * (1 + self.TIMEOUT_CHECK_TOLERANCE)
+            timeout_check_interval = int(self._timeout * 1000 * (1 + self.TIMEOUT_CHECK_TOLERANCE))
             self._timeout_timer.setInterval(timeout_check_interval)
             self._timeout_timer.timeout.connect(self._onTimeoutTimerTriggered)
 
