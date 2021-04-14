@@ -470,7 +470,7 @@ class ScaleTool(Tool):
             U, s, Vh = scipy.linalg.svd(rotation_data)
             result._data[:3, :3] = U.dot(Vh)
         except ValueError as ex:
-            Logger.log("Could not perform SVD for matrix {} because {}.".format(str(rotation_data), str(ex)))
+            Logger.log("e", "Could not perform SVD for matrix {} because {}.".format(str(rotation_data), str(ex)))
         return result
 
     def _getExtents(self, node, matrix):
