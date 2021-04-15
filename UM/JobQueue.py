@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import multiprocessing
@@ -43,7 +43,7 @@ class JobQueue:
         if thread_count <= 0:
             thread_count = 1  # Assume we can run at least one thread in parallel (as well as the main thread).
 
-        self._threads = [_Worker(self, name = "JobQueWorker [%s]" % t) for t in range(thread_count)]
+        self._threads = [_Worker(self, name = "JobQueueWorker [%s]" % t) for t in range(thread_count)]
 
         self._semaphore = threading.Semaphore(0)    # type: threading.Semaphore
         self._jobs = []                             # type: List[Job]
