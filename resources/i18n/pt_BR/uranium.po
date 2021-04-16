@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.9\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2021-04-02 16:35+0200\n"
-"PO-Revision-Date: 2020-10-25 08:30+0100\n"
+"PO-Revision-Date: 2021-04-11 17:48+0200\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -15,6 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -34,7 +35,7 @@ msgstr "Mover"
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr "Mover Modelo"
+msgstr "Move Modelo"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
@@ -44,7 +45,7 @@ msgstr "Rotacionar"
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
-msgstr "Rotacionar Modelo"
+msgstr "Rotaciona Modelo"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
 msgctxt "@label"
@@ -64,7 +65,7 @@ msgstr "Escala"
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr "Redimensionar Modelo"
+msgstr "Redimensiona Modelo"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
@@ -149,17 +150,17 @@ msgstr "Arquivo Local"
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
-msgstr ""
+msgstr "Salvar no Disco"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
-msgstr ""
+msgstr "Salva no Disco"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
-msgstr ""
+msgstr "Salvar no Disco"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
@@ -496,18 +497,18 @@ msgstr "Carregando"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
-msgstr ""
+msgstr "Não há modelos em <filename>{0}</filename>."
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
 msgctxt "@info:title"
 msgid "No Models in File"
-msgstr ""
+msgstr "Sem Modelos no Arquivo"
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
+msgstr "Falha em carregar <filename>{0}</filename>. O arquivo pode estar corrompido, inacessível ou não conter nenhum modelo."
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:33
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
