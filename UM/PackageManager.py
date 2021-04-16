@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -44,14 +44,18 @@ class PackageManager(QObject):
                 continue
 
             # Load all JSON files that are located in the bundled_packages directory.
-            for file_name in os.listdir(search_path):
-                if not file_name.endswith(".json"):
-                    continue
-                file_path = os.path.join(search_path, file_name)
-                if not os.path.isfile(file_path):
-                    continue
-                self._bundled_package_management_file_paths.append(file_path)
-                Logger.log("i", "Found bundled packages JSON file: {location}".format(location = file_path))
+            try:
+                for file_name in os.listdir(search_path):
+                    if not file_name.endswith(".json"):
+                        continue
+                    file_path = os.path.join(search_path, file_name)
+                    if not os.path.isfile(file_path):
+                        continue
+                    self._bundled_package_management_file_paths.append(file_path)
+                    Logger.log("i", "Found bundled packages JSON file: {location}".format(location = file_path))
+            except EnvironmentError as e:  # Unable to read directory. Could be corrupt disk or insufficient access to list the directory.
+                Logger.log("e", f"Unable to read package directory to search for packages JSON files: {str(e)}")
+                pass
 
         for search_path in (Resources.getDataStoragePath(), Resources.getConfigStoragePath()):
             candidate_user_path = os.path.join(search_path, "packages.json")
