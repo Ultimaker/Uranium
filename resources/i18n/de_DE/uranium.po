@@ -150,17 +150,17 @@ msgstr "Lokale Datei"
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
-msgstr ""
+msgstr "Auf Festplatte speichern"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
-msgstr ""
+msgstr "Auf Festplatte speichern"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
-msgstr ""
+msgstr "Auf Festplatte speichern"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
@@ -497,18 +497,18 @@ msgstr "Wird geladen"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
-msgstr ""
+msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
 msgctxt "@info:title"
 msgid "No Models in File"
-msgstr ""
+msgstr "Keine Modelle in der Datei"
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
+msgstr "<filename>{0}</filename> konnte nicht geladen werden. Die Datei könnte beschädigt oder unzugänglich sein, oder sie enthielt keine Modelle."
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:33
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21

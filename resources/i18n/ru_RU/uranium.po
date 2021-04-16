@@ -150,17 +150,17 @@ msgstr "Локальный файл"
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
-msgstr ""
+msgstr "Сохранить на диск"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
-msgstr ""
+msgstr "Сохранить на диск"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
-msgstr ""
+msgstr "Сохранить на диск"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
@@ -500,18 +500,18 @@ msgstr "Загрузка"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
-msgstr ""
+msgstr "Там, где нет моделей в <filename>{0}</filename>."
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
 msgctxt "@info:title"
 msgid "No Models in File"
-msgstr ""
+msgstr "Нет моделей в файле"
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
+msgstr "Не удалось загрузить <filename>{0}</filename>. Возможно, файл поврежден, недоступен или не содержит моделей."
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:33
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
