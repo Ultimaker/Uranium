@@ -6,6 +6,7 @@ import os  # To remove duplicate files.
 import os.path  # To re-format files with their proper file extension but with a version number in between.
 import shutil  # To move files in constant-time.
 
+from UM.Logger import Logger
 from UM.Resources import Resources  # To get the central storage location.
 from UM.Version import Version  # To track version numbers of these files.
 
@@ -36,6 +37,7 @@ class CentralFileStorage:
         :param version: A version number for the file.
         """
         if not os.path.exists(file_path):
+            Logger.debug(f"{file_id} {str(version)} was already stored centrally.")
             return
         storage_path = cls._getFilePath(file_id, version)
 
@@ -45,8 +47,10 @@ class CentralFileStorage:
             if new_file_hash != stored_file_hash:
                 raise FileExistsError(f"Central file storage already has a file with ID {file_id} and version {str(version)}, but it's different.")
             os.remove(file_path)
+            Logger.info(f"{file_id} {str(version)} was already stored centrally. Removing duplicate.")
         else:
             shutil.move(file_path, storage_path)
+            Logger.info(f"Storing new file {file_id} {str(version)}.")
 
     @classmethod
     def retrieve(cls, file_id: str, sha256_hash: str, version: Version = Version("1.0.0")) -> str:
