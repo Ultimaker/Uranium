@@ -18,10 +18,13 @@ def setup_function():
         f.write(TEST_FILE_CONTENTS)
 
 def teardown_function():
-    if os.path.exists(TEST_FILE_PATH):
-        os.remove(TEST_FILE_PATH)
-    if os.path.exists("test_central_storage"):
-        shutil.rmtree("test_central_storage")
+    try:
+        if os.path.exists(TEST_FILE_PATH):
+            os.remove(TEST_FILE_PATH)
+        if os.path.exists("test_central_storage"):
+            shutil.rmtree("test_central_storage")
+    except EnvironmentError:
+        pass
 
 def test_storeRetrieve():
     """
