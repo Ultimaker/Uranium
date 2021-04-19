@@ -55,7 +55,15 @@ class CentralFileStorage:
         :param version: The version number of the file to retrieve.
         :return: A path to the location of the centrally stored file.
         """
-        pass  # TODO.
+        storage_path = cls._get_file_path(file_id, version)
+
+        if not os.path.exists(storage_path):
+            raise FileNotFoundError(f"Central file storage doesn't have a file with ID {file_id} and version {str(version)}.")
+        stored_file_hash = cls._hash_file(storage_path)
+        if stored_file_hash != sha256_hash:
+            raise IOError(f"The centrally stored file with ID {file_id} and version {str(version)} does not match with the given file hash.")
+
+        return storage_path
 
     @classmethod
     def _get_file_path(cls, file_id: str, version: Version) -> str:
