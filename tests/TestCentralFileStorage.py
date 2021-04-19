@@ -83,3 +83,10 @@ def test_storeVersions():
     assert stored_path1 != stored_path2
     assert open(stored_path1, "rb").read() == TEST_FILE_CONTENTS
     assert open(stored_path2, "rb").read() == TEST_FILE_CONTENTS2
+
+def test_retrieveNonExistent():
+    """
+    Tests retrieving a file that is not stored in the central location.
+    """
+    with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
+        pytest.raises(FileNotFoundError, lambda: CentralFileStorage.retrieve("non_existent_file", "0123456789ABCDEF"))
