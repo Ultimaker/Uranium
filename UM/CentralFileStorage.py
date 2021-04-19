@@ -37,11 +37,11 @@ class CentralFileStorage:
         """
         if not os.path.exists(file_path):
             return
-        storage_path = cls._get_file_path(file_id, version)
+        storage_path = cls._getFilePath(file_id, version)
 
         if os.path.exists(storage_path):  # File already exists. Check if it's the same.
-            new_file_hash = cls._hash_file(file_path)
-            stored_file_hash = cls._hash_file(storage_path)
+            new_file_hash = cls._hashFile(file_path)
+            stored_file_hash = cls._hashFile(storage_path)
             if new_file_hash != stored_file_hash:
                 raise FileExistsError(f"Central file storage already has a file with ID {file_id} and version {str(version)}, but it's different.")
             os.remove(file_path)
@@ -57,18 +57,18 @@ class CentralFileStorage:
         :param version: The version number of the file to retrieve.
         :return: A path to the location of the centrally stored file.
         """
-        storage_path = cls._get_file_path(file_id, version)
+        storage_path = cls._getFilePath(file_id, version)
 
         if not os.path.exists(storage_path):
             raise FileNotFoundError(f"Central file storage doesn't have a file with ID {file_id} and version {str(version)}.")
-        stored_file_hash = cls._hash_file(storage_path)
+        stored_file_hash = cls._hashFile(storage_path)
         if stored_file_hash != sha256_hash:
             raise IOError(f"The centrally stored file with ID {file_id} and version {str(version)} does not match with the given file hash.")
 
         return storage_path
 
     @classmethod
-    def _get_file_path(cls, file_id: str, version: Version) -> str:
+    def _getFilePath(cls, file_id: str, version: Version) -> str:
         """
         Get a canonical file path for a hypothetical file with a specified ID and version.
         :param file_id: The name of the file to get a name for.
@@ -79,7 +79,7 @@ class CentralFileStorage:
         return os.path.join(Resources._getDataStorageRootPath(), "storage", file_name)
 
     @classmethod
-    def _hash_file(cls, file_path: str) -> str:
+    def _hashFile(cls, file_path: str) -> str:
         """
         Returns a SHA-256 hash of the specified file.
         :param file_path: The path to a file to get the hash of.
