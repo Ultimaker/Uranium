@@ -23,7 +23,7 @@ class Theme(QObject):
         self._engine = engine
         self._styles = None  # type: Optional[QObject]
         self._path = ""
-        self._icons = {}  # type: Dict[str, QUrl]
+        self._icons = {}  # type: Dict[str, Dict[str, QUrl]]
         self._images = {}  # type: Dict[str, QUrl]
 
         # Workaround for incorrect default font on Windows
@@ -116,10 +116,14 @@ class Theme(QObject):
         Logger.log("w", "No size %s defined in Theme", size)
         return QSizeF()
 
+    @pyqtSlot(str, str, result = "QUrl")
     @pyqtSlot(str, result = "QUrl")
-    def getIcon(self, icon_name: str) -> QUrl:
-        if icon_name in self._icons:
-            return self._icons[icon_name]
+    def getIcon(self, icon_name: str, px: str = "24") -> QUrl:
+        if px in self._icons:
+            if icon_name in self._icons[px]:
+                return self._icons[px][icon_name]
+            elif icon_name in self._icons["icons"]:  # Retrieve the "old" icon from the base icon folder
+                return self._icons["icons"][icon_name]
 
         # We don't log this anymore since we have new fallback behavior to load the icon from a plugin folder
         # Logger.log("w", "No icon %s defined in Theme", icon_name)
@@ -222,9 +226,12 @@ class Theme(QObject):
 
         iconsdir = os.path.join(path, "icons")
         if os.path.isdir(iconsdir):
-            for icon in os.listdir(iconsdir):
-                name = os.path.splitext(icon)[0]
-                self._icons[name] = QUrl.fromLocalFile(os.path.join(iconsdir, icon))
+            for base_path, _, icons in os.walk(iconsdir):
+                px = base_path.split(os.sep)[-1]
+                self._icons[px] = {}
+                for icon in icons:
+                    name = os.path.splitext(icon)[0]
+                    self._icons[px][name] = QUrl.fromLocalFile(os.path.join(base_path, icon))
 
         imagesdir = os.path.join(path, "images")
         if os.path.isdir(imagesdir):
@@ -280,4 +287,3 @@ class Theme(QObject):
 
 def createTheme(engine, script_engine = None):
     return Theme.getInstance(engine)
-
