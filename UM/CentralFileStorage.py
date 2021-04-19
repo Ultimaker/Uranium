@@ -35,6 +35,8 @@ class CentralFileStorage:
         :param file_path: The path to the file to store in the central file storage.
         :param file_id: A name for the file to store.
         :param version: A version number for the file.
+        :raises FileExistsError: There is already a centrally stored file with that name and version, but it's
+        different.
         """
         if not os.path.exists(file_path):
             Logger.debug(f"{file_id} {str(version)} was already stored centrally.")
@@ -60,6 +62,8 @@ class CentralFileStorage:
         :param sha256_hash: A SHA-256 hash of the file you expect to receive from the central storage.
         :param version: The version number of the file to retrieve.
         :return: A path to the location of the centrally stored file.
+        :raises FileNotFoundError: There is no file stored with that name and version.
+        :raises IOError: The hash of the file is incorrect. Opening this file could be a security risk.
         """
         storage_path = cls._getFilePath(file_id, version)
 
