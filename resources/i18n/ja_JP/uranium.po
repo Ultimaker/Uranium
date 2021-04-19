@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.9\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2021-04-02 16:35+0200\n"
-"PO-Revision-Date: 2020-08-21 13:40+0200\n"
+"PO-Revision-Date: 2021-04-16 15:10+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, Brule <jason@brule.co.jp>, Japanese <info@bothof.nl>\n"
 "Language: ja_JP\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -150,17 +150,17 @@ msgstr "ローカルファイル"
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
-msgstr ""
+msgstr "ディスクに保存する"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
-msgstr ""
+msgstr "ディスクに保存する"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
-msgstr ""
+msgstr "ディスクに保存する"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
@@ -497,18 +497,18 @@ msgstr "読み込み中"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
-msgstr ""
+msgstr "<filename>{0}</filename>にはモデルがありませんでした。"
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
 msgctxt "@info:title"
 msgid "No Models in File"
-msgstr ""
+msgstr "ファイルにモデルがありません"
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
+msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできないか、モデルが含まれていませんでした。"
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:33
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21

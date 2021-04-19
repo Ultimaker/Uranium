@@ -7,9 +7,9 @@ msgstr ""
 "Project-Id-Version: Uranium 4.9\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2021-04-02 16:35+0200\n"
-"PO-Revision-Date: 2020-11-01 18:27+0800\n"
-"Last-Translator: Zhang Heh Ji <dinowchang@gmail.com>\n"
-"Language-Team: Zhang Heh Ji <dinowchang@gmail.com>\n"
+"PO-Revision-Date: 2021-04-16 20:21+0200\n"
+"Last-Translator: Valen Chang <carf17771@gmail.com>\n"
+"Language-Team: Valen Chang <carf17771@gmail.com>/Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Lang-Code: xx\n"
 "Country-Code: XX\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -152,17 +152,17 @@ msgstr "本機檔案"
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
-msgstr ""
+msgstr "儲存至磁碟"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
-msgstr ""
+msgstr "儲存至磁碟"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
-msgstr ""
+msgstr "儲存至磁碟"
 
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
@@ -496,18 +496,18 @@ msgstr "載入中"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
-msgstr ""
+msgstr "無法找到模型在 <filename>{0}</filename>."
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
 msgctxt "@info:title"
 msgid "No Models in File"
-msgstr ""
+msgstr "檔案中無模型"
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
+msgstr "載入 <filename>{0}</filename>失敗。 這個檔案可能已損壞、無法存取或不包含任何模型。"
 
 #: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:33
 #: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
