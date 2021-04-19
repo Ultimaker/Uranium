@@ -66,6 +66,14 @@ def test_storeDuplicate():
         CentralFileStorage.store(TEST_FILE_PATH + ".copy.txt", "myfile")  # Shouldn't raise error. File contents are identical.
         assert not os.path.exists(TEST_FILE_PATH + ".copy.txt")  # Duplicate must be removed.
 
+def test_storeConflict():
+    """
+    Tests storing two different files under the same ID/version.
+    """
+    with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
+        CentralFileStorage.store(TEST_FILE_PATH, "myfile")
+        pytest.raises(FileExistsError, lambda: CentralFileStorage.store(TEST_FILE_PATH2, "myfile"))
+
 def test_storeVersions():
     with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
         CentralFileStorage.store(TEST_FILE_PATH, "myfile", Version("1.0.0"))
