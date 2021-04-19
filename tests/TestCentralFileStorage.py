@@ -20,11 +20,15 @@ TEST_FILE_HASH2 = hashlib.sha256(TEST_FILE_CONTENTS2).hexdigest()
 def setup_function():
     with open(TEST_FILE_PATH, "wb") as f:
         f.write(TEST_FILE_CONTENTS)
+    with open(TEST_FILE_PATH2, "wb") as f:
+        f.write(TEST_FILE_CONTENTS2)
 
 def teardown_function():
     try:
         if os.path.exists(TEST_FILE_PATH):
             os.remove(TEST_FILE_PATH)
+        if os.path.exists(TEST_FILE_PATH2):
+            os.remove(TEST_FILE_PATH2)
         if os.path.exists("test_central_storage"):
             shutil.rmtree("test_central_storage")
     except EnvironmentError:
@@ -48,3 +52,13 @@ def test_storeNonExistent():
     """
     with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
         CentralFileStorage.store("non_existent_file.txt", "my_non_existent_file")  # Shouldn't raise error.
+
+def test_storeVersions():
+    with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
+        CentralFileStorage.store(TEST_FILE_PATH, "myfile", Version("1.0.0"))
+        CentralFileStorage.store(TEST_FILE_PATH2, "myfile", Version("1.1.0"))
+        stored_path1 = CentralFileStorage.retrieve("myfile", TEST_FILE_HASH, Version("1.0.0"))
+        stored_path2 = CentralFileStorage.retrieve("myfile", TEST_FILE_HASH2, Version("1.1.0"))
+    assert stored_path1 != stored_path2
+    assert open(stored_path1, "rb").read() == TEST_FILE_CONTENTS
+    assert open(stored_path2, "rb").read() == TEST_FILE_CONTENTS2
