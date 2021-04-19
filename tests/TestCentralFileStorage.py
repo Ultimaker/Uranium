@@ -32,4 +32,6 @@ def test_storeRetrieve():
     """
     with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
         CentralFileStorage.store(TEST_FILE_PATH, "myfile")
-        CentralFileStorage.retrieve("myfile", TEST_FILE_HASH)
+        stored_path = CentralFileStorage.retrieve("myfile", TEST_FILE_HASH)
+    assert os.path.exists(stored_path)
+    assert open(stored_path, "rb").read() == TEST_FILE_CONTENTS
