@@ -1,7 +1,13 @@
 # Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Version import Version
+import hashlib  # To generate cryptographic hashes of files.
+import os  # To remove duplicate files.
+import os.path  # To re-format files with their proper file extension but with a version number in between.
+import shutil  # To move files in constant-time.
+
+from UM.Resources import Resources  # To get the central storage location.
+from UM.Version import Version  # To track version numbers of these files.
 
 class CentralFileStorage:
     """
@@ -29,7 +35,16 @@ class CentralFileStorage:
         :param file_id: A name for the file to store.
         :param version: A version number for the file.
         """
-        pass  # TODO.
+        storage_path = cls._get_file_path(file_id, version)
+
+        if os.path.exists(storage_path):  # File already exists. Check if it's the same.
+            new_file_hash = cls._hash_file(file_path)
+            stored_file_hash = cls._hash_file(storage_path)
+            if new_file_hash != stored_file_hash:
+                raise FileExistsError(f"Central file storage already has a file with ID {file_id} and version {str(version)}, but it's different.")
+            os.remove(file_path)
+        else:
+            shutil.move(file_path, storage_path)
 
     @classmethod
     def retrieve(cls, file_id: str, sha256_hash: str, version: Version = Version("1.0.0")) -> str:
@@ -41,3 +56,30 @@ class CentralFileStorage:
         :return: A path to the location of the centrally stored file.
         """
         pass  # TODO.
+
+    @classmethod
+    def _get_file_path(cls, file_id: str, version: Version) -> str:
+        """
+        Get a canonical file path for a hypothetical fil with a specified ID and version.
+        :param file_id: The name of the file to get a name for.
+        :param version: The version number of the file to get a name for.
+        :return: A path to store such a file.
+        """
+        file_name = file_id + "." + str(version)
+        return os.path.join(Resources._getDataStorageRootPath(), "storage", file_name)
+
+    @classmethod
+    def _hash_file(cls, file_path: str) -> str:
+        """
+        Returns a SHA-256 hash of the specified file.
+        :param file_path: The path to a file to get the hash of.
+        :return: A cryptographic hash of the specified file.
+        """
+        block_size = 2 ** 16
+        hasher = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            contents = f.read(block_size)
+            while len(contents) > 0:
+                hasher.update(contents)
+                contents = f.read(block_size)
+        return hasher.hexdigest()
