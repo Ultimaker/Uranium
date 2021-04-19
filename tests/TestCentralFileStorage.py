@@ -8,10 +8,14 @@ import shutil  # To clean up after the test.
 import unittest.mock  # To mock the Resources class.
 
 from UM.CentralFileStorage import CentralFileStorage  # The class under test.
+from UM.Version import Version  # Storing files of different versions.
 
 TEST_FILE_PATH = "test_file.txt"
 TEST_FILE_CONTENTS = b"May thy PLA floweth into all the right spots, and none other."
 TEST_FILE_HASH = hashlib.sha256(TEST_FILE_CONTENTS).hexdigest()
+TEST_FILE_PATH2 = "test_file2.txt"
+TEST_FILE_CONTENTS2 = b"May all PVA dissolveth to the snotty goo from wence it came, for it be its natural state of being."
+TEST_FILE_HASH2 = hashlib.sha256(TEST_FILE_CONTENTS2).hexdigest()
 
 def setup_function():
     with open(TEST_FILE_PATH, "wb") as f:
@@ -35,3 +39,12 @@ def test_storeRetrieve():
         stored_path = CentralFileStorage.retrieve("myfile", TEST_FILE_HASH)
     assert os.path.exists(stored_path)
     assert open(stored_path, "rb").read() == TEST_FILE_CONTENTS
+
+def test_storeNonExistent():
+    """
+    Tests storing a file that doesn't exist.
+
+    The storage is expected to fail silently, leaving just a debug statement that it was already stored.
+    """
+    with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
+        CentralFileStorage.store("non_existent_file.txt", "my_non_existent_file")  # Shouldn't raise error.
