@@ -47,6 +47,8 @@ class CentralFileStorage:
         storage_path = cls._getFilePath(file_id, version)
 
         if os.path.exists(storage_path):  # File already exists. Check if it's the same.
+            if os.path.getsize(file_path) != os.path.getsize(storage_path):  # As quick check if files are the same, check their file sizes.
+                raise FileExistsError(f"Central file storage already has a file with ID {file_id} and version {str(version)}, but it's different.")
             new_file_hash = cls._hashFile(file_path)
             stored_file_hash = cls._hashFile(storage_path)
             if new_file_hash != stored_file_hash:
