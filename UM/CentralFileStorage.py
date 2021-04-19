@@ -38,9 +38,12 @@ class CentralFileStorage:
         :raises FileExistsError: There is already a centrally stored file with that name and version, but it's
         different.
         """
+        if not os.path.exists(cls._centralStorageLocation()):
+            os.makedirs(cls._centralStorageLocation())
         if not os.path.exists(file_path):
             Logger.debug(f"{file_id} {str(version)} was already stored centrally.")
             return
+
         storage_path = cls._getFilePath(file_id, version)
 
         if os.path.exists(storage_path):  # File already exists. Check if it's the same.
@@ -84,7 +87,15 @@ class CentralFileStorage:
         :return: A path to store such a file.
         """
         file_name = file_id + "." + str(version)
-        return os.path.join(Resources.getDataStoragePath(), "..", "storage", file_name)
+        return os.path.join(cls._centralStorageLocation(), file_name)
+
+    @classmethod
+    def _centralStorageLocation(cls) -> str:
+        """
+        Gets a directory to store things in a version-neutral location.
+        :return: A directory to store things centrally.
+        """
+        return os.path.join(Resources.getDataStoragePath(), "..", "storage")
 
     @classmethod
     def _hashFile(cls, file_path: str) -> str:
