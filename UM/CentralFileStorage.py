@@ -76,7 +76,7 @@ class CentralFileStorage:
         :return: A path to store such a file.
         """
         file_name = file_id + "." + str(version)
-        return os.path.join(Resources._getDataStorageRootPath(), "storage", file_name)
+        return os.path.join(Resources.getDataStoragePath(), "..", "storage", file_name)
 
     @classmethod
     def _hashFile(cls, file_path: str) -> str:
