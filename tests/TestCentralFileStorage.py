@@ -53,6 +53,18 @@ def test_storeNonExistent():
     with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
         CentralFileStorage.store("non_existent_file.txt", "my_non_existent_file")  # Shouldn't raise error.
 
+def test_storeDuplicate():
+    """
+    Tests storing a file twice.
+
+    The storage should make the files unique, i.e. remove the duplicate.
+    """
+    with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
+        shutil.copy(TEST_FILE_PATH, TEST_FILE_PATH + ".copy.txt")
+        CentralFileStorage.store(TEST_FILE_PATH, "myfile")
+        CentralFileStorage.store(TEST_FILE_PATH + ".copy.txt", "myfile")  # Shouldn't raise error. File contents are identical.
+        assert not os.path.exists(TEST_FILE_PATH + ".copy.txt")  # Duplicate must be removed.
+
 def test_storeVersions():
     with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
         CentralFileStorage.store(TEST_FILE_PATH, "myfile", Version("1.0.0"))
