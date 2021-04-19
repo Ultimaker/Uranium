@@ -35,6 +35,8 @@ class CentralFileStorage:
         :param file_id: A name for the file to store.
         :param version: A version number for the file.
         """
+        if not os.path.exists(file_path):
+            return
         storage_path = cls._get_file_path(file_id, version)
 
         if os.path.exists(storage_path):  # File already exists. Check if it's the same.
@@ -68,7 +70,7 @@ class CentralFileStorage:
     @classmethod
     def _get_file_path(cls, file_id: str, version: Version) -> str:
         """
-        Get a canonical file path for a hypothetical fil with a specified ID and version.
+        Get a canonical file path for a hypothetical file with a specified ID and version.
         :param file_id: The name of the file to get a name for.
         :param version: The version number of the file to get a name for.
         :return: A path to store such a file.
