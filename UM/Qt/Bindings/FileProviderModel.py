@@ -1,12 +1,15 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 from typing import Callable, Optional
 
 from PyQt5.QtCore import Qt
 from UM.FlameProfiler import pyqtSlot
+from UM.i18n import i18nCatalog
 from UM.Qt.ListModel import ListModel
 from UM.Logger import Logger
 
+i18n_catalog = i18nCatalog("uranium")
 
 class FileProviderModel(ListModel):
     NameRole = Qt.UserRole + 1
@@ -44,7 +47,7 @@ class FileProviderModel(ListModel):
         # list and handle it in the front-end by triggering the openAction when that item is selected
         self.appendItem({
             "name"         : "LocalFileProvider",
-            "displayText"  : "From Disk",
+            "displayText"  : i18n_catalog.i18nc("@menu", "From Disk"),
             "fileProvider" : None,  # it's not loaded via a plugin, so its FileProvider is empty
             "shortcut"     : "Ctrl+O",
             "priority"     : 99,  # Assign a high value to make sure it appears on top in the File->Open File(s) submenu
