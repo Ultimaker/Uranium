@@ -11,7 +11,7 @@ def getMetaData():
         "tool": {
             "name": i18n_catalog.i18nc("@action:button", "Move"),
             "description": i18n_catalog.i18nc("@info:tooltip", "Move Model"),
-            "icon": "translate",
+            "icon": "ArrowFourWay",
             "tool_panel": "TranslateTool.qml",
             "weight": -1
         }
