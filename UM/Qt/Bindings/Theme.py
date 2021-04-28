@@ -122,8 +122,8 @@ class Theme(QObject):
         if px in self._icons:
             if icon_name in self._icons[px]:
                 return self._icons[px][icon_name]
-            elif icon_name in self._icons["icons"]:  # Retrieve the "old" icon from the base icon folder
-                return self._icons["icons"][icon_name]
+        elif icon_name in self._icons["icons"]:  # Retrieve the "old" icon from the base icon folder
+            return self._icons["icons"][icon_name]
 
         # We don't log this anymore since we have new fallback behavior to load the icon from a plugin folder
         # Logger.log("w", "No icon %s defined in Theme", icon_name)
