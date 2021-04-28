@@ -237,11 +237,11 @@ class Theme(QObject):
         iconsdir = os.path.join(path, "icons")
         if os.path.isdir(iconsdir):
             for base_path, _, icons in os.walk(iconsdir):
-                px = base_path.split(os.sep)[-1]
-                self._icons[px] = {}
+                detail_level = base_path.split(os.sep)[-1]
+                self._icons[detail_level] = {}
                 for icon in icons:
                     name = os.path.splitext(icon)[0]
-                    self._icons[px][name] = QUrl.fromLocalFile(os.path.join(base_path, icon))
+                    self._icons[detail_level][name] = QUrl.fromLocalFile(os.path.join(base_path, icon))
 
         imagesdir = os.path.join(path, "images")
         if os.path.isdir(imagesdir):
