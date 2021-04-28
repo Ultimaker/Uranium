@@ -118,7 +118,7 @@ class Theme(QObject):
 
     @pyqtSlot(str, str, result = "QUrl")
     @pyqtSlot(str, result = "QUrl")
-    def getIcon(self, icon_name: str, px: str = "24") -> QUrl:
+    def getIcon(self, icon_name: str, px: str = "default") -> QUrl:
         if px in self._icons:
             if icon_name in self._icons[px]:
                 return self._icons[px][icon_name]
