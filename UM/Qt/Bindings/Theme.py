@@ -118,10 +118,20 @@ class Theme(QObject):
 
     @pyqtSlot(str, str, result = "QUrl")
     @pyqtSlot(str, result = "QUrl")
-    def getIcon(self, icon_name: str, px: str = "default") -> QUrl:
-        if px in self._icons:
-            if icon_name in self._icons[px]:
-                return self._icons[px][icon_name]
+    def getIcon(self, icon_name: str, detail_level: str = "default") -> QUrl:
+        """
+        Finds and returns the url of the requested icon. The icons are organized in folders according to their detail
+        level and the same icon may exist with more details. If a detail level is not specified, the icon will be
+        retrieved from the "default" folder. Icons with a higher detail level are recommended to be used with a bigger
+        width/height.
+
+        :param icon_name: The name of the icon to be retrieved. The same icon may exist in multiple detail levels.
+        :param detail_level: The level of detail of the icon. Choice between "low, "default", "medium", "high".
+        :return: The file url of the requested icon, in the requested detail level.
+        """
+        if detail_level in self._icons:
+            if icon_name in self._icons[detail_level]:
+                return self._icons[detail_level][icon_name]
         elif icon_name in self._icons["icons"]:  # Retrieve the "old" icon from the base icon folder
             return self._icons["icons"][icon_name]
 
