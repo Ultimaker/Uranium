@@ -108,7 +108,7 @@ ListView
                         width: UM.Theme.getSize("message_close").width
                         sourceSize.width: width
                         color: control.hovered ? UM.Theme.getColor("message_close_hover") : UM.Theme.getColor("message_close")
-                        source: UM.Theme.getIcon("cross1")
+                        source: UM.Theme.getIcon("Cancel")
                     }
 
                     label: Item {}

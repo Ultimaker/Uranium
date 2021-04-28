@@ -11,7 +11,7 @@ def getMetaData():
         "tool": {
             "name": i18n_catalog.i18nc("@label", "Scale"),
             "description": i18n_catalog.i18nc("@info:tooltip", "Scale Model"),
-            "icon": "scale",
+            "icon": "Scale",
             "tool_panel": "ScaleTool.qml",
             "weight": 0
         }
