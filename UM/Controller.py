@@ -517,7 +517,7 @@ class Controller:
                 camera.setPosition(Vector(0, 100, 700))
                 self._camera_tool.rotateCamera(angle, 0)  # type: ignore
             elif coordinate == "y":
-                if angle == 90:
+                if angle % 360 == 90:
                     # Prepare the camera for top view, so no rotation has to be applied after setting the top view.
                     camera.setPosition(Vector(0, 100, 100))
                     self._camera_tool.rotateCamera(90, 0)  # type: ignore
@@ -526,6 +526,13 @@ class Controller:
                     self.setCameraOrigin("z")
                     camera.lookAt(Vector(0, 100, 1))
                     self._camera_tool.rotateCamera(0, 0)  # type: ignore
+                elif angle % 360 == 270:
+                    camera.setPosition(Vector(0, -100, 100))
+                    self._camera_tool.rotateCamera(90, 0)  # type: ignore
+                    camera.setPosition(Vector(0, -800, 1))
+                    self.setCameraOrigin("z")
+                    camera.lookAt(Vector(0, 100, 1))
+                    self._camera_tool.rotateCamera(0, 0)
                 else:
                     camera.setPosition(Vector(0, 100, 700))
                     self._camera_tool.rotateCamera(0, angle)  # type: ignore
