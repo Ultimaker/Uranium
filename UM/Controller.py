@@ -532,7 +532,7 @@ class Controller:
                     camera.setPosition(Vector(0, -800, 1))
                     self.setCameraOrigin("z")
                     camera.lookAt(Vector(0, 100, 1))
-                    self._camera_tool.rotateCamera(0, 0)
+                    self._camera_tool.rotateCamera(0, 0)  # type: ignore
                 else:
                     camera.setPosition(Vector(0, 100, 700))
                     self._camera_tool.rotateCamera(0, angle)  # type: ignore
