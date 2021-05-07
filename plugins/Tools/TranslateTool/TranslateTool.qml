@@ -246,10 +246,7 @@ Item
     {
         target: base
         property: "xText"
-        value:
-        {
-            return base.roundFloat(UM.ActiveTool.properties.getValue("X"), 4)
-        }
+        value: base.roundFloat(UM.ActiveTool.properties.getValue("X"), 4)
     }
 
     Binding
