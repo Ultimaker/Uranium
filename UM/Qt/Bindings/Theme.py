@@ -260,8 +260,8 @@ class Theme(QObject):
                         data = json.load(f)
                         for icon in data:
                             self._deprecated_icons[icon] = data[icon]
-                except:
-                    pass
+                except (UnicodeDecodeError, json.decoder.JSONDecodeError, EnvironmentError):
+                    Logger.logException("w", "Could not parse deprecated icons list %s", deprecated_icons_file)
 
         imagesdir = os.path.join(path, "images")
         if os.path.isdir(imagesdir):
