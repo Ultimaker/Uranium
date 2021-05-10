@@ -4,6 +4,7 @@
 import json
 import os
 import sys
+import warnings
 from typing import Dict, Optional, List
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
@@ -24,6 +25,7 @@ class Theme(QObject):
         self._styles = None  # type: Optional[QObject]
         self._path = ""
         self._icons = {}  # type: Dict[str, Dict[str, QUrl]]
+        self._deprecated_icons = {} # type: Dict[str, Dict[str, str]]
         self._images = {}  # type: Dict[str, QUrl]
 
         # Workaround for incorrect default font on Windows
@@ -135,6 +137,14 @@ class Theme(QObject):
         elif icon_name in self._icons["icons"]:  # Retrieve the "old" icon from the base icon folder
             return self._icons["icons"][icon_name]
 
+        if icon_name in self._deprecated_icons:
+            new_icon = self._deprecated_icons[icon_name]["new_icon"]
+            warning = f"The icon {icon_name} is deprecated. Please use {new_icon} instead."
+
+            Logger.log("w_once", warning)
+            warnings.warn(warning, DeprecationWarning, stacklevel=2)
+            return self.getIcon(self._deprecated_icons[icon_name]["new_icon"], self._deprecated_icons[icon_name]["size"])
+
         # We don't log this anymore since we have new fallback behavior to load the icon from a plugin folder
         # Logger.log("w", "No icon %s defined in Theme", icon_name)
         return QUrl()
@@ -242,6 +252,16 @@ class Theme(QObject):
                 for icon in icons:
                     name = os.path.splitext(icon)[0]
                     self._icons[detail_level][name] = QUrl.fromLocalFile(os.path.join(base_path, icon))
+
+            deprecated_icons_file = os.path.join(iconsdir, "deprecated_icons.json")
+            if os.path.isfile(deprecated_icons_file):
+                try:
+                    with open(deprecated_icons_file, encoding="utf-8") as f:
+                        data = json.load(f)
+                        for icon in data:
+                            self._deprecated_icons[icon] = data[icon]
+                except (UnicodeDecodeError, json.decoder.JSONDecodeError, EnvironmentError):
+                    Logger.logException("w", "Could not parse deprecated icons list %s", deprecated_icons_file)
 
         imagesdir = os.path.join(path, "images")
         if os.path.isdir(imagesdir):
