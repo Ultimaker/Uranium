@@ -139,7 +139,7 @@ class Theme(QObject):
 
         if icon_name in self._deprecated_icons:
             new_icon = self._deprecated_icons[icon_name]["new_icon"]
-            warning = f"The icon {icon_name} is deprecated. Please use {new_icon} instead."
+            warning = f"The icon '{icon_name}' is deprecated. Please use icon '{new_icon}' instead."
 
             Logger.log("w_once", warning)
             warnings.warn(warning, DeprecationWarning, stacklevel=2)
