@@ -26,12 +26,17 @@ class MeshReader(FileReader):
 
         # The mesh reader may set a MIME type itself if it knows a more specific MIME type than just going by extension.
         # If not, automatically generate one from our MIME type database, going by the file extension.
-        if result.source_mime_type is None:
-            try:
-                result.source_mime_type = MimeTypeDatabase.getMimeTypeForFile(file_name)
-            except MimeTypeNotFoundError:
-                Logger.warning(f"Loaded file {file_name} has no associated MIME type.")
-                # Leave MIME type at None then.
+        if not isinstance(result, list):
+            meshes = [result]
+        else:
+            meshes = result
+        for mesh in meshes:
+            if mesh.source_mime_type is None:
+                try:
+                    mesh.source_mime_type = MimeTypeDatabase.getMimeTypeForFile(file_name)
+                except MimeTypeNotFoundError:
+                    Logger.warning(f"Loaded file {file_name} has no associated MIME type.")
+                    # Leave MIME type at None then.
 
         return result
 
