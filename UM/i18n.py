@@ -218,7 +218,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
             if gettext.find(cast(str, self.__name), path, languages = [self.__language]):
                 try:
                     self.__translation = gettext.translation(cast(str, self.__name), path, languages = [self.__language])
-                except (OSError, struct.error):
+                except (EnvironmentError, struct.error, UnicodeDecodeError):
                     Logger.warning("Corrupt or inaccessible translation file: {fname}".format(fname = self.__name))
 
         self.__require_update = False
