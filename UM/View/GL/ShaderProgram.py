@@ -3,7 +3,7 @@
 
 import ast
 import configparser
-from typing import cast, List, Union
+from typing import Any, cast, Dict, List, Union
 
 from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
 from UM.Logger import Logger
@@ -32,9 +32,9 @@ class ShaderProgram:
         self._attribute_bindings = {}
 
         self._shader_program = None
-        self._uniform_indices = {}
+        self._uniform_indices = {}  # type: Dict[str, int]
         self._attribute_indices = {}
-        self._uniform_values = {}
+        self._uniform_values = {}  # type: Dict[int, Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]]
         self._bound = False
         self._textures = {}
 
@@ -155,7 +155,7 @@ class ShaderProgram:
         if not self._shader_program.link():
             Logger.log("e", "Shader failed to link: %s", self._shader_program.log())
 
-    def setUniformValue(self, name, value, **kwargs):
+    def setUniformValue(self, name: str, value: Union[Vector, Matrix, Color, List[float], List[List[float]], float, int], **kwargs: Any) -> None:
         """Set a named uniform variable.
 
         Unless otherwise specified as argument, the specified value will be cached so that
@@ -334,7 +334,7 @@ class ShaderProgram:
     def _matrixToQMatrix4x4(self, m):
         return QMatrix4x4(m.getData().flatten())
 
-    def _setUniformValueDirect(self, uniform: int, value: Union[Vector, Matrix, Color, List[float], List[List[float]], float]) -> None:
+    def _setUniformValueDirect(self, uniform: int, value: Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]) -> None:
         if type(value) is Vector:
             value = cast(Vector, value)
             self._shader_program.setUniformValue(uniform, QVector3D(value.x, value.y, value.z))
@@ -360,4 +360,4 @@ class ShaderProgram:
             value = cast(List[List[float]], value)
             self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
         else:
-            self._shader_program.setUniformValue(uniform, cast(float, value))
+            self._shader_program.setUniformValue(uniform, cast(Union[float, int], value))
