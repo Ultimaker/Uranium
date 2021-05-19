@@ -1,8 +1,9 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import configparser
 import ast
+import configparser
+from typing import List, Union
 
 from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
 from UM.Logger import Logger
@@ -333,7 +334,7 @@ class ShaderProgram:
     def _matrixToQMatrix4x4(self, m):
         return QMatrix4x4(m.getData().flatten())
 
-    def _setUniformValueDirect(self, uniform, value):
+    def _setUniformValueDirect(self, uniform: int, value: Union[Vector, Matrix, Color, List[List[float]], float]) -> None:
         if type(value) is Vector:
             self._shader_program.setUniformValue(uniform, QVector3D(value.x, value.y, value.z))
         elif type(value) is Matrix:
