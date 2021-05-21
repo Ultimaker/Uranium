@@ -860,13 +860,14 @@ class SceneNode:
             aabb = self._mesh_data.getExtents(self.getWorldTransformation(copy = False))
 
         for child in self._children:
-            if child.getBoundingBox().minimum == child.getBoundingBox().maximum:
+            child_bb = child.getBoundingBox()
+            if child_bb is None or child_bb.minimum == child_bb.maximum:
                 # Child had a degenerate bounding box, such as an empty group. Don't count it along.
                 continue
             if aabb is None:
-                aabb = child.getBoundingBox()
+                aabb = child_bb
             else:
-                aabb = aabb + child.getBoundingBox()
+                aabb = aabb + child_bb
 
         if aabb is None:  # There is no mesh data and no children with bounding box. Use the current position then, but it's a degenerate AABB.
             position = self.getWorldPosition()
