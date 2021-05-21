@@ -855,17 +855,23 @@ class SceneNode:
         self.boundingBoxChanged.emit()
 
     def _calculateAABB(self) -> None:
+        aabb = None
         if self._mesh_data:
             aabb = self._mesh_data.getExtents(self.getWorldTransformation(copy = False))
-        else:  # If there is no mesh_data, use a boundingbox that encompasses the local (0,0,0)
-            position = self.getWorldPosition()
-            aabb = AxisAlignedBox(minimum = position, maximum = position)
 
         for child in self._children:
+            if child.getBoundingBox().minimum == child.getBoundingBox().maximum:
+                # Child had a degenerate bounding box, such as an empty group. Don't count it along.
+                continue
             if aabb is None:
                 aabb = child.getBoundingBox()
             else:
                 aabb = aabb + child.getBoundingBox()
+
+        if aabb is None:  # There is no mesh data and no children with bounding box. Use the current position then, but it's a degenerate AABB.
+            position = self.getWorldPosition()
+            aabb = AxisAlignedBox(minimum = position, maximum = position)
+
         self._aabb = aabb
 
     def __str__(self) -> str:
