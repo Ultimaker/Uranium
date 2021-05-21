@@ -524,7 +524,10 @@ class SceneNode:
         self._cached_normal_matrix = Matrix(self.getWorldTransformation(copy=False).getData())
         self._cached_normal_matrix.setRow(3, [0, 0, 0, 1])
         self._cached_normal_matrix.setColumn(3, [0, 0, 0, 1])
-        self._cached_normal_matrix.pseudoinvert()
+        try:
+            self._cached_normal_matrix.pseudoinvert()
+        except numpy.linalg.LinAlgError:  # Inversion can fail if the transformation is singular. In that case, the normal vectors would become degenerate anyway.
+            pass
         self._cached_normal_matrix.transpose()
 
     def getCachedNormalMatrix(self) -> Matrix:
