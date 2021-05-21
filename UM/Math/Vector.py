@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
@@ -220,10 +220,10 @@ class Vector:
         return Vector(data = -1 * self._data)
 
     def __repr__(self):
-        return "Vector({0:.3}, {1:.3}, {2:.3})".format(self._data[0], self._data[1], self._data[2])
+        return "Vector({0:.3f}, {1:.3f}, {2:.3f})".format(self._data[0], self._data[1], self._data[2])
 
     def __str__(self):
-        return "<{0:.3},{1:.3},{2:.3}>".format(self._data[0], self._data[1], self._data[2])
+        return "<{0:.3f},{1:.3f},{2:.3f}>".format(self._data[0], self._data[1], self._data[2])
 
     def __lt__(self, other):
         return self._data[0] < other._data[0] and self._data[1] < other._data[1] and self._data[2] < other._data[2]
