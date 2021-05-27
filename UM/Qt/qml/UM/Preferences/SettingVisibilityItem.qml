@@ -58,7 +58,7 @@ Item {
             width: Math.round(check.height * 0.75) | 0
             height: width
 
-            source: UM.Theme.getIcon("Information")
+            source: UM.Theme.getIcon("notice")
 
             color: palette.buttonText
         }
