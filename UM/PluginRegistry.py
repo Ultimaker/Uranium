@@ -626,23 +626,14 @@ class PluginRegistry(QObject):
                     highest_version = current_version
                     final_location = loc
 
-
         # Move data (if any) to central storage
         central_storage_file = os.path.join(final_location, plugin_id, "central_storage.json")
         if os.path.exists(central_storage_file):
             try:
                 with open(central_storage_file, "r", encoding="utf-8") as file_stream:
                     self._handleStoringFiles(file_stream.read(), os.path.join(final_location, plugin_id))
-
             except:
-                print("NOPE NOPE")
                 pass
-
-        '''if "files_for_central_storage" in plugin_metadata:
-            Logger.log("d", f"Moving files to central storage for {plugin_id}")
-            for file_path, file_id, version_string, hash in plugin_metadata["files_for_central_storage"]:
-                CentralFileStorage.store(file_path, file_id, Version(version_string))'''
-
         try:
             file, path, desc = imp.find_module(plugin_id, [final_location])
         except Exception:
