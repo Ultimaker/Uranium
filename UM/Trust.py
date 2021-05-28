@@ -449,12 +449,13 @@ class Trust:
                             Logger.log("w", "Directory symbolic link '{0}' will not be followed.".format(dir_full_path))
 
                 # Check if the files moved to storage are still correct.
-                for entry in storage_json:
-                    try:
-                        # If this doesn't raise an exception, it's correct.
-                        CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
-                    except:
-                        self._violation_handler("Centrally stored file '{0}' didn't match with checksum.".format(entry[1]))
+                if storage_json:
+                    for entry in storage_json:
+                        try:
+                            # If this doesn't raise an exception, it's correct.
+                            CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
+                        except:
+                            self._violation_handler("Centrally stored file '{0}' didn't match with checksum.".format(entry[1]))
 
                 # A number of files have been moved to the storage.
                 # This is allowed, so we should accept that.
