@@ -41,7 +41,7 @@ class CentralFileStorage:
         if not os.path.exists(cls._centralStorageLocation()):
             os.makedirs(cls._centralStorageLocation())
         if not os.path.exists(file_path):
-            Logger.debug(f"{file_id} {str(version)} was already stored centrally.")
+            Logger.debug(f"{file_id} {str(version)} was already stored centrally or the provided file_path is not correct")
             return
 
         storage_path = cls._getFilePath(file_id, version)
