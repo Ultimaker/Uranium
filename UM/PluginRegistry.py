@@ -702,6 +702,7 @@ class PluginRegistry(QObject):
             file_manifest = json.loads(file_data)
         except json.decoder.JSONDecodeError:
             Logger.logException("e", "Failed to parse central_storage.json")
+            return
 
         for file_to_move in file_manifest:
             CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]))
