@@ -455,7 +455,7 @@ class Trust:
                             # If this doesn't raise an exception, it's correct.
                             CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
                         except:
-                            self._violation_handler("Centrally stored file '{0}' didn't match with checksum.".format(entry[1]))
+                            self._violation_handler("Centrally stored file '{0}' didn't match with checksum or it could not be found".format(entry[1]))
 
                 # A number of files have been moved to the storage.
                 # This is allowed, so we should accept that.
