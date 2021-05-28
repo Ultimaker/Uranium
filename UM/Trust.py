@@ -32,6 +32,7 @@ class TrustBasics:
 
     # For (in) directories (plugins for example):
     __signatures_relative_filename = "signature.json"
+    __central_storage_relative_filename = "central_storage.json"
     __root_signatures_category = "root_signatures"
     __root_signed_manifest_key = "root_manifest_signature"
 
@@ -54,6 +55,10 @@ class TrustBasics:
         """
 
         return cls.__hash_algorithm
+
+    @classmethod
+    def getCentralStorageFilename(cls) -> str:
+        return cls.__central_storage_relative_filename
 
     @classmethod
     def getSignaturesLocalFilename(cls) -> str:
@@ -386,6 +391,12 @@ class Trust:
 
         try:
             json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
+            storage_filename = os.path.join(path, TrustBasics.getCentralStorageFilename())
+
+            storage_json = None
+            if os.path.exists(storage_filename):
+                with open(storage_filename, "r", encoding="utf-8") as data_file:
+                    storage_json = json.load(data_file)
 
             # Open the file containing signatures:
             with open(json_filename, "r", encoding = "utf-8") as data_file:
@@ -434,6 +445,10 @@ class Trust:
                         dir_full_path = os.path.join(path, dirname)
                         if os.path.islink(dir_full_path) and not self._follow_symlinks:
                             Logger.log("w", "Directory symbolic link '{0}' will not be followed.".format(dir_full_path))
+
+                # A number of files have bene moved to the storage.
+                # This is allowed, so we should accept that. 
+                file_count += len(storage_json)
 
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
