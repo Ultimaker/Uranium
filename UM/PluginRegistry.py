@@ -688,7 +688,7 @@ class PluginRegistry(QObject):
 
         return None
 
-    def _handleCentralStorage(self, file_data, plugin_path):
+    def _handleCentralStorage(self, file_data: str, plugin_path: str) -> None:
         try:
             file_manifest = json.loads(file_data)
         except json.decoder.JSONDecodeError:
