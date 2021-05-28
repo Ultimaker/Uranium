@@ -17,8 +17,10 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey, RSAPriva
 from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
 from cryptography.hazmat.primitives.serialization import load_pem_public_key, load_pem_private_key
 
+from UM.CentralFileStorage import CentralFileStorage
 from UM.Logger import Logger
 from UM.Resources import Resources
+from UM.Version import Version
 
 
 class TrustBasics:
@@ -446,8 +448,16 @@ class Trust:
                         if os.path.islink(dir_full_path) and not self._follow_symlinks:
                             Logger.log("w", "Directory symbolic link '{0}' will not be followed.".format(dir_full_path))
 
-                # A number of files have bene moved to the storage.
-                # This is allowed, so we should accept that. 
+                # Check if the files moved to storage are still correct.
+                for entry in storage_json:
+                    try:
+                        # If this doesn't raise an exception, it's correct.
+                        CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
+                    except:
+                        self._violation_handler("Centrally stored file '{0}' didn't match with checksum.".format(entry[1]))
+
+                # A number of files have been moved to the storage.
+                # This is allowed, so we should accept that.
                 file_count += len(storage_json)
 
                 # The number of correctly signed files should be the same as the number of signatures:
