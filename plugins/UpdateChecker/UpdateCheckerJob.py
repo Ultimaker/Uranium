@@ -74,7 +74,7 @@ class UpdateCheckerJob(Job):
                 for key, value in data[application_name].items():
                     if "major" in value and "minor" in value and "revision" in value and "url" in value:
                         os = key
-                        if platform.system() == os: #TODO: add architecture check
+                        if platform.system().lower() == os.lower(): #TODO: add architecture check
                             newest_version = Version([int(value["major"]), int(value["minor"]), int(value["revision"])])
                             if local_version < newest_version:
                                 preferences = Application.getInstance().getPreferences()
