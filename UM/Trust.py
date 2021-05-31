@@ -459,7 +459,8 @@ class Trust:
 
                 # A number of files have been moved to the storage.
                 # This is allowed, so we should accept that.
-                file_count += len(storage_json)
+                if storage_json:
+                    file_count += len(storage_json)
 
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
@@ -470,6 +471,7 @@ class Trust:
             return True
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
+            Logger.logException("e", "Failed to validate signature")
             self._violation_handler("Can't find or parse signatures for unbundled folder '{0}'.".format(path))
         return False
 
