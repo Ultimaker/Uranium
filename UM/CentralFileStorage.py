@@ -21,6 +21,16 @@ class CentralFileStorage:
     the file, the retriever needs to specify the hash of the file that it expects to find, and this hash is checked
     before giving up the location of the file. This hash will guard against unauthorised changes to the file. The
     plug-in, if properly signed, will then not be surprised by malicious content in that file.
+
+    If multiple files need to be moved, it's also possible to add a file called "central_storage.json" to the root
+    directory of the plugin. This json needs to contain a list, of which each element is a list of 4 elements.
+    The first element holds the relative path to the file, the second is the ID, the third is the ID of the file and the
+    last item is the hash.
+
+    A brief example of such a file:
+    [
+        ["files/VeryLargeFileToStore.big", "very_large_file", "1.0.1", "abcdefghijklmnop"]
+    ]
     """
 
     @classmethod
