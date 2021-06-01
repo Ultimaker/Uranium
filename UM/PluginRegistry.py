@@ -691,7 +691,7 @@ class PluginRegistry(QObject):
     def _handleCentralStorage(self, file_data: str, plugin_path: str) -> None:
         """
         Plugins can indicate that they want certain things to be stored in a central location.
-        In the case of a signed plugin, this is done by means of the central_storage.json file.
+        In the case of a signed plugin you *must* do this by means of the central_storage.json file.
         :param file_data: The data as loaded from the file
         :param plugin_path: The location of the plugin on the file system
         :return:
