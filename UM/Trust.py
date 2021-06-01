@@ -397,7 +397,7 @@ class Trust:
 
             storage_json = None
             if os.path.exists(storage_filename):
-                with open(storage_filename, "r", encoding="utf-8") as data_file:
+                with open(storage_filename, "r", encoding = "utf-8") as data_file:
                     storage_json = json.load(data_file)
 
             # Open the file containing signatures:
@@ -454,8 +454,8 @@ class Trust:
                         try:
                             # If this doesn't raise an exception, it's correct.
                             CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
-                        except:
-                            self._violation_handler("Centrally stored file '{0}' didn't match with checksum or it could not be found".format(entry[1]))
+                        except (EnvironmentError, IOError):
+                            self._violation_handler(f"Centrally stored file '{entry[1]}' didn't match with checksum or it could not be found")
 
                 # A number of files have been moved to the storage.
                 # This is allowed, so we should accept that.

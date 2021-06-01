@@ -627,10 +627,10 @@ class PluginRegistry(QObject):
                     final_location = loc
 
         # Move data (if any) to central storage
-        central_storage_file = os.path.join(final_location, plugin_id, "central_storage.json")
+        central_storage_file = os.path.join(final_location, plugin_id, Trust.getCentralStorageFilename())
         if os.path.exists(central_storage_file):
             try:
-                with open(central_storage_file, "r", encoding="utf-8") as file_stream:
+                with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
                     self._handleCentralStorage(file_stream.read(), os.path.join(final_location, plugin_id))
             except:
                 pass
