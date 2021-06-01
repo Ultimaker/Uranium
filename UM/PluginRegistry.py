@@ -698,12 +698,15 @@ class PluginRegistry(QObject):
         """
         try:
             file_manifest = json.loads(file_data)
-        except json.decoder.JSONDecodeError:
+        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
             Logger.logException("e", "Failed to parse central_storage.json")
             return
 
         for file_to_move in file_manifest:
-            CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]))
+            try:
+                CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]))
+            except (TypeError, IndexError):
+                Logger.logException("w", "Unable to move file to central storage")
 
     #   Load the plugin data from the stream and in-place update the metadata.
     def _parsePluginInfo(self, plugin_id, file_data, meta_data):
