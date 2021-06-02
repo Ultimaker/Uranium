@@ -15,6 +15,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
+from UM.CentralFileStorage import CentralFileStorage
 from UM.Logger import Logger
 from UM.Message import Message
 from UM.Platform import Platform
@@ -624,6 +625,15 @@ class PluginRegistry(QObject):
                 if current_version > highest_version:
                     highest_version = current_version
                     final_location = loc
+
+        # Move data (if any) to central storage
+        central_storage_file = os.path.join(final_location, plugin_id, TrustBasics.getCentralStorageFilename())
+        if os.path.exists(central_storage_file):
+            try:
+                with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
+                    self._handleCentralStorage(file_stream.read(), os.path.join(final_location, plugin_id))
+            except:
+                pass
         try:
             file, path, desc = imp.find_module(plugin_id, [final_location])
         except Exception:
@@ -677,6 +687,26 @@ class PluginRegistry(QObject):
                 return os.path.abspath(os.path.join(folder_path, ".."))
 
         return None
+
+    def _handleCentralStorage(self, file_data: str, plugin_path: str) -> None:
+        """
+        Plugins can indicate that they want certain things to be stored in a central location.
+        In the case of a signed plugin you *must* do this by means of the central_storage.json file.
+        :param file_data: The data as loaded from the file
+        :param plugin_path: The location of the plugin on the file system
+        :return:
+        """
+        try:
+            file_manifest = json.loads(file_data)
+        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
+            Logger.logException("e", "Failed to parse central_storage.json")
+            return
+
+        for file_to_move in file_manifest:
+            try:
+                CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]))
+            except (TypeError, IndexError):
+                Logger.logException("w", "Unable to move file to central storage")
 
     #   Load the plugin data from the stream and in-place update the metadata.
     def _parsePluginInfo(self, plugin_id, file_data, meta_data):

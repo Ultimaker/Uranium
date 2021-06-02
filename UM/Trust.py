@@ -17,8 +17,10 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey, RSAPriva
 from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
 from cryptography.hazmat.primitives.serialization import load_pem_public_key, load_pem_private_key
 
+from UM.CentralFileStorage import CentralFileStorage
 from UM.Logger import Logger
 from UM.Resources import Resources
+from UM.Version import Version
 
 
 class TrustBasics:
@@ -32,6 +34,7 @@ class TrustBasics:
 
     # For (in) directories (plugins for example):
     __signatures_relative_filename = "signature.json"
+    __central_storage_relative_filename = "central_storage.json"
     __root_signatures_category = "root_signatures"
     __root_signed_manifest_key = "root_manifest_signature"
 
@@ -54,6 +57,10 @@ class TrustBasics:
         """
 
         return cls.__hash_algorithm
+
+    @classmethod
+    def getCentralStorageFilename(cls) -> str:
+        return cls.__central_storage_relative_filename
 
     @classmethod
     def getSignaturesLocalFilename(cls) -> str:
@@ -386,6 +393,12 @@ class Trust:
 
         try:
             json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
+            storage_filename = os.path.join(path, TrustBasics.getCentralStorageFilename())
+
+            storage_json = None
+            if os.path.exists(storage_filename):
+                with open(storage_filename, "r", encoding = "utf-8") as data_file:
+                    storage_json = json.load(data_file)
 
             # Open the file containing signatures:
             with open(json_filename, "r", encoding = "utf-8") as data_file:
@@ -435,6 +448,20 @@ class Trust:
                         if os.path.islink(dir_full_path) and not self._follow_symlinks:
                             Logger.log("w", "Directory symbolic link '{0}' will not be followed.".format(dir_full_path))
 
+                # Check if the files moved to storage are still correct.
+                if storage_json:
+                    for entry in storage_json:
+                        try:
+                            # If this doesn't raise an exception, it's correct.
+                            CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
+                        except (EnvironmentError, IOError):
+                            self._violation_handler(f"Centrally stored file '{entry[1]}' didn't match with checksum or it could not be found")
+
+                # A number of files have been moved to the storage.
+                # This is allowed, so we should accept that.
+                if storage_json:
+                    file_count += len(storage_json)
+
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
                     self._violation_handler("Mismatch: # entries in '{0}' vs. real files.".format(json_filename))
@@ -444,6 +471,7 @@ class Trust:
             return True
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
+            Logger.logException("e", "Failed to validate signature")
             self._violation_handler("Can't find or parse signatures for unbundled folder '{0}'.".format(path))
         return False
 
