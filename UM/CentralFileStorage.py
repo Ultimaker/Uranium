@@ -62,9 +62,9 @@ class CentralFileStorage:
         if os.path.exists(storage_path):  # File already exists. Check if it's the same.
             if os.path.getsize(path) != os.path.getsize(storage_path):  # As quick check if files are the same, check their file sizes.
                 raise FileExistsError(f"Central file storage already has an item (file or directory) with ID {path_id} and version {str(version)}, but it's different.")
-            new_file_hash = cls._hashItem(path)
-            stored_file_hash = cls._hashItem(storage_path)
-            if new_file_hash != stored_file_hash:
+            new_item_hash = cls._hashItem(path)
+            stored_item_hash = cls._hashItem(storage_path)
+            if new_item_hash != stored_item_hash:
                 raise FileExistsError(f"Central file storage already has an item (file or directory) with ID {path_id} and version {str(version)}, but it's different.")
             if os.path.isfile(path):
                 os.remove(path)
