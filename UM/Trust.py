@@ -453,14 +453,16 @@ class Trust:
                     for entry in storage_json:
                         try:
                             # If this doesn't raise an exception, it's correct.
-                            CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
+                            central_storage_path = CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
+
+                            # If a directory was moved, add all the files in that directory to the file_count. For
+                            # individual files mentioned in the central_storage.json increment the file_count by 1.
+                            if os.path.isdir(central_storage_path):
+                                file_count += sum([len(files) for _, _, files in os.walk(central_storage_path)])
+                            elif os.path.isfile(central_storage_path):
+                                file_count += 1
                         except (EnvironmentError, IOError):
                             self._violation_handler(f"Centrally stored file '{entry[1]}' didn't match with checksum or it could not be found")
-
-                # A number of files have been moved to the storage.
-                # This is allowed, so we should accept that.
-                if storage_json:
-                    file_count += len(storage_json)
 
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:
