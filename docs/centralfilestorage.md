@@ -1,10 +1,10 @@
 Central File Storage
 ====================
-Uranium provides a central file storage location where its plug-ins can store big files. They can move a file or folder into the central file storage, give it a name and version number, and then retrieve the file again when it needs to be used. The central file storage is neutral for all versions of the application.
+Uranium provides a central file storage location where its plug-ins can store files and directories. They can move a file or folder into the central file storage, give it a name and version number, and then retrieve the file again when it needs to be used. The central file storage is neutral for all versions of the application. It is not located in the folders specific to one version of the application, but in a place where all versions can access it.
 
 Purpose
 -------
-When upgrading the application to a new version, the user's configuration is copied to a new folder and upgraded there. This configuration not only contains preferences and profiles, but also the plug-ins the user had installed. If these plug-ins contain large files, those would get copied every time the user installs a new version of the application. This can take up a significant amount of space on the hard drive.
+When upgrading the application to a new version, the user's configuration is copied to a new folder and upgraded there. This configuration not only contains preferences and profiles, but also the plug-ins the user had installed. If these plug-ins contain large files, those would normally get copied every time the user installs a new version of the application. This can take up a significant amount of space on the hard drive.
 
 Using the central file storage, the plug-in can store big files in a location that doesn't get copied when a new version is installed. This can save a significant amount of hard drive space for the user.
 
