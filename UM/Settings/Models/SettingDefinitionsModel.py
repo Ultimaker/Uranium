@@ -15,7 +15,6 @@ from UM.Settings import SettingRelation
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
-from UM.Settings.SettingFunction import SettingFunction
 from UM.i18n import i18nCatalog
 from UM.Application import Application
 
@@ -763,15 +762,9 @@ class SettingDefinitionsModel(QAbstractListModel):
             if self._filter_dict and not child.matchesFilter(**filter):
                 continue
 
-            enabled = self._container.getProperty(child.key, "enabled")
-            if isinstance(enabled, SettingFunction):
-                enabled = enabled(self._container)
-
-            if not enabled:
-                continue
-
             if child.key in self._visible:
-                return True
+                if self._container.getProperty(child.key, "enabled"):
+                    return True
 
             if self._isAnyDescendantVisible(child):
                 return True
