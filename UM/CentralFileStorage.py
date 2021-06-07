@@ -5,11 +5,12 @@ import hashlib  # To generate cryptographic hashes of files.
 import os  # To remove duplicate files.
 import os.path  # To re-format files with their proper file extension but with a version number in between.
 import shutil  # To move files in constant-time.
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 from UM.Logger import Logger
 from UM.Resources import Resources  # To get the central storage location.
 from UM.Version import Version  # To track version numbers of these files.
+
 
 class CentralFileStorage:
     """
@@ -35,8 +36,12 @@ class CentralFileStorage:
     ]
     """
 
+    # In some cases a plugin might ask for files to be moved, but it's not needed (since the plugin is actually bundled
+    # In order to ensure that the same API can still be used, we store those situations.
+    _unmoved_files = {}  # type: Dict[str, str]
+
     @classmethod
-    def store(cls, path: str, path_id: str, version: Version = Version("1.0.0")) -> None:
+    def store(cls, path: str, path_id: str, version: Version = Version("1.0.0"), move_file: bool = True) -> None:
         """
         Store a new item (file or directory) into the central file storage. This item will get moved to a storage
         location that is not specific to this version of the application.
@@ -45,12 +50,22 @@ class CentralFileStorage:
         `FileExistsError`. If the item is the same, no error is raised and the item to store is simply deleted. It is a
         duplicate of the item already stored.
 
+        Note that this function SHOULD NOT be called by plugins themselves. The central_storage.json should be used
+        instead!
+
         :param path: The path to the item (file or directory) to store in the central file storage.
         :param path_id: A name for the item (file or directory) to store.
         :param version: A version number for the item (file or directory).
+        :param move_file: Should the file be moved at all or just remembered for later retrieval
         :raises FileExistsError: There is already a centrally stored item (file or directory) with that name and
         version, but it's different.
         """
+        if not move_file:
+            full_identifier = path_id + str(version)
+            if full_identifier not in cls._unmoved_files:
+                cls._unmoved_files[full_identifier] = path
+            return
+
         if not os.path.exists(cls._centralStorageLocation()):
             os.makedirs(cls._centralStorageLocation())
         if not os.path.exists(path):
@@ -87,6 +102,9 @@ class CentralFileStorage:
         :raises IOError: The hash of the item (file or directory) is incorrect. Opening this item could be a security
         risk.
         """
+        if path_id + str(version) in cls._unmoved_files:
+            return cls._unmoved_files[path_id + str(version)]
+
         storage_path = cls._getItemPath(path_id, version)
 
         if not os.path.exists(storage_path):

@@ -631,7 +631,7 @@ class PluginRegistry(QObject):
         if os.path.exists(central_storage_file):
             try:
                 with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
-                    self._handleCentralStorage(file_stream.read(), os.path.join(final_location, plugin_id))
+                    self._handleCentralStorage(file_stream.read(), os.path.join(final_location, plugin_id), is_bundled_plugin = self.isBundledPlugin(plugin_id))
             except:
                 pass
         try:
@@ -688,7 +688,7 @@ class PluginRegistry(QObject):
 
         return None
 
-    def _handleCentralStorage(self, file_data: str, plugin_path: str) -> None:
+    def _handleCentralStorage(self, file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> None:
         """
         Plugins can indicate that they want certain things to be stored in a central location.
         In the case of a signed plugin you *must* do this by means of the central_storage.json file.
@@ -704,7 +704,7 @@ class PluginRegistry(QObject):
 
         for file_to_move in file_manifest:
             try:
-                CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]))
+                CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]), move_file = not is_bundled_plugin)
             except (TypeError, IndexError):
                 Logger.logException("w", "Unable to move file to central storage")
 
