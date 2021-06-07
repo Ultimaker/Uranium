@@ -36,7 +36,7 @@ class CentralFileStorage:
     ]
     """
 
-    # In some cases a plugin might ask for files to be moved, but it's not needed (since the plugin is actually bundled
+    # In some cases a plugin might ask for files to be moved, but it's not needed (since the plugin is actually bundled)
     # In order to ensure that the same API can still be used, we store those situations.
     _unmoved_files = {}  # type: Dict[str, str]
 
