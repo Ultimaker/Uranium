@@ -354,7 +354,7 @@ class PluginRegistry(QObject):
 
     # Indicates that a specific plugin is currently being loaded. If the plugin_id is empty, it means that no plugin
     # is currently being loaded.
-    pluginLoadingInProgress = pyqtSignal(str, arguments = ["plugin_id"])
+    pluginLoadStarted = pyqtSignal(str, arguments = ["plugin_id"])
 
     def loadPlugins(self, metadata: Optional[Dict[str, Any]] = None) -> None:
         """Load all plugins matching a certain set of metadata
@@ -375,7 +375,7 @@ class PluginRegistry(QObject):
             if plugin_id in self.preloaded_plugins:
                 continue  # Already loaded this before.
 
-            self.pluginLoadingInProgress.emit(plugin_id)
+            self.pluginLoadStarted.emit(plugin_id)
 
             # Get the plugin metadata:
             try:
@@ -400,7 +400,7 @@ class PluginRegistry(QObject):
                 except PluginNotFoundError:
                     pass
 
-        self.pluginLoadingInProgress.emit("")
+        self.pluginLoadStarted.emit("")
         Logger.log("d", "Loading all plugins took %s seconds", time.time() - start_time)
 
     # Checks if the given plugin API version is compatible with the current version.

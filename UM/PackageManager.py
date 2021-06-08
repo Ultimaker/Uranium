@@ -294,7 +294,8 @@ class PackageManager(QObject):
     def _installAllScheduledPackages(self) -> None:
         while self._to_install_package_dict:
             package_id, package_info = list(self._to_install_package_dict.items())[0]
-            self._application.showSplashMessage(f"{catalog.i18nc('@info:progress', 'Unpacking plugin')} {package_id}...")
+            installing_plugin_msg = catalog.i18nc("@info:progress Don't translate {package_id}", "Installing plugin {package_id}...").format(package_id = package_id)
+            self._application.showSplashMessage(installing_plugin_msg)
             self._installPackage(package_info)
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
