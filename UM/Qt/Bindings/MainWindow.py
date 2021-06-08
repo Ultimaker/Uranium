@@ -1,10 +1,11 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF
+from PyQt5.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF, QRect
 from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow
 
+from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
@@ -18,6 +19,11 @@ from typing import Optional
 @signalemitter
 class MainWindow(QQuickWindow):
     """QQuickWindow subclass that provides the main window."""
+    DEFAULT_WINDOW_WIDTH = 1280
+    DEFAULT_WINDOW_HEIGHT = 720
+    DEFAULT_WINDOW_LEFT = 50
+    DEFAULT_WINDOW_TOP = 50
+
 
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
@@ -46,35 +52,45 @@ class MainWindow(QQuickWindow):
         Selection.selectionChanged.connect(self._onSceneChanged)
         self._preferences = Application.getInstance().getPreferences()
 
-        self._preferences.addPreference("general/window_width", 1280)
-        self._preferences.addPreference("general/window_height", 720)
-        self._preferences.addPreference("general/window_left", 50)
-        self._preferences.addPreference("general/window_top", 50)
+        self._preferences.addPreference("general/window_width", self.DEFAULT_WINDOW_WIDTH)
+        self._preferences.addPreference("general/window_height", self.DEFAULT_WINDOW_HEIGHT)
+        self._preferences.addPreference("general/window_left", self.DEFAULT_WINDOW_LEFT)
+        self._preferences.addPreference("general/window_top", self.DEFAULT_WINDOW_TOP)
         self._preferences.addPreference("general/window_state", Qt.WindowNoState)
         self._preferences.addPreference("general/restore_window_geometry", True)
 
-        if not self._preferences.getValue("general/restore_window_geometry"):
-            self._preferences.resetPreference("general/window_width")
-            self._preferences.resetPreference("general/window_height")
-            self._preferences.resetPreference("general/window_left")
-            self._preferences.resetPreference("general/window_top")
-            self._preferences.resetPreference("general/window_state")
+        restored_geometry = QRect(int(self._preferences.getValue("general/window_left")),
+                                  int(self._preferences.getValue("general/window_top")),
+                                  int(self._preferences.getValue("general/window_width")),
+                                  int(self._preferences.getValue("general/window_height")))
 
-        # Restore window geometry
-        self.setWidth(int(self._preferences.getValue("general/window_width")))
-        self.setHeight(int(self._preferences.getValue("general/window_height")))
-        self.setPosition(int(self._preferences.getValue("general/window_left")), int(self._preferences.getValue("general/window_top")))
+        if not self._preferences.getValue("general/restore_window_geometry"):
+            # Ignore whatever the preferences said.
+            Logger.log("i", "Not restoring window geometry from preferences because 'restore_window_geometry' is false")
+            restored_geometry = QRect(self.DEFAULT_WINDOW_LEFT,
+                                      self.DEFAULT_WINDOW_TOP,
+                                      self.DEFAULT_WINDOW_WIDTH,
+                                      self.DEFAULT_WINDOW_HEIGHT)
 
         # Make sure restored geometry is not outside the currently available screens
         screen_found = False
         for s in range(0, self._app.desktop().screenCount()):
-            if self.geometry().intersects(self._app.desktop().availableGeometry(s)):
+            if restored_geometry.intersects(self._app.desktop().availableGeometry(s)):
                 screen_found = True
                 break
-        if not screen_found:
-            self.setPosition(50, 50)
 
+        if not screen_found:
+            Logger.log("w", "Could not restore to previous location on screen, since the sizes or number of monitors "
+                            "have changed since then")
+            # Unable to find the screen that this window used to be on, so just use the defaults
+            restored_geometry = QRect(self.DEFAULT_WINDOW_LEFT,
+                                      self.DEFAULT_WINDOW_TOP,
+                                      self.DEFAULT_WINDOW_WIDTH,
+                                      self.DEFAULT_WINDOW_HEIGHT)
+
+        self.setGeometry(restored_geometry)
         self.setWindowState(int(self._preferences.getValue("general/window_state")))
+
         self._mouse_x = 0
         self._mouse_y = 0
 
