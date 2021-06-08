@@ -19,8 +19,8 @@ if TYPE_CHECKING:
 
 
 def resolveAnySymlink(file_name: str) -> str:
-    """ Some OSs have a different extensions for linked files (for example, one possibility is .lnk-files on Windows).
-    At least in cases such as that, the literal .lnk file will be attempted to open, not the file. This resolves:
+    """ Some OSs have different extensions for linked files (for example, one possibility is .lnk-files on Windows).
+    In such cases, the literal .lnk file will be attempted to open, not the file this resolves:
     """
 
     info = QFileInfo(file_name)
