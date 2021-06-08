@@ -91,10 +91,11 @@ def test_retrieveNonExistent():
     with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
         pytest.raises(FileNotFoundError, lambda: CentralFileStorage.retrieve("non_existent_file", "0123456789ABCDEF"))
 
-def test_retrieveWrongHash():
+def test_retrieveWrongHashOnEnterprise():
     """
     Tests retrieving a file that has a wrong hash.
     """
     with unittest.mock.patch("UM.Resources.Resources.getDataStoragePath", lambda: "test_central_storage/4.9"):
+        CentralFileStorage.setIsEnterprise(True)
         CentralFileStorage.store(TEST_FILE_PATH, "myfile")
         pytest.raises(IOError, lambda: CentralFileStorage.retrieve("myfile", TEST_FILE_HASH2))
