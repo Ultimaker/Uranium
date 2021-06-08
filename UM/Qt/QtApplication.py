@@ -186,6 +186,12 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Initializing version upgrade manager ...")
         self._version_upgrade_manager = VersionUpgradeManager(self)
 
+    def _displayLoadingPluginSplashMessage(self, plugin_id: Optional[str]) -> None:
+        message = i18nCatalog("uranium").i18nc("@info:progress", "Loading plugins...")
+        if plugin_id:
+            message = f"{i18nCatalog('uranium').i18nc('@info:progress', 'Loading plugin')} {plugin_id}..."
+        self.showSplashMessage(message)
+
     def startSplashWindowPhase(self) -> None:
         super().startSplashWindowPhase()
         i18n_catalog = i18nCatalog("uranium")
@@ -205,7 +211,9 @@ class QtApplication(QApplication, Application):
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         # Remove and install the plugins that have been scheduled
         self._plugin_registry.initializeBeforePluginsAreLoaded()
+        self._plugin_registry.pluginLoadingInProgress.connect(self._displayLoadingPluginSplashMessage)
         self._loadPlugins()
+        self._plugin_registry.pluginLoadingInProgress.disconnect(self._displayLoadingPluginSplashMessage)
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         self.pluginsLoaded.emit()
 
