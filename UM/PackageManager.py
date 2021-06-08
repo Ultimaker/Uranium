@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -10,7 +10,7 @@ import zipfile
 from json import JSONDecodeError
 from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
 
-from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty
+from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
 
 from UM import i18nCatalog
 from UM.Logger import Logger
@@ -44,14 +44,18 @@ class PackageManager(QObject):
                 continue
 
             # Load all JSON files that are located in the bundled_packages directory.
-            for file_name in os.listdir(search_path):
-                if not file_name.endswith(".json"):
-                    continue
-                file_path = os.path.join(search_path, file_name)
-                if not os.path.isfile(file_path):
-                    continue
-                self._bundled_package_management_file_paths.append(file_path)
-                Logger.log("i", "Found bundled packages JSON file: {location}".format(location = file_path))
+            try:
+                for file_name in os.listdir(search_path):
+                    if not file_name.endswith(".json"):
+                        continue
+                    file_path = os.path.join(search_path, file_name)
+                    if not os.path.isfile(file_path):
+                        continue
+                    self._bundled_package_management_file_paths.append(file_path)
+                    Logger.log("i", "Found bundled packages JSON file: {location}".format(location = file_path))
+            except EnvironmentError as e:  # Unable to read directory. Could be corrupt disk or insufficient access to list the directory.
+                Logger.log("e", f"Unable to read package directory to search for packages JSON files: {str(e)}")
+                pass
 
         for search_path in (Resources.getDataStoragePath(), Resources.getConfigStoragePath()):
             candidate_user_path = os.path.join(search_path, "packages.json")
@@ -165,6 +169,12 @@ class PackageManager(QObject):
                     Logger.log("i", "Loaded bundled packages data from %s", search_path)
             except UnicodeDecodeError:
                 Logger.logException("e", "Can't decode package management files. File is corrupt.")
+                return
+            except FileNotFoundError:
+                Logger.error("Package management file {search_path} doesn't exist.".format(search_path = search_path))
+                return
+            except EnvironmentError as e:
+                Logger.error("Unable to read package management file {search_path}: {err}".format(search_path = search_path, err = str(e)))
                 return
 
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
@@ -284,6 +294,8 @@ class PackageManager(QObject):
     def _installAllScheduledPackages(self) -> None:
         while self._to_install_package_dict:
             package_id, package_info = list(self._to_install_package_dict.items())[0]
+            installing_plugin_msg = catalog.i18nc("@info:progress Don't translate {package_id}", "Installing plugin {package_id}...").format(package_id = package_id)
+            self._application.showSplashMessage(installing_plugin_msg)
             self._installPackage(package_info)
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
@@ -539,8 +551,11 @@ class PackageManager(QObject):
             return
         try:
             with zipfile.ZipFile(filename, "r") as archive:
+                name_list = archive.namelist()
                 temp_dir = tempfile.TemporaryDirectory()
-                archive.extractall(temp_dir.name)
+                for archive_filename in name_list:
+                    archive.extract(archive_filename, temp_dir.name)
+                    QCoreApplication.processEvents()
         except Exception:
             Logger.logException("e", "Failed to install package from file [%s]", filename)
             return

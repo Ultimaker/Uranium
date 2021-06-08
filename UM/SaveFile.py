@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import tempfile
@@ -14,6 +14,8 @@ if sys.platform != "win32":
             fcntl.flock(file, fcntl.LOCK_EX)
         except OSError:  # Some file systems don't support file locks.
             pass
+        except ValueError:  # Can fail on some operating systems due to other instances of the application closing the file to prepare for deletion.
+            pass  # It's okay to ignore the lock then because they were about to delete the file anyway.
 
     if hasattr(fcntl, 'F_FULLFSYNC'):
         def fsync(fd):

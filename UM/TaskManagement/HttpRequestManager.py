@@ -371,7 +371,9 @@ class HttpRequestManager(TaskManager):
             # manager seems not always able to recover from a total loss of network access, so re-create it
             self._network_manager = QNetworkAccessManager(self)
 
-        Logger.log("d", "%s got an error %s, %s", request_data, error, error_string)
+        # Use peek() to retrieve the reply's body instead of readAll(), because readAll consumes the content
+        reply_body = request_data.reply.peek(request_data.reply.bytesAvailable())  # unlike readAll(), peek doesn't consume the content
+        Logger.log("d", "%s got an QNetworkReplyError %s. The server returned: %s", request_data, error_string, reply_body)
 
         with self._request_lock:
             # Safeguard: make sure that we have the reply in the currently in-progress requests set

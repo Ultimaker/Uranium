@@ -270,7 +270,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         if "inherits" in parsed:
             inherited = self._resolveInheritance(parsed["inherits"])
-            parsed = self._mergeDicts(inherited, parsed)
+            parsed = self._mergeDicts(inherited, parsed, new_dict = False)
 
         self._verifyJson(parsed)
 
@@ -456,13 +456,22 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 if item is not None:
                     return item
 
-    # Recursively merge two dictionaries, returning a new dictionary
-    def _mergeDicts(self, first: Dict[Any, Any], second: Dict[Any, Any]) -> Dict[Any, Any]:
-        result = copy.deepcopy(first)
+    def _mergeDicts(self, first: Dict[Any, Any], second: Dict[Any, Any], new_dict = True) -> Dict[Any, Any]:
+        """
+        Recursively merge a dictionary. It will return a new dict if new_dict is true (default)
+        :param first: First dictionary to merge
+        :param second: Second dictionary
+        :param new_dict: Should a new dict be created or should the first dict be updated in place?
+        :return: Merged dict
+        """
+        if new_dict:
+            result = copy.deepcopy(first)
+        else:
+            result = first
         for key, value in second.items():
             if key in result:
                 if isinstance(value, dict):
-                    result[key] = self._mergeDicts(result[key], value)
+                    result[key] = self._mergeDicts(result[key], value, new_dict = new_dict)
                 else:
                     result[key] = value
             else:

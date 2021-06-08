@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Optional
 
@@ -17,14 +17,18 @@ i18n_catalog = i18nCatalog("uranium")
 class ReadFileJob(Job):
     """A Job subclass that performs file loading."""
 
-    def __init__(self, filename: str, handler: Optional[FileHandler] = None) -> None:
+    def __init__(self, filename: str, handler: Optional[FileHandler] = None, add_to_recent_files: bool = True) -> None:
         super().__init__()
         self._filename = filename
         self._handler = handler
         self._loading_message = None  # type: Optional[Message]
+        self._add_to_recent_files = add_to_recent_files
 
     def getFileName(self):
         return self._filename
+
+    def getAddToRecentFiles(self):
+        return self._add_to_recent_files
 
     def run(self) -> None:
         from UM.Mesh.MeshReader import MeshReader
@@ -69,9 +73,10 @@ class ReadFileJob(Job):
         finally:
             end_time = time.time()
             Logger.log("d", "Loading file took %0.1f seconds", end_time - begin_time)
-            if self._result is None:
-                self._loading_message.hide()
-                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible.", self._filename), lifetime = 0, title = i18n_catalog.i18nc("@info:title", "Unable to Open File"))
-                result_message.show()
-                return
             self._loading_message.hide()
+            if reader.emptyFileHintSet():
+                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "There where no models in <filename>{0}</filename>.", self._filename), lifetime=0, title=i18n_catalog.i18nc("@info:title", "No Models in File"))
+                result_message.show()
+            elif not self._result:
+                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models.", self._filename), lifetime = 0, title = i18n_catalog.i18nc("@info:title", "Unable to Open File"))
+                result_message.show()

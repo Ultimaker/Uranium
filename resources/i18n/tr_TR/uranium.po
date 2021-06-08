@@ -1,13 +1,13 @@
 # Uranium
-# Copyright (C) 2020 Ultimaker B.V.
+# Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.7\n"
+"Project-Id-Version: Uranium 4.9\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2020-10-19 13:16+0200\n"
-"PO-Revision-Date: 2020-08-21 13:40+0200\n"
+"POT-Creation-Date: 2021-04-02 16:35+0200\n"
+"PO-Revision-Date: 2021-04-16 15:14+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, Turkish <info@bothof.nl>\n"
 "Language: tr_TR\n"
@@ -15,347 +15,425 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.4.1\n"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ Dosyası"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter metin dışı modu desteklemez."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "Yazdırılacak ağ yok."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL Dosyası"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "STL akışa yazılırken desteklenmeyen çıktı modu."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL Dosyası (ASCII)"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL Dosyası (İkili)"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:29
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "Yerel Dosya"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to File"
-msgstr "Dosyaya Kaydet"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@info:tooltip"
-msgid "Save to File"
-msgstr "Dosyaya Kaydet"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:54
-msgctxt "@title:window"
-msgid "Save to File"
-msgstr "Dosyaya Kaydet"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:87
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "Yazılacak dosya türleri mevcut değil!"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:133
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "Dosya Zaten Mevcut"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:133
-#, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "Dosya <filename>{0}</filename> zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:163
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> dosyasına kaydediliyor"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:164
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "Kaydediliyor"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> dosyasını kaydetmeye çalışırken izin reddedildi"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:175
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<filename>{0}</filename> dosyasına kaydedilemedi: <message>{1}</message>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> dosyasına kaydedildi"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Dosya Kaydedildi"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:186
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "Klasörü Aç"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:186
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "Dosyayı içeren klasörü açın"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:65
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Uyarı"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<filename>{0}</filename> dosyasına kaydedilirken bir şeyler ters gitti: <message>{1}</message>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Hata"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror"
 msgstr "Ayna"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/MirrorTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Ayna Modeli"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:352
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "Nesne yapı levhasına düz olarak yerleştiriliyor..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:352
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "Nesne Döndürme"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Döndürme"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Döndürme Modeli"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Ölçek"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Ölçek Modeli"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
 msgid "Move"
 msgstr "Taşıma"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Move Model"
 msgstr "Taşıma Modu"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Döndürme"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Döndürme Modeli"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "Nesne yapı levhasına düz olarak yerleştiriliyor..."
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "Nesne Döndürme"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "Ölçek"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Ölçek Modeli"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Update Checker"
 msgstr "Güncelleme Denetleyicisi"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Güncellemeleri Denetle"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
 msgctxt "@info"
 msgid "Could not access update information."
 msgstr "Güncelleme bilgilerine erişilemedi."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:70
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
+#: /mnt/projects/ultimaker/cura/Uranium/UM/VersionUpgradeManager.py:173
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Sürüm Yükseltme"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:65
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:70
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "Kullandığınız sürüm güncellemeleri denetlemeyi desteklemiyor."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Uyarı"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
 msgstr "Güncellemelerin kontrolü sırasında bir hata oluştu."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Hata"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Yeni sürüm bulunamadı."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:104
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:105
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "{application_name} {version_number} yayınlandı!"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:106
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number}, daha iyi ve daha güvenilir bir yazdırma deneyimi sunar."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:109
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:110
 msgctxt "@action:button"
 msgid "Download"
 msgstr "İndir"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:111
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:112
 msgctxt "@action:button"
 msgid "Learn more"
 msgstr "Daha fazla bilgi edinin"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "Yerel Dosya"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr "Diske Kaydet"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr "Diske Kaydet"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr "Diske Kaydet"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "Yazılacak dosya türleri mevcut değil!"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "Dosya Zaten Mevcut"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "Dosya <filename>{0}</filename> zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "<filename>{0}</filename> dosyasına kaydediliyor"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "Kaydediliyor"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "<filename>{0}</filename> dosyasını kaydetmeye çalışırken izin reddedildi"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "<filename>{0}</filename> dosyasına kaydedilemedi: <message>{1}</message>"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "<filename>{0}</filename> dosyasına kaydedildi"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Dosya Kaydedildi"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "Klasörü Aç"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "Dosyayı içeren klasörü açın"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "<filename>{0}</filename> dosyasına kaydedilirken bir şeyler ters gitti: <message>{1}</message>"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "Basit"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:33
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Sıfırla"
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STL Dosyası"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:45
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "OBJWriter metin dışı modu desteklemez."
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "Yazdırılacak ağ yok."
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ Dosyası"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL Dosyası (ASCII)"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL Dosyası (İkili)"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "STL akışa yazılırken desteklenmeyen çıktı modu."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:318
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+"Eklenti kurulumu yapıldı.\n"
+"Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:379
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr "{} eklentisi henüz doğrulanmadığından yüklenmedi."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:479
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
 msgstr ""
-"Yapılandırmanız bozuk görünüyor. Şu profillerde bir sorun var gibi görünüyor:\n"
-"- {profiles}\n"
-" Fabrika varsayılanlarına sıfırlamak ister misiniz? Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır."
+"Eklenti kaldırıldı.\n"
+"Kaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:50
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr "Fabrika ayarlarına sıfırla"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:52
-msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr "Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır! Sıfırlamak istediğinizden emin misiniz?"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:58
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:844
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
+#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:826
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/FileHandler.py:60
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Tüm desteklenen türler ({0})"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:59
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:845
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
+#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:827
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/FileHandler.py:61
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Tüm Dosyalar (*)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:122
 #, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> türündeki dosyalar açılamaz"
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2}g {1:0>2}sa {2:0>2}dk"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "Geçersiz Dosya"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:124
 #, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr "<filename>{0}</filename> yüklenemedi. Dosya çökmüş veya erişilemiyor olabilir."
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2}sa {1:0>2}dk"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:127
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} gün"
+msgstr[1] "{0} gün"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:127
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:129
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} saat"
+msgstr[1] "{0} saat"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:127
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:129
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:131
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} dakika"
+msgstr[1] "{0} dakika"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:192
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr "Paket yöneticisi başlatılıyor..."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:200
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr "Yapılandırmanız bozuk görünüyor."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:202
 msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr "Dosya Açılamıyor"
+msgid "Configuration errors"
+msgstr "Yapılandırma hataları"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "Yükleniyor"
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:205
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "Eklentiler yükleniyor..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:212
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "Yapılandırma güncelleniyor..."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:218
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "Tercihler yükleniyor..."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:305
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr "UI Yükleniyor..."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Mesh/ReadMeshJob.py:70
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Nesne özgün boyutun %{0}’sine kadar otomatik ölçeklendirildi"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Mesh/ReadMeshJob.py:70
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Nesne Ölçeklendiriliyor"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:272
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:192
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "{filename} yeniden yüklemek ister misiniz?"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:193
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr "Dosya değiştirildi"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:194
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "Yeniden Yükle"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:194
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "Bu, değiştirilmiş dosyaların diskten yeniden yüklenmesini tetikleyecektir."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/View/GL/OpenGL.py:59
+#: /mnt/projects/ultimaker/cura/Uranium/UM/View/GL/OpenGL.py:64
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "OpenGL Başlatılamadı"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/View/GL/OpenGL.py:74
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteği gerektirir. Lütfen ekran kartı sürücülerinizi kontrol edin."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "Eski {0} versiyonundan bir yapılandırma içe aktarıldı."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:281
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -365,12 +443,12 @@ msgstr ""
 "Şu paketler kaldırılırken bazı hatalar meydana geldi:\n"
 "{packages}"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:274
+#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:283
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "Kaldırma hataları"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:550
+#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:559
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -382,324 +460,207 @@ msgstr ""
 "{error}.\n"
 "Lütfen daha sonra tekrar yükseltmeyi deneyin."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:553
+#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:562
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Güncelleme hatası"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:220
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
-msgstr "{} eklentisi güvenilir bağlam dışında dosya yüklemeyi denediğinden yüklenmedi"
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:40
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "<filename>{0}</filename> türündeki dosyalar açılamaz"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:363
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:40
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr "Geçersiz Dosya"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:53
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr "<filename>{0}</filename> yüklenemedi. Dosya çökmüş veya erişilemiyor olabilir."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:55
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr "Dosya Açılamıyor"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:63
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "Yükleniyor"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr "<filename>{0}</filename> dosyasında model bulunamadı."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr "Dosyada Model Yok"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr "<filename>{0}</filename> dosyası yüklenemedi. Dosya bozuk veya erişilemez olabilir ya da içinde model yoktur."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:33
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
+msgctxt "@action:button"
+msgid "Reset"
+msgstr "Sıfırla"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:45
+#, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
-"Eklenti kurulumu yapıldı.\n"
-"Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
+"Yapılandırmanız bozuk görünüyor. Şu profillerde bir sorun var gibi görünüyor:\n"
+"- {profiles}\n"
+" Fabrika varsayılanlarına sıfırlamak ister misiniz? Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:416
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "{} eklentisi henüz doğrulanmadığından yüklenmedi."
+#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:50
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr "Fabrika ayarlarına sıfırla"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:516
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr ""
-"Eklenti kaldırıldı.\n"
-"Kaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
+#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:52
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr "Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır! Sıfırlamak istediğinizden emin misiniz?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
-#, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
-msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}g {1:0>2}sa {2:0>2}dk"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:124
-#, python-brace-format
-msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}sa {1:0>2}dk"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is days"
-msgid "{0} day"
-msgid_plural "{0} days"
-msgstr[0] "{0} gün"
-msgstr[1] "{0} gün"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is hours"
-msgid "{0} hour"
-msgid_plural "{0} hours"
-msgstr[0] "{0} saat"
-msgstr[1] "{0} saat"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:131
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is minutes"
-msgid "{0} minute"
-msgid_plural "{0} minutes"
-msgstr[0] "{0} dakika"
-msgstr[1] "{0} dakika"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:190
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr "Paket yöneticisi başlatılıyor..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr "Yapılandırmanız bozuk görünüyor."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:200
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr "Yapılandırma hataları"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:203
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "Eklentiler yükleniyor..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:210
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "Yapılandırma güncelleniyor..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:216
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "Tercihler yükleniyor..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:301
-msgctxt "@info:progress"
-msgid "Loading UI..."
-msgstr "UI Yükleniyor..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:181
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr "{filename} yeniden yüklemek ister misiniz?"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr "Dosya değiştirildi"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:183
-msgctxt "@action:button"
-msgid "Reload"
-msgstr "Yeniden Yükle"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:183
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr "Bu, değiştirilmiş dosyaların diskten yeniden yüklenmesini tetikleyecektir."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "Eski {0} versiyonundan bir yapılandırma içe aktarıldı."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:59
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:64
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "OpenGL Başlatılamadı"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:74
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteği gerektirir. Lütfen ekran kartı sürücülerinizi kontrol edin."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "Düz Şekilde Yerleştir"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "Yapı plakasıyla hizalanacak yüzü seçin"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "Döndürmeyi Tuttur"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "Ölçeklendirmeyi Tuttur"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "Ölçeklendirmeyi Aynı Yap"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:196
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:196
 msgctxt "@option:check"
 msgid "Lock Model"
 msgstr "Kilit Modeli"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "Düz Şekilde Yerleştir"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "Yapı plakasıyla hizalanacak yüzü seçin"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "Döndürmeyi Tuttur"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "Ölçeklendirmeyi Tuttur"
+
+#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "Ölçeklendirmeyi Aynı Yap"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
 msgstr "Kaldırmayı Onayla"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr "%1’i kaldırmak istediğinizden emin misiniz? Bu eylem geri alınamaz!"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Yazıcılar"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Tür"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
 msgstr "Tercihler"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:107
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:111
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr "Varsayılanlar"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:115
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:119
 msgctxt "@action:button"
 msgid "Close"
 msgstr "Kapat"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:149
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Genel"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:149
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
 msgctxt "@title:tab"
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "Yeniden Adlandır"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr "Lütfen yeni bir isim girin."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "İptal Et"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
-msgctxt "@action:button"
-msgid "OK"
-msgstr "Tamam"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "Bu ayar etkin makine tarafından saklanmış ve görünür olmayacak."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
 msgstr[0] "Bu ayar %1 değerle saklanmış. Ayarı görünür yapmak için ayar değerini değiştirin."
 msgstr[1] "Bu ayar %1 değerle saklanmış. Ayarı görünür yapmak için bu ayarların değerini değiştirin."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "Yeniden Adlandır"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr "Lütfen yeni bir isim girin."
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:241
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "İptal Et"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
+msgctxt "@action:button"
+msgid "OK"
+msgstr "Tamam"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Yazıcılar"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Tür"
+
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
 msgstr "Geri"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
 msgstr "Bitir"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
 msgstr "İleri"
-
-#: ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Günlük bilgilerinin çıktısını konsola aktarır."
-
-#: ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Konsol Günlükçüsü"
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Wavefront OBJ dosyalarının okunmasına olanak sağlar."
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ Okuyucu"
-
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Wavefront OBJ dosyalarının yazılmasına olanak sağlar."
-
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ Yazıcı"
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "STL dosyalarının okunması için destek sağlar."
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL Okuyucu"
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "STL dosyalarının yazılması için destek sağlar."
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL Yazıcı"
 
 #: FileLogger/plugin.json
 msgctxt "description"
@@ -721,26 +682,6 @@ msgctxt "name"
 msgid "Local Container Provider"
 msgstr "Yerel Kapsayıcı Sağlayıcısı"
 
-#: LocalFileOutputDevice/plugin.json
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Yerel dosyalara kaydetmeyi sağlar."
-
-#: LocalFileOutputDevice/plugin.json
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Yerel Dosya Çıkış Cihazı"
-
-#: Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Aracın kamerayı yönlendirmesini sağlar."
-
-#: Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Kamera Aracı"
-
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
@@ -750,36 +691,6 @@ msgstr "Ayna aracı sağlar."
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "Ayna Aracı"
-
-#: Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Döndürme aracı sağlar."
-
-#: Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Döndürme Aracı"
-
-#: Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Ölçeklendirme aracı sağlar."
-
-#: Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Ölçeklendirme Aracı"
-
-#: Tools/SelectionTool/plugin.json
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Seçim aracı sağlar."
-
-#: Tools/SelectionTool/plugin.json
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "Seçim Aracı"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
@@ -791,6 +702,46 @@ msgctxt "name"
 msgid "Move Tool"
 msgstr "Taşıma Aracı"
 
+#: Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Döndürme aracı sağlar."
+
+#: Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Döndürme Aracı"
+
+#: Tools/CameraTool/plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Aracın kamerayı yönlendirmesini sağlar."
+
+#: Tools/CameraTool/plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Kamera Aracı"
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Seçim aracı sağlar."
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Seçim Aracı"
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Ölçeklendirme aracı sağlar."
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Ölçeklendirme Aracı"
+
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
@@ -801,6 +752,26 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr "Güncelleme Denetleyicisi"
 
+#: LocalFileOutputDevice/plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "Yerel dosyalara kaydetmeyi sağlar."
+
+#: LocalFileOutputDevice/plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "Yerel Dosya Çıkış Cihazı"
+
+#: ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Günlük bilgilerinin çıktısını konsola aktarır."
+
+#: ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Konsol Günlükçüsü"
+
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
@@ -810,6 +781,62 @@ msgstr "Basit gerçek bir ağ görünümü sağlar."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Basit Görünüm"
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "STL dosyalarının okunması için destek sağlar."
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STL Okuyucu"
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Wavefront OBJ dosyalarının yazılmasına olanak sağlar."
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ Yazıcı"
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "STL dosyalarının yazılması için destek sağlar."
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr "STL Yazıcı"
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Wavefront OBJ dosyalarının okunmasına olanak sağlar."
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ Okuyucu"
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "Dosyaya Kaydet"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "Dosyaya Kaydet"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "Dosyaya Kaydet"
+
+#~ msgctxt "@error:untrusted"
+#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
+#~ msgstr "{} eklentisi güvenilir bağlam dışında dosya yüklemeyi denediğinden yüklenmedi"
 
 #~ msgctxt "@info:status Don't translate the XML tag <filename>!"
 #~ msgid "Failed to load <filename>{0}</filename>"

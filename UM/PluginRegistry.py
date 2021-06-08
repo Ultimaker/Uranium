@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import imp
@@ -15,6 +15,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
+from UM.CentralFileStorage import CentralFileStorage
 from UM.Logger import Logger
 from UM.Message import Message
 from UM.Platform import Platform
@@ -181,53 +182,6 @@ class PluginRegistry(QObject):
         except ValueError:
             is_in_path = False
         return is_in_path
-
-    def _verifyCleanHierarchy(self, abs_path: str) -> bool:
-        """ Only trust plugins if not checking or when there are no other files (not in the exceptions) in parent-root.
-        :param abs_path: The path to check for violations.
-        :return: True if the hierarchy of the abs_path and below can potentially be trusted.
-        """
-
-        # Don't check plugins if not in a 'security scenario'. Hobbyists must be able to tinker without signing.
-        if not self._check_if_trusted:
-            return True
-
-        install_prefix = os.path.abspath(self._application.getInstallPrefix())
-
-        # Put the parent-root on the work-list:
-        worklist = [abs_path]
-        while worklist:
-            current_dir = worklist.pop()
-
-            # If the directory under scrutiny is a signed folder or bundled, it's ok:
-            has_signature_file = os.path.isfile(os.path.join(current_dir, TrustBasics.getSignaturesLocalFilename()))
-            is_bundled = self._isPathInLocation(install_prefix, current_dir)
-            if has_signature_file or is_bundled:
-                continue
-
-            # Otherwise it's outside of the trusted area, and needs to be checked whether stray file/folder or plugin:
-            for file in os.listdir(current_dir):
-                abs_file = os.path.join(current_dir, file)
-
-                # If the file is a sub-folder, put it on the work-list to be investigated in a later iteration:
-                if os.path.isdir(abs_file):
-                    worklist.append(abs_file)
-
-                # Otherwise, the file can never have a valid signature associated with it, so message and abort:
-                else:
-                    Logger.error("Plugins in %s won't load: File that can't be verified: %s", abs_path, abs_file)
-                    if abs_path not in self._clean_hierarchy_sent_messages:
-                        self._clean_hierarchy_sent_messages.append(abs_path)
-                        message_text = i18n_catalog.i18nc("@error:untrusted",
-                                                          "Plugin {} was not loaded because it tried to load files outside of the trusted context",
-                                                          abs_path)
-                        # TODO: Message now has exactly the same string as for an unverified plugin, rather than a
-                        #       folder which contains other plugins, because of the string freeze in the current branch.
-                        Message(text=message_text).show()
-                    return False
-
-        # All is well:
-        return True
 
     # TODO:
     # - [ ] Improve how metadata is stored. It should not be in the 'plugin' prop
@@ -398,6 +352,10 @@ class PluginRegistry(QObject):
         self._bundled_plugin_cache[plugin_id] = is_bundled
         return is_bundled
 
+    # Indicates that a specific plugin is currently being loaded. If the plugin_id is empty, it means that no plugin
+    # is currently being loaded.
+    pluginLoadStarted = pyqtSignal(str, arguments = ["plugin_id"])
+
     def loadPlugins(self, metadata: Optional[Dict[str, Any]] = None) -> None:
         """Load all plugins matching a certain set of metadata
 
@@ -416,6 +374,8 @@ class PluginRegistry(QObject):
         for plugin_id in plugin_ids:
             if plugin_id in self.preloaded_plugins:
                 continue  # Already loaded this before.
+
+            self.pluginLoadStarted.emit(plugin_id)
 
             # Get the plugin metadata:
             try:
@@ -439,6 +399,8 @@ class PluginRegistry(QObject):
                     self._plugins_installed.append(plugin_id)
                 except PluginNotFoundError:
                     pass
+
+        self.pluginLoadStarted.emit("")
         Logger.log("d", "Loading all plugins took %s seconds", time.time() - start_time)
 
     # Checks if the given plugin API version is compatible with the current version.
@@ -585,7 +547,10 @@ class PluginRegistry(QObject):
             del self.bundled_plugin_cache[plugin_id]
 
         Logger.log("i", "Attempting to remove plugin '%s' from directory '%s'", plugin_id, plugin_path)
-        shutil.rmtree(plugin_path)
+        try:
+            shutil.rmtree(plugin_path)
+        except EnvironmentError as e:
+            Logger.error("Unable to remove plug-in {plugin_id}: {err}".format(plugin_id = plugin_id, err = str(e)))
 
 #===============================================================================
 # PRIVATE METHODS
@@ -641,19 +606,44 @@ class PluginRegistry(QObject):
 
         if plugin_id in self._found_plugins:
             return self._found_plugins[plugin_id]
-        location = None
+        locations = []
         for folder in self._plugin_locations:
-            if not self._verifyCleanHierarchy(folder):
-                continue
             location = self._locatePlugin(plugin_id, folder)
             if location:
-                break
+                locations.append(location)
 
-        if not location:
+        if not locations:
             return None
+        final_location = locations[0]
 
+        if len(locations) > 1:
+            # We found multiple versions of the plugin. Let's find out which one to load!
+            highest_version = Version(0)
+
+            for loc in locations:
+                meta_data = {}  # type: Dict[str, Any]
+                plugin_location = os.path.join(loc, plugin_id)
+                metadata_file = os.path.join(plugin_location, "plugin.json")
+                try:
+                    with open(metadata_file, "r", encoding="utf-8") as file_stream:
+                        self._parsePluginInfo(plugin_id, file_stream.read(), meta_data)
+                except:
+                    pass
+                current_version = Version(meta_data["plugin"]["version"])
+                if current_version > highest_version:
+                    highest_version = current_version
+                    final_location = loc
+
+        # Move data (if any) to central storage
+        central_storage_file = os.path.join(final_location, plugin_id, TrustBasics.getCentralStorageFilename())
+        if os.path.exists(central_storage_file):
+            try:
+                with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
+                    self._handleCentralStorage(file_stream.read(), os.path.join(final_location, plugin_id), is_bundled_plugin = self.isBundledPlugin(plugin_id))
+            except:
+                pass
         try:
-            file, path, desc = imp.find_module(plugin_id, [location])
+            file, path, desc = imp.find_module(plugin_id, [final_location])
         except Exception:
             Logger.logException("e", "Import error when importing %s", plugin_id)
             return None
@@ -705,6 +695,26 @@ class PluginRegistry(QObject):
                 return os.path.abspath(os.path.join(folder_path, ".."))
 
         return None
+
+    def _handleCentralStorage(self, file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> None:
+        """
+        Plugins can indicate that they want certain things to be stored in a central location.
+        In the case of a signed plugin you *must* do this by means of the central_storage.json file.
+        :param file_data: The data as loaded from the file
+        :param plugin_path: The location of the plugin on the file system
+        :return:
+        """
+        try:
+            file_manifest = json.loads(file_data)
+        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
+            Logger.logException("e", "Failed to parse central_storage.json")
+            return
+
+        for file_to_move in file_manifest:
+            try:
+                CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]), move_file = not is_bundled_plugin)
+            except (TypeError, IndexError):
+                Logger.logException("w", "Unable to move file to central storage")
 
     #   Load the plugin data from the stream and in-place update the metadata.
     def _parsePluginInfo(self, plugin_id, file_data, meta_data):

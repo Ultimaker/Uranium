@@ -178,7 +178,7 @@ PreferencesPage
         {
             target: objectList.model
 
-            onItemsChanged:
+            function onItemsChanged()
             {
                 var itemIndex = -1;
                 if (base.currentItem === null)

@@ -22,6 +22,8 @@ def signFile(private_key_path: str, filename: str, optional_password: Optional[s
       "root_signature": "...<key in base-64>..."
     }
 
+    See also 'Trust.py' in the main library and the related scripts; 'createkeypair.py', 'signfolder.py' in this folder.
+
     :param private_key_path: Path to the file containing the private key.
     :param filename: The file to be signed.
     :param optional_password: If the private key has a password, it should be provided here.

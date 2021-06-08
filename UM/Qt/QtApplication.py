@@ -8,6 +8,8 @@ from typing import List
 from typing import Any, cast, Dict, Optional
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+
+from UM.FileProvider import FileProvider
 from UM.FlameProfiler import pyqtSlot
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
@@ -184,6 +186,12 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Initializing version upgrade manager ...")
         self._version_upgrade_manager = VersionUpgradeManager(self)
 
+    def _displayLoadingPluginSplashMessage(self, plugin_id: Optional[str]) -> None:
+        message = i18nCatalog("uranium").i18nc("@info:progress", "Loading plugins...")
+        if plugin_id:
+            message = i18nCatalog("uranium").i18nc("@info:progress", "Loading plugin {plugin_id}...").format(plugin_id = plugin_id)
+        self.showSplashMessage(message)
+
     def startSplashWindowPhase(self) -> None:
         super().startSplashWindowPhase()
         i18n_catalog = i18nCatalog("uranium")
@@ -203,7 +211,9 @@ class QtApplication(QApplication, Application):
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         # Remove and install the plugins that have been scheduled
         self._plugin_registry.initializeBeforePluginsAreLoaded()
+        self._plugin_registry.pluginLoadStarted.connect(self._displayLoadingPluginSplashMessage)
         self._loadPlugins()
+        self._plugin_registry.pluginLoadStarted.disconnect(self._displayLoadingPluginSplashMessage)
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         self.pluginsLoaded.emit()
 
@@ -222,8 +232,8 @@ class QtApplication(QApplication, Application):
             self._preferences.deserialize(serialized)
             self._preferences.setValue("general/plugins_to_remove", "")
             self._preferences.writeToFile(preferences_filename)
-        except (FileNotFoundError, UnicodeDecodeError):
-            Logger.log("i", "The preferences file cannot be found or it is corrupted, so we will use default values")
+        except (EnvironmentError, UnicodeDecodeError):
+            Logger.log("i", "The preferences file cannot be opened or it is corrupted, so we will use default values")
 
         self.processEvents()
         # Force the configuration file to be written again since the list of plugins to remove maybe changed
@@ -310,16 +320,17 @@ class QtApplication(QApplication, Application):
     def recentFiles(self) -> List[QUrl]:
         return self._recent_files
 
+    fileProvidersChanged = pyqtSignal()
+
+    @pyqtProperty("QVariantList", notify = fileProvidersChanged)
+    def fileProviders(self) -> List[FileProvider]:
+        return self.getFileProviders()
+
     def _onJobFinished(self, job: Job) -> None:
-        if isinstance(job, WriteFileJob):
-            if not job.getResult() or not job.getAddToRecentFiles():
-                # For a write file job, if it failed or it doesn't need to be added to the recent files list, we do not
-                # add it.
-                return
-        elif (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
+        if isinstance(job, WriteFileJob) and not job.getResult():
             return
 
-        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)):
+        if isinstance(job, (ReadMeshJob, ReadFileJob, WriteFileJob)) and job.getAddToRecentFiles():
             self.addFileToRecentFiles(job.getFileName())
 
     def addFileToRecentFiles(self, file_name: str) -> None:
@@ -443,7 +454,7 @@ class QtApplication(QApplication, Application):
     @property
     def isVisible(self) -> bool:
         if self._main_window is not None:
-            return self._main_window.visible #type: ignore #MyPy doesn't realise that self._main_window cannot be None here.
+            return self._main_window.isVisible()  #type: ignore #MyPy doesn't realise that self._main_window cannot be None here.
         return False
 
     def getTheme(self) -> Optional[Theme]:
@@ -490,6 +501,9 @@ class QtApplication(QApplication, Application):
             self.getBackend().close()
         except Exception as e:
             Logger.log("e", "Exception while closing backend: %s", repr(e))
+
+        if self._qml_engine:
+            self._qml_engine.deleteLater()
 
         if self._tray_icon_widget:
             self._tray_icon_widget.deleteLater()
@@ -597,8 +611,10 @@ class QtApplication(QApplication, Application):
     @pyqtSlot()
     def resetWorkspace(self) -> None:
         self._workspace_metadata_storage.clear()
+        self._current_workspace_information.clear()
         self.deleteAll()
         self.workspaceLoaded.emit("")
+        self.getController().getScene().clearMetaData()
 
     def getMeshFileHandler(self) -> MeshFileHandler:
         """Get the MeshFileHandler of this application."""
@@ -656,4 +672,3 @@ class _QtFunctionEvent(QEvent):
     def __init__(self, fevent: QEvent) -> None:
         super().__init__(self.QtFunctionEvent)
         self._function_event = fevent
-

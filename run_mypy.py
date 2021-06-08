@@ -80,7 +80,7 @@ def main():
 
     for i, returncode in enumerate(pool.imap(partial(call, shell=True), commands)):
         if returncode != 0:
-            print("\nCommand %s failed checking. :(" % commands[i])
+            print("\nCommand {command} failed checking (code {errcode}). :(".format(command = commands[i], errcode = returncode))
             failed = True
 
     if not failed:
