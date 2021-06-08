@@ -6,6 +6,7 @@ import os  # To remove duplicate files.
 import os.path  # To re-format files with their proper file extension but with a version number in between.
 import shutil  # To move files in constant-time.
 from typing import List, Tuple, Dict
+from PyQt5.QtCore import QCoreApplication
 
 from UM.Logger import Logger
 from UM.Resources import Resources  # To get the central storage location.
@@ -39,6 +40,8 @@ class CentralFileStorage:
     # In some cases a plugin might ask for files to be moved, but it's not needed (since the plugin is actually bundled)
     # In order to ensure that the same API can still be used, we store those situations.
     _unmoved_files = {}  # type: Dict[str, str]
+
+    _is_enterprise_version = False
 
     @classmethod
     def store(cls, path: str, path_id: str, version: Version = Version("1.0.0"), move_file: bool = True) -> None:
@@ -109,9 +112,11 @@ class CentralFileStorage:
 
         if not os.path.exists(storage_path):
             raise FileNotFoundError(f"Central file storage doesn't have an item (file or directory) with ID {path_id} and version {str(version)}.")
-        stored_file_hash = cls._hashItem(storage_path)
-        if stored_file_hash != sha256_hash:
-            raise IOError(f"The centrally stored item (file or directory) with ID {path_id} and version {str(version)} does not match with the given hash.")
+
+        if cls._is_enterprise_version:
+            stored_file_hash = cls._hashItem(storage_path)
+            if stored_file_hash != sha256_hash:
+                raise IOError(f"The centrally stored item (file or directory) with ID {path_id} and version {str(version)} does not match with the given hash.")
 
         return storage_path
 
@@ -148,6 +153,7 @@ class CentralFileStorage:
             while len(contents) > 0:
                 hasher.update(contents)
                 contents = f.read(block_size)
+        QCoreApplication.processEvents()  # Process events to allow the interface to update
         return hasher.hexdigest()
 
     @classmethod
@@ -184,3 +190,7 @@ class CentralFileStorage:
         elif os.path.isfile(item_path):
             return cls._hashFile(item_path)
         raise FileNotFoundError(f"The specified item '{item_path}' was neither a file nor a directory.")
+
+    @classmethod
+    def setIsEnterprise(cls, is_enterprise: bool) -> None:
+        cls._is_enterprise_version = is_enterprise
