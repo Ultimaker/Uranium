@@ -10,7 +10,7 @@ import zipfile
 from json import JSONDecodeError
 from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
 
-from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty
+from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
 
 from UM import i18nCatalog
 from UM.Logger import Logger
@@ -294,6 +294,7 @@ class PackageManager(QObject):
     def _installAllScheduledPackages(self) -> None:
         while self._to_install_package_dict:
             package_id, package_info = list(self._to_install_package_dict.items())[0]
+            self._application.showSplashMessage(f"{catalog.i18nc('@info:progress', 'Unpacking plugin')} {package_id}...")
             self._installPackage(package_info)
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
@@ -549,8 +550,11 @@ class PackageManager(QObject):
             return
         try:
             with zipfile.ZipFile(filename, "r") as archive:
+                name_list = archive.namelist()
                 temp_dir = tempfile.TemporaryDirectory()
-                archive.extractall(temp_dir.name)
+                for archive_filename in name_list:
+                    archive.extract(archive_filename, temp_dir.name)
+                    QCoreApplication.processEvents()
         except Exception:
             Logger.logException("e", "Failed to install package from file [%s]", filename)
             return
