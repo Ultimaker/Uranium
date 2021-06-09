@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import argparse
@@ -480,7 +480,10 @@ class Application:
             executable = sys.argv[0]
         else:
             executable = sys.executable
-        return os.path.dirname(os.path.realpath(executable))
+        try:
+            return os.path.dirname(os.path.realpath(executable))
+        except EnvironmentError:  # Symlinks can't be dereferenced.
+            return os.path.dirname(executable)
 
     # Returns the path to the folder the app is installed _in_, e.g.: '/root/blah/programs'
     @staticmethod
