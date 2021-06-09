@@ -246,12 +246,15 @@ class Theme(QObject):
 
         iconsdir = os.path.join(path, "icons")
         if os.path.isdir(iconsdir):
-            for base_path, _, icons in os.walk(iconsdir):
-                detail_level = base_path.split(os.sep)[-1]
-                self._icons[detail_level] = {}
-                for icon in icons:
-                    name = os.path.splitext(icon)[0]
-                    self._icons[detail_level][name] = QUrl.fromLocalFile(os.path.join(base_path, icon))
+            try:
+                for base_path, _, icons in os.walk(iconsdir):
+                    detail_level = base_path.split(os.sep)[-1]
+                    self._icons[detail_level] = {}
+                    for icon in icons:
+                        name = os.path.splitext(icon)[0]
+                        self._icons[detail_level][name] = QUrl.fromLocalFile(os.path.join(base_path, icon))
+            except EnvironmentError:  # Exception when calling os.walk, e.g. no access rights.
+                pass  # Won't get any icons then. Images will show as black squares.
 
             deprecated_icons_file = os.path.join(iconsdir, "deprecated_icons.json")
             if os.path.isfile(deprecated_icons_file):
