@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.9\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2021-04-02 16:35+0200\n"
+"POT-Creation-Date: 2021-06-10 17:38+0200\n"
 "PO-Revision-Date: 2021-04-16 15:09+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, German <info@bothof.nl>\n"
@@ -17,507 +17,268 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.1\n"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Spiegeln"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ-Datei"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Modell spiegeln"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "OBJWriter unterstützt keinen Nicht-Textmodus."
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Bewegen"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "Es ist kein Mesh zum Schreiben vorhanden."
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Modell bewegen"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STL-Datei"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Drehen"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "Nicht unterstützter Ausgangsmodus schreibt STL in Stream."
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Modell drehen"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL-Datei (ASCII)"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "Objekt flach auf die Druckplatte leben..."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL-Datei (Binär)"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "Objektdrehung"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Skalieren"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Modell skalieren"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr "Update-Prüfer"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Nach Updates suchen"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
-msgctxt "@info"
-msgid "Could not access update information."
-msgstr "Zugriff auf Update-Informationen nicht möglich."
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
-#: /mnt/projects/ultimaker/cura/Uranium/UM/VersionUpgradeManager.py:173
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "Versions-Upgrade"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "Die Version, die Sie verwenden, unterstützt die Suche nach Updates nicht."
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Warnhinweis"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-msgctxt "@info"
-msgid "An error occurred while checking for updates."
-msgstr "Bei der Suche nach Aktualisierungen ist ein Fehler aufgetreten."
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Fehler"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Es wurde keine neue Version gefunden."
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:105
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "{application_name} {version_number} ist verfügbar!"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr "{application_name} {version_number} bietet eine bessere und zuverlässigere Druckerfahrung."
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:110
-msgctxt "@action:button"
-msgid "Download"
-msgstr "Download"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:112
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "Mehr erfahren"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Lokale Datei"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
 msgstr "Auf Festplatte speichern"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
 msgstr "Auf Festplatte speichern"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
 msgstr "Auf Festplatte speichern"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "Es sind keine Dateitypen zum Schreiben vorhanden!"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Datei bereits vorhanden"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Die Datei <filename>{0}</filename> ist bereits vorhanden. Soll die Datei wirklich überschrieben werden?"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Wird gespeichert unter <filename>{0}</filename>"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "Wird gespeichert"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Beim Versuch <filename>{0}</filename> zu speichern, wird der Zugriff verweigert"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Konnte nicht als <filename>{0}</filename> gespeichert werden: <message>{1}</message>"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Wurde als <filename>{0}</filename> gespeichert"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "Datei wurde gespeichert"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Ordner öffnen"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Öffnet den Ordner, der die gespeicherte Datei enthält"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Warnhinweis"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Das Speichern unter <filename>{0}</filename>: <message>{1}</message> hat nicht funktioniert"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Views/SimpleView/__init__.py:12
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Fehler"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
+msgstr "Spiegeln"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Modell spiegeln"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "Objekt flach auf die Druckplatte leben..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "Objektdrehung"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Drehen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Modell drehen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "Skalieren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Modell skalieren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Bewegen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Modell bewegen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr "Update-Prüfer"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Nach Updates suchen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
+msgctxt "@info"
+msgid "Could not access update information."
+msgstr "Zugriff auf Update-Informationen nicht möglich."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "Versions-Upgrade"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "Die Version, die Sie verwenden, unterstützt die Suche nach Updates nicht."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+msgctxt "@info"
+msgid "An error occurred while checking for updates."
+msgstr "Bei der Suche nach Aktualisierungen ist ein Fehler aufgetreten."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Es wurde keine neue Version gefunden."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:105
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "{application_name} {version_number} ist verfügbar!"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr "{application_name} {version_number} bietet eine bessere und zuverlässigere Druckerfahrung."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:110
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Download"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:112
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "Mehr erfahren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "Einfach"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL-Datei"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter unterstützt keinen Nicht-Textmodus."
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "Es ist kein Mesh zum Schreiben vorhanden."
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ-Datei"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL-Datei (ASCII)"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL-Datei (Binär)"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "Nicht unterstützter Ausgangsmodus schreibt STL in Stream."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:318
-msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr ""
-"Das Plugin wurde installiert.\n"
-"Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:379
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "Plugin {} wurde nicht geladen, weil es nicht verifiziert werden konnte."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:479
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr ""
-"Das Plugin wurde entfernt.\n"
-"Bitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:826
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/FileHandler.py:60
-#, python-brace-format
-msgctxt "@item:inlistbox"
-msgid "All Supported Types ({0})"
-msgstr "Alle unterstützten Typen ({0})"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:827
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/FileHandler.py:61
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr "Alle Dateien (*)"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:122
-#, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
-msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}T. {1:0>2}St. {2:0>2}Mi."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:124
-#, python-brace-format
-msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}St. {1:0>2}Mi."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:127
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is days"
-msgid "{0} day"
-msgid_plural "{0} days"
-msgstr[0] "{0} Tag"
-msgstr[1] "{0} Tage"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:127
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:129
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is hours"
-msgid "{0} hour"
-msgid_plural "{0} hours"
-msgstr[0] "{0} Stunde"
-msgstr[1] "{0} Stunden"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:127
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:129
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:131
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is minutes"
-msgid "{0} minute"
-msgid_plural "{0} minutes"
-msgstr[0] "{0} Minute"
-msgstr[1] "{0} Minuten"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:192
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr "Paketmanager wird initialisiert ..."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:200
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr "Ihre Konfiguration scheint beschädigt zu sein."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:202
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr "Konfigurationsfehler"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:205
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "Plugins werden geladen..."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:212
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "Die Konfiguration wird aktualisiert..."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:218
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "Einstellungen werden geladen..."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:305
-msgctxt "@info:progress"
-msgid "Loading UI..."
-msgstr "Benutzeroberfläche wird geladen..."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Mesh/ReadMeshJob.py:70
-#, python-format, python-brace-format
-msgctxt "@info:status"
-msgid "Auto scaled object to {0}% of original size"
-msgstr "Automatische Skalierung des Objekts auf {0}% der Originalgröße"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Mesh/ReadMeshJob.py:70
-msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "Objekt-Skalierung"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:192
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr "Möchten Sie {filename} neu laden?"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:193
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr "Datei wurde geändert"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:194
-msgctxt "@action:button"
-msgid "Reload"
-msgstr "Neu laden"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:194
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr "Damit werden die geänderten Dateien erneut von der Festplatte geladen."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/View/GL/OpenGL.py:59
-#: /mnt/projects/ultimaker/cura/Uranium/UM/View/GL/OpenGL.py:64
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "OpenGL konnte nicht initialisiert werden"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/View/GL/OpenGL.py:74
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Wichtige OpenGL-Erweiterungen fehlen. Dieses Programm erfordert Support für Framebuffer-Objekte. Überprüfen Sie bitte Ihre Videokartentreiber."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "Eine Konfiguration einer älteren Version von {0} wurde importiert."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:281
-#, python-brace-format
-msgctxt "@error:uninstall"
-msgid ""
-"There were some errors uninstalling the following packages:\n"
-"{packages}"
-msgstr ""
-"Beim Deinstallieren der folgenden Pakete traten Fehler auf:\n"
-"{packages}"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:283
-msgctxt "@info:title"
-msgid "Uninstalling errors"
-msgstr "Fehler beim Deinstallieren"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:559
-#, python-brace-format
-msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr ""
-"Beim Deinstallieren des Pakets {package} vor dem Installieren einer neuen Version trat ein Fehler auf:\n"
-"{error}.\n"
-"Versuchen Sie später erneut, die Aktualisierung durchzuführen."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:562
-msgctxt "@info:title"
-msgid "Updating error"
-msgstr "Fehler beim Aktualisieren"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:40
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "Dateien des Typs <filename>{0}</filename> können nicht geöffnet werden"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:40
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "Ungültige Datei"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:53
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr "<filename>{0}</filename> konnte nicht geladen werden. Die Datei könnte fehlerhaft oder unzugänglich sein."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:55
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
-msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr "Datei kann nicht geöffnet werden"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:63
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "Wird geladen"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
-msgctxt "@info:title"
-msgid "No Models in File"
-msgstr "Keine Modelle in der Datei"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr "<filename>{0}</filename> konnte nicht geladen werden. Die Datei könnte beschädigt oder unzugänglich sein, oder sie enthielt keine Modelle."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:33
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:33
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:45
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:45
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -529,138 +290,445 @@ msgstr ""
 "- {profiles}\n"
 " Möchten Sie auf die Werkseinstellungen zurücksetzen? Durch das Zurücksetzen werden all Ihre aktuellen Drucker und Profile entfernt."
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:50
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:50
 msgctxt "@title:window"
 msgid "Reset to factory"
 msgstr "Zurücksetzung auf Werkseinstellungen"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:52
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:52
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "Durch das Zurücksetzen werden alle Ihre aktuellen Drucker und Profile entfernt! Möchten Sie wirklich zurücksetzen?"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:196
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr "Modell sperren"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:864
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
+#, python-brace-format
+msgctxt "@item:inlistbox"
+msgid "All Supported Types ({0})"
+msgstr "Alle unterstützten Typen ({0})"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:72
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:865
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
+msgstr "Alle Dateien (*)"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "Dateien des Typs <filename>{0}</filename> können nicht geöffnet werden"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr "Ungültige Datei"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr "<filename>{0}</filename> konnte nicht geladen werden. Die Datei könnte fehlerhaft oder unzugänglich sein."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr "Datei kann nicht geöffnet werden"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:63
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "Wird geladen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr "Keine Modelle in der Datei"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr "<filename>{0}</filename> konnte nicht geladen werden. Die Datei könnte beschädigt oder unzugänglich sein, oder sie enthielt keine Modelle."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled object to {0}% of original size"
+msgstr "Automatische Skalierung des Objekts auf {0}% der Originalgröße"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "Objekt-Skalierung"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:285
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid ""
+"There were some errors uninstalling the following packages:\n"
+"{packages}"
+msgstr ""
+"Beim Deinstallieren der folgenden Pakete traten Fehler auf:\n"
+"{packages}"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:287
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr "Fehler beim Deinstallieren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:297
+#, python-brace-format
+msgctxt "@info:progress Don't translate {package_id}"
+msgid "Installing plugin {package_id}..."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
+#, python-brace-format
+msgctxt "@error:update"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr ""
+"Beim Deinstallieren des Pakets {package} vor dem Installieren einer neuen Version trat ein Fehler auf:\n"
+"{error}.\n"
+"Versuchen Sie später erneut, die Aktualisierung durchzuführen."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:571
+msgctxt "@info:title"
+msgid "Updating error"
+msgstr "Fehler beim Aktualisieren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:319
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+"Das Plugin wurde installiert.\n"
+"Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:386
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr "Plugin {} wurde nicht geladen, weil es nicht verifiziert werden konnte."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:488
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr ""
+"Das Plugin wurde entfernt.\n"
+"Bitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
+#, python-brace-format
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2}T. {1:0>2}St. {2:0>2}Mi."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:124
+#, python-brace-format
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2}St. {1:0>2}Mi."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} Tag"
+msgstr[1] "{0} Tage"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} Stunde"
+msgstr[1] "{0} Stunden"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:131
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} Minute"
+msgstr[1] "{0} Minuten"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:211
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "Plugins werden geladen..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:192
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr "Paketmanager wird initialisiert ..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:206
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr "Ihre Konfiguration scheint beschädigt zu sein."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:208
+msgctxt "@info:title"
+msgid "Configuration errors"
+msgstr "Konfigurationsfehler"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:220
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "Die Konfiguration wird aktualisiert..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:226
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "Einstellungen werden geladen..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:313
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr "Benutzeroberfläche wird geladen..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "Möchten Sie {filename} neu laden?"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:193
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr "Datei wurde geändert"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "Neu laden"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "Damit werden die geänderten Dateien erneut von der Festplatte geladen."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "Eine Konfiguration einer älteren Version von {0} wurde importiert."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:59
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:64
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "OpenGL konnte nicht initialisiert werden"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:74
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Wichtige OpenGL-Erweiterungen fehlen. Dieses Programm erfordert Support für Framebuffer-Objekte. Überprüfen Sie bitte Ihre Videokartentreiber."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
 msgid "Lay flat"
 msgstr "Flach"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr "Wählen Sie die Fläche aus, die an der Bauplatte ausgerichtet werden soll"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Snap-Drehung"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Snap-Skalierung"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Einheitliche Skalierung"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:222
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "Modell sperren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
 msgstr "Entfernen bestätigen"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr "Möchten Sie %1 wirklich entfernen? Dies kann nicht rückgängig gemacht werden!"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Drucker"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Typ"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:111
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:112
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr "Standardeinstellungen"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:119
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:120
 msgctxt "@action:button"
 msgid "Close"
 msgstr "Schließen"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:149
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Allgemein"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:151
 msgctxt "@title:tab"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "Umbenennen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr "Bitte einen neuen Namen eingeben."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
+msgctxt "@action:button"
+msgid "OK"
+msgstr "OK"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "Diese Einstellung wurde durch das aktive Gerät ausgeblendet und ist nicht sichtbar."
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
 msgstr[0] "Diese Einstellung wurde durch den Wert von %1 ausgeblendet. Ändern Sie den Wert dieser Einstellung, um diese Einstellung sichtbar zu machen."
 msgstr[1] "Diese Einstellung wurde durch die Werte von %1 ausgeblendet. Ändern Sie die Werte dieser Einstellung, um diese Einstellung sichtbar zu machen."
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "Umbenennen"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr "Bitte einen neuen Namen eingeben."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:241
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
-msgctxt "@action:button"
-msgid "OK"
-msgstr "OK"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Drucker"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Typ"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:215
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
 msgstr "Zurück"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
 msgstr "Beenden"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
 msgstr "Weiter"
+
+#: ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Gibt Protokoll-Informationen an die Konsole weiter."
+
+#: ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Konsolen-Protokolleinrichtung"
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Ermöglicht das Lesen von Wavefront OBJ-Dateien."
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ-Reader"
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Ermöglicht das Schreiben von Wavefront OBJ-Dateien."
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ-Writer"
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "Bietet Unterstützung für das Lesen von STL-Dateien."
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STL-Reader"
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "Bietet Unterstützung für das Schreiben von STL-Dateien."
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr "STL-Writer"
 
 #: FileLogger/plugin.json
 msgctxt "description"
@@ -682,35 +750,15 @@ msgctxt "name"
 msgid "Local Container Provider"
 msgstr "Lokaler Containeranbieter"
 
-#: Tools/MirrorTool/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Stellt das Spiegelungstool bereit."
+msgid "Enables saving to local files."
+msgstr "Ermöglicht das Speichern als lokale Datei."
 
-#: Tools/MirrorTool/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Spiegelungstool"
-
-#: Tools/TranslateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Move tool."
-msgstr "Stellt das Bewegungstool bereit."
-
-#: Tools/TranslateTool/plugin.json
-msgctxt "name"
-msgid "Move Tool"
-msgstr "Bewegungstool"
-
-#: Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Stellt das Drehungstool bereit."
-
-#: Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Drehungstool"
+msgid "Local File Output Device"
+msgstr "Lokales Dateiausgabegerät"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
@@ -722,15 +770,25 @@ msgctxt "name"
 msgid "Camera Tool"
 msgstr "Kameratool"
 
-#: Tools/SelectionTool/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Stellt das Auswahltool bereit."
+msgid "Provides the Mirror tool."
+msgstr "Stellt das Spiegelungstool bereit."
 
-#: Tools/SelectionTool/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "name"
-msgid "Selection Tool"
-msgstr "Auswahltool"
+msgid "Mirror Tool"
+msgstr "Spiegelungstool"
+
+#: Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Stellt das Drehungstool bereit."
+
+#: Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Drehungstool"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
@@ -742,6 +800,26 @@ msgctxt "name"
 msgid "Scale Tool"
 msgstr "Skaliertool"
 
+#: Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Stellt das Auswahltool bereit."
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Auswahltool"
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr "Stellt das Bewegungstool bereit."
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "name"
+msgid "Move Tool"
+msgstr "Bewegungstool"
+
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
@@ -752,26 +830,6 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr "Update-Prüfer"
 
-#: LocalFileOutputDevice/plugin.json
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Ermöglicht das Speichern als lokale Datei."
-
-#: LocalFileOutputDevice/plugin.json
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Lokales Dateiausgabegerät"
-
-#: ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Gibt Protokoll-Informationen an die Konsole weiter."
-
-#: ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Konsolen-Protokolleinrichtung"
-
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
@@ -781,46 +839,6 @@ msgstr "Bietet eine einfache, solide Netzansicht."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Einfache Ansicht"
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Bietet Unterstützung für das Lesen von STL-Dateien."
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL-Reader"
-
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Ermöglicht das Schreiben von Wavefront OBJ-Dateien."
-
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ-Writer"
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Bietet Unterstützung für das Schreiben von STL-Dateien."
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL-Writer"
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Ermöglicht das Lesen von Wavefront OBJ-Dateien."
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ-Reader"
 
 #~ msgctxt "@action:button Preceded by 'Ready to'."
 #~ msgid "Save to File"

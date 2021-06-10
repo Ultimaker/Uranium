@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.9\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2021-04-02 16:35+0200\n"
+"POT-Creation-Date: 2021-06-10 17:38+0200\n"
 "PO-Revision-Date: 2017-09-27 12:27+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Finnish <info@bothof.nl>\n"
@@ -16,500 +16,268 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Peilaus"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ -tiedosto"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Peilaa mallia"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Siirrä"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Siirrä mallia"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Pyöritys"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Pyöritä mallia"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
-msgctxt "@title"
-msgid "Object Rotation"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Skaalaus"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STL-tiedosto"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Skaalaa mallia"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
-msgctxt "@item:inmenu"
-msgid "Update Checker"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Tarkista päivitykset"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL-tiedosto (ASCII)"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
-msgctxt "@info"
-msgid "Could not access update information."
-msgstr "Päivitystietoja ei löytynyt."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL-tiedosto (binaari)"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
-#: /mnt/projects/ultimaker/cura/Uranium/UM/VersionUpgradeManager.py:173
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "Versiopäivitys"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "Käyttämäsi versio ei tue päivitysten tarkistusta."
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Varoitus"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-msgctxt "@info"
-msgid "An error occurred while checking for updates."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Virhe"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Uutta versiota ei löytynyt."
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:105
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:110
-msgctxt "@action:button"
-msgid "Download"
-msgstr "Lataa"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:112
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Paikallinen tiedosto"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "Käytettävissä ei ole tiedostotyyppejä, joilla voidaan kirjoittaa!"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Tiedosto on jo olemassa"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti kirjoittaa sen päälle?"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Tallennetaan tiedostoon <filename>{0}</filename>"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "Tallennetaan"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Lupa evätty yritettäessä tallentaa tiedostoon <filename>{0}</filename>"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</message>"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Tallennettu tiedostoon <filename>{0}</filename>"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "Tiedosto tallennettu"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Avaa kansio"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Avaa tiedoston sisältävän kansion"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Varoitus"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Views/SimpleView/__init__.py:12
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Virhe"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
+msgstr "Peilaus"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Peilaa mallia"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Pyöritys"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Pyöritä mallia"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "Skaalaus"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Skaalaa mallia"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Siirrä"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Siirrä mallia"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Tarkista päivitykset"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
+msgctxt "@info"
+msgid "Could not access update information."
+msgstr "Päivitystietoja ei löytynyt."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "Versiopäivitys"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "Käyttämäsi versio ei tue päivitysten tarkistusta."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+msgctxt "@info"
+msgid "An error occurred while checking for updates."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Uutta versiota ei löytynyt."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:105
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:110
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Lataa"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:112
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "Yksinkertainen"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL-tiedosto"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ -tiedosto"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL-tiedosto (ASCII)"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL-tiedosto (binaari)"
-
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:318
-msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr ""
-"Laajennus on asennettu.\n"
-"Ota laajennus käyttöön käynnistämällä sovellus uudelleen."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:379
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:479
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:826
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/FileHandler.py:60
-#, python-brace-format
-msgctxt "@item:inlistbox"
-msgid "All Supported Types ({0})"
-msgstr "Kaikki tuetut tyypit ({0})"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PluginRegistry.py:827
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/FileHandler.py:61
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr "Kaikki tiedostot (*)"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:122
-#, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
-msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2} p {1:0>2} h {2:0>2} min"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:124
-#, python-brace-format
-msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2} h {1:0>2} min"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:127
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is days"
-msgid "{0} day"
-msgid_plural "{0} days"
-msgstr[0] "{0} päivä"
-msgstr[1] "{0} päivää"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:127
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:129
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is hours"
-msgid "{0} hour"
-msgid_plural "{0} hours"
-msgstr[0] "{0} tunti"
-msgstr[1] "{0} tuntia"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:127
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:129
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/Duration.py:131
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is minutes"
-msgid "{0} minute"
-msgid_plural "{0} minutes"
-msgstr[0] "{0} minuutti"
-msgstr[1] "{0} minuuttia"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:192
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:200
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:202
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:205
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "Ladataan lisäosia..."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:212
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "Päivitetään määrityksiä..."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:218
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "Ladataan lisäasetuksia..."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/QtApplication.py:305
-msgctxt "@info:progress"
-msgid "Loading UI..."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Mesh/ReadMeshJob.py:70
-#, python-format, python-brace-format
-msgctxt "@info:status"
-msgid "Auto scaled object to {0}% of original size"
-msgstr "Kappale skaalattu automaattisesti {0} %:iin alkuperäisestä koosta"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Mesh/ReadMeshJob.py:70
-msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "Skaalataan kappaletta"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:192
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:193
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:194
-msgctxt "@action:button"
-msgid "Reload"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Scene/Scene.py:194
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/View/GL/OpenGL.py:59
-#: /mnt/projects/ultimaker/cura/Uranium/UM/View/GL/OpenGL.py:64
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "OpenGL:n alustus epäonnistui"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/View/GL/OpenGL.py:74
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Kriittisiä OpenGL-lisäosia puuttuu. Tämä ohjelma vaatii tuen Framebuffer-objekteille. Tarkista näytönohjaimen ajurit."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "Aikaisemman {0} -version määritykset tuotiin."
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:281
-#, python-brace-format
-msgctxt "@error:uninstall"
-msgid ""
-"There were some errors uninstalling the following packages:\n"
-"{packages}"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:283
-msgctxt "@info:title"
-msgid "Uninstalling errors"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:559
-#, python-brace-format
-msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/PackageManager.py:562
-msgctxt "@info:title"
-msgid "Updating error"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:40
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:40
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "Virheellinen tiedosto"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:53
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:55
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
-msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:63
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "Ladataan"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:78
-msgctxt "@info:title"
-msgid "No Models in File"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/FileHandler/ReadFileJob.py:81
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:33
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:33
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Palauta"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:45
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:45
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -518,138 +286,438 @@ msgid ""
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:50
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:50
 msgctxt "@title:window"
 msgid "Reset to factory"
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/ConfigurationErrorMessage.py:52
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:52
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:196
-msgctxt "@option:check"
-msgid "Lock Model"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:864
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
+#, python-brace-format
+msgctxt "@item:inlistbox"
+msgid "All Supported Types ({0})"
+msgstr "Kaikki tuetut tyypit ({0})"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:72
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:865
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
+msgstr "Kaikki tiedostot (*)"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr "Virheellinen tiedosto"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:63
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "Ladataan"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled object to {0}% of original size"
+msgstr "Kappale skaalattu automaattisesti {0} %:iin alkuperäisestä koosta"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "Skaalataan kappaletta"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:285
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid ""
+"There were some errors uninstalling the following packages:\n"
+"{packages}"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:287
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:297
+#, python-brace-format
+msgctxt "@info:progress Don't translate {package_id}"
+msgid "Installing plugin {package_id}..."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
+#, python-brace-format
+msgctxt "@error:update"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:571
+msgctxt "@info:title"
+msgid "Updating error"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:319
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+"Laajennus on asennettu.\n"
+"Ota laajennus käyttöön käynnistämällä sovellus uudelleen."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:386
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:488
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
+#, python-brace-format
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2} p {1:0>2} h {2:0>2} min"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:124
+#, python-brace-format
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2} h {1:0>2} min"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} päivä"
+msgstr[1] "{0} päivää"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} tunti"
+msgstr[1] "{0} tuntia"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:131
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} minuutti"
+msgstr[1] "{0} minuuttia"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:211
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "Ladataan lisäosia..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:192
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:206
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:208
+msgctxt "@info:title"
+msgid "Configuration errors"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:220
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "Päivitetään määrityksiä..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:226
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "Ladataan lisäasetuksia..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:313
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:193
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
+msgctxt "@action:button"
+msgid "Reload"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "Aikaisemman {0} -version määritykset tuotiin."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:59
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:64
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "OpenGL:n alustus epäonnistui"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:74
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Kriittisiä OpenGL-lisäosia puuttuu. Tämä ohjelma vaatii tuen Framebuffer-objekteille. Tarkista näytönohjaimen ajurit."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
 msgid "Lay flat"
 msgstr "Aseta latteaksi"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr ""
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Kohdista pyöritys"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Kohdista skaalaus"
 
-#: /mnt/projects/ultimaker/cura/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Tasainen skaalaus"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:222
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
 msgstr "Vahvista poisto"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr "Haluatko varmasti poistaa kappaleen %1? Tätä ei voida kumota!"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Tulostimet"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Tyyppi"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
 msgstr "Lisäasetukset"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:111
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:112
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr "Oletusarvot"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:119
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:120
 msgctxt "@action:button"
 msgid "Close"
 msgstr "Sulje"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:149
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Yleiset"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:151
 msgctxt "@title:tab"
 msgid "Settings"
 msgstr "Asetukset"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "Nimeä uudelleen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
+msgctxt "@action:button"
+msgid "OK"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "Tämä asetus ei ole näkyvissä, koska aktiivinen laite on piilottanut sen."
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
 msgstr[0] "Tämä asetus on piilotettu asetuksella %1. Tuo asetus näkyviin muuttamalla kyseisen asetuksen arvoa."
 msgstr[1] "Tämä asetus on piilotettu asetuksilla %1. Tuo asetus näkyviin muuttamalla kyseisten asetusten arvoja."
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "Nimeä uudelleen"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:241
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Peruuta"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
-msgctxt "@action:button"
-msgid "OK"
-msgstr ""
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Tulostimet"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Tyyppi"
-
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:215
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
 msgstr "Takaisin"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
 msgstr "Lopeta"
 
-#: /mnt/projects/ultimaker/cura/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
 msgstr "Seuraava"
+
+#: ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Lähettää lokitiedot konsoliin."
+
+#: ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Konsolin tiedonkeruu"
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ -lukija"
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ -kirjoitin"
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "Tukee STL-tiedostojen lukemista."
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STL-lukija"
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "Tukee STL-tiedostojen kirjoittamista."
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr "STL-kirjoitin"
 
 #: FileLogger/plugin.json
 msgctxt "description"
@@ -671,35 +739,15 @@ msgctxt "name"
 msgid "Local Container Provider"
 msgstr ""
 
-#: Tools/MirrorTool/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Näyttää peilaustyökalun."
+msgid "Enables saving to local files."
+msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
 
-#: Tools/MirrorTool/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Peilaustyökalu"
-
-#: Tools/TranslateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Move tool."
-msgstr "Näyttää siirtotyökalun."
-
-#: Tools/TranslateTool/plugin.json
-msgctxt "name"
-msgid "Move Tool"
-msgstr "Siirtotyökalu"
-
-#: Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Näyttää pyöritystyökalun."
-
-#: Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Pyöritystyökalu"
+msgid "Local File Output Device"
+msgstr "Paikallisen tiedoston tulostusväline"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
@@ -711,15 +759,25 @@ msgctxt "name"
 msgid "Camera Tool"
 msgstr "Kameratyökalu"
 
-#: Tools/SelectionTool/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Näyttää valintatyökalun."
+msgid "Provides the Mirror tool."
+msgstr "Näyttää peilaustyökalun."
 
-#: Tools/SelectionTool/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "name"
-msgid "Selection Tool"
-msgstr "Valintatyökalu"
+msgid "Mirror Tool"
+msgstr "Peilaustyökalu"
+
+#: Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Näyttää pyöritystyökalun."
+
+#: Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Pyöritystyökalu"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
@@ -731,6 +789,26 @@ msgctxt "name"
 msgid "Scale Tool"
 msgstr "Skaalaustyökalu"
 
+#: Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Näyttää valintatyökalun."
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Valintatyökalu"
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr "Näyttää siirtotyökalun."
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "name"
+msgid "Move Tool"
+msgstr "Siirtotyökalu"
+
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
@@ -741,26 +819,6 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr "Päivitysten tarkistin"
 
-#: LocalFileOutputDevice/plugin.json
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
-
-#: LocalFileOutputDevice/plugin.json
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Paikallisen tiedoston tulostusväline"
-
-#: ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Lähettää lokitiedot konsoliin."
-
-#: ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Konsolin tiedonkeruu"
-
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
@@ -770,46 +828,6 @@ msgstr "Näyttää yksinkertaisen kiinteän verkkonäkymän."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Yksinkertainen näkymä"
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Tukee STL-tiedostojen lukemista."
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL-lukija"
-
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
-
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ -kirjoitin"
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Tukee STL-tiedostojen kirjoittamista."
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL-kirjoitin"
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ -lukija"
 
 #~ msgctxt "@action:button Preceded by 'Ready to'."
 #~ msgid "Save to File"
