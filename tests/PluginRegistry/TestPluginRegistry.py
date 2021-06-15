@@ -130,7 +130,7 @@ class TestPluginRegistry():
     def test_metaData(self, registry):
         expected_metadata = {"id": "TestPlugin",
                             "plugin": {"name": "TestPlugin",
-                                       "api": 5,
+                                       "api": "7.6.0",
                                        "supported_sdk_versions": [Version(5)],
                                        "version": "1.0.0",
                                         "i18n-catalog": "bla",

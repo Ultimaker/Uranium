@@ -1,6 +1,6 @@
 {
     "name": "TestPlugin",
-    "api": 5,
+    "api": "7.6.0",
     "version": "1.0.0",
     "i18n-catalog": "bla",
     "description": "test"
