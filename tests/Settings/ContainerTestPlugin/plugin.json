@@ -1,5 +1,5 @@
 {
     "name": "TestContainerPlugin",
-    "api": 7,
+    "api": "7.6.0",
     "version": "1.0.0"
 }
