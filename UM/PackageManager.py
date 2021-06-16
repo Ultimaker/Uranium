@@ -494,13 +494,14 @@ class PackageManager(QObject):
     # \param force_add is used when updating. In that case you actually want to uninstall & install
     @pyqtSlot(str)
     def removePackage(self, package_id: str, force_add: bool = False) -> None:
+        Logger.log("i", "Removing package [%s]", package_id)
         # Check the delayed installation and removal lists first
         if not self.isPackageInstalled(package_id):
-            Logger.log("i", "Attempt to remove package [%s] that is not installed, do nothing.", package_id)
+            Logger.log("w", "Attempt to remove package [%s] that is not installed, do nothing.", package_id)
             return
         # Extra safety check
         if package_id not in self._installed_package_dict and package_id in self._bundled_package_dict:
-            Logger.log("i", "Not uninstalling [%s] because it is a bundled package.")
+            Logger.log("w", "Not uninstalling [%s] because it is a bundled package.", package_id)
             return
 
         if package_id not in self._to_install_package_dict or force_add:
