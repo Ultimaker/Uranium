@@ -82,7 +82,7 @@ class PackageManager(QObject):
     packagesWithUpdateChanged = pyqtSignal()
 
     def initialize(self) -> None:
-        self._loadManagementData()
+        self.loadManagementData()
         self._removeAllScheduledPackages()
         self._installAllScheduledPackages()
 
@@ -155,7 +155,7 @@ class PackageManager(QObject):
         return False
 
     # (for initialize) Loads the package management file if exists
-    def _loadManagementData(self) -> None:
+    def loadManagementData(self) -> None:
         # The bundled package management file should always be there
         if len(self._bundled_package_management_file_paths) == 0:
             Logger.log("w", "Bundled package management files could not be found!")
