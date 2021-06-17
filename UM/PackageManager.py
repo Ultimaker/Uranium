@@ -330,6 +330,21 @@ class PackageManager(QObject):
 
         return package_info
 
+    def getInstalledPackageIDs(self) -> Set[str]:
+        """
+        Get packages ID's that were installed. This does not contain bundled plugins.
+        :return: Set of id's of installed packages
+        """
+        installed_ids = set()  # type: Set[str]
+        if self._installed_package_dict.keys():
+            installed_ids = installed_ids.union(set(self._installed_package_dict.keys()))
+
+        installed_ids = installed_ids.difference(self._to_remove_package_set)
+        # If it's going to be installed and to be removed, then the package is being updated and it should be listed.
+        if self._to_install_package_dict.keys():
+            installed_ids = installed_ids.union(set(self._to_install_package_dict.keys()))
+        return installed_ids
+
     def getAllInstalledPackageIDs(self) -> Set[str]:
         # Add bundled, installed, and to-install packages to the set of installed package IDs
         all_installed_ids = set()  # type: Set[str]
