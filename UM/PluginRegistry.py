@@ -478,7 +478,21 @@ class PluginRegistry(QObject):
             self.enablePlugin(plugin_id)
             Logger.info("Loaded plugin %s", plugin_id)
 
-        except Exception as ex:
+        except Exception:
+            message_text = i18n_catalog.i18nc("@error",
+                                              "The plugin {} could not be loaded. Re-installing the plugin might solve "
+                                              "the issue", plugin_id)
+            unable_to_load_plugin_message = Message(text = message_text)
+            unable_to_load_plugin_message.addAction("remove",
+                                   name= i18n_catalog.i18nc("@action:button", "Remove plugin"),
+                                   icon="",
+                                   description="Remove the plugin",
+                                   button_align=Message.ActionButtonAlignment.ALIGN_RIGHT)
+
+            # Listen for the pyqt signal, since that one does support lambda's
+            unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: (self.uninstallPlugin(plugin_id), message.hide()))
+
+            unable_to_load_plugin_message.show()
             Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
     #   Uninstall a plugin with a given ID:
