@@ -249,7 +249,8 @@ class Theme(QObject):
             try:
                 for base_path, _, icons in os.walk(iconsdir):
                     detail_level = base_path.split(os.sep)[-1]
-                    self._icons[detail_level] = {}
+                    if detail_level not in self._icons:
+                        self._icons[detail_level] = {}
                     for icon in icons:
                         name = os.path.splitext(icon)[0]
                         self._icons[detail_level][name] = QUrl.fromLocalFile(os.path.join(base_path, icon))

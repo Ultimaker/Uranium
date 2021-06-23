@@ -140,8 +140,7 @@ class QtApplication(QApplication, Application):
         #  - The language in use, so the splash window can be shown in the correct language.
         #  - The OpenGL 'force' parameters.
         try:
-            preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
-            self._preferences.readFromFile(preferences_filename)
+            self.readPreferencesFromConfiguration()
         except FileNotFoundError:
             Logger.log("i", "Preferences file not found, ignore and use default language '%s'", self._default_language)
 
@@ -238,8 +237,7 @@ class QtApplication(QApplication, Application):
         self.processEvents()
         # Force the configuration file to be written again since the list of plugins to remove maybe changed
         try:
-            self._preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
-            self._preferences.readFromFile(self._preferences_filename)
+            self.readPreferencesFromConfiguration()
         except FileNotFoundError:
             Logger.log("i", "The preferences file '%s' cannot be found, will use default values",
                        self._preferences_filename)
@@ -282,6 +280,10 @@ class QtApplication(QApplication, Application):
                     Logger.info("Created system tray icon.")
                 except FileNotFoundError:
                     Logger.log("w", "Could not find the icon %s", self._tray_icon_name)
+
+    def readPreferencesFromConfiguration(self) -> None:
+        self._preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
+        self._preferences.readFromFile(self._preferences_filename)
 
     def initializeEngine(self) -> None:
         # TODO: Document native/qml import trickery
