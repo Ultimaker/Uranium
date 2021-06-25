@@ -390,7 +390,7 @@ msgstr "Fouten bij het de-installeren"
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
-msgstr ""
+msgstr "Plugin {package_id} installeren..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
 #, python-brace-format
@@ -436,7 +436,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
 msgid "From Disk"
-msgstr ""
+msgstr "Vanaf schijf"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
 #, python-brace-format
@@ -487,7 +487,7 @@ msgstr "Invoegtoepassingen laden..."
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
-msgstr ""
+msgstr "Plugin {plugin_id} laden..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
 msgctxt "@info:progress"

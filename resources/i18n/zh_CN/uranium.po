@@ -391,7 +391,7 @@ msgstr "卸载错误"
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
-msgstr ""
+msgstr "正在安装插件 {package_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
 #, python-brace-format
@@ -437,7 +437,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
 msgid "From Disk"
-msgstr ""
+msgstr "从磁盘"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
 #, python-brace-format
@@ -485,7 +485,7 @@ msgstr "正在载入插件..."
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
-msgstr ""
+msgstr "正在加载插件 {plugin_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
 msgctxt "@info:progress"
