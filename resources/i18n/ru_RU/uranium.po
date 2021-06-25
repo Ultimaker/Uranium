@@ -390,7 +390,7 @@ msgstr "Ошибки при удалении"
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
-msgstr ""
+msgstr "Установка встраиваемого модуля {package_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
 #, python-brace-format
@@ -436,7 +436,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
 msgid "From Disk"
-msgstr ""
+msgstr "С диска"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
 #, python-brace-format
@@ -490,7 +490,7 @@ msgstr "Загрузка плагинов..."
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
-msgstr ""
+msgstr "Загрузка встраиваемого модуля {plugin_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
 msgctxt "@info:progress"

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.10\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2021-06-10 17:38+0200\n"
-"PO-Revision-Date: 2021-04-16 20:21+0200\n"
+"PO-Revision-Date: 2021-06-12 11:30+0800\n"
 "Last-Translator: Valen Chang <carf17771@gmail.com>\n"
 "Language-Team: Valen Chang <carf17771@gmail.com>/Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language: zh_TW\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Lang-Code: xx\n"
 "Country-Code: XX\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
@@ -366,7 +366,7 @@ msgstr "載入 <filename>{0}</filename>失敗。 這個檔案可能已損壞、�
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "自動將物件縮放到原始大小的 {0}%"
+msgstr "自動將物件縮放到原始大小的 {0} %."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
 msgctxt "@info:title"
@@ -392,7 +392,7 @@ msgstr "移除錯誤"
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
-msgstr ""
+msgstr "正在安裝插件 {package_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
 #, python-brace-format
@@ -417,13 +417,13 @@ msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
 msgstr ""
-"外掛已安裝。\n"
+"插件已安裝。\n"
 "請重新啟動應用程式以啟動外掛。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:386
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "外掛 {} 因無法驗証而沒有被載入。"
+msgstr "插件 {} 因無法驗証而沒有被載入。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:488
 #, python-brace-format
@@ -432,13 +432,13 @@ msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
 msgstr ""
-"外掛程式已移除。\n"
+"插件已移除。\n"
 "請重新啟動 {0} 以完成解除安裝。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
 msgid "From Disk"
-msgstr ""
+msgstr "從磁碟"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
 #, python-brace-format
@@ -480,13 +480,13 @@ msgstr[0] "{0} 分"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:211
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr "正在載入外掛..."
+msgstr "正在載入插件..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:192
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
-msgstr ""
+msgstr "正在載入插件 {plugin_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
 msgctxt "@info:progress"
