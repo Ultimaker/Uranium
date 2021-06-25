@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.10\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2021-06-10 17:38+0200\n"
-"PO-Revision-Date: 2021-04-11 17:48+0200\n"
+"PO-Revision-Date: 2021-06-19 06:29+0200\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 3.0\n"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
@@ -390,7 +390,7 @@ msgstr "Erros ao desinstalar"
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
-msgstr ""
+msgstr "Installando complemento {package_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
 #, python-brace-format
@@ -436,7 +436,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
 msgid "From Disk"
-msgstr ""
+msgstr "Do Disco"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
 #, python-brace-format
@@ -487,7 +487,7 @@ msgstr "Carregando complementos..."
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
-msgstr ""
+msgstr "Carregando complemento {plugin_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
 msgctxt "@info:progress"
