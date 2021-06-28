@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
@@ -33,7 +33,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         self.setIconName("save")
 
         self.shortcut = "Ctrl+S"
-        self.menu_entry_text = "To Disk"
+        self.menu_entry_text = catalog.i18nc("@item:inmenu About saving files to the hard drive", "To Disk")
 
         self._writing = False
 
