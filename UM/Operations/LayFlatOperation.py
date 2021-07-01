@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import Operation
@@ -139,7 +139,8 @@ class LayFlatOperation(Operation.Operation):
         """Undoes this lay flat operation."""
 
         self._node.setOrientation(self._old_orientation) #Restore saved orientation.
-        self._gravity_operation.undo()
+        if self._gravity_operation is not None:
+            self._gravity_operation.undo()
 
     def redo(self):
         """Re-does this lay flat operation."""
