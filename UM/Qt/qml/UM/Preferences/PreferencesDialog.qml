@@ -60,6 +60,25 @@ Dialog
                     base.currentPage = row;
                 }
             }
+
+            Keys.onUpPressed:
+            {
+                let row = base.currentPage - 1;
+                if (row >= 0)
+                {
+                    stackView.replace(configPagesModel.get(row).item);
+                    base.currentPage = row;
+                }
+            }
+            Keys.onDownPressed:
+            {
+                let row = base.currentPage + 1;
+                if (row < configPagesModel.count)
+                {
+                    stackView.replace(configPagesModel.get(row).item);
+                    base.currentPage = row;
+                }
+            }
         }
 
         StackView {
