@@ -79,6 +79,7 @@ Dialog
                     base.currentPage = row;
                 }
             }
+            Keys.onRightPressed: stackView.currentItem.forceActiveFocus()
         }
 
         StackView {
