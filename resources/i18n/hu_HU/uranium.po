@@ -220,12 +220,6 @@ msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "A fájlt tartalmazó mappa megnyitása."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
-msgctxt "@info:title"
-msgid "Warning"
-msgstr ""
-
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
 #, python-brace-format
 msgctxt "@info:status"
@@ -234,14 +228,6 @@ msgid ""
 "message>"
 msgstr "Valami hiba történt <filename>{0}</filename> mentésekor: <message>{1}</"
 "message>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
-msgctxt "@info:title"
-msgid "Error"
-msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -340,17 +326,6 @@ msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Minden fájl (*)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr ""
-
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
@@ -361,11 +336,6 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
 msgctxt "@info:title"
 msgid "Unable to Open File"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:63
-msgctxt "@info:title"
-msgid "Loading"
 msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
@@ -383,17 +353,6 @@ msgstr ""
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
-#, python-format, python-brace-format
-msgctxt "@info:status"
-msgid "Auto scaled object to {0}% of original size"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
-msgctxt "@info:title"
-msgid "Scaling Object"
 msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:285
@@ -434,24 +393,9 @@ msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Frissítési hiba"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:319
-msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr ""
-
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:386
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:488
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
 msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
@@ -675,11 +619,6 @@ msgstr "Válasz egy felületet, amit az alpsíkra igazítunk."
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Durva forgatás"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
