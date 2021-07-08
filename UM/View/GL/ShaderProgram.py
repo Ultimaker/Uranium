@@ -66,7 +66,7 @@ class ShaderProgram:
         parser = configparser.ConfigParser(interpolation = None, comment_prefixes = (';', ))
         parser.optionxform = lambda option: option
         try:
-            parser.read(file_name)
+            parser.read(file_name, encoding = "UTF-8")
         except EnvironmentError:
             raise InvalidShaderProgramError("{0} can't be opened for reading.".format(file_name))
         except UnicodeDecodeError:
