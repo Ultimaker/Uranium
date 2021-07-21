@@ -178,7 +178,8 @@ class PluginRegistry(QObject):
 
     def _isPathInLocation(self, location: str, path: str) -> bool:
         try:
-            is_in_path = os.path.commonpath([location, path]).startswith(location)
+            canonical_location = os.path.normpath(location)
+            is_in_path = os.path.normpath(os.path.commonpath([canonical_location, path])).startswith(canonical_location)
         except ValueError:
             is_in_path = False
         return is_in_path
@@ -662,7 +663,8 @@ class PluginRegistry(QObject):
 
             try:
                 with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
-                    self._handleCentralStorage(file_stream.read(), plugin_final_path, is_bundled_plugin = self.isBundledPlugin(plugin_id))
+                    if not self._handleCentralStorage(file_stream.read(), plugin_final_path, is_bundled_plugin = self.isBundledPlugin(plugin_id)):
+                        return None
             except:
                 pass
         try:
@@ -719,25 +721,33 @@ class PluginRegistry(QObject):
 
         return None
 
-    def _handleCentralStorage(self, file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> None:
+    def _handleCentralStorage(self, file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> bool:
         """
         Plugins can indicate that they want certain things to be stored in a central location.
         In the case of a signed plugin you *must* do this by means of the central_storage.json file.
         :param file_data: The data as loaded from the file
         :param plugin_path: The location of the plugin on the file system
-        :return:
+        :return: False if there is a security suspicion, True otherwise (even if the method otherwise fails).
         """
         try:
             file_manifest = json.loads(file_data)
         except (json.decoder.JSONDecodeError, UnicodeDecodeError):
-            Logger.logException("e", "Failed to parse central_storage.json")
-            return
+            Logger.logException("e", f"Failed to parse the central storage file for '{plugin_path}'.")
+            return True
 
         for file_to_move in file_manifest:
+            full_path = os.path.join(plugin_path, file_to_move[0])
+
+            # Check if the central storage file didn't contain any files-to-copy outside of the plugin directory:
+            if self._check_if_trusted and not is_bundled_plugin and not self._isPathInLocation(plugin_path, full_path):
+                Logger.log("w", f"Suspect central file location '{full_path}' for file in '{plugin_path}'.")
+                return False
+
             try:
-                CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]), move_file = not is_bundled_plugin)
+                CentralFileStorage.store(full_path, file_to_move[1], Version(file_to_move[2]), move_file = not is_bundled_plugin)
             except (TypeError, IndexError):
-                Logger.logException("w", "Unable to move file to central storage")
+                Logger.logException("w", f"Can't move file {file_to_move[1]} to central storage for '{plugin_path}'.")
+        return True
 
     #   Load the plugin data from the stream and in-place update the metadata.
     def _parsePluginInfo(self, plugin_id, file_data, meta_data):
