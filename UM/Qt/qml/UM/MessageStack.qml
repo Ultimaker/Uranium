@@ -118,14 +118,76 @@ ListView
                 visible: model.dismissable
                 enabled: model.dismissable
             }
+            UM.RecolorImage
+            {
+                id: icon
+                visible: model.progress == null
+                anchors.verticalCenter: messageTitle.verticalCenter
+                anchors.left: parent.left
+                height: visible ? UM.Theme.getSize("medium_button_icon").height : 0
+                width: height
+                sourceSize.width: width
+                sourceSize.height: height
 
+                states:
+                    [
+                        State
+                        {
+                            name: "confirmation"
+                            when: model.message_type == 0
+                            PropertyChanges
+                            {
+                                target: icon
+                                source: UM.Theme.getIcon("CheckCircle")
+//                                color: UM.Theme.getColor("primary_button")
+                                color: "green"
+                            }
+                        },
+                        State
+                        {
+                            name: "information"
+                            when: model.message_type == 1
+                            PropertyChanges
+                            {
+                                target: icon
+                                source: UM.Theme.getIcon("Information")
+                                color: UM.Theme.getColor("primary_button")
+                            }
+                        },
+                        State
+                        {
+                            name: "warning"
+                            when: model.message_type == 2
+                            PropertyChanges
+                            {
+                                target: icon
+                                source: UM.Theme.getIcon("Warning")
+//                                color: UM.Theme.getColor("primary_button")
+                                color: "gold"
+                            }
+                        },
+                        State
+                        {
+                            name: "failure"
+                            when: model.message_type == 3
+                            PropertyChanges
+                            {
+                                target: icon
+                                source: UM.Theme.getIcon("CancelCircle")
+//                                color: UM.Theme.getColor("primary_button")
+                                color: "red"
+                            }
+                        }
+                    ]
+            }
             Label
             {
                 id: messageTitle
 
                 anchors
                 {
-                    left: parent.left
+                    left: icon.right
+                    leftMargin: UM.Theme.getSize("default_margin").width
                     right: closeButton.left
                     rightMargin: UM.Theme.getSize("default_margin").width
                 }
