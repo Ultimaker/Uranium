@@ -651,9 +651,18 @@ class PluginRegistry(QObject):
         # Move data (if any) to central storage
         central_storage_file = os.path.join(final_location, plugin_id, TrustBasics.getCentralStorageFilename())
         if os.path.exists(central_storage_file):
+            plugin_final_path = os.path.join(final_location, plugin_id)
+
+            if self._check_if_trusted and plugin_id not in self._checked_plugin_ids and not self.isBundledPlugin(plugin_id):
+                # Do a quick check if the central-storage file itself hasn't been tampered with (and such).
+                # This is necessary, as we move to central storage first, and only _then_ properly check the manifest.
+                if self._trust_checker and not self._trust_checker.signedFolderPreStorageCheck(plugin_final_path):
+                    self._distrusted_plugin_ids.append(plugin_id)
+                    return None
+
             try:
                 with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
-                    self._handleCentralStorage(file_stream.read(), os.path.join(final_location, plugin_id), is_bundled_plugin = self.isBundledPlugin(plugin_id))
+                    self._handleCentralStorage(file_stream.read(), plugin_final_path, is_bundled_plugin = self.isBundledPlugin(plugin_id))
             except:
                 pass
         try:

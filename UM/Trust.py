@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import base64
@@ -384,6 +384,78 @@ class Trust:
             return False
         return self._verifyHash(file_hash, signature, filename)
 
+    def _verifyManifestIntegrety(self, signatures_json: Dict[str, str], json_data: Dict[str, str]) -> bool:
+        try:
+            self_sign = json_data.get(TrustBasics.getRootSignedManifestKey(), None)
+            if self_sign is None:
+                return False
+            shash = TrustBasics.getSelfSignHash(signatures_json)
+            if shash is None or not self._verifyHash(shash, self_sign):
+                return False
+            return True
+        except:  # Yes, we do really want this on _every_ exception that might occur.
+            return False
+
+    def signedFolderPreStorageCheck(self, path: str) -> bool:
+        """Do a quick check whether the 'central storage file' of a folder has been tampered with.
+
+        Shared pools of versioned items ('central storage') are used if a folder contains a 'central storage file'.
+        (See the CentralFileStorage class for details.) The 'canonical' version of a folder as far as the Trust system
+        is concerned, is the one where the items are already in central storage. Otherwise there would either be a whole
+        range of 'acceptable answers' (and that's harder to test against) or, there would always be a need to verify
+        a situation that shouldn't be that frequent (items need to be copied to central storage). This creates a problem
+        in that the central storage mechanism needs to run _first_, however. The central storage has it's own security
+        measures, but this means that the central storage file in a folder (which contains info on what items should be
+        copied) hasn't been checked against the trust manifest file in that folder yet.
+
+        This only concerns the signature of the central storage file (and the correctness of the manifest file itself).
+        Per separation of concern, and since the storage system already needs to be aware of security, any other
+        'sanity checks' on the contents central storage file itself are the job of that system.
+
+        :param path: The folder to do a quick pre-move check for.
+        :return: True if the central-storage file is correctly signed. A folder without such a file is correct as well.
+        """
+
+        try:
+            # Check if the central storage file exist, if not, then the system won't copy anything in any case.
+            name_on_disk = os.path.join(path, TrustBasics.getCentralStorageFilename())
+            if not os.path.exists(name_on_disk):
+                Logger.log("i", f"No central storage file for unbundled folder '{path}'.")
+                return True
+
+            # Open the file containing signatures (just reading the json is negligible compared to the verify or store):
+            json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
+            with open(json_filename, "r", encoding="utf-8") as data_file:
+                json_data = json.load(data_file)
+                signatures_json = json_data.get(TrustBasics.getRootSignatureCategory(), None)
+                if signatures_json is None:
+                    self._violation_handler(f"Can't parse (folder) signature file '{data_file}' in '{path}'.")
+                    return False
+
+                # Check if there is an entry, since this file is known to exist in the folder:
+                name_in_data = TrustBasics.getCentralStorageFilename()
+                if name_in_data not in signatures_json:
+                    self._violation_handler(f"Central storage file not signed for '{path}'.")
+                    return False
+
+                # Verify that the central storage file hasn't been tampered with:
+                if not self._verifyFile(name_on_disk, signatures_json[name_in_data]):
+                    self._violation_handler(f"Central storage file does not match signature for '{path}'.")
+                    return False
+
+                # Check if the signing file itself has been tampered with (manifest is self-signed):
+                if not self._verifyManifestIntegrety(signatures_json, json_data):
+                    self._violation_handler(f"Signature file '{data_file}' is not properly self-signed in '{path}'.")
+                    return False
+
+                # Otherwise, as far as this quick pre check is concerned, there is nothing wrong:
+                Logger.log("i", f"Central storage file signed correctly for '{path}'.")
+                return True
+
+        except:  # Yes, we do really want this on _every_ exception that might occur.
+            self._violation_handler(f"Exception during verification of central storage file for '{path}'.")
+        return False
+
     def signedFolderCheck(self, path: str) -> bool:
         """In the 'singed folder' case, check whether the folder is signed according to the Trust-objects' public key.
 
@@ -414,14 +486,9 @@ class Trust:
                         self._violation_handler("Suspect key '{0}' in signature file '{1}'.".format(key, data_file))
                         return False
 
-                # Check if the signing file itself has been tampered with:
-                self_sign = json_data.get(TrustBasics.getRootSignedManifestKey(), None)
-                if self_sign is None:
-                    self._violation_handler("Signature file '{0}' is not a self-signed manifest.".format(data_file))
-                    return False
-                shash = TrustBasics.getSelfSignHash(signatures_json)
-                if shash is None or not self._verifyHash(shash, self_sign):
-                    self._violation_handler("Suspect self-sign in signature-file '{0}'.".format(data_file))
+                # Check if the signing file itself has been tampered with (manifest is self-signed):
+                if not self._verifyManifestIntegrety(signatures_json, json_data):
+                    self._violation_handler(f"Signature file '{data_file}' is not properly self-signed in '{path}'.")
                     return False
 
                 # Loop over all files within the folder (excluding the signature file):
@@ -472,9 +539,8 @@ class Trust:
             Logger.log("i", "Verified unbundled folder '{0}'.".format(path))
             return True
 
-        except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Failed to validate signature")
-            self._violation_handler("Can't find or parse signatures for unbundled folder '{0}'.".format(path))
+        except:  # Yes, we do really want this on _every_ exception that might occur.
+            self._violation_handler(f"Exception during verification of unbundled folder '{path}'.")
         return False
 
     def signedFileCheck(self, filename: str) -> bool:
@@ -501,8 +567,8 @@ class Trust:
             Logger.log("i", "Verified unbundled file '{0}'.".format(filename))
             return True
 
-        except:  # Yes, we  do really want this on _every_ exception that might occur.
-            self._violation_handler("Can't find or parse signatures for unbundled file '{0}'.".format(filename))
+        except:  # Yes, we do really want this on _every_ exception that might occur.
+            self._violation_handler(f"Exception during verification of unbundled file '{filename}'.")
         return False
 
     @staticmethod
