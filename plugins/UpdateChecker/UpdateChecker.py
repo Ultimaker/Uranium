@@ -15,6 +15,7 @@ from UM.Message import Message
 from UM.TaskManagement.HttpRequestManager import HttpRequestManager
 from UM.Version import Version
 from UM.i18n import i18nCatalog
+from .NewVersionMessage import NewVersionMessage
 
 i18n_catalog = i18nCatalog("uranium")
 
@@ -111,23 +112,8 @@ class UpdateChecker(Extension):
         Logger.log("i", "Found a new version of the software. Spawning message")
 
         application_display_name = Application.getInstance().getApplicationDisplayName().title()
-        title_message = i18n_catalog.i18nc("@info:status",
-                                           "{application_name} {version_number} is available!".format(
-                                               application_name=application_display_name,
-                                               version_number=newest_version))
-        content_message = i18n_catalog.i18nc("@info:status",
-                                             "{application_name} {version_number} provides a better and more reliable printing experience.".format(
-                                                 application_name=application_display_name,
-                                                 version_number=newest_version))
 
-        message = Message(text=content_message, title=title_message)
-        message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
-
-        message.addAction("new_features", i18n_catalog.i18nc("@action:button", "Learn more"), "[no_icon]",
-                          "[no_description]",
-                          button_style=Message.ActionButtonStyle.LINK,
-                          button_align=Message.ActionButtonAlignment.ALIGN_LEFT)
-
+        message = NewVersionMessage(application_display_name = application_display_name, newest_version = newest_version)
         message.actionTriggered.connect(self._onActionTriggered)
         message.show()
 
