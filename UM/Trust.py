@@ -427,28 +427,28 @@ class Trust:
                 return True
 
             # Open the file containing signatures (just reading the json is negligible compared to the verify or store):
-            json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
-            with open(json_filename, "r", encoding = "utf-8") as data_file:
-                json_data = json.load(data_file)
-                signatures_json = json_data.get(TrustBasics.getRootSignatureCategory(), None)
-                if signatures_json is None:
-                    self._violation_handler(f"Can't parse (folder) signature file '{data_file}' in '{path}'.")
+            manifest_path = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
+            with open(manifest_path, "r", encoding = "utf-8") as manifest_file:
+                manifest_content = json.load(manifest_file)
+                file_signatures = manifest_content.get(TrustBasics.getRootSignatureCategory(), None)
+                if file_signatures is None:
+                    self._violation_handler(f"Can't parse (folder) signature file '{manifest_file}' in '{path}'.")
                     return False
 
                 # Check if there is an entry, since this file is known to exist in the folder:
-                name_in_data = TrustBasics.getCentralStorageFilename()
-                if name_in_data not in signatures_json:
+                central_storage_basename = TrustBasics.getCentralStorageFilename()
+                if central_storage_basename not in file_signatures:
                     self._violation_handler(f"Central storage file not signed for '{path}'.")
                     return False
 
                 # Verify that the central storage file hasn't been tampered with:
-                if not self._verifyFile(central_storage_filename, signatures_json[name_in_data]):
+                if not self._verifyFile(central_storage_filename, file_signatures[central_storage_basename]):
                     self._violation_handler(f"Central storage file does not match signature for '{path}'.")
                     return False
 
                 # Check if the signing file itself has been tampered with (manifest is self-signed):
-                if not self._verifyManifestIntegrety(signatures_json, json_data):
-                    self._violation_handler(f"Signature file '{data_file}' is not properly self-signed in '{path}'.")
+                if not self._verifyManifestIntegrety(file_signatures, manifest_content):
+                    self._violation_handler(f"Manifest '{manifest_path}' is not properly self-signed in '{path}'.")
                     return False
 
                 # Otherwise, as far as this quick pre check is concerned, there is nothing wrong:
@@ -467,31 +467,31 @@ class Trust:
         """
 
         try:
-            json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
+            manifest_path = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
             storage_filename = os.path.join(path, TrustBasics.getCentralStorageFilename())
 
-            storage_json = None
+            storage_list = None
             if os.path.exists(storage_filename):
-                with open(storage_filename, "r", encoding = "utf-8") as data_file:
-                    storage_json = json.load(data_file)
+                with open(storage_filename, "r", encoding = "utf-8") as storage_file:
+                    storage_list = json.load(storage_file)
 
             # Open the file containing signatures:
-            with open(json_filename, "r", encoding = "utf-8") as data_file:
-                json_data = json.load(data_file)
-                signatures_json = json_data.get(TrustBasics.getRootSignatureCategory(), None)
-                if signatures_json is None:
-                    self._violation_handler("Can't parse (folder) signature file '{0}'.".format(data_file))
+            with open(manifest_path, "r", encoding = "utf-8") as manifest_file:
+                manifest_content = json.load(manifest_file)
+                file_signatures = manifest_content.get(TrustBasics.getRootSignatureCategory(), None)
+                if file_signatures is None:
+                    self._violation_handler("Can't parse (folder) signature file '{0}'.".format(manifest_file))
                     return False
 
                 # Any filename outside of the plugin-root is a sure sign of tampering:
-                for key in signatures_json.keys():
+                for key in file_signatures.keys():
                     if ".." in key:
-                        self._violation_handler("Suspect key '{0}' in signature file '{1}'.".format(key, data_file))
+                        self._violation_handler("Suspect key '{0}' in signature file '{1}'.".format(key, manifest_file))
                         return False
 
                 # Check if the signing file itself has been tampered with (manifest is self-signed):
-                if not self._verifyManifestIntegrety(signatures_json, json_data):
-                    self._violation_handler(f"Signature file '{data_file}' is not properly self-signed in '{path}'.")
+                if not self._verifyManifestIntegrety(file_signatures, manifest_content):
+                    self._violation_handler(f"Manifest '{manifest_file}' is not properly self-signed in '{path}'.")
                     return False
 
                 # Loop over all files within the folder (excluding the signature file):
@@ -504,7 +504,7 @@ class Trust:
                         file_count += 1
 
                         # Get the signature for the current to-verify file:
-                        signature = signatures_json.get(name_in_data, None)
+                        signature = file_signatures.get(name_in_data, None)
                         if signature is None:
                             self._violation_handler("File '{0}' was not signed with a checksum.".format(name_on_disk))
                             return False
@@ -519,8 +519,8 @@ class Trust:
                             Logger.log("w", "Directory symbolic link '{0}' will not be followed.".format(dir_full_path))
 
                 # Check if the files moved to storage are still correct.
-                if storage_json:
-                    for entry in storage_json:
+                if storage_list:
+                    for entry in storage_list:
                         try:
                             # If this doesn't raise an exception, it's correct, since central storage uses hashes.
                             central_storage_path = CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
@@ -535,13 +535,13 @@ class Trust:
                                 file_count += sum([len(files) for _, _, files in os.walk(central_storage_path)])
                             elif os.path.isfile(central_storage_path):
                                 file_count += 1
-                        except (EnvironmentError, IOError, OSError):
+                        except (EnvironmentError, IOError):
                             self._violation_handler(f"Couldn't verify at least one centrally stored file for '{path}'.")
                             return False
 
                 # The number of correctly signed files should be the same as the number of signatures:
-                if len(signatures_json.keys()) != file_count:
-                    self._violation_handler("Mismatch: # entries in '{0}' vs. real files.".format(json_filename))
+                if len(file_signatures.keys()) != file_count:
+                    self._violation_handler("Mismatch: # entries in '{0}' vs. real files.".format(manifest_path))
                     return False
 
             Logger.log("i", "Verified unbundled folder '{0}'.".format(path))
