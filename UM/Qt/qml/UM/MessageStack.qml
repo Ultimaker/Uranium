@@ -79,7 +79,7 @@ ListView
         border.color: UM.Theme.getColor("message_border")
         radius: UM.Theme.getSize("message_radius").width
 
-        Item
+        Row
         {
             id: titleBar
 
@@ -91,7 +91,117 @@ ListView
                 margins: UM.Theme.getSize("default_margin").width
             }
 
-            height: childrenRect.height
+            height: messageTypeIcon.height
+            Item
+            {
+                id: messageTypeIcon
+                visible: model.progress == null
+                height: UM.Theme.getSize("small_button_icon").height
+                width: visible ? UM.Theme.getSize("small_button_icon").height : 0
+                Rectangle
+                {
+                    id: messageIconBackground
+                    height: parent.height
+                    width: parent.width
+                    radius: Math.round(width / 2)
+                }
+                UM.RecolorImage
+                {
+                    id: messageIcon
+                    height: parent.height
+                    width: parent.width
+                    sourceSize.width: width
+                    sourceSize.height: height
+                }
+
+                states:
+                        [
+                            State
+                            {
+                                name: "positive"
+                                when: model.message_type == 0
+                                PropertyChanges
+                                {
+                                    target: messageIcon
+                                    source: UM.Theme.getIcon("Check", "low")
+                                    color: UM.Theme.getColor("message_success_icon")
+                                }
+                                PropertyChanges
+                                {
+                                    target: messageIconBackground
+                                    color: UM.Theme.getColor("message_success_background")
+                                }
+                            },
+                            State
+                            {
+                                name: "neutral"
+                                when: model.message_type == 1
+                                PropertyChanges
+                                {
+                                    target: messageIcon
+                                    source: ""
+                                }
+                                PropertyChanges
+                                {
+                                    target: messageIconBackground
+                                    color: "transparent"
+                                }
+                                PropertyChanges
+                                {
+                                    target: messageTypeIcon
+                                    visible: false
+                                }
+                            },
+                            State
+                            {
+                                name: "warning"
+                                when: model.message_type == 2
+                                PropertyChanges
+                                {
+                                    target: messageIcon
+                                    source: UM.Theme.getIcon("Warning", "low")
+                                    color: UM.Theme.getColor("message_warning_icon")
+                                }
+                                PropertyChanges
+                                {
+                                    target: messageIconBackground
+                                    color: UM.Theme.getColor("message_warning_background")
+                                }
+                            },
+                            State
+                            {
+                                name: "error"
+                                when: model.message_type == 3
+                                PropertyChanges
+                                {
+                                    target: messageIcon
+                                    source: UM.Theme.getIcon("Cancel", "low")
+                                    color: UM.Theme.getColor("message_error_icon")
+                                }
+                                PropertyChanges
+                                {
+                                    target: messageIconBackground
+                                    color: UM.Theme.getColor("message_error_background")
+                                }
+                            }
+                        ]
+            }
+
+
+            Label
+            {
+                id: messageTitle
+                width: parent.width - x
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: model.title == undefined ? "" : model.title
+                color: UM.Theme.getColor("text")
+                font: UM.Theme.getFont("default_bold")
+                wrapMode: Text.WordWrap
+                elide: Text.ElideRight
+                maximumLineCount: 2
+                renderType: Text.NativeRendering
+            }
 
             Button
             {
@@ -99,7 +209,7 @@ ListView
                 width: UM.Theme.getSize("message_close").width
                 height: UM.Theme.getSize("message_close").height
 
-                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
 
                 style: ButtonStyle
                 {
@@ -117,118 +227,6 @@ ListView
                 onClicked: base.model.hideMessage(model.id)
                 visible: model.dismissable
                 enabled: model.dismissable
-            }
-            Row
-            {
-            
-            }
-            Rectangle
-            {
-                id: messageIconBackground
-                anchors.verticalCenter: messageTitle.verticalCenter
-                anchors.left: parent.left
-                visible: model.progress == null
-                height: visible ? UM.Theme.getSize("small_button_icon").height : 0
-                width: height
-                radius: Math.round(width / 2)
-            }
-            UM.RecolorImage
-            {
-                id: messageTypeIcon
-                visible: messageIconBackground.visible
-                anchors.centerIn: messageIconBackground
-                height: messageIconBackground.height
-                width: height
-                sourceSize.width: width
-                sourceSize.height: height
-            }
-
-            states:
-                    [
-                        State
-                        {
-                            name: "positive"
-                            when: model.message_type == 0
-                            PropertyChanges
-                            {
-                                target: messageTypeIcon
-                                source: UM.Theme.getIcon("Check", "low")
-                                color: UM.Theme.getColor("message_success_icon")
-                            }
-                            PropertyChanges
-                            {
-                                target: messageIconBackground
-                                color: UM.Theme.getColor("message_success_background")
-                            }
-                        },
-                        State
-                        {
-                            name: "neutral"
-                            when: model.message_type == 1
-                            PropertyChanges
-                            {
-                                target: messageTypeIcon
-                                source: ""
-                            }
-                            PropertyChanges
-                            {
-                                target: messageIconBackground
-                                color: "transparent"
-                                visible: false
-                            }
-                        },
-                        State
-                        {
-                            name: "warning"
-                            when: model.message_type == 2
-                            PropertyChanges
-                            {
-                                target: messageTypeIcon
-                                source: UM.Theme.getIcon("Warning", "low")
-                                color: UM.Theme.getColor("message_warning_icon")
-                            }
-                            PropertyChanges
-                            {
-                                target: messageIconBackground
-                                color: UM.Theme.getColor("message_warning_background")
-                            }
-                        },
-                        State
-                        {
-                            name: "error"
-                            when: model.message_type == 3
-                            PropertyChanges
-                            {
-                                target: messageTypeIcon
-                                source: UM.Theme.getIcon("Cancel", "low")
-                                color: UM.Theme.getColor("message_error_icon")
-                            }
-                            PropertyChanges
-                            {
-                                target: messageIconBackground
-                                color: UM.Theme.getColor("message_error_background")
-                            }
-                        }
-                    ]
-
-            Label
-            {
-                id: messageTitle
-
-                anchors
-                {
-                    left: messageTypeIcon.right
-                    right: closeButton.left
-                    rightMargin: UM.Theme.getSize("default_margin").width
-                }
-
-                text: model.title == undefined ? "" : model.title
-                color: UM.Theme.getColor("text")
-                font: UM.Theme.getFont("default_bold")
-                wrapMode: Text.WordWrap
-                elide: Text.ElideRight
-                maximumLineCount: 2
-                renderType: Text.NativeRendering
             }
         }
         Item
