@@ -118,40 +118,63 @@ ListView
                 visible: model.dismissable
                 enabled: model.dismissable
             }
-            UM.RecolorImage
+            Row
             {
-                id: icon
-                visible: model.progress == null
+            
+            }
+            Rectangle
+            {
+                id: messageIconBackground
                 anchors.verticalCenter: messageTitle.verticalCenter
                 anchors.left: parent.left
-                height: visible ? UM.Theme.getSize("medium_button_icon").height : 0
+                visible: model.progress == null
+                height: visible ? UM.Theme.getSize("small_button_icon").height : 0
+                width: height
+                radius: Math.round(width / 2)
+            }
+            UM.RecolorImage
+            {
+                id: messageTypeIcon
+                visible: messageIconBackground.visible
+                anchors.centerIn: messageIconBackground
+                height: messageIconBackground.height
                 width: height
                 sourceSize.width: width
                 sourceSize.height: height
+            }
 
-                states:
+            states:
                     [
                         State
                         {
-                            name: "confirmation"
+                            name: "positive"
                             when: model.message_type == 0
                             PropertyChanges
                             {
-                                target: icon
-                                source: UM.Theme.getIcon("CheckCircle")
-//                                color: UM.Theme.getColor("primary_button")
-                                color: "green"
+                                target: messageTypeIcon
+                                source: UM.Theme.getIcon("Check", "low")
+                                color: UM.Theme.getColor("message_success_icon")
+                            }
+                            PropertyChanges
+                            {
+                                target: messageIconBackground
+                                color: UM.Theme.getColor("message_success_background")
                             }
                         },
                         State
                         {
-                            name: "information"
+                            name: "neutral"
                             when: model.message_type == 1
                             PropertyChanges
                             {
-                                target: icon
-                                source: UM.Theme.getIcon("Information")
-                                color: UM.Theme.getColor("primary_button")
+                                target: messageTypeIcon
+                                source: ""
+                            }
+                            PropertyChanges
+                            {
+                                target: messageIconBackground
+                                color: "transparent"
+                                visible: false
                             }
                         },
                         State
@@ -160,34 +183,41 @@ ListView
                             when: model.message_type == 2
                             PropertyChanges
                             {
-                                target: icon
-                                source: UM.Theme.getIcon("Warning")
-//                                color: UM.Theme.getColor("primary_button")
-                                color: "gold"
+                                target: messageTypeIcon
+                                source: UM.Theme.getIcon("Warning", "low")
+                                color: UM.Theme.getColor("message_warning_icon")
+                            }
+                            PropertyChanges
+                            {
+                                target: messageIconBackground
+                                color: UM.Theme.getColor("message_warning_background")
                             }
                         },
                         State
                         {
-                            name: "failure"
+                            name: "error"
                             when: model.message_type == 3
                             PropertyChanges
                             {
-                                target: icon
-                                source: UM.Theme.getIcon("CancelCircle")
-//                                color: UM.Theme.getColor("primary_button")
-                                color: "red"
+                                target: messageTypeIcon
+                                source: UM.Theme.getIcon("Cancel", "low")
+                                color: UM.Theme.getColor("message_error_icon")
+                            }
+                            PropertyChanges
+                            {
+                                target: messageIconBackground
+                                color: UM.Theme.getColor("message_error_background")
                             }
                         }
                     ]
-            }
+
             Label
             {
                 id: messageTitle
 
                 anchors
                 {
-                    left: icon.right
-                    leftMargin: UM.Theme.getSize("default_margin").width
+                    left: messageTypeIcon.right
                     right: closeButton.left
                     rightMargin: UM.Theme.getSize("default_margin").width
                 }
