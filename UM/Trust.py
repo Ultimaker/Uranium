@@ -397,7 +397,10 @@ class Trust:
             return False
 
     def signedFolderPreStorageCheck(self, path: str) -> bool:
-        """Do a quick check whether the 'central storage file' of a folder has been tampered with.
+        """Do a quick check whether the 'central storage file' of a folder has been tampered with. This is necessary,
+        since the central storage system (which otherwise runs first) copies files, and the copying of files itself
+        can be an attack. Note that right after copying, a full check can be done, so the files themselves don't have
+        to be checked yet (since that happens in the full check after copying).
 
         Shared pools of versioned items ('central storage') are used if a folder contains a 'central storage file'.
         (See the CentralFileStorage class for details.) The 'canonical' version of a folder as far as the Trust system
@@ -418,8 +421,8 @@ class Trust:
 
         try:
             # Check if the central storage file exist, if not, then the system won't copy anything in any case.
-            name_on_disk = os.path.join(path, TrustBasics.getCentralStorageFilename())
-            if not os.path.exists(name_on_disk):
+            central_storage_filename = os.path.join(path, TrustBasics.getCentralStorageFilename())
+            if not os.path.exists(central_storage_filename):
                 Logger.log("i", f"No central storage file for unbundled folder '{path}'.")
                 return True
 
@@ -439,7 +442,7 @@ class Trust:
                     return False
 
                 # Verify that the central storage file hasn't been tampered with:
-                if not self._verifyFile(name_on_disk, signatures_json[name_in_data]):
+                if not self._verifyFile(central_storage_filename, signatures_json[name_in_data]):
                     self._violation_handler(f"Central storage file does not match signature for '{path}'.")
                     return False
 
@@ -519,8 +522,12 @@ class Trust:
                 if storage_json:
                     for entry in storage_json:
                         try:
-                            # If this doesn't raise an exception, it's correct.
+                            # If this doesn't raise an exception, it's correct, since central storage uses hashes.
                             central_storage_path = CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
+
+                            # File could have been removed during execution (also helps with tests).
+                            if not os.path.exists(central_storage_path):
+                                continue
 
                             # If a directory was moved, add all the files in that directory to the file_count. For
                             # individual files mentioned in the central_storage.json increment the file_count by 1.
@@ -528,8 +535,9 @@ class Trust:
                                 file_count += sum([len(files) for _, _, files in os.walk(central_storage_path)])
                             elif os.path.isfile(central_storage_path):
                                 file_count += 1
-                        except (EnvironmentError, IOError):
-                            self._violation_handler(f"Centrally stored file '{entry[1]}' didn't match with checksum or it could not be found")
+                        except (EnvironmentError, IOError, OSError):
+                            self._violation_handler(f"Couldn't verify at least one centrally stored file for '{path}'.")
+                            return False
 
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(signatures_json.keys()) != file_count:

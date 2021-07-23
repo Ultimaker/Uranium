@@ -1,17 +1,18 @@
 import copy
 import json
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 import os
 import pytest
 import random
 import tempfile
 
+from UM.CentralFileStorage import CentralFileStorage
 from UM.Trust import TrustBasics, Trust
 
 from scripts.signfile import signFile
 from scripts.signfolder import signFolder
 
-_folder_names = ["a", "b"]
+_folder_names = ["signed", "unsigned", "large"]
 _subfolder_names = ["sub", "."]
 _file_names = ["x.txt", "y.txt", "z.txt"]
 _passphrase = "swordfish"  # For code coverage: Securely storing a private key without one is probably better.
@@ -41,16 +42,35 @@ class TestTrust:
             with open(path, "w") as file:
                 file.write("".join(random.choice(['a', 'b', 'c', '0', '1', '2', '\n']) for _ in range(1024)))
 
+        # Set up mocked Central File Storage & plugin file (don't move the files yet, though):
+        CentralFileStorage.setIsEnterprise(True)
+
+        central_storage_dir = tempfile.TemporaryDirectory()
+        central_storage_path = central_storage_dir.name
+        large_plugin_path = os.path.join(temp_path, _folder_names[2])
+        store_folder = os.path.join(large_plugin_path, _subfolder_names[0])
+        store_file = os.path.join(large_plugin_path, _file_names[2])
+
+        central_storage_dict = [
+            [f"{_subfolder_names[0]}", f"{_subfolder_names[0]}", "1.0.0", CentralFileStorage._hashItem(store_folder)],
+            [f"{_file_names[2]}", f"{_file_names[2]}", "1.0.0", CentralFileStorage._hashItem(store_file)]
+        ]
+        central_storage_file_path = os.path.join(large_plugin_path, TrustBasics.getCentralStorageFilename())
+        with open(central_storage_file_path, "w") as file:
+            json.dump(central_storage_dict, file, indent = 2)
+
         # Instantiate a trust object with the public key that was just generated:
         violation_callback = MagicMock()
         trust = Trust(public_path)  # No '.getInstance', since key & handler provided.
         trust._violation_handler = violation_callback
-        yield temp_path, private_path, trust, violation_callback
+        yield temp_path, private_path, trust, violation_callback, central_storage_path
 
         temp_dir.cleanup()
+        central_storage_dir.cleanup()
+        CentralFileStorage.setIsEnterprise(False)
 
     def test_signFileAndVerify(self, init_trust):
-        temp_dir, private_path, trust_instance, violation_callback = init_trust
+        temp_dir, private_path, trust_instance, violation_callback, _ = init_trust
         filepath_signed = os.path.join(temp_dir, _folder_names[0], _subfolder_names[0], _file_names[0])
         filepath_unsigned = os.path.join(temp_dir, _folder_names[1], _subfolder_names[0], _file_names[2])
 
@@ -84,10 +104,29 @@ class TestTrust:
         assert violation_callback.call_count > 0
         violation_callback.reset_mock()
 
-    def test_signFolderAndVerify(self, init_trust):
-        temp_dir, private_path, trust_instance, violation_callback = init_trust
+    def test_signFolderAndPreStorageCheck(self, init_trust):
+        temp_dir, private_path, trust_instance, violation_callback, central_storage_dir = init_trust
+        folderpath_signed = os.path.join(temp_dir, _folder_names[2])
+        folderpath_without_storage = os.path.join(temp_dir, _folder_names[0])
+        # Note that we don't do anything with the storage here yet, after all, this is a _pre_-storage check.
+
+        # Verify completely unsigned folder should fail:
+        assert not trust_instance.signedFolderPreStorageCheck(folderpath_signed)
+        assert violation_callback.call_count == 1
+        violation_callback.reset_mock()
+
+        # Signing it, then verify, should succeed:
+        assert signFolder(private_path, folderpath_signed, [], _passphrase)
+        assert trust_instance.signedFolderPreStorageCheck(folderpath_signed)
+
+        # A folder without a central storage file should just pass, no matter what:
+        assert trust_instance.signedFolderPreStorageCheck(folderpath_without_storage)
+
+    def test_signFolderAndVerify(self, init_trust, pytestconfig):
+        temp_dir, private_path, trust_instance, violation_callback, central_storage_dir = init_trust
         folderpath_signed = os.path.join(temp_dir, _folder_names[0])
         folderpath_unsigned = os.path.join(temp_dir, _folder_names[1])
+        folderpath_large = os.path.join(temp_dir, _folder_names[2])
 
         # Attempt to sign a folder & validate it's signatures.
         assert signFolder(private_path, folderpath_signed, [], _passphrase)
@@ -140,6 +179,35 @@ class TestTrust:
         assert not trust_instance.signedFolderCheck(folderpath_signed)
         assert violation_callback.call_count == 1
         violation_callback.reset_mock()
+
+        # * 'Central file storage'-enabled section *
+        with patch("UM.CentralFileStorage.CentralFileStorage._centralStorageLocation", MagicMock(return_value=central_storage_dir)):
+
+            # Do some set-up (signing, moveing files around with the central file storage):
+            assert signFolder(private_path, folderpath_large, [], _passphrase)
+            assert violation_callback.call_count == 0
+            subfolder_path = os.path.join(folderpath_large, _subfolder_names[0])
+            file_path = os.path.join(folderpath_large, _file_names[2])
+            stored_file_path = os.path.join(central_storage_dir, _file_names[2] + ".1.0.0")
+            CentralFileStorage.store(subfolder_path, _subfolder_names[0], "1.0.0", True)
+            CentralFileStorage.store(file_path, _file_names[2], "1.0.0", True)
+
+            # Should pass signed folder check, even though files have moved to central storage:
+            assert trust_instance.signedFolderCheck(folderpath_large)
+            assert violation_callback.call_count == 0
+
+            # Should not pass the signed folder check if one of the files doesn't have the right hash in storage.
+            with open(stored_file_path, "w") as file:
+                file.write("\nWhoopsadoodle, the file just changed suddenly.\n")
+            assert not trust_instance.signedFolderCheck(folderpath_large)
+            assert violation_callback.call_count > 0
+            violation_callback.reset_mock()
+
+            # Should not pass the signed folder check if one of the files is missing, even in storage.
+            os.remove(stored_file_path)
+            assert not trust_instance.signedFolderCheck(folderpath_large)
+            assert violation_callback.call_count > 0
+            violation_callback.reset_mock()
 
     def test_initTrustFail(self):
         with pytest.raises(Exception):
