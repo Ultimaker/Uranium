@@ -131,7 +131,7 @@ ListView
                         PropertyChanges
                         {
                             target: messageIconBackground
-                            color: UM.Theme.getColor("message_success_background")
+                            color: UM.Theme.getColor("message_success_icon_background")
                         }
                     },
                     State
@@ -167,7 +167,7 @@ ListView
                         PropertyChanges
                         {
                             target: messageIconBackground
-                            color: UM.Theme.getColor("message_warning_background")
+                            color: UM.Theme.getColor("message_warning_icon_background")
                         }
                     },
                     State
@@ -183,7 +183,7 @@ ListView
                         PropertyChanges
                         {
                             target: messageIconBackground
-                            color: UM.Theme.getColor("message_error_background")
+                            color: UM.Theme.getColor("message_error_icon_background")
                         }
                     }
                 ]
