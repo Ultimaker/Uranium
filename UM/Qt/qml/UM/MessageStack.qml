@@ -117,76 +117,76 @@ ListView
                 }
 
                 states:
-                        [
-                            State
-                            {
-                                name: "positive"
-                                when: model.message_type == 0
-                                PropertyChanges
-                                {
-                                    target: messageIcon
-                                    source: UM.Theme.getIcon("Check", "low")
-                                    color: UM.Theme.getColor("message_success_icon")
-                                }
-                                PropertyChanges
-                                {
-                                    target: messageIconBackground
-                                    color: UM.Theme.getColor("message_success_background")
-                                }
-                            },
-                            State
-                            {
-                                name: "neutral"
-                                when: model.message_type == 1
-                                PropertyChanges
-                                {
-                                    target: messageIcon
-                                    source: ""
-                                }
-                                PropertyChanges
-                                {
-                                    target: messageIconBackground
-                                    color: "transparent"
-                                }
-                                PropertyChanges
-                                {
-                                    target: messageTypeIcon
-                                    visible: false
-                                }
-                            },
-                            State
-                            {
-                                name: "warning"
-                                when: model.message_type == 2
-                                PropertyChanges
-                                {
-                                    target: messageIcon
-                                    source: UM.Theme.getIcon("Warning", "low")
-                                    color: UM.Theme.getColor("message_warning_icon")
-                                }
-                                PropertyChanges
-                                {
-                                    target: messageIconBackground
-                                    color: UM.Theme.getColor("message_warning_background")
-                                }
-                            },
-                            State
-                            {
-                                name: "error"
-                                when: model.message_type == 3
-                                PropertyChanges
-                                {
-                                    target: messageIcon
-                                    source: UM.Theme.getIcon("Cancel", "low")
-                                    color: UM.Theme.getColor("message_error_icon")
-                                }
-                                PropertyChanges
-                                {
-                                    target: messageIconBackground
-                                    color: UM.Theme.getColor("message_error_background")
-                                }
-                            }
-                        ]
+                [
+                    State
+                    {
+                        name: "positive"
+                        when: model.message_type == 0
+                        PropertyChanges
+                        {
+                            target: messageIcon
+                            source: UM.Theme.getIcon("Check", "low")
+                            color: UM.Theme.getColor("message_success_icon")
+                        }
+                        PropertyChanges
+                        {
+                            target: messageIconBackground
+                            color: UM.Theme.getColor("message_success_background")
+                        }
+                    },
+                    State
+                    {
+                        name: "neutral"
+                        when: model.message_type == 1
+                        PropertyChanges
+                        {
+                            target: messageIcon
+                            source: ""
+                        }
+                        PropertyChanges
+                        {
+                            target: messageIconBackground
+                            color: "transparent"
+                        }
+                        PropertyChanges
+                        {
+                            target: messageTypeIcon
+                            visible: false
+                        }
+                    },
+                    State
+                    {
+                        name: "warning"
+                        when: model.message_type == 2
+                        PropertyChanges
+                        {
+                            target: messageIcon
+                            source: UM.Theme.getIcon("Warning", "low")
+                            color: UM.Theme.getColor("message_warning_icon")
+                        }
+                        PropertyChanges
+                        {
+                            target: messageIconBackground
+                            color: UM.Theme.getColor("message_warning_background")
+                        }
+                    },
+                    State
+                    {
+                        name: "error"
+                        when: model.message_type == 3
+                        PropertyChanges
+                        {
+                            target: messageIcon
+                            source: UM.Theme.getIcon("Cancel", "low")
+                            color: UM.Theme.getColor("message_error_icon")
+                        }
+                        PropertyChanges
+                        {
+                            target: messageIconBackground
+                            color: UM.Theme.getColor("message_error_background")
+                        }
+                    }
+                ]
             }
 
 
