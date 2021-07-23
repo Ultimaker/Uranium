@@ -3,7 +3,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 import platform
 import json
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Dict, Optional, Tuple, Type
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
@@ -16,6 +16,7 @@ from UM.Message import Message
 from UM.TaskManagement.HttpRequestManager import HttpRequestManager
 from UM.Version import Version
 from UM.i18n import i18nCatalog
+from .NewBetaVersionMessage import NewBetaVersionMessage
 from .NewVersionMessage import NewVersionMessage
 
 if TYPE_CHECKING:
@@ -32,6 +33,7 @@ class UpdateChecker(Extension):
     to change it to work for other applications.
     """
     url = "https://software.ultimaker.com/latest.json"
+    beta_url = "http://software.ultimaker.com/beta.json"
 
     def __init__(self) -> None:
         super().__init__()
@@ -46,6 +48,7 @@ class UpdateChecker(Extension):
 
         # Which version was the latest shown in the version upgrade dialog. Don't show these updates twice.
         Application.getInstance().getPreferences().addPreference("info/latest_update_version_shown", "0.0.0")
+        Application.getInstance().getPreferences().addPreference("info/latest_beta_update_version_shown", "0.0.0")
 
     def checkNewVersion(self, silent = False, display_same_version = True) -> None:
         """Connect with software.ultimaker.com, load latest.json and check version info.
@@ -62,7 +65,9 @@ class UpdateChecker(Extension):
         """
         http_manager = HttpRequestManager.getInstance()
         Logger.log("i", "Checking for new version")
-        http_manager.get(self.url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
+        http_manager.get(self.url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version, "latest"))
+        http_manager.get(self.beta_url,
+                         callback=lambda reply: self._onRequestCompleted(reply, silent, display_same_version, "beta"))
         self._download_url = None
 
     def _extractVersionAndURLFromData(self, data: Dict, application_name: str) -> Tuple[Optional[Version], Optional[str]]:
@@ -77,7 +82,7 @@ class UpdateChecker(Extension):
                         int(data[application_name][os]["minor"]),
                         int(data[application_name][os]["revision"])]), data[application_name][os]["url"]
 
-    def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool) -> None:
+    def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool, version_type: str) -> None:
         if reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) != 200:
             # TODO: Show failure message
             return
@@ -104,9 +109,15 @@ class UpdateChecker(Extension):
             self._download_url = download_url
 
         local_version = Version(app_version)
+        if version_type == "latest":
+            self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewVersionMessage, "info/latest_update_version_shown")
+        elif version_type == "beta":
+            self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewBetaVersionMessage,
+                                     "info/latest_beta_update_version_shown")
 
+    def _handleLatestUpdate(self, local_version: Version, newest_version: Version, silent: bool, display_same_version: bool, message_class: Type, preference_key: str) -> None:
         preferences = Application.getInstance().getPreferences()
-        latest_version_shown = preferences.getValue("info/latest_update_version_shown")
+        latest_version_shown = preferences.getValue(preference_key)
 
         if local_version == newest_version and local_version == latest_version_shown:
             if display_same_version and not silent:
@@ -120,11 +131,12 @@ class UpdateChecker(Extension):
         if local_version > newest_version:
             return  # No idea how this can happen, but don't bother the user with this.
 
-        preferences.setValue("info/latest_update_version_shown", str(newest_version))
+        preferences.setValue(preference_key, str(newest_version))
         Logger.log("i", "Found a new version of the software. Spawning message")
 
-        message = NewVersionMessage(application_display_name = Application.getInstance().getApplicationDisplayName().title(),
-                                    newest_version = newest_version)
+        message = message_class(
+            application_display_name=Application.getInstance().getApplicationDisplayName().title(),
+            newest_version=newest_version)
         message.actionTriggered.connect(self._onActionTriggered)
         message.show()
 
