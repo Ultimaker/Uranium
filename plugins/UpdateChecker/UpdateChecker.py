@@ -3,7 +3,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 import platform
 import json
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, Optional, Tuple
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
@@ -42,7 +42,7 @@ class UpdateChecker(Extension):
         if Application.getInstance().getPreferences().getValue("info/automatic_update_check"):
             self.checkNewVersion(silent = True, display_same_version = False)
 
-        self._download_url = None
+        self._download_url: Optional[str] = None
 
         # Which version was the latest shown in the version upgrade dialog. Don't show these updates twice.
         Application.getInstance().getPreferences().addPreference("info/latest_update_version_shown", "0.0.0")
@@ -65,6 +65,18 @@ class UpdateChecker(Extension):
         http_manager.get(self.url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
         self._download_url = None
 
+    def _extractVersionAndURLFromData(self, data: Dict, application_name: str) -> Tuple[Optional[Version], Optional[str]]:
+        if application_name not in data:
+            return None, None
+
+        os = platform.system()
+        if os not in data[application_name]:
+            return None, None
+
+        return Version([int(data[application_name][os]["major"]),
+                        int(data[application_name][os]["minor"]),
+                        int(data[application_name][os]["revision"])]), data[application_name][os]["url"]
+
     def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool) -> None:
         if reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) != 200:
             # TODO: Show failure message
@@ -76,17 +88,6 @@ class UpdateChecker(Extension):
             # Todo more explicit exception handling & showing of error messages
             return
 
-        application_name = Application.getInstance().getApplicationName()
-        if application_name not in data:
-            #TODO: Warn user about this
-            return
-
-        cura_data = data[application_name]
-        os = platform.system()
-        if os not in cura_data:
-            # TODO: warn user
-            return
-
         app_version = Application.getInstance().getVersion()
         # Skip if we're on a dev version
         if app_version == "master" or app_version == Version([0, 0, 0]):
@@ -95,8 +96,14 @@ class UpdateChecker(Extension):
                         title=i18n_catalog.i18nc("@info:title", "Warning")).show()
             return
 
-        local_version = Version(Application.getInstance().getVersion())
-        newest_version = Version([int(cura_data[os]["major"]), int(cura_data[os]["minor"]), int(cura_data[os]["revision"])])
+        newest_version, download_url = self._extractVersionAndURLFromData(data, Application.getInstance().getApplicationName())
+        if newest_version is None:
+            # Todo: warn user that something failed!
+            return
+        if download_url is not None:
+            self._download_url = download_url
+
+        local_version = Version(app_version)
 
         preferences = Application.getInstance().getPreferences()
         latest_version_shown = preferences.getValue("info/latest_update_version_shown")
@@ -112,13 +119,12 @@ class UpdateChecker(Extension):
 
         if local_version > newest_version:
             return  # No idea how this can happen, but don't bother the user with this.
-        self._download_url = cura_data[os]["url"]
+
         preferences.setValue("info/latest_update_version_shown", str(newest_version))
         Logger.log("i", "Found a new version of the software. Spawning message")
 
-        application_display_name = Application.getInstance().getApplicationDisplayName().title()
-
-        message = NewVersionMessage(application_display_name = application_display_name, newest_version = newest_version)
+        message = NewVersionMessage(application_display_name = Application.getInstance().getApplicationDisplayName().title(),
+                                    newest_version = newest_version)
         message.actionTriggered.connect(self._onActionTriggered)
         message.show()
 
