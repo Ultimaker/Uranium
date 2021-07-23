@@ -407,7 +407,7 @@ class Trust:
         is concerned, is the one where the items are already in central storage. Otherwise there would either be a whole
         range of 'acceptable answers' (and that's harder to test against) or, there would always be a need to verify
         a situation that shouldn't be that frequent (items need to be copied to central storage). This creates a problem
-        in that the central storage mechanism needs to run _first_, however. The central storage has it's own security
+        in that the central storage mechanism needs to run _first_, however. The central storage has its own security
         measures, but this means that the central storage file in a folder (which contains info on what items should be
         copied) hasn't been checked against the trust manifest file in that folder yet.
 
@@ -428,7 +428,7 @@ class Trust:
 
             # Open the file containing signatures (just reading the json is negligible compared to the verify or store):
             json_filename = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
-            with open(json_filename, "r", encoding="utf-8") as data_file:
+            with open(json_filename, "r", encoding = "utf-8") as data_file:
                 json_data = json.load(data_file)
                 signatures_json = json_data.get(TrustBasics.getRootSignatureCategory(), None)
                 if signatures_json is None:
