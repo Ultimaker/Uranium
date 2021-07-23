@@ -82,6 +82,7 @@ ListView
         Row
         {
             id: titleBar
+            spacing: UM.Theme.getSize("default_margin").width
 
             anchors
             {
@@ -91,13 +92,14 @@ ListView
                 margins: UM.Theme.getSize("default_margin").width
             }
 
-            height: messageTypeIcon.height
+            height: Math.max(messageTypeIcon.height, messageTitle.height)
             Item
             {
                 id: messageTypeIcon
                 visible: model.progress == null
                 height: UM.Theme.getSize("small_button_icon").height
                 width: visible ? UM.Theme.getSize("small_button_icon").height : 0
+                anchors.verticalCenter: parent.verticalCenter
                 Rectangle
                 {
                     id: messageIconBackground
@@ -191,7 +193,9 @@ ListView
             Label
             {
                 id: messageTitle
-                width: parent.width - x
+                // Account for the left and right margins of the titleBar since they are not automatically accounted
+                // for using the width - x
+                width: parent.width - x - 2 * UM.Theme.getSize("default_margin").width
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: model.title == undefined ? "" : model.title
@@ -208,8 +212,6 @@ ListView
                 id: closeButton
                 width: UM.Theme.getSize("message_close").width
                 height: UM.Theme.getSize("message_close").height
-
-                anchors.verticalCenter: parent.verticalCenter
 
                 style: ButtonStyle
                 {
