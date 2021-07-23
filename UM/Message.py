@@ -12,7 +12,6 @@ from UM.Signal import Signal, signalemitter
 class Message(QObject):
     """Class for displaying messages to the user."""
 
-
     class ActionButtonStyle:
         DEFAULT = 0
         LINK = 1
@@ -23,14 +22,14 @@ class Message(QObject):
         ALIGN_RIGHT = 3
 
     class MessageType:
-        CONFIRMATION = 0
-        INFORMATION = 1
+        POSITIVE = 0
+        NEUTRAL = 1
         WARNING = 2
-        FAILURE = 3
+        ERROR = 3
 
     def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
                  title: Optional[str] = None, parent=None, use_inactivity_timer: bool = True, image_source: str = "",
-                 image_caption: str = "", option_text: str = "", option_state: bool = True, message_type: int = MessageType.INFORMATION) -> None:
+                 image_caption: str = "", option_text: str = "", option_state: bool = True, message_type: int = MessageType.NEUTRAL) -> None:
 
         """Class for displaying messages to the user.
         Even though the lifetime can be set, in certain cases it can still have a lifetime if nothing happens with the
@@ -208,7 +207,7 @@ class Message(QObject):
         """
         Gets the type of the message.
         The message gets a different icon according to its type.
-        :return: The type of the message (CONFIRMATION, INFORMATION, WARNING, FAILURE)
+        :return: The type of the message (POSITIVE, NEUTRAL, WARNING, ERROR)
         """
         return self._message_type
 
