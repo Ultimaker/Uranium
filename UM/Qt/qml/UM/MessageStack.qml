@@ -96,7 +96,7 @@ ListView
             Item
             {
                 id: messageTypeIcon
-                visible: model.progress == null
+                visible: messageIcon.source != ""
                 height: UM.Theme.getSize("small_button_icon").height
                 width: visible ? UM.Theme.getSize("small_button_icon").height : 0
                 anchors.verticalCenter: parent.verticalCenter
@@ -147,11 +147,6 @@ ListView
                         {
                             target: messageIconBackground
                             color: "transparent"
-                        }
-                        PropertyChanges
-                        {
-                            target: messageTypeIcon
-                            visible: false
                         }
                     },
                     State
