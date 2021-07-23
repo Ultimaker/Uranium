@@ -3,6 +3,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 import platform
 import json
+from typing import TYPE_CHECKING
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
@@ -17,6 +18,10 @@ from UM.Version import Version
 from UM.i18n import i18nCatalog
 from .NewVersionMessage import NewVersionMessage
 
+if TYPE_CHECKING:
+    from PyQt5.QtNetwork import QNetworkReply
+
+
 i18n_catalog = i18nCatalog("uranium")
 
 
@@ -28,7 +33,7 @@ class UpdateChecker(Extension):
     """
     url = "https://software.ultimaker.com/latest.json"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.setMenuName(i18n_catalog.i18nc("@item:inmenu", "Update Checker"))
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
@@ -42,7 +47,7 @@ class UpdateChecker(Extension):
         # Which version was the latest shown in the version upgrade dialog. Don't show these updates twice.
         Application.getInstance().getPreferences().addPreference("info/latest_update_version_shown", "0.0.0")
 
-    def checkNewVersion(self, silent = False, display_same_version = True):
+    def checkNewVersion(self, silent = False, display_same_version = True) -> None:
         """Connect with software.ultimaker.com, load latest.json and check version info.
 
         If the version info is higher then the current version, spawn a message to
@@ -60,7 +65,7 @@ class UpdateChecker(Extension):
         http_manager.get(self.url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
         self._download_url = None
 
-    def _onRequestCompleted(self, reply, silent, display_same_version):
+    def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool) -> None:
         if reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) != 200:
             # TODO: Show failure message
             return
@@ -117,7 +122,7 @@ class UpdateChecker(Extension):
         message.actionTriggered.connect(self._onActionTriggered)
         message.show()
 
-    def _onActionTriggered(self, message, action):
+    def _onActionTriggered(self, message: Message, action: str) -> None:
         """Callback function for the "download" button on the update notification.
 
         This function is here is because the custom Signal in Uranium keeps a list of weak references to its
