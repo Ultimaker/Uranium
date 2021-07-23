@@ -43,7 +43,7 @@ class Message(QObject):
         :param text: Text that needs to be displayed in the message
         :param lifetime: How long should the message be displayed (in seconds).
             if lifetime is 0, it will never automatically be destroyed.
-        :param dismissible: Can the user dismiss the message?
+        :param dismissable: Can the user dismiss the message?
         :param title: Phrase that will be shown above the message.
         :param image_source: an absolute path where an image can be found to be
         displayed (QUrl.toLocalFile()) can be used for that.
@@ -51,6 +51,9 @@ class Message(QObject):
         really, it's up to the QML to handle that).
         :param progress: Is there any progress to be displayed? if -1, it's seen
         as indeterminate.
+        :param message_type: Defines the type of message (POSITIVE, NEUTRAL, WARNING, ERROR, default: NEUTRAL).
+                            According to the type, an icon appears next to the message title. The NEUTRAL messages
+                            contain no icon.
         """
 
         super().__init__(parent)
