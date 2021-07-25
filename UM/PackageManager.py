@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -10,7 +10,7 @@ import zipfile
 from json import JSONDecodeError
 from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
 
-from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty
+from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
 
 from UM import i18nCatalog
 from UM.Logger import Logger
@@ -44,14 +44,18 @@ class PackageManager(QObject):
                 continue
 
             # Load all JSON files that are located in the bundled_packages directory.
-            for file_name in os.listdir(search_path):
-                if not file_name.endswith(".json"):
-                    continue
-                file_path = os.path.join(search_path, file_name)
-                if not os.path.isfile(file_path):
-                    continue
-                self._bundled_package_management_file_paths.append(file_path)
-                Logger.log("i", "Found bundled packages JSON file: {location}".format(location = file_path))
+            try:
+                for file_name in os.listdir(search_path):
+                    if not file_name.endswith(".json"):
+                        continue
+                    file_path = os.path.join(search_path, file_name)
+                    if not os.path.isfile(file_path):
+                        continue
+                    self._bundled_package_management_file_paths.append(file_path)
+                    Logger.log("i", "Found bundled packages JSON file: {location}".format(location = file_path))
+            except EnvironmentError as e:  # Unable to read directory. Could be corrupt disk or insufficient access to list the directory.
+                Logger.log("e", f"Unable to read package directory to search for packages JSON files: {str(e)}")
+                pass
 
         for search_path in (Resources.getDataStoragePath(), Resources.getConfigStoragePath()):
             candidate_user_path = os.path.join(search_path, "packages.json")
@@ -165,6 +169,12 @@ class PackageManager(QObject):
                     Logger.log("i", "Loaded bundled packages data from %s", search_path)
             except UnicodeDecodeError:
                 Logger.logException("e", "Can't decode package management files. File is corrupt.")
+                return
+            except FileNotFoundError:
+                Logger.error("Package management file {search_path} doesn't exist.".format(search_path = search_path))
+                return
+            except EnvironmentError as e:
+                Logger.error("Unable to read package management file {search_path}: {err}".format(search_path = search_path, err = str(e)))
                 return
 
         # Need to use the file lock here to prevent concurrent I/O from other processes/threads
@@ -284,6 +294,8 @@ class PackageManager(QObject):
     def _installAllScheduledPackages(self) -> None:
         while self._to_install_package_dict:
             package_id, package_info = list(self._to_install_package_dict.items())[0]
+            installing_plugin_msg = catalog.i18nc("@info:progress Don't translate {package_id}", "Installing plugin {package_id}...").format(package_id = package_id)
+            self._application.showSplashMessage(installing_plugin_msg)
             self._installPackage(package_info)
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
@@ -317,6 +329,21 @@ class PackageManager(QObject):
             package_info["is_bundled"] = package_info["package_id"] in self._bundled_package_dict.keys() and not self.isUserInstalledPackage(package_info["package_id"])
 
         return package_info
+
+    def getInstalledPackageIDs(self) -> Set[str]:
+        """
+        Get packages ID's that were installed. This does not contain bundled plugins.
+        :return: Set of id's of installed packages
+        """
+        installed_ids = set()  # type: Set[str]
+        if self._installed_package_dict.keys():
+            installed_ids = installed_ids.union(set(self._installed_package_dict.keys()))
+
+        installed_ids = installed_ids.difference(self._to_remove_package_set)
+        # If it's going to be installed and to be removed, then the package is being updated and it should be listed.
+        if self._to_install_package_dict.keys():
+            installed_ids = installed_ids.union(set(self._to_install_package_dict.keys()))
+        return installed_ids
 
     def getAllInstalledPackageIDs(self) -> Set[str]:
         # Add bundled, installed, and to-install packages to the set of installed package IDs
@@ -482,13 +509,14 @@ class PackageManager(QObject):
     # \param force_add is used when updating. In that case you actually want to uninstall & install
     @pyqtSlot(str)
     def removePackage(self, package_id: str, force_add: bool = False) -> None:
+        Logger.log("i", "Removing package [%s]", package_id)
         # Check the delayed installation and removal lists first
         if not self.isPackageInstalled(package_id):
-            Logger.log("i", "Attempt to remove package [%s] that is not installed, do nothing.", package_id)
+            Logger.log("w", "Attempt to remove package [%s] that is not installed, do nothing.", package_id)
             return
         # Extra safety check
         if package_id not in self._installed_package_dict and package_id in self._bundled_package_dict:
-            Logger.log("i", "Not uninstalling [%s] because it is a bundled package.")
+            Logger.log("w", "Not uninstalling [%s] because it is a bundled package.", package_id)
             return
 
         if package_id not in self._to_install_package_dict or force_add:
@@ -539,8 +567,11 @@ class PackageManager(QObject):
             return
         try:
             with zipfile.ZipFile(filename, "r") as archive:
+                name_list = archive.namelist()
                 temp_dir = tempfile.TemporaryDirectory()
-                archive.extractall(temp_dir.name)
+                for archive_filename in name_list:
+                    archive.extract(archive_filename, temp_dir.name)
+                    QCoreApplication.processEvents()
         except Exception:
             Logger.logException("e", "Failed to install package from file [%s]", filename)
             return

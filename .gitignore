@@ -17,9 +17,12 @@ resources/i18n/en_US
 resources/i18n/x-test
 resources/i18n/en_7S
 .mypy_cache
+.coverage*
+htmlcov/
 
 # JUnit
 junit.xml
+junit-pytest-*
 
 # Different files
 *.pyc

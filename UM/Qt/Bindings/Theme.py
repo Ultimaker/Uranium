@@ -4,6 +4,7 @@
 import json
 import os
 import sys
+import warnings
 from typing import Dict, Optional, List
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
@@ -23,7 +24,8 @@ class Theme(QObject):
         self._engine = engine
         self._styles = None  # type: Optional[QObject]
         self._path = ""
-        self._icons = {}  # type: Dict[str, QUrl]
+        self._icons = {}  # type: Dict[str, Dict[str, QUrl]]
+        self._deprecated_icons = {} # type: Dict[str, Dict[str, str]]
         self._images = {}  # type: Dict[str, QUrl]
 
         # Workaround for incorrect default font on Windows
@@ -116,10 +118,32 @@ class Theme(QObject):
         Logger.log("w", "No size %s defined in Theme", size)
         return QSizeF()
 
+    @pyqtSlot(str, str, result = "QUrl")
     @pyqtSlot(str, result = "QUrl")
-    def getIcon(self, icon_name: str) -> QUrl:
-        if icon_name in self._icons:
-            return self._icons[icon_name]
+    def getIcon(self, icon_name: str, detail_level: str = "default") -> QUrl:
+        """
+        Finds and returns the url of the requested icon. The icons are organized in folders according to their detail
+        level and the same icon may exist with more details. If a detail level is not specified, the icon will be
+        retrieved from the "default" folder. Icons with a higher detail level are recommended to be used with a bigger
+        width/height.
+
+        :param icon_name: The name of the icon to be retrieved. The same icon may exist in multiple detail levels.
+        :param detail_level: The level of detail of the icon. Choice between "low, "default", "medium", "high".
+        :return: The file url of the requested icon, in the requested detail level.
+        """
+        if detail_level in self._icons:
+            if icon_name in self._icons[detail_level]:
+                return self._icons[detail_level][icon_name]
+        elif icon_name in self._icons["icons"]:  # Retrieve the "old" icon from the base icon folder
+            return self._icons["icons"][icon_name]
+
+        if icon_name in self._deprecated_icons:
+            new_icon = self._deprecated_icons[icon_name]["new_icon"]
+            warning = f"The icon '{icon_name}' is deprecated. Please use icon '{new_icon}' instead."
+
+            Logger.log("w_once", warning)
+            warnings.warn(warning, DeprecationWarning, stacklevel=2)
+            return self.getIcon(self._deprecated_icons[icon_name]["new_icon"], self._deprecated_icons[icon_name]["size"])
 
         # We don't log this anymore since we have new fallback behavior to load the icon from a plugin folder
         # Logger.log("w", "No icon %s defined in Theme", icon_name)
@@ -222,9 +246,26 @@ class Theme(QObject):
 
         iconsdir = os.path.join(path, "icons")
         if os.path.isdir(iconsdir):
-            for icon in os.listdir(iconsdir):
-                name = os.path.splitext(icon)[0]
-                self._icons[name] = QUrl.fromLocalFile(os.path.join(iconsdir, icon))
+            try:
+                for base_path, _, icons in os.walk(iconsdir):
+                    detail_level = base_path.split(os.sep)[-1]
+                    if detail_level not in self._icons:
+                        self._icons[detail_level] = {}
+                    for icon in icons:
+                        name = os.path.splitext(icon)[0]
+                        self._icons[detail_level][name] = QUrl.fromLocalFile(os.path.join(base_path, icon))
+            except EnvironmentError:  # Exception when calling os.walk, e.g. no access rights.
+                pass  # Won't get any icons then. Images will show as black squares.
+
+            deprecated_icons_file = os.path.join(iconsdir, "deprecated_icons.json")
+            if os.path.isfile(deprecated_icons_file):
+                try:
+                    with open(deprecated_icons_file, encoding="utf-8") as f:
+                        data = json.load(f)
+                        for icon in data:
+                            self._deprecated_icons[icon] = data[icon]
+                except (UnicodeDecodeError, json.decoder.JSONDecodeError, EnvironmentError):
+                    Logger.logException("w", "Could not parse deprecated icons list %s", deprecated_icons_file)
 
         imagesdir = os.path.join(path, "images")
         if os.path.isdir(imagesdir):
@@ -280,4 +321,3 @@ class Theme(QObject):
 
 def createTheme(engine, script_engine = None):
     return Theme.getInstance(engine)
-

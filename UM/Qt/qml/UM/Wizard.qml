@@ -157,7 +157,7 @@ UM.Dialog
                             height: UM.Theme.getSize("standard_arrow").height
                             sourceSize.height: width
                             color: palette.mid
-                            source: UM.Theme.getIcon("arrow_bottom")
+                            source: UM.Theme.getIcon("ChevronSingleDown")
                         }
                     }
                 }

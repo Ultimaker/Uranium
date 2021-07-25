@@ -1,20 +1,21 @@
 # Uranium
-# Copyright (C) 2020 Ultimaker B.V.
+# Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.7\n"
+"Project-Id-Version: Uranium 4.10\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2020-10-19 13:16+0200\n"
-"PO-Revision-Date: 2020-08-21 13:40+0200\n"
+"POT-Creation-Date: 2021-06-10 17:38+0200\n"
+"PO-Revision-Date: 2021-04-16 15:13+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>Language-Team: Lionbridge <info@lionbridge.com>, Paulo Miranda <av@utopica3d.com>, Portuguese <info@bothof.nl>\n"
+"Language-Team: \n"
 "Language: pt_PT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
@@ -53,83 +54,83 @@ msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
 msgstr "Ficheiro STL (Binário)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:29
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Ficheiro Local"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to File"
-msgstr "Guardar Ficheiro"
-
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr "Guardar no disco"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
-msgid "Save to File"
-msgstr "Guardar Ficheiro"
+msgid "Save to Disk"
+msgstr "Guardar no disco"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:54
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
-msgid "Save to File"
-msgstr "Guardar Ficheiro"
+msgid "Save to Disk"
+msgstr "Guardar no disco"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:87
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "Não existem quaisquer formatos disponíveis para gravar o ficheiro!"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:133
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "O Ficheiro já Existe"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:133
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "O ficheiro <filename>{0}</filename> já existe. Tem a certeza de que deseja substituí-lo?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:163
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "A guardar em <filename>{0}</filename>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:164
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "A Guardar"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Permissão negada ao tentar guardar <filename>{0}</filename>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:175
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Não foi possível guardar em <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Guardado em <filename>{0}</filename>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "Ficheiro Guardado"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:186
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Abrir Pasta"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:186
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Abrir a pasta que contém o ficheiro"
@@ -138,20 +139,20 @@ msgstr "Abrir a pasta que contém o ficheiro"
 # Context!?
 # Aviso?
 # Cuidado?
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:65
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Atenção"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Ocorreu um problema ao guardar em <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
 msgctxt "@info:title"
@@ -168,12 +169,12 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Espelhar o Modelo"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:352
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr "A colocar horizontalmente o objeto na placa de construção..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:352
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr "Rotação do objeto"
@@ -224,47 +225,47 @@ msgid "Could not access update information."
 msgstr "Não foi possível aceder às informações sobre a atualização."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:70
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
 #: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Atualizar Versão"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:65
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:70
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "A versão que está a usar não permite verificar se existem atualizações."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
 msgstr "Ocorreu um erro ao procurar por atualizações."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:99
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Não foi encontrada uma nova versão."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:104
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:105
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "A {application_name} {version_number} encontra-se disponível!"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:106
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "A {application_name} {version_number} proporciona uma experiência de impressão melhor e mais fiável."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:109
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:110
 msgctxt "@action:button"
 msgid "Download"
 msgstr "Transferir"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:111
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:112
 msgctxt "@action:button"
 msgid "Learn more"
 msgstr "Saber mais"
@@ -303,49 +304,65 @@ msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "A reposição irá remover todos os perfis e impressoras atuais! Tem a certeza de que deseja efetuar a reposição?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:58
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:844
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:864
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Todos os Formatos Suportados ({0})"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:59
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:845
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:72
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:865
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Todos os Ficheiros (*)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "Não é possível abrir ficheiros do tipo <filename>{0}</filename>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "Ficheiro Inválido"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
 msgstr "Não foi possível carregar <filename>{0}</filename>. O ficheiro pode estar danificado ou inacessível."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
 msgctxt "@info:title"
 msgid "Unable to Open File"
 msgstr "Não é possível abrir o ficheiro"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:63
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "A Abrir"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr "Não existiam modelos em <filename>{0}</filename>."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr "Nenhum modelo no ficheiro"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr "Não foi possível carregar <filename>{0}</filename>. O ficheiro pode estar corrompido, inacessível ou não continha qualquer modelo."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
 #, python-format, python-brace-format
@@ -358,7 +375,7 @@ msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "A Redimensionar Objeto"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:272
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:285
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -368,12 +385,18 @@ msgstr ""
 "Ocorreram alguns erros ao desinstalar os seguintes pacotes:\n"
 "{packages}"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:274
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:287
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "Erros de desinstalação"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:550
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:297
+#, python-brace-format
+msgctxt "@info:progress Don't translate {package_id}"
+msgid "Installing plugin {package_id}..."
+msgstr "A instalar o plugin {package_id}..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -385,17 +408,12 @@ msgstr ""
 "{error}.\n"
 "Tente atualizar novamente mais tarde."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:553
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:571
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Erro de atualização"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:220
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
-msgstr "O plug-in {} não foi carregado porque tentou carregar ficheiros fora do contexto fidedigno"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:363
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:319
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -404,12 +422,12 @@ msgstr ""
 "O plug-in foi instalado.\n"
 "Por favor reinicie a aplicação para ativar o plug-in."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:416
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:386
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
 msgstr "O plug-in {} não foi carregado porque não foi possível verificá-lo."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:516
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:488
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -418,6 +436,11 @@ msgid ""
 msgstr ""
 "O plug-in foi removido.\n"
 "Por favor reinicie o {0} para concluir a desinstalação."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr "A partir do disco"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
 #, python-brace-format
@@ -459,57 +482,64 @@ msgstr[0] "{0} minuto"
 msgstr[1] "{0} minutos"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:190
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr "A iniciar o gestor de pacotes..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr "A sua configuração parece estar danificada."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:200
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr "Erros de configuração"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:211
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "A carregar plug-ins..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:210
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:192
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr "A carregar o plugin {plugin_id}..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr "A iniciar o gestor de pacotes..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:206
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr "A sua configuração parece estar danificada."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:208
+msgctxt "@info:title"
+msgid "Configuration errors"
+msgstr "Erros de configuração"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:220
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "A atualizar a configuração..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:216
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:226
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "A carregar preferências..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:301
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:313
 msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "A carregar a Interface..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:181
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Deseja recarregar {filename}?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:182
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:193
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "O ficheiro foi modificado"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:183
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Recarregar"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:183
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Isto irá reabrir os ficheiros modificados a partir do disco."
@@ -557,7 +587,7 @@ msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Manter Proporções"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:196
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:222
 msgctxt "@option:check"
 msgid "Lock Model"
 msgstr "Bloquear Modelo"
@@ -587,22 +617,22 @@ msgctxt "@title:window"
 msgid "Preferences"
 msgstr "Preferências"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:107
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:112
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr "Predefinições"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:115
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:120
 msgctxt "@action:button"
 msgid "Close"
 msgstr "Fechar"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Geral"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:149
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:151
 msgctxt "@title:tab"
 msgid "Settings"
 msgstr "Definições"
@@ -814,6 +844,22 @@ msgstr "Permite uma visualização sólida simples dos objectos."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Visualização simples"
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "Guardar Ficheiro"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "Guardar Ficheiro"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "Guardar Ficheiro"
+
+#~ msgctxt "@error:untrusted"
+#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
+#~ msgstr "O plug-in {} não foi carregado porque tentou carregar ficheiros fora do contexto fidedigno"
 
 #~ msgctxt "@info:status Don't translate the XML tag <filename>!"
 #~ msgid "Failed to load <filename>{0}</filename>"

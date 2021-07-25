@@ -240,7 +240,7 @@ class QtRenderer(Renderer):
              0.0,  0.0,
              1.0,  0.0,
              1.0,  1.0
-        ], dtype = numpy.float32).tostring()
+        ], dtype = numpy.float32).tobytes()
         buffer.write(0, data, len(data))
         buffer.release()
         self._quad_buffer = buffer

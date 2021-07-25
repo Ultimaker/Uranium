@@ -140,8 +140,7 @@ class QtApplication(QApplication, Application):
         #  - The language in use, so the splash window can be shown in the correct language.
         #  - The OpenGL 'force' parameters.
         try:
-            preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
-            self._preferences.readFromFile(preferences_filename)
+            self.readPreferencesFromConfiguration()
         except FileNotFoundError:
             Logger.log("i", "Preferences file not found, ignore and use default language '%s'", self._default_language)
 
@@ -186,6 +185,12 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Initializing version upgrade manager ...")
         self._version_upgrade_manager = VersionUpgradeManager(self)
 
+    def _displayLoadingPluginSplashMessage(self, plugin_id: Optional[str]) -> None:
+        message = i18nCatalog("uranium").i18nc("@info:progress", "Loading plugins...")
+        if plugin_id:
+            message = i18nCatalog("uranium").i18nc("@info:progress", "Loading plugin {plugin_id}...").format(plugin_id = plugin_id)
+        self.showSplashMessage(message)
+
     def startSplashWindowPhase(self) -> None:
         super().startSplashWindowPhase()
         i18n_catalog = i18nCatalog("uranium")
@@ -205,7 +210,9 @@ class QtApplication(QApplication, Application):
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         # Remove and install the plugins that have been scheduled
         self._plugin_registry.initializeBeforePluginsAreLoaded()
+        self._plugin_registry.pluginLoadStarted.connect(self._displayLoadingPluginSplashMessage)
         self._loadPlugins()
+        self._plugin_registry.pluginLoadStarted.disconnect(self._displayLoadingPluginSplashMessage)
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         self.pluginsLoaded.emit()
 
@@ -224,14 +231,13 @@ class QtApplication(QApplication, Application):
             self._preferences.deserialize(serialized)
             self._preferences.setValue("general/plugins_to_remove", "")
             self._preferences.writeToFile(preferences_filename)
-        except (FileNotFoundError, UnicodeDecodeError):
-            Logger.log("i", "The preferences file cannot be found or it is corrupted, so we will use default values")
+        except (EnvironmentError, UnicodeDecodeError):
+            Logger.log("i", "The preferences file cannot be opened or it is corrupted, so we will use default values")
 
         self.processEvents()
         # Force the configuration file to be written again since the list of plugins to remove maybe changed
         try:
-            self._preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
-            self._preferences.readFromFile(self._preferences_filename)
+            self.readPreferencesFromConfiguration()
         except FileNotFoundError:
             Logger.log("i", "The preferences file '%s' cannot be found, will use default values",
                        self._preferences_filename)
@@ -274,6 +280,10 @@ class QtApplication(QApplication, Application):
                     Logger.info("Created system tray icon.")
                 except FileNotFoundError:
                     Logger.log("w", "Could not find the icon %s", self._tray_icon_name)
+
+    def readPreferencesFromConfiguration(self) -> None:
+        self._preferences_filename = Resources.getPath(Resources.Preferences, self._app_name + ".cfg")
+        self._preferences.readFromFile(self._preferences_filename)
 
     def initializeEngine(self) -> None:
         # TODO: Document native/qml import trickery
@@ -494,6 +504,9 @@ class QtApplication(QApplication, Application):
         except Exception as e:
             Logger.log("e", "Exception while closing backend: %s", repr(e))
 
+        if self._qml_engine:
+            self._qml_engine.deleteLater()
+
         if self._tray_icon_widget:
             self._tray_icon_widget.deleteLater()
 
@@ -600,6 +613,7 @@ class QtApplication(QApplication, Application):
     @pyqtSlot()
     def resetWorkspace(self) -> None:
         self._workspace_metadata_storage.clear()
+        self._current_workspace_information.clear()
         self.deleteAll()
         self.workspaceLoaded.emit("")
         self.getController().getScene().clearMetaData()
@@ -660,4 +674,3 @@ class _QtFunctionEvent(QEvent):
     def __init__(self, fevent: QEvent) -> None:
         super().__init__(self.QtFunctionEvent)
         self._function_event = fevent
-

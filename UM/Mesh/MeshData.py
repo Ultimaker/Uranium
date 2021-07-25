@@ -236,7 +236,7 @@ class MeshData:
 
         if self._vertices is None:
             return None
-        return self._vertices.tostring()
+        return self._vertices.tobytes()
 
     def getNormalsAsByteArray(self) -> Optional[bytes]:
         """Get all normals of this mesh as a bytearray
@@ -246,7 +246,7 @@ class MeshData:
 
         if self._normals is None:
             return None
-        return self._normals.tostring()
+        return self._normals.tobytes()
 
     def getIndicesAsByteArray(self) -> Optional[bytes]:
         """Get all indices as a bytearray
@@ -256,17 +256,17 @@ class MeshData:
 
         if self._indices is None:
             return None
-        return self._indices.tostring()
+        return self._indices.tobytes()
 
     def getColorsAsByteArray(self) -> Optional[bytes]:
         if self._colors is None:
             return None
-        return self._colors.tostring()
+        return self._colors.tobytes()
 
     def getUVCoordinatesAsByteArray(self) -> Optional[bytes]:
         if self._uvs is None:
             return None
-        return self._uvs.tostring()
+        return self._uvs.tobytes()
 
     def _computeConvexHull(self) -> None:
         """Convex hull handling"""
@@ -522,8 +522,10 @@ def createConvexHull(vertex_data: numpy.ndarray) -> scipy.spatial.ConvexHull:
         Logger.log("w", "Loaded model may be low-dimensional, apply QJ to make it full dimensional.")
         try:
             hull_result = scipy.spatial.ConvexHull(vertex_data, qhull_options="QJ")
-        except scipy.spatial.qhull.QhullError as e:
-            Logger.log("e", "Couldn't construct convex hull around mesh (using faux hull instead): {err}".format(err = str(e)))
+        except (scipy.spatial.qhull.QhullError, OSError):
+            # The OS error can sometimes occur on windows.
+            # See https://github.com/scipy/scipy/issues/8850 for more info.
+            Logger.logException("e", "Couldn't construct convex hull around mesh (using faux hull instead)")
             hull_result = scipy.spatial.ConvexHull(numpy.array([[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]))  # Cube, known to always succeed.
     return hull_result
 

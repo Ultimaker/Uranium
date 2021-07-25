@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
@@ -24,16 +24,16 @@ catalog = i18nCatalog("uranium")
 class LocalFileOutputDevice(ProjectOutputDevice):
     """Implements an OutputDevice that supports saving to arbitrary local files."""
 
-    def __init__(self, parent = None):
-        super().__init__(device_id = "local_file", parent = parent)
+    def __init__(self, add_to_output_devices: bool = True, parent = None):
+        super().__init__(device_id = "local_file", add_to_output_devices = add_to_output_devices, parent = parent)
 
         self.setName(catalog.i18nc("@item:inmenu", "Local File"))
-        self.setShortDescription(catalog.i18nc("@action:button Preceded by 'Ready to'.", "Save to File"))
-        self.setDescription(catalog.i18nc("@info:tooltip", "Save to File"))
+        self.setShortDescription(catalog.i18nc("@action:button Preceded by 'Ready to'.", "Save to Disk"))
+        self.setDescription(catalog.i18nc("@info:tooltip", "Save to Disk"))
         self.setIconName("save")
 
         self.shortcut = "Ctrl+S"
-        self.menu_entry_text = "To Disk"
+        self.menu_entry_text = catalog.i18nc("@item:inmenu About saving files to the hard drive", "To Disk")
 
         self._writing = False
 
@@ -55,7 +55,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         # Set up and display file dialog
         dialog = QFileDialog()
 
-        dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
+        dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to Disk"))
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
 
@@ -110,7 +110,8 @@ class LocalFileOutputDevice(ProjectOutputDevice):
 
         # CURA-6411: This code needs to be before dialog.selectFile and the filters, because otherwise in macOS (for some reason) the setDirectory call doesn't work.
         stored_directory = Application.getInstance().getPreferences().getValue("local_file/dialog_save_path")
-        dialog.setDirectory(stored_directory)
+        if stored_directory and stored_directory != "":
+            dialog.setDirectory(stored_directory)
 
         # Add the file name before adding the extension to the dialog
         if file_name is not None:

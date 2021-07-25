@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING, cast
 
 from .FileReader import FileReader
 from .FileWriter import FileWriter
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, QUrl
+from PyQt5.QtCore import QFileInfo, QObject, pyqtProperty, pyqtSlot, QUrl
 
 from UM.Logger import Logger
 from UM.Platform import Platform
@@ -16,6 +16,17 @@ i18n_catalog = i18nCatalog("uranium")
 
 if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
+
+
+def resolveAnySymlink(file_name: str) -> str:
+    """ Some OSs have different extensions for linked files (for example, one possibility is .lnk-files on Windows).
+    In such cases, the literal .lnk file will be attempted to open, not the file this resolves:
+    """
+
+    info = QFileInfo(file_name)
+    if info.exists() and info.isSymLink():  # Use 'exists': Not certain to be a literal file, depending on subclass.
+        file_name = info.symLinkTarget()
+    return file_name
 
 
 class FileHandler(QObject):
@@ -167,6 +178,7 @@ class FileHandler(QObject):
         :returns: Reader that accepts the given file name. If no acceptable Reader is found None is returned.
         """
 
+        file_name = resolveAnySymlink(file_name)
         for id, reader in self._readers.items():
             try:
                 if reader.acceptsFile(file_name):

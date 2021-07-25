@@ -5,7 +5,6 @@ from typing import cast
 from unittest.mock import MagicMock
 
 import pytest
-import Arcus #Prevents error: "PyCapsule_GetPointer called with incorrect name" with conflicting SIP configurations between Arcus and PyQt: Import Arcus first!
 from UM.Qt.QtApplication import QtApplication #QTApplication import is required, even though it isn't used.
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
@@ -20,7 +19,7 @@ class FixtureApplication(Application):
     engineCreatedSignal = Signal()
 
     def __init__(self):
-        super().__init__(name = "test", version = "1.0", api_version = "7.4.0")
+        super().__init__(name = "test", version = "1.0", api_version = "7.6.0")
         super().initialize()
         Signal._signalQueue = self
 

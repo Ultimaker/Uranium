@@ -1,8 +1,9 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import configparser
 import ast
+import configparser
+from typing import Any, cast, Dict, List, Union
 
 from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
 from UM.Logger import Logger
@@ -31,9 +32,9 @@ class ShaderProgram:
         self._attribute_bindings = {}
 
         self._shader_program = None
-        self._uniform_indices = {}
+        self._uniform_indices = {}  # type: Dict[str, int]
         self._attribute_indices = {}
-        self._uniform_values = {}
+        self._uniform_values = {}  # type: Dict[int, Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]]
         self._bound = False
         self._textures = {}
 
@@ -65,7 +66,7 @@ class ShaderProgram:
         parser = configparser.ConfigParser(interpolation = None, comment_prefixes = (';', ))
         parser.optionxform = lambda option: option
         try:
-            parser.read(file_name)
+            parser.read(file_name, encoding = "UTF-8")
         except EnvironmentError:
             raise InvalidShaderProgramError("{0} can't be opened for reading.".format(file_name))
         except UnicodeDecodeError:
@@ -154,7 +155,7 @@ class ShaderProgram:
         if not self._shader_program.link():
             Logger.log("e", "Shader failed to link: %s", self._shader_program.log())
 
-    def setUniformValue(self, name, value, **kwargs):
+    def setUniformValue(self, name: str, value: Union[Vector, Matrix, Color, List[float], List[List[float]], float, int], **kwargs: Any) -> None:
         """Set a named uniform variable.
 
         Unless otherwise specified as argument, the specified value will be cached so that
@@ -340,23 +341,30 @@ class ShaderProgram:
     def _matrixToQMatrix4x4(self, m):
         return QMatrix4x4(m.getData().flatten())
 
-    def _setUniformValueDirect(self, uniform, value):
+    def _setUniformValueDirect(self, uniform: int, value: Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]) -> None:
         if type(value) is Vector:
+            value = cast(Vector, value)
             self._shader_program.setUniformValue(uniform, QVector3D(value.x, value.y, value.z))
         elif type(value) is Matrix:
-            self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(value))
+            self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(cast(Matrix, value)))
         elif type(value) is Color:
+            value = cast(Color, value)
             self._shader_program.setUniformValue(uniform,
                 QColor(round(value.r * 255), round(value.g * 255), round(value.b * 255), round(value.a * 255)))
-        elif type(value) is list and type(value[0]) is list and len(value[0]) == 4:
+        elif type(value) is list and type(cast(List[List[float]], value)[0]) is list and len(cast(List[List[float]], value)[0]) == 4:
+            value = cast(List[List[float]], value)
             self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(Matrix(value)))
-        elif type(value) is list and len(value) == 2:
+        elif type(value) is list and len(cast(List[float], value)) == 2:
+            value = cast(List[float], value)
             self._shader_program.setUniformValue(uniform, QVector2D(value[0], value[1]))
-        elif type(value) is list and len(value) == 3:
+        elif type(value) is list and len(cast(List[float], value)) == 3:
+            value = cast(List[float], value)
             self._shader_program.setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
-        elif type(value) is list and len(value) == 4:
+        elif type(value) is list and len(cast(List[float], value)) == 4:
+            value = cast(List[float], value)
             self._shader_program.setUniformValue(uniform, QVector4D(value[0], value[1], value[2], value[3]))
-        elif type(value) is list and type(value[0]) is list and len(value[0]) == 2:
+        elif type(value) is list and type(cast(List[List[float]], value)[0]) is list and len(cast(List[List[float]], value)[0]) == 2:
+            value = cast(List[List[float]], value)
             self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
         else:
-            self._shader_program.setUniformValue(uniform, value)
+            self._shader_program.setUniformValue(uniform, cast(Union[float, int], value))

@@ -15,6 +15,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
+from UM.CentralFileStorage import CentralFileStorage
 from UM.Logger import Logger
 from UM.Message import Message
 from UM.Platform import Platform
@@ -351,6 +352,10 @@ class PluginRegistry(QObject):
         self._bundled_plugin_cache[plugin_id] = is_bundled
         return is_bundled
 
+    # Indicates that a specific plugin is currently being loaded. If the plugin_id is empty, it means that no plugin
+    # is currently being loaded.
+    pluginLoadStarted = pyqtSignal(str, arguments = ["plugin_id"])
+
     def loadPlugins(self, metadata: Optional[Dict[str, Any]] = None) -> None:
         """Load all plugins matching a certain set of metadata
 
@@ -369,6 +374,8 @@ class PluginRegistry(QObject):
         for plugin_id in plugin_ids:
             if plugin_id in self.preloaded_plugins:
                 continue  # Already loaded this before.
+
+            self.pluginLoadStarted.emit(plugin_id)
 
             # Get the plugin metadata:
             try:
@@ -392,6 +399,8 @@ class PluginRegistry(QObject):
                     self._plugins_installed.append(plugin_id)
                 except PluginNotFoundError:
                     pass
+
+        self.pluginLoadStarted.emit("")
         Logger.log("d", "Loading all plugins took %s seconds", time.time() - start_time)
 
     # Checks if the given plugin API version is compatible with the current version.
@@ -469,7 +478,21 @@ class PluginRegistry(QObject):
             self.enablePlugin(plugin_id)
             Logger.info("Loaded plugin %s", plugin_id)
 
-        except Exception as ex:
+        except Exception:
+            message_text = i18n_catalog.i18nc("@error",
+                                              "The plugin {} could not be loaded. Re-installing the plugin might solve "
+                                              "the issue", plugin_id)
+            unable_to_load_plugin_message = Message(text = message_text)
+            unable_to_load_plugin_message.addAction("remove",
+                                   name= i18n_catalog.i18nc("@action:button", "Remove plugin"),
+                                   icon="",
+                                   description="Remove the plugin",
+                                   button_align=Message.ActionButtonAlignment.ALIGN_RIGHT)
+
+            # Listen for the pyqt signal, since that one does support lambda's
+            unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: (self.uninstallPlugin(plugin_id), message.hide()))
+
+            unable_to_load_plugin_message.show()
             Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
     #   Uninstall a plugin with a given ID:
@@ -624,6 +647,15 @@ class PluginRegistry(QObject):
                 if current_version > highest_version:
                     highest_version = current_version
                     final_location = loc
+
+        # Move data (if any) to central storage
+        central_storage_file = os.path.join(final_location, plugin_id, TrustBasics.getCentralStorageFilename())
+        if os.path.exists(central_storage_file):
+            try:
+                with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
+                    self._handleCentralStorage(file_stream.read(), os.path.join(final_location, plugin_id), is_bundled_plugin = self.isBundledPlugin(plugin_id))
+            except:
+                pass
         try:
             file, path, desc = imp.find_module(plugin_id, [final_location])
         except Exception:
@@ -677,6 +709,26 @@ class PluginRegistry(QObject):
                 return os.path.abspath(os.path.join(folder_path, ".."))
 
         return None
+
+    def _handleCentralStorage(self, file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> None:
+        """
+        Plugins can indicate that they want certain things to be stored in a central location.
+        In the case of a signed plugin you *must* do this by means of the central_storage.json file.
+        :param file_data: The data as loaded from the file
+        :param plugin_path: The location of the plugin on the file system
+        :return:
+        """
+        try:
+            file_manifest = json.loads(file_data)
+        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
+            Logger.logException("e", "Failed to parse central_storage.json")
+            return
+
+        for file_to_move in file_manifest:
+            try:
+                CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]), move_file = not is_bundled_plugin)
+            except (TypeError, IndexError):
+                Logger.logException("w", "Unable to move file to central storage")
 
     #   Load the plugin data from the stream and in-place update the metadata.
     def _parsePluginInfo(self, plugin_id, file_data, meta_data):

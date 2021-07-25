@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, cast, Dict, List, Optional, TYPE_CHECKING
 
 import numpy
 
@@ -16,6 +16,8 @@ from UM.Mesh.MeshData import MeshData
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 from UM.Signal import Signal, signalemitter
 
+if TYPE_CHECKING:
+    from UM.MimeTypeDatabase import MimeType
 
 @signalemitter
 class SceneNode:
@@ -88,6 +90,7 @@ class SceneNode:
         self._name = name  # type: str
         self._id = node_id  # type: str
         self._decorators = []  # type: List[SceneNodeDecorator]
+        self.source_mime_type = None  # type: Optional[MimeType]  # MIME type of the source file this node was created from.
 
         # Store custom settings to be compatible with Savitar SceneNode
         self._settings = {}  # type: Dict[str, Any]
@@ -375,7 +378,7 @@ class SceneNode:
 
         return MeshData(vertices = self.getMeshDataTransformedVertices(), normals = self.getMeshDataTransformedNormals())
 
-    def getMeshDataTransformedVertices(self) -> numpy.ndarray:
+    def getMeshDataTransformedVertices(self) -> Optional[numpy.ndarray]:
         """Get the transformed vertices from this scene node/object, based on the transformation of scene nodes wrt root.
 
         If this node is a group, it will recursively concatenate all child nodes/objects.
@@ -395,7 +398,7 @@ class SceneNode:
                 transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation(copy=False)).getVertices()
         return transformed_vertices
 
-    def getMeshDataTransformedNormals(self) -> numpy.ndarray:
+    def getMeshDataTransformedNormals(self) -> Optional[numpy.ndarray]:
         """Get the transformed normals from this scene node/object, based on the transformation of scene nodes wrt root.
 
         If this node is a group, it will recursively concatenate all child nodes/objects.
@@ -466,7 +469,12 @@ class SceneNode:
         child.childrenChanged.disconnect(self.childrenChanged)
         child.meshDataChanged.disconnect(self.meshDataChanged)
 
-        self._children.remove(child)
+        try:
+            self._children.remove(child)
+        except ValueError:  # Could happen that the child was removed asynchronously by a different thread. Don't crash by removing it twice.
+            pass
+        # But still update the AABB and such.
+
         child._parent = None
         child._transformChanged()
         child.parentChanged.emit(self)
@@ -516,7 +524,10 @@ class SceneNode:
         self._cached_normal_matrix = Matrix(self.getWorldTransformation(copy=False).getData())
         self._cached_normal_matrix.setRow(3, [0, 0, 0, 1])
         self._cached_normal_matrix.setColumn(3, [0, 0, 0, 1])
-        self._cached_normal_matrix.pseudoinvert()
+        try:
+            self._cached_normal_matrix.pseudoinvert()
+        except numpy.linalg.LinAlgError:  # Inversion can fail if the transformation is singular. In that case, the normal vectors would become degenerate anyway.
+            pass
         self._cached_normal_matrix.transpose()
 
     def getCachedNormalMatrix(self) -> Matrix:
@@ -850,17 +861,24 @@ class SceneNode:
         self.boundingBoxChanged.emit()
 
     def _calculateAABB(self) -> None:
+        aabb = None
         if self._mesh_data:
             aabb = self._mesh_data.getExtents(self.getWorldTransformation(copy = False))
-        else:  # If there is no mesh_data, use a boundingbox that encompasses the local (0,0,0)
+
+        for child in self._children:
+            child_bb = child.getBoundingBox()
+            if child_bb is None or child_bb.minimum == child_bb.maximum:
+                # Child had a degenerate bounding box, such as an empty group. Don't count it along.
+                continue
+            if aabb is None:
+                aabb = child_bb
+            else:
+                aabb = aabb + child_bb
+
+        if aabb is None:  # There is no mesh data and no children with bounding box. Use the current position then, but it's a degenerate AABB.
             position = self.getWorldPosition()
             aabb = AxisAlignedBox(minimum = position, maximum = position)
 
-        for child in self._children:
-            if aabb is None:
-                aabb = child.getBoundingBox()
-            else:
-                aabb = aabb + child.getBoundingBox()
         self._aabb = aabb
 
     def __str__(self) -> str:

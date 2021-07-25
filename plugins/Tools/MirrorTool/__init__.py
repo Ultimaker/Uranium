@@ -11,7 +11,7 @@ def getMetaData():
         "tool": {
             "name": i18n_catalog.i18nc("@label", "Mirror"),
             "description": i18n_catalog.i18nc("@info:tooltip", "Mirror Model"),
-            "icon": "mirror",
+            "icon": "Mirror",
             "weight": 2
         },
     }

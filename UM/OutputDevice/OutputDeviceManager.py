@@ -247,12 +247,10 @@ class OutputDeviceManager:
             self.resetActiveDevice()
         return True
 
-    def addProjectOutputDevice(self, device: "ProjectOutputDevice", add_to_output_devices: bool = False) -> None:
+    def addProjectOutputDevice(self, device: "ProjectOutputDevice") -> None:
         """Add and register a project output device.
 
         :param device: The output device to add.
-        :param add_to_output_devices: Boolean to determine whether the device should also be added to the _output_devices
-                                      list. If that happens, the device will appear as an option also in the OutputDevicesActionButton
 
         :note Does nothing if a device with the same ID as the passed device was already added.
         """
@@ -264,12 +262,13 @@ class OutputDeviceManager:
         self._project_output_devices[device.getId()] = device
         device.enabledChanged.connect(self.projectOutputDevicesChanged.emit)
 
-        if add_to_output_devices:
-            self.addOutputDevice(device)
-        else:
-            # Call the connectWriteSignalsToDevice(..) only if addOutputDevice(..) function hasn't been called already
-            # to avoid connecting the signals twice
-            self.connectWriteSignalsToDevice(device)
+        if device.enabled:
+            if device.add_to_output_devices:
+                self.addOutputDevice(device)
+            else:
+                # Call the connectWriteSignalsToDevice(..) only if addOutputDevice(..) function hasn't been called already
+                # to avoid connecting the signals twice
+                self.connectWriteSignalsToDevice(device)
 
         self.projectOutputDevicesChanged.emit()
 

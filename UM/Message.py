@@ -76,16 +76,25 @@ class Message(QObject):
         self._actions = []  # type: List[Dict[str, Union[str, int]]]
         self._title = title
 
+        self.actionTriggered.connect(self._onActionTriggered)
+
     # We use these signals as QTimers need to be triggered from a qThread. By using signals to pass it,
     # the events are forced to be on the event loop (which is a qThread)
     inactivityTimerStop = pyqtSignal()
     inactivityTimerStart = pyqtSignal()
+    # Our signals work a bit differently, but also don't support lambdas. As such, the pyqt version of the same signal
+    # is also added.
+    # The actionTriggered signal will trigger the PyQtAction triggered signal
+    pyQtActionTriggered = pyqtSignal(QObject, str)
     actionTriggered = Signal()
     optionToggled = Signal()
 
     titleChanged = Signal()
     textChanged = Signal()
     progressChanged = Signal()
+
+    def _onActionTriggered(self, message, action):
+        self.pyQtActionTriggered.emit(message, action)
 
     def _stopInactivityTimer(self) -> None:
         if self._inactivity_timer:

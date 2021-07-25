@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import argparse
@@ -110,13 +110,24 @@ class Application:
 
         self._app_install_dir = self.getInstallPrefix()  # type: str
 
+        # Intended for keeping plugin workspace metadata that is going to be saved in and retrieved from workspace files.
+        # When the workspace is stored, all workspace readers will need to ensure that the workspace metadata is correctly
+        # stored to the output file. The same also holds when loading a workspace; the existing data will be cleared
+        # and replaced with the data recovered from the file (if any).
         self._workspace_metadata_storage = WorkspaceMetadataStorage()  # type: WorkspaceMetadataStorage
+
+        # Intended for keeping plugin workspace information that is only temporary. The information added in this structure
+        # is NOT saved to and retrieved from workspace files.
+        self._current_workspace_information = WorkspaceMetadataStorage()  # type: WorkspaceMetadataStorage
 
     def getAPIVersion(self) -> "Version":
         return self._api_version
 
     def getWorkspaceMetadataStorage(self) -> WorkspaceMetadataStorage:
         return self._workspace_metadata_storage
+
+    def getCurrentWorkspaceInformation(self) -> WorkspaceMetadataStorage:
+        return self._current_workspace_information
 
     # Adds the command line options that can be parsed by the command line parser.
     # Can be overridden to add additional command line options to the parser.
@@ -469,7 +480,10 @@ class Application:
             executable = sys.argv[0]
         else:
             executable = sys.executable
-        return os.path.dirname(os.path.realpath(executable))
+        try:
+            return os.path.dirname(os.path.realpath(executable))
+        except EnvironmentError:  # Symlinks can't be dereferenced.
+            return os.path.dirname(executable)
 
     # Returns the path to the folder the app is installed _in_, e.g.: '/root/blah/programs'
     @staticmethod
