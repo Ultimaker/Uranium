@@ -56,6 +56,12 @@ class RenderBatch:
         TriangleStrip = 0x0005
         TriangleFan = 0x0006
 
+    _render_mode_to_vertex_count = {
+        RenderMode.Points: 1,
+        RenderMode.Lines: 2,
+        RenderMode.Triangles: 3
+    }
+
     class BlendMode:
         """Blending mode."""
         NoBlending = 0 ## Blending disabled.
@@ -276,12 +282,7 @@ class RenderBatch:
         vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
         vertex_buffer.bind()
 
-        if self._render_range is None:
-            index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
-        else:
-            # Don't use glDrawRangeElements, just upload a clipped part of the array and the start index always becomes 0.
-            index_buffer = OpenGL.getInstance().createIndexBuffer(
-                mesh, force_recreate=True, index_start = self._render_range[0], index_stop = self._render_range[1])
+        index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
         if index_buffer is not None:
             index_buffer.bind()
 
@@ -296,6 +297,13 @@ class RenderBatch:
         mesh = item["mesh"]
         if mesh.getVertexCount() == 0:
             return
+
+        if self._render_range is not None:
+            self._shader.setUniformValue("u_drawRange", [self._render_range[0], self._render_range[1]])
+            self._shader.setUniformValue("draw_range", [self._render_range[0], self._render_range[1]])
+        else:
+            self._shader.setUniformValue("u_drawRange", [-1, -1])
+            self._shader.setUniformValue("draw_range", [-1, -1])
 
         transformation = item["transformation"]
         normal_matrix = item["normal_transformation"]
@@ -318,16 +326,11 @@ class RenderBatch:
         vao.bind()
 
         if mesh.hasIndices():
-            if self._render_range is None:
-                if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3, self._gl.GL_UNSIGNED_INT, None)
-                else:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
-            else:
-                if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawRangeElements(self._render_mode, self._render_range[0], self._render_range[1], self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
-                else:
-                    self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
+            # The last parameter here is supposed to take either an array, or an offset into the current buffer.
+            # However, this Python wrapper can only handle either the array, or None, which serves as a 0-offset.
+            # As other offsets do not seem possible (everyting was tried), the range is instead handled in the shader.
+            elem_count = mesh.getFaceCount() * self._render_mode_to_vertex_count.get(self._render_mode, 1)
+            self._gl.glDrawElements(self._render_mode, elem_count, self._gl.GL_UNSIGNED_INT, None)
         else:
             self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
 
