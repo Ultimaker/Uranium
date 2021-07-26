@@ -102,9 +102,13 @@ class UpdateChecker(Extension):
         newest_version, download_url = self._extractVersionAndURLFromData(data, application_name)
         newest_beta_version, beta_download_url = self._extractVersionAndURLFromData(data, application_name + "-beta")
 
-        if newest_version is None or newest_beta_version is None:
-            Logger.log("w", "Unable to extract version from the provided data.")
-            return
+        if newest_version is None:
+            Logger.log("w", "Unable to extract latest version from the provided data.")
+            newest_version = Version("0.0.0")
+
+        if newest_beta_version is None:
+            Logger.log("w", "Unable to extract BETA version from the provided data.")
+            newest_beta_version = Version("0.0.0")
 
         if download_url is not None:
             self._download_url = download_url
