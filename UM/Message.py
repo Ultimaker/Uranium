@@ -51,9 +51,9 @@ class Message(QObject):
         really, it's up to the QML to handle that).
         :param progress: Is there any progress to be displayed? if -1, it's seen
         as indeterminate.
-        :param message_type: Defines the type of message (POSITIVE, NEUTRAL, WARNING, ERROR, default: NEUTRAL).
-                            According to the type, an icon appears next to the message title. The NEUTRAL messages
-                            contain no icon.
+        :param message_type: Defines the type of message according to the MessageType enum (POSITIVE, NEUTRAL, WARNING,
+        ERROR, default: NEUTRAL). Depending on the type, an icon appears next to the message title. The NEUTRAL messages
+        contain no icon.
         """
 
         super().__init__(parent)
