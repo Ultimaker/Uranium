@@ -51,7 +51,6 @@ class UpdateChecker(Extension):
         preferences.addPreference("info/latest_beta_update_version_shown", "0.0.0")
 
         preferences.addPreference("info/latest_update_source", "stable")
-        self._version_type = preferences.getValue("info/latest_update_source")
 
     def checkNewVersion(self, silent = False, display_same_version = True) -> None:
         """Connect with software.ultimaker.com, load latest.json and check version info.
@@ -108,18 +107,21 @@ class UpdateChecker(Extension):
         if newest_version is None or newest_beta_version is None:
             # Todo: warn user that something failed!
             return
+
         if download_url is not None:
             self._download_url = download_url
 
         local_version = Version(app_version)
-
-        if self._version_type == "beta":
+        preferences = Application.getInstance().getPreferences()
+        if preferences.getValue("info/latest_update_source") == "beta":
             if newest_version >= newest_beta_version:
                 # The stable release is higher than the beta, check if we need to show that!
                 self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewVersionMessage,
                                          "info/latest_update_version_shown")
             else:
                 # Beta version is the highest, check for that
+                if download_url is not None:
+                    self._download_url = beta_download_url
                 self._handleLatestUpdate(local_version, newest_beta_version, silent, display_same_version,
                                          NewBetaVersionMessage, "info/latest_beta_update_version_shown")
         else:
