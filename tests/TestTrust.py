@@ -181,9 +181,9 @@ class TestTrust:
         violation_callback.reset_mock()
 
         # * 'Central file storage'-enabled section *
-        with patch("UM.CentralFileStorage.CentralFileStorage._centralStorageLocation", MagicMock(return_value=central_storage_dir)):
+        with patch("UM.CentralFileStorage.CentralFileStorage._centralStorageLocation", MagicMock(return_value = central_storage_dir)):
 
-            # Do some set-up (signing, moveing files around with the central file storage):
+            # Do some set-up (signing, moving files around with the central file storage):
             assert signFolder(private_path, folderpath_large, [], _passphrase)
             assert violation_callback.call_count == 0
             subfolder_path = os.path.join(folderpath_large, _subfolder_names[0])
