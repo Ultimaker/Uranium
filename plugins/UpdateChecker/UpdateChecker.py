@@ -33,22 +33,25 @@ class UpdateChecker(Extension):
     to change it to work for other applications.
     """
     url = "https://software.ultimaker.com/latest.json"
-    beta_url = "http://software.ultimaker.com/beta.json"
+    beta_url = "http://software.ultimaker.com/beta.json"  # TODO: Remove this (just for development purposes!)
 
     def __init__(self) -> None:
         super().__init__()
         self.setMenuName(i18n_catalog.i18nc("@item:inmenu", "Update Checker"))
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
-
-        Application.getInstance().getPreferences().addPreference("info/automatic_update_check", True)
-        if Application.getInstance().getPreferences().getValue("info/automatic_update_check"):
+        preferences = Application.getInstance().getPreferences()
+        preferences.addPreference("info/automatic_update_check", True)
+        if preferences.getValue("info/automatic_update_check"):
             self.checkNewVersion(silent = True, display_same_version = False)
 
         self._download_url: Optional[str] = None
 
         # Which version was the latest shown in the version upgrade dialog. Don't show these updates twice.
-        Application.getInstance().getPreferences().addPreference("info/latest_update_version_shown", "0.0.0")
-        Application.getInstance().getPreferences().addPreference("info/latest_beta_update_version_shown", "0.0.0")
+        preferences.addPreference("info/latest_update_version_shown", "0.0.0")
+        preferences.addPreference("info/latest_beta_update_version_shown", "0.0.0")
+
+        preferences.addPreference("info/latest_update_source", "stable")
+        self._version_type = preferences.getValue("info/latest_update_source")
 
     def checkNewVersion(self, silent = False, display_same_version = True) -> None:
         """Connect with software.ultimaker.com, load latest.json and check version info.
@@ -65,9 +68,7 @@ class UpdateChecker(Extension):
         """
         http_manager = HttpRequestManager.getInstance()
         Logger.log("i", "Checking for new version")
-        http_manager.get(self.url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version, "latest"))
-        http_manager.get(self.beta_url,
-                         callback=lambda reply: self._onRequestCompleted(reply, silent, display_same_version, "beta"))
+        http_manager.get(self.beta_url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
         self._download_url = None
 
     def _extractVersionAndURLFromData(self, data: Dict, application_name: str) -> Tuple[Optional[Version], Optional[str]]:
@@ -82,7 +83,7 @@ class UpdateChecker(Extension):
                         int(data[application_name][os]["minor"]),
                         int(data[application_name][os]["revision"])]), data[application_name][os]["url"]
 
-    def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool, version_type: str) -> None:
+    def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool) -> None:
         if reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) != 200:
             # TODO: Show failure message
             return
@@ -100,8 +101,10 @@ class UpdateChecker(Extension):
                 Message(i18n_catalog.i18nc("@info", "The version you are using does not support checking for updates."),
                         title=i18n_catalog.i18nc("@info:title", "Warning")).show()
             return
+        application_name = Application.getInstance().getApplicationName()
+        newest_version, download_url = self._extractVersionAndURLFromData(data, application_name)
+        newest_beta_version, beta_download_url = self._extractVersionAndURLFromData(data, application_name + "-beta")
 
-        newest_version, download_url = self._extractVersionAndURLFromData(data, Application.getInstance().getApplicationName())
         if newest_version is None:
             # Todo: warn user that something failed!
             return
@@ -109,10 +112,10 @@ class UpdateChecker(Extension):
             self._download_url = download_url
 
         local_version = Version(app_version)
-        if version_type == "latest":
+        if self._version_type == "stable":
             self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewVersionMessage, "info/latest_update_version_shown")
-        elif version_type == "beta":
-            self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewBetaVersionMessage,
+        elif self._version_type == "beta":
+            self._handleLatestUpdate(local_version, newest_beta_version, silent, display_same_version, NewBetaVersionMessage,
                                      "info/latest_beta_update_version_shown")
 
     def _handleLatestUpdate(self, local_version: Version, newest_version: Version, silent: bool, display_same_version: bool, message_class: Type, preference_key: str) -> None:
