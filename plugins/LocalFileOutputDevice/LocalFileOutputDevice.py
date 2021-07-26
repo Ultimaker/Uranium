@@ -187,7 +187,10 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         self.writeFinished.emit(self)
         if job.getResult():
             self.writeSuccess.emit(self)
-            message = Message(catalog.i18nc("@info:status Don't translate the XML tags <filename>!", "Saved to <filename>{0}</filename>").format(job.getFileName()), title = catalog.i18nc("@info:title", "File Saved"))
+            message = Message(
+                catalog.i18nc("@info:status Don't translate the XML tags <filename>!", "Saved to <filename>{0}</filename>").format(job.getFileName()),
+                title = catalog.i18nc("@info:title", "File Saved"),
+                message_type = Message.MessageType.POSITIVE)
             message.addAction("open_folder", catalog.i18nc("@action:button", "Open Folder"), "open-folder", catalog.i18nc("@info:tooltip", "Open the folder containing the file"))
             message._folder = os.path.dirname(job.getFileName())
             message.actionTriggered.connect(self._onMessageActionTriggered)

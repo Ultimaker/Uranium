@@ -79,9 +79,10 @@ ListView
         border.color: UM.Theme.getColor("message_border")
         radius: UM.Theme.getSize("message_radius").width
 
-        Item
+        RowLayout
         {
             id: titleBar
+            spacing: UM.Theme.getSize("default_margin").width
 
             anchors
             {
@@ -91,15 +92,120 @@ ListView
                 margins: UM.Theme.getSize("default_margin").width
             }
 
-            height: childrenRect.height
+            height: Math.max(messageTypeIcon.height, messageTitle.height)
+            Item
+            {
+                id: messageTypeIcon
+                visible: messageIcon.source != ""
+                height: visible ? UM.Theme.getSize("message_type_icon").height: 0
+                width: visible ? UM.Theme.getSize("message_type_icon").height : 0
+                UM.RecolorImage
+                {
+                    id: messageIconBackground
+                    height: parent.height
+                    width: parent.width
+                    sourceSize.width: width
+                    sourceSize.height: height
+                    source: UM.Theme.getIcon("CircleSolid", "low")
+                }
+                UM.RecolorImage
+                {
+                    id: messageIcon
+                    height: parent.height
+                    width: parent.width
+                    sourceSize.width: width
+                    sourceSize.height: height
+                }
+
+                states:
+                [
+                    State
+                    {
+                        name: "positive"
+                        when: model.message_type == 0
+                        PropertyChanges
+                        {
+                            target: messageIcon
+                            source: UM.Theme.getIcon("Check", "low")
+                            color: UM.Theme.getColor("message_success_icon")
+                        }
+                        PropertyChanges
+                        {
+                            target: messageIconBackground
+                            color: UM.Theme.getColor("success")
+                        }
+                    },
+                    State
+                    {
+                        name: "neutral"
+                        when: model.message_type == 1
+                        PropertyChanges
+                        {
+                            target: messageIcon
+                            source: ""
+                        }
+                        PropertyChanges
+                        {
+                            target: messageIconBackground
+                            color: "transparent"
+                        }
+                    },
+                    State
+                    {
+                        name: "warning"
+                        when: model.message_type == 2
+                        PropertyChanges
+                        {
+                            target: messageIcon
+                            source: UM.Theme.getIcon("Warning", "low")
+                            color: UM.Theme.getColor("message_warning_icon")
+                        }
+                        PropertyChanges
+                        {
+                            target: messageIconBackground
+                            color: UM.Theme.getColor("warning")
+                        }
+                    },
+                    State
+                    {
+                        name: "error"
+                        when: model.message_type == 3
+                        PropertyChanges
+                        {
+                            target: messageIcon
+                            source: UM.Theme.getIcon("Cancel", "low")
+                            color: UM.Theme.getColor("message_error_icon")
+                        }
+                        PropertyChanges
+                        {
+                            target: messageIconBackground
+                            color: UM.Theme.getColor("error")
+                        }
+                    }
+                ]
+            }
+
+
+            Label
+            {
+                id: messageTitle
+                Layout.fillWidth: true
+
+                text: model.title == undefined ? "" : model.title
+                color: UM.Theme.getColor("text")
+                font: UM.Theme.getFont("default_bold")
+                wrapMode: Text.WordWrap
+                elide: Text.ElideRight
+                maximumLineCount: 2
+                renderType: Text.NativeRendering
+            }
 
             Button
             {
                 id: closeButton
-                width: UM.Theme.getSize("message_close").width
-                height: UM.Theme.getSize("message_close").height
-
-                anchors.right: parent.right
+                implicitWidth: UM.Theme.getSize("message_close").width
+                implicitHeight: UM.Theme.getSize("message_close").height
+                Layout.alignment: Qt.AlignTop
 
                 style: ButtonStyle
                 {
@@ -117,26 +223,6 @@ ListView
                 onClicked: base.model.hideMessage(model.id)
                 visible: model.dismissable
                 enabled: model.dismissable
-            }
-
-            Label
-            {
-                id: messageTitle
-
-                anchors
-                {
-                    left: parent.left
-                    right: closeButton.left
-                    rightMargin: UM.Theme.getSize("default_margin").width
-                }
-
-                text: model.title == undefined ? "" : model.title
-                color: UM.Theme.getColor("text")
-                font: UM.Theme.getFont("default_bold")
-                wrapMode: Text.WordWrap
-                elide: Text.ElideRight
-                maximumLineCount: 2
-                renderType: Text.NativeRendering
             }
         }
         Item
