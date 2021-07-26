@@ -14,8 +14,7 @@ class NewBetaVersionMessage(Message):
                                         version_number=newest_version)),
             title = I18N_CATALOG.i18nc("@info:status",
                                          "Try out the latest version and help us improve {application_name}".format(
-                                         application_name = application_display_name,
-                                         version_number = newest_version)))
+                                         application_name = application_display_name)))
 
         self.addAction("download", I18N_CATALOG.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
 

@@ -105,7 +105,7 @@ class UpdateChecker(Extension):
         newest_version, download_url = self._extractVersionAndURLFromData(data, application_name)
         newest_beta_version, beta_download_url = self._extractVersionAndURLFromData(data, application_name + "-beta")
 
-        if newest_version is None:
+        if newest_version is None or newest_beta_version is None:
             # Todo: warn user that something failed!
             return
         if download_url is not None:
