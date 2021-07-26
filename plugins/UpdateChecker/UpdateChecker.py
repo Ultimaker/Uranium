@@ -112,11 +112,20 @@ class UpdateChecker(Extension):
             self._download_url = download_url
 
         local_version = Version(app_version)
-        if self._version_type == "stable":
-            self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewVersionMessage, "info/latest_update_version_shown")
-        elif self._version_type == "beta":
-            self._handleLatestUpdate(local_version, newest_beta_version, silent, display_same_version, NewBetaVersionMessage,
-                                     "info/latest_beta_update_version_shown")
+
+        if self._version_type == "beta":
+            if newest_version >= newest_beta_version:
+                # The stable release is higher than the beta, check if we need to show that!
+                self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewVersionMessage,
+                                         "info/latest_update_version_shown")
+            else:
+                # Beta version is the highest, check for that
+                self._handleLatestUpdate(local_version, newest_beta_version, silent, display_same_version,
+                                         NewBetaVersionMessage, "info/latest_beta_update_version_shown")
+        else:
+            # Only handle stable release!
+            self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewVersionMessage,
+                                     "info/latest_update_version_shown")
 
     def _handleLatestUpdate(self, local_version: Version, newest_version: Version, silent: bool, display_same_version: bool, message_class: Type, preference_key: str) -> None:
         preferences = Application.getInstance().getPreferences()
