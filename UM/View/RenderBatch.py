@@ -229,7 +229,7 @@ class RenderBatch:
 
         self._shader.release()
 
-    def _setMeshAttributes(self, mesh: Any):
+    def _setMeshAttributes(self, mesh: Any) -> None:
         self._shader.enableAttribute("a_vertex", "vector3f", 0)
         vertex_count = mesh.getVertexCount()
         offset = vertex_count * 3 * 4
@@ -261,7 +261,7 @@ class RenderBatch:
                 Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
                 self._shader.disableAttribute(attribute["opengl_name"])
 
-    def _vertexBuffersSetup(self, mesh: Any):
+    def _vertexBuffersSetup(self, mesh: Any) -> None:
         # See if the mesh has already been stored to the GPU:
         vao = mesh.getCachedUserValue(self._shader.getReferenceKey())
         if not vao is None:
@@ -293,7 +293,7 @@ class RenderBatch:
         vao.release()
         return vao
 
-    def _renderItem(self, item: Dict[str, Any]):
+    def _renderItem(self, item: Dict[str, Any]) -> None:
         mesh = item["mesh"]
         if mesh.getVertexCount() == 0:
             return
