@@ -261,7 +261,7 @@ class RenderBatch:
                 Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
                 self._shader.disableAttribute(attribute["opengl_name"])
 
-    def _vertexBuffersSetup(self, mesh: Any) -> Optional[QOpenGLVertexArrayObject]:
+    def _vertexBuffersSetup(self, mesh: MeshData) -> Optional[QOpenGLVertexArrayObject]:
         # See if the mesh has already been stored to the GPU:
         vao = cast(Optional[QOpenGLVertexArrayObject], mesh.getCachedUserValue(self._shader.getReferenceKey()))
         if vao is not None:
@@ -294,7 +294,7 @@ class RenderBatch:
         return vao
 
     def _renderItem(self, item: Dict[str, Any]) -> None:
-        mesh = item["mesh"]
+        mesh = cast(MeshData, item["mesh"])
         if mesh.getVertexCount() == 0:
             return
 
