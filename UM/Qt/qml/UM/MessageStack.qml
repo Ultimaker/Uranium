@@ -79,7 +79,7 @@ ListView
         border.color: UM.Theme.getColor("message_border")
         radius: UM.Theme.getSize("message_radius").width
 
-        Row
+        RowLayout
         {
             id: titleBar
             spacing: UM.Theme.getSize("default_margin").width
@@ -190,7 +190,7 @@ ListView
                 id: messageTitle
                 // Account for the left and right margins of the titleBar since they are not automatically accounted
                 // for using the width - x
-                width: parent.width - x - 2 * UM.Theme.getSize("default_margin").width
+                Layout.fillWidth: true
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: model.title == undefined ? "" : model.title
@@ -205,8 +205,8 @@ ListView
             Button
             {
                 id: closeButton
-                width: UM.Theme.getSize("message_close").width
-                height: UM.Theme.getSize("message_close").height
+                implicitWidth: UM.Theme.getSize("message_close").width
+                implicitHeight: UM.Theme.getSize("message_close").height
 
                 style: ButtonStyle
                 {
