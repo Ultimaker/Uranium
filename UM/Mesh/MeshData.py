@@ -350,7 +350,7 @@ class MeshData:
 
         return self._attributes[key]
 
-    def getCachedUserValue(self, key: str):
+    def getCachedUserValue(self, key: str) -> Any:
         return None if key not in self._user_data_cache else self._user_data_cache[key]
 
     def setCachedUserValue(self, key: str, value: Any):

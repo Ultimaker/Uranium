@@ -1,6 +1,6 @@
 # Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import List, Dict, Union, Optional, Any
+from typing import cast, List, Dict, Union, Optional, Any
 
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
@@ -261,13 +261,13 @@ class RenderBatch:
                 Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
                 self._shader.disableAttribute(attribute["opengl_name"])
 
-    def _vertexBuffersSetup(self, mesh: Any) -> None:
+    def _vertexBuffersSetup(self, mesh: Any) -> Optional[QOpenGLVertexArrayObject]:
         # See if the mesh has already been stored to the GPU:
-        vao = mesh.getCachedUserValue(self._shader.getReferenceKey())
-        if not vao is None:
+        vao = cast(Optional[QOpenGLVertexArrayObject], mesh.getCachedUserValue(self._shader.getReferenceKey()))
+        if vao is not None:
             return vao
 
-        # Initialize VAO (VertexArrayObjecy). On activation, this will wrap around the other vertex/index buffers.
+        # Initialize VAO (VertexArrayObject). On activation, this will wrap around the other vertex/index buffers.
         # That enables reusing them without much fuss.
         if OpenGLContext.properties["supportsVertexArrayObjects"]:
             vao = QOpenGLVertexArrayObject()
@@ -302,8 +302,8 @@ class RenderBatch:
             self._shader.setUniformValue("u_drawRange", [self._render_range[0], self._render_range[1]])
             self._shader.setUniformValue("draw_range", [self._render_range[0], self._render_range[1]])
         else:
-            self._shader.setUniformValue("u_drawRange", [-1, -1])
-            self._shader.setUniformValue("draw_range", [-1, -1])
+            self._shader.setUniformValue("u_drawRange", [-1.0, -1.0])
+            self._shader.setUniformValue("draw_range", [-1.0, -1.0])
 
         transformation = item["transformation"]
         normal_matrix = item["normal_transformation"]
@@ -323,6 +323,8 @@ class RenderBatch:
             self._shader.updateBindings(**item["uniforms"])
 
         vao = self._vertexBuffersSetup(mesh)
+        if vao is None:
+            return
         vao.bind()
 
         if mesh.hasIndices():

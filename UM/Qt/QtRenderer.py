@@ -3,7 +3,7 @@
 
 import numpy
 from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLVertexArrayObject
-from typing import List, Tuple, Dict
+from typing import List, Optional, Tuple, Dict
 
 import UM.Qt.QtApplication
 from UM.View.Renderer import Renderer
