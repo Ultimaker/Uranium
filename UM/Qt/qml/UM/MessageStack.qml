@@ -97,8 +97,8 @@ ListView
             {
                 id: messageTypeIcon
                 visible: messageIcon.source != ""
-                height: UM.Theme.getSize("small_button_icon").height
-                width: visible ? UM.Theme.getSize("small_button_icon").height : 0
+                height: UM.Theme.getSize("message_type_icon").height
+                width: visible ? UM.Theme.getSize("message_type_icon").height : 0
                 anchors.verticalCenter: parent.verticalCenter
                 Rectangle
                 {
@@ -131,7 +131,7 @@ ListView
                         PropertyChanges
                         {
                             target: messageIconBackground
-                            color: UM.Theme.getColor("message_success_icon_background")
+                            color: UM.Theme.getColor("success")
                         }
                     },
                     State
@@ -162,7 +162,7 @@ ListView
                         PropertyChanges
                         {
                             target: messageIconBackground
-                            color: UM.Theme.getColor("message_warning_icon_background")
+                            color: UM.Theme.getColor("warning")
                         }
                     },
                     State
@@ -178,7 +178,7 @@ ListView
                         PropertyChanges
                         {
                             target: messageIconBackground
-                            color: UM.Theme.getColor("message_error_icon_background")
+                            color: UM.Theme.getColor("error")
                         }
                     }
                 ]
