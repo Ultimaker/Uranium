@@ -84,13 +84,12 @@ class UpdateChecker(Extension):
 
     def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool) -> None:
         if reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) != 200:
-            # TODO: Show failure message
+            Logger.log("w", "Something went wrong when checking for updates. We didn't get the expected response")
             return
         try:
             data = json.loads(bytes(reply.readAll()).decode())
         except Exception:
             Logger.logException("w", "Failed to parse update data")
-            # Todo more explicit exception handling & showing of error messages
             return
 
         app_version = Application.getInstance().getVersion()
@@ -105,7 +104,7 @@ class UpdateChecker(Extension):
         newest_beta_version, beta_download_url = self._extractVersionAndURLFromData(data, application_name + "-beta")
 
         if newest_version is None or newest_beta_version is None:
-            # Todo: warn user that something failed!
+            Logger.log("w", "Unable to extract version from the provided data.")
             return
 
         if download_url is not None:
