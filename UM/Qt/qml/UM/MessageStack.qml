@@ -97,15 +97,16 @@ ListView
             {
                 id: messageTypeIcon
                 visible: messageIcon.source != ""
-                height: UM.Theme.getSize("message_type_icon").height
+                height: visible ? UM.Theme.getSize("message_type_icon").height: 0
                 width: visible ? UM.Theme.getSize("message_type_icon").height : 0
-                anchors.verticalCenter: parent.verticalCenter
-                Rectangle
+                UM.RecolorImage
                 {
                     id: messageIconBackground
                     height: parent.height
                     width: parent.width
-                    radius: Math.round(width / 2)
+                    sourceSize.width: width
+                    sourceSize.height: height
+                    source: UM.Theme.getIcon("CircleSolid", "low")
                 }
                 UM.RecolorImage
                 {
@@ -191,7 +192,6 @@ ListView
                 // Account for the left and right margins of the titleBar since they are not automatically accounted
                 // for using the width - x
                 Layout.fillWidth: true
-                anchors.verticalCenter: parent.verticalCenter
 
                 text: model.title == undefined ? "" : model.title
                 color: UM.Theme.getColor("text")
@@ -207,6 +207,7 @@ ListView
                 id: closeButton
                 implicitWidth: UM.Theme.getSize("message_close").width
                 implicitHeight: UM.Theme.getSize("message_close").height
+                Layout.alignment: Qt.AlignTop
 
                 style: ButtonStyle
                 {
