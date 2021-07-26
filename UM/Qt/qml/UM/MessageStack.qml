@@ -189,8 +189,6 @@ ListView
             Label
             {
                 id: messageTitle
-                // Account for the left and right margins of the titleBar since they are not automatically accounted
-                // for using the width - x
                 Layout.fillWidth: true
 
                 text: model.title == undefined ? "" : model.title
