@@ -33,7 +33,6 @@ class UpdateChecker(Extension):
     to change it to work for other applications.
     """
     url = "https://software.ultimaker.com/latest.json"
-    beta_url = "http://software.ultimaker.com/beta.json"  # TODO: Remove this (just for development purposes!)
 
     def __init__(self) -> None:
         super().__init__()
@@ -67,7 +66,7 @@ class UpdateChecker(Extension):
         """
         http_manager = HttpRequestManager.getInstance()
         Logger.log("i", "Checking for new version")
-        http_manager.get(self.beta_url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
+        http_manager.get(self.url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
         self._download_url = None
 
     def _extractVersionAndURLFromData(self, data: Dict, application_name: str) -> Tuple[Optional[Version], Optional[str]]:
