@@ -352,7 +352,10 @@ class RotateTool(Tool):
         """
 
         self.operationStarted.emit(self)
-        self._progress_message = Message(i18n_catalog.i18nc("@label", "Laying object flat on buildplate..."), lifetime = 0, dismissable = False, title = i18n_catalog.i18nc("@title", "Object Rotation"))
+        self._progress_message = Message(i18n_catalog.i18nc("@label", "Laying object flat on buildplate..."),
+                                         lifetime = 0,
+                                         dismissable = False,
+                                         title = i18n_catalog.i18nc("@title", "Object Rotation"))
         self._progress_message.setProgress(0)
 
         self._iterations = 0

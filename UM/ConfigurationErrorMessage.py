@@ -33,6 +33,8 @@ class ConfigurationErrorMessage(Message):
         self.addAction("reset", name = i18n_catalog.i18nc("@action:button", "Reset"), icon = None, description = "Reset your configuration to factory defaults.")
         self.actionTriggered.connect(self._actionTriggered)
 
+        self._message_type = Message.MessageType.ERROR
+
     # Show more containers which we know are faulty.
     def addFaultyContainers(self, faulty_containers: Union[Iterable, str], *args):
         initial_length = len(self._faulty_containers)

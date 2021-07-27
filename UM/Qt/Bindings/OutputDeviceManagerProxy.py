@@ -153,10 +153,12 @@ class OutputDeviceManagerProxy(QObject):
         except OutputDeviceError.DeviceBusyError:
             pass
         except OutputDeviceError.WriteRequestFailedError as e:
-            message = Message(str(e), title = catalog.i18nc("@info:title", "Error"))
+            message = Message(str(e), title = catalog.i18nc("@info:title", "Error"),
+                              message_type = Message.MessageType.ERROR)
             message.show()
         except Exception as e:
-            message = Message(str(e), title=catalog.i18nc("@info:title", "Error"))
+            message = Message(str(e), title=catalog.i18nc("@info:title", "Error"),
+                              message_type = Message.MessageType.ERROR)
             message.show()
             Logger.logException("e", "Unable to write to file %s: %s", file_name, e)
 
