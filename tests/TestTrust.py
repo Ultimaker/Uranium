@@ -122,6 +122,10 @@ class TestTrust:
         # A folder without a central storage file should just pass, no matter what:
         assert trust_instance.signedFolderPreStorageCheck(folderpath_without_storage)
 
+        # From here on out, make sure we're testing the other part of that functionality (prevent early out):
+        trust_instance._verifyFile = MagicMock(return_value = True)
+        trust_instance._verifyManifestIntegrety = MagicMock(return_value=True)
+
         # Overwrite the central storage dictionary with files moved to an arbitrary location (then fail the check):
         central_storage_dict = [["/root/.importantfile", "/home/eve", "1.0.0", "dummy"]]
         central_storage_file_path = os.path.join(folderpath_signed, TrustBasics.getCentralStorageFilename())
