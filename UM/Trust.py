@@ -200,7 +200,7 @@ class TrustBasics:
     def generateNewKeyPair() -> Tuple[RSAPrivateKeyWithSerialization, RSAPublicKey]:
         """Create a new private-public key-pair.
 
-        :return: A tulple of private-key/public key.
+        :return: A tuple of private-key/public key.
         """
 
         private_key = rsa.generate_private_key(public_exponent = 65537, key_size = 4096, backend = default_backend())
@@ -284,6 +284,16 @@ class TrustBasics:
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             Logger.logException("e", "Removal of pycache for unbundled path '{0}' failed.".format(path))
         return False
+
+    @staticmethod
+    def isPathInLocation(location: str, path: str) -> bool:
+        try:
+            canonical_location = os.path.normpath(location)
+            canonical_path = os.path.normpath(path)
+            is_in_path = os.path.commonpath([canonical_location, canonical_path]).startswith(canonical_location)
+        except ValueError:
+            is_in_path = False
+        return is_in_path
 
 
 class Trust:
@@ -451,9 +461,29 @@ class Trust:
                     self._violation_handler(f"Manifest '{manifest_path}' is not properly self-signed in '{path}'.")
                     return False
 
-                # Otherwise, as far as this quick pre check is concerned, there is nothing wrong:
-                Logger.log("i", f"Central storage file signed correctly for '{path}'.")
-                return True
+            # Check if the central storage file doesn't contain files that would be moved outside the plugin folder,
+            #   or files that would be moved to outside of the central storage location:
+            with open(central_storage_filename, "r", encoding = "utf-8") as central_storage_file:
+                central_storage_list = json.loads(central_storage_file.read())
+
+                storage_location = CentralFileStorage.centralStorageLocation()
+                for file_to_move in central_storage_list:
+
+                    # Any file is not from outside of the plugin:
+                    source_full_path = os.path.join(path, file_to_move[0])
+                    if not TrustBasics.isPathInLocation(path, source_full_path):
+                        self._violation_handler(f"Item to store '{file_to_move[0]}' is from outside of '{path}'.")
+                        return False
+
+                    # Any file does not go outside of storage territory:
+                    dest_full_path = os.path.join(storage_location, file_to_move[1])
+                    if not TrustBasics.isPathInLocation(storage_location, dest_full_path):
+                        self._violation_handler(f"Move '{file_to_move[0]}' from '{path}' to outside of storage folder.")
+                        return False
+
+            # Otherwise, as far as this quick pre check is concerned, there is nothing wrong:
+            Logger.log("i", f"Central storage file signed correctly for '{path}'.")
+            return True
 
         except:  # Yes, we do really want this on _every_ exception that might occur.
             self._violation_handler(f"Exception during verification of central storage file for '{path}'.")
