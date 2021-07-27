@@ -242,14 +242,13 @@ class TestTrust:
         assert TrustBasics.getFileSignature("file-not-found", private_key) is None
 
     def test_isPathInLocation(self):
-        assert TrustBasics.isPathInLocation(r"C:\a\b\c", r"C:\a\b\c\d")
-        assert TrustBasics.isPathInLocation(r"C:/a\b/c", r"C:/a/b/c/d\..")
-        assert not TrustBasics.isPathInLocation(r"C:\a\b\c", r"C:\a\b\c\d\..\..")
-        assert not TrustBasics.isPathInLocation(r"C:\a\b\c", r"C:\a\b")
+        assert TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b/c/d")
+        assert TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b/c/d/..")
+        assert not TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b/c/d/../..")
+        assert not TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b")
         assert not TrustBasics.isPathInLocation(r"/a/b/c", r"/d/q/f")
-        assert TrustBasics.isPathInLocation(r"C:\a\b\c", r"C:\a\b\..\b\c\d\..\e")
-        assert TrustBasics.isPathInLocation(r"/a/b/../d/c", r"\a\d\c")
-        assert not TrustBasics.isPathInLocation(r"/a/b/../d/c", r"\a\d\c.txt")
-        assert not TrustBasics.isPathInLocation(r"D:\a\b\c", r"C:\a\b\c\d")
-        assert not TrustBasics.isPathInLocation(r"C:\a\b\..\d\c", r"C:\a\b\..\b\c\d\..\e")
-        assert not TrustBasics.isPathInLocation(r"/a/b/../d/c.txt", r"\a\d\c")
+        assert TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b/../b/c/d/../e")
+        assert TrustBasics.isPathInLocation(r"/a/b/../d/c", r"/a/d/c")
+        assert not TrustBasics.isPathInLocation(r"/a/b/../d/c", r"/a/d/c.txt")
+        assert not TrustBasics.isPathInLocation(r"/a/b/../d/c", r"/a/b/../b/c/d/../e")
+        assert not TrustBasics.isPathInLocation(r"/a/b/../d/c.txt", r"/a/d/c")
