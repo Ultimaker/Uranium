@@ -229,7 +229,7 @@ class RenderBatch:
 
         self._shader.release()
 
-    def _setMeshAttributes(self, mesh: Any) -> None:
+    def _setMeshAttributes(self, mesh: MeshData) -> None:
         self._shader.enableAttribute("a_vertex", "vector3f", 0)
         vertex_count = mesh.getVertexCount()
         offset = vertex_count * 3 * 4
