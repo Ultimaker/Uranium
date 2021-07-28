@@ -9,7 +9,8 @@ def test_addAction():
 
 
 def test_gettersAndSetters():
-    message = Message(text = "OMG", title="YAY", image_caption="DERP", image_source= "HERP", option_text="FOO", option_state= False)
+    message = Message(text = "OMG", title="YAY", image_caption="DERP", image_source= "HERP", option_text="FOO",
+                      option_state= False, message_type = Message.MessageType.POSITIVE)
     message.setMaxProgress(200)
     assert message.getText() == "OMG"
     assert message.getTitle() == "YAY"
@@ -27,5 +28,3 @@ def test_dismissable():
     # In certain conditions the message is always set to dismissable (even if we asked for a non dimissiable message)
     message = Message(lifetime=0, dismissable=False)
     assert message.isDismissable()
-
-

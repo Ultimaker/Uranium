@@ -25,8 +25,7 @@ class ConfigurationErrorMessage(Message):
         if ConfigurationErrorMessage.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         ConfigurationErrorMessage.__instance = self
-
-        super().__init__(*args, **kwargs)
+        super(ConfigurationErrorMessage, self).__init__(*args, message_type = Message.MessageType.ERROR, **kwargs)
         self._application = application
         self._faulty_containers = set()
 

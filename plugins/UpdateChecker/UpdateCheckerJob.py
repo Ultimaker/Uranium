@@ -50,8 +50,8 @@ class UpdateCheckerJob(Job):
             Logger.logException("w", "Failed to check for new version: %s" % e)
             if not self.silent:
                 Message(i18n_catalog.i18nc("@info", "Could not access update information."),
-                    title = i18n_catalog.i18nc("@info:title", "Version Upgrade")
-                ).show()
+                        title = i18n_catalog.i18nc("@info:title", "Version Upgrade"),
+                        message_type = Message.MessageType.ERROR).show()
             return
 
         try:
@@ -63,12 +63,18 @@ class UpdateCheckerJob(Job):
                     local_version = Version(Application.getInstance().getVersion())
                 else:
                     if not self.silent:
-                        Message(i18n_catalog.i18nc("@info", "The version you are using does not support checking for updates."), title = i18n_catalog.i18nc("@info:title", "Warning")).show()
+                        Message(i18n_catalog.i18nc("@info",
+                                                   "The version you are using does not support checking for updates."),
+                                title = i18n_catalog.i18nc("@info:title", "Warning"),
+                                message_type = Message.MessageType.WARNING).show()
                     return
             except ValueError:
                 Logger.log("w", "Could not determine application version from string %s, not checking for updates", Application.getInstance().getVersion())
                 if not self.silent:
-                    Message(i18n_catalog.i18nc("@info", "The version you are using does not support checking for updates."), title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
+                    Message(i18n_catalog.i18nc("@info",
+                                               "The version you are using does not support checking for updates."),
+                            title = i18n_catalog.i18nc("@info:title", "Version Upgrade"),
+                            message_type = Message.MessageType.WARNING).show()
                 return
 
             if application_name in data:
@@ -93,18 +99,23 @@ class UpdateCheckerJob(Job):
                 Logger.log("w", "Did not find any version information for %s." % application_name)
         except Exception:
             Logger.logException("e", "Exception in update checker while parsing the JSON file.")
-            Message(i18n_catalog.i18nc("@info", "An error occurred while checking for updates."), title = i18n_catalog.i18nc("@info:title", "Error")).show()
+            Message(i18n_catalog.i18nc("@info", "An error occurred while checking for updates."),
+                    title = i18n_catalog.i18nc("@info:title", "Error"),
+                    message_type = Message.MessageType.ERROR).show()
             no_new_version = False  # Just to suppress the message below.
 
         if no_new_version and not self.silent:
-            Message(i18n_catalog.i18nc("@info", "No new version was found."), title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
+            Message(i18n_catalog.i18nc("@info", "No new version was found."),
+                    title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
 
     def showUpdate(self, newest_version: Version, download_url: str) -> None:
         application_display_name = Application.getInstance().getApplicationDisplayName().title()
         title_message = i18n_catalog.i18nc("@info:status",
-                                           "{application_name} {version_number} is available!".format(application_name = application_display_name, version_number = newest_version))
+                                           "{application_name} {version_number} is available!".format(application_name = application_display_name,
+                                                                                                      version_number = newest_version))
         content_message = i18n_catalog.i18nc("@info:status",
-                                             "{application_name} {version_number} provides a better and more reliable printing experience.".format(application_name = application_display_name, version_number = newest_version))
+                                             "{application_name} {version_number} provides a better and more reliable printing experience.".format(application_name = application_display_name,
+                                                                                                                                                   version_number = newest_version))
 
         message = Message(text = content_message, title = title_message)
         message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")

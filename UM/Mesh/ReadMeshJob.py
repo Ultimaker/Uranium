@@ -67,7 +67,9 @@ class ReadMeshJob(ReadFileJob):
                         scale_vector = Vector(scale_factor, scale_factor, scale_factor)
                         display_scale_factor = scale_factor * 100
 
-                        scale_message = Message(i18n_catalog.i18nc("@info:status", "Auto scaled object to {0}% of original size", ("%i" % display_scale_factor)),
+                        scale_message = Message(i18n_catalog.i18nc("@info:status",
+                                                                   "Auto scaled object to {0}% of original size",
+                                                                   ("%i" % display_scale_factor)),
                                                 title = i18n_catalog.i18nc("@info:title", "Scaling Object"))
 
                         try:
