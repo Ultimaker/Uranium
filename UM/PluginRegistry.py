@@ -385,7 +385,7 @@ class PluginRegistry(QObject):
                 Logger.error("Plugin {} was not loaded because it could not be verified.", plugin_id)
                 message_text = i18n_catalog.i18nc("@error:untrusted",
                                                   "Plugin {} was not loaded because it could not be verified.", plugin_id)
-                Message(text = message_text, message_type = Message.MessageType.WARNING).show()
+                Message(text = message_text, message_type = Message.MessageType.ERROR).show()
                 continue
 
             # Save all metadata to the metadata dictionary:
