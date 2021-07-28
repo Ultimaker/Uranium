@@ -284,7 +284,8 @@ class PackageManager(QObject):
             message = Message(catalog.i18nc("@error:uninstall",
                                             "There were some errors uninstalling the following packages:\n{packages}".format(
                                             packages = "- " + "\n- ".join(remove_failures))),
-                              title = catalog.i18nc("@info:title", "Uninstalling errors"))
+                              title = catalog.i18nc("@info:title", "Uninstalling errors"),
+                              message_type = Message.MessageType.ERROR)
             message.show()
 
         self._to_remove_package_set = remove_failures
@@ -584,7 +585,8 @@ class PackageManager(QObject):
                                             "There was an error uninstalling the package {package} before installing "
                                             "new version:\n{error}.\nPlease try to upgrade again later.".format(
                                             package = package_id, error = str(e))),
-                              title = catalog.i18nc("@info:title", "Updating error"))
+                              title = catalog.i18nc("@info:title", "Updating error"),
+                              message_type = Message.MessageType.ERROR)
             message.show()
             return
 

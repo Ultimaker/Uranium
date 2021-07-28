@@ -37,7 +37,12 @@ class ReadFileJob(Job):
             return None
         reader = self._handler.getReaderForFile(self._filename)
         if not reader:
-            result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Cannot open files of the type of <filename>{0}</filename>", self._filename), lifetime=0, title = i18n_catalog.i18nc("@info:title", "Invalid File"))
+            result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!",
+                                                        "Cannot open files of the type of <filename>{0}</filename>",
+                                                        self._filename),
+                                     lifetime = 0,
+                                     title = i18n_catalog.i18nc("@info:title", "Invalid File"),
+                                     message_type = Message.MessageType.ERROR)
             result_message.show()
             return
 
@@ -50,9 +55,12 @@ class ReadFileJob(Job):
 
         if pre_read_result != MeshReader.PreReadResult.accepted:
             if pre_read_result == MeshReader.PreReadResult.failed:
-                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible.", self._filename),
-                                         lifetime=0,
-                                         title = i18n_catalog.i18nc("@info:title", "Unable to Open File"))
+                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!",
+                                                            "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible.",
+                                                            self._filename),
+                                         lifetime = 0,
+                                         title = i18n_catalog.i18nc("@info:title", "Unable to Open File"),
+                                         message_type = Message.MessageType.ERROR)
                 result_message.show()
             return
 
@@ -75,8 +83,18 @@ class ReadFileJob(Job):
             Logger.log("d", "Loading file took %0.1f seconds", end_time - begin_time)
             self._loading_message.hide()
             if reader.emptyFileHintSet():
-                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "There where no models in <filename>{0}</filename>.", self._filename), lifetime=0, title=i18n_catalog.i18nc("@info:title", "No Models in File"))
+                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!",
+                                                            "There where no models in <filename>{0}</filename>.",
+                                                            self._filename),
+                                         lifetime = 0,
+                                         title = i18n_catalog.i18nc("@info:title", "No Models in File"),
+                                         message_type = Message.MessageType.WARNING)
                 result_message.show()
             elif not self._result:
-                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models.", self._filename), lifetime = 0, title = i18n_catalog.i18nc("@info:title", "Unable to Open File"))
+                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!",
+                                                            "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models.",
+                                                            self._filename),
+                                         lifetime = 0,
+                                         title = i18n_catalog.i18nc("@info:title", "Unable to Open File"),
+                                         message_type = Message.MessageType.ERROR)
                 result_message.show()

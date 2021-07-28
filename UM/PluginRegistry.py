@@ -385,7 +385,7 @@ class PluginRegistry(QObject):
                 Logger.error("Plugin {} was not loaded because it could not be verified.", plugin_id)
                 message_text = i18n_catalog.i18nc("@error:untrusted",
                                                   "Plugin {} was not loaded because it could not be verified.", plugin_id)
-                Message(text = message_text).show()
+                Message(text = message_text, message_type = Message.MessageType.ERROR).show()
                 continue
 
             # Save all metadata to the metadata dictionary:
@@ -483,12 +483,12 @@ class PluginRegistry(QObject):
             message_text = i18n_catalog.i18nc("@error",
                                               "The plugin {} could not be loaded. Re-installing the plugin might solve "
                                               "the issue", plugin_id)
-            unable_to_load_plugin_message = Message(text = message_text)
+            unable_to_load_plugin_message = Message(text = message_text, message_type = Message.MessageType.ERROR)
             unable_to_load_plugin_message.addAction("remove",
-                                   name= i18n_catalog.i18nc("@action:button", "Remove plugin"),
-                                   icon="",
-                                   description="Remove the plugin",
-                                   button_align=Message.ActionButtonAlignment.ALIGN_RIGHT)
+                                   name = i18n_catalog.i18nc("@action:button", "Remove plugin"),
+                                   icon = "",
+                                   description = "Remove the plugin",
+                                   button_align = Message.ActionButtonAlignment.ALIGN_RIGHT)
 
             # Listen for the pyqt signal, since that one does support lambda's
             unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: (self.uninstallPlugin(plugin_id), message.hide()))
