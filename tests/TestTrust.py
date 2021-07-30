@@ -199,7 +199,7 @@ class TestTrust:
         violation_callback.reset_mock()
 
         # * 'Central file storage'-enabled section *
-        with patch("UM.CentralFileStorage.CentralFileStorage.centralStorageLocation", MagicMock(return_value = central_storage_dir)):
+        with patch("UM.CentralFileStorage.CentralFileStorage.getCentralStorageLocation", MagicMock(return_value = central_storage_dir)):
 
             # Do some set-up (signing, moving files around with the central file storage):
             assert signFolder(private_path, folderpath_large, [], _passphrase)
@@ -245,14 +245,22 @@ class TestTrust:
         private_key, public_key = TrustBasics.generateNewKeyPair()
         assert TrustBasics.getFileSignature("file-not-found", private_key) is None
 
-    def test_isPathInLocation(self):
-        assert TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b/c/d")
-        assert TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b/c/d/..")
-        assert not TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b/c/d/../..")
-        assert not TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b")
-        assert not TrustBasics.isPathInLocation(r"/a/b/c", r"/d/q/f")
-        assert TrustBasics.isPathInLocation(r"/a/b/c", r"/a/b/../b/c/d/../e")
-        assert TrustBasics.isPathInLocation(r"/a/b/../d/c", r"/a/d/c")
-        assert not TrustBasics.isPathInLocation(r"/a/b/../d/c", r"/a/d/c.txt")
-        assert not TrustBasics.isPathInLocation(r"/a/b/../d/c", r"/a/b/../b/c/d/../e")
-        assert not TrustBasics.isPathInLocation(r"/a/b/../d/c.txt", r"/a/d/c")
+    @pytest.mark.parametrize("location,subfolder", [
+        (r"/a/b/c", r"/a/b/c/d"),
+        (r"/a/b/c", r"/a/b/c/d/.."),
+        (r"/a/b/c", r"/a/b/../b/c/d/../e"),
+        (r"/a/b/../d/c", r"/a/d/c")
+    ])
+    def test_isPathInLocation(self, location, subfolder):
+        assert TrustBasics.isPathInLocation(location, subfolder)
+
+    @pytest.mark.parametrize("location,subfolder", [
+        (r"/a/b/c", r"/a/b/c/d/../.."),
+        (r"/a/b/c", r"/a/b"),
+        (r"/a/b/c", r"/d/q/f"),
+        (r"/a/b/../d/c", r"/a/d/c.txt"),
+        (r"/a/b/../d/c", r"/a/b/../b/c/d/../e"),
+        (r"/a/b/../d/c.txt", r"/a/d/c")
+    ])
+    def test_notIsPathInLocation(self, location, subfolder):
+        assert not TrustBasics.isPathInLocation(location, subfolder)

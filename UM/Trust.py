@@ -42,6 +42,10 @@ class TrustBasics:
     __signature_filename_extension = ".signature"
     __root_signature_entry = "root_signature"
 
+    # Files that are cached should be removed before verifying:
+    __cached_folder_names = ["__pycache__"]
+    __cached_file_extentions = [".qmlc"]
+
     @staticmethod
     def defaultViolationHandler(message: str) -> None:
         """This violationHandler is called after any other handlers"""
@@ -261,17 +265,25 @@ class TrustBasics:
             Logger.logException("e", "Save private/public key to '{0}','{1}' failed.".format(private_path, public_path))
         return False
 
-    @staticmethod
-    def removeCached(path: str) -> bool:
+    @classmethod
+    def removeCached(cls, path: str) -> bool:
+        """ Removes any cached files and folders from a (folder) path (like __pycache__ and such).
+
+        This not only prevents people from messing with these hardly checkable things, but also makes the code have less
+        exceptions, since it can be assumed afterwards that the folder is in some sort of 'canonical' state.
+
+        :param path: The path to remove any cached files or folders from.
+        :return: Whether this operation succeeded.
+        """
         try:
             cache_folders_to_empty = []  # type: List[str]
             cache_files_to_remove = []  # type: List[str]
             for root, dirnames, filenames in os.walk(path, followlinks=True):
                 for dirname in dirnames:
-                    if dirname == "__pycache__":
+                    if dirname in cls.__cached_folder_names:
                         cache_folders_to_empty.append(os.path.join(root, dirname))
                 for filename in filenames:
-                    if Path(filename).suffix == ".qmlc":
+                    if Path(filename).suffix in cls.__cached_file_extentions:
                         cache_files_to_remove.append(os.path.join(root, filename))
             for cache_folder in cache_folders_to_empty:
                 for root, dirnames, filenames in os.walk(cache_folder, followlinks=True):
@@ -287,6 +299,12 @@ class TrustBasics:
 
     @staticmethod
     def isPathInLocation(location: str, path: str) -> bool:
+        """ Whether a path is a sub-folder (or equal) of a given location (path).
+
+        :param location: The given path the other path should be a (sub-)folder of.
+        :param path: The presumptive (sub-)folder.
+        :return: True if path is equal to or matches but deeper than location, False otherwise.
+        """
         try:
             canonical_location = os.path.normpath(location)
             canonical_path = os.path.normpath(path)
@@ -461,12 +479,12 @@ class Trust:
                     self._violation_handler(f"Manifest '{manifest_path}' is not properly self-signed in '{path}'.")
                     return False
 
-            # Check if the central storage file doesn't contain files that would be moved outside the plugin folder,
-            #   or files that would be moved to outside of the central storage location:
+            # Check if the central storage file doesn't contain files that would be moved outside the plugin folder, or
+            # files that would be moved to outside of the central storage location:
             with open(central_storage_filename, "r", encoding = "utf-8") as central_storage_file:
                 central_storage_list = json.loads(central_storage_file.read())
 
-                storage_location = CentralFileStorage.centralStorageLocation()
+                storage_location = CentralFileStorage.getCentralStorageLocation()
                 for file_to_move in central_storage_list:
 
                     # Any file is not from outside of the plugin:
