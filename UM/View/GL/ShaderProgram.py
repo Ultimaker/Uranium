@@ -92,8 +92,10 @@ class ShaderProgram:
             Logger.log("d", "Fragment shader")
             Logger.log("d", fragment_code_str)
 
-        self.setVertexShader(vertex_code)
-        self.setFragmentShader(fragment_code)
+        if not self.setVertexShader(vertex_code):
+            raise InvalidShaderProgramError(f"Could not set vertex shader from '{file_name}'.")
+        if not self.setFragmentShader(fragment_code):
+            raise InvalidShaderProgramError(f"Could not set fragment shader from '{file_name}'.")
         # Geometry shader is optional and only since version OpenGL 3.2 or with extension ARB_geometry_shader4
         if geometry_key in parser["shaders"]:
             code = parser["shaders"][geometry_key]
@@ -101,7 +103,8 @@ class ShaderProgram:
                 code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
                 Logger.log("d", "Loading geometry shader... \n")
                 Logger.log("d", code_str)
-            self.setGeometryShader(code)
+            if not self.setGeometryShader(code):
+                raise InvalidShaderProgramError(f"Could not set geometry shader from '{file_name}'.")
 
         self.build()
 
@@ -127,6 +130,9 @@ class ShaderProgram:
 
         if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Vertex, shader):
             Logger.log("e", "Vertex shader failed to compile: %s", self._shader_program.log())
+            return False
+
+        return True
 
     def setFragmentShader(self, shader):
         """Set the fragment shader to use.
@@ -138,6 +144,9 @@ class ShaderProgram:
 
         if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Fragment, shader):
             Logger.log("e", "Fragment shader failed to compile: %s", self._shader_program.log())
+            return False
+
+        return True
 
     def setGeometryShader(self, shader):
         if not self._shader_program:
@@ -145,6 +154,9 @@ class ShaderProgram:
 
         if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Geometry, shader):
             Logger.log("e", "Geometry shader failed to compile: %s", self._shader_program.log())
+            return False
+
+        return True
 
     def build(self):
         """Build the complete shader program out of the separately provided sources."""

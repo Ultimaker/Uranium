@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import sys
@@ -6,7 +6,7 @@ import ctypes   # type: ignore
 
 from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer
 from PyQt5.QtWidgets import QMessageBox
-from typing import Any, TYPE_CHECKING, cast
+from typing import Any, TYPE_CHECKING, cast, Optional
 
 from UM.Logger import Logger
 
@@ -181,7 +181,7 @@ class OpenGL:
         """
         return Texture(self._gl)
 
-    def createShaderProgram(self, file_name: str) -> ShaderProgram:
+    def createShaderProgram(self, file_name: str) -> Optional[ShaderProgram]:
         """Create a ShaderProgram Object.
 
         This should return an implementation-specifc ShaderProgram subclass.
@@ -199,7 +199,10 @@ class OpenGL:
             # If the loading failed, it could be that there is no specific shader for this version.
             # Try again without a version nr to get the generic one.
             if version_string != "":
-                shader.load(file_name, version = "")
+                try:
+                    shader.load(file_name, version = "")
+                except InvalidShaderProgramError:
+                    return None
         return shader
 
     def createVertexBuffer(self, mesh: "MeshData", **kwargs: Any) -> QOpenGLBuffer:
