@@ -69,8 +69,8 @@ class CentralFileStorage:
                 cls._unmoved_files[full_identifier] = path
             return
 
-        if not os.path.exists(cls._centralStorageLocation()):
-            os.makedirs(cls._centralStorageLocation())
+        if not os.path.exists(cls.getCentralStorageLocation()):
+            os.makedirs(cls.getCentralStorageLocation())
         if not os.path.exists(path):
             Logger.debug(f"{path_id} {str(version)} was already stored centrally or the provided path is not correct")
             return
@@ -129,10 +129,10 @@ class CentralFileStorage:
         :return: A path to store such an item.
         """
         item_name = item_id + "." + str(version)
-        return os.path.join(cls._centralStorageLocation(), item_name)
+        return os.path.join(cls.getCentralStorageLocation(), item_name)
 
     @classmethod
-    def _centralStorageLocation(cls) -> str:
+    def getCentralStorageLocation(cls) -> str:
         """
         Gets a directory to store things in a version-neutral location.
         :return: A directory to store things centrally.
