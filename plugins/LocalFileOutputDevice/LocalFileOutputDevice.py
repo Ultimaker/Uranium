@@ -165,7 +165,8 @@ class LocalFileOutputDevice(ProjectOutputDevice):
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)
 
-            message = Message(catalog.i18nc("@info:progress Don't translate the XML tags <filename>!", "Saving to <filename>{0}</filename>").format(file_name),
+            message = Message(catalog.i18nc("@info:progress Don't translate the XML tags <filename>!",
+                                            "Saving to <filename>{0}</filename>").format(file_name),
                               0, False, -1 , catalog.i18nc("@info:title", "Saving"))
             message.show()
 
@@ -187,20 +188,30 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         self.writeFinished.emit(self)
         if job.getResult():
             self.writeSuccess.emit(self)
-            message = Message(catalog.i18nc("@info:status Don't translate the XML tags <filename>!", "Saved to <filename>{0}</filename>").format(job.getFileName()), title = catalog.i18nc("@info:title", "File Saved"))
+            message = Message(
+                catalog.i18nc("@info:status Don't translate the XML tags <filename>!", "Saved to <filename>{0}</filename>").format(job.getFileName()),
+                title = catalog.i18nc("@info:title", "File Saved"),
+                message_type = Message.MessageType.POSITIVE)
             message.addAction("open_folder", catalog.i18nc("@action:button", "Open Folder"), "open-folder", catalog.i18nc("@info:tooltip", "Open the folder containing the file"))
             message._folder = os.path.dirname(job.getFileName())
             message.actionTriggered.connect(self._onMessageActionTriggered)
             message.show()
         else:
-            message = Message(catalog.i18nc("@info:status Don't translate the XML tags <filename> or <message>!", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())), lifetime = 0, title = catalog.i18nc("@info:title", "Warning"))
+            message = Message(catalog.i18nc("@info:status Don't translate the XML tags <filename> or <message>!",
+                                            "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())),
+                                            lifetime = 0,
+                                            title = catalog.i18nc("@info:title", "Error"),
+                                            message_type = Message.MessageType.ERROR)
             message.show()
             self.writeError.emit(self)
 
         try:
             job.getStream().close()
         except (OSError, PermissionError): #When you don't have the rights to do the final flush or the disk is full.
-            message = Message(catalog.i18nc("@info:status", "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())), title = catalog.i18nc("@info:title", "Error"))
+            message = Message(catalog.i18nc("@info:status",
+                                            "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())),
+                                            title = catalog.i18nc("@info:title", "Error"),
+                                            message_type = Message.MessageType.ERROR)
             message.show()
             self.writeError.emit(self)
 

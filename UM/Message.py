@@ -12,7 +12,6 @@ from UM.Signal import Signal, signalemitter
 class Message(QObject):
     """Class for displaying messages to the user."""
 
-
     class ActionButtonStyle:
         DEFAULT = 0
         LINK = 1
@@ -22,9 +21,15 @@ class Message(QObject):
         ALIGN_LEFT = 2
         ALIGN_RIGHT = 3
 
+    class MessageType:
+        POSITIVE = 0
+        NEUTRAL = 1
+        WARNING = 2
+        ERROR = 3
+
     def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
                  title: Optional[str] = None, parent=None, use_inactivity_timer: bool = True, image_source: str = "",
-                 image_caption: str = "", option_text: str = "", option_state: bool = True) -> None:
+                 image_caption: str = "", option_text: str = "", option_state: bool = True, message_type: int = MessageType.NEUTRAL) -> None:
 
         """Class for displaying messages to the user.
         Even though the lifetime can be set, in certain cases it can still have a lifetime if nothing happens with the
@@ -38,7 +43,7 @@ class Message(QObject):
         :param text: Text that needs to be displayed in the message
         :param lifetime: How long should the message be displayed (in seconds).
             if lifetime is 0, it will never automatically be destroyed.
-        :param dismissible: Can the user dismiss the message?
+        :param dismissable: Can the user dismiss the message?
         :param title: Phrase that will be shown above the message.
         :param image_source: an absolute path where an image can be found to be
         displayed (QUrl.toLocalFile()) can be used for that.
@@ -46,6 +51,9 @@ class Message(QObject):
         really, it's up to the QML to handle that).
         :param progress: Is there any progress to be displayed? if -1, it's seen
         as indeterminate.
+        :param message_type: Defines the type of message according to the MessageType enum (POSITIVE, NEUTRAL, WARNING,
+        ERROR, default: NEUTRAL). Depending on the type, an icon appears next to the message title. The NEUTRAL messages
+        contain no icon.
         """
 
         super().__init__(parent)
@@ -75,6 +83,8 @@ class Message(QObject):
 
         self._actions = []  # type: List[Dict[str, Union[str, int]]]
         self._title = title
+
+        self._message_type = message_type
 
         self.actionTriggered.connect(self._onActionTriggered)
 
@@ -195,6 +205,14 @@ class Message(QObject):
 
     def getImageCaption(self) -> str:
         return self._image_caption
+
+    def getMessageType(self) -> int:
+        """
+        Gets the type of the message.
+        The message gets a different icon according to its type.
+        :return: The type of the message (POSITIVE, NEUTRAL, WARNING, ERROR)
+        """
+        return self._message_type
 
     def setText(self, text: str) -> None:
         """Changes the text on the message.

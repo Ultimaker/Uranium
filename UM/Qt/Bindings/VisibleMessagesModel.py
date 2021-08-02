@@ -23,6 +23,7 @@ class VisibleMessagesModel(ListModel):
     ImageCaptionRole = Qt.UserRole + 12
     OptionTextRole = Qt.UserRole + 13
     OptionStateRole = Qt.UserRole + 14
+    MessageTypeRole = Qt.UserRole + 15
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -39,6 +40,7 @@ class VisibleMessagesModel(ListModel):
         self.addRoleName(self.ImageCaptionRole, "image_caption")
         self.addRoleName(self.OptionTextRole, "option_text")
         self.addRoleName(self.OptionStateRole, "option_state")
+        self.addRoleName(self.MessageTypeRole, "message_type")
         self._populateMessageList()
 
     def _populateMessageList(self):
@@ -57,7 +59,8 @@ class VisibleMessagesModel(ListModel):
             "image_source": message.getImageSource(),
             "image_caption": message.getImageCaption(),
             "option_text": message.getOptionText(),
-            "option_state": message.getOptionState()
+            "option_state": message.getOptionState(),
+            "message_type": message.getMessageType()
         })
         message.titleChanged.connect(self._onMessageTitleChanged)
         message.textChanged.connect(self._onMessageTextChanged)

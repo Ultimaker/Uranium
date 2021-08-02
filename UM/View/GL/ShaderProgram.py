@@ -56,7 +56,7 @@ class ShaderProgram:
 
         :exception{InvalidShaderProgramError} Raised when the file provided does not contain any valid shaders.
         """
-        Logger.log("d", "Loading shader file [%s]...", file_name)
+        Logger.log("d", "Loading [%s]...", file_name)
 
         vertex_key = "vertex" + version
         fragment_key = "fragment" + version

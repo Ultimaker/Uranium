@@ -50,6 +50,11 @@ class OpenGLContext:
         """
         if ctx is None:
             ctx = QOpenGLContext.currentContext()
+            if ctx is None:
+                # We failed to get the current context.
+                # The typing claims that this doesn't happen, yet results in the field indicate
+                # that it does. See sentry crash CURA-87
+                return False
         return ctx.hasExtension(bytearray(extension_name, "utf-8"))
 
     @classmethod

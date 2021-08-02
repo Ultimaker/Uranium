@@ -178,7 +178,8 @@ class PluginRegistry(QObject):
 
     def _isPathInLocation(self, location: str, path: str) -> bool:
         try:
-            is_in_path = os.path.commonpath([location, path]).startswith(location)
+            canonical_location = os.path.normpath(location)
+            is_in_path = os.path.normpath(os.path.commonpath([canonical_location, path])).startswith(canonical_location)
         except ValueError:
             is_in_path = False
         return is_in_path
@@ -384,7 +385,7 @@ class PluginRegistry(QObject):
                 Logger.error("Plugin {} was not loaded because it could not be verified.", plugin_id)
                 message_text = i18n_catalog.i18nc("@error:untrusted",
                                                   "Plugin {} was not loaded because it could not be verified.", plugin_id)
-                Message(text = message_text).show()
+                Message(text = message_text, message_type = Message.MessageType.ERROR).show()
                 continue
 
             # Save all metadata to the metadata dictionary:
@@ -482,12 +483,12 @@ class PluginRegistry(QObject):
             message_text = i18n_catalog.i18nc("@error",
                                               "The plugin {} could not be loaded. Re-installing the plugin might solve "
                                               "the issue", plugin_id)
-            unable_to_load_plugin_message = Message(text = message_text)
+            unable_to_load_plugin_message = Message(text = message_text, message_type = Message.MessageType.ERROR)
             unable_to_load_plugin_message.addAction("remove",
-                                   name= i18n_catalog.i18nc("@action:button", "Remove plugin"),
-                                   icon="",
-                                   description="Remove the plugin",
-                                   button_align=Message.ActionButtonAlignment.ALIGN_RIGHT)
+                                   name = i18n_catalog.i18nc("@action:button", "Remove plugin"),
+                                   icon = "",
+                                   description = "Remove the plugin",
+                                   button_align = Message.ActionButtonAlignment.ALIGN_RIGHT)
 
             # Listen for the pyqt signal, since that one does support lambda's
             unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: (self.uninstallPlugin(plugin_id), message.hide()))
@@ -651,9 +652,19 @@ class PluginRegistry(QObject):
         # Move data (if any) to central storage
         central_storage_file = os.path.join(final_location, plugin_id, TrustBasics.getCentralStorageFilename())
         if os.path.exists(central_storage_file):
+            plugin_final_path = os.path.join(final_location, plugin_id)
+
+            if self._check_if_trusted and plugin_id not in self._checked_plugin_ids and not self.isBundledPlugin(plugin_id):
+                # Do a quick check if the central-storage file itself hasn't been tampered with (and such).
+                # This is necessary, as we move to central storage first, and only _then_ properly check the manifest.
+                if self._trust_checker and not self._trust_checker.signedFolderPreStorageCheck(plugin_final_path):
+                    self._distrusted_plugin_ids.append(plugin_id)
+                    return None
+
             try:
                 with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
-                    self._handleCentralStorage(file_stream.read(), os.path.join(final_location, plugin_id), is_bundled_plugin = self.isBundledPlugin(plugin_id))
+                    if not self._handleCentralStorage(file_stream.read(), plugin_final_path, is_bundled_plugin = self.isBundledPlugin(plugin_id)):
+                        return None
             except:
                 pass
         try:
@@ -710,25 +721,33 @@ class PluginRegistry(QObject):
 
         return None
 
-    def _handleCentralStorage(self, file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> None:
+    def _handleCentralStorage(self, file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> bool:
         """
         Plugins can indicate that they want certain things to be stored in a central location.
         In the case of a signed plugin you *must* do this by means of the central_storage.json file.
         :param file_data: The data as loaded from the file
         :param plugin_path: The location of the plugin on the file system
-        :return:
+        :return: False if there is a security suspicion, True otherwise (even if the method otherwise fails).
         """
         try:
             file_manifest = json.loads(file_data)
         except (json.decoder.JSONDecodeError, UnicodeDecodeError):
-            Logger.logException("e", "Failed to parse central_storage.json")
-            return
+            Logger.logException("e", f"Failed to parse the central storage file for '{plugin_path}'.")
+            return True
 
         for file_to_move in file_manifest:
+            full_path = os.path.join(plugin_path, file_to_move[0])
+
+            # Check if the central storage file didn't contain any files-to-copy outside of the plugin directory:
+            if self._check_if_trusted and not is_bundled_plugin and not self._isPathInLocation(plugin_path, full_path):
+                Logger.log("w", f"Suspect central file location '{full_path}' for file in '{plugin_path}'.")
+                return False
+
             try:
-                CentralFileStorage.store(os.path.join(plugin_path, file_to_move[0]), file_to_move[1], Version(file_to_move[2]), move_file = not is_bundled_plugin)
+                CentralFileStorage.store(full_path, file_to_move[1], Version(file_to_move[2]), move_file = not is_bundled_plugin)
             except (TypeError, IndexError):
-                Logger.logException("w", "Unable to move file to central storage")
+                Logger.logException("w", f"Can't move file {file_to_move[1]} to central storage for '{plugin_path}'.")
+        return True
 
     #   Load the plugin data from the stream and in-place update the metadata.
     def _parsePluginInfo(self, plugin_id, file_data, meta_data):

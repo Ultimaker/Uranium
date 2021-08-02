@@ -42,7 +42,7 @@ def mime_database():
 def test_system_mimetypes(mime_database):
     mime = mime_database.getMimeTypeForFile(os.path.abspath(__file__))
     assert mime.name == "text/x-python"
-    assert mime.comment == "Python script"
+    assert "Python" in mime.comment  # Check only part of the string, because comments are translated!
     assert "py" in mime.suffixes
     assert mime.preferredSuffix == "py"
 
@@ -139,7 +139,7 @@ def test_getMimeType(mime_database):
     assert mime.comment == "Custom JPEG MIME Type" # We must get the custom one, not Qt's MIME type.
 
     mime = mime_database.getMimeType("image/png")
-    assert mime.comment == "PNG image" # Qt's MIME type (at least on my system).
+    assert "PNG" in mime.comment  # Qt's MIME type.  # Check only part of the string, because comments are translated!
 
     with pytest.raises(MimeTypeNotFoundError):
         mime_database.getMimeType("archive/x-file-that-your-mom-would-fit-in") # Try to fetch some non-existing MIME type.

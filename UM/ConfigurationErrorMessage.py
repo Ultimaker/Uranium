@@ -25,13 +25,14 @@ class ConfigurationErrorMessage(Message):
         if ConfigurationErrorMessage.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
         ConfigurationErrorMessage.__instance = self
-
-        super().__init__(*args, **kwargs)
+        super(ConfigurationErrorMessage, self).__init__(*args, **kwargs)
         self._application = application
         self._faulty_containers = set()
 
         self.addAction("reset", name = i18n_catalog.i18nc("@action:button", "Reset"), icon = None, description = "Reset your configuration to factory defaults.")
         self.actionTriggered.connect(self._actionTriggered)
+
+        self._message_type = Message.MessageType.ERROR
 
     # Show more containers which we know are faulty.
     def addFaultyContainers(self, faulty_containers: Union[Iterable, str], *args):

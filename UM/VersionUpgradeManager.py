@@ -170,7 +170,9 @@ class VersionUpgradeManager:
             self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type)  # Upgrade this file.
             QCoreApplication.processEvents()  # Ensure that the GUI does not freeze.
         if upgraded:
-            message = UM.Message.Message(text = catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", Application.getInstance().getApplicationName()), title = catalogue.i18nc("@info:title", "Version Upgrade"))
+            message = UM.Message.Message(text = catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", Application.getInstance().getApplicationName()),
+                                         title = catalogue.i18nc("@info:title", "Version Upgrade"),
+                                         message_type = UM.Message.Message.MessageType.POSITIVE)
             message.show()
         Logger.log("i", "Checking and performing updates took %s", time.time() - start_time)
         return upgraded
