@@ -730,7 +730,7 @@ class PluginRegistry(QObject):
             full_path = os.path.join(plugin_path, file_to_move[0])
             try:
                 CentralFileStorage.store(full_path, file_to_move[1], Version(file_to_move[2]), move_file = not is_bundled_plugin)
-            except (FileExistsError, TypeError, IndexError):
+            except (FileExistsError, TypeError, IndexError, OSError):
                 Logger.logException("w", f"Can't move file {file_to_move[0]} to central storage for '{plugin_path}'.")
         return True
 
