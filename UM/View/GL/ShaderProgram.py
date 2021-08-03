@@ -65,7 +65,7 @@ class ShaderProgram:
 
         # Hashtags should not be ignored, they are part of GLSL.
         parser = configparser.ConfigParser(interpolation = None, comment_prefixes = (';', ))
-        parser.optionxform = lambda option: option
+        parser.optionxform = lambda option: option  # type: ignore
         try:
             parser.read(file_name, encoding = "UTF-8")
         except EnvironmentError:
