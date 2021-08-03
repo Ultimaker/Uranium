@@ -132,7 +132,18 @@ class UpdateChecker(Extension):
             self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewVersionMessage,
                                      "info/latest_update_version_shown")
 
-    def _handleLatestUpdate(self, local_version: Version, newest_version: Version, silent: bool, display_same_version: bool, message_class: Type, preference_key: str) -> None:
+    def _handleLatestUpdate(self, local_version: Version, newest_version: Version, silent: bool, display_same_version: bool, message_class: Type, preference_key: str) -> bool:
+        """
+
+        :param local_version:
+        :param newest_version:
+        :param silent:
+        :param display_same_version:
+        :param message_class:
+        :param preference_key:
+        :return: True if an action was taken, false otherwise
+        """
+
         preferences = Application.getInstance().getPreferences()
         latest_version_shown = preferences.getValue(preference_key)
 
@@ -140,22 +151,24 @@ class UpdateChecker(Extension):
             if display_same_version and not silent:
                 Message(i18n_catalog.i18nc("@info", "No new version was found."),
                         title=i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
-            return  # Nothing to do!
+                return True
+            return False  # Nothing to do!
 
         if local_version < latest_version_shown and not display_same_version:
-            return  # User was already informed once.
+            return False  # User was already informed once.
 
         if local_version > newest_version:
-            return  # No idea how this can happen, but don't bother the user with this.
+            return False  # No idea how this can happen, but don't bother the user with this.
 
         preferences.setValue(preference_key, str(newest_version))
         Logger.log("i", "Found a new version of the software. Spawning message")
 
         message = message_class(
-            application_display_name=Application.getInstance().getApplicationDisplayName().title(),
-            newest_version=newest_version)
+            application_display_name = Application.getInstance().getApplicationDisplayName().title(),
+            newest_version = newest_version)
         message.actionTriggered.connect(self._onActionTriggered)
         message.show()
+        return True
 
     def _onActionTriggered(self, message: Message, action: str) -> None:
         """Callback function for the "download" button on the update notification.
