@@ -27,7 +27,7 @@ class ShaderProgram:
     for the different shader program stages, in addition to defaults that should
     be used for uniform values and uniform and attribute bindings.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self._bindings = {}
         self._attribute_bindings = {}
 
@@ -40,7 +40,7 @@ class ShaderProgram:
 
         self._debug_shader = False  # Set this to true to enable extra logging concerning shaders
 
-    def load(self, file_name, version = ""):
+    def load(self, file_name: str, version: str = "") -> None:
         """Load a shader program file.
 
         This method loads shaders from a simple text file, using Python's configparser
@@ -120,7 +120,7 @@ class ShaderProgram:
             for key, value in parser["attributes"].items():
                 self.addAttributeBinding(key, value)
 
-    def setVertexShader(self, shader):
+    def setVertexShader(self, shader: str) -> bool:
         """Set the vertex shader to use.
 
         :param shader: :type{string} The vertex shader to use.
@@ -134,7 +134,7 @@ class ShaderProgram:
 
         return True
 
-    def setFragmentShader(self, shader):
+    def setFragmentShader(self, shader: str) -> bool:
         """Set the fragment shader to use.
 
         :param shader: :type{string} The fragment shader to use.
@@ -148,7 +148,7 @@ class ShaderProgram:
 
         return True
 
-    def setGeometryShader(self, shader):
+    def setGeometryShader(self, shader: str) -> bool:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
@@ -158,7 +158,7 @@ class ShaderProgram:
 
         return True
 
-    def build(self):
+    def build(self) -> None:
         """Build the complete shader program out of the separately provided sources."""
         if not self._shader_program:
             Logger.log("e", "No shader sources loaded")
