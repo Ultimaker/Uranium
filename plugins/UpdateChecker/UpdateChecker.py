@@ -69,7 +69,8 @@ class UpdateChecker(Extension):
         http_manager.get(self.url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
         self._download_url = None
 
-    def _extractVersionAndURLFromData(self, data: Dict, application_name: str) -> Tuple[Optional[Version], Optional[str]]:
+    @classmethod
+    def _extractVersionAndURLFromData(cls, data: Dict, application_name: str) -> Tuple[Optional[Version], Optional[str]]:
         if application_name not in data:
             return None, None
 
