@@ -135,12 +135,12 @@ class UpdateChecker(Extension):
     def _handleLatestUpdate(self, local_version: Version, newest_version: Version, silent: bool, display_same_version: bool, message_class: Type, preference_key: str) -> bool:
         """
 
-        :param local_version:
-        :param newest_version:
-        :param silent:
-        :param display_same_version:
-        :param message_class:
-        :param preference_key:
+        :param local_version: Local version of the application
+        :param newest_version: Newest version (as reported by remote)
+        :param silent: Should any other message but "a new update is there" be supressed?
+        :param display_same_version: Should a message be shown if there is no new version?
+        :param message_class: What message class should be used to spawn the message if a new version was found
+        :param preference_key: What preference key should be used to check (and set) the latest shown version?
         :return: True if an action was taken, false otherwise
         """
 
