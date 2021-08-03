@@ -1,9 +1,9 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
 from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLVertexArrayObject
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Optional
 
 import UM.Qt.QtApplication
 from UM.View.Renderer import Renderer
@@ -212,7 +212,10 @@ class QtRenderer(Renderer):
         OpenGL()
         self._gl = OpenGL.getInstance().getBindingsObject()
 
-        self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader")) #type: ShaderProgram
+        default_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))  # type: Optional[ShaderProgram]
+        if default_shader is None:
+            return
+        self._default_material = default_shader
 
         self.addRenderPass(DefaultPass(self._viewport_width, self._viewport_height))
         self.addRenderPass(SelectionPass(self._viewport_width, self._viewport_height))

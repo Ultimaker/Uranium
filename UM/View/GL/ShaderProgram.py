@@ -3,7 +3,7 @@
 
 import ast
 import configparser
-from typing import Any, cast, Dict, List, Union
+from typing import Any, cast, Dict, List, Union, Optional
 
 from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
 from UM.Logger import Logger
@@ -11,6 +11,7 @@ from UM.Logger import Logger
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Math.Color import Color
+from UM.View.GL.Texture import Texture
 
 
 class InvalidShaderProgramError(Exception):
@@ -27,20 +28,20 @@ class ShaderProgram:
     for the different shader program stages, in addition to defaults that should
     be used for uniform values and uniform and attribute bindings.
     """
-    def __init__(self):
-        self._bindings = {}
-        self._attribute_bindings = {}
+    def __init__(self) -> None:
+        self._bindings = {}  # type: Dict[str, str]
+        self._attribute_bindings = {}  # type: Dict[str, str]
 
-        self._shader_program = None
+        self._shader_program = None  # type: Optional[QOpenGLShaderProgram]
         self._uniform_indices = {}  # type: Dict[str, int]
-        self._attribute_indices = {}
+        self._attribute_indices = {}  # type: Dict[str, int]
         self._uniform_values = {}  # type: Dict[int, Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]]
         self._bound = False
-        self._textures = {}
+        self._textures = {}  # type: Dict[int, Texture]
 
         self._debug_shader = False  # Set this to true to enable extra logging concerning shaders
 
-    def load(self, file_name, version = ""):
+    def load(self, file_name: str, version: str = "") -> None:
         """Load a shader program file.
 
         This method loads shaders from a simple text file, using Python's configparser
@@ -64,7 +65,7 @@ class ShaderProgram:
 
         # Hashtags should not be ignored, they are part of GLSL.
         parser = configparser.ConfigParser(interpolation = None, comment_prefixes = (';', ))
-        parser.optionxform = lambda option: option
+        parser.optionxform = lambda option: option  # type: ignore
         try:
             parser.read(file_name, encoding = "UTF-8")
         except EnvironmentError:
@@ -92,8 +93,10 @@ class ShaderProgram:
             Logger.log("d", "Fragment shader")
             Logger.log("d", fragment_code_str)
 
-        self.setVertexShader(vertex_code)
-        self.setFragmentShader(fragment_code)
+        if not self.setVertexShader(vertex_code):
+            raise InvalidShaderProgramError(f"Could not set vertex shader from '{file_name}'.")
+        if not self.setFragmentShader(fragment_code):
+            raise InvalidShaderProgramError(f"Could not set fragment shader from '{file_name}'.")
         # Geometry shader is optional and only since version OpenGL 3.2 or with extension ARB_geometry_shader4
         if geometry_key in parser["shaders"]:
             code = parser["shaders"][geometry_key]
@@ -101,7 +104,8 @@ class ShaderProgram:
                 code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
                 Logger.log("d", "Loading geometry shader... \n")
                 Logger.log("d", code_str)
-            self.setGeometryShader(code)
+            if not self.setGeometryShader(code):
+                raise InvalidShaderProgramError(f"Could not set geometry shader from '{file_name}'.")
 
         self.build()
 
@@ -117,7 +121,7 @@ class ShaderProgram:
             for key, value in parser["attributes"].items():
                 self.addAttributeBinding(key, value)
 
-    def setVertexShader(self, shader):
+    def setVertexShader(self, shader: str) -> bool:
         """Set the vertex shader to use.
 
         :param shader: :type{string} The vertex shader to use.
@@ -125,10 +129,13 @@ class ShaderProgram:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Vertex, shader):
+        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.Vertex, shader):
             Logger.log("e", "Vertex shader failed to compile: %s", self._shader_program.log())
+            return False
 
-    def setFragmentShader(self, shader):
+        return True
+
+    def setFragmentShader(self, shader: str) -> bool:
         """Set the fragment shader to use.
 
         :param shader: :type{string} The fragment shader to use.
@@ -136,17 +143,23 @@ class ShaderProgram:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Fragment, shader):
+        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.Fragment, shader):
             Logger.log("e", "Fragment shader failed to compile: %s", self._shader_program.log())
+            return False
 
-    def setGeometryShader(self, shader):
+        return True
+
+    def setGeometryShader(self, shader: str) -> bool:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Geometry, shader):
+        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.Geometry, shader):
             Logger.log("e", "Geometry shader failed to compile: %s", self._shader_program.log())
+            return False
 
-    def build(self):
+        return True
+
+    def build(self) -> None:
         """Build the complete shader program out of the separately provided sources."""
         if not self._shader_program:
             Logger.log("e", "No shader sources loaded")
@@ -171,7 +184,7 @@ class ShaderProgram:
         if not self._shader_program:
             return
 
-        if name not in self._uniform_indices:
+        if name not in self._uniform_indices and self._shader_program is not None:
             self._uniform_indices[name] = self._shader_program.uniformLocation(name)
 
         uniform = self._uniform_indices[name]
@@ -184,7 +197,7 @@ class ShaderProgram:
         if self._bound:
             self._setUniformValueDirect(uniform, value)
 
-    def setTexture(self, texture_unit, texture):
+    def setTexture(self, texture_unit: int, texture: Texture) -> None:
         """Set a texture that should be bound to a specified texture unit when this shader is bound.
 
         :param texture_unit: :type{int} The texture unit to bind the texture to.
@@ -206,6 +219,9 @@ class ShaderProgram:
 
         :note If the shader is not bound, this will bind the shader.
         """
+        if not self._shader_program:
+            return
+
         self.bind()
 
         if name not in self._attribute_indices:
@@ -269,7 +285,7 @@ class ShaderProgram:
         for texture_unit, texture in self._textures.items():
             texture.release(texture_unit)
 
-    def addBinding(self, key, value):
+    def addBinding(self, key: str, value: str) -> None:
         """Add a uniform value binding.
 
         Uniform value bindings are used to provide an abstraction between uniforms as set
@@ -306,7 +322,7 @@ class ShaderProgram:
             if key in self._bindings and value is not None:
                 self.setUniformValue(self._bindings[key], value, cache = False)
 
-    def addAttributeBinding(self, key, value):
+    def addAttributeBinding(self, key: str, value: str) -> None:
         """Add an attribute binding.
 
         Attribute bindings are similar to uniform value bindings, except they specify what
@@ -337,27 +353,27 @@ class ShaderProgram:
     def _setUniformValueDirect(self, uniform: int, value: Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]) -> None:
         if type(value) is Vector:
             value = cast(Vector, value)
-            self._shader_program.setUniformValue(uniform, QVector3D(value.x, value.y, value.z))
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector3D(value.x, value.y, value.z))
         elif type(value) is Matrix:
-            self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(cast(Matrix, value)))
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, self._matrixToQMatrix4x4(cast(Matrix, value)))
         elif type(value) is Color:
             value = cast(Color, value)
-            self._shader_program.setUniformValue(uniform,
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform,
                 QColor(round(value.r * 255), round(value.g * 255), round(value.b * 255), round(value.a * 255)))
         elif type(value) is list and type(cast(List[List[float]], value)[0]) is list and len(cast(List[List[float]], value)[0]) == 4:
             value = cast(List[List[float]], value)
-            self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(Matrix(value)))
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, self._matrixToQMatrix4x4(Matrix(value)))
         elif type(value) is list and len(cast(List[float], value)) == 2:
             value = cast(List[float], value)
-            self._shader_program.setUniformValue(uniform, QVector2D(value[0], value[1]))
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector2D(value[0], value[1]))
         elif type(value) is list and len(cast(List[float], value)) == 3:
             value = cast(List[float], value)
-            self._shader_program.setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
         elif type(value) is list and len(cast(List[float], value)) == 4:
             value = cast(List[float], value)
-            self._shader_program.setUniformValue(uniform, QVector4D(value[0], value[1], value[2], value[3]))
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector4D(value[0], value[1], value[2], value[3]))
         elif type(value) is list and type(cast(List[List[float]], value)[0]) is list and len(cast(List[List[float]], value)[0]) == 2:
             value = cast(List[List[float]], value)
-            self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
         else:
-            self._shader_program.setUniformValue(uniform, cast(Union[float, int], value))
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, cast(Union[float, int], value))
