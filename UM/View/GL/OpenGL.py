@@ -201,7 +201,8 @@ class OpenGL:
             if version_string != "":
                 try:
                     shader.load(file_name, version = "")
-                except InvalidShaderProgramError:
+                except InvalidShaderProgramError as e:
+                    Logger.logException("e", str(e))
                     return None
         return shader
 
