@@ -122,7 +122,25 @@ class TestTrust:
         # A folder without a central storage file should just pass, no matter what:
         assert trust_instance.signedFolderPreStorageCheck(folderpath_without_storage)
 
-    def test_signFolderAndVerify(self, init_trust, pytestconfig):
+        # From here on out, make sure we're testing the other part of that functionality (prevent early out):
+        trust_instance._verifyFile = MagicMock(return_value = True)
+        trust_instance._verifyManifestIntegrety = MagicMock(return_value=True)
+
+        # Overwrite the central storage dictionary with files moved to an arbitrary location (then fail the check):
+        central_storage_dict = [["/root/.importantfile", "/home/eve", "1.0.0", "dummy"]]
+        central_storage_file_path = os.path.join(folderpath_signed, TrustBasics.getCentralStorageFilename())
+        with open(central_storage_file_path, "w") as file:
+            json.dump(central_storage_dict, file, indent=2)
+        assert not trust_instance.signedFolderPreStorageCheck(folderpath_signed)
+
+        # Overwrite the central storage dictionary with files-to-move outside of the storage area (then fail the check):
+        central_storage_dict = [["signatures.json", "../../signatures.json", "1.0.0", "dummy"]]
+        central_storage_file_path = os.path.join(folderpath_signed, TrustBasics.getCentralStorageFilename())
+        with open(central_storage_file_path, "w") as file:
+            json.dump(central_storage_dict, file, indent=2)
+        assert not trust_instance.signedFolderPreStorageCheck(folderpath_signed)
+
+    def test_signFolderAndVerify(self, init_trust):
         temp_dir, private_path, trust_instance, violation_callback, central_storage_dir = init_trust
         folderpath_signed = os.path.join(temp_dir, _folder_names[0])
         folderpath_unsigned = os.path.join(temp_dir, _folder_names[1])
@@ -181,7 +199,7 @@ class TestTrust:
         violation_callback.reset_mock()
 
         # * 'Central file storage'-enabled section *
-        with patch("UM.CentralFileStorage.CentralFileStorage._centralStorageLocation", MagicMock(return_value = central_storage_dir)):
+        with patch("UM.CentralFileStorage.CentralFileStorage.getCentralStorageLocation", MagicMock(return_value = central_storage_dir)):
 
             # Do some set-up (signing, moving files around with the central file storage):
             assert signFolder(private_path, folderpath_large, [], _passphrase)
@@ -226,3 +244,23 @@ class TestTrust:
     def test_signNonexisting(self):
         private_key, public_key = TrustBasics.generateNewKeyPair()
         assert TrustBasics.getFileSignature("file-not-found", private_key) is None
+
+    @pytest.mark.parametrize("location,subfolder", [
+        (r"/a/b/c", r"/a/b/c/d"),
+        (r"/a/b/c", r"/a/b/c/d/.."),
+        (r"/a/b/c", r"/a/b/../b/c/d/../e"),
+        (r"/a/b/../d/c", r"/a/d/c")
+    ])
+    def test_isPathInLocation(self, location, subfolder):
+        assert TrustBasics.isPathInLocation(location, subfolder)
+
+    @pytest.mark.parametrize("location,subfolder", [
+        (r"/a/b/c", r"/a/b/c/d/../.."),
+        (r"/a/b/c", r"/a/b"),
+        (r"/a/b/c", r"/d/q/f"),
+        (r"/a/b/../d/c", r"/a/d/c.txt"),
+        (r"/a/b/../d/c", r"/a/b/../b/c/d/../e"),
+        (r"/a/b/../d/c.txt", r"/a/d/c")
+    ])
+    def test_notIsPathInLocation(self, location, subfolder):
+        assert not TrustBasics.isPathInLocation(location, subfolder)
