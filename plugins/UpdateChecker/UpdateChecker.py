@@ -46,8 +46,8 @@ class UpdateChecker(Extension):
         self._download_url: Optional[str] = None
 
         # Which version was the latest shown in the version upgrade dialog. Don't show these updates twice.
-        preferences.addPreference("info/latest_update_version_shown", "0.0.0")
-        preferences.addPreference("info/latest_beta_update_version_shown", "0.0.0")
+        preferences.addPreference("info/latest_update_version_shown", Application.getInstance().getVersion())
+        preferences.addPreference("info/latest_beta_update_version_shown", Application.getInstance().getVersion())
 
         preferences.addPreference("info/latest_update_source", "stable")
 
