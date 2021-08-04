@@ -147,7 +147,9 @@ class UpdateChecker(Extension):
         preferences = Application.getInstance().getPreferences()
         latest_version_shown = preferences.getValue(preference_key)
 
-        if local_version == newest_version and local_version == latest_version_shown:
+        if local_version == newest_version:
+            if local_version > latest_version_shown:
+                preferences.setValue(preference_key, str(local_version))
             if display_same_version and not silent:
                 Message(i18n_catalog.i18nc("@info", "No new version was found."),
                         title=i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
