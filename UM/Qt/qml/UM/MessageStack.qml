@@ -6,7 +6,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 
-import UM 1.3 as UM
+import UM 1.4 as UM
 
 ListView
 {
@@ -93,96 +93,29 @@ ListView
             }
 
             height: Math.max(messageTypeIcon.height, messageTitle.height)
-            Item
+            UM.StatusIcon
             {
                 id: messageTypeIcon
-                visible: messageIcon.source != ""
+                visible: status != UM.StatusIcon.Status.NEUTRAL
                 height: visible ? UM.Theme.getSize("message_type_icon").height: 0
                 width: visible ? UM.Theme.getSize("message_type_icon").height : 0
-                UM.RecolorImage
+                status:
                 {
-                    id: messageIconBackground
-                    height: parent.height
-                    width: parent.width
-                    sourceSize.width: width
-                    sourceSize.height: height
-                    source: UM.Theme.getIcon("CircleSolid", "low")
-                }
-                UM.RecolorImage
-                {
-                    id: messageIcon
-                    height: parent.height
-                    width: parent.width
-                    sourceSize.width: width
-                    sourceSize.height: height
-                }
-
-                states:
-                [
-                    State
+                    switch (model.message_type)
                     {
-                        name: "positive"
-                        when: model.message_type == 0
-                        PropertyChanges
-                        {
-                            target: messageIcon
-                            source: UM.Theme.getIcon("Check", "low")
-                            color: UM.Theme.getColor("message_success_icon")
-                        }
-                        PropertyChanges
-                        {
-                            target: messageIconBackground
-                            color: UM.Theme.getColor("success")
-                        }
-                    },
-                    State
-                    {
-                        name: "neutral"
-                        when: model.message_type == 1
-                        PropertyChanges
-                        {
-                            target: messageIcon
-                            source: ""
-                        }
-                        PropertyChanges
-                        {
-                            target: messageIconBackground
-                            color: "transparent"
-                        }
-                    },
-                    State
-                    {
-                        name: "warning"
-                        when: model.message_type == 2
-                        PropertyChanges
-                        {
-                            target: messageIcon
-                            source: UM.Theme.getIcon("Warning", "low")
-                            color: UM.Theme.getColor("message_warning_icon")
-                        }
-                        PropertyChanges
-                        {
-                            target: messageIconBackground
-                            color: UM.Theme.getColor("warning")
-                        }
-                    },
-                    State
-                    {
-                        name: "error"
-                        when: model.message_type == 3
-                        PropertyChanges
-                        {
-                            target: messageIcon
-                            source: UM.Theme.getIcon("Cancel", "low")
-                            color: UM.Theme.getColor("message_error_icon")
-                        }
-                        PropertyChanges
-                        {
-                            target: messageIconBackground
-                            color: UM.Theme.getColor("error")
-                        }
+                        case 0:
+                            return UM.StatusIcon.Status.POSITIVE
+                        case 1:
+                            return UM.StatusIcon.Status.NEUTRAL
+                        case 2:
+                            return UM.StatusIcon.Status.WARNING
+                        case 3:
+                            return UM.StatusIcon.Status.ERROR
+                        default:
+                            return UM.StatusIcon.Status.NEUTRAL
                     }
-                ]
+                    return UM.StatusIcon.Status.WARNING
+                }
             }
 
 
