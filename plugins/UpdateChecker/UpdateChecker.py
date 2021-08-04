@@ -49,7 +49,7 @@ class UpdateChecker(Extension):
         preferences.addPreference("info/latest_update_version_shown", Application.getInstance().getVersion())
         preferences.addPreference("info/latest_beta_update_version_shown", Application.getInstance().getVersion())
 
-        preferences.addPreference("info/latest_update_source", "stable")
+        preferences.addPreference("info/latest_update_source", "beta")
 
     def checkNewVersion(self, silent = False, display_same_version = True) -> None:
         """Connect with software.ultimaker.com, load latest.json and check version info.
