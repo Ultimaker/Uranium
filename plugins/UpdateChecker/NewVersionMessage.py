@@ -8,11 +8,11 @@ I18N_CATALOG = i18nCatalog("uranium")
 class NewVersionMessage(Message):
     def __init__(self, application_display_name: str, newest_version: Version) -> None:
         super().__init__(
-            text = I18N_CATALOG.i18nc("@info:status",
+            title = I18N_CATALOG.i18nc("@info:status",
                                         "{application_name} {version_number} is available!").format(
                                         application_name = application_display_name,
                                         version_number = newest_version),
-            title = I18N_CATALOG.i18nc("@info:status",
+            text = I18N_CATALOG.i18nc("@info:status",
                                          "{application_name} {version_number} provides a better and more reliable printing experience.").format(
                                          application_name = application_display_name,
                                          version_number = newest_version))
