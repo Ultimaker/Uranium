@@ -636,7 +636,7 @@ class PluginRegistry(QObject):
                     current_version = Version(meta_data["plugin"]["version"])
                 except InvalidMetaDataError:
                     current_version = Version("0.0.0")
-                    Logger.log(f"The plugin.json in '{plugin_location}' is invalid. Assuming that the version of '{plugin_id}' is {current_version}.")
+                    Logger.log("e", f"The plugin.json in '{plugin_location}' is invalid. Assuming that the version of '{plugin_id}' is {current_version}.")
                 if current_version > highest_version:
                     highest_version = current_version
                     final_location = loc
