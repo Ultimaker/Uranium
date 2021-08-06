@@ -7,7 +7,7 @@ set(CPACK_PACKAGE_VERSION_PATCH 93)
 set(CPACK_GENERATOR "DEB;RPM")
 
 set(RPM_REQUIRES
-    "python3 >= 3.5.0"
+    "python3 >= ${Python3_VERSION}"
     "python3-qt5 >= 5.6.0"
     "qt5-qtquickcontrols >= 5.6.0"
     "arcus >= 15.05.90"
@@ -16,7 +16,7 @@ string(REPLACE ";" "," RPM_REQUIRES "${RPM_REQUIRES}")
 set(CPACK_RPM_PACKAGE_REQUIRES ${RPM_REQUIRES})
 
 set(DEB_DEPENDS
-    "python3 (>= 3.5.0)"
+    "python3 (>= ${Python3_VERSION})"
     "python3-pyqt5 (>= 5.6.0)"
     "python3-pyqt5.qtopengl (>= 5.6.0)"
     "python3-pyqt5.qtquick (>= 5.6.0)"

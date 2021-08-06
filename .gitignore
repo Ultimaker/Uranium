@@ -58,3 +58,5 @@ resources/.DS_Store
 
 #Common plug-ins
 plugins/UraniumExample*Plugin
+/cmake-build-debug/
+/cmake-build-release/

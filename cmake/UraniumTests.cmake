@@ -32,7 +32,7 @@ function(uranium_add_test)
 
     add_test(
         NAME ${_NAME}
-        COMMAND ${PYTHON_EXECUTABLE} -m pytest --junitxml=${CMAKE_BINARY_DIR}/junit-${_NAME}.xml ${_DIRECTORY}
+        COMMAND ${Python3_EXECUTABLE} -m pytest --junitxml=${CMAKE_BINARY_DIR}/junit-${_NAME}.xml ${_DIRECTORY}
     )
     set_tests_properties(${_NAME} PROPERTIES ENVIRONMENT LANG=C)
     set_tests_properties(${_NAME} PROPERTIES ENVIRONMENT "PYTHONPATH=${_PYTHONPATH}")
@@ -52,5 +52,5 @@ endforeach()
 #Add code style test.
 add_test(
     NAME "code-style"
-    COMMAND ${PYTHON_EXECUTABLE} run_mypy.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMAND ${Python3_EXECUTABLE} run_mypy.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
