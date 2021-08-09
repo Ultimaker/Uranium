@@ -71,6 +71,7 @@ class MeshData:
         self._convex_hull_vertices = None  # type: Optional[numpy.ndarray]
         self._convex_hull_lock = threading.Lock()
 
+        self._user_data_cache = {}  # type: Dict[str, Any]
         self._attributes = {}  # type: Dict[str, Any]
         if attributes is not None:
             for key, attribute in attributes.items():
@@ -348,6 +349,12 @@ class MeshData:
         """the return value is a dict with at least keys opengl_name, opengl_type, value"""
 
         return self._attributes[key]
+
+    def getCachedUserValue(self, key: str) -> Any:
+        return None if key not in self._user_data_cache else self._user_data_cache[key]
+
+    def setCachedUserValue(self, key: str, value: Any):
+        self._user_data_cache[key] = value
 
     def attributeNames(self) -> List[str]:
         """Return attribute names in alphabetical order

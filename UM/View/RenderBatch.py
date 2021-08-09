@@ -1,6 +1,6 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from typing import List, Dict, Union, Optional, Any
+from typing import cast, List, Dict, Union, Optional, Any
 
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
@@ -55,6 +55,12 @@ class RenderBatch:
         Triangles = 0x0004
         TriangleStrip = 0x0005
         TriangleFan = 0x0006
+
+    _render_mode_to_vertex_count = {
+        RenderMode.Points: 1,
+        RenderMode.Lines: 2,
+        RenderMode.Triangles: 3
+    }
 
     class BlendMode:
         """Blending mode."""
@@ -215,17 +221,6 @@ class RenderBatch:
             light_0_position = camera.getCameraLightPosition()
         )
 
-        # The VertexArrayObject (VAO) works like a VCR, recording buffer activities in the GPU.
-        # When the same buffers are used elsewhere, one can bind this VertexArrayObject to
-        # the context instead of uploading all buffers again.
-        if OpenGLContext.properties["supportsVertexArrayObjects"]:
-            vao = QOpenGLVertexArrayObject()
-            vao.create()
-            if not vao.isCreated():
-                Logger.log("e", "VAO not created. Hell breaks loose")
-            else:
-                vao.bind()
-
         for item in self._items:
             self._renderItem(item)
 
@@ -234,43 +229,7 @@ class RenderBatch:
 
         self._shader.release()
 
-    def _renderItem(self, item: Dict[str, Any]):
-        transformation = item["transformation"]
-        mesh = item["mesh"]
-
-        # Do not render if there's no vertex (empty mesh)
-        if mesh.getVertexCount() == 0:
-            return
-
-        normal_matrix = item["normal_transformation"]
-        if mesh.hasNormals() and normal_matrix is None:
-            normal_matrix = Matrix(transformation.getData())
-            normal_matrix.setRow(3, [0, 0, 0, 1])
-            normal_matrix.setColumn(3, [0, 0, 0, 1])
-            normal_matrix.invert()
-            normal_matrix.transpose()
-
-        self._shader.updateBindings(
-            model_matrix = transformation,
-            normal_matrix = normal_matrix
-        )
-
-        if item["uniforms"] is not None:
-            self._shader.updateBindings(**item["uniforms"])
-
-        vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
-        vertex_buffer.bind()
-
-        if self._render_range is None:
-            index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
-        else:
-            # glDrawRangeElements does not work as expected and did not get the indices field working..
-            # Now we're just uploading a clipped part of the array and the start index always becomes 0.
-            index_buffer = OpenGL.getInstance().createIndexBuffer(
-                mesh, force_recreate=True, index_start = self._render_range[0], index_stop = self._render_range[1])
-        if index_buffer is not None:
-            index_buffer.bind()
-
+    def _setMeshAttributes(self, mesh: MeshData) -> None:
         self._shader.enableAttribute("a_vertex", "vector3f", 0)
         vertex_count = mesh.getVertexCount()
         offset = vertex_count * 3 * 4
@@ -302,21 +261,79 @@ class RenderBatch:
                 Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
                 self._shader.disableAttribute(attribute["opengl_name"])
 
-        if mesh.hasIndices():
-            if self._render_range is None:
-                if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3, self._gl.GL_UNSIGNED_INT, None)
-                else:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
-            else:
-                if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawRangeElements(self._render_mode, self._render_range[0], self._render_range[1], self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
-                else:
-                    self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
-        else:
-            self._gl.glDrawArrays(self._render_mode, 0, vertex_count)
+    def _vertexBuffersSetup(self, mesh: MeshData) -> Optional[QOpenGLVertexArrayObject]:
+        # See if the mesh has already been stored to the GPU:
+        vao = cast(Optional[QOpenGLVertexArrayObject], mesh.getCachedUserValue(self._shader.getReferenceKey()))
+        if vao is not None:
+            return vao
 
-        vertex_buffer.release()
+        # Initialize VAO (VertexArrayObject). On activation, this will wrap around the other vertex/index buffers.
+        # That enables reusing them without much fuss.
+        if OpenGLContext.properties["supportsVertexArrayObjects"]:
+            vao = QOpenGLVertexArrayObject()
+            vao.create()
+            if not vao.isCreated():
+                Logger.log("e", "RenderBatch: VAO not created. You will not go to R^3 today.")
+                return None
 
+        # Setup VAO:
+        vao.bind()
+
+        vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
+        vertex_buffer.bind()
+
+        index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
         if index_buffer is not None:
-            index_buffer.release()
+            index_buffer.bind()
+
+        self._setMeshAttributes(mesh)
+
+        # Cache and return:
+        mesh.setCachedUserValue(self._shader.getReferenceKey(), vao)
+        vao.release()
+        return vao
+
+    def _renderItem(self, item: Dict[str, Any]) -> None:
+        mesh = cast(MeshData, item["mesh"])
+        if mesh.getVertexCount() == 0:
+            return
+
+        if self._render_range is not None:
+            self._shader.setUniformValue("u_drawRange", [self._render_range[0], self._render_range[1]])
+            self._shader.setUniformValue("draw_range", [self._render_range[0], self._render_range[1]])
+        else:
+            self._shader.setUniformValue("u_drawRange", [-1.0, -1.0])
+            self._shader.setUniformValue("draw_range", [-1.0, -1.0])
+
+        transformation = item["transformation"]
+        normal_matrix = item["normal_transformation"]
+        if mesh.hasNormals() and normal_matrix is None:
+            normal_matrix = Matrix(transformation.getData())
+            normal_matrix.setRow(3, [0, 0, 0, 1])
+            normal_matrix.setColumn(3, [0, 0, 0, 1])
+            normal_matrix.invert()
+            normal_matrix.transpose()
+
+        self._shader.updateBindings(
+            model_matrix = transformation,
+            normal_matrix = normal_matrix
+        )
+
+        if item["uniforms"] is not None:
+            self._shader.updateBindings(**item["uniforms"])
+
+        vao = self._vertexBuffersSetup(mesh)
+        if vao is None:
+            return
+        vao.bind()
+
+        if mesh.hasIndices():
+            # The last parameter here is supposed to take either an array, or an offset into the current buffer.
+            # However, this Python wrapper can only handle either the array, or None, which serves as a 0-offset.
+            # As other offsets do not seem possible (everyting was tried), the range is instead handled in the shader.
+            elem_count = mesh.getFaceCount() * self._render_mode_to_vertex_count.get(self._render_mode, 1)
+            self._gl.glDrawElements(self._render_mode, elem_count, self._gl.GL_UNSIGNED_INT, None)
+        else:
+            self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
+
+        vao.release()
