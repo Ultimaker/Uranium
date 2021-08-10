@@ -17,13 +17,21 @@ class UraniumConan(ConanFile):
     exports = "LICENSE"
     exports_sources = "plugins/*", "resources/*", "UM/*"
     no_copy_source = True
-
+    options = {
+        "python_version": "ANY"
+    }
+    default_options = {
+        "python_version": "3.8"
+    }
     scm = {
         "type": "git",
         "subfolder": ".",
         "url": "auto",
         "revision": "auto"
     }
+
+    def configure(self):
+        self.options["Arcus"].python_version = self.options.python_version
 
     def requirements(self):
         self.requires(f"Arcus/4.10.0@ultimaker/testing")
