@@ -167,7 +167,7 @@ class PackageManager(QObject):
                 with open(search_path, "r", encoding = "utf-8") as f:
                     self._bundled_package_dict.update(json.load(f))
                     Logger.log("i", "Loaded bundled packages data from %s", search_path)
-            except UnicodeDecodeError:
+            except (UnicodeDecodeError, JSONDecodeError):
                 Logger.logException("e", "Can't decode package management files. File is corrupt.")
                 return
             except FileNotFoundError:
