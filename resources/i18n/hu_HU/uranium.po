@@ -1,13 +1,12 @@
-
 # Uranium
 # Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.10\n"
+"Project-Id-Version: Uranium 4.11\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2021-06-10 17:38+0200\n"
+"POT-Creation-Date: 2021-08-11 10:01+0200\n"
 "PO-Revision-Date: 2019-10-10 22:30+0200\n"
 "Last-Translator: Nagy Attila\n"
 "Language-Team: AT-VLOG <LL@li.org>\n"
@@ -17,18 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "Egyszerű"
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL fájl"
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
 msgstr "Hullámfront OBJ fájl"
@@ -46,95 +35,23 @@ msgstr "Nincs háló, amelybe írhatnánk"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
 msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL fájl (ASCII)"
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL fájl (bináris)"
+msgid "STL File"
+msgstr "STL fájl"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
 msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
 msgstr "Nem támogatott kimeneti mód az STL adatfolyam írására."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:50
-msgctxt "@info"
-msgid "Could not access update information."
-msgstr "Nem sikerült elérni frissítéseket."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL fájl (ASCII)"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:51
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:97
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:155
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "Verzió frissítés"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "Ez a verzió nem támogatja a frissítések ellenőrzését."
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:188
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Figyelem"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:93
-msgctxt "@info"
-msgid "An error occurred while checking for updates."
-msgstr "Hiba történt a frissítések keresése közben."
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:93
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:141
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Hiba"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:97
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Nem találtam új verziót."
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:102
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "Az {application_name} {version_number} elérhető!"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:104
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"{application_name} {version_number} provides a better and more reliable "
-"printing experience."
-msgstr ""
-"Az {application_name} {version_number} jobb és megbízhatóbb szolgáltatást nyújthat."
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
-msgctxt "@action:button"
-msgid "Download"
-msgstr "Letöltés"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:109
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "Tudj meg többet"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr "Frissítések"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Frissítések ellenőrzése."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL fájl (bináris)"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
 msgctxt "@item:inmenu"
@@ -143,18 +60,23 @@ msgstr "Helyi fájl"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to File"
-msgstr "Mentés fájlba"
+msgid "Save to Disk"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
-msgid "Save to File"
-msgstr "Mentés fájlba"
+msgid "Save to Disk"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
-msgid "Save to File"
-msgstr "Mentés fájlba"
+msgid "Save to Disk"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
@@ -169,85 +91,87 @@ msgstr "A fájl használatban van."
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
-msgid ""
-"The file <filename>{0}</filename> already exists. Are you sure you want to "
-"overwrite it?"
-msgstr "A <filename>{0}</filename> fájl használatban van. Biztosan felül akarod "
-"írni ?"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "A <filename>{0}</filename> fájl használatban van. Biztosan felül akarod írni ?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Mentés a(z) <filename>{0}</filename> fájlba."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "Mentés"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Hozzáférés megtagadva a <filename>{0}</filename> fájlba történő íráskor."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Sikertelen mentés a(z) <filename>{0}</filename> fájlba: <message>{1}</message>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Mentés <filename>{0}</filename> fájlba."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "Fájl elmentve."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Mappa megnyitása"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "A fájlt tartalmazó mappa megnyitása."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Hiba"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
 #, python-brace-format
 msgctxt "@info:status"
-msgid ""
-"Something went wrong saving to <filename>{0}</filename>: <message>{1}</"
-"message>"
-msgstr "Valami hiba történt <filename>{0}</filename> mentésekor: <message>{1}</"
-"message>"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Valami hiba történt <filename>{0}</filename> mentésekor: <message>{1}</message>"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
-msgid "Scale"
-msgstr "Méretezés"
+msgid "Mirror"
+msgstr "Tükrözés"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
 msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Méretarányos modell"
+msgid "Mirror Model"
+msgstr "Modell tükrözés"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Mozgatás"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "Alapsíkra fektetés"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Modell mozgatása"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:358
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "Elforgatás"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
@@ -259,101 +183,197 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr "Modell forgatása"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:275
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "Alapsíkra fektetés"
+msgid "Scale"
+msgstr "Méretezés"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:275
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "Elforgatás"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Méretarányos modell"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Tükrözés"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Mozgatás"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Modell tükrözés"
+msgid "Move Model"
+msgstr "Modell mozgatása"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:105
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:12
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} BETA is available!"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Letöltés"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:23
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "Tudj meg többet"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:12
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "Az {application_name} {version_number} elérhető!"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:16
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr "Az {application_name} {version_number} jobb és megbízhatóbb szolgáltatást nyújthat."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr "Frissítések"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Frissítések ellenőrzése."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "Ez a verzió nem támogatja a frissítések ellenőrzését."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Figyelem"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Nem találtam új verziót."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:174
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "Verzió frissítés"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "Egyszerű"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
+msgctxt "@action:button"
+msgid "Reset"
+msgstr "Alaphelyzet"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the "
-"following profiles:\n"
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
-"Would you like to reset to factory defaults?"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
-"A konfigurációd hibásnak tűnik. Valószínűleg valami sérülés lehet a következő "
-"profilban:"
+"A konfigurációd hibákat tartalmazhat. Valami sérültnek tűnik a következő profilban:\n"
 "- {profiles}\n"
-"Visszatöltsük az alapértelmezett beállításokat?"
+" Szeretnéd betölteni a gyári alapértékekekt? Ez visszaállít minden értéketalpértékre a jelenlegi printernél és a profilban."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr "A konfigurációd sérültnek tűnik."
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr "Gyári visszaállítás"
 
-#: /home/ruben/Projects/Uranium/UM/__init__.py:17
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:177
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr "Konfigurációs hibák"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:53
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr "Mindent visszaállítunk gyári értékekre a jelenlegi nyomtatónál és profilban.Biztosan végrehajtjuk?"
 
-#: /home/ruben/Projects/Uranium/UM/__init__.py:18
-msgctxt "@info:button"
-msgid "Reset your configuration to factory defaults."
-msgstr "Állítsa vissza a konfigurációt a gyári alapértékekre."
-
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:181
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:696
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:56
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:883
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Minden támogatott típus ({0})"
 
-
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:184
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:697
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:57
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:72
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:884
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Minden fájl (*)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:41
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "Nem lehet megnyitni a <filename>{0}</filename> típusú fájlokat"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:44
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr "Érvénytelen fájl"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:98
 msgctxt "@info:title"
 msgid "Unable to Open File"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "Betöltés"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:87
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:90
 msgctxt "@info:title"
 msgid "No Models in File"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
 msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:71
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled object to {0}% of original size"
+msgstr "Automatikus méretezés az eredeti méretről {0}% of méretre"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "Tárgy méretezés"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:285
 #, python-brace-format
@@ -361,124 +381,60 @@ msgctxt "@error:uninstall"
 msgid ""
 "There were some errors uninstalling the following packages:\n"
 "{packages}"
-msgstr "Hiba történt a következő csomagok eltávolításakor:"
-"{packages}"
+msgstr "Hiba történt a következő csomagok eltávolításakor:{packages}"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:287
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "Eltávolítási hibák"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:297
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:298
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:585
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
-"There was an error uninstalling the package {package} before installing new "
-"version:\n"
+"There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr 
-"Hiba történt a (z) {package} csomag eltávolításában az új verzió telepítése előtt."
-"{error}.\n"
+msgstr ""
+"Hiba történt a (z) {package} csomag eltávolításában az új verzió telepítése előtt.{error}.\n"
 "Próbáld meg később a frissítést."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:571
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:588
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Frissítési hiba"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:386
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
-#, python-brace-format
-msgctxt ""
-"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
-"minutes"
-msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}n {1:0>2}ó {2:0>2}perc"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:124
-#, python-brace-format
-msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}ó {1:0>2}perc"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is days"
-msgid "{0} day"
-msgid_plural "{0} days"
-msgstr[0] "{0} nap"
-msgstr[1] "{0} nap"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is hours"
-msgid "{0} hour"
-msgid_plural "{0} hours"
-msgstr[0] "{0} óra"
-msgstr[1] "{0} óra"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:131
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is minutes"
-msgid "{0} minute"
-msgid_plural "{0} minutes"
-msgstr[0] "{0} perc"
-msgstr[1] "{0} perc"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:180
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "Plugin betöltése..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:192
-#, python-brace-format
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "Konfiguráció frissítése..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "Preferenciák betöltése..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:206
-msgctxt "@info:status"
-msgid "Auto scaled object to {0}% of original size"
-msgstr "Automatikus méretezés az eredeti méretről {0}% of méretre"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:208
-msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "Tárgy méretezés"
-
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:277
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:311
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "A kiegészítő telepítve lett.\n"
+msgstr ""
+"A kiegészítő telepítve lett.\n"
 "Aktiválásához indítsd újra az alkalmazást."
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:403
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:378
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
+msgctxt "@error"
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -488,61 +444,91 @@ msgstr ""
 "A kiegészítő törölve lett.\n"
 "Indítsd újra a {0} alkalmazást."
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:155
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "A konfiguráció egy régebbi {0} verzióból lett importálva."
-
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:58
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:63
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "Az OpenGL inicializálás sikertelen."
-
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:73
-msgctxt "Critical OpenGL Extensions Missing"
-msgid ""
-"Critical OpenGL extensions are missing. This program requires support for "
-"Framebuffer Objects. Please check your video card drivers."
-msgstr "Kritikus OpenGL kiterjesztés hiányzik. Ez szükséges a Framebuffer tárgyak "
-"megjelenítéséhez. Kérlek ellenőrizd a videókártyád driverét."
-
-#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Alaphelyzet"
-
-#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:44
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the "
-"following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your "
-"current printers and profiles."
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
 msgstr ""
-"A konfigurációd hibákat tartalmazhat. Valami sérültnek tűnik a "
-"következő profilban:\n"
-"- {profiles}\n"
-" Szeretnéd betölteni a gyári alapértékekekt? Ez visszaállít minden értéket"
-"alpértékre a jelenlegi printernél és a profilban."
 
-#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:49
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr "Gyári visszaállítás"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:128
+#, python-brace-format
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2}n {1:0>2}ó {2:0>2}perc"
 
-#: /home/ruben/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
-msgctxt "@label"
-msgid ""
-"Reset will remove all your current printers and profiles! Are you sure you "
-"want to reset?"
-msgstr "Mindent visszaállítunk gyári értékekre a jelenlegi nyomtatónál és profilban."
-"Biztosan végrehajtjuk?"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:130
+#, python-brace-format
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2}ó {1:0>2}perc"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} nap"
+msgstr[1] "{0} nap"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} óra"
+msgstr[1] "{0} óra"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:137
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} perc"
+msgstr[1] "{0} perc"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:189
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:210
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "Plugin betöltése..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:191
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:197
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:205
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr "A konfigurációd sérültnek tűnik."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:207
+msgctxt "@info:title"
+msgid "Configuration errors"
+msgstr "Konfigurációs hibák"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:219
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "Konfiguráció frissítése..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:225
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "Preferenciák betöltése..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:315
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
 #, python-brace-format
@@ -567,28 +553,35 @@ msgstr "Ez elindítja a módosult fájlok újratöltését a lemezről."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
 #, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "Nem lehet megnyitni a <filename>{0}</filename> típusú fájlokat"
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "A konfiguráció egy régebbi {0} verzióból lett importálva."
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "Érvénytelen fájl"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:59
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:64
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "Az OpenGL inicializálás sikertelen."
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>"
-msgstr "Sikertelen a <filename>{0}</filename> fájl betöltése."
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:74
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Kritikus OpenGL kiterjesztés hiányzik. Ez szükséges a Framebuffer tárgyak megjelenítéséhez. Kérlek ellenőrizd a videókártyád driverét."
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "Betöltés"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "Fektetés"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "Válasz egy felületet, amit az alpsíkra igazítunk."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "Durva forgatás"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
 msgctxt "@option:check"
@@ -605,20 +598,25 @@ msgctxt "@option:check"
 msgid "Lock Model"
 msgstr "Zárolás"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "Fektetés"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "Etávolítás jóváhagyása"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:59
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "Válasz egy felületet, amit az alpsíkra igazítunk."
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Biztosan eltávolítani akarja a (z)%1 fájlt? Ez nem vonható vissza!"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:80
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "Durva forgatás"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Nyomtatók"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Típus"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
@@ -668,44 +666,17 @@ msgstr "OK"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
 msgctxt "@item:tooltip"
-msgid ""
-"This setting has been hidden by the active machine and will not be visible."
+msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "A beállítás rejtett lesz az aktív gépnél és nem lesz látható."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
 msgctxt "@item:tooltip %1 is list of setting names"
-msgid ""
-"This setting has been hidden by the value of %1. Change the value of that "
-"setting to make this setting visible."
-msgid_plural ""
-"This setting has been hidden by the values of %1. Change the values of those "
-"settings to make this setting visible."
-msgstr[0] "Ez a beállítás az értékek %1 -át rejtette el. Állítd át az értéket"
-"ha látni szeretnéd a beállítást."
-msgstr[1] "Ez a beállítás az értékek %1 -át rejtette el. Állítd át az értéket"
-"ha látni szeretnéd a beállítást."
+msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+msgstr[0] "Ez a beállítás az értékek %1 -át rejtette el. Állítd át az értéketha látni szeretnéd a beállítást."
+msgstr[1] "Ez a beállítás az értékek %1 -át rejtette el. Állítd át az értéketha látni szeretnéd a beállítást."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Nyomtatók"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Típus"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "Etávolítás jóváhagyása"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Biztosan eltávolítani akarja a (z)%1 fájlt? Ez nem vonható vissza!"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
 msgstr "Vissza"
@@ -720,47 +691,15 @@ msgctxt "@action:button"
 msgid "Next"
 msgstr "Következő"
 
-#: UraniumExampleExtensionPlugin/plugin.json
+#: ConsoleLogger/plugin.json
 msgctxt "description"
-msgid ""
-"Example extension to instruct people on how to create Uranium extensions."
-msgstr "Ez egy példa a kiterjesztésekre, hogy bemutassuk, hogyan lehet "
-"készíteni Uranium kiterjesztéseket."
-
-#: UraniumExampleExtensionPlugin/plugin.json
-msgctxt "name"
-msgid "Example Extension"
-msgstr "Példa kiterjesztés"
-
-#: Views/SimpleView/plugin.json
-msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "Egyszerű szilárd háló nézet."
-
-#: Views/SimpleView/plugin.json
-msgctxt "name"
-msgid "Simple View"
-msgstr "Egyszerű nézet"
-
-#: FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Naplóadatokat ment ki a beállítási mappában lévő fájlba."
-
-#: FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
-msgstr "Fájl loggolás"
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "STL fájlok olvasásának támogatása"
+msgid "Outputs log information to the console."
+msgstr "Kimeneti napló a konzolra."
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
-msgid "STL Reader"
-msgstr "STL olvasó"
+msgid "Console Logger"
+msgstr "Konzol naplózó"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
@@ -784,88 +723,83 @@ msgstr "Wavefront OBJ író"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "STL fájlok olvasásának támogatása"
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STL olvasó"
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "description"
 msgid "Provides support for writing STL files."
 msgstr "STL fájlok írásának támogatása."
 
-#: FileHandlers/STLReader/plugin.json
+#: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
 msgid "STL Writer"
 msgstr "STL író"
 
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Kimeneti napló a konzolra."
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Konzol naplózó"
-
 #: FileLogger/plugin.json
 msgctxt "description"
-msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr "Példa eszköz, hogyan készítsünk Uranium eszközöket."
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Naplóadatokat ment ki a beállítási mappában lévő fájlba."
 
 #: FileLogger/plugin.json
 msgctxt "name"
-msgid "Example Tool"
-msgstr "Példa eszköz"
+msgid "File Logger"
+msgstr "Fájl loggolás"
 
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
-msgid ""
-"Example output device to instruct people on how to create Uranium output "
-"devices."
-msgstr "Kimeneti eszköz példa arra, hogyan készítsünk Uránium kimeneti eszközt."
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "Beépített beállítás tárolók, az alkalmazások telepítéséhez."
 
 #: LocalContainerProvider/plugin.json
 msgctxt "name"
-msgid "Example Output Device"
-msgstr "Kimeneti eszköz példa"
+msgid "Local Container Provider"
+msgstr "Helyi tároló biztosítása"
 
 #: LocalFileOutputDevice/plugin.json
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Szoftver frissítés ellenőrzése."
-
-#: LocalFileOutputDevice/plugin.json
-msgctxt "name"
-msgid "Update Checker"
-msgstr "Frissítések"
-
-#: Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid ""
-"Example file reader to instruct people on how to create Uranium file readers."
-msgstr "Fájl olvasó példa arra, hogyan készítsünk Uránium fájl olvasókat."
-
-#: Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Example File Reader"
-msgstr "Fájl olvasó példa"
-
-#: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
 msgstr "Mentés engedélyezése helyi fájlba."
 
-#: Tools/MirrorTool/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "name"
 msgid "Local File Output Device"
 msgstr "Helyi fájl kimeneti eszköz"
 
+#: Tools/CameraTool/plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Kamera kezelő eszköz biztosítása"
+
+#: Tools/CameraTool/plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Kamera eszköz"
+
+#: Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr "Tükröző eszköz biztosítása"
+
+#: Tools/MirrorTool/plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Tükröző eszköz"
+
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
-msgid ""
-"Provides built-in setting containers that come with the installation of the "
-"application."
-msgstr "Beépített beállítás tárolók, az alkalmazások telepítéséhez."
+msgid "Provides the Rotate tool."
+msgstr "Forgatás eszköz biztosítása"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
-msgid "Local Container Provider"
-msgstr "Helyi tároló biztosítása"
+msgid "Rotate Tool"
+msgstr "Forgatás eszköz"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
@@ -897,32 +831,91 @@ msgctxt "name"
 msgid "Move Tool"
 msgstr "Mozgatás eszköz"
 
-#: Tools/CameraTool/plugin.json
+#: UpdateChecker/plugin.json
 msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Kamera kezelő eszköz biztosítása"
-
-#: Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Kamera eszköz"
-
-#: Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Forgatás eszköz biztosítása"
+msgid "Checks for updates of the software."
+msgstr "Szoftver frissítés ellenőrzése."
 
 #: UpdateChecker/plugin.json
 msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Forgatás eszköz"
+msgid "Update Checker"
+msgstr "Frissítések"
 
 #: Views/SimpleView/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Tükröző eszköz biztosítása"
+msgid "Provides a simple solid mesh view."
+msgstr "Egyszerű szilárd háló nézet."
 
 #: Views/SimpleView/plugin.json
 msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Tükröző eszköz"
+msgid "Simple View"
+msgstr "Egyszerű nézet"
+
+#~ msgctxt "@info"
+#~ msgid "Could not access update information."
+#~ msgstr "Nem sikerült elérni frissítéseket."
+
+#~ msgctxt "@info"
+#~ msgid "An error occurred while checking for updates."
+#~ msgstr "Hiba történt a frissítések keresése közben."
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "Mentés fájlba"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "Mentés fájlba"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "Mentés fájlba"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults?"
+#~ msgstr ""
+#~ "A konfigurációd hibásnak tűnik. Valószínűleg valami sérülés lehet a következő profilban:- {profiles}\n"
+#~ "Visszatöltsük az alapértelmezett beállításokat?"
+
+#~ msgctxt "@info:button"
+#~ msgid "Reset your configuration to factory defaults."
+#~ msgstr "Állítsa vissza a konfigurációt a gyári alapértékekre."
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Sikertelen a <filename>{0}</filename> fájl betöltése."
+
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "Ez egy példa a kiterjesztésekre, hogy bemutassuk, hogyan lehet készíteni Uranium kiterjesztéseket."
+
+#~ msgctxt "name"
+#~ msgid "Example Extension"
+#~ msgstr "Példa kiterjesztés"
+
+#~ msgctxt "description"
+#~ msgid "Example tool to instruct people on how to create Uranium tools."
+#~ msgstr "Példa eszköz, hogyan készítsünk Uranium eszközöket."
+
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "Példa eszköz"
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "Kimeneti eszköz példa arra, hogyan készítsünk Uránium kimeneti eszközt."
+
+#~ msgctxt "name"
+#~ msgid "Example Output Device"
+#~ msgstr "Kimeneti eszköz példa"
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "Fájl olvasó példa arra, hogyan készítsünk Uránium fájl olvasókat."
+
+#~ msgctxt "name"
+#~ msgid "Example File Reader"
+#~ msgstr "Fájl olvasó példa"
