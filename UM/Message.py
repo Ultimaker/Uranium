@@ -31,7 +31,7 @@ class Message(QObject):
 
     def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
                  title: Optional[str] = None, parent=None, use_inactivity_timer: bool = True, image_source: str = "",
-                 image_caption: str = "", option_text: str = "", option_state: bool = True, message_type: int = MessageType.NEUTRAL) -> None:
+                 image_caption: str = "", option_text: str = "", option_state: bool = True, message_type: MessageType = MessageType.NEUTRAL) -> None:
 
         """Class for displaying messages to the user.
         Even though the lifetime can be set, in certain cases it can still have a lifetime if nothing happens with the
