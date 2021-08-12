@@ -72,7 +72,7 @@ ListView
         // Height is the size of the children + a margin on top & bottom.
         height: childrenRect.height + 2 * UM.Theme.getSize("default_margin").height
 
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenter: parent !== null ? parent.horizontalCenter : undefined
 
         color: UM.Theme.getColor("message_background")
         border.width: UM.Theme.getSize("default_lining").width
