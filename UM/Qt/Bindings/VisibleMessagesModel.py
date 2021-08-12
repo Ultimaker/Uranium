@@ -60,7 +60,7 @@ class VisibleMessagesModel(ListModel):
             "image_caption": message.getImageCaption(),
             "option_text": message.getOptionText(),
             "option_state": message.getOptionState(),
-            "message_type": message.getMessageType()
+            "message_type": int(message.getMessageType())
         })
         message.titleChanged.connect(self._onMessageTitleChanged)
         message.textChanged.connect(self._onMessageTextChanged)
