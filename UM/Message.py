@@ -1,5 +1,7 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
+from enum import IntEnum
 from typing import Optional, Union, Dict, List
 
 from PyQt5.QtCore import QTimer, pyqtSignal, QObject
@@ -21,7 +23,7 @@ class Message(QObject):
         ALIGN_LEFT = 2
         ALIGN_RIGHT = 3
 
-    class MessageType:
+    class MessageType(IntEnum):
         POSITIVE = 0
         NEUTRAL = 1
         WARNING = 2
@@ -29,7 +31,7 @@ class Message(QObject):
 
     def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
                  title: Optional[str] = None, parent=None, use_inactivity_timer: bool = True, image_source: str = "",
-                 image_caption: str = "", option_text: str = "", option_state: bool = True, message_type: int = MessageType.NEUTRAL) -> None:
+                 image_caption: str = "", option_text: str = "", option_state: bool = True, message_type: MessageType = MessageType.NEUTRAL) -> None:
 
         """Class for displaying messages to the user.
         Even though the lifetime can be set, in certain cases it can still have a lifetime if nothing happens with the
@@ -206,7 +208,7 @@ class Message(QObject):
     def getImageCaption(self) -> str:
         return self._image_caption
 
-    def getMessageType(self) -> int:
+    def getMessageType(self) -> MessageType:
         """
         Gets the type of the message.
         The message gets a different icon according to its type.
