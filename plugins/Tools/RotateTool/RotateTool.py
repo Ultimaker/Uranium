@@ -198,7 +198,7 @@ class RotateTool(Tool):
                 if id in self._handle.getExtraWidgetsColorMap() and self._active_widget == self._handle.ExtraWidgets(id):
                     axis = math.floor((self._active_widget.value - self._active_widget.XPositive90.value) / 2)
 
-                    angle = math.radians(-90 if self._active_widget.value - 2 * axis else 90)
+                    angle = math.radians(90 if (self._active_widget.value - ToolHandle.AllAxis) % 2 else -90)
                     axis +=  self._handle.XAxis
 
                     rotation = Quaternion()
