@@ -1,11 +1,8 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import collections
 import gc
-import os
-import pickle #For serializing/deserializing Python classes to binary files
-import re #For finding containers with asterisks in the constraints and for detecting backup files.
+import re  # For finding containers with asterisks in the constraints and for detecting backup files.
 import time
 from typing import Any, cast, Dict, List, Optional, Set, Type, TYPE_CHECKING
 
@@ -14,7 +11,7 @@ import UM.FlameProfiler
 from UM.LockFile import LockFile
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
-from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
+from UM.PluginRegistry import PluginRegistry  # To register the container type plug-ins and container provider plug-ins.
 from UM.Resources import Resources
 from UM.Settings.EmptyInstanceContainer import EmptyInstanceContainer
 from UM.Settings.ContainerFormatError import ContainerFormatError
