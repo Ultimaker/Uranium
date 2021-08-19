@@ -4,8 +4,9 @@
 import gc
 import re  # For finding containers with asterisks in the constraints and for detecting backup files.
 import time
+import apsw
 from typing import Any, cast, Dict, List, Optional, Set, Type, TYPE_CHECKING
-
+import os
 import UM.Dictionary
 import UM.FlameProfiler
 from UM.LockFile import LockFile
@@ -335,10 +336,31 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return container_id in self._containers
 
+    def _createDatabaseFile(self, db_path: str) -> apsw.Connection:
+        connection = apsw.Connection(os.path.join(Resources.getDataStoragePath(), "containers.db"))
+        cursor = connection.cursor()
+        cursor.execute("""
+                CREATE TABLE profiles(
+                    id text,
+                    name text,
+                    last_modified integer
+                );
+                CREATE UNIQUE INDEX idx_profiles_id on profiles (id);
+            """)
+        return connection
+
+    def _getDatabaseConnection(self) -> apsw.Connection:
+        db_path = os.path.join(Resources.getDataStoragePath(), "containers.db")
+        if not os.path.exists(db_path):
+            return self._createDatabaseFile(db_path)
+        return apsw.Connection(db_path)
+
     def loadAllMetadata(self) -> None:
         """Load the metadata of all available definition containers, instance
         containers and container stacks.
         """
+
+        connection = self._getDatabaseConnection()
 
         self._clearQueryCache()
         gc.disable()
