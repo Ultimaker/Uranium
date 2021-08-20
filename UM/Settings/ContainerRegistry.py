@@ -74,7 +74,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._db_connection = None
 
         self._cached_inserts = {}
-
+        self._database_handlers = {}
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
     containerAdded = Signal()
@@ -344,17 +344,21 @@ class ContainerRegistry(ContainerRegistryInterface):
         return container_id in self._containers
 
     def _createDatabaseFile(self, db_path: str) -> apsw.Connection:
-        connection = apsw.Connection(os.path.join(Resources.getDataStoragePath(), "containers.db"))
+        connection = apsw.Connection(db_path)
         cursor = connection.cursor()
         cursor.execute("""
-                CREATE TABLE containers(
-                    id text,
-                    name text,
-                    last_modified integer,
-                    container_type text
-                );
-                CREATE UNIQUE INDEX idx_containers_id on containers (id);
-            """)
+            CREATE TABLE containers(
+                id text,
+                name text,
+                last_modified integer,
+                container_type text
+            );
+            CREATE UNIQUE INDEX idx_containers_id on containers (id);
+        """)
+
+        for handler in self._database_handlers.values():
+            handler.setupTable(cursor)
+
         return connection
 
     def _getDatabaseConnection(self) -> apsw.Connection:
@@ -381,16 +385,14 @@ class ContainerRegistry(ContainerRegistryInterface):
             return row[1]
         return None
 
-    def _prepareMetadataForDatabase(self, metadata: Dict[str, Any]) -> None:
+    def _addToDatabaseInsertBatch(self, metadata: Dict[str, Any]) -> None:
         container_type = metadata["type"]
-        if container_type in self._prepare_for_database_handlers:
-            if container_type not in self._cached_inserts:
-                self._cached_inserts[container_type] = []
-            self._cached_inserts[container_type].append(self._prepare_for_database_handlers[container_type](metadata))
+        if container_type in self._database_handlers:
+            self._database_handlers[container_type].addToInsertBatch(metadata)
 
-    def _getMetadataFromDatabase(self, container_id, container_type):
-        if container_type in self._get_from_database_handlers:
-            return self._get_from_database_handlers[container_type](container_id)
+    def _getMetadataFromDatabase(self, container_id, container_type, cursor):
+        if container_type in self._database_handlers:
+            return self._database_handlers[container_type].getMetadata(container_id, cursor)
         return {}
 
     def loadAllMetadata(self) -> None:
@@ -420,7 +422,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         # TODO: Might need to change this in the future, but this allows for gradual implementation now
                         containers_to_add.append((container_id, metadata["name"], modified_time, metadata["type"]))
 
-                        self._prepareMetadataForDatabase(metadata)
+                        self._addToDatabaseInsertBatch(metadata)
 
                     self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
@@ -432,7 +434,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         # TODO: Update the data in the database using the newer data from the file
                         continue
                     container_type = self._getProfileType(container_id, cursor)
-                    self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type)
+                    self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type, cursor)
                     self.source_provider[container_id] = provider
 
         # Since it could well be that we have to make a *lot* of changes to the database, we want to do that in
@@ -447,11 +449,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         ContainerRegistry.allMetadataLoaded.emit()
 
     def _insertAllCachedProfilesIntoDatabase(self, cursor):
-        for key, values in self._cached_inserts.items():
-            cursor.executemany(self._insert_into_database_queries[key], values)
-
-        # Reset the cached data
-        self._cached_inserts = {}
+        for values in self._database_handlers.values():
+            values.executeAllBatchedInserts(cursor)
 
     @UM.FlameProfiler.profile
     def load(self) -> None:
