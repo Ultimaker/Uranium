@@ -68,9 +68,12 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
 
-        self._add_to_database_handlers = {}
+        self._prepare_for_database_handlers = {}
+        self._insert_into_database_queries = {}
         self._get_from_database_handlers = {}
         self._db_connection = None
+
+        self._cached_inserts = {}
 
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
@@ -378,10 +381,12 @@ class ContainerRegistry(ContainerRegistryInterface):
             return row[1]
         return None
 
-    def _addMetadataToDatabase(self, metadata: Dict[str, Any]) -> None:
+    def _prepareMetadataForDatabase(self, metadata: Dict[str, Any]) -> None:
         container_type = metadata["type"]
-        if container_type in self._add_to_database_handlers:
-            self._add_to_database_handlers[container_type](metadata)
+        if container_type in self._prepare_for_database_handlers:
+            if container_type not in self._cached_inserts:
+                self._cached_inserts[container_type] = []
+            self._cached_inserts[container_type].append(self._prepare_for_database_handlers[container_type](metadata))
 
     def _getMetadataFromDatabase(self, container_id, container_type):
         if container_type in self._get_from_database_handlers:
@@ -398,6 +403,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._clearQueryCache()
         gc.disable()
         resource_start_time = time.time()
+
+        containers_to_add = []
         for provider in self._providers:  # Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()):  # Make copy of all IDs since it might change during iteration.
                 db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
@@ -408,18 +415,16 @@ class ContainerRegistry(ContainerRegistryInterface):
                         Logger.log("w", f"Invalid metadata for container {container_id}: {metadata}")
                         continue
                     modified_time = provider.getLastModifiedTime(container_id)
-                    if metadata["type"] in self._add_to_database_handlers:
+                    if metadata["type"] in self._prepare_for_database_handlers:
                         # Only add it to the database if we have an actual handler.
                         # TODO: Might need to change this in the future, but this allows for gradual implementation now
-                        cursor.execute("INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
-                                               (container_id, metadata["name"], modified_time, metadata["type"]))
-                        self._addMetadataToDatabase(metadata)
+                        containers_to_add.append((container_id, metadata["name"], modified_time, metadata["type"]))
+
+                        self._prepareMetadataForDatabase(metadata)
 
                     self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
 
-                    self.metadata[container_id] = metadata
-                    self.source_provider[container_id] = provider
                 else:
                     # Metadata already exists in database.
                     modified_time = provider.getLastModifiedTime(container_id)
@@ -430,9 +435,23 @@ class ContainerRegistry(ContainerRegistryInterface):
                     self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type)
                     self.source_provider[container_id] = provider
 
+        # Since it could well be that we have to make a *lot* of changes to the database, we want to do that in
+        # a single transaction to speed it up.
+        cursor.execute('begin')
+        cursor.executemany("INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)", containers_to_add)
+        self._insertAllCachedProfilesIntoDatabase(cursor)
+        cursor.execute("commit")
+
         Logger.log("d", "Loading metadata into container registry took %s seconds", time.time() - resource_start_time)
         gc.enable()
         ContainerRegistry.allMetadataLoaded.emit()
+
+    def _insertAllCachedProfilesIntoDatabase(self, cursor):
+        for key, values in self._cached_inserts.items():
+            cursor.executemany(self._insert_into_database_queries[key], values)
+
+        # Reset the cached data
+        self._cached_inserts = {}
 
     @UM.FlameProfiler.profile
     def load(self) -> None:
