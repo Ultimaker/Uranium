@@ -344,13 +344,13 @@ class ContainerRegistry(ContainerRegistryInterface):
         connection = apsw.Connection(os.path.join(Resources.getDataStoragePath(), "containers.db"))
         cursor = connection.cursor()
         cursor.execute("""
-                CREATE TABLE profiles(
+                CREATE TABLE containers(
                     id text,
                     name text,
                     last_modified integer,
                     container_type text
                 );
-                CREATE UNIQUE INDEX idx_profiles_id on profiles (id);
+                CREATE UNIQUE INDEX idx_containers_id on containers (id);
             """)
         return connection
 
@@ -364,14 +364,14 @@ class ContainerRegistry(ContainerRegistryInterface):
         return self._db_connection
 
     def _getProfileType(self, container_id: str, db_cursor):
-        db_cursor.execute("select id, container_type from profiles where id = ?", (container_id, ))
+        db_cursor.execute("select id, container_type from containers where id = ?", (container_id, ))
         row = db_cursor.fetchone()
         if row:
             return row[1]
         return None
 
     def _getProfileModificationTime(self, container_id: str, db_cursor):
-        query = f"select id, last_modified from profiles where id = '{container_id}'"
+        query = f"select id, last_modified from containers where id = '{container_id}'"
         db_cursor.execute(query)
         row = db_cursor.fetchone()
         if row:
@@ -411,9 +411,10 @@ class ContainerRegistry(ContainerRegistryInterface):
                     if metadata["type"] in self._add_to_database_handlers:
                         # Only add it to the database if we have an actual handler.
                         # TODO: Might need to change this in the future, but this allows for gradual implementation now
-                        cursor.execute("INSERT INTO profiles (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
+                        cursor.execute("INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
                                                (container_id, metadata["name"], modified_time, metadata["type"]))
                         self._addMetadataToDatabase(metadata)
+
                     self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
 
