@@ -65,9 +65,11 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.source_provider["empty"] = None
         self._resource_types = {"definition": Resources.DefinitionContainers}  # type: Dict[str, int]
 
-        #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
+        # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
 
+        self._add_to_database_handlers = {}
+        self._get_from_database_handlers = {}
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
     containerAdded = Signal()
@@ -343,7 +345,8 @@ class ContainerRegistry(ContainerRegistryInterface):
                 CREATE TABLE profiles(
                     id text,
                     name text,
-                    last_modified integer
+                    last_modified integer,
+                    container_type text
                 );
                 CREATE UNIQUE INDEX idx_profiles_id on profiles (id);
             """)
@@ -355,28 +358,75 @@ class ContainerRegistry(ContainerRegistryInterface):
             return self._createDatabaseFile(db_path)
         return apsw.Connection(db_path)
 
+    def _getProfileType(self, container_id: str, db_cursor):
+        db_cursor.execute("select id, container_type from profiles where id = ?", (container_id, ))
+        row = db_cursor.fetchone()
+        if row:
+            return row[1]
+        return None
+
+    def _getProfileModificationTime(self, container_id: str, db_cursor):
+        query = f"select id, last_modified from profiles where id = '{container_id}'"
+        db_cursor.execute(query)
+        row = db_cursor.fetchone()
+        if row:
+            return row[1]
+        return None
+
+    def _addMetadataToDatabase(self, metadata: Dict[str, Any]) -> None:
+        container_type = metadata["type"]
+        if container_type in self._add_to_database_handlers:
+            self._add_to_database_handlers[container_type](metadata)
+
+    def _getMetadataFromDatabase(self, container_id, container_type):
+        if container_type in self._get_from_database_handlers:
+            return self._get_from_database_handlers[container_type](container_id)
+        return {}
+
     def loadAllMetadata(self) -> None:
         """Load the metadata of all available definition containers, instance
         containers and container stacks.
         """
 
-        connection = self._getDatabaseConnection()
+        cursor = self._getDatabaseConnection().cursor()
 
         self._clearQueryCache()
         gc.disable()
         resource_start_time = time.time()
         for provider in self._providers:  # Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()):  # Make copy of all IDs since it might change during iteration.
-                if container_id not in self.metadata:
-                    self._application.processEvents()  # Update the user interface because loading takes a while. Specifically the loading screen.
+                db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
+                if db_last_modified_time is None:
+                    # Item is not yet in the database. Add it now!
                     metadata = provider.loadMetadata(container_id)
+
+
+
                     if not self._isMetadataValid(metadata):
-                        Logger.log("w", "Invalid metadata for container {container_id}: {metadata}".format(container_id = container_id, metadata = metadata))
-                        if container_id in self.metadata:
-                            del self.metadata[container_id]
+                        Logger.log("w", f"Invalid metadata for container {container_id}: {metadata}")
                         continue
+                    modified_time = provider.getLastModifiedTime(container_id)
+                    if metadata["type"] in self._add_to_database_handlers:
+                        # Only add it to the database if we have an actual handler.
+                        # TODO: Might need to change this in the future, but this allows for gradual implementation now
+                        cursor.execute("INSERT INTO profiles (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
+                                               (container_id, metadata["name"], modified_time, metadata["type"]))
+                        self._addMetadataToDatabase(metadata)
                     self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
+
+                    self.metadata[container_id] = metadata
+                    self.source_provider[container_id] = provider
+                else:
+                    # Metadata already exists in database.
+                    modified_time = provider.getLastModifiedTime(container_id)
+                    if modified_time > db_last_modified_time:
+                        # TODO: Update the data in the database using the newer data from the file
+                        continue
+                    container_type = self._getProfileType(container_id, cursor)
+                    self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type)
+                    self.source_provider[container_id] = provider
+
         Logger.log("d", "Loading metadata into container registry took %s seconds", time.time() - resource_start_time)
         gc.enable()
         ContainerRegistry.allMetadataLoaded.emit()

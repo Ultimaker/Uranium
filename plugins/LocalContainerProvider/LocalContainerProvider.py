@@ -54,6 +54,9 @@ class LocalContainerProvider(ContainerProvider):
             self._updatePathCache()
         return self._id_to_path.keys()
 
+    def getLastModifiedTime(self, container_id: str) -> Optional[float]:
+        return os.path.getmtime(self._id_to_path[container_id])
+
     def loadContainer(self, container_id: str) -> "ContainerInterface":
         # First get the actual (base) ID of the path we're going to read.
         file_path = self._id_to_path[container_id]  # Raises KeyError if container ID does not exist in the (cache of the) files.
