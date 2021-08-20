@@ -68,12 +68,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
 
-        self._prepare_for_database_handlers = {}
-        self._insert_into_database_queries = {}
-        self._get_from_database_handlers = {}
         self._db_connection = None
 
-        self._cached_inserts = {}
         self._database_handlers = {}
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
@@ -417,11 +413,10 @@ class ContainerRegistry(ContainerRegistryInterface):
                         Logger.log("w", f"Invalid metadata for container {container_id}: {metadata}")
                         continue
                     modified_time = provider.getLastModifiedTime(container_id)
-                    if metadata["type"] in self._prepare_for_database_handlers:
+                    if metadata["type"] in self._database_handlers:
                         # Only add it to the database if we have an actual handler.
                         # TODO: Might need to change this in the future, but this allows for gradual implementation now
                         containers_to_add.append((container_id, metadata["name"], modified_time, metadata["type"]))
-
                         self._addToDatabaseInsertBatch(metadata)
 
                     self.metadata[container_id] = metadata
