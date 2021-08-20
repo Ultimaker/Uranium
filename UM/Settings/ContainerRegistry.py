@@ -435,6 +435,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Since it could well be that we have to make a *lot* of changes to the database, we want to do that in
         # a single transaction to speed it up.
         cursor.execute('begin')
+        Logger.log("d", "Added %s containers to the database", len(containers_to_add))
         cursor.executemany("INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)", containers_to_add)
         self._insertAllCachedProfilesIntoDatabase(cursor)
         cursor.execute("commit")
