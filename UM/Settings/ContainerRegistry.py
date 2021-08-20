@@ -70,6 +70,8 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._add_to_database_handlers = {}
         self._get_from_database_handlers = {}
+        self._db_connection = None
+
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
     containerAdded = Signal()
@@ -353,10 +355,13 @@ class ContainerRegistry(ContainerRegistryInterface):
         return connection
 
     def _getDatabaseConnection(self) -> apsw.Connection:
+        if self._db_connection is not None:
+            return self._db_connection
         db_path = os.path.join(Resources.getDataStoragePath(), "containers.db")
         if not os.path.exists(db_path):
             return self._createDatabaseFile(db_path)
-        return apsw.Connection(db_path)
+        self._db_connection = apsw.Connection(db_path)
+        return self._db_connection
 
     def _getProfileType(self, container_id: str, db_cursor):
         db_cursor.execute("select id, container_type from profiles where id = ?", (container_id, ))
@@ -399,9 +404,6 @@ class ContainerRegistry(ContainerRegistryInterface):
                 if db_last_modified_time is None:
                     # Item is not yet in the database. Add it now!
                     metadata = provider.loadMetadata(container_id)
-
-
-
                     if not self._isMetadataValid(metadata):
                         Logger.log("w", f"Invalid metadata for container {container_id}: {metadata}")
                         continue
