@@ -109,7 +109,8 @@ class VersionUpgradeManager:
             "plugins\\.*",    # Don't upgrade manually installed plug-ins.
             "plugins/.*",
             "./*packages\.json",
-            "./*plugins\.json"
+            "./*plugins\.json",
+            "./containers\.db"
         ]  # type: List[str]
 
     def registerIgnoredFile(self, file_name: str) -> None:
