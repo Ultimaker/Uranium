@@ -24,6 +24,7 @@ from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface, DefinitionContainerInterface
 from UM.Signal import Signal, signalemitter
+from .DatabaseContainerMetadataController import DatabaseMetadataContainerController
 
 if TYPE_CHECKING:
     from UM.PluginObject import PluginObject
@@ -68,9 +69,9 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
 
-        self._db_connection = None
+        self._db_connection: Optional[apsw.Connection] = None
 
-        self._database_handlers = {}
+        self._database_handlers: Dict[str, DatabaseMetadataContainerController] = {}
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
     containerAdded = Signal()
