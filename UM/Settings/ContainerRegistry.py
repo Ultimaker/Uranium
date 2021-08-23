@@ -382,10 +382,10 @@ class ContainerRegistry(ContainerRegistryInterface):
             return row[1]
         return None
 
-    def _addMetadataToDatabase(self, metadata: Dict[str, Any]) -> None:
+    def _addMetadataToDatabase(self, metadata: Dict[str, Any], cursor) -> None:
         container_type = metadata["type"]
         if container_type in self._database_handlers:
-            self._database_handlers[container_type].insert(metadata)
+            self._database_handlers[container_type].insert(metadata, cursor)
 
     def _addToDatabaseInsertBatch(self, metadata: Dict[str, Any]) -> None:
         container_type = metadata["type"]
@@ -408,7 +408,9 @@ class ContainerRegistry(ContainerRegistryInterface):
         gc.disable()
         resource_start_time = time.time()
 
-        containers_to_add = []
+        # Since it could well be that we have to make a *lot* of changes to the database, we want to do that in
+        # a single transaction to speed it up.
+        cursor.execute('begin')
         for provider in self._providers:  # Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()):  # Make copy of all IDs since it might change during iteration.
                 db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
@@ -422,8 +424,10 @@ class ContainerRegistry(ContainerRegistryInterface):
                     if metadata["type"] in self._database_handlers:
                         # Only add it to the database if we have an actual handler.
                         # TODO: Might need to change this in the future, but this allows for gradual implementation now
-                        containers_to_add.append((container_id, metadata["name"], modified_time, metadata["type"]))
-                        self._addToDatabaseInsertBatch(metadata)
+                        cursor.execute(
+                            "INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
+                            (container_id, metadata["name"], modified_time, metadata["type"]))
+                        self._addMetadataToDatabase(metadata, cursor)
 
                     self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
@@ -438,12 +442,6 @@ class ContainerRegistry(ContainerRegistryInterface):
                     self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type, cursor)
                     self.source_provider[container_id] = provider
 
-        # Since it could well be that we have to make a *lot* of changes to the database, we want to do that in
-        # a single transaction to speed it up.
-        cursor.execute('begin')
-        Logger.log("d", "Added %s containers to the database", len(containers_to_add))
-        cursor.executemany("INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)", containers_to_add)
-        self._insertAllCachedProfilesIntoDatabase(cursor)
         cursor.execute("commit")
 
         Logger.log("d", "Loading metadata into container registry took %s seconds", time.time() - resource_start_time)
