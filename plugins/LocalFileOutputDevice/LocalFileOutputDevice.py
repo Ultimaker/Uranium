@@ -3,7 +3,6 @@
 
 import os
 import sys
-from typing import Optional
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
@@ -35,8 +34,6 @@ class LocalFileOutputDevice(ProjectOutputDevice):
 
         self.shortcut = "Ctrl+S"
         self.menu_entry_text = catalog.i18nc("@item:inmenu About saving files to the hard drive", "To Disk")
-        self._last_saved_filename = ""
-        Application.getInstance().workspaceLoaded.connect(self._resetLastSavedFilename)
 
         self._writing = False
 
@@ -71,9 +68,6 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         filters = []
         mime_types = []
         selected_filter = None
-
-        if self._last_saved_filename:
-            file_name = self._last_saved_filename
 
         if "preferred_mimetypes" in kwargs and kwargs["preferred_mimetypes"] is not None:
             preferred_mimetypes = kwargs["preferred_mimetypes"]
@@ -146,10 +140,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
                 raise OutputDeviceError.UserCanceledError()
 
         self.writeStarted.emit(self)
-
-        # Keep the name (without the rest of the path and the extension) that was used for saving the file, so that the
-        # next time the dialog opens it will be set as the default name
-        self._last_saved_filename = os.path.splitext(os.path.basename(file_name))[0]
+        Application.getInstance().workspaceLoaded.emit(file_name)
 
         # Actually writing file
         if file_handler:
@@ -228,12 +219,3 @@ class LocalFileOutputDevice(ProjectOutputDevice):
     def _onMessageActionTriggered(self, message, action):
         if action == "open_folder" and hasattr(message, "_folder"):
             QDesktopServices.openUrl(QUrl.fromLocalFile(message._folder))
-
-    def _resetLastSavedFilename(self, workspace_file_name: str) -> None:
-        """
-        Reset the last saved filename whenever another project (workspace) file is loaded.
-        
-        :param workspace_file_name: The new workspace file that was loaded
-        """
-        if workspace_file_name != self._last_saved_filename:
-            self._last_saved_filename = ""
