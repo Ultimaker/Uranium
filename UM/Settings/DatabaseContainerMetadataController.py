@@ -34,8 +34,8 @@ class DatabaseMetadataContainerController:
         cursor.executemany(self._insert_query, self._insert_batch)
         self._insert_batch.clear()
 
-    def insert(self, data: Tuple, cursor) -> None:
-        cursor.execute(self._insert_query, data)
+    def insert(self, metadata: metadata_type, cursor) -> None:
+        cursor.execute(self._insert_query, self._convertMetadataToInsertBatch(metadata))
 
 
 

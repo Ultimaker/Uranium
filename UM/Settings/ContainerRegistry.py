@@ -382,6 +382,11 @@ class ContainerRegistry(ContainerRegistryInterface):
             return row[1]
         return None
 
+    def _addMetadataToDatabase(self, metadata: Dict[str, Any]) -> None:
+        container_type = metadata["type"]
+        if container_type in self._database_handlers:
+            self._database_handlers[container_type].insert(metadata)
+
     def _addToDatabaseInsertBatch(self, metadata: Dict[str, Any]) -> None:
         container_type = metadata["type"]
         if container_type in self._database_handlers:
