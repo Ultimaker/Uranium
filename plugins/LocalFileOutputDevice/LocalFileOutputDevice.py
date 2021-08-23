@@ -14,7 +14,6 @@ from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Message import Message
 from UM.OutputDevice import OutputDeviceError
-from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice.ProjectOutputDevice import ProjectOutputDevice
 from UM.i18n import i18nCatalog
 
