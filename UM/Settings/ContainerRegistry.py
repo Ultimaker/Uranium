@@ -421,7 +421,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         Logger.log("w", f"Invalid metadata for container {container_id}: {metadata}")
                         continue
                     modified_time = provider.getLastModifiedTime(container_id)
-                    if metadata["type"] in self._database_handlers:
+                    if metadata.get("type") in self._database_handlers:
                         # Only add it to the database if we have an actual handler.
                         # TODO: Might need to change this in the future, but this allows for gradual implementation now
                         cursor.execute(

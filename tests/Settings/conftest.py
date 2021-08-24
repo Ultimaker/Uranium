@@ -120,3 +120,6 @@ class TestContainerProvider(ContainerProvider):
 
     def saveContainer(self, *args, **kwargs):
         return None
+
+    def getLastModifiedTime(self, container_id: str):
+        pass
