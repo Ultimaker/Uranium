@@ -4,7 +4,7 @@
 import gc
 import re  # For finding containers with asterisks in the constraints and for detecting backup files.
 import time
-import apsw
+import sqlite3 as db
 from typing import Any, cast, Dict, List, Optional, Set, Type, TYPE_CHECKING
 import os
 import UM.Dictionary
@@ -69,7 +69,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
 
-        self._db_connection: Optional[apsw.Connection] = None
+        self._db_connection: Optional[db.Connection] = None
 
         self._database_handlers: Dict[str, DatabaseMetadataContainerController] = {}
         self._explicit_read_only_container_ids = set()  # type: Set[str]
@@ -340,10 +340,10 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return container_id in self._containers
 
-    def _createDatabaseFile(self, db_path: str) -> apsw.Connection:
-        connection = apsw.Connection(db_path)
+    def _createDatabaseFile(self, db_path: str) -> db.Connection:
+        connection = db.Connection(db_path)
         cursor = connection.cursor()
-        cursor.execute("""
+        cursor.executescript("""
             CREATE TABLE containers(
                 id text,
                 name text,
@@ -358,13 +358,13 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return connection
 
-    def _getDatabaseConnection(self) -> apsw.Connection:
+    def _getDatabaseConnection(self) -> db.Connection:
         if self._db_connection is not None:
             return self._db_connection
         db_path = os.path.join(Resources.getDataStoragePath(), "containers.db")
         if not os.path.exists(db_path):
             return self._createDatabaseFile(db_path)
-        self._db_connection = apsw.Connection(db_path)
+        self._db_connection = db.Connection(db_path)
         return self._db_connection
 
     def _getProfileType(self, container_id: str, db_cursor):

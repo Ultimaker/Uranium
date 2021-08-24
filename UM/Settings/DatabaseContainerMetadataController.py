@@ -14,7 +14,7 @@ class DatabaseMetadataContainerController:
         self._select_query = select_query
 
     def setupTable(self, cursor) -> None:
-        cursor.execute(self._table_query)
+        cursor.executescript(self._table_query)
 
     def _convertMetadataToInsertBatch(self, metadata: metadata_type) -> Tuple:
         raise NotImplementedError("Subclass of should provide way to convert metadata")
