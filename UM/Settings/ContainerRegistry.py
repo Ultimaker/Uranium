@@ -31,6 +31,9 @@ if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
 
 
+metadata_type = Dict[str, Any]
+
+
 @signalemitter
 class ContainerRegistry(ContainerRegistryInterface):
     """Central class to manage all setting providers.
@@ -56,7 +59,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._providers = []  # type: List[ContainerProvider]
         PluginRegistry.addType("container_provider", self.addProvider)
 
-        self.metadata = {}  # type: Dict[str, Dict[str, Any]]
+        self.metadata = {}  # type: Dict[str, metadata_type]
         self._containers = {}  # type: Dict[str, ContainerInterface]
         self._wrong_container_ids = set() # type: Set[str]  # Set of already known wrong containers that must be skipped
         self.source_provider = {}  # type: Dict[str, Optional[ContainerProvider]]  # Where each container comes from.
@@ -139,7 +142,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return cast(List[InstanceContainer], self.findContainers(container_type = InstanceContainer, **kwargs))
 
-    def findInstanceContainersMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
+    def findInstanceContainersMetadata(self, **kwargs: Any) -> List[metadata_type]:
         """Find the metadata of all instance containers matching certain criteria.
 
         :param kwargs: A dictionary of keyword arguments containing keys and
@@ -161,7 +164,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return cast(List[ContainerStack], self.findContainers(container_type = ContainerStack, **kwargs))
 
-    def findContainerStacksMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
+    def findContainerStacksMetadata(self, **kwargs: Any) -> List[metadata_type]:
         """Find the metadata of all container stacks matching certain criteria.
 
         :param kwargs: A dictionary of keyword arguments containing keys and
@@ -214,7 +217,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 result.append(new_container)
         return result
 
-    def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[Dict[str, Any]]:
+    def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[metadata_type]:
         """Find the metadata of all container objects matching certain criteria.
 
         :param container_type: If provided, return only objects that are
@@ -257,7 +260,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         query.execute(candidates = candidates)
 
-        return cast(List[Dict[str, Any]], query.getResult())  # As the execute of the query is done, result won't be none.
+        return cast(List[metadata_type], query.getResult())  # As the execute of the query is done, result won't be none.
 
     def findDirtyContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
         """Specialized find function to find only the modified container objects
@@ -367,14 +370,14 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._db_connection = db.Connection(db_path)
         return self._db_connection
 
-    def _getProfileType(self, container_id: str, db_cursor):
+    def _getProfileType(self, container_id: str, db_cursor: db.Cursor) -> Optional[str]:
         db_cursor.execute("select id, container_type from containers where id = ?", (container_id, ))
         row = db_cursor.fetchone()
         if row:
             return row[1]
         return None
 
-    def _getProfileModificationTime(self, container_id: str, db_cursor):
+    def _getProfileModificationTime(self, container_id: str, db_cursor: db.Cursor) -> Optional[float]:
         query = f"select id, last_modified from containers where id = '{container_id}'"
         db_cursor.execute(query)
         row = db_cursor.fetchone()
@@ -382,17 +385,17 @@ class ContainerRegistry(ContainerRegistryInterface):
             return row[1]
         return None
 
-    def _addMetadataToDatabase(self, metadata: Dict[str, Any], cursor) -> None:
+    def _addMetadataToDatabase(self, metadata: metadata_type, cursor: db.Cursor) -> None:
         container_type = metadata["type"]
         if container_type in self._database_handlers:
             self._database_handlers[container_type].insert(metadata, cursor)
 
-    def _addToDatabaseInsertBatch(self, metadata: Dict[str, Any]) -> None:
+    def _addToDatabaseInsertBatch(self, metadata: metadata_type) -> None:
         container_type = metadata["type"]
         if container_type in self._database_handlers:
             self._database_handlers[container_type].addToInsertBatch(metadata)
 
-    def _getMetadataFromDatabase(self, container_id, container_type, cursor):
+    def _getMetadataFromDatabase(self, container_id: str, container_type: str, cursor: db.Cursor) -> metadata_type:
         if container_type in self._database_handlers:
             return self._database_handlers[container_type].getMetadata(container_id, cursor)
         return {}
@@ -448,7 +451,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         gc.enable()
         ContainerRegistry.allMetadataLoaded.emit()
 
-    def _insertAllCachedProfilesIntoDatabase(self, cursor):
+    def _insertAllCachedProfilesIntoDatabase(self, cursor: db.Cursor) -> None:
         for values in self._database_handlers.values():
             values.executeAllBatchedInserts(cursor)
 
@@ -662,7 +665,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         return None
 
     @classmethod
-    def getContainerForMimeType(cls, mime_type):
+    def getContainerForMimeType(cls, mime_type: MimeType) -> Optional[str]:
         """Get the container type corresponding to a certain mime type.
 
         :param mime_type: The mime type to get the container type for.
@@ -739,7 +742,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.metadata[container.getId()] = container.getMetaData()  # refresh the metadata
         self.containerMetaDataChanged.emit(*args, **kwargs)
 
-    def _isMetadataValid(self, metadata: Optional[Dict[str, Any]]) -> bool:
+    def _isMetadataValid(self, metadata: Optional[metadata_type]) -> bool:
         """Validate a metadata object.
 
         If the metadata is invalid, the container is not allowed to be in the
