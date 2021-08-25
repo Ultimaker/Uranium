@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QUrl
 
 from UM.Application import Application
 from UM.FlameProfiler import pyqtSlot
@@ -56,7 +56,7 @@ class VisibleMessagesModel(ListModel):
             "actions": self.createActionsModel(message.getActions()),
             "dismissable": message.isDismissable(),
             "title": message.getTitle(),
-            "image_source": message.getImageSource(),
+            "image_source": QUrl.fromLocalFile(message.getImageSource()),
             "image_caption": message.getImageCaption(),
             "option_text": message.getOptionText(),
             "option_state": message.getOptionState(),
