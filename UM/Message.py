@@ -4,7 +4,7 @@
 from enum import IntEnum
 from typing import Optional, Union, Dict, List
 
-from PyQt5.QtCore import QTimer, pyqtSignal, QObject
+from PyQt5.QtCore import QTimer, pyqtSignal, QObject, QUrl
 
 from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
@@ -202,8 +202,8 @@ class Message(QObject):
     def getOptionState(self) -> bool:
         return self._option_state
 
-    def getImageSource(self) -> str:
-        return self._image_source
+    def getImageSource(self) -> "QUrl":
+        return QUrl.fromLocalFile(self._image_source)
 
     def getImageCaption(self) -> str:
         return self._image_caption
