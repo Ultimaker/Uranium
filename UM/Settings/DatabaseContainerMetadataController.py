@@ -4,7 +4,7 @@ metadata_type = Dict[str, Any]
 
 
 class DatabaseMetadataContainerController:
-    def __init__(self, insert_query: str = "", select_query: str = "" ,update_query: str = "", table_query: str = "") -> None:
+    def __init__(self, insert_query: str = "", select_query: str = "", update_query: str = "", table_query: str = "") -> None:
 
         self._insert_batch: List[Tuple] = []
 
@@ -41,7 +41,8 @@ class DatabaseMetadataContainerController:
         cursor.execute(self._insert_query, self._convertMetadataToInsertBatch(metadata))
 
     def update(self, metadata: metadata_type, cursor) -> None:
-        cursor.execute(self._update_query)
+        converted_data = self._convertMetadataToUpdateBatch(metadata)
+        cursor.execute(self._update_query, converted_data + (metadata["id"],))
 
 
 
