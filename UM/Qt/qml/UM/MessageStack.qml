@@ -158,11 +158,13 @@ ListView
                 enabled: model.dismissable
             }
         }
-        Item
+        Column
         {
             id: imageItem
             visible: messageImage.progress == 1.0
             height: visible ? childrenRect.height: 0
+            width: childrenRect.width
+            spacing: UM.Theme.getSize("narrow_margin").height
 
             anchors
             {
@@ -178,12 +180,12 @@ ListView
             Image
             {
                 id: messageImage
+                height: UM.Theme.getSize("message_image").height
+                fillMode: Image.PreserveAspectFit
                 anchors
                 {
                     horizontalCenter: parent.horizontalCenter
                 }
-                height: UM.Theme.getSize("message_image").height
-                fillMode: Image.PreserveAspectFit
                 source: model.image_source
                 sourceSize
                 {
@@ -198,10 +200,7 @@ ListView
                 id: imageCaption
                 anchors
                 {
-                    left: parent.left
-                    right: parent.right
-                    top: messageImage.bottom
-                    topMargin: UM.Theme.getSize("narrow_margin").height
+                    horizontalCenter: messageImage.horizontalCenter
                 }
 
                 text: model.image_caption
@@ -209,7 +208,7 @@ ListView
                 elide: Text.ElideRight
                 color: UM.Theme.getColor("text")
                 font: UM.Theme.getFont("large_bold")
-                height: contentHeight
+                height: text != "" ? contentHeight : 0
                 linkColor: UM.Theme.getColor("text_link")
             }
         }
@@ -227,7 +226,7 @@ ListView
                 rightMargin: UM.Theme.getSize("default_margin").width
 
                 top: imageItem.bottom
-                topMargin: UM.Theme.getSize("narrow_margin").height
+                topMargin: UM.Theme.getSize("default_margin").height
             }
 
             height: text == "" ? 0 : contentHeight
