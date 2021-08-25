@@ -22,6 +22,9 @@ class DatabaseMetadataContainerController:
     def _convertRawDataToMetadata(self, data: Tuple) -> metadata_type:
         raise NotImplementedError("Subclass of should provide way to convert to metadata")
 
+    def _convertMetadataToUpdateBatch(self, metadata: metadata_type) -> Tuple:
+        raise NotImplementedError("Subclass of should provide way to convert metadata")
+
     def addToInsertBatch(self, metadata: metadata_type) -> None:
         self._insert_batch.append(self._convertMetadataToInsertBatch(metadata))
 
@@ -36,6 +39,9 @@ class DatabaseMetadataContainerController:
 
     def insert(self, metadata: metadata_type, cursor) -> None:
         cursor.execute(self._insert_query, self._convertMetadataToInsertBatch(metadata))
+
+    def update(self, metadata: metadata_type, cursor) -> None:
+        cursor.execute(self._update_query)
 
 
 

@@ -390,6 +390,11 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_type in self._database_handlers:
             self._database_handlers[container_type].insert(metadata, cursor)
 
+    def _updateMetadataInDatabase(self, container_id: str, metadata: metadata_type, cursor: db.Cursor) -> None:
+        container_type = metadata["type"]
+        if container_type in self._database_handlers:
+            self._database_handlers[container_type].update(metadata, cursor)
+
     def _addToDatabaseInsertBatch(self, metadata: metadata_type) -> None:
         container_type = metadata["type"]
         if container_type in self._database_handlers:
@@ -441,6 +446,11 @@ class ContainerRegistry(ContainerRegistryInterface):
                     if modified_time > db_last_modified_time:
                         # TODO: Update the data in the database using the newer data from the file
                         continue
+
+                        # Metadata is outdated, so load from file and update the database
+                        #metadata = provider.loadMetadata(container_id)
+                        #cursor.execute("UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?", (metadata["name"], modified_time, metadata["type"], metadata["id"]))
+
                     container_type = self._getProfileType(container_id, cursor)
                     self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type, cursor)
                     self.source_provider[container_id] = provider
