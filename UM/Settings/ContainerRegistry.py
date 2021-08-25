@@ -451,7 +451,8 @@ class ContainerRegistry(ContainerRegistryInterface):
                         #metadata = provider.loadMetadata(container_id)
                         #cursor.execute("UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?", (metadata["name"], modified_time, metadata["type"], metadata["id"]))
 
-                    container_type = self._getProfileType(container_id, cursor)
+                    # Since we know that the container exists, we also know that it will never be None.
+                    container_type = cast(str, self._getProfileType(container_id, cursor))
                     self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type, cursor)
                     self.source_provider[container_id] = provider
 
@@ -675,7 +676,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         return None
 
     @classmethod
-    def getContainerForMimeType(cls, mime_type: MimeType) -> Optional[str]:
+    def getContainerForMimeType(cls, mime_type: MimeType) -> Optional[Type[ContainerInterface]]:
         """Get the container type corresponding to a certain mime type.
 
         :param mime_type: The mime type to get the container type for.

@@ -112,7 +112,7 @@ class ContainerProvider(PluginObject):
         """
         raise NotImplementedError(f"The container provider {self.__class__.__name__} doesn't properly implement getContainerFilePathById.")
 
-    def getLastModifiedTime(self, container_id: str) -> Optional[float]:
+    def getLastModifiedTime(self, container_id: str) -> float:
         raise NotImplementedError(f"The container provider {self.__class__.__name__} doesn't properly implement getLastModifiedTime.")
 
     def getAllIds(self) -> Iterable[str]:

@@ -54,7 +54,7 @@ class LocalContainerProvider(ContainerProvider):
             self._updatePathCache()
         return self._id_to_path.keys()
 
-    def getLastModifiedTime(self, container_id: str) -> Optional[float]:
+    def getLastModifiedTime(self, container_id: str) -> float:
         return os.path.getmtime(self._id_to_path[container_id])
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
