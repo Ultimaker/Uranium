@@ -1,5 +1,3 @@
-from PyQt5.QtCore import QUrl
-
 from UM.Message import Message
 
 
@@ -17,7 +15,7 @@ def test_gettersAndSetters():
     assert message.getText() == "OMG"
     assert message.getTitle() == "YAY"
     assert message.getImageCaption() == "DERP"
-    assert message.getImageSource() == QUrl.fromLocalFile("HERP")
+    assert message.getImageSource() == "HERP"
     assert message.getOptionText() == "FOO"
     assert message.getMaxProgress() == 200
     assert message.getOptionState() == False
