@@ -386,8 +386,10 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def _getProfileModificationTime(self, container_id: str, db_cursor: db.Cursor) -> Optional[float]:
         query = f"select id, last_modified from containers where id = '{container_id}'"
+
         db_cursor.execute(query)
         row = db_cursor.fetchone()
+
         if row:
             return row[1]
         return None
@@ -498,7 +500,6 @@ class ContainerRegistry(ContainerRegistryInterface):
     def _removeContainerFromDatabase(self, container_id: str, cursor: db.Cursor) -> None:
         for database_handler in self._database_handlers.values():
             database_handler.delete(container_id, cursor)
-
 
     @UM.FlameProfiler.profile
     def load(self) -> None:

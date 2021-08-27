@@ -392,6 +392,23 @@ def test_loadAllMetada(container_registry):
     assert container_registry.isLoaded(instances[0].get("id"))
 
 
+def test_databaseHandler(container_registry):
+    profile_handler = MagicMock()
+    container_registry._database_handlers["profile"] = profile_handler
+
+    # The fixture makes sure that the database is cleared before we start.
+    container_registry.loadAllMetadata()
+    # so we expect that the profile handler was asked to insert it into the database
+    profile_handler.insert.assert_called_once()
+
+    # If we try to load the database again, we expect that the insert is not called (as it's already in the DB!)
+    container_registry.loadAllMetadata()
+    profile_handler.insert.assert_called_once()
+
+
+
+
+
 def test_findLazyLoadedContainers(container_registry):
     container_registry.loadAllMetadata()
     container_registry.containerLoadComplete.emit = MagicMock()
