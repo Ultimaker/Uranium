@@ -69,12 +69,19 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.source_provider["empty"] = None
         self._resource_types = {"definition": Resources.DefinitionContainers}  # type: Dict[str, int]
 
-        # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
+        # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata
+        # changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
 
+        # We use a database to store the metadata so that we don't have to extract them from the files every time
+        # the application starts. Reading the data from a lot of files is especially slow on Windows; about 30x as slow.
         self._db_connection: Optional[db.Connection] = None
 
+        # Since each container that we can store in the database has different metadata (and thus needs different logic
+        # to extract it from the database again), we use database controllers to do that. These are set by type; Each
+        # type of container needs to have their own controller.
         self._database_handlers: Dict[str, DatabaseMetadataContainerController] = {}
+
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
     containerAdded = Signal()

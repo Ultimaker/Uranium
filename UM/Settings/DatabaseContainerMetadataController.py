@@ -4,6 +4,11 @@ metadata_type = Dict[str, Any]
 
 
 class DatabaseMetadataContainerController:
+    """
+    This is an interface for storing and retrieving container metadata from a database. Since each type of container
+    has it's own metadata (and thus should probably insert / get / update it differently) it's likely that each type
+    needs it's own controller.
+    """
     def __init__(self, insert_query: str = "", select_query: str = "", update_query: str = "", table_query: str = "") -> None:
 
         self._insert_batch: List[Tuple] = []
