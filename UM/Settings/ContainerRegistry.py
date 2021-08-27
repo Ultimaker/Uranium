@@ -371,7 +371,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def _getDatabaseConnection(self) -> db.Connection:
         if self._db_connection is not None:
             return self._db_connection
-        db_path = os.path.join(Resources.getDataStoragePath(), "containers.db")
+        db_path = os.path.join(Resources.getCacheStoragePath(), "containers.db")
         if not os.path.exists(db_path):
             self._db_connection = self._createDatabaseFile(db_path)
             return self._db_connection
