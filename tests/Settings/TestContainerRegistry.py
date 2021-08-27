@@ -392,21 +392,66 @@ def test_loadAllMetada(container_registry):
     assert container_registry.isLoaded(instances[0].get("id"))
 
 
-def test_databaseHandler(container_registry):
+def test_insertInDatabaseCalledOnce(container_registry):
     profile_handler = MagicMock()
     container_registry._database_handlers["profile"] = profile_handler
 
     # The fixture makes sure that the database is cleared before we start.
     container_registry.loadAllMetadata()
-    # so we expect that the profile handler was asked to insert it into the database
+
+    # So we expect that the profile handler was asked to insert it into the database
     profile_handler.insert.assert_called_once()
+    profile_handler.update.assert_not_called()
+
+    # If we try to load the database again, we expect that the insert is not called again (as it's already in the DB!)
+    container_registry.loadAllMetadata()
+    profile_handler.insert.assert_called_once()
+    profile_handler.update.assert_not_called()
+
+
+def test_deleteUnknownContainerFromDatabase(container_registry):
+    profile_handler = MagicMock()
+    container_registry._database_handlers["profile"] = profile_handler
+
+    # Add a profile ID that doesn't have a "twin" on disk in form of a file. This simulates a profile that was inserted
+    # into the database during previous boot, but the profile was deleted from disk. As such, it should be removed
+    connection = container_registry._getDatabaseConnection()
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO containers values ('to_be_deleted_profile_id', 'deleted profile', '50', 'profile')")
+    cursor.execute("commit")
+
+    # Maybe a bit overkill, but make sure that we can find the container now
+    cursor.execute("SELECT * FROM containers WHERE id = 'to_be_deleted_profile_id'")
+    assert cursor.fetchone()
+
+    # Fill the registry
+    container_registry.loadAllMetadata()
+
+    # And now we should not be able to find it!
+    cursor.execute("SELECT * FROM containers WHERE id = 'to_be_deleted_profile_id'")
+    assert not cursor.fetchone()
+
+
+def test_isDataUpdatedWhenFileOnDiskIsNewer(container_registry):
+    # In this check we make sure that the update function is called if the modified time in the DB is older as the
+    # last time the file was modified on the disk.
+    profile_handler = MagicMock()
+    container_registry._database_handlers["profile"] = profile_handler
+
+    # The fixture makes sure that the database is cleared before we start.
+    container_registry.loadAllMetadata()
+    # So we expect that the profile handler was asked to insert it into the database
+    profile_handler.insert.assert_called_once()
+    profile_handler.update.assert_not_called()
+
+    # Now we have to change the database so that the modified date is super old
+    container_registry._db_connection.execute("UPDATE containers SET last_modified = 0 WHERE id = 'setting_values'")
+    container_registry._db_connection.execute("commit")
 
     # If we try to load the database again, we expect that the insert is not called (as it's already in the DB!)
     container_registry.loadAllMetadata()
     profile_handler.insert.assert_called_once()
-
-
-
+    profile_handler.update.assert_called_once()
 
 
 def test_findLazyLoadedContainers(container_registry):
