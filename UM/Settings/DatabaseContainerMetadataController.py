@@ -9,7 +9,12 @@ class DatabaseMetadataContainerController:
     has it's own metadata (and thus should probably insert / get / update it differently) it's likely that each type
     needs it's own controller.
     """
-    def __init__(self, insert_query: str = "", select_query: str = "", update_query: str = "", table_query: str = "") -> None:
+    def __init__(self,
+                 insert_query: str = "",
+                 select_query: str = "",
+                 update_query: str = "",
+                 delete_query: str = "",
+                 table_query: str = "") -> None:
 
         self._insert_batch: List[Tuple] = []
 
@@ -17,6 +22,7 @@ class DatabaseMetadataContainerController:
         self._update_query = update_query
         self._table_query = table_query
         self._select_query = select_query
+        self._delete_query = delete_query
 
     def setupTable(self, cursor) -> None:
         cursor.executescript(self._table_query)
@@ -48,6 +54,9 @@ class DatabaseMetadataContainerController:
     def update(self, metadata: metadata_type, cursor) -> None:
         converted_data = self._convertMetadataToUpdateBatch(metadata)
         cursor.execute(self._update_query, converted_data + (metadata["id"],))
+
+    def delete(self, container_id: str, cursor) -> None:
+        cursor.execute(self._delete_query, (container_id,))
 
 
 

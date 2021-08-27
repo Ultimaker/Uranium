@@ -426,8 +426,13 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Since it could well be that we have to make a *lot* of changes to the database, we want to do that in
         # a single transaction to speed it up.
         cursor.execute("begin")
+        all_container_ids = set()
         for provider in self._providers:  # Automatically sorted by the priority queue.
-            for container_id in list(provider.getAllIds()):  # Make copy of all IDs since it might change during iteration.
+            # Make copy of all IDs since it might change during iteration.
+            provider_container_ids = set(provider.getAllIds())
+            # Keep a list of all the ID's that we know off
+            all_container_ids.update(provider_container_ids)
+            for container_id in provider_container_ids:
                 db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
                 if db_last_modified_time is None:
                     # Item is not yet in the database. Add it now!
@@ -469,13 +474,31 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         cursor.execute("commit")
 
+        # Find all ID's that we currently have in the database
+        cursor.execute("SELECT id from containers")
+        all_ids_in_database = {container_id[0] for container_id in cursor.fetchall()}
+        ids_to_remove = all_ids_in_database - all_container_ids
+
+        # Purge ID's that don't have a matching file
+        for container_id in ids_to_remove:
+            cursor.execute("DELETE FROM containers WHERE id = ?", (container_id,))
+            self._removeContainerFromDatabase(container_id, cursor)
+
+        if ids_to_remove:  # We only can (and need to) commit again if we removed containers
+            cursor.execute("commit")
+
         Logger.log("d", "Loading metadata into container registry took %s seconds", time.time() - resource_start_time)
         gc.enable()
         ContainerRegistry.allMetadataLoaded.emit()
 
     def _insertAllCachedProfilesIntoDatabase(self, cursor: db.Cursor) -> None:
-        for values in self._database_handlers.values():
-            values.executeAllBatchedInserts(cursor)
+        for database_handler in self._database_handlers.values():
+            database_handler.executeAllBatchedInserts(cursor)
+
+    def _removeContainerFromDatabase(self, container_id: str, cursor: db.Cursor) -> None:
+        for database_handler in self._database_handlers.values():
+            database_handler.delete(container_id, cursor)
+
 
     @UM.FlameProfiler.profile
     def load(self) -> None:
