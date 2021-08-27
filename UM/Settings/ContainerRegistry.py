@@ -425,7 +425,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         # Since it could well be that we have to make a *lot* of changes to the database, we want to do that in
         # a single transaction to speed it up.
-        cursor.execute('begin')
+        cursor.execute("begin")
         for provider in self._providers:  # Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()):  # Make copy of all IDs since it might change during iteration.
                 db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
