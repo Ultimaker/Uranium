@@ -61,7 +61,7 @@ def container_registry(application, test_containers_provider, plugin_registry: P
     db_path = os.path.join(Resources.getDataStoragePath(), "containers.db")
     if os.path.exists(db_path):
         os.remove(db_path)
-    print("BEEPs")
+        
     container_registry._db_connection = None
 
     UM.Settings.ContainerStack.setContainerRegistry(registry)
