@@ -56,7 +56,7 @@ class VisibleMessagesModel(ListModel):
             "actions": self.createActionsModel(message.getActions()),
             "dismissable": message.isDismissable(),
             "title": message.getTitle(),
-            "image_source": QUrl.fromLocalFile(message.getImageSource()),
+            "image_source": self.getImageSourceAsQUrl(message.getImageSource()),
             "image_caption": message.getImageCaption(),
             "option_text": message.getOptionText(),
             "option_state": message.getOptionState(),
@@ -65,6 +65,14 @@ class VisibleMessagesModel(ListModel):
         message.titleChanged.connect(self._onMessageTitleChanged)
         message.textChanged.connect(self._onMessageTextChanged)
         message.progressChanged.connect(self._onMessageProgress)
+
+    @staticmethod
+    def getImageSourceAsQUrl(image_source):
+        if type(image_source) is str:
+            return QUrl.fromLocalFile(image_source)
+        elif type(image_source) is QUrl:
+            return image_source
+        return QUrl.fromLocalFile("")
 
     def createActionsModel(self, actions):
         model = ListModel()
