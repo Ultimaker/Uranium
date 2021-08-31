@@ -67,7 +67,7 @@ class VisibleMessagesModel(ListModel):
         message.progressChanged.connect(self._onMessageProgress)
 
     @staticmethod
-    def getImageSourceAsQUrl(image_source):
+    def getImageSourceAsQUrl(image_source: Union[QUrl, str]) -> QUrl:
         if type(image_source) is str:
             return QUrl.fromLocalFile(image_source)
         elif type(image_source) is QUrl:
