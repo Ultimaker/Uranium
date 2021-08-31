@@ -1,5 +1,6 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from typing import Union
 
 from PyQt5.QtCore import Qt, QUrl
 
@@ -56,7 +57,7 @@ class VisibleMessagesModel(ListModel):
             "actions": self.createActionsModel(message.getActions()),
             "dismissable": message.isDismissable(),
             "title": message.getTitle(),
-            "image_source": QUrl.fromLocalFile(message.getImageSource()),
+            "image_source": self.getImageSourceAsQUrl(message.getImageSource()),
             "image_caption": message.getImageCaption(),
             "option_text": message.getOptionText(),
             "option_state": message.getOptionState(),
@@ -65,6 +66,14 @@ class VisibleMessagesModel(ListModel):
         message.titleChanged.connect(self._onMessageTitleChanged)
         message.textChanged.connect(self._onMessageTextChanged)
         message.progressChanged.connect(self._onMessageProgress)
+
+    @staticmethod
+    def getImageSourceAsQUrl(image_source: Union[QUrl, str]) -> QUrl:
+        if type(image_source) is str:
+            return QUrl.fromLocalFile(image_source)
+        elif type(image_source) is QUrl:
+            return image_source
+        return QUrl.fromLocalFile("")
 
     def createActionsModel(self, actions):
         model = ListModel()
