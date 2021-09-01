@@ -80,7 +80,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Since each container that we can store in the database has different metadata (and thus needs different logic
         # to extract it from the database again), we use database controllers to do that. These are set by type; Each
         # type of container needs to have their own controller.
-        self._database_handlers: Dict[str, DatabaseMetadataContainerController] = {}
+        self._database_handlers: Dict[str, Optional[DatabaseMetadataContainerController]] = {}
 
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
@@ -395,24 +395,19 @@ class ContainerRegistry(ContainerRegistryInterface):
             return row[1]
         return None
 
-    def _addMetadataToDatabase(self, metadata: metadata_type, cursor: db.Cursor) -> None:
+    def _addMetadataToDatabase(self, metadata: metadata_type) -> None:
         container_type = metadata["type"]
         if container_type in self._database_handlers:
-            self._database_handlers[container_type].insert(metadata, cursor)
+            self._database_handlers[container_type].insert(metadata)
 
-    def _updateMetadataInDatabase(self, metadata: metadata_type, cursor: db.Cursor) -> None:
+    def _updateMetadataInDatabase(self, metadata: metadata_type) -> None:
         container_type = metadata["type"]
         if container_type in self._database_handlers:
-            self._database_handlers[container_type].update(metadata, cursor)
+            self._database_handlers[container_type].update(metadata)
 
-    def _addToDatabaseInsertBatch(self, metadata: metadata_type) -> None:
-        container_type = metadata["type"]
+    def _getMetadataFromDatabase(self, container_id: str, container_type: str) -> metadata_type:
         if container_type in self._database_handlers:
-            self._database_handlers[container_type].addToInsertBatch(metadata)
-
-    def _getMetadataFromDatabase(self, container_id: str, container_type: str, cursor: db.Cursor) -> metadata_type:
-        if container_type in self._database_handlers:
-            return self._database_handlers[container_type].getMetadata(container_id, cursor)
+            return self._database_handlers[container_type].getMetadata(container_id)
         return {}
 
     def loadAllMetadata(self) -> None:
@@ -421,6 +416,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         """
 
         cursor = self._getDatabaseConnection().cursor()
+        for handlers in self._database_handlers.values():
+            handlers.cursor = cursor
 
         self._clearQueryCache()
         gc.disable()
@@ -450,7 +447,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         cursor.execute(
                             "INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
                             (container_id, metadata["name"], modified_time, metadata["type"]))
-                        self._addMetadataToDatabase(metadata, cursor)
+                        self._addMetadataToDatabase(metadata)
 
                     self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
@@ -463,7 +460,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         # Metadata is outdated, so load from file and update the database
                         metadata = provider.loadMetadata(container_id)
                         cursor.execute("UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?", (metadata["name"], modified_time, metadata["type"], metadata["id"]))
-                        self._updateMetadataInDatabase(metadata, cursor)
+                        self._updateMetadataInDatabase(metadata)
                         self.metadata[container_id] = metadata
                         self.source_provider[container_id] = provider
                         continue
@@ -472,7 +469,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                     container_type = cast(str, self._getProfileType(container_id, cursor))
 
                     # No need to do any file reading, we can just get it from the database.
-                    self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type, cursor)
+                    self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type)
                     self.source_provider[container_id] = provider
 
         cursor.execute("commit")
@@ -494,13 +491,9 @@ class ContainerRegistry(ContainerRegistryInterface):
         gc.enable()
         ContainerRegistry.allMetadataLoaded.emit()
 
-    def _insertAllCachedProfilesIntoDatabase(self, cursor: db.Cursor) -> None:
+    def _removeContainerFromDatabase(self, container_id: str) -> None:
         for database_handler in self._database_handlers.values():
-            database_handler.executeAllBatchedInserts(cursor)
-
-    def _removeContainerFromDatabase(self, container_id: str, cursor: db.Cursor) -> None:
-        for database_handler in self._database_handlers.values():
-            database_handler.delete(container_id, cursor)
+            database_handler.delete(container_id)
 
     @UM.FlameProfiler.profile
     def load(self) -> None:

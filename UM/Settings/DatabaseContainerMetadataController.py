@@ -1,6 +1,10 @@
-from typing import Tuple, Dict, Any, List
+from typing import Tuple, List, Generator, Optional, Any
+from sqlite3 import Cursor
 
-metadata_type = Dict[str, Any]
+from UM.Logger import Logger
+from UM.Settings.InstanceContainer import InstanceContainer
+
+from .SQLQueryFactory import metadata_type, SQLQueryFactory
 
 
 class DatabaseMetadataContainerController:
@@ -9,56 +13,50 @@ class DatabaseMetadataContainerController:
     has it's own metadata (and thus should probably insert / get / update it differently) it's likely that each type
     needs it's own controller.
     """
-    def __init__(self,
-                 insert_query: str = "",
-                 select_query: str = "",
-                 update_query: str = "",
-                 delete_query: str = "",
-                 table_query: str = "") -> None:
 
+    def __init__(self, queries: SQLQueryFactory):
+        self.queries = queries
+        self.cursor: Optional[Cursor] = None
+        self.container_type: Optional[InstanceContainer] = None
         self._insert_batch: List[Tuple] = []
 
-        self._insert_query = insert_query
-        self._update_query = update_query
-        self._table_query = table_query
-        self._select_query = select_query
-        self._delete_query = delete_query
+    def setupTable(self, cursor: Cursor) -> None:
+        self.cursor = cursor
+        self.cursor.executescript(self.queries.create)
 
-    def setupTable(self, cursor) -> None:
-        cursor.executescript(self._table_query)
+    def insert(self, metadata: metadata_type) -> None:
+        values = list(self.groomMetadata(metadata).values())
+        self.cursor.execute(self.queries.insert, values)
 
-    def _convertMetadataToInsertBatch(self, metadata: metadata_type) -> Tuple:
-        raise NotImplementedError("Subclass of should provide way to convert metadata")
+    def update(self, metadata: metadata_type) -> None:
+        self.cursor.execute(self.queries.update, metadata.values())
 
-    def _convertRawDataToMetadata(self, data: Tuple) -> metadata_type:
-        raise NotImplementedError("Subclass of should provide way to convert to metadata")
+    def delete(self, container_id: str) -> None:
+        self.cursor.execute(self.queries.delete, (container_id,))
 
-    def _convertMetadataToUpdateBatch(self, metadata: metadata_type) -> Tuple:
-        raise NotImplementedError("Subclass of should provide way to convert metadata")
+    def keys(self) -> Generator:
+        for key in self.queries.fields.keys():
+            yield key
+        yield "container_type"
+        yield "type"
 
-    def addToInsertBatch(self, metadata: metadata_type) -> None:
-        self._insert_batch.append(self._convertMetadataToInsertBatch(metadata))
+    def values(self, container_id: str) -> Generator:
+        result = self.cursor.execute(self.queries.select, (container_id,)).fetchone()
+        if result is None:
+            Logger.warning(f"Could not retrieve metadata for: {container_id} from database")
+            return []  # Todo: check if this needs to be None, empty list, raise an exception or fallback to old container
+        for value in result:
+            yield value
+        yield self.container_type
+        yield self.queries.table
 
-    def getMetadata(self, container_id: str, cursor) -> metadata_type:
-        result = cursor.execute(self._select_query, (container_id,))
-        data = result.fetchone()
-        return self._convertRawDataToMetadata(data)
+    def items(self, container_id: str) -> Generator:
+        for key, value in zip(self.keys(), self.values(container_id)):
+            yield key, value
 
-    def executeAllBatchedInserts(self, cursor) -> None:
-        cursor.executemany(self._insert_query, self._insert_batch)
-        self._insert_batch.clear()
+    def getMetadata(self, container_id: str) -> metadata_type:
+        metadata = {k: v for k, v in self.items(container_id)}
+        return metadata
 
-    def insert(self, metadata: metadata_type, cursor) -> None:
-        cursor.execute(self._insert_query, self._convertMetadataToInsertBatch(metadata))
-
-    def update(self, metadata: metadata_type, cursor) -> None:
-        converted_data = self._convertMetadataToUpdateBatch(metadata)
-        cursor.execute(self._update_query, converted_data + (metadata["id"],))
-
-    def delete(self, container_id: str, cursor) -> None:
-        cursor.execute(self._delete_query, (container_id,))
-
-
-
-
-
+    def groomMetadata(self, metadata: metadata_type) -> metadata_type:
+        return {k: metadata.get(k, "") for k in self.queries.fields.keys()}
