@@ -36,6 +36,7 @@ class OutputDevice():
         self._description = "Do something with an unknown device"
         self._icon_name = "generic_device"
         self._priority = 0
+        self._last_filename = None  # Optional[str]
 
     metaDataChanged = Signal()
 
@@ -159,6 +160,12 @@ class OutputDevice():
         """
 
         raise NotImplementedError("requestWrite needs to be implemented")
+
+    def getLastOutputName(self) -> Optional[str]:
+        return self._last_out_name
+
+    def setLastOutputName(self, name: Optional[str] = None) -> None:
+        self._last_out_name = name
 
     writeStarted = Signal()
     writeProgress = Signal()

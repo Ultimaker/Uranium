@@ -138,8 +138,8 @@ class LocalFileOutputDevice(ProjectOutputDevice):
             if result == QMessageBox.No:
                 raise OutputDeviceError.UserCanceledError()
 
+        self.setLastOutputName(file_name)
         self.writeStarted.emit(self)
-        Application.getInstance().workspaceLoaded.emit(file_name)
 
         # Actually writing file
         if file_handler:
