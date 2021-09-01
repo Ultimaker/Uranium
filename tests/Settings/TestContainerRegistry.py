@@ -10,6 +10,7 @@ from UM.Resources import Resources
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
+from UM.Settings.SQLQueryFactory import SQLQueryFactory
 
 from .MockContainer import MockContainer
 
@@ -390,6 +391,61 @@ def test_loadAllMetada(container_registry):
     # As we asked for it, the lazy loading should kick in and actually load it.
     container_registry.findInstanceContainers(id = instances[0].get("id"))
     assert container_registry.isLoaded(instances[0].get("id"))
+
+
+def test_sqlCreateTableQuery():
+    sql_factory = SQLQueryFactory(table = "test_table",
+                                  fields = {
+                                      "id": "text",
+                                      "field_1": "text",
+                                      "field_2": "text",
+                                      "field_3": "text"
+                                  })
+    assert sql_factory.create == "CREATE TABLE test_table (id text, field_1 text, field_2 text, field_3 text); CREATE UNIQUE INDEX idx_test_table_id on test_table (id);"
+
+
+def test_sqlInsertQuery():
+    sql_factory = SQLQueryFactory(table = "test_table",
+                                  fields = {
+                                      "id": "text",
+                                      "field_1": "text",
+                                      "field_2": "text",
+                                      "field_3": "text"
+                                  })
+    assert sql_factory.insert == "INSERT INTO test_table (id, field_1, field_2, field_3) VALUES (?, ?, ?, ?)"
+
+
+def test_sqlUpdateQuery():
+    sql_factory = SQLQueryFactory(table = "test_table",
+                                  fields = {
+                                      "id": "text",
+                                      "field_1": "text",
+                                      "field_2": "text",
+                                      "field_3": "text"
+                                  })
+    assert sql_factory.update == "UPDATE test_table SET (id = ?, field_1 = ?, field_2 = ?, field_3 = ?) WHERE id = ?"
+
+
+def test_sqlSelectQuery():
+    sql_factory = SQLQueryFactory(table = "test_table",
+                                  fields = {
+                                      "id": "text",
+                                      "field_1": "text",
+                                      "field_2": "text",
+                                      "field_3": "text"
+                                  })
+    assert sql_factory.select == "SELECT * FROM test_table WHERE id = ?"
+
+
+def test_sqlDeleteQuery():
+    sql_factory = SQLQueryFactory(table = "test_table",
+                                  fields = {
+                                      "id": "text",
+                                      "field_1": "text",
+                                      "field_2": "text",
+                                      "field_3": "text"
+                                  })
+    assert sql_factory.delete == "DELETE FROM test_table WHERE id = ?"
 
 
 def test_insertInDatabaseCalledOnce(container_registry):

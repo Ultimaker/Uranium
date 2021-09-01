@@ -80,7 +80,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Since each container that we can store in the database has different metadata (and thus needs different logic
         # to extract it from the database again), we use database controllers to do that. These are set by type; Each
         # type of container needs to have their own controller.
-        self._database_handlers: Dict[str, Optional[DatabaseMetadataContainerController]] = {}
+        self._database_handlers: Dict[str, DatabaseMetadataContainerController] = {}
 
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
