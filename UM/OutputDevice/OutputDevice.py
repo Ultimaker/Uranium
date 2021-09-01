@@ -161,12 +161,6 @@ class OutputDevice():
 
         raise NotImplementedError("requestWrite needs to be implemented")
 
-    def getLastOutputName(self) -> Optional[str]:
-        return self._last_out_name
-
-    def setLastOutputName(self, name: Optional[str] = None) -> None:
-        self._last_out_name = name
-
     writeStarted = Signal()
     writeProgress = Signal()
     writeFinished = Signal()

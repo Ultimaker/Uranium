@@ -48,6 +48,11 @@ class ProjectOutputDevice(QObject, OutputDevice):
         Shortcut key combination
         """
 
+        self._last_out_name = None  # type: Optional[str]
+        """
+        Last output project name, gives the possibility to do something with the updated project-name on saving, if any.
+        """
+
     @property
     def enabled(self) -> bool:
         return self._enabled
@@ -71,3 +76,9 @@ class ProjectOutputDevice(QObject, OutputDevice):
                     Application.getInstance().getOutputDeviceManager().addOutputDevice(self)
                 else:
                     Application.getInstance().getOutputDeviceManager().removeOutputDevice(self.getId())
+
+    def getLastOutputName(self) -> Optional[str]:
+        return self._last_out_name
+
+    def setLastOutputName(self, name: Optional[str] = None) -> None:
+        self._last_out_name = name
