@@ -21,26 +21,44 @@ class DatabaseMetadataContainerController:
         self._insert_batch: List[Tuple] = []
 
     def setupTable(self, cursor: Cursor) -> None:
+        """Creates the table in the DB.
+
+        param cursor: the DB cursor
+        """
         self.cursor = cursor
         self.cursor.executescript(self.queries.create)
 
     def insert(self, metadata: metadata_type) -> None:
+        """Insert a container in the DB.
+
+        param container_id: The container_id to insert
+        """
         values = list(self.groomMetadata(metadata).values())
         self.cursor.execute(self.queries.insert, values)
 
     def update(self, metadata: metadata_type) -> None:
+        """Updates a container in the DB.
+
+        param container_id: The container_id to update
+        """
         self.cursor.execute(self.queries.update, metadata.values())
 
     def delete(self, container_id: str) -> None:
+        """Removes a container from the DB."""
         self.cursor.execute(self.queries.delete, (container_id,))
 
     def keys(self) -> Generator:
+        """Yields all the metadata keys. These consist of the DB fields and `container_type` and `type`"""
         for key in self.queries.fields.keys():
             yield key
         yield "container_type"
         yield "type"
 
     def values(self, container_id: str) -> Generator:
+        """Yields all value obtained from the DB row and the 'container_type' and `type`
+
+        param container_id: The container_id to query
+        """
         result = self.cursor.execute(self.queries.select, (container_id,)).fetchone()
         if result is None:
             Logger.warning(f"Could not retrieve metadata for: {container_id} from database")
@@ -51,12 +69,27 @@ class DatabaseMetadataContainerController:
         yield self.queries.table
 
     def items(self, container_id: str) -> Generator:
+        """Yields all values and keys obtained from the DB row including the `container_type` and `type`
+        param container_id: The container_id to query
+        """
         for key, value in zip(self.keys(), self.values(container_id)):
             yield key, value
 
     def getMetadata(self, container_id: str) -> metadata_type:
+        """Return the metadate needed to create a container
+
+        param container_id: The container_id to query
+        :return The container metadata
+        """
         metadata = {k: v for k, v in self.items(container_id)}
         return metadata
 
     def groomMetadata(self, metadata: metadata_type) -> metadata_type:
+        """
+        Ensures that the metadata is in the order of the field keys and has the right size.
+        if the metadata doesn't contains a key which is stored in the DB it will add it as
+        an empty string. Key, value pairs that are not stored in the DB are dropped.
+
+        :param metadata: The container metadata
+        """
         return {k: metadata.get(k, "") for k in self.queries.fields.keys()}

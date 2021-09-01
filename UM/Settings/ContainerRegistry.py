@@ -443,7 +443,6 @@ class ContainerRegistry(ContainerRegistryInterface):
                     modified_time = provider.getLastModifiedTime(container_id)
                     if metadata.get("type") in self._database_handlers:
                         # Only add it to the database if we have an actual handler.
-                        # TODO: Might need to change this in the future, but this allows for gradual implementation now
                         cursor.execute(
                             "INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
                             (container_id, metadata["name"], modified_time, metadata["type"]))
@@ -456,7 +455,6 @@ class ContainerRegistry(ContainerRegistryInterface):
                     # Metadata already exists in database.
                     modified_time = provider.getLastModifiedTime(container_id)
                     if modified_time > db_last_modified_time:
-                        # TODO: Update the data in the database using the newer data from the file
                         # Metadata is outdated, so load from file and update the database
                         metadata = provider.loadMetadata(container_id)
                         cursor.execute("UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?", (metadata["name"], modified_time, metadata["type"], metadata["id"]))
