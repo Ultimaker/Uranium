@@ -480,7 +480,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Purge ID's that don't have a matching file
         for container_id in ids_to_remove:
             cursor.execute("DELETE FROM containers WHERE id = ?", (container_id,))
-            self._removeContainerFromDatabase(container_id, cursor)
+            self._removeContainerFromDatabase(container_id)
 
         if ids_to_remove:  # We only can (and need to) commit again if we removed containers
             cursor.execute("commit")
