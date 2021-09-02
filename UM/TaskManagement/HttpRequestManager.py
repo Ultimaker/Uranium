@@ -8,7 +8,7 @@ from threading import RLock
 from typing import Callable, cast, Dict, Set, Union, Optional, Any
 
 from PyQt5.QtCore import QObject, QUrl, Qt, pyqtSignal, pyqtProperty
-from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
+from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply, QSslConfiguration
 
 from UM.Logger import Logger
 from UM.TaskManagement.HttpRequestData import HttpRequestData
@@ -349,6 +349,7 @@ class HttpRequestManager(TaskManager):
 
         # Connect callback signals
         reply.error.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.QueuedConnection)
+        reply.sslErrors.connect(lambda err, rd = request_data: self._onRequestSLLError(rd, err), type = Qt.QueuedConnection)
         reply.finished.connect(lambda rd = request_data: self._onRequestFinished(rd), type = Qt.QueuedConnection)
 
         # Only connect download/upload progress callbacks when necessary to reduce CPU usage.
@@ -360,6 +361,10 @@ class HttpRequestManager(TaskManager):
         with self._request_lock:
             self._requests_in_progress.add(request_data)
             request_data.setStartTime(now)
+
+    def _onRequestSLLError(self, request_data: "HttpRequestData", error_list):
+        combined_error_strings = ", ".join([error.errorString() for error in error_list])
+        Logger.log("w", f"{request_data} got one or more SLL errors: [{combined_error_strings}]")
 
     def _onRequestError(self, request_data: "HttpRequestData", error: "QNetworkReply.NetworkError") -> None:
         error_string = None
@@ -373,7 +378,7 @@ class HttpRequestManager(TaskManager):
 
         # Use peek() to retrieve the reply's body instead of readAll(), because readAll consumes the content
         reply_body = request_data.reply.peek(request_data.reply.bytesAvailable())  # unlike readAll(), peek doesn't consume the content
-        Logger.log("d", "%s got an QNetworkReplyError %s. The server returned: %s", request_data, error_string, reply_body)
+        Logger.log("w", "%s got an QNetworkReplyError %s. The server returned: %s", request_data, error_string, reply_body)
 
         with self._request_lock:
             # Safeguard: make sure that we have the reply in the currently in-progress requests set
