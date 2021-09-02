@@ -1,10 +1,11 @@
-from typing import Tuple, List, Generator, Optional
+from typing import Tuple, List, Generator, Optional, Union
 from sqlite3 import Cursor
 
 from UM.Logger import Logger
 from UM.Settings.InstanceContainer import InstanceContainer
 
 from .SQLQueryFactory import metadata_type, SQLQueryFactory
+from .SQLFilter import SQLFilter
 
 
 class DatabaseMetadataContainerController:
@@ -17,12 +18,12 @@ class DatabaseMetadataContainerController:
     def __init__(self, queries: SQLQueryFactory):
         self._queries = queries
         self.cursor: Optional[Cursor] = None
-        self._container_type: Optional[InstanceContainer] = None
+        self._container_type = InstanceContainer
         self._insert_batch: List[Tuple] = []
 
-    def _execute(self, *args) -> Cursor:
+    def _execute(self, query: Union[str, SQLFilter], *args) -> Cursor:
         if self.cursor:
-            return self.cursor.execute(*args)
+            return self.cursor.execute(str(query), *args)
         else:
             Logger.error("Could not execute, cursor not set")
             raise RuntimeError("Could not execute, cursor not set")
@@ -56,6 +57,7 @@ class DatabaseMetadataContainerController:
 
     def keys(self) -> Generator:
         """Yields all the metadata keys. These consist of the DB fields and `container_type` and `type`"""
+        yield "id"
         for key in self._queries.fields.keys():
             yield key
         yield "container_type"
@@ -88,8 +90,7 @@ class DatabaseMetadataContainerController:
         param container_id: The container_id to query
         :return The container metadata
         """
-        metadata = {k: v for k, v in self.items(container_id)}
-        return metadata
+        return {k: v for k, v in self.items(container_id)}
 
     def groomMetadata(self, metadata: metadata_type) -> metadata_type:
         """
@@ -99,4 +100,4 @@ class DatabaseMetadataContainerController:
 
         :param metadata: The container metadata
         """
-        return {k: metadata.get(k, "") for k in self._queries.fields.keys()}
+        return {k: metadata.get(k, "") for k in ["id",] + list(self._queries.fields.keys())}

@@ -1,5 +1,7 @@
 from typing import Dict, Any
 
+from .SQLFilter import SQLFilter
+
 metadata_type = Dict[str, Any]
 
 
@@ -12,7 +14,8 @@ class SQLQueryFactory:
         self.__create = ""
         self.__insert = ""
         self.__update = ""
-        self.__select = ""
+        self.__select = SQLFilter("")
+        self.__select_all = SQLFilter("")
         self.__delete = ""
         self._update_queries()
 
@@ -52,9 +55,14 @@ class SQLQueryFactory:
         return self.__update
 
     @property
-    def select(self) -> str:
+    def select(self) -> SQLFilter:
         """Select SQL query """
         return self.__select
+
+    @property
+    def select_all(self) -> SQLFilter:
+        """Select all rows SQL query """
+        return self.__select_all
 
     @property
     def delete(self) -> str:
@@ -62,12 +70,13 @@ class SQLQueryFactory:
         return self.__delete
 
     def _update_queries(self) -> None:
-        values = ", ".join(["?" for k in self.fields.keys()])
         columns_create = ", ".join([f"{k} {v}" for k, v in self.fields.items()])
-        self.__create = f"CREATE TABLE {self.table} ({columns_create}); CREATE UNIQUE INDEX idx_{self.table}_id on {self.table} (id);"
+        self.__create = f"CREATE TABLE {self.table} (id text, {columns_create}); CREATE UNIQUE INDEX idx_{self.table}_id on {self.table} (id);"
         columns_insert = ", ".join([f"{k}" for k in self.fields.keys()])
-        self.__insert = f"INSERT INTO {self.table} ({columns_insert}) VALUES ({values})"
+        values = ", ".join(["?" for k in self.fields.keys()])
+        self.__insert = f"INSERT INTO {self.table} (id, {columns_insert}) VALUES (?, {values})"
         columns_update = ", ".join([f"{k} = ?" for k in self.fields.keys()])
-        self.__update = f"UPDATE {self.table} SET ({columns_update}) WHERE id = ?"
-        self.__select = f"SELECT * FROM {self.table} WHERE id = ?"
+        self.__update = f"UPDATE {self.table} SET {columns_update} WHERE id = ?"
+        self.__select = SQLFilter(f"SELECT {{}} FROM {self.table} WHERE id = ?")
+        self.__select_all = SQLFilter(f"SELECT {{}} FROM {self.table}")
         self.__delete = f"DELETE FROM {self.table} WHERE id = ?"

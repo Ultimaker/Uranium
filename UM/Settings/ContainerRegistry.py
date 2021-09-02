@@ -25,6 +25,7 @@ from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface, DefinitionContainerInterface
 from UM.Signal import Signal, signalemitter
 from .DatabaseContainerMetadataController import DatabaseMetadataContainerController
+from .SQLQueryFactory import SQLQueryFactory
 
 if TYPE_CHECKING:
     from UM.PluginObject import PluginObject
@@ -76,6 +77,12 @@ class ContainerRegistry(ContainerRegistryInterface):
         # We use a database to store the metadata so that we don't have to extract them from the files every time
         # the application starts. Reading the data from a lot of files is especially slow on Windows; about 30x as slow.
         self._db_connection: Optional[db.Connection] = None
+        self._queries = SQLQueryFactory(table = "containers",
+                                        fields = {
+                                            "name": "text",
+                                            "last_modified": "integer",
+                                            "container_type": "text"
+                                        })
 
         # Since each container that we can store in the database has different metadata (and thus needs different logic
         # to extract it from the database again), we use database controllers to do that. These are set by type; Each
@@ -353,15 +360,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def _createDatabaseFile(self, db_path: str) -> db.Connection:
         connection = db.Connection(db_path)
         cursor = connection.cursor()
-        cursor.executescript("""
-            CREATE TABLE containers(
-                id text,
-                name text,
-                last_modified integer,
-                container_type text
-            );
-            CREATE UNIQUE INDEX idx_containers_id on containers (id);
-        """)
+        cursor.executescript(self._queries.create)
 
         for handler in self._database_handlers.values():
             handler.setupTable(cursor)
@@ -379,16 +378,14 @@ class ContainerRegistry(ContainerRegistryInterface):
         return self._db_connection
 
     def _getProfileType(self, container_id: str, db_cursor: db.Cursor) -> Optional[str]:
-        db_cursor.execute("select id, container_type from containers where id = ?", (container_id, ))
+        db_cursor.execute(self._queries.select["id", "container_type"], (container_id, ))
         row = db_cursor.fetchone()
         if row:
             return row[1]
         return None
 
     def _getProfileModificationTime(self, container_id: str, db_cursor: db.Cursor) -> Optional[float]:
-        query = f"select id, last_modified from containers where id = '{container_id}'"
-
-        db_cursor.execute(query)
+        db_cursor.execute(self._queries.select["id", "last_modified"], (container_id, ))
         row = db_cursor.fetchone()
 
         if row:
@@ -443,9 +440,8 @@ class ContainerRegistry(ContainerRegistryInterface):
                     modified_time = provider.getLastModifiedTime(container_id)
                     if metadata.get("type") in self._database_handlers:
                         # Only add it to the database if we have an actual handler.
-                        cursor.execute(
-                            "INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
-                            (container_id, metadata["name"], modified_time, metadata["type"]))
+                        cursor.execute(self._queries.insert,
+                                       (container_id, metadata["name"], modified_time, metadata["type"]))
                         self._addMetadataToDatabase(metadata)
 
                     self.metadata[container_id] = metadata
@@ -457,7 +453,9 @@ class ContainerRegistry(ContainerRegistryInterface):
                     if modified_time > db_last_modified_time:
                         # Metadata is outdated, so load from file and update the database
                         metadata = provider.loadMetadata(container_id)
-                        cursor.execute("UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?", (metadata["name"], modified_time, metadata["type"], metadata["id"]))
+                        # UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?
+                        cursor.execute(self._queries.update,
+                                       (metadata["name"], modified_time, metadata["type"], metadata["id"]))
                         self._updateMetadataInDatabase(metadata)
                         self.metadata[container_id] = metadata
                         self.source_provider[container_id] = provider
@@ -473,13 +471,14 @@ class ContainerRegistry(ContainerRegistryInterface):
         cursor.execute("commit")
 
         # Find all ID's that we currently have in the database
-        cursor.execute("SELECT id from containers")
+        # 'SELECT id FROM containers WHERE id = ?'
+        cursor.execute(self._queries.select_all["id"])
         all_ids_in_database = {container_id[0] for container_id in cursor.fetchall()}
         ids_to_remove = all_ids_in_database - all_container_ids
 
         # Purge ID's that don't have a matching file
         for container_id in ids_to_remove:
-            cursor.execute("DELETE FROM containers WHERE id = ?", (container_id,))
+            cursor.execute(self._queries.delete, (container_id,))
             self._removeContainerFromDatabase(container_id)
 
         if ids_to_remove:  # We only can (and need to) commit again if we removed containers
