@@ -393,59 +393,35 @@ def test_loadAllMetada(container_registry):
     assert container_registry.isLoaded(instances[0].get("id"))
 
 
-def test_sqlCreateTableQuery():
-    sql_factory = SQLQueryFactory(table = "test_table",
-                                  fields = {
-                                      "id": "text",
-                                      "field_1": "text",
-                                      "field_2": "text",
-                                      "field_3": "text"
-                                  })
-    assert sql_factory.create == "CREATE TABLE test_table (id text, field_1 text, field_2 text, field_3 text); CREATE UNIQUE INDEX idx_test_table_id on test_table (id);"
+@pytest.fixture
+def sql_queries():
+    return SQLQueryFactory(table = "test_table",
+                           fields = {
+                               "id": "text",
+                               "field_1": "text",
+                               "field_2": "text",
+                               "field_3": "text"
+                           })
 
 
-def test_sqlInsertQuery():
-    sql_factory = SQLQueryFactory(table = "test_table",
-                                  fields = {
-                                      "id": "text",
-                                      "field_1": "text",
-                                      "field_2": "text",
-                                      "field_3": "text"
-                                  })
-    assert sql_factory.insert == "INSERT INTO test_table (id, field_1, field_2, field_3) VALUES (?, ?, ?, ?)"
+def test_sqlCreateTableQuery(sql_queries):
+    assert sql_queries.create == "CREATE TABLE test_table (id text, field_1 text, field_2 text, field_3 text); CREATE UNIQUE INDEX idx_test_table_id on test_table (id);"
 
 
-def test_sqlUpdateQuery():
-    sql_factory = SQLQueryFactory(table = "test_table",
-                                  fields = {
-                                      "id": "text",
-                                      "field_1": "text",
-                                      "field_2": "text",
-                                      "field_3": "text"
-                                  })
-    assert sql_factory.update == "UPDATE test_table SET (id = ?, field_1 = ?, field_2 = ?, field_3 = ?) WHERE id = ?"
+def test_sqlInsertQuery(sql_queries):
+    assert sql_queries.insert == "INSERT INTO test_table (id, field_1, field_2, field_3) VALUES (?, ?, ?, ?)"
 
 
-def test_sqlSelectQuery():
-    sql_factory = SQLQueryFactory(table = "test_table",
-                                  fields = {
-                                      "id": "text",
-                                      "field_1": "text",
-                                      "field_2": "text",
-                                      "field_3": "text"
-                                  })
-    assert sql_factory.select == "SELECT * FROM test_table WHERE id = ?"
+def test_sqlUpdateQuery(sql_queries):
+    assert sql_queries.update == "UPDATE test_table SET (id = ?, field_1 = ?, field_2 = ?, field_3 = ?) WHERE id = ?"
 
 
-def test_sqlDeleteQuery():
-    sql_factory = SQLQueryFactory(table = "test_table",
-                                  fields = {
-                                      "id": "text",
-                                      "field_1": "text",
-                                      "field_2": "text",
-                                      "field_3": "text"
-                                  })
-    assert sql_factory.delete == "DELETE FROM test_table WHERE id = ?"
+def test_sqlSelectQuery(sql_queries):
+    assert sql_queries.select == "SELECT * FROM test_table WHERE id = ?"
+
+
+def test_sqlDeleteQuery(sql_queries):
+    assert sql_queries.delete == "DELETE FROM test_table WHERE id = ?"
 
 
 def test_insertInDatabaseCalledOnce(container_registry):
