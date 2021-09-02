@@ -1,4 +1,4 @@
-from typing import Dict, Any, KeysView
+from typing import Dict, Any
 
 metadata_type = Dict[str, Any]
 

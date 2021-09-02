@@ -1,4 +1,4 @@
-from typing import Tuple, List, Generator, Optional, Any
+from typing import Tuple, List, Generator, Optional
 from sqlite3 import Cursor
 
 from UM.Logger import Logger
@@ -15,10 +15,17 @@ class DatabaseMetadataContainerController:
     """
 
     def __init__(self, queries: SQLQueryFactory):
-        self.queries = queries
+        self._queries = queries
         self.cursor: Optional[Cursor] = None
-        self.container_type: Optional[InstanceContainer] = None
+        self._container_type: Optional[InstanceContainer] = None
         self._insert_batch: List[Tuple] = []
+
+    def _execute(self, *args) -> Cursor:
+        if self.cursor:
+            return self.cursor.execute(*args)
+        else:
+            Logger.error("Could not execute, cursor not set")
+            raise RuntimeError("Could not execute, cursor not set")
 
     def setupTable(self, cursor: Cursor) -> None:
         """Creates the table in the DB.
@@ -26,7 +33,7 @@ class DatabaseMetadataContainerController:
         param cursor: the DB cursor
         """
         self.cursor = cursor
-        self.cursor.executescript(self.queries.create)
+        self.cursor.executescript(self._queries.create)
 
     def insert(self, metadata: metadata_type) -> None:
         """Insert a container in the DB.
@@ -34,22 +41,22 @@ class DatabaseMetadataContainerController:
         param container_id: The container_id to insert
         """
         values = list(self.groomMetadata(metadata).values())
-        self.cursor.execute(self.queries.insert, values)
+        self._execute(self._queries.insert, values)
 
     def update(self, metadata: metadata_type) -> None:
         """Updates a container in the DB.
 
         param container_id: The container_id to update
         """
-        self.cursor.execute(self.queries.update, metadata.values())
+        self._execute(self._queries.update, metadata.values())
 
     def delete(self, container_id: str) -> None:
         """Removes a container from the DB."""
-        self.cursor.execute(self.queries.delete, (container_id,))
+        self._execute(self._queries.delete, (container_id,))
 
     def keys(self) -> Generator:
         """Yields all the metadata keys. These consist of the DB fields and `container_type` and `type`"""
-        for key in self.queries.fields.keys():
+        for key in self._queries.fields.keys():
             yield key
         yield "container_type"
         yield "type"
@@ -59,14 +66,14 @@ class DatabaseMetadataContainerController:
 
         param container_id: The container_id to query
         """
-        result = self.cursor.execute(self.queries.select, (container_id,)).fetchone()
+        result = self._execute(self._queries.select, (container_id,)).fetchone()
         if result is None:
             Logger.warning(f"Could not retrieve metadata for: {container_id} from database")
             return []  # Todo: check if this needs to be None, empty list, raise an exception or fallback to old container
         for value in result:
             yield value
-        yield self.container_type
-        yield self.queries.table
+        yield self._container_type
+        yield self._queries.table
 
     def items(self, container_id: str) -> Generator:
         """Yields all values and keys obtained from the DB row including the `container_type` and `type`
@@ -76,7 +83,7 @@ class DatabaseMetadataContainerController:
             yield key, value
 
     def getMetadata(self, container_id: str) -> metadata_type:
-        """Return the metadate needed to create a container
+        """Return the metadata needed to create a container
 
         param container_id: The container_id to query
         :return The container metadata
@@ -92,4 +99,4 @@ class DatabaseMetadataContainerController:
 
         :param metadata: The container metadata
         """
-        return {k: metadata.get(k, "") for k in self.queries.fields.keys()}
+        return {k: metadata.get(k, "") for k in self._queries.fields.keys()}
