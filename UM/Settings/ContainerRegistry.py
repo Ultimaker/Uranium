@@ -360,7 +360,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def _createDatabaseFile(self, db_path: str) -> db.Connection:
         connection = db.Connection(db_path)
         cursor = connection.cursor()
-        cursor.executescript(self._queries.create)
+        cursor.executescript(self._queries.create())
 
         for handler in self._database_handlers.values():
             handler.setupTable(cursor)
@@ -378,14 +378,14 @@ class ContainerRegistry(ContainerRegistryInterface):
         return self._db_connection
 
     def _getProfileType(self, container_id: str, db_cursor: db.Cursor) -> Optional[str]:
-        db_cursor.execute(self._queries.select["id", "container_type"], (container_id, ))
+        db_cursor.execute(self._queries.select(columns = "id, container_type"), (container_id, ))
         row = db_cursor.fetchone()
         if row:
             return row[1]
         return None
 
     def _getProfileModificationTime(self, container_id: str, db_cursor: db.Cursor) -> Optional[float]:
-        db_cursor.execute(self._queries.select["id", "last_modified"], (container_id, ))
+        db_cursor.execute(self._queries.select(columns = "id, last_modified"), (container_id, ))
         row = db_cursor.fetchone()
 
         if row:
@@ -440,7 +440,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                     modified_time = provider.getLastModifiedTime(container_id)
                     if metadata.get("type") in self._database_handlers:
                         # Only add it to the database if we have an actual handler.
-                        cursor.execute(self._queries.insert,
+                        cursor.execute(self._queries.insert(),
                                        (container_id, metadata["name"], modified_time, metadata["type"]))
                         self._addMetadataToDatabase(metadata)
 
@@ -454,7 +454,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         # Metadata is outdated, so load from file and update the database
                         metadata = provider.loadMetadata(container_id)
                         # UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?
-                        cursor.execute(self._queries.update,
+                        cursor.execute(self._queries.update(),
                                        (metadata["name"], modified_time, metadata["type"], metadata["id"]))
                         self._updateMetadataInDatabase(metadata)
                         self.metadata[container_id] = metadata
@@ -471,14 +471,13 @@ class ContainerRegistry(ContainerRegistryInterface):
         cursor.execute("commit")
 
         # Find all ID's that we currently have in the database
-        # 'SELECT id FROM containers WHERE id = ?'
-        cursor.execute(self._queries.select_all["id"])
+        cursor.execute(self._queries.select(columns = "id", query_all = True))
         all_ids_in_database = {container_id[0] for container_id in cursor.fetchall()}
         ids_to_remove = all_ids_in_database - all_container_ids
 
         # Purge ID's that don't have a matching file
         for container_id in ids_to_remove:
-            cursor.execute(self._queries.delete, (container_id,))
+            cursor.execute(self._queries.delete(), (container_id,))
             self._removeContainerFromDatabase(container_id)
 
         if ids_to_remove:  # We only can (and need to) commit again if we removed containers

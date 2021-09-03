@@ -21,9 +21,9 @@ class DatabaseMetadataContainerController:
         self._container_type = InstanceContainer
         self._insert_batch: List[Tuple] = []
 
-    def _execute(self, query: Union[str, SQLFilter], *args) -> Cursor:
+    def _execute(self, query: str, *args) -> Cursor:
         if self.cursor:
-            return self.cursor.execute(str(query), *args)
+            return self.cursor.execute(query, *args)
         else:
             Logger.error("Could not execute, cursor not set")
             raise RuntimeError("Could not execute, cursor not set")
@@ -34,7 +34,7 @@ class DatabaseMetadataContainerController:
         param cursor: the DB cursor
         """
         self.cursor = cursor
-        self.cursor.executescript(self._queries.create)
+        self.cursor.executescript(self._queries.create())
 
     def insert(self, metadata: metadata_type) -> None:
         """Insert a container in the DB.
@@ -42,18 +42,18 @@ class DatabaseMetadataContainerController:
         param container_id: The container_id to insert
         """
         values = list(self.groomMetadata(metadata).values())
-        self._execute(self._queries.insert, values)
+        self._execute(self._queries.insert(), values)
 
     def update(self, metadata: metadata_type) -> None:
         """Updates a container in the DB.
 
         param container_id: The container_id to update
         """
-        self._execute(self._queries.update, metadata.values())
+        self._execute(self._queries.update(), metadata.values())
 
     def delete(self, container_id: str) -> None:
         """Removes a container from the DB."""
-        self._execute(self._queries.delete, (container_id,))
+        self._execute(self._queries.delete(), (container_id,))
 
     def keys(self) -> Generator:
         """Yields all the metadata keys. These consist of the DB fields and `container_type` and `type`"""
@@ -68,7 +68,7 @@ class DatabaseMetadataContainerController:
 
         param container_id: The container_id to query
         """
-        result = self._execute(self._queries.select, (container_id,)).fetchone()
+        result = self._execute(self._queries.select(), (container_id,)).fetchone()
         if result is None:
             Logger.warning(f"Could not retrieve metadata for: {container_id} from database")
             return []  # Todo: check if this needs to be None, empty list, raise an exception or fallback to old container
