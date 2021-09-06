@@ -63,22 +63,22 @@ msgstr "Plik lokalny"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
-msgstr "Save to Disk"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
-msgstr "Save to Disk"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
-msgstr "To Disk"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
-msgstr "Save to Disk"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
@@ -338,13 +338,13 @@ msgstr "Nieprawidłowy plik"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:98
 msgctxt "@info:title"
 msgid "Unable to Open File"
-msgstr "Unable to Open File"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
 msgctxt "@info:title"
@@ -355,18 +355,18 @@ msgstr "Ładowanie"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
-msgstr "There where no models in <filename>{0}</filename>."
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:90
 msgctxt "@info:title"
 msgid "No Models in File"
-msgstr "No Models in File"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:71
 #, python-format, python-brace-format
@@ -398,7 +398,7 @@ msgstr "Błędy odinstalowywania"
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
-msgstr "Installing plugin {package_id}..."
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:585
 #, python-brace-format
@@ -429,7 +429,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:378
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "Plugin {} was not loaded because it could not be verified."
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
 msgctxt "@error"
@@ -439,7 +439,7 @@ msgstr "The plugin {} could not be loaded. Re-installing the plugin might solve 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
 msgctxt "@action:button"
 msgid "Remove plugin"
-msgstr "Remove plugin"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
 #, python-brace-format
@@ -454,7 +454,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
 msgid "From Disk"
-msgstr "From Disk"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:128
 #, python-brace-format
@@ -505,7 +505,7 @@ msgstr "Wczytywanie wtyczek..."
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
-msgstr "Loading plugin {plugin_id}..."
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:197
 msgctxt "@info:progress"
@@ -535,7 +535,7 @@ msgstr "Ładowanie preferencji..."
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:315
 msgctxt "@info:progress"
 msgid "Loading UI..."
-msgstr "Loading UI..."
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
 #, python-brace-format
@@ -726,7 +726,7 @@ msgstr "Umożliwia tworzenie plików Wavefront OBJ."
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ Writer"
+msgstr ""
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
@@ -746,7 +746,7 @@ msgstr "Zapewnia wsparcie dla tworzenia plików STL."
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
 msgid "STL Writer"
-msgstr "STL Writer"
+msgstr ""
 
 #: FileLogger/plugin.json
 msgctxt "description"
