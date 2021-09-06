@@ -1,13 +1,13 @@
 # Uranium
 # Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.11\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2021-08-11 10:01+0200\n"
-"PO-Revision-Date: 2019-10-10 22:30+0200\n"
+"PO-Revision-Date: 2021-09-06 14:31+0200\n"
 "Last-Translator: Nagy Attila\n"
 "Language-Team: AT-VLOG <LL@li.org>\n"
 "Language: hu_HU\n"
@@ -15,6 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
@@ -31,7 +32,7 @@ msgstr "Az OBJWriter nem támogatja a nem szöveges módot."
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
 msgctxt "@error:no mesh"
 msgid "There is no mesh to write."
-msgstr "Nincs háló, amelybe írhatnánk"
+msgstr "Nincs háló, amelybe írhatnánk."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
 msgctxt "@item:inlistbox"
@@ -86,7 +87,7 @@ msgstr "Ez a fájltípus nem írható!"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
 msgctxt "@title:window"
 msgid "File Already Exists"
-msgstr "A fájl használatban van."
+msgstr "A fájl használatban van"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
 #, python-brace-format
@@ -98,7 +99,7 @@ msgstr "A <filename>{0}</filename> fájl használatban van. Biztosan felül akar
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
-msgstr "Mentés a(z) <filename>{0}</filename> fájlba."
+msgstr "Mentés a(z) <filename>{0}</filename> fájlba"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
 msgctxt "@info:title"
@@ -109,7 +110,7 @@ msgstr "Mentés"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Hozzáférés megtagadva a <filename>{0}</filename> fájlba történő íráskor."
+msgstr "Hozzáférés megtagadva a <filename>{0}</filename> fájlba történő íráskor"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
@@ -122,12 +123,12 @@ msgstr "Sikertelen mentés a(z) <filename>{0}</filename> fájlba: <message>{1}</
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
-msgstr "Mentés <filename>{0}</filename> fájlba."
+msgstr "Mentés <filename>{0}</filename> fájlba"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
 msgctxt "@info:title"
 msgid "File Saved"
-msgstr "Fájl elmentve."
+msgstr "Fájl elmentve"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@action:button"
@@ -137,7 +138,7 @@ msgstr "Mappa megnyitása"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
-msgstr "A fájlt tartalmazó mappa megnyitása."
+msgstr "A fájlt tartalmazó mappa megnyitása"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
@@ -166,7 +167,7 @@ msgstr "Modell tükrözés"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr "Alapsíkra fektetés"
+msgstr "Alapsíkra fektetés..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:358
 msgctxt "@title"
@@ -247,7 +248,7 @@ msgstr "Frissítések"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
-msgstr "Frissítések ellenőrzése."
+msgstr "Frissítések ellenőrzése"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
 msgctxt "@info"
@@ -561,7 +562,7 @@ msgstr "A konfiguráció egy régebbi {0} verzióból lett importálva."
 #: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:64
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr "Az OpenGL inicializálás sikertelen."
+msgstr "Az OpenGL inicializálás sikertelen"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:74
 msgctxt "Critical OpenGL Extensions Missing"
@@ -576,7 +577,7 @@ msgstr "Fektetés"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
-msgstr "Válasz egy felületet, amit az alpsíkra igazítunk."
+msgstr "Válasz egy felületet, amit az alpsíkra igazítunk"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
 msgctxt "@action:checkbox"
@@ -724,7 +725,7 @@ msgstr "Wavefront OBJ író"
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
 msgid "Provides support for reading STL files."
-msgstr "STL fájlok olvasásának támogatása"
+msgstr "STL fájlok olvasásának támogatása."
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "name"
@@ -774,7 +775,7 @@ msgstr "Helyi fájl kimeneti eszköz"
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr "Kamera kezelő eszköz biztosítása"
+msgstr "Kamera kezelő eszköz biztosítása."
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
@@ -784,7 +785,7 @@ msgstr "Kamera eszköz"
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr "Tükröző eszköz biztosítása"
+msgstr "Tükröző eszköz biztosítása."
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"
@@ -794,7 +795,7 @@ msgstr "Tükröző eszköz"
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr "Forgatás eszköz biztosítása"
+msgstr "Forgatás eszköz biztosítása."
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
@@ -804,7 +805,7 @@ msgstr "Forgatás eszköz"
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr "Méretező eszköz biztosítása"
+msgstr "Méretező eszköz biztosítása."
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "name"
@@ -814,7 +815,7 @@ msgstr "Méretező eszköz"
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr "Kiválasztó eszköz biztosítása"
+msgstr "Kiválasztó eszköz biztosítása."
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "name"
@@ -824,7 +825,7 @@ msgstr "Kiválasztó eszköz"
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
-msgstr "Mozgatás eszköz biztosítása"
+msgstr "Mozgatás eszköz biztosítása."
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"

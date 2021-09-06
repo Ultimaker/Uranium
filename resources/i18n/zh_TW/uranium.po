@@ -1,13 +1,13 @@
 # Uranium
 # Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.11\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2021-08-11 10:01+0200\n"
-"PO-Revision-Date: 2021-08-16 20:55+0800\n"
+"PO-Revision-Date: 2021-09-06 14:34+0200\n"
 "Last-Translator: Valen Chang <carf17771@gmail.com>\n"
 "Language-Team: Valen Chang <carf17771@gmail.com>/Zhang Heh Ji <dinowchang@gmail.com>\n"
 "Language: zh_TW\n"
@@ -371,9 +371,7 @@ msgstr "載入 <filename>{0}</filename>失敗。 這個檔案可能已損壞、�
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr ""
-"自動將物件縮放到原始大小的 {0} %\n"
-"."
+msgstr "自動將物件縮放到原始大小的 {0} %"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
