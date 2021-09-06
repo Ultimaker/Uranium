@@ -63,22 +63,22 @@ msgstr "Plik lokalny"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
-msgstr ""
+msgstr "Save to Disk"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
-msgstr ""
+msgstr "Save to Disk"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
-msgstr ""
+msgstr "To Disk"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
-msgstr ""
+msgstr "Save to Disk"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
 msgctxt "@info:warning"
@@ -210,13 +210,13 @@ msgstr "Przenieś model"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number} BETA is available!"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
+msgstr "Try out the latest BETA version and help us improve {application_name}."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
@@ -338,13 +338,13 @@ msgstr "Nieprawidłowy plik"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr ""
+msgstr "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:98
 msgctxt "@info:title"
 msgid "Unable to Open File"
-msgstr ""
+msgstr "Unable to Open File"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
 msgctxt "@info:title"
@@ -355,18 +355,18 @@ msgstr "Ładowanie"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
-msgstr ""
+msgstr "There where no models in <filename>{0}</filename>."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:90
 msgctxt "@info:title"
 msgid "No Models in File"
-msgstr ""
+msgstr "No Models in File"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
+msgstr "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:71
 #, python-format, python-brace-format
@@ -398,7 +398,7 @@ msgstr "Błędy odinstalowywania"
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
-msgstr ""
+msgstr "Installing plugin {package_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:585
 #, python-brace-format
@@ -429,17 +429,17 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:378
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
-msgstr ""
+msgstr "Plugin {} was not loaded because it could not be verified."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr ""
+msgstr "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
 msgctxt "@action:button"
 msgid "Remove plugin"
-msgstr ""
+msgstr "Remove plugin"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
 #, python-brace-format
@@ -454,7 +454,7 @@ msgstr ""
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
 msgid "From Disk"
-msgstr ""
+msgstr "From Disk"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:128
 #, python-brace-format
@@ -505,7 +505,7 @@ msgstr "Wczytywanie wtyczek..."
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
-msgstr ""
+msgstr "Loading plugin {plugin_id}..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:197
 msgctxt "@info:progress"
@@ -535,7 +535,7 @@ msgstr "Ładowanie preferencji..."
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:315
 msgctxt "@info:progress"
 msgid "Loading UI..."
-msgstr ""
+msgstr "Loading UI..."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
 #, python-brace-format

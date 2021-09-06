@@ -72,7 +72,7 @@ msgstr "Opslaan op schijf"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
-msgstr ""
+msgstr "Naar schijf"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
@@ -208,13 +208,13 @@ msgstr "Model Verplaatsen"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number} BÈTA is beschikbaar!"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
+msgstr "Probeer de nieuwste BÈTA-versie uit en help ons {application_name} te verbeteren."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
@@ -431,12 +431,12 @@ msgstr "Plug-in {} is niet geladen omdat deze niet kon worden geverifieerd."
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr ""
+msgstr "De plug-in {} kon niet worden geladen. De plug-in opnieuw installeren kan het probleem misschien oplossen"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
 msgctxt "@action:button"
 msgid "Remove plugin"
-msgstr ""
+msgstr "Plug-in verwijderen"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
 #, python-brace-format

@@ -72,7 +72,7 @@ msgstr "Salva su disco"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
-msgstr ""
+msgstr "Su disco"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
@@ -208,13 +208,13 @@ msgstr "Modello Spostamento"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number} BETA è disponibile!"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
+msgstr "Prova la versione BETA più recente e aiutaci a migliorare {application_name}."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
@@ -431,12 +431,12 @@ msgstr "Il plugin {} non è stato caricato in quanto non è stato possibile veri
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr ""
+msgstr "Impossibile caricare il plugin {}. Per risolvere il problema, provare a reinstallare il plugin"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
 msgctxt "@action:button"
 msgid "Remove plugin"
-msgstr ""
+msgstr "Rimuovi plugin"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
 #, python-brace-format

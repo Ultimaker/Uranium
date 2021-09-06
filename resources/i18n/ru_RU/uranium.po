@@ -72,7 +72,7 @@ msgstr "Сохранить на диск"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
-msgstr ""
+msgstr "На диск"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
@@ -208,13 +208,13 @@ msgstr "Перемещение модели"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} BETA is available!"
-msgstr ""
+msgstr "Доступна бета-версия {application_name} {version_number}!"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
+msgstr "Попробуйте последнюю бета-версию и помогите нам усовершенствовать приложение {application_name}."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
@@ -431,12 +431,12 @@ msgstr "Подключаемый модуль {} не загружен, так �
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr ""
+msgstr "Невозможно загрузить плагин {}. Переустановка плагина может решить проблему"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
 msgctxt "@action:button"
 msgid "Remove plugin"
-msgstr ""
+msgstr "Удалить плагин"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
 #, python-brace-format
