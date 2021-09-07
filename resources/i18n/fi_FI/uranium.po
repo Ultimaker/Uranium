@@ -1,12 +1,12 @@
 # Uranium
 # Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.10\n"
+"Project-Id-Version: Uranium 4.11\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2021-06-10 17:38+0200\n"
+"POT-Creation-Date: 2021-08-11 10:01+0200\n"
 "PO-Revision-Date: 2017-09-27 12:27+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Finnish <info@bothof.nl>\n"
@@ -68,6 +68,11 @@ msgctxt "@info:tooltip"
 msgid "Save to Disk"
 msgstr ""
 
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr ""
+
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
@@ -89,70 +94,64 @@ msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti kirjoittaa sen päälle?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:168
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Tallennetaan tiedostoon <filename>{0}</filename>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "Tallennetaan"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Lupa evätty yritettäessä tallentaa tiedostoon <filename>{0}</filename>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Tallennettu tiedostoon <filename>{0}</filename>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "Tiedosto tallennettu"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Avaa kansio"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:191
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Avaa tiedoston sisältävän kansion"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Varoitus"
-
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Virhe"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
 msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:159
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Virhe"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -169,7 +168,7 @@ msgctxt "@label"
 msgid "Laying object flat on buildplate..."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:358
 msgctxt "@title"
 msgid "Object Rotation"
 msgstr ""
@@ -204,80 +203,86 @@ msgctxt "@info:tooltip"
 msgid "Move Model"
 msgstr "Siirrä mallia"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
-msgctxt "@item:inmenu"
-msgid "Update Checker"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:12
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} BETA is available!"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Tarkista päivitykset"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
-msgctxt "@info"
-msgid "Could not access update information."
-msgstr "Päivitystietoja ei löytynyt."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "Versiopäivitys"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:66
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "Käyttämäsi versio ei tue päivitysten tarkistusta."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
-msgctxt "@info"
-msgid "An error occurred while checking for updates."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:100
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Uutta versiota ei löytynyt."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Lataa"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:105
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:23
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:12
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:107
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:16
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:110
-msgctxt "@action:button"
-msgid "Download"
-msgstr "Lataa"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:112
-msgctxt "@action:button"
-msgid "Learn more"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
+msgctxt "@item:inmenu"
+msgid "Update Checker"
 msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Tarkista päivitykset"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "Käyttämäsi versio ei tue päivitysten tarkistusta."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Varoitus"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Uutta versiota ei löytynyt."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:174
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "Versiopäivitys"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "Yksinkertainen"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:33
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:32
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Palauta"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:45
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -286,18 +291,18 @@ msgid ""
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:50
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@title:window"
 msgid "Reset to factory"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:52
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:53
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:864
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:883
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -305,64 +310,64 @@ msgid "All Supported Types ({0})"
 msgstr "Kaikki tuetut tyypit ({0})"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:72
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:865
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:884
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Kaikki tiedostot (*)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:41
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:40
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:44
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "Virheellinen tiedosto"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:98
 msgctxt "@info:title"
 msgid "Unable to Open File"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:63
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "Ladataan"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:87
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:78
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:90
 msgctxt "@info:title"
 msgid "No Models in File"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:81
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:71
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Kappale skaalattu automaattisesti {0} %:iin alkuperäisestä koosta"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:70
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Skaalataan kappaletta"
@@ -380,13 +385,13 @@ msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:297
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:298
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:568
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:585
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -395,12 +400,12 @@ msgid ""
 "Please try to upgrade again later."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:571
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:588
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:319
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:311
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -409,12 +414,22 @@ msgstr ""
 "Laajennus on asennettu.\n"
 "Ota laajennus käyttöön käynnistämällä sovellus uudelleen."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:386
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:378
 msgctxt "@error:untrusted"
 msgid "Plugin {} was not loaded because it could not be verified."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:488
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
+msgctxt "@error"
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr ""
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -427,19 +442,19 @@ msgctxt "@menu"
 msgid "From Disk"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:122
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:128
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2} p {1:0>2} h {2:0>2} min"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:124
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:130
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2} h {1:0>2} min"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -447,8 +462,8 @@ msgid_plural "{0} days"
 msgstr[0] "{0} päivä"
 msgstr[1] "{0} päivää"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -456,9 +471,9 @@ msgid_plural "{0} hours"
 msgstr[0] "{0} tunti"
 msgstr[1] "{0} tuntia"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:127
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:129
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:131
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:137
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -466,44 +481,44 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuutti"
 msgstr[1] "{0} minuuttia"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:190
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:211
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:189
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:210
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Ladataan lisäosia..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:192
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:191
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:198
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:197
 msgctxt "@info:progress"
 msgid "Initializing package manager..."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:206
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:205
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:208
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:207
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:220
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:219
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Päivitetään määrityksiä..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:226
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:225
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Ladataan lisäasetuksia..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:313
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:315
 msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr ""
@@ -828,6 +843,10 @@ msgstr "Näyttää yksinkertaisen kiinteän verkkonäkymän."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Yksinkertainen näkymä"
+
+#~ msgctxt "@info"
+#~ msgid "Could not access update information."
+#~ msgstr "Päivitystietoja ei löytynyt."
 
 #~ msgctxt "@action:button Preceded by 'Ready to'."
 #~ msgid "Save to File"

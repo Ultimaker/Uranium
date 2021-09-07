@@ -1,7 +1,7 @@
 # Uranium
 # Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.11\n"
