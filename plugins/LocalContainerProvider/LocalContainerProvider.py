@@ -253,6 +253,8 @@ class LocalContainerProvider(ContainerProvider):
         try:
             with open(cache_path, "rb") as f:
                 definition = pickle.load(f)
+                # Defend a bit against injected files to deserialize.
+                assert type(definition) == DefinitionContainer, "Can only restore DefinitionContainers from cache!"
         except Exception as e: #TODO: Switch to multi-catch once we've upgraded to Python 3.6. Catch: OSError, PermissionError, IOError, AttributeError, EOFError, ImportError, IndexError and UnpicklingError.
             Logger.log("w", "Failed to load definition {definition_id} from cached file: {error_msg}".format(definition_id = definition_id, error_msg = str(e)))
             return None
