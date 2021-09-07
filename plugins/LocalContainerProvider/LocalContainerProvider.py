@@ -255,7 +255,7 @@ class LocalContainerProvider(ContainerProvider):
             with open(cache_path, "rb") as f:
                 # The DefinitionContainerUnpickler has a list of whitelisted globals
                 definition = DefinitionContainerUnpickler(f).load()
-        except Exception as e: #TODO: Switch to multi-catch once we've upgraded to Python 3.6. Catch: OSError, PermissionError, IOError, AttributeError, EOFError, ImportError, IndexError and UnpicklingError.
+        except (OSError, PermissionError, IOError, AttributeError, EOFError, ImportError, IndexError, pickle.UnpicklingError) as e:
             Logger.log("w", "Failed to load definition {definition_id} from cached file: {error_msg}".format(definition_id = definition_id, error_msg = str(e)))
             return None
 
