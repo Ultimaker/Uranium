@@ -78,8 +78,8 @@ class ProjectOutputDevice(QObject, OutputDevice):
 
     @staticmethod
     def getLastOutputName() -> Optional[str]:
-        return OutputDevice.last_out_name
+        return ProjectOutputDevice.last_out_name
 
     @staticmethod
     def setLastOutputName(name: Optional[str] = None) -> None:
-        OutputDevice.last_out_name = name
+        ProjectOutputDevice.last_out_name = name
