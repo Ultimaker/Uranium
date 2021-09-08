@@ -404,27 +404,27 @@ def sql_queries():
 
 
 def test_sqlCreateTableQuery(sql_queries):
-    assert sql_queries.create() == "CREATE TABLE test_table (id text, field_1 text, field_2 text, field_3 text); CREATE UNIQUE INDEX idx_test_table_id on test_table (id);"
+    assert sql_queries.create == "CREATE TABLE test_table (id text, field_1 text, field_2 text, field_3 text); CREATE UNIQUE INDEX idx_test_table_id on test_table (id);"
 
 
 def test_sqlInsertQuery(sql_queries):
-    assert sql_queries.insert() == "INSERT INTO test_table (id, field_1, field_2, field_3) VALUES (?, ?, ?, ?)"
+    assert sql_queries.insert == "INSERT INTO test_table (id, field_1, field_2, field_3) VALUES (?, ?, ?, ?)"
 
 
 def test_sqlUpdateQuery(sql_queries):
-    assert sql_queries.update() == "UPDATE test_table SET field_1 = ?, field_2 = ?, field_3 = ? WHERE id = ?"
+    assert sql_queries.update == "UPDATE test_table SET field_1 = ?, field_2 = ?, field_3 = ? WHERE id = ?"
 
 
 def test_sqlSelectQuery(sql_queries):
-    assert sql_queries.select() == "SELECT * FROM test_table WHERE id = ?"
+    assert str(sql_queries.select) == "SELECT * FROM test_table WHERE id = ?"
 
 
 def test_sqlSelectFilterQuery(sql_queries):
-    assert sql_queries.select(columns = "id, field_1") == "SELECT id, field_1 FROM test_table WHERE id = ?"
+    assert str(sql_queries.select["id", "field_1"]) == "SELECT id, field_1 FROM test_table WHERE id = ?"
 
 
 def test_sqlDeleteQuery(sql_queries):
-    assert sql_queries.delete() == "DELETE FROM test_table WHERE id = ?"
+    assert sql_queries.delete == "DELETE FROM test_table WHERE id = ?"
 
 
 def test_insertInDatabaseCalledOnce(container_registry):

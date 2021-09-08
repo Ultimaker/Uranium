@@ -1,7 +1,6 @@
 from typing import Dict, Any
 
 from .SQLFilter import SQLFilter
-from .SQLQuery import SQLQuery
 
 metadata_type = Dict[str, Any]
 
@@ -12,27 +11,13 @@ class SQLQueryFactory:
     def __init__(self, table: str, fields: metadata_type) -> None:
         self._table = table
         self._fields = fields
+        self.__create = ""
+        self.__insert = ""
+        self.__update = ""
+        self.__select = SQLFilter("")
+        self.__select_all = SQLFilter("")
+        self.__delete = ""
         self._update_queries()
-        self.create = SQLFilter("CREATE TABLE {table} (id text, {fields}); CREATE UNIQUE INDEX idx_{table}_id on {table} (id);")
-        self.insert = SQLFilter("INSERT INTO {table} (id, {columns}) VALUES (?, {values})")
-        self.update = SQLFilter("UPDATE {table} SET {columns}", where = "id = ?")
-        self.select = SQLFilter("SELECT {columns} FROM {table}", where = "id = ?")
-        self.delete = SQLFilter("DELETE FROM {table}", where = "id = ?")
-
-    create = SQLQuery()
-    # SQL create string, can be dynamically modified by specifying: table (table_name), fields (field_name field_type, ...)
-
-    insert = SQLQuery()
-    # SQL insert string, can be dynamically modified by specifying: table (table_name), columns (field_name, ...), values (?, ...)
-
-    update = SQLQuery()
-    # SQL update string, can be dynamically modified by specifying: table (table_name), columns (field_name = ?, ...), where (field_name = ?, ...)
-
-    select = SQLQuery()
-    # SQL select string, can be dynamically modified by specifying: table (table_name), columns (field_name, ...), where (field_name = ?, ...)
-
-    delete = SQLQuery()
-    # SQL delete string, can be dynamically modified by specifying: table (table_name), where (field_name = ?, ...)
 
     @property
     def table(self) -> str:
@@ -42,6 +27,7 @@ class SQLQueryFactory:
     @table.setter
     def table(self, value: str) -> None:
         self._table = value
+        self._update_queries()
 
     @property
     def fields(self) -> metadata_type:
@@ -53,13 +39,44 @@ class SQLQueryFactory:
         self._fields = value
         self._update_queries()
 
+    @property
+    def create(self) -> str:
+        """Create SQL query """
+        return self.__create
+
+    @property
+    def insert(self) -> str:
+        """Insert SQL query """
+        return self.__insert
+
+    @property
+    def update(self) -> str:
+        """Update SQL query """
+        return self.__update
+
+    @property
+    def select(self) -> SQLFilter:
+        """Select SQL query """
+        return self.__select
+
+    @property
+    def select_all(self) -> SQLFilter:
+        """Select all rows SQL query """
+        return self.__select_all
+
+    @property
+    def delete(self) -> str:
+        """Delete SQL query """
+        return self.__delete
+
     def _update_queries(self) -> None:
-        """
-        Each SQLQuery where the queries can be dynamically overwritten need to have a private
-        attribute for there default values, these need to be named according to self._<name>_<overload_attribute>
-        """
-        self._create_fields = ", ".join([f"{k} {v}" for k, v in self._fields.items()])
-        self._insert_values = ", ".join(["?" for k in self._fields.keys()])
-        self._insert_columns = ", ".join([f"{k}" for k in self._fields.keys()])
-        self._select_columns = "*"
-        self._update_columns = ", ".join([f"{k} = ?" for k in self._fields.keys()])
+        columns_create = ", ".join([f"{k} {v}" for k, v in self.fields.items()])
+        self.__create = f"CREATE TABLE {self.table} (id text, {columns_create}); CREATE UNIQUE INDEX idx_{self.table}_id on {self.table} (id);"
+        columns_insert = ", ".join([f"{k}" for k in self.fields.keys()])
+        values = ", ".join(["?" for k in self.fields.keys()])
+        self.__insert = f"INSERT INTO {self.table} (id, {columns_insert}) VALUES (?, {values})"
+        columns_update = ", ".join([f"{k} = ?" for k in self.fields.keys()])
+        self.__update = f"UPDATE {self.table} SET {columns_update} WHERE id = ?"
+        self.__select = SQLFilter(f"SELECT {{}} FROM {self.table} WHERE id = ?")
+        self.__select_all = SQLFilter(f"SELECT {{}} FROM {self.table}")
+        self.__delete = f"DELETE FROM {self.table} WHERE id = ?"
