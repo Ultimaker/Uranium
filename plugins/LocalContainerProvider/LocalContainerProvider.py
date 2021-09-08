@@ -17,6 +17,7 @@ from UM.SaveFile import SaveFile
 from UM.Settings.ContainerProvider import ContainerProvider  # The class we're implementing.
 from UM.Settings.ContainerRegistry import ContainerRegistry  # To get the resource types for containers.
 from UM.Settings.DefinitionContainer import DefinitionContainer  # To check if we need to cache this container.
+from UM.Settings.DefinitionContainerUnpickler import DefinitionContainerUnpickler
 
 MYPY = False
 if MYPY:  # Things to import for type checking only.
@@ -252,8 +253,9 @@ class LocalContainerProvider(ContainerProvider):
 
         try:
             with open(cache_path, "rb") as f:
-                definition = pickle.load(f)
-        except Exception as e: #TODO: Switch to multi-catch once we've upgraded to Python 3.6. Catch: OSError, PermissionError, IOError, AttributeError, EOFError, ImportError, IndexError and UnpicklingError.
+                # The DefinitionContainerUnpickler has a list of whitelisted globals
+                definition = DefinitionContainerUnpickler(f).load()
+        except (OSError, PermissionError, IOError, AttributeError, EOFError, ImportError, IndexError, pickle.UnpicklingError) as e:
             Logger.log("w", "Failed to load definition {definition_id} from cached file: {error_msg}".format(definition_id = definition_id, error_msg = str(e)))
             return None
 
