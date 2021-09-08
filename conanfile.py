@@ -26,6 +26,9 @@ class UraniumConan(ConanFile):
         "revision": "auto"
     }
 
+    def configure(self):
+        self.options["Arcus"].shared = self.settings.os != "Windows"
+
     def requirements(self):
         self.requires(f"Python/3.8.10@python/testing")
         self.requires(f"Arcus/4.11.0@ultimaker/testing")
