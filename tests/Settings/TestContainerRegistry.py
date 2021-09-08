@@ -397,6 +397,7 @@ def test_loadAllMetada(container_registry):
 def sql_queries():
     return SQLQueryFactory(table = "test_table",
                            fields = {
+                               "id": "text",
                                "field_1": "text",
                                "field_2": "text",
                                "field_3": "text"
@@ -412,15 +413,11 @@ def test_sqlInsertQuery(sql_queries):
 
 
 def test_sqlUpdateQuery(sql_queries):
-    assert sql_queries.update == "UPDATE test_table SET field_1 = ?, field_2 = ?, field_3 = ? WHERE id = ?"
+    assert sql_queries.update == "UPDATE test_table SET (id = ?, field_1 = ?, field_2 = ?, field_3 = ?) WHERE id = ?"
 
 
 def test_sqlSelectQuery(sql_queries):
-    assert str(sql_queries.select) == "SELECT * FROM test_table WHERE id = ?"
-
-
-def test_sqlSelectFilterQuery(sql_queries):
-    assert str(sql_queries.select["id", "field_1"]) == "SELECT id, field_1 FROM test_table WHERE id = ?"
+    assert sql_queries.select == "SELECT * FROM test_table WHERE id = ?"
 
 
 def test_sqlDeleteQuery(sql_queries):
