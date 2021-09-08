@@ -23,6 +23,10 @@ class ProjectOutputDevice(QObject, OutputDevice):
     """Signal which informs whether the project output device has been enabled or disabled, so that it can be added or removed 
      from the 'File->Save Project...' submenu"""
 
+    last_out_name = None  # type: Optional[str]
+    """Last output project name, gives the possibility to do something with the updated project-name on saving, if any.
+    """
+
     def __init__(self, device_id: str, add_to_output_devices: bool = False, parent = None, **kwargs):
         super().__init__(device_id = device_id, parent = parent)
 
@@ -71,3 +75,11 @@ class ProjectOutputDevice(QObject, OutputDevice):
                     Application.getInstance().getOutputDeviceManager().addOutputDevice(self)
                 else:
                     Application.getInstance().getOutputDeviceManager().removeOutputDevice(self.getId())
+
+    @staticmethod
+    def getLastOutputName() -> Optional[str]:
+        return ProjectOutputDevice.last_out_name
+
+    @staticmethod
+    def setLastOutputName(name: Optional[str] = None) -> None:
+        ProjectOutputDevice.last_out_name = name

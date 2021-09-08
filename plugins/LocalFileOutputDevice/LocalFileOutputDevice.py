@@ -14,8 +14,8 @@ from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Message import Message
 from UM.OutputDevice import OutputDeviceError
-from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice.ProjectOutputDevice import ProjectOutputDevice
+from UM.Workspace.WorkspaceWriter import WorkspaceWriter
 from UM.i18n import i18nCatalog
 
 catalog = i18nCatalog("uranium")
@@ -139,13 +139,15 @@ class LocalFileOutputDevice(ProjectOutputDevice):
             if result == QMessageBox.No:
                 raise OutputDeviceError.UserCanceledError()
 
-        self.writeStarted.emit(self)
-
         # Actually writing file
         if file_handler:
             file_writer = file_handler.getWriter(selected_type["id"])
         else:
             file_writer = Application.getInstance().getMeshFileHandler().getWriter(selected_type["id"])
+
+        if isinstance(file_writer, WorkspaceWriter):
+            self.setLastOutputName(file_name)
+        self.writeStarted.emit(self)
 
         try:
             mode = selected_type["mode"]
