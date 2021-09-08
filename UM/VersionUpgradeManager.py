@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections  # For deque, for breadth-first search and to track tasks, and namedtuple.
@@ -109,8 +109,7 @@ class VersionUpgradeManager:
             "plugins\\.*",    # Don't upgrade manually installed plug-ins.
             "plugins/.*",
             "./*packages\.json",
-            "./*plugins\.json",
-            "./containers\.db"
+            "./*plugins\.json"
         ]  # type: List[str]
 
     def registerIgnoredFile(self, file_name: str) -> None:

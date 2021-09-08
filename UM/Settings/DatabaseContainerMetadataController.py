@@ -1,3 +1,6 @@
+# Copyright (c) 2021 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
+
 from typing import Tuple, List, Generator, Optional
 from sqlite3 import Cursor
 
