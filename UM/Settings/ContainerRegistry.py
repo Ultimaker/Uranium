@@ -4,8 +4,9 @@
 import gc
 import re  # For finding containers with asterisks in the constraints and for detecting backup files.
 import time
+import sqlite3 as db
 from typing import Any, cast, Dict, List, Optional, Set, Type, TYPE_CHECKING
-
+import os
 import UM.Dictionary
 import UM.FlameProfiler
 from UM.LockFile import LockFile
@@ -23,10 +24,14 @@ from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface, DefinitionContainerInterface
 from UM.Signal import Signal, signalemitter
+from .DatabaseContainerMetadataController import DatabaseMetadataContainerController
 
 if TYPE_CHECKING:
     from UM.PluginObject import PluginObject
     from UM.Qt.QtApplication import QtApplication
+
+
+metadata_type = Dict[str, Any]
 
 
 @signalemitter
@@ -54,7 +59,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._providers = []  # type: List[ContainerProvider]
         PluginRegistry.addType("container_provider", self.addProvider)
 
-        self.metadata = {}  # type: Dict[str, Dict[str, Any]]
+        self.metadata = {}  # type: Dict[str, metadata_type]
         self._containers = {}  # type: Dict[str, ContainerInterface]
         self._wrong_container_ids = set() # type: Set[str]  # Set of already known wrong containers that must be skipped
         self.source_provider = {}  # type: Dict[str, Optional[ContainerProvider]]  # Where each container comes from.
@@ -64,8 +69,18 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.source_provider["empty"] = None
         self._resource_types = {"definition": Resources.DefinitionContainers}  # type: Dict[str, int]
 
-        #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
+        # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata
+        # changes.
         self.containerMetaDataChanged.connect(self._clearQueryCache)
+
+        # We use a database to store the metadata so that we don't have to extract them from the files every time
+        # the application starts. Reading the data from a lot of files is especially slow on Windows; about 30x as slow.
+        self._db_connection: Optional[db.Connection] = None
+
+        # Since each container that we can store in the database has different metadata (and thus needs different logic
+        # to extract it from the database again), we use database controllers to do that. These are set by type; Each
+        # type of container needs to have their own controller.
+        self._database_handlers: Dict[str, DatabaseMetadataContainerController] = {}
 
         self._explicit_read_only_container_ids = set()  # type: Set[str]
 
@@ -134,7 +149,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return cast(List[InstanceContainer], self.findContainers(container_type = InstanceContainer, **kwargs))
 
-    def findInstanceContainersMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
+    def findInstanceContainersMetadata(self, **kwargs: Any) -> List[metadata_type]:
         """Find the metadata of all instance containers matching certain criteria.
 
         :param kwargs: A dictionary of keyword arguments containing keys and
@@ -156,7 +171,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return cast(List[ContainerStack], self.findContainers(container_type = ContainerStack, **kwargs))
 
-    def findContainerStacksMetadata(self, **kwargs: Any) -> List[Dict[str, Any]]:
+    def findContainerStacksMetadata(self, **kwargs: Any) -> List[metadata_type]:
         """Find the metadata of all container stacks matching certain criteria.
 
         :param kwargs: A dictionary of keyword arguments containing keys and
@@ -209,7 +224,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 result.append(new_container)
         return result
 
-    def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[Dict[str, Any]]:
+    def findContainersMetadata(self, *, ignore_case: bool = False, **kwargs: Any) -> List[metadata_type]:
         """Find the metadata of all container objects matching certain criteria.
 
         :param container_type: If provided, return only objects that are
@@ -252,7 +267,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         query.execute(candidates = candidates)
 
-        return cast(List[Dict[str, Any]], query.getResult())  # As the execute of the query is done, result won't be none.
+        return cast(List[metadata_type], query.getResult())  # As the execute of the query is done, result won't be none.
 
     def findDirtyContainers(self, *, ignore_case: bool = False, **kwargs: Any) -> List[ContainerInterface]:
         """Specialized find function to find only the modified container objects
@@ -335,29 +350,148 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return container_id in self._containers
 
+    def _createDatabaseFile(self, db_path: str) -> db.Connection:
+        connection = db.Connection(db_path)
+        cursor = connection.cursor()
+        cursor.executescript("""
+            CREATE TABLE containers(
+                id text,
+                name text,
+                last_modified integer,
+                container_type text
+            );
+            CREATE UNIQUE INDEX idx_containers_id on containers (id);
+        """)
+
+        for handler in self._database_handlers.values():
+            handler.setupTable(cursor)
+
+        return connection
+
+    def _getDatabaseConnection(self) -> db.Connection:
+        if self._db_connection is not None:
+            return self._db_connection
+        db_path = os.path.join(Resources.getCacheStoragePath(), "containers.db")
+        if not os.path.exists(db_path):
+            self._db_connection = self._createDatabaseFile(db_path)
+            return self._db_connection
+        self._db_connection = db.Connection(db_path)
+        return self._db_connection
+
+    def _getProfileType(self, container_id: str, db_cursor: db.Cursor) -> Optional[str]:
+        db_cursor.execute("select id, container_type from containers where id = ?", (container_id, ))
+        row = db_cursor.fetchone()
+        if row:
+            return row[1]
+        return None
+
+    def _getProfileModificationTime(self, container_id: str, db_cursor: db.Cursor) -> Optional[float]:
+        query = f"select id, last_modified from containers where id = '{container_id}'"
+
+        db_cursor.execute(query)
+        row = db_cursor.fetchone()
+
+        if row:
+            return row[1]
+        return None
+
+    def _addMetadataToDatabase(self, metadata: metadata_type) -> None:
+        container_type = metadata["type"]
+        if container_type in self._database_handlers:
+            self._database_handlers[container_type].insert(metadata)
+
+    def _updateMetadataInDatabase(self, metadata: metadata_type) -> None:
+        container_type = metadata["type"]
+        if container_type in self._database_handlers:
+            self._database_handlers[container_type].update(metadata)
+
+    def _getMetadataFromDatabase(self, container_id: str, container_type: str) -> metadata_type:
+        if container_type in self._database_handlers:
+            return self._database_handlers[container_type].getMetadata(container_id)
+        return {}
+
     def loadAllMetadata(self) -> None:
         """Load the metadata of all available definition containers, instance
         containers and container stacks.
         """
 
+        cursor = self._getDatabaseConnection().cursor()
+        for handlers in self._database_handlers.values():
+            handlers.cursor = cursor
+
         self._clearQueryCache()
         gc.disable()
         resource_start_time = time.time()
+
+        # Since it could well be that we have to make a *lot* of changes to the database, we want to do that in
+        # a single transaction to speed it up.
+        cursor.execute("begin")
+        all_container_ids = set()
         for provider in self._providers:  # Automatically sorted by the priority queue.
-            for container_id in list(provider.getAllIds()):  # Make copy of all IDs since it might change during iteration.
-                if container_id not in self.metadata:
-                    self._application.processEvents()  # Update the user interface because loading takes a while. Specifically the loading screen.
+            # Make copy of all IDs since it might change during iteration.
+            provider_container_ids = set(provider.getAllIds())
+            # Keep a list of all the ID's that we know off
+            all_container_ids.update(provider_container_ids)
+            for container_id in provider_container_ids:
+                db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
+                if db_last_modified_time is None:
+                    # Item is not yet in the database. Add it now!
                     metadata = provider.loadMetadata(container_id)
                     if not self._isMetadataValid(metadata):
-                        Logger.log("w", "Invalid metadata for container {container_id}: {metadata}".format(container_id = container_id, metadata = metadata))
-                        if container_id in self.metadata:
-                            del self.metadata[container_id]
+                        Logger.log("w", f"Invalid metadata for container {container_id}: {metadata}")
                         continue
+                    modified_time = provider.getLastModifiedTime(container_id)
+                    if metadata.get("type") in self._database_handlers:
+                        # Only add it to the database if we have an actual handler.
+                        cursor.execute(
+                            "INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
+                            (container_id, metadata["name"], modified_time, metadata["type"]))
+                        self._addMetadataToDatabase(metadata)
+
                     self.metadata[container_id] = metadata
                     self.source_provider[container_id] = provider
+
+                else:
+                    # Metadata already exists in database.
+                    modified_time = provider.getLastModifiedTime(container_id)
+                    if modified_time > db_last_modified_time:
+                        # Metadata is outdated, so load from file and update the database
+                        metadata = provider.loadMetadata(container_id)
+                        cursor.execute("UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?", (metadata["name"], modified_time, metadata["type"], metadata["id"]))
+                        self._updateMetadataInDatabase(metadata)
+                        self.metadata[container_id] = metadata
+                        self.source_provider[container_id] = provider
+                        continue
+
+                    # Since we know that the container exists, we also know that it will never be None.
+                    container_type = cast(str, self._getProfileType(container_id, cursor))
+
+                    # No need to do any file reading, we can just get it from the database.
+                    self.metadata[container_id] = self._getMetadataFromDatabase(container_id, container_type)
+                    self.source_provider[container_id] = provider
+
+        cursor.execute("commit")
+
+        # Find all ID's that we currently have in the database
+        cursor.execute("SELECT id from containers")
+        all_ids_in_database = {container_id[0] for container_id in cursor.fetchall()}
+        ids_to_remove = all_ids_in_database - all_container_ids
+
+        # Purge ID's that don't have a matching file
+        for container_id in ids_to_remove:
+            cursor.execute("DELETE FROM containers WHERE id = ?", (container_id,))
+            self._removeContainerFromDatabase(container_id)
+
+        if ids_to_remove:  # We only can (and need to) commit again if we removed containers
+            cursor.execute("commit")
+
         Logger.log("d", "Loading metadata into container registry took %s seconds", time.time() - resource_start_time)
         gc.enable()
         ContainerRegistry.allMetadataLoaded.emit()
+
+    def _removeContainerFromDatabase(self, container_id: str) -> None:
+        for database_handler in self._database_handlers.values():
+            database_handler.delete(container_id)
 
     @UM.FlameProfiler.profile
     def load(self) -> None:
@@ -569,7 +703,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         return None
 
     @classmethod
-    def getContainerForMimeType(cls, mime_type):
+    def getContainerForMimeType(cls, mime_type: MimeType) -> Optional[Type[ContainerInterface]]:
         """Get the container type corresponding to a certain mime type.
 
         :param mime_type: The mime type to get the container type for.
@@ -646,7 +780,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.metadata[container.getId()] = container.getMetaData()  # refresh the metadata
         self.containerMetaDataChanged.emit(*args, **kwargs)
 
-    def _isMetadataValid(self, metadata: Optional[Dict[str, Any]]) -> bool:
+    def _isMetadataValid(self, metadata: Optional[metadata_type]) -> bool:
         """Validate a metadata object.
 
         If the metadata is invalid, the container is not allowed to be in the

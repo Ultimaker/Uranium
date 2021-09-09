@@ -104,10 +104,16 @@ class ContainerProvider(PluginObject):
                 return None
         return self._metadata[container_id]
 
-    # Gets the container file path with for the container with the given ID. Returns None if the container/file doesn't
-    # exist.
     def getContainerFilePathById(self, container_id: str) -> Optional[str]:
-        raise NotImplementedError("The container provider {class_name} doesn't properly implement getAllIds.".format(class_name = self.__class__.__name__))
+        """ Gets the container file path with for the container with the given ID. Returns None if the container/file
+        doesn't exist.
+        :param container_id:
+        :return:
+        """
+        raise NotImplementedError(f"The container provider {self.__class__.__name__} doesn't properly implement getContainerFilePathById.")
+
+    def getLastModifiedTime(self, container_id: str) -> float:
+        raise NotImplementedError(f"The container provider {self.__class__.__name__} doesn't properly implement getLastModifiedTime.")
 
     def getAllIds(self) -> Iterable[str]:
         """Gets a list of IDs of all containers this provider provides.
