@@ -71,6 +71,6 @@ class SQLQueryFactory:
         columns_insert = ", ".join([f"{k}" for k in self.fields.keys()])
         self.__insert = f"INSERT INTO {self.table} ({columns_insert}) VALUES ({values})"
         columns_update = ", ".join([f"{k} = ?" for k in self.fields.keys()])
-        self.__update = f"UPDATE {self.table} SET ({columns_update}) WHERE id = ?"
+        self.__update = f"UPDATE {self.table} SET {columns_update} WHERE id = ?"
         self.__select = f"SELECT * FROM {self.table} WHERE id = ?"
         self.__delete = f"DELETE FROM {self.table} WHERE id = ?"

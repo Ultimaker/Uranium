@@ -51,7 +51,9 @@ class DatabaseMetadataContainerController:
 
         param container_id: The container_id to update
         """
-        self._execute(self._queries.update, metadata.values())
+        values = list(self.groomMetadata(metadata).values())
+        values.append(metadata["id"])
+        self._execute(self._queries.update, values)
 
     def delete(self, container_id: str) -> None:
         """Removes a container from the DB."""
