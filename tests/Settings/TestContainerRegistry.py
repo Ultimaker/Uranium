@@ -413,7 +413,7 @@ def test_sqlInsertQuery(sql_queries):
 
 
 def test_sqlUpdateQuery(sql_queries):
-    assert sql_queries.update == "UPDATE test_table SET (id = ?, field_1 = ?, field_2 = ?, field_3 = ?) WHERE id = ?"
+    assert sql_queries.update == "UPDATE test_table SET id = ?, field_1 = ?, field_2 = ?, field_3 = ? WHERE id = ?"
 
 
 def test_sqlSelectQuery(sql_queries):
