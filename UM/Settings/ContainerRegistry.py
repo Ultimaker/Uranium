@@ -351,7 +351,6 @@ class ContainerRegistry(ContainerRegistryInterface):
         return container_id in self._containers
 
     def _createDatabaseFile(self, db_path: str) -> db.Connection:
-        print("-------- creating database")
         connection = db.Connection(db_path)
         cursor = connection.cursor()
         cursor.executescript("""
