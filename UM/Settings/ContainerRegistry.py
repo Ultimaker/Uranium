@@ -351,6 +351,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         return container_id in self._containers
 
     def _createDatabaseFile(self, db_path: str) -> db.Connection:
+        print("-------- creating database")
         connection = db.Connection(db_path)
         cursor = connection.cursor()
         cursor.executescript("""
@@ -385,6 +386,21 @@ class ContainerRegistry(ContainerRegistryInterface):
             return row[1]
         return None
 
+    def _recreateCorruptDataBase(self, cursor: db.Cursor) -> None:
+        """Closes the Database, removes the file from cache and recreate all metadata from scratch"""
+        cursor.execute("rollback")  # Cancel any ongoing transaction.
+        print("closing cursor:", cursor)
+        cursor.close()
+
+        self._db_connection = None
+        db_path = os.path.join(Resources.getCacheStoragePath(), "containers.db")
+        try:
+            os.remove(db_path)
+        except EnvironmentError:  # Was already deleted by rollback.
+            pass
+
+        self.loadAllMetadata()
+
     def _getProfileModificationTime(self, container_id: str, db_cursor: db.Cursor) -> Optional[float]:
         query = f"select id, last_modified from containers where id = '{container_id}'"
 
@@ -398,12 +414,20 @@ class ContainerRegistry(ContainerRegistryInterface):
     def _addMetadataToDatabase(self, metadata: metadata_type) -> None:
         container_type = metadata["type"]
         if container_type in self._database_handlers:
-            self._database_handlers[container_type].insert(metadata)
+            try:
+                self._database_handlers[container_type].insert(metadata)
+            except db.DatabaseError as e:
+                Logger.warning(f"Removing corrupt database and recreating database. {e}")
+                self._recreateCorruptDataBase(self._database_handlers[container_type].cursor)
 
     def _updateMetadataInDatabase(self, metadata: metadata_type) -> None:
         container_type = metadata["type"]
         if container_type in self._database_handlers:
-            self._database_handlers[container_type].update(metadata)
+            try:
+                self._database_handlers[container_type].update(metadata)
+            except db.DatabaseError as e:
+                Logger.warning(f"Removing corrupt database and recreating database. {e}")
+                self._recreateCorruptDataBase(self._database_handlers[container_type].cursor)
 
     def _getMetadataFromDatabase(self, container_id: str, container_type: str) -> metadata_type:
         if container_type in self._database_handlers:
@@ -433,7 +457,14 @@ class ContainerRegistry(ContainerRegistryInterface):
             # Keep a list of all the ID's that we know off
             all_container_ids.update(provider_container_ids)
             for container_id in provider_container_ids:
-                db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
+                try:
+                    db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
+                except db.DatabaseError as e:
+                    Logger.warning(f"Removing corrupt database and recreating database. {e}")
+                    self._recreateCorruptDataBase(cursor)
+                    cursor = self._getDatabaseConnection().cursor()  # After recreating the database, all the cursors have changed.
+                    cursor.execute("begin")
+                    db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
                 if db_last_modified_time is None:
                     # Item is not yet in the database. Add it now!
                     metadata = provider.loadMetadata(container_id)
