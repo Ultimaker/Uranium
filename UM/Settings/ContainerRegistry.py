@@ -389,6 +389,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         """Closes the Database, removes the file from cache and recreate all metadata from scratch"""
         if not cursor:
             self.loadAllMetadata()
+            return
+
         cursor.execute("rollback")  # Cancel any ongoing transaction.
         cursor.close()
 
