@@ -385,8 +385,10 @@ class ContainerRegistry(ContainerRegistryInterface):
             return row[1]
         return None
 
-    def _recreateCorruptDataBase(self, cursor: db.Cursor) -> None:
+    def _recreateCorruptDataBase(self, cursor: Optional[db.Cursor]) -> None:
         """Closes the Database, removes the file from cache and recreate all metadata from scratch"""
+        if not cursor:
+            self.loadAllMetadata()
         cursor.execute("rollback")  # Cancel any ongoing transaction.
         cursor.close()
 
