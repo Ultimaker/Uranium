@@ -517,7 +517,7 @@ def approximateConvexHull(vertex_data: numpy.ndarray, target_count: int) -> Opti
 def createConvexHull(vertex_data: numpy.ndarray) -> scipy.spatial.ConvexHull:
     try:
         hull_result = scipy.spatial.ConvexHull(vertex_data)
-    except scipy.spatial.qhull.QhullError:
+    except (scipy.spatial.qhull.QhullError, OSError):
         # Sometimes you can get an error when the model is lower dimensional. Try using "QJ" is make it full-dimensional.
         Logger.log("w", "Loaded model may be low-dimensional, apply QJ to make it full dimensional.")
         try:

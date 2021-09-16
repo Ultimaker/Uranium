@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections  # For deque, for breadth-first search and to track tasks, and namedtuple.
@@ -430,6 +430,7 @@ class VersionUpgradeManager:
         # Keep converting the file until it's at one of the current versions.
         while (configuration_type, version) not in self._current_versions:
             if (configuration_type, version) not in self._upgrade_routes:
+                Logger.log("w", f"Unable to upgrade file of type {configuration_type} of version {version}")
                 # No version upgrade plug-in claims to be able to upgrade this file.
                 return None
             new_type, new_version, upgrade_step = self._upgrade_routes[(configuration_type, version)]

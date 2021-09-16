@@ -633,9 +633,10 @@ class PluginRegistry(QObject):
                 try:
                     with open(metadata_file, "r", encoding="utf-8") as file_stream:
                         self._parsePluginInfo(plugin_id, file_stream.read(), meta_data)
-                except:
-                    pass
-                current_version = Version(meta_data["plugin"]["version"])
+                    current_version = Version(meta_data["plugin"]["version"])
+                except InvalidMetaDataError:
+                    current_version = Version("0.0.0")
+                    Logger.log("e", f"The plugin.json in '{plugin_location}' is invalid. Assuming that the version of '{plugin_id}' is {current_version}.")
                 if current_version > highest_version:
                     highest_version = current_version
                     final_location = loc
