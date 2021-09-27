@@ -10,6 +10,7 @@ from UM.Resources import Resources
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
+from UM.Settings.SQLQueryFactory import SQLQueryFactory
 
 from .MockContainer import MockContainer
 
@@ -390,6 +391,99 @@ def test_loadAllMetada(container_registry):
     # As we asked for it, the lazy loading should kick in and actually load it.
     container_registry.findInstanceContainers(id = instances[0].get("id"))
     assert container_registry.isLoaded(instances[0].get("id"))
+
+
+@pytest.fixture
+def sql_queries():
+    return SQLQueryFactory(table = "test_table",
+                           fields = {
+                               "id": "text",
+                               "field_1": "text",
+                               "field_2": "text",
+                               "field_3": "text"
+                           })
+
+
+def test_sqlCreateTableQuery(sql_queries):
+    assert sql_queries.create == "CREATE TABLE test_table (id text, field_1 text, field_2 text, field_3 text); CREATE UNIQUE INDEX idx_test_table_id on test_table (id);"
+
+
+def test_sqlInsertQuery(sql_queries):
+    assert sql_queries.insert == "INSERT INTO test_table (id, field_1, field_2, field_3) VALUES (?, ?, ?, ?)"
+
+
+def test_sqlUpdateQuery(sql_queries):
+    assert sql_queries.update == "UPDATE test_table SET id = ?, field_1 = ?, field_2 = ?, field_3 = ? WHERE id = ?"
+
+
+def test_sqlSelectQuery(sql_queries):
+    assert sql_queries.select == "SELECT * FROM test_table WHERE id = ?"
+
+
+def test_sqlDeleteQuery(sql_queries):
+    assert sql_queries.delete == "DELETE FROM test_table WHERE id = ?"
+
+
+def test_insertInDatabaseCalledOnce(container_registry):
+    profile_handler = MagicMock()
+    container_registry._database_handlers["profile"] = profile_handler
+
+    # The fixture makes sure that the database is cleared before we start.
+    container_registry.loadAllMetadata()
+
+    # So we expect that the profile handler was asked to insert it into the database
+    profile_handler.insert.assert_called_once()
+    profile_handler.update.assert_not_called()
+
+    # If we try to load the database again, we expect that the insert is not called again (as it's already in the DB!)
+    container_registry.loadAllMetadata()
+    profile_handler.insert.assert_called_once()
+    profile_handler.update.assert_not_called()
+
+
+def test_deleteUnknownContainerFromDatabase(container_registry):
+    profile_handler = MagicMock()
+    container_registry._database_handlers["profile"] = profile_handler
+
+    # Add a profile ID that doesn't have a "twin" on disk in form of a file. This simulates a profile that was inserted
+    # into the database during previous boot, but the profile was deleted from disk. As such, it should be removed
+    connection = container_registry._getDatabaseConnection()
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO containers values ('to_be_deleted_profile_id', 'deleted profile', '50', 'profile')")
+    cursor.execute("commit")
+
+    # Maybe a bit overkill, but make sure that we can find the container now
+    cursor.execute("SELECT * FROM containers WHERE id = 'to_be_deleted_profile_id'")
+    assert cursor.fetchone()
+
+    # Fill the registry
+    container_registry.loadAllMetadata()
+
+    # And now we should not be able to find it!
+    cursor.execute("SELECT * FROM containers WHERE id = 'to_be_deleted_profile_id'")
+    assert not cursor.fetchone()
+
+
+def test_isDataUpdatedWhenFileOnDiskIsNewer(container_registry):
+    # In this check we make sure that the update function is called if the modified time in the DB is older as the
+    # last time the file was modified on the disk.
+    profile_handler = MagicMock()
+    container_registry._database_handlers["profile"] = profile_handler
+
+    # The fixture makes sure that the database is cleared before we start.
+    container_registry.loadAllMetadata()
+    # So we expect that the profile handler was asked to insert it into the database
+    profile_handler.insert.assert_called_once()
+    profile_handler.update.assert_not_called()
+
+    # Now we have to change the database so that the modified date is super old
+    container_registry._db_connection.execute("UPDATE containers SET last_modified = 0 WHERE id = 'setting_values'")
+    container_registry._db_connection.execute("commit")
+
+    # If we try to load the database again, we expect that the insert is not called (as it's already in the DB!)
+    container_registry.loadAllMetadata()
+    profile_handler.insert.assert_called_once()
+    profile_handler.update.assert_called_once()
 
 
 def test_findLazyLoadedContainers(container_registry):

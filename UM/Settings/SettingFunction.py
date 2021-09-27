@@ -327,8 +327,8 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "file",
         "subprocess",
         "globals",
-        "__class__"
-        "__globals__"
+        "__class__",
+        "__globals__",
         "hasattr",
         "raw_input",
         "input",

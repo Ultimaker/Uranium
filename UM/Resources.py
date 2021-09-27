@@ -187,9 +187,10 @@ class Resources:
 
         # Ensure the directory we want to write to exists
         try:
-            os.makedirs(path)
-        except OSError:
-            pass
+            if not os.path.exists(path):
+                os.makedirs(path)
+        except (OSError, ValueError) as e:  # OSError occurs if we have no access rights. ValueError occurs if the path is broken, e.g. null character in username.
+            Logger.error(f"Failed to create resource directory for type {resource_type}: {type(e)} - {str(e)}")
 
         return path
 
@@ -476,6 +477,8 @@ class Resources:
         Logger.log("d", "Cache storage path is %s", cls.__cache_storage_path)
         if not os.path.exists(cls.__config_storage_path) or not os.path.exists(cls.__data_storage_path):
             cls._copyLatestDirsIfPresent()
+        if not os.path.exists(cls.__cache_storage_path):
+            os.makedirs(cls.__cache_storage_path, exist_ok = True)
 
         cls.__paths.insert(0, cls.__data_storage_path)
 

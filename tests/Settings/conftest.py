@@ -57,6 +57,13 @@ def container_registry(application, test_containers_provider, plugin_registry: P
     with unittest.mock.patch("UM.PluginRegistry.PluginRegistry.getMetaData", unittest.mock.MagicMock(return_value = {"container_provider": {}})):
         registry.addProvider(test_containers_provider)
 
+    # Make sure that a new database connection is used.
+    db_path = os.path.join(Resources.getCacheStoragePath(), "containers.db")
+    if os.path.exists(db_path):
+        os.remove(db_path)
+
+    container_registry._db_connection = None
+
     UM.Settings.ContainerStack.setContainerRegistry(registry)
     UM.Settings.InstanceContainer.setContainerRegistry(registry)
     return registry
@@ -120,3 +127,6 @@ class TestContainerProvider(ContainerProvider):
 
     def saveContainer(self, *args, **kwargs):
         return None
+
+    def getLastModifiedTime(self, container_id: str):
+        return 50
