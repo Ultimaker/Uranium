@@ -28,6 +28,7 @@ class Message(QObject):
         NEUTRAL = 1
         WARNING = 2
         ERROR = 3
+        CLOUD = 4
 
     def __init__(self, text: str = "", lifetime: int = 30, dismissable: bool = True, progress: float = None,
                  title: Optional[str] = None, parent=None, use_inactivity_timer: bool = True, image_source: str = "",

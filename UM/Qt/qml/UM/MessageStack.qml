@@ -103,6 +103,7 @@ ListView
                 {
                     switch (model.message_type)
                     {
+
                         case 0:
                             return UM.StatusIcon.Status.POSITIVE
                         case 1:
@@ -111,6 +112,8 @@ ListView
                             return UM.StatusIcon.Status.WARNING
                         case 3:
                             return UM.StatusIcon.Status.ERROR
+                        case 4:
+                            return UM.StatusIcon.Status.CLOUD
                         default:
                             return UM.StatusIcon.Status.NEUTRAL
                     }

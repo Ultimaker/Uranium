@@ -12,7 +12,8 @@ Item
         POSITIVE,
         NEUTRAL,
         WARNING,
-        ERROR
+        ERROR,
+        CLOUD
     }
     property string status: StatusIcon.Status.NEUTRAL
 
@@ -106,6 +107,22 @@ Item
                 target: iconBackground
                 source: UM.Theme.getIcon("CircleSolid", "low")
                 color: UM.Theme.getColor("error")
+            }
+        },
+        State
+        {
+            name: "cloud"
+            when: status == StatusIcon.Status.CLOUD
+            PropertyChanges
+            {
+                target: iconInner
+                source: UM.Theme.getIcon("CloudBadge", "low")
+                color: UM.Theme.getColor("primary")
+            }
+            PropertyChanges
+            {
+                target: iconBackground
+                source: ""
             }
         }
     ]
