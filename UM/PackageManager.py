@@ -668,9 +668,6 @@ class PackageManager(QObject):
                     except:
                         Logger.logException("e", "Failed to load potential license file '%s' as text file.", file_info.filename)
                         license_string = None
-        except EnvironmentError as e:
-            Logger.error(f"Could not access {filename} to read license file: {str(e)}")
-            license_string = None
         except zipfile.BadZipFile as e:
             Logger.error("Package is corrupt: {err}".format(err = str(e)))
             license_string = None
