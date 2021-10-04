@@ -11,7 +11,6 @@ from json import JSONDecodeError
 from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
-from PyQt5.QtGui import QDesktopServices
 
 from UM import i18nCatalog
 from UM.Logger import Logger
@@ -72,6 +71,7 @@ class PackageManager(QObject):
         self._to_remove_package_set = set()  # type: Set[str] # A set of packages that need to be removed at the next start
         self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that need to be installed at the next start
         self._dismissed_packages = set()    # type: Set[str] # A set of packages that are dismissed by the user
+        self.installed_packages = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that were successfully installed at startup
 
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
         self._available_package_versions = {}  # type: Dict[str, Set[UMVersion]]
@@ -294,53 +294,14 @@ class PackageManager(QObject):
 
     # (for initialize) Installs all packages that have been scheduled to be installed.
     def _installAllScheduledPackages(self) -> None:
-        materials_installed = False
         while self._to_install_package_dict:
             package_id, package_info = list(self._to_install_package_dict.items())[0]
             installing_plugin_msg = catalog.i18nc("@info:progress Don't translate {package_id}", "Installing plugin {package_id}...").format(package_id = package_id)
             self._application.showSplashMessage(installing_plugin_msg)
             self._installPackage(package_info)
-            materials_installed = package_info["package_info"].get("package_type") == "material"
+            self.installed_packages[package_id] = self._installed_package_dict[package_id]
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
-        if materials_installed:
-            self._showSyncNewMaterialsMessage()
-
-    def _showSyncNewMaterialsMessage(self):
-        sync_materials_message = Message(
-                text = catalog.i18nc("@action:button", "Please sync the material profiles with your pinter before starting to print."),
-                title = catalog.i18nc("@action:button", "New materials installed"),
-                message_type = Message.MessageType.WARNING,
-                lifetime = 0
-        )
-
-        sync_materials_message.addAction(
-                "sync",
-                name = catalog.i18nc("@action:button", "Sync materials with printers"),
-                icon = "",
-                description = "Sync your newly installed materials with your printers.",
-                button_align = Message.ActionButtonAlignment.ALIGN_RIGHT
-        )
-
-        sync_materials_message.addAction(
-                "learn_more",
-                name = catalog.i18nc("@action:button", "Learn more"),
-                icon = "",
-                description = "Learn more.",
-                button_align = Message.ActionButtonAlignment.ALIGN_LEFT,
-                button_style = Message.ActionButtonStyle.LINK
-        )
-        sync_materials_message.actionTriggered.connect(self._onSyncMaterialsMessageActionTriggered)
-        sync_materials_message.show()
-
-    @staticmethod
-    def _onSyncMaterialsMessageActionTriggered(sync_message: Optional[Message], sync_message_action: Optional[str]):
-        if sync_message_action == "sync":
-            QDesktopServices.openUrl(QUrl("https://example.com/sync"))
-            if sync_message is not None:
-                sync_message.hide()
-        elif sync_message_action == "learn_more":
-            QDesktopServices.openUrl(QUrl("https://example.com/learn_more"))
 
     def getBundledPackageInfo(self, package_id: str) -> Optional[Dict[str, Any]]:
         package_info = None
