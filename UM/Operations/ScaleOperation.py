@@ -52,35 +52,31 @@ class ScaleOperation(Operation.Operation):
             self._node.setScale(self._node.getScale() + self._scale)
         elif self._relative_scale: #Scale relatively to the current scale.
             scale_factor = Vector()
+
             ## Ensure that the direction is correctly applied (it can be flipped due to mirror)
             if self._scale.z == self._scale.y and self._scale.y == self._scale.x:
                 ratio = (1 / (self._node.getScale().x + self._node.getScale().y + self._node.getScale().z)) * 3
                 ratio_vector = ratio * self._node.getScale()
                 self._scale *= ratio_vector
+            self._scale *= self._node.getScale().length()
+
             if self._node.getScale().x > 0:
                 scale_factor = scale_factor.set(x=abs(self._node.getScale().x + self._scale.x))
             else:
                 scale_factor = scale_factor.set(x=-abs(self._node.getScale().x - self._scale.x))
+
             if self._node.getScale().y > 0:
                 scale_factor = scale_factor.set(y=abs(self._node.getScale().y + self._scale.y))
             else:
                 scale_factor = scale_factor.set(y=-abs(self._node.getScale().y - self._scale.y))
+
             if self._node.getScale().z > 0:
                 scale_factor = scale_factor.set(z=abs(self._node.getScale().z + self._scale.z))
             else:
                 scale_factor = scale_factor.set(z=-abs(self._node.getScale().z - self._scale.z))
 
-            current_scale = self._node.getScale()
-
-            if scale_factor.x != 0:
-                scale_factor = scale_factor.set(x=scale_factor.x / current_scale.x)
-            if scale_factor.y != 0:
-                scale_factor = scale_factor.set(y=scale_factor.y / current_scale.y)
-            if scale_factor.z != 0:
-                scale_factor = scale_factor.set(z=scale_factor.z / current_scale.z)
-
             self._node.setPosition(-self._scale_around_point) #If scaling around a point, shift that point to the axis origin first and shift it back after performing the transformation.
-            self._node.scale(scale_factor, SceneNode.TransformSpace.World)
+            self._node.setScale(scale_factor, SceneNode.TransformSpace.World)
             self._node.setPosition(self._scale_around_point)
             new_scale = self._node.getScale()
             if self._snap:
