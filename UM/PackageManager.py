@@ -71,7 +71,7 @@ class PackageManager(QObject):
         self._to_remove_package_set = set()  # type: Set[str] # A set of packages that need to be removed at the next start
         self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that need to be installed at the next start
         self._dismissed_packages = set()    # type: Set[str] # A set of packages that are dismissed by the user
-        self.installed_packages = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that were successfully installed at startup
+        self.installed_packages = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that were installed during startup
 
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
         self._available_package_versions = {}  # type: Dict[str, Set[UMVersion]]
