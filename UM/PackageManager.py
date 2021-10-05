@@ -71,6 +71,7 @@ class PackageManager(QObject):
         self._to_remove_package_set = set()  # type: Set[str] # A set of packages that need to be removed at the next start
         self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that need to be installed at the next start
         self._dismissed_packages = set()    # type: Set[str] # A set of packages that are dismissed by the user
+        self._installed_packages = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that were installed during startup
 
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
         self._available_package_versions = {}  # type: Dict[str, Set[UMVersion]]
@@ -298,6 +299,7 @@ class PackageManager(QObject):
             installing_plugin_msg = catalog.i18nc("@info:progress Don't translate {package_id}", "Installing plugin {package_id}...").format(package_id = package_id)
             self._application.showSplashMessage(installing_plugin_msg)
             self._installPackage(package_info)
+            self._installed_packages[package_id] = self._installed_package_dict[package_id]
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
 
@@ -668,9 +670,6 @@ class PackageManager(QObject):
                     except:
                         Logger.logException("e", "Failed to load potential license file '%s' as text file.", file_info.filename)
                         license_string = None
-        except EnvironmentError as e:
-            Logger.error(f"Could not access {filename} to read license file: {str(e)}")
-            license_string = None
         except zipfile.BadZipFile as e:
             Logger.error("Package is corrupt: {err}".format(err = str(e)))
             license_string = None
@@ -729,6 +728,9 @@ class PackageManager(QObject):
             return urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(path)))
         else:
             return ""
+
+    def getPackagesInstalledOnStartup(self) -> Dict[str, Dict[str, Any]]:
+        return self._installed_packages
 
 
 __all__ = ["PackageManager"]

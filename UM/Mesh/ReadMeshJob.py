@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Message import Message
@@ -68,7 +68,7 @@ class ReadMeshJob(ReadFileJob):
                         display_scale_factor = scale_factor * 100
 
                         scale_message = Message(i18n_catalog.i18nc("@info:status",
-                                                                   "Auto scaled object to {0}% of original size",
+                                                                   "Auto scaled model to {0}% of original size",
                                                                    ("%i" % display_scale_factor)),
                                                 title = i18n_catalog.i18nc("@info:title", "Scaling Object"))
 
