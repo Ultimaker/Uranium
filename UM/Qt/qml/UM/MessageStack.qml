@@ -189,8 +189,8 @@ ListView
                 source: model.image_source
                 sourceSize
                 {
-                    height: height
-                    width: width
+                    height: messageImage.height
+                    width: messageImage.width
                 }
                 mipmap: true
             }
