@@ -110,7 +110,8 @@ class LocalFileOutputDevice(ProjectOutputDevice):
 
         # CURA-6411: This code needs to be before dialog.selectFile and the filters, because otherwise in macOS (for some reason) the setDirectory call doesn't work.
         stored_directory = Application.getInstance().getPreferences().getValue("local_file/dialog_save_path")
-        if stored_directory and stored_directory != "":
+
+        if stored_directory and stored_directory != "" and os.path.exists(stored_directory):
             dialog.setDirectory(stored_directory)
 
         # Add the file name before adding the extension to the dialog
