@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.11\n"
-"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
+"Report-Msgid-Bugs-To: setting_version = 19plugins@ultimaker.com\n"
 "POT-Creation-Date: 2021-08-11 10:01+0200\n"
 "PO-Revision-Date: 2021-04-16 15:14+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
