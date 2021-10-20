@@ -1,12 +1,12 @@
 # Uranium
 # Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.11\n"
 "Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
-"POT-Creation-Date: 2021-08-11 10:01+0200\n"
+"POT-Creation-Date: 2021-10-20 16:58+0200\n"
 "PO-Revision-Date: 2021-04-16 15:12+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, Jinbuhm Kim, <Jinbuhm.Kim@gmail.com>, Korean <info@bothof.nl>\n"
@@ -84,71 +84,71 @@ msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "쓸 수있는 파일 유형이 없습니다!"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "파일이 이미 있음"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "<filename>{0}</filename> 파일이 이미 있습니다. 덮어 쓰시겠습니까?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "<filename>{0}</filename> 저장 중입니다"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "저장"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "<filename>{0}</filename> 저장하려고 하나 권한이 거부되었습니다"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "<filename>{0}</filename>: <message>{1}</message> 에 저장할 수 없습니다"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "<filename>{0}</filename> 에 저장됨"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "파일이 저장됨"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "폴더 열기"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "파일이 있는 폴더를 엽니다"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
 msgctxt "@info:title"
 msgid "Error"
 msgstr "오류"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
@@ -368,15 +368,15 @@ msgstr "<filename>{0}</filename>을(를) 로드하지 못했습니다. 파일이
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:71
 #, python-format, python-brace-format
 msgctxt "@info:status"
-msgid "Auto scaled object to {0}% of original size"
-msgstr "원본크기의 {0}% 로 개체 크기 자동조절"
+msgid "Auto scaled model to {0}% of original size"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "크기 조절"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:285
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:286
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -386,18 +386,18 @@ msgstr ""
 "다음 패키지를 제거하는 중에 오류가 발생했습니다. \n"
 "{packages}"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:287
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:288
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "오류 제거 중"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:298
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:299
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "플러그인 설치 중 {package_id}..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:585
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:587
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -409,7 +409,7 @@ msgstr ""
 "{error}.\n"
 " 업그레이드를 나중에 다시 시도하십시오."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:588
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:590
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "업데이트 오류"
@@ -841,6 +841,46 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr "업데이트 검사기"
 
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "description"
+msgid "Example extension to instruct people on how to create Uranium extensions."
+msgstr "우라늄 확장을 만드는 방법을 보여주는 예입니다."
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "name"
+msgid "Example Extension"
+msgstr "확장 예"
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "description"
+msgid "Example file reader to instruct people on how to create Uranium file readers."
+msgstr "우라늄 파일 리더를 만드는 방법을 보여주는 파일 리더 예입니다."
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "name"
+msgid "Example File Reader"
+msgstr "파일 리더 예"
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "description"
+msgid "Example output device to instruct people on how to create Uranium output devices."
+msgstr "우라늄 출력 장치를 만드는 방법을 보여주는 출력 장치 예입니다."
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "name"
+msgid "Example Output Device"
+msgstr "출력 장치 예"
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "description"
+msgid "Example tool to instruct people on how to create Uranium tools."
+msgstr "우라늄 도구를 만드는 방법을 보여주는 도구 예입니다."
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "name"
+msgid "Example Tool"
+msgstr "도구 예"
+
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
@@ -850,6 +890,11 @@ msgstr "간단한 솔리드 메쉬보기를 제공합니다."
 msgctxt "name"
 msgid "Simple View"
 msgstr "단순보기"
+
+#, python-format, python-brace-format
+#~ msgctxt "@info:status"
+#~ msgid "Auto scaled object to {0}% of original size"
+#~ msgstr "원본크기의 {0}% 로 개체 크기 자동조절"
 
 #~ msgctxt "@info"
 #~ msgid "Could not access update information."
@@ -892,38 +937,6 @@ msgstr "단순보기"
 #~ msgctxt "@info:button"
 #~ msgid "Reset your configuration to factory defaults."
 #~ msgstr "설정을 기본값으로 재설정합니다."
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "우라늄 확장을 만드는 방법을 보여주는 예입니다."
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "확장 예"
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "우라늄 파일 리더를 만드는 방법을 보여주는 파일 리더 예입니다."
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "파일 리더 예"
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "우라늄 도구를 만드는 방법을 보여주는 도구 예입니다."
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "도구 예"
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "우라늄 출력 장치를 만드는 방법을 보여주는 출력 장치 예입니다."
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "출력 장치 예"
 
 #~ msgctxt "@title:tab"
 #~ msgid "Plugins"
