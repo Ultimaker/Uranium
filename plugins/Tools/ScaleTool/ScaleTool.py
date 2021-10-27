@@ -38,7 +38,7 @@ class ScaleTool(Tool):
 
         self._snap_scale = False
         self._non_uniform_scale = False
-        self._scale_speed = 10
+        self._scale_speed = 1
 
         self._drag_length = 0
 
@@ -70,7 +70,6 @@ class ScaleTool(Tool):
 
         :param event: type(Event)
         """
-
         super().event(event)
 
         if event.type == Event.ToolActivateEvent:
@@ -164,6 +163,7 @@ class ScaleTool(Tool):
                         else:
                             scale_factor = self._scale_sum
                             self._scale_sum = 0.0
+
                     if scale_factor:
                         scale_change = Vector(0.0, 0.0, 0.0)
                         if self._non_uniform_scale:

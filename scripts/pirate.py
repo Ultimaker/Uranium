@@ -80,7 +80,7 @@ with open(po_file, "w", encoding = "utf-8") as f:
     f.write("""msgid ""
 msgstr ""
 "Project-Id-Version: Pirate\\n"
-"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\\n"
+"Report-Msgid-Bugs-To: plugins@ultimaker.com\\n"
 "POT-Creation-Date: 1492\\n"
 "PO-Revision-Date: 1492\\n"
 "Last-Translator: Ghostkeeper and Awhiemstra\\n"

@@ -1,12 +1,12 @@
 # Uranium
 # Copyright (C) 2021 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.11\n"
-"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2021-08-11 10:01+0200\n"
+"Project-Id-Version: Uranium 4.12\n"
+"Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
+"POT-Creation-Date: 2021-10-20 16:58+0200\n"
 "PO-Revision-Date: 2021-04-16 15:09+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, German <info@bothof.nl>\n"
@@ -84,71 +84,71 @@ msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "Es sind keine Dateitypen zum Schreiben vorhanden!"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Datei bereits vorhanden"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:138
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Die Datei <filename>{0}</filename> ist bereits vorhanden. Soll die Datei wirklich überschrieben werden?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Wird gespeichert unter <filename>{0}</filename>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "Wird gespeichert"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Beim Versuch <filename>{0}</filename> zu speichern, wird der Zugriff verweigert"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Konnte nicht als <filename>{0}</filename> gespeichert werden: <message>{1}</message>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Wurde als <filename>{0}</filename> gespeichert"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "Datei wurde gespeichert"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Ordner öffnen"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Öffnet den Ordner, der die gespeicherte Datei enthält"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Fehler"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
@@ -368,15 +368,15 @@ msgstr "<filename>{0}</filename> konnte nicht geladen werden. Die Datei könnte 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:71
 #, python-format, python-brace-format
 msgctxt "@info:status"
-msgid "Auto scaled object to {0}% of original size"
-msgstr "Automatische Skalierung des Objekts auf {0}% der Originalgröße"
+msgid "Auto scaled model to {0}% of original size"
+msgstr ""
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Objekt-Skalierung"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:285
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:286
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -386,18 +386,18 @@ msgstr ""
 "Beim Deinstallieren der folgenden Pakete traten Fehler auf:\n"
 "{packages}"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:287
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:288
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "Fehler beim Deinstallieren"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:298
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:299
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "Plugin {package_id} wird installiert..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:585
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:587
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -409,7 +409,7 @@ msgstr ""
 "{error}.\n"
 "Versuchen Sie später erneut, die Aktualisierung durchzuführen."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:588
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:590
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Fehler beim Aktualisieren"
@@ -845,6 +845,46 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr "Update-Prüfer"
 
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "description"
+msgid "Example extension to instruct people on how to create Uranium extensions."
+msgstr "Die Beispiel-Erweiterung zeigt, wie Uran-Erweiterungen erstellt werden."
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "name"
+msgid "Example Extension"
+msgstr "Beispiel-Erweiterung"
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "description"
+msgid "Example file reader to instruct people on how to create Uranium file readers."
+msgstr "Der Beispiel-Dateireader zeigt, wie Uran-Dateireader erstellt werden."
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "name"
+msgid "Example File Reader"
+msgstr "Beispiel-Dateireader"
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "description"
+msgid "Example output device to instruct people on how to create Uranium output devices."
+msgstr "Das Beispiel-Ausgabegerät zeigt, wie Uran-Ausgabegeräte erstellt werden."
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "name"
+msgid "Example Output Device"
+msgstr "Beispiel-Ausgabegerät"
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "description"
+msgid "Example tool to instruct people on how to create Uranium tools."
+msgstr "Das Beispiel-Werkzeug zeigt, wie Uran-Werkzeuge erstellt werden."
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "name"
+msgid "Example Tool"
+msgstr "Beispiel-Werkzeug"
+
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
@@ -854,6 +894,11 @@ msgstr "Bietet eine einfache, solide Netzansicht."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Einfache Ansicht"
+
+#, python-format, python-brace-format
+#~ msgctxt "@info:status"
+#~ msgid "Auto scaled object to {0}% of original size"
+#~ msgstr "Automatische Skalierung des Objekts auf {0}% der Originalgröße"
 
 #~ msgctxt "@info"
 #~ msgid "Could not access update information."
@@ -896,38 +941,6 @@ msgstr "Einfache Ansicht"
 #~ msgctxt "@info:button"
 #~ msgid "Reset your configuration to factory defaults."
 #~ msgstr "Setzen Sie Ihre Konfiguration auf die Werkseinstellungen zurück."
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Die Beispiel-Erweiterung zeigt, wie Uran-Erweiterungen erstellt werden."
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "Beispiel-Erweiterung"
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Der Beispiel-Dateireader zeigt, wie Uran-Dateireader erstellt werden."
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "Beispiel-Dateireader"
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "Das Beispiel-Werkzeug zeigt, wie Uran-Werkzeuge erstellt werden."
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "Beispiel-Werkzeug"
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Das Beispiel-Ausgabegerät zeigt, wie Uran-Ausgabegeräte erstellt werden."
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "Beispiel-Ausgabegerät"
 
 #~ msgctxt "@title:tab"
 #~ msgid "Plugins"

@@ -187,9 +187,10 @@ class Resources:
 
         # Ensure the directory we want to write to exists
         try:
-            os.makedirs(path)
-        except OSError:
-            pass
+            if not os.path.exists(path):
+                os.makedirs(path)
+        except (OSError, ValueError) as e:  # OSError occurs if we have no access rights. ValueError occurs if the path is broken, e.g. null character in username.
+            Logger.error(f"Failed to create resource directory for type {resource_type}: {type(e)} - {str(e)}")
 
         return path
 

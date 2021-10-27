@@ -68,7 +68,7 @@ def potheader():
     headertxt += "msgid \"\"\n"
     headertxt += "msgstr \"\"\n"
     headertxt += "\"Project-Id-Version: Uranium json setting files\\n\"\n"
-    headertxt += "\"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\\n\"\n"
+    headertxt += "\"Report-Msgid-Bugs-To: plugins@ultimaker.com\\n\"\n"
     headertxt += "\"POT-Creation-Date: %s+0000\\n\"\n" %time.strftime("%Y-%m-%d %H:%M")
     headertxt += "\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n"
     headertxt += "\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n"
