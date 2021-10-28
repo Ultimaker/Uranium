@@ -5,7 +5,6 @@ from PyQt5.QtCore import Qt
 
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
-from UM.PluginRegistry import PluginRegistry
 
 
 class ViewModel(ListModel):
@@ -36,15 +35,7 @@ class ViewModel(ListModel):
             return
 
         for view_id,view in views.items():
-            # A view may be named as "PluginName" or "PluginName_ViewName" (in case of plugins with 2+ views)
-            plugin_name = view.getPluginId()
             view_meta_data = view.getMetaData()
-
-            # If a plugin has multiple views, we get a list of dicts and filter for the one we want
-            # Note: will only work if metadata 'name' and View's _name have the same value
-            if type(view_meta_data) == list:
-                view_name = view_id.split('_', maxsplit=1)[1]  # Get everything after the first '_'
-                view_meta_data = list(filter(lambda view: view['name'] == view_name , view_meta_data))[0]
 
             # Skip view modes that are marked as not visible
             if "visible" in view_meta_data and not view_meta_data["visible"]:
