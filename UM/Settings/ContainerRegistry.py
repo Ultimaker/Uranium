@@ -404,9 +404,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.loadAllMetadata()
 
     def _getProfileModificationTime(self, container_id: str, db_cursor: db.Cursor) -> Optional[float]:
-        query = f"select id, last_modified from containers where id = '{container_id}'"
-
-        db_cursor.execute(query)
+        db_cursor.execute("select id, last_modified from containers where id = ?", (container_id, ))
         row = db_cursor.fetchone()
 
         if row:
