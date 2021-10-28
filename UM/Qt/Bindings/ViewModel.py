@@ -38,7 +38,7 @@ class ViewModel(ListModel):
         for view_id,view in views.items():
             # A view may be named as "PluginName" or "PluginName_ViewName" (in case of plugins with 2+ views)
             plugin_name = view.getPluginId()
-            view_meta_data = PluginRegistry.getInstance().getMetaData(plugin_name).get("view", {})
+            view_meta_data = view.getMetaData()
 
             # If a plugin has multiple views, we get a list of dicts and filter for the one we want
             # Note: will only work if metadata 'name' and View's _name have the same value
