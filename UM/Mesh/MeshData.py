@@ -353,7 +353,7 @@ class MeshData:
     def getCachedUserValue(self, key: str) -> Any:
         return self._user_data_cache.get(key) 
 
-    def setCachedUserValue(self, key: str, value: Any):
+    def setCachedUserValue(self, key: str, value: Any) -> None:  
         self._user_data_cache[key] = value
 
     def attributeNames(self) -> List[str]:
