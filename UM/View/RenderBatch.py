@@ -269,12 +269,15 @@ class RenderBatch:
 
         # Initialize VAO (VertexArrayObject). On activation, this will wrap around the other vertex/index buffers.
         # That enables reusing them without much fuss.
-        if OpenGLContext.properties["supportsVertexArrayObjects"]:
-            vao = QOpenGLVertexArrayObject()
-            vao.create()
-            if not vao.isCreated():
-                Logger.log("e", "RenderBatch: VAO not created. You will not go to R^3 today.")
-                return None
+        if not OpenGLContext.properties["supportsVertexArrayObjects"]:
+            Logger.log("e", "RenderBatch: This OpenGL doesn't support VAO? You will not go to R^3 today.")
+            return None
+
+        vao = QOpenGLVertexArrayObject()
+        vao.create()
+        if not vao.isCreated():
+            Logger.log("e", "RenderBatch: VAO not created. You will not go to R^3 today.")
+            return None
 
         # Setup VAO:
         vao.bind()
