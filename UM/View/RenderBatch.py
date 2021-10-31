@@ -330,7 +330,7 @@ class RenderBatch:
         if mesh.hasIndices():
             # The last parameter here is supposed to take either an array, or an offset into the current buffer.
             # However, this Python wrapper can only handle either the array, or None, which serves as a 0-offset.
-            # As other offsets do not seem possible (everyting was tried), the range is instead handled in the shader.
+            # As other offsets do not seem possible (everything was tried), the range is instead handled in the shader.
             elem_count = mesh.getFaceCount() * self._render_mode_to_vertex_count.get(self._render_mode, 1)
             self._gl.glDrawElements(self._render_mode, elem_count, self._gl.GL_UNSIGNED_INT, None)
         else:
