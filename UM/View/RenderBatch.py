@@ -300,10 +300,8 @@ class RenderBatch:
 
         if self._render_range is not None:
             self._shader.setUniformValue("u_drawRange", [self._render_range[0], self._render_range[1]])
-            self._shader.setUniformValue("draw_range", [self._render_range[0], self._render_range[1]])
         else:
             self._shader.setUniformValue("u_drawRange", [-1.0, -1.0])
-            self._shader.setUniformValue("draw_range", [-1.0, -1.0])
 
         transformation = item["transformation"]
         normal_matrix = item["normal_transformation"]
