@@ -7,7 +7,7 @@ from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake
 
 class UraniumConan(ConanFile):
     name = "Uranium"
-    version = "4.11.0"
+    version = "4.12.0"
     license = "LGPL-3.0"
     author = "Ultimaker B.V."
     url = "https://github.com/Ultimaker/uranium"
