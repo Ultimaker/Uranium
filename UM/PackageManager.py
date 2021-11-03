@@ -37,8 +37,8 @@ class PackageManager(QObject):
         self._plugin_registry = self._application.getPluginRegistry()
 
         # JSON files that keep track of all installed packages.
-        self._user_package_management_file_path = None  # type: Optional[str]
-        self._bundled_package_management_file_paths = []  # type: List[str]
+        self._user_package_management_file_path: Optional[str] = None
+        self._bundled_package_management_file_paths: List[str] = []
         for search_path in Resources.getAllPathsForType(Resources.BundledPackages):
             if not os.path.isdir(search_path):
                 continue
@@ -64,19 +64,19 @@ class PackageManager(QObject):
         if self._user_package_management_file_path is None:  # Doesn't exist yet.
             self._user_package_management_file_path = os.path.join(Resources.getDataStoragePath(), "packages.json")
 
-        self._installation_dirs_dict = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}  # type: Dict[str, str]
+        self._installation_dirs_dict: Dict[str, str] = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}
 
-        self._bundled_package_dict = {}  # type: Dict[str, Dict[str, Any]] # A dict of all bundled packages
-        self._installed_package_dict = {}  # type: Dict[str, Dict[str, Any]] # A dict of all installed packages
-        self._to_remove_package_set = set()  # type: Set[str] # A set of packages that need to be removed at the next start
-        self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that need to be installed at the next start
-        self._dismissed_packages = set()    # type: Set[str] # A set of packages that are dismissed by the user
-        self._installed_packages = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that were installed during startup
+        self._bundled_package_dict: Dict[str, Dict[str, Any]] = {}  # A dict of all bundled packages
+        self._installed_package_dict: Dict[str, Dict[str, Any]] = {}  # A dict of all installed packages
+        self._to_remove_package_set: Set[str] = set()  # A set of packages that need to be removed at the next start
+        self._to_install_package_dict: Dict[str, Dict[str, Any]] = {}  # A dict of packages that need to be installed at the next start
+        self._dismissed_packages: Set[str] = set()  # A set of packages that are dismissed by the user
+        self._installed_packages: Dict[str, Dict[str, Any]] = {}  # A dict of packages that were installed during startup
 
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
-        self._available_package_versions = {}  # type: Dict[str, Set[UMVersion]]
+        self._available_package_versions: Dict[str, Set[UMVersion]] = {}
 
-        self._packages_with_update_available = set()  # type: Set[str]
+        self._packages_with_update_available: Set[str] = set()
 
     packageInstalled = Signal()  # Emits the package_id (str) of an installed package
     installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
