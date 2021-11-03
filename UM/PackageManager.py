@@ -734,10 +734,10 @@ class PackageManager(QObject):
     def getPackagesInstalledOnStartup(self) -> Dict[str, Dict[str, Any]]:
         return self._installed_packages
 
-    def getPackagesToRemove(self) -> Dict[str, Dict[str, any]]:
+    def getPackagesToRemove(self) -> Dict[str, Dict[str, Any]]:
         return self._to_remove_package_dict
 
-    def getPackagesToInstall(self) -> Dict[str, Dict[str, any]]:
+    def getPackagesToInstall(self) -> Dict[str, Dict[str, Any]]:
         return self._to_install_package_dict
 
 __all__ = ["PackageManager"]
