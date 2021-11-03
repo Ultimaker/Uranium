@@ -168,6 +168,7 @@ class UpdateChecker(Extension):
         message = message_class(
             application_display_name = Application.getInstance().getApplicationDisplayName().title(),
             newest_version = newest_version)
+        message.download_url = self._download_url  # At this point 'our own' _download_url is set to the correct value.
         message.actionTriggered.connect(self._onActionTriggered)
         message.show()
         return True
@@ -180,6 +181,6 @@ class UpdateChecker(Extension):
         """
         if action == "download":
             if self._download_url is not None:
-                QDesktopServices.openUrl(QUrl(self._download_url))
+                QDesktopServices.openUrl(QUrl(message.download_url))
         elif action == "new_features":
-            QDesktopServices.openUrl(QUrl(Application.getInstance().change_log_url))
+            QDesktopServices.openUrl(QUrl(message.change_log_url))

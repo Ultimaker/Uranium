@@ -82,6 +82,7 @@ class Application:
         self._default_language = "en_US"  # type: str
 
         self.change_log_url: str = "https://github.com/Ultimaker/Uranium"  # Where to find a more detailed description of the recent updates.
+        self.beta_change_log_url: str = "https://github.com/Ultimaker/Uranium"  # Where to find a more detailed description of proposed updates.
 
         self._preferences_filename = None  # type: str
         self._preferences = None  # type: Preferences
