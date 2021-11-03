@@ -69,6 +69,7 @@ class PackageManager(QObject):
         self._bundled_package_dict: Dict[str, Dict[str, Any]] = {}  # A dict of all bundled packages
         self._installed_package_dict: Dict[str, Dict[str, Any]] = {}  # A dict of all installed packages
         self._to_remove_package_set: Set[str] = set()  # A set of packages that need to be removed at the next start
+        self._to_remove_package_dict: Dict[str, Dict[str, Any]] = {}  # A dict of packages that need to be removed at the next start
         self._to_install_package_dict: Dict[str, Dict[str, Any]] = {}  # A dict of packages that need to be installed at the next start
         self._dismissed_packages: Set[str] = set()  # A set of packages that are dismissed by the user
         self._installed_packages: Dict[str, Dict[str, Any]] = {}  # A dict of packages that were installed during startup
@@ -525,6 +526,7 @@ class PackageManager(QObject):
         if package_id not in self._to_install_package_dict or force_add:
             # Schedule for a delayed removal:
             self._to_remove_package_set.add(package_id)
+            self._to_remove_package_dict[package_id] = self._installed_package_dict[package_id]
         else:
             if package_id in self._to_install_package_dict:
                 # Remove from the delayed installation list if present
@@ -732,5 +734,7 @@ class PackageManager(QObject):
     def getPackagesInstalledOnStartup(self) -> Dict[str, Dict[str, Any]]:
         return self._installed_packages
 
+    def getPackagesToRemove(self) -> Dict[str, Dict[str, any]]:
+        return self._to_remove_package_dict
 
 __all__ = ["PackageManager"]
