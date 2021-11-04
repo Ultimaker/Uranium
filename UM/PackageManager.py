@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
 
 PackageData = Dict[str, Any]
-BundledPackageDict = Dict[str, PackageData]
+PackageDataDict = Dict[str, PackageData]
 
 class PackageManager(QObject):
     Version = 1
@@ -68,13 +68,13 @@ class PackageManager(QObject):
 
         self._installation_dirs_dict: Dict[str, str] = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}
 
-        self._bundled_package_dict: BundledPackageDict = {}  # A dict of all bundled packages
-        self._installed_package_dict: BundledPackageDict = {}  # A dict of all installed packages
+        self._bundled_package_dict: PackageDataDict = {}  # A dict of all bundled packages
+        self._installed_package_dict: PackageDataDict = {}  # A dict of all installed packages
         self._to_remove_package_set: Set[str] = set()  # A set of packages that need to be removed at the next start
-        self._to_remove_package_dict: BundledPackageDict = {}  # A dict of packages that need to be removed at the next start
-        self._to_install_package_dict: BundledPackageDict = {}  # A dict of packages that need to be installed at the next start
+        self._to_remove_package_dict: PackageDataDict = {}  # A dict of packages that need to be removed at the next start
+        self._to_install_package_dict: PackageDataDict = {}  # A dict of packages that need to be installed at the next start
         self._dismissed_packages: Set[str] = set()  # A set of packages that are dismissed by the user
-        self._installed_packages: BundledPackageDict = {}  # A dict of packages that were installed during startup
+        self._installed_packages: PackageDataDict = {}  # A dict of packages that were installed during startup
 
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
         self._available_package_versions: Dict[str, Set[UMVersion]] = {}
@@ -733,13 +733,13 @@ class PackageManager(QObject):
         else:
             return ""
 
-    def getPackagesInstalledOnStartup(self) -> BundledPackageDict:
+    def getPackagesInstalledOnStartup(self) -> PackageDataDict:
         return self._installed_packages
 
-    def getPackagesToRemove(self) -> BundledPackageDict:
+    def getPackagesToRemove(self) -> PackageDataDict:
         return self._to_remove_package_dict
 
-    def getPackagesToInstall(self) -> BundledPackageDict:
+    def getPackagesToInstall(self) -> PackageDataDict:
         return self._to_install_package_dict
 
 __all__ = ["PackageManager"]
