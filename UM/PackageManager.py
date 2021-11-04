@@ -25,6 +25,8 @@ catalog = i18nCatalog("uranium")
 if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
 
+PackageData = Dict[str, Any]
+PackageDataDict = Dict[str, PackageData]
 
 class PackageManager(QObject):
     Version = 1
@@ -37,8 +39,8 @@ class PackageManager(QObject):
         self._plugin_registry = self._application.getPluginRegistry()
 
         # JSON files that keep track of all installed packages.
-        self._user_package_management_file_path = None  # type: Optional[str]
-        self._bundled_package_management_file_paths = []  # type: List[str]
+        self._user_package_management_file_path: Optional[str] = None
+        self._bundled_package_management_file_paths: List[str] = []
         for search_path in Resources.getAllPathsForType(Resources.BundledPackages):
             if not os.path.isdir(search_path):
                 continue
@@ -64,19 +66,20 @@ class PackageManager(QObject):
         if self._user_package_management_file_path is None:  # Doesn't exist yet.
             self._user_package_management_file_path = os.path.join(Resources.getDataStoragePath(), "packages.json")
 
-        self._installation_dirs_dict = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}  # type: Dict[str, str]
+        self._installation_dirs_dict: Dict[str, str] = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}
 
-        self._bundled_package_dict = {}  # type: Dict[str, Dict[str, Any]] # A dict of all bundled packages
-        self._installed_package_dict = {}  # type: Dict[str, Dict[str, Any]] # A dict of all installed packages
-        self._to_remove_package_set = set()  # type: Set[str] # A set of packages that need to be removed at the next start
-        self._to_install_package_dict = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that need to be installed at the next start
-        self._dismissed_packages = set()    # type: Set[str] # A set of packages that are dismissed by the user
-        self._installed_packages = {}  # type: Dict[str, Dict[str, Any]]  # A dict of packages that were installed during startup
+        self._bundled_package_dict: PackageDataDict = {}  # A dict of all bundled packages
+        self._installed_package_dict: PackageDataDict = {}  # A dict of all installed packages
+        self._to_remove_package_set: Set[str] = set()  # A set of packages that need to be removed at the next start
+        self._to_remove_package_dict: PackageDataDict = {}  # A dict of packages that need to be removed at the next start
+        self._to_install_package_dict: PackageDataDict = {}  # A dict of packages that need to be installed at the next start
+        self._dismissed_packages: Set[str] = set()  # A set of packages that are dismissed by the user
+        self._installed_packages: PackageDataDict = {}  # A dict of packages that were installed during startup
 
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
-        self._available_package_versions = {}  # type: Dict[str, Set[UMVersion]]
+        self._available_package_versions: Dict[str, Set[UMVersion]] = {}
 
-        self._packages_with_update_available = set()  # type: Set[str]
+        self._packages_with_update_available: Set[str] = set()
 
     packageInstalled = Signal()  # Emits the package_id (str) of an installed package
     installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
@@ -241,7 +244,7 @@ class PackageManager(QObject):
     # Returns True if the candidate is preferred over the base
     #  - The package with the higher SDK version is considered having the higher version number. If they are the same,
     #  - if the based package version is greater than or equal to the given package, -1 is returned. Otherwise, 1.
-    def _shouldInstallCandidate(self, candidate_dict: Dict[str, Any], base_dict: Dict[str, Any]) -> bool:
+    def _shouldInstallCandidate(self, candidate_dict: PackageData, base_dict: PackageData) -> bool:
         # If the base version has a higher SDK version, use the based version by removing the candidate one.
         sdk_version_candidate = UMVersion(candidate_dict["sdk_version"])
         if not self.isPackageCompatible(sdk_version_candidate):
@@ -303,14 +306,14 @@ class PackageManager(QObject):
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
 
-    def getBundledPackageInfo(self, package_id: str) -> Optional[Dict[str, Any]]:
+    def getBundledPackageInfo(self, package_id: str) -> Optional[PackageData]:
         package_info = None
         if package_id in self._bundled_package_dict:
             package_info = self._bundled_package_dict[package_id]["package_info"]
         return package_info
 
     # Checks the given package is installed. If so, return a dictionary that contains the package's information.
-    def getInstalledPackageInfo(self, package_id: str) -> Optional[Dict[str, Any]]:
+    def getInstalledPackageInfo(self, package_id: str) -> Optional[PackageData]:
         if package_id in self._to_remove_package_set:
             return None
 
@@ -338,7 +341,7 @@ class PackageManager(QObject):
         Get packages ID's that were installed. This does not contain bundled plugins.
         :return: Set of id's of installed packages
         """
-        installed_ids = set()  # type: Set[str]
+        installed_ids: Set[str] = set()
         if self._installed_package_dict.keys():
             installed_ids = installed_ids.union(set(self._installed_package_dict.keys()))
 
@@ -350,7 +353,7 @@ class PackageManager(QObject):
 
     def getAllInstalledPackageIDs(self) -> Set[str]:
         # Add bundled, installed, and to-install packages to the set of installed package IDs
-        all_installed_ids = set()  # type: Set[str]
+        all_installed_ids: Set[str] = set()
 
         if self._bundled_package_dict.keys():
             all_installed_ids = all_installed_ids.union(set(self._bundled_package_dict.keys()))
@@ -369,7 +372,7 @@ class PackageManager(QObject):
         Used by the Marketplace to check which packages have updates available.
         """
 
-        package_ids_and_versions = []  # type: List[Tuple[str, str]]
+        package_ids_and_versions: List[Tuple[str, str]] = []
         all_installed_ids = self.getAllInstalledPackageIDs()
         for package_id in all_installed_ids:
             package_info = self.getInstalledPackageInfo(package_id)
@@ -380,12 +383,12 @@ class PackageManager(QObject):
             package_ids_and_versions.append((package_id, package_info["package_version"]))
         return package_ids_and_versions
 
-    def getAllInstalledPackagesInfo(self) -> Dict[str, List[Dict[str, Any]]]:
+    def getAllInstalledPackagesInfo(self) -> Dict[str, List[PackageData]]:
 
         all_installed_ids = self.getAllInstalledPackageIDs()
 
         # map of <package_type> -> <package_id> -> <package_info>
-        installed_packages_dict = {}  # type: Dict[str, List[Dict[str, Any]]]
+        installed_packages_dict: Dict[str, List[PackageData]] = {}
         for package_id in all_installed_ids:
             # Skip required plugins as they should not be tampered with
             if package_id in self._application.getRequiredPlugins():
@@ -416,7 +419,7 @@ class PackageManager(QObject):
     def getDismissedPackages(self) -> List[str]:
         return list(self._dismissed_packages)
 
-    def reEvaluateDismissedPackages(self, subscribed_packages_payload: List[Dict[str, Any]], sdk_version: str) -> None:
+    def reEvaluateDismissedPackages(self, subscribed_packages_payload: List[PackageData], sdk_version: str) -> None:
         """
         It removes a package from the "dismissed incompatible packages" list, if
         it gets updated in the meantime. We check every package from the payload
@@ -525,6 +528,7 @@ class PackageManager(QObject):
         if package_id not in self._to_install_package_dict or force_add:
             # Schedule for a delayed removal:
             self._to_remove_package_set.add(package_id)
+            self._to_remove_package_dict[package_id] = self._installed_package_dict[package_id]
         else:
             if package_id in self._to_install_package_dict:
                 # Remove from the delayed installation list if present
@@ -557,7 +561,7 @@ class PackageManager(QObject):
             break
 
     # Installs all files associated with the given package.
-    def _installPackage(self, installation_package_data: Dict[str, Any]) -> None:
+    def _installPackage(self, installation_package_data: PackageData) -> None:
         package_info = installation_package_data["package_info"]
         filename = installation_package_data["filename"]
 
@@ -626,8 +630,8 @@ class PackageManager(QObject):
             Logger.log("e", "Can't install package, operating system is blocking it: {err}".format(err = str(e)))
 
     # Gets package information from the given file.
-    def getPackageInfo(self, filename: str) -> Dict[str, Any]:
-        package_json = {}  # type: Dict[str, Any]
+    def getPackageInfo(self, filename: str) -> PackageData:
+        package_json: PackageData = {}
         try:
             with zipfile.ZipFile(filename) as archive:
                 # Go through all the files and use the first successful read as the result
@@ -729,8 +733,13 @@ class PackageManager(QObject):
         else:
             return ""
 
-    def getPackagesInstalledOnStartup(self) -> Dict[str, Dict[str, Any]]:
+    def getPackagesInstalledOnStartup(self) -> PackageDataDict:
         return self._installed_packages
 
+    def getPackagesToRemove(self) -> PackageDataDict:
+        return self._to_remove_package_dict
+
+    def getPackagesToInstall(self) -> PackageDataDict:
+        return self._to_install_package_dict
 
 __all__ = ["PackageManager"]
