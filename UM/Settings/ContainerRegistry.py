@@ -390,8 +390,11 @@ class ContainerRegistry(ContainerRegistryInterface):
         if not cursor:
             self.loadAllMetadata()
             return
-
-        cursor.execute("rollback")  # Cancel any ongoing transaction.
+        try:
+            cursor.execute("rollback")  # Cancel any ongoing transaction.
+        except:
+            # Could be that the cursor is already closed
+            pass
         cursor.close()
 
         self._db_connection = None

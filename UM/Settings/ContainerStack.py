@@ -763,10 +763,12 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         error_keys = []
         for key in self.getAllKeys():
+            if not self.getProperty(key, "enabled"):
+                continue
             validation_state = self.getProperty(key, "validationState")
             if validation_state is None:
                 # Setting is not validated. This can happen if there is only a setting definition.
-                # We do need to validate it, because a setting defintions value can be set by a function, which could
+                # We do need to validate it, because a setting definitions value can be set by a function, which could
                 # be an invalid setting.
                 definition = cast(SettingDefinition, self.getSettingDefinition(key))
                 validator_type = SettingDefinition.getValidatorForType(definition.type)
