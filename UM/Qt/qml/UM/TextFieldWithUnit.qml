@@ -1,6 +1,6 @@
 import QtQuick.Controls 2.15
 import QtQuick 2.15
-import UM 1.0 as UM
+import UM 1.5 as UM
 
 TextField
 {
@@ -15,15 +15,12 @@ TextField
 
         color: UM.Theme.getColor("setting_validation_ok")
 
-        Label
+        UM.Label
         {
             id: unitLabel
             anchors.right: parent.right
             anchors.rightMargin: UM.Theme.getSize("setting_unit_margin").width
-            anchors.verticalCenter: parent.verticalCenter
             color: UM.Theme.getColor("setting_unit")
-            font: UM.Theme.getFont("default")
-            renderType: Text.NativeRendering
         }
     }
 }

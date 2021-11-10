@@ -6,7 +6,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 
-import UM 1.4 as UM
+import UM 1.5 as UM
 
 ListView
 {
@@ -118,19 +118,15 @@ ListView
                 }
             }
 
-
-            Label
+            UM.Label
             {
                 id: messageTitle
                 Layout.fillWidth: true
 
                 text: model.title == undefined ? "" : model.title
-                color: UM.Theme.getColor("text")
                 font: UM.Theme.getFont("default_bold")
-                wrapMode: Text.WordWrap
                 elide: Text.ElideRight
                 maximumLineCount: 2
-                renderType: Text.NativeRendering
             }
 
             Button
@@ -213,10 +209,9 @@ ListView
             }
         }
 
-        Label
+        UM.Label
         {
             id: messageLabel
-
             anchors
             {
                 left: parent.left
@@ -238,14 +233,9 @@ ListView
 
             text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? "" : model.text
             onLinkActivated: Qt.openUrlExternally(link)
-            color: UM.Theme.getColor("text")
-            font: UM.Theme.getFont("default")
-            wrapMode: Text.Wrap
-            renderType: Text.NativeRendering
-            linkColor: UM.Theme.getColor("text_link")
         }
 
-        CheckBox
+        UM.CheckBox
         {
             id: optionToggle
             anchors
@@ -262,16 +252,6 @@ ListView
             height: visible ? undefined: 0
             checked: model.option_state
             onCheckedChanged: base.model.optionToggled(message.model_id, checked)
-            style: CheckBoxStyle
-            {
-                label: Label
-                {
-                    text: control.text
-                    font: UM.Theme.getFont("default")
-                    color: UM.Theme.getColor("text")
-                    elide: Text.ElideRight
-                }
-            }
         }
 
         UM.ProgressBar
