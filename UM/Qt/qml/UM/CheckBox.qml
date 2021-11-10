@@ -5,19 +5,33 @@ import UM 1.0 as UM
 CheckBox
 {
     id: control
+    states: [
+        State {
+            name: "hovered"
+            when: control.hovered
+            PropertyChanges { target: indicator_background; color: UM.Theme.getColor("checkbox_hover")}
+            PropertyChanges { target: indicator_background; border.color: UM.Theme.getColor("checkbox_border_hover")}
+        },
+        State {
+            name: "disabled"
+            when: !control.enabled
+            PropertyChanges { target: indicator_background; color: UM.Theme.getColor("checkbox_disabled")}
+        }
+    ]
 
     indicator: Rectangle
     {
+        id: indicator_background
         implicitWidth:  UM.Theme.getSize("checkbox").width
         implicitHeight: UM.Theme.getSize("checkbox").height
 
-        color: (control.hovered || control._hovered) ? UM.Theme.getColor("checkbox_hover") : (control.enabled ? UM.Theme.getColor("checkbox") : UM.Theme.getColor("checkbox_disabled"))
+        color: UM.Theme.getColor("checkbox")
         Behavior on color { ColorAnimation { duration: 50; } }
 
         radius: control.exclusiveGroup ? Math.round(UM.Theme.getSize("checkbox").width / 2) : UM.Theme.getSize("checkbox_radius").width
         anchors.verticalCenter: parent.verticalCenter
         border.width: UM.Theme.getSize("default_lining").width
-        border.color: (control.hovered || control._hovered) ? UM.Theme.getColor("checkbox_border_hover") : UM.Theme.getColor("checkbox_border")
+        border.color: UM.Theme.getColor("checkbox_border")
 
         UM.RecolorImage
         {

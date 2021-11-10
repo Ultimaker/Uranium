@@ -74,14 +74,14 @@ Item
     {
         id: snapRotationCheckbox
         anchors.left: parent.left;
-        anchors.top: resetRotationButton.bottom;
-        anchors.topMargin: UM.Theme.getSize("default_margin").width;
+        anchors.top: resetRotationButton.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").width
 
         //: Snap Rotation checkbox
-        text: catalog.i18nc("@action:checkbox","Snap Rotation");
+        text: catalog.i18nc("@action:checkbox","Snap Rotation")
 
-        checked: UM.ActiveTool.properties.getValue("RotationSnap");
-        onClicked: UM.ActiveTool.setProperty("RotationSnap", checked);
+        checked: UM.ActiveTool.properties.getValue("RotationSnap")
+        onClicked: UM.ActiveTool.setProperty("RotationSnap", checked)
     }
 
     Binding
