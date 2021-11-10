@@ -84,15 +84,14 @@ Item
 
         spacing: UM.Theme.getSize("default_margin").height
 
-        CheckBox
+        UM.CheckBox
         {
             id: snapScalingCheckbox
 
             width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
             text: catalog.i18nc("@option:check", "Snap Scaling")
 
-            style: UM.Theme.styles.checkbox;
-            checked: UM.ActiveTool.properties.getValue("ScaleSnap");
+            checked: UM.ActiveTool.properties.getValue("ScaleSnap")
             onClicked:
             {
                 UM.ActiveTool.setProperty("ScaleSnap", checked);
@@ -112,14 +111,13 @@ Item
             value: UM.ActiveTool.properties.getValue("ScaleSnap")
         }
 
-        CheckBox
+        UM.CheckBox
         {
             id: uniformScalingCheckbox
 
             width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
             text: catalog.i18nc("@option:check", "Uniform Scaling")
 
-            style: UM.Theme.styles.checkbox;
             checked: !UM.ActiveTool.properties.getValue("NonUniformScale")
             onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked)
         }
