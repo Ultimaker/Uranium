@@ -7,19 +7,22 @@ import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 
+// import QtQuick.Dialogs 1.3 as NewStuff
+import QtQuick.Controls 2.15 as NewControls
+
 import ".."
 
 import UM 1.1 as UM
 
-Dialog
+NewControls.Dialog
 {
     id: base;
 
     title: catalog.i18nc("@title:window", "Preferences")
-    minimumWidth: UM.Theme.getSize("modal_window_minimum").width
-    minimumHeight: UM.Theme.getSize("modal_window_minimum").height
-    width: minimumWidth
-    height: minimumHeight
+    width: UM.Theme.getSize("modal_window_minimum").width
+    height: UM.Theme.getSize("modal_window_minimum").height
+    //width: minimumWidth
+    //height: minimumHeight
 
     property int currentPage: 0;
     onCurrentPageChanged:
@@ -106,21 +109,21 @@ Dialog
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
-    leftButtons: Button
-    {
-        id: defaultsButton
-        text: catalog.i18nc("@action:button", "Defaults");
-        enabled: stackView.currentItem.resetEnabled;
-        onClicked: stackView.currentItem.reset();
-    }
-
-    rightButtons: Button
-    {
-        id: closeButton
-        text: catalog.i18nc("@action:button", "Close");
-        iconName: "dialog-close";
-        onClicked: base.accept();
-    }
+//    leftButtons: Button
+//    {
+//        id: defaultsButton
+//        text: catalog.i18nc("@action:button", "Defaults");
+//        enabled: stackView.currentItem.resetEnabled;
+//        onClicked: stackView.currentItem.reset();
+//    }
+//
+//    rightButtons: Button
+//    {
+//        id: closeButton
+//        text: catalog.i18nc("@action:button", "Close");
+//        iconName: "dialog-close";
+//        onClicked: base.accept();
+//    }
 
     function setPage(index)
     {
