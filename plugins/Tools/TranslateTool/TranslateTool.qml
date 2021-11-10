@@ -4,7 +4,7 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.2
 
-import UM 1.1 as UM
+import UM 1.5 as UM
 
 Item
 {
@@ -29,16 +29,16 @@ Item
         //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
         //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
         //Then remove any trailing zeroes and the radix.
-        var output = "";
+        var output = ""
         if (input !== undefined)
         {
             output = input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
         }
         if (output == "-0")
         {
-            output = "0";
+            output = "0"
         }
-        return output;
+        return output
     }
 
     function selectTextInTextfield(selected_item){
@@ -48,54 +48,53 @@ Item
 
     Grid
     {
-        id: textfields;
+        id: textfields
 
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
-        anchors.top: parent.top;
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors.top: parent.top
 
-        columns: 2;
-        flow: Grid.TopToBottom;
-        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2);
+        columns: 2
+        flow: Grid.TopToBottom
+        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
 
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: "X";
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("x_axis");
-            verticalAlignment: Text.AlignVCenter;
+            height: UM.Theme.getSize("setting_control").height
+            text: "X"
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("x_axis")
+            verticalAlignment: Text.AlignVCenter
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: "Y";
-            font: UM.Theme.getFont("default");
+            height: UM.Theme.getSize("setting_control").height
+            text: "Y"
+            font: UM.Theme.getFont("default")
             color: UM.Theme.getColor("z_axis"); // This is intentional. The internal axis are switched.
-            verticalAlignment: Text.AlignVCenter;
+            verticalAlignment: Text.AlignVCenter
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: "Z";
-            font: UM.Theme.getFont("default");
+            height: UM.Theme.getSize("setting_control").height
+            text: "Z"
+            font: UM.Theme.getFont("default")
             color: UM.Theme.getColor("y_axis"); // This is intentional. The internal axis are switched.
-            verticalAlignment: Text.AlignVCenter;
+            verticalAlignment: Text.AlignVCenter
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
-        TextField
+        UM.TextFieldWithUnit
         {
             id: xTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "mm"
             text: xText
             validator: DoubleValidator
             {
@@ -106,26 +105,25 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("X", modified_text);
+                UM.ActiveTool.setProperty("X", modified_text)
             }
             onActiveFocusChanged:
             {
                 if(!activeFocus && text =="")
                 {
                     xText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
-                    xText = 0;
+                    xText = 0
                 }
             }
             Keys.onBacktabPressed: selectTextInTextfield(zTextField)
             Keys.onTabPressed: selectTextInTextfield(yTextField)
         }
-        TextField
+        UM.TextFieldWithUnit
         {
             id: yTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "mm"
             text: yText
             validator: DoubleValidator
             {
@@ -136,7 +134,7 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Y", modified_text);
+                UM.ActiveTool.setProperty("Y", modified_text)
             }
 
             onActiveFocusChanged:
@@ -144,19 +142,18 @@ Item
                 if(!activeFocus && text =="")
                 {
                     yText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
-                    yText = 0;
+                    yText = 0
                 }
             }
             Keys.onBacktabPressed: selectTextInTextfield(xTextField)
             Keys.onTabPressed: selectTextInTextfield(zTextField)
         }
-        TextField
+        UM.TextFieldWithUnit
         {
             id: zTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "mm"
             text: zText
             validator: DoubleValidator
             {
@@ -166,7 +163,7 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Z", modified_text);
+                UM.ActiveTool.setProperty("Z", modified_text)
             }
 
             onActiveFocusChanged:
@@ -174,7 +171,7 @@ Item
                 if(!activeFocus && text =="")
                 {
                     zText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
-                    zText = 0;
+                    zText = 0
                 }
             }
             Keys.onBacktabPressed: selectTextInTextfield(yTextField)
@@ -200,42 +197,42 @@ Item
 
             if (base.lockPosition == "true"){
                 lockPositionCheckbox.checked = true
-                return 1;
+                return 1
             }
             else if (base.lockPosition == "partially"){
                 lockPositionCheckbox.checked = true
-                return 2;
+                return 2
             }
             else{
                 lockPositionCheckbox.checked = false
-                return 0;
+                return 0
             }
         }
 
 
         id: lockPositionCheckbox
         anchors.top: textfields.bottom
-        anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
         anchors.left: textfields.left
         anchors.leftMargin: UM.Theme.getSize("default_margin").width
 
-        text: catalog.i18nc("@option:check","Lock Model");
-        style: UM.Theme.styles.partially_checkbox;
+        text: catalog.i18nc("@option:check","Lock Model")
+        style: UM.Theme.styles.partially_checkbox
 
         onClicked: {
 
             // If state is partially, then set Checked
             if (checkbox_state == 2){
                 lockPositionCheckbox.checked = true
-                UM.ActiveTool.setProperty("LockPosition", true);
+                UM.ActiveTool.setProperty("LockPosition", true)
             }
             else{
-                UM.ActiveTool.setProperty("LockPosition", lockPositionCheckbox.checked);
+                UM.ActiveTool.setProperty("LockPosition", lockPositionCheckbox.checked)
             }
 
             // After clicking the base.lockPosition is not refreshed, fot this reason manually update the state
             // Set zero because only 2 will show partially icon in checkbox
-            checkbox_state = 0;
+            checkbox_state = 0
         }
     }
 
