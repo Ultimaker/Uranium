@@ -70,7 +70,7 @@ Item
         visible: UM.ActiveTool.properties.getValue("SelectFaceSupported") == true //Might be undefined if we're switching away from the RotateTool!
     }
 
-    CheckBox
+    UM.CheckBox
     {
         id: snapRotationCheckbox
         anchors.left: parent.left;
@@ -79,8 +79,6 @@ Item
 
         //: Snap Rotation checkbox
         text: catalog.i18nc("@action:checkbox","Snap Rotation");
-
-        style: UM.Theme.styles.checkbox;
 
         checked: UM.ActiveTool.properties.getValue("RotationSnap");
         onClicked: UM.ActiveTool.setProperty("RotationSnap", checked);
