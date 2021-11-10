@@ -4,7 +4,7 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.2
 
-import UM 1.1 as UM
+import UM 1.5 as UM
 
 Item
 {
@@ -54,36 +54,35 @@ Item
         selected_item.focus = true
     }
 
-    Button
+    UM.ImageButton
     {
         id: resetScaleButton
         anchors.top: textfields.bottom
-        anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
         anchors.left: textfields.left
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
         z: 1
 
         //: Reset scale tool button
         text: catalog.i18nc("@action:button","Reset")
-        iconSource: UM.Theme.getIcon("ArrowReset");
-        property bool needBorder: true
+        imageSource: UM.Theme.getIcon("ArrowReset")
+        imageWidth: UM.Theme.getSize("medium_button_icon").width
+        imageHeight: UM.Theme.getSize("medium_button_icon").height
 
-        style: UM.Theme.styles.tool_button;
-
-        onClicked: UM.ActiveTool.triggerAction("resetScale");
+        onClicked: UM.ActiveTool.triggerAction("resetScale")
     }
 
 
     Flow
     {
-        id: checkboxes;
+        id: checkboxes
 
-        anchors.left: resetScaleButton.right;
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
-        anchors.right: parent.right;
-        anchors.top: resetScaleButton.top;
+        anchors.left: resetScaleButton.right
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors.right: parent.right
+        anchors.top: resetScaleButton.top
 
-        spacing: UM.Theme.getSize("default_margin").height;
+        spacing: UM.Theme.getSize("default_margin").height
 
         CheckBox
         {
@@ -121,8 +120,8 @@ Item
             text: catalog.i18nc("@option:check", "Uniform Scaling")
 
             style: UM.Theme.styles.checkbox;
-            checked: !UM.ActiveTool.properties.getValue("NonUniformScale");
-            onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked);
+            checked: !UM.ActiveTool.properties.getValue("NonUniformScale")
+            onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked)
         }
 
         Binding
@@ -137,30 +136,30 @@ Item
     {
         id: textfields;
 
-        anchors.top: parent.top;
+        anchors.top: parent.top
 
-        columns: 3;
-        flow: Grid.TopToBottom;
-        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2);
+        columns: 3
+        flow: Grid.TopToBottom
+        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
 
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: "X";
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("x_axis");
-            verticalAlignment: Text.AlignVCenter;
+            height: UM.Theme.getSize("setting_control").height
+            text: "X"
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("x_axis")
+            verticalAlignment: Text.AlignVCenter
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
         Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: "Y";
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("z_axis"); // This is intentional. The internal axis are switched.
-            verticalAlignment: Text.AlignVCenter;
+            height: UM.Theme.getSize("setting_control").height
+            text: "Y"
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("z_axis") // This is intentional. The internal axis are switched.
+            verticalAlignment: Text.AlignVCenter
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
@@ -169,19 +168,19 @@ Item
         {
             height: UM.Theme.getSize("setting_control").height;
             text: "Z";
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("y_axis"); // This is intentional. The internal axis are switched.
-            verticalAlignment: Text.AlignVCenter;
+            font: UM.Theme.getFont("default")
+            color: UM.Theme.getColor("y_axis") // This is intentional. The internal axis are switched.
+            verticalAlignment: Text.AlignVCenter
             renderType: Text.NativeRendering
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
         TextField
         {
             id: widthTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            property string unit: "mm"
+            style: UM.Theme.styles.text_field
             text: widthText
             validator: DoubleValidator
             {
@@ -201,10 +200,10 @@ Item
         TextField
         {
             id: depthTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            property string unit: "mm"
+            style: UM.Theme.styles.text_field
             text: depthText
             validator: DoubleValidator
             {
@@ -216,7 +215,7 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectDepth", modified_text);
+                UM.ActiveTool.setProperty("ObjectDepth", modified_text)
             }
             Keys.onBacktabPressed: selectTextInTextfield(xPercentage)
             Keys.onTabPressed: selectTextInTextfield(zPercentage)
@@ -224,10 +223,10 @@ Item
         TextField
         {
             id: heightTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            property string unit: "mm"
+            style: UM.Theme.styles.text_field
             text: heightText
             validator: DoubleValidator
             {

@@ -4,6 +4,7 @@ from typing import Union, Dict
 
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtProperty, QUrl
 
+from UM.Decorators import deprecated
 from UM.PluginObject import PluginObject
 
 
@@ -43,10 +44,12 @@ class Stage(QObject, PluginObject):
             return self._components[name]
         return QUrl()
 
+    @deprecated("Stages no longer have icons", "4.13")
     @pyqtProperty(QUrl, notify = iconSourceChanged)
     def iconSource(self) -> QUrl:
         return self._icon_source
 
+    @deprecated("Stages no longer have icons", "4.13")
     def setIconSource(self, source: Union[str, QUrl]) -> None:
         if type(source) == str:
             source = QUrl.fromLocalFile(source)

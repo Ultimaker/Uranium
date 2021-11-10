@@ -26,4 +26,6 @@ SimpleButton 1.1 SimpleButton.qml
 TabRow 1.3 TabRow.qml
 TabRowButton 1.3 TabRowButton.qml
 
-StatusIcon   1.4 StatusIcon.qml
+StatusIcon 1.4 StatusIcon.qml
+
+ImageButton 1.5 ImageButton.qml
