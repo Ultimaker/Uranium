@@ -30,3 +30,4 @@ StatusIcon 1.4 StatusIcon.qml
 
 ImageButton 1.5 ImageButton.qml
 CheckBox 1.5 CheckBox.qml
+TextFieldWithUnit 1.5 TextFieldWithUnit.qml
