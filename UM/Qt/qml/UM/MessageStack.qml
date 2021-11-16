@@ -2,8 +2,7 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.3
-import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.3
+import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
 
 import UM 1.5 as UM
@@ -39,22 +38,19 @@ ListView
     {
         Button
         {
+            id: control
             text: model.name
-            style: ButtonStyle
+            background: Item {}
+            contentItem: Label
             {
-                background: Item {}
-
-                label: Label
+                text: control.text
+                font:
                 {
-                    text: control.text
-                    font:
-                    {
-                        var defaultFont = UM.Theme.getFont("default")
-                        defaultFont.underline = true
-                        return defaultFont
-                    }
-                    color: UM.Theme.getColor("text_link")
+                    var defaultFont = UM.Theme.getFont("default")
+                    defaultFont.underline = true
+                    return defaultFont
                 }
+                color: UM.Theme.getColor("text_link")
             }
         }
     }
@@ -128,30 +124,18 @@ ListView
                 elide: Text.ElideRight
                 maximumLineCount: 2
             }
-
-            Button
+            UM.SimpleButton
             {
                 id: closeButton
                 implicitWidth: UM.Theme.getSize("message_close").width
                 implicitHeight: UM.Theme.getSize("message_close").height
                 Layout.alignment: Qt.AlignTop
-
-                style: ButtonStyle
-                {
-                    background: UM.RecolorImage
-                    {
-                        width: UM.Theme.getSize("message_close").width
-                        sourceSize.width: width
-                        color: control.hovered ? UM.Theme.getColor("message_close_hover") : UM.Theme.getColor("message_close")
-                        source: UM.Theme.getIcon("Cancel")
-                    }
-
-                    label: Item {}
-                }
-
                 onClicked: base.model.hideMessage(model.id)
                 visible: model.dismissable
                 enabled: model.dismissable
+                color: UM.Theme.getColor("message_close")
+                hoverColor: UM.Theme.getColor("message_close_hover")
+                iconSource: UM.Theme.getIcon("Cancel")
             }
         }
         Column
