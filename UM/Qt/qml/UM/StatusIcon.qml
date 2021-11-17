@@ -47,7 +47,7 @@ Item
             PropertyChanges
             {
                 target: iconInner
-                source: UM.Theme.getIcon("Check", "low")
+                source: UM.Theme.getIcon("BadgeCheck", "default")
                 color: UM.Theme.getColor("message_success_icon")
             }
             PropertyChanges
@@ -81,7 +81,7 @@ Item
             PropertyChanges
             {
                 target: iconInner
-                source: UM.Theme.getIcon("Warning", "low")
+                source: UM.Theme.getIcon("BadgeWarning", "default")
                 color: UM.Theme.getColor("message_warning_icon")
             }
             PropertyChanges
@@ -98,7 +98,7 @@ Item
             PropertyChanges
             {
                 target: iconInner
-                source: UM.Theme.getIcon("Cancel", "low")
+                source: UM.Theme.getIcon("BadgeCancel", "default")
                 color: UM.Theme.getColor("message_error_icon")
             }
             PropertyChanges
