@@ -369,7 +369,7 @@ msgstr "Nepodařilo se načíst <filename>{0}</filename>. Soubor může být po�
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr ""
+msgstr "Model automaticky naškálován na {0} % původní velikosti"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
