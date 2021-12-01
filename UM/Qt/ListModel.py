@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, pyqtSignal
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 
 class ListModel(QAbstractListModel):
@@ -161,14 +161,19 @@ class ListModel(QAbstractListModel):
         self._items[index][property] = value
         self.dataChanged.emit(self.index(index, 0), self.index(index, 0))
 
-    def sort(self, fun: Callable[[Any], float]) -> None:
+    def sort(self, fun: Callable[[Any], float], key: Optional[str] = None, reverse = False) -> None:
         """Sort the list.
 
         :param fun: The callable to use for determining the sort key.
+        :param key: Use the sorting function on the underlying data
+        :param reverse: reverse the sorted results
         """
 
         self.beginResetModel()
-        self._items.sort(key = fun)
+        if key:
+            self._items = [{key: item} for item in sorted([k[key] for k in self._items], key = fun, reverse = reverse)]
+        else:
+            self._items.sort(key = fun, reverse = reverse)
         self.endResetModel()
 
     @pyqtSlot(str, QVariant, result = int)
