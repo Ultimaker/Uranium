@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 import re  # To replace parts of version strings with regex.
 from typing import cast, Union, List
@@ -32,8 +32,16 @@ class Version:
             version = version.replace("-", ".")
             version = version.replace("_", ".")
             version = version.replace("\"", "")
-            version = re.sub(r"[A-Z]+", "", version)
             version_list = version.split(".")  # type: ignore
+            # Only the third element (the postfix_type) is allowed to be a string. In other cases all non numeric
+            # characters need to be filtered out
+            try:
+                version_list[0] = re.sub(r"[A-Z]+", "", version_list[0])
+                version_list[1] = re.sub(r"[A-Z]+", "", version_list[1])
+                version_list[2] = re.sub(r"[A-Z]+", "", version_list[2])
+                version_list[4] = re.sub(r"[A-Z]+", "", version_list[4])
+            except IndexError:
+                pass
         elif isinstance(version, list):
             version_list = version  # type: ignore
         elif isinstance(version, int):
@@ -106,7 +114,7 @@ class Version:
     def hasPostFix(self) -> bool:
         """Check if a version has a postfix."""
 
-        return self.getPostfixVersion() > 0 and self._postfix_type != ""
+        return self._postfix_type != ""
 
     def __gt__(self, other: Union["Version", str]) -> bool:
         """Indicates whether this version is later than the specified version.
