@@ -474,7 +474,7 @@ class PluginRegistry(QObject):
         except Exception:
             self.removeCorruptedPluginMessage(plugin_id)
 
-    def removeCorruptedPluginMessage(self, plugin_id):
+    def removeCorruptedPluginMessage(self, plugin_id: str) -> None:
         """Shows a message to the user remove the corrupted plugin"""
         message_text = i18n_catalog.i18nc("@error",
                                           "The plugin {} could not be loaded. Re-installing the plugin might solve "
