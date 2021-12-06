@@ -546,6 +546,11 @@ class PackageManager(QObject):
 
         return package_id in self._installed_package_dict
 
+    def isBundledPackage(self, package_id: str) -> bool:
+        """Is the package a bundled package?"""
+
+        return package_id in self._bundled_package_dict
+
     # Removes everything associated with the given package ID.
     def _purgePackage(self, package_id: str) -> None:
         # Iterate through all directories in the data storage directory and look for sub-directories that belong to
