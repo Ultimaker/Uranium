@@ -747,4 +747,23 @@ class PackageManager(QObject):
     def getPackagesToInstall(self) -> PackageDataDict:
         return self._to_install_package_dict
 
+    def canDowngrade(self, package_id: str) -> bool:
+        """ Checks if the local installed package has a higher version than the bundled package
+
+        :return: ``True`` if the package can be downgraded to a bundled version, ``False`` if the bundled version is
+        higher or the same. Also returns ``False`` if there is only a bundled or an installed package present on the
+        system.
+        """
+        local_package = self.getInstalledPackageInfo(package_id)
+        if local_package is None:
+            return False
+
+        bundled_package = self.getBundledPackageInfo(package_id)
+        if bundled_package is None:
+            return False
+
+        local_version = UMVersion(local_package["package_version"])
+        bundled_version = UMVersion(bundled_package["package_version"])
+        return bundled_version < local_version
+
 __all__ = ["PackageManager"]
