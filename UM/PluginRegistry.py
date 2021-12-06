@@ -444,6 +444,7 @@ class PluginRegistry(QObject):
             to_register = plugin.register(self._application)  # type: ignore  # We catch AttributeError on this in case register() doesn't exist.
             if not to_register:
                 Logger.log("w", "Plugin %s did not return any objects to register", plugin_id)
+                self.removeCorruptedPluginMessage(plugin_id)
                 return
             for plugin_type, plugin_object in to_register.items():
                 if type(plugin_object) == list:
@@ -471,21 +472,25 @@ class PluginRegistry(QObject):
             Logger.info("Loaded plugin %s", plugin_id)
 
         except Exception:
-            message_text = i18n_catalog.i18nc("@error",
-                                              "The plugin {} could not be loaded. Re-installing the plugin might solve "
-                                              "the issue", plugin_id)
-            unable_to_load_plugin_message = Message(text = message_text, message_type = Message.MessageType.ERROR)
-            unable_to_load_plugin_message.addAction("remove",
-                                   name = i18n_catalog.i18nc("@action:button", "Remove plugin"),
-                                   icon = "",
-                                   description = "Remove the plugin",
-                                   button_align = Message.ActionButtonAlignment.ALIGN_RIGHT)
+            self.removeCorruptedPluginMessage(plugin_id)
 
-            # Listen for the pyqt signal, since that one does support lambda's
-            unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: (self.uninstallPlugin(plugin_id), message.hide()))
+    def removeCorruptedPluginMessage(self, plugin_id: str) -> None:
+        """Shows a message to the user remove the corrupted plugin"""
+        message_text = i18n_catalog.i18nc("@error",
+                                          "The plugin {} could not be loaded. Re-installing the plugin might solve "
+                                          "the issue", plugin_id)
+        unable_to_load_plugin_message = Message(text = message_text, message_type = Message.MessageType.ERROR)
+        unable_to_load_plugin_message.addAction("remove",
+                               name = i18n_catalog.i18nc("@action:button", "Remove plugin"),
+                               icon = "",
+                               description = "Remove the plugin",
+                               button_align = Message.ActionButtonAlignment.ALIGN_RIGHT)
 
-            unable_to_load_plugin_message.show()
-            Logger.logException("e", "Error loading plugin %s:", plugin_id)
+        # Listen for the pyqt signal, since that one does support lambda's
+        unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: (self.uninstallPlugin(plugin_id), message.hide()))
+
+        unable_to_load_plugin_message.show()
+        Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
     #   Uninstall a plugin with a given ID:
     @pyqtSlot(str, result = "QVariantMap")
