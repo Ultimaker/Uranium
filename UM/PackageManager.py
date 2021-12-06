@@ -747,6 +747,10 @@ class PackageManager(QObject):
     def getPackagesToInstall(self) -> PackageDataDict:
         return self._to_install_package_dict
 
+    @pyqtProperty(bool, notify = installedPackagesChanged)
+    def hasPackagesToRemoveOrInstall(self) -> bool:
+        return len(self._to_remove_package_dict) > 0 or len(self._to_install_package_dict) > 0
+
     def canDowngrade(self, package_id: str) -> bool:
         """ Checks if the local installed package has a higher version than the bundled package
 
