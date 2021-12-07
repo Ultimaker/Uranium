@@ -479,7 +479,7 @@ class PluginRegistry(QObject):
         message_text = i18n_catalog.i18nc("@error",
                                           "The plugin {} could not be loaded. Re-installing the plugin might solve "
                                           "the issue", plugin_id)
-        unable_to_load_plugin_message = Message(text = message_text, message_type = Message.MessageType.ERROR)
+        unable_to_load_plugin_message = Message(text = message_text, message_type = Message.MessageType.ERROR, lifetime = 0)
         unable_to_load_plugin_message.addAction("remove",
                                name = i18n_catalog.i18nc("@action:button", "Remove plugin"),
                                icon = "",
