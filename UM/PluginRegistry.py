@@ -412,6 +412,7 @@ class PluginRegistry(QObject):
 
         # If not found, raise error:
         if not plugin:
+            self.removeCorruptedPluginMessage(plugin_id)
             raise PluginNotFoundError(plugin_id)
 
         # If found, but isn't in the metadata dictionary, add it:
