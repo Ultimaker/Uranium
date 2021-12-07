@@ -87,7 +87,7 @@ class PluginRegistry(QObject):
         self._checked_plugin_ids: List[str] = []
         self._distrusted_plugin_ids: List[str] = []
         self._trust_checker: Optional[Trust] = None
-        self._plugins_enabled_or_disabled = False  # Flag indicating if there were any plugins' en-/disabled this session
+        self._plugins_enabled_or_disabled: bool = False  # Flag indicating if there were any plugins' en-/disabled this session
 
     def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
         self._check_if_trusted = check_if_trusted
