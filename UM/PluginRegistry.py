@@ -498,9 +498,6 @@ class PluginRegistry(QObject):
     #   Uninstall a plugin with a given ID:
     @pyqtSlot(str, result = "QVariantMap")
     def uninstallPlugin(self, plugin_id: str) -> Dict[str, str]:
-        result = {"status": "error", "message": "", "id": plugin_id}
-        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart {0} to finish uninstall.", self._application.getApplicationName())
-
         in_to_install = plugin_id in self._plugins_to_install
         if in_to_install:
             del self._plugins_to_install[plugin_id]
@@ -517,8 +514,12 @@ class PluginRegistry(QObject):
             if plugin_id in self._plugins_installed:
                 self._plugins_installed.remove(plugin_id)
         self.pluginRemoved.emit(plugin_id)
-        result["status"] = "ok"
-        result["message"] = success_message
+
+        result = {
+            "status": "ok",
+            "message": i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart {0} to finish uninstall.", self._application.getApplicationName()),
+            "id": plugin_id
+        }
         return result
 
     # Installs the given plugin file. It will overwrite the existing plugin if present.
