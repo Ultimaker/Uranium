@@ -951,7 +951,7 @@ class PluginRegistry(QObject):
             del cls._type_register_map[plugin_type]
 
     _type_register_map: Dict[str, Callable[[Any], None]]  = {}
-    __instance: Optional["PluginRegistry"] = None
+    __instance = None  # type: PluginRegistry
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "PluginRegistry":
