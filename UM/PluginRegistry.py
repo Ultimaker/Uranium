@@ -88,6 +88,8 @@ class PluginRegistry(QObject):
         self._distrusted_plugin_ids = []  # type: List[str]
         self._trust_checker = None  # type: Optional[Trust]
 
+    pluginRemoved = pyqtSignal(str)
+
     def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
         self._check_if_trusted = check_if_trusted
         if self._check_if_trusted:
@@ -499,9 +501,6 @@ class PluginRegistry(QObject):
         result = {"status": "error", "message": "", "id": plugin_id}
         success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart {0} to finish uninstall.", self._application.getApplicationName())
 
-        if plugin_id not in self._plugins_installed:
-            return result
-
         in_to_install = plugin_id in self._plugins_to_install
         if in_to_install:
             del self._plugins_to_install[plugin_id]
@@ -515,8 +514,9 @@ class PluginRegistry(QObject):
 
             # Remove the plugin object from the Plugin Registry:
             self._plugins.pop(plugin_id, None)
-            self._plugins_installed.remove(plugin_id)
-
+            if plugin_id in self._plugins_installed:
+                self._plugins_installed.remove(plugin_id)
+        self.pluginRemoved.emit(plugin_id)
         result["status"] = "ok"
         result["message"] = success_message
         return result
