@@ -87,7 +87,7 @@ class PluginRegistry(QObject):
         self._checked_plugin_ids: List[str] = []
         self._distrusted_plugin_ids: List[str] = []
         self._trust_checker: Optional[Trust] = None
-        self.plugins_enabled_or_disabled = False  # Flag indicating if there were any plugins' en-/disabled this session
+        self._plugins_enabled_or_disabled = False  # Flag indicating if there were any plugins' en-/disabled this session
 
     def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
         self._check_if_trusted = check_if_trusted
@@ -210,18 +210,30 @@ class PluginRegistry(QObject):
                 return False
         return True
 
+    hasPluginsEnabledOrDisabledChanged = pyqtSignal()
+
+    def setHasPluginsEnabledOrDisabled(self, value: bool) -> None:
+        if value != self._plugins_enabled_or_disabled:
+            self._plugins_enabled_or_disabled = value
+            self.hasPluginsEnabledOrDisabledChanged.emit()
+
+    @pyqtProperty(bool, fset = setHasPluginsEnabledOrDisabled, notify = hasPluginsEnabledOrDisabledChanged)
+    def hasPluginsEnabledOrDisabled(self) -> bool:
+        """A flag indicating if a plugin has ben set to enable or disable this Cura session"""
+        return self._plugins_enabled_or_disabled
+
     #   Remove plugin from the list of enabled plugins and save to preferences:
     def disablePlugin(self, plugin_id: str) -> None:
         if plugin_id not in self._disabled_plugins:
             self._disabled_plugins.append(plugin_id)
-            self.plugins_enabled_or_disabled = True
+            self.setHasPluginsEnabledOrDisabled(True)
         self._savePluginData()
 
     #   Add plugin to the list of enabled plugins and save to preferences:
     def enablePlugin(self, plugin_id: str) -> None:
         if plugin_id in self._disabled_plugins:
             self._disabled_plugins.remove(plugin_id)
-            self.plugins_enabled_or_disabled = True
+            self.setHasPluginsEnabledOrDisabled(True)
         self._savePluginData()
 
     #   Get a list of enabled plugins:
