@@ -87,6 +87,7 @@ class PluginRegistry(QObject):
         self._checked_plugin_ids = []     # type: List[str]
         self._distrusted_plugin_ids = []  # type: List[str]
         self._trust_checker = None  # type: Optional[Trust]
+        self.plugins_enabled_or_disabled = False  # Flag indicating if there were any plugins' en-/disabled this session
 
     def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
         self._check_if_trusted = check_if_trusted
@@ -213,12 +214,14 @@ class PluginRegistry(QObject):
     def disablePlugin(self, plugin_id: str) -> None:
         if plugin_id not in self._disabled_plugins:
             self._disabled_plugins.append(plugin_id)
+            self.plugins_enabled_or_disabled = True
         self._savePluginData()
 
     #   Add plugin to the list of enabled plugins and save to preferences:
     def enablePlugin(self, plugin_id: str) -> None:
         if plugin_id in self._disabled_plugins:
             self._disabled_plugins.remove(plugin_id)
+            self.plugins_enabled_or_disabled = True
         self._savePluginData()
 
     #   Get a list of enabled plugins:
