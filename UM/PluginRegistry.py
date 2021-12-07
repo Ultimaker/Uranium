@@ -52,41 +52,41 @@ class PluginRegistry(QObject):
         PluginRegistry.__instance = self
 
         super().__init__(parent)
-        self.preloaded_plugins = []  # type: List[str]  # List of plug-in names that must be loaded before the rest, if the plug-ins are available. They are loaded in this order too.
+        self.preloaded_plugins: List[str] = []  # List of plug-in names that must be loaded before the rest, if the plug-ins are available. They are loaded in this order too.
 
-        self._application = application  # type: Application
-        self._api_version = application.getAPIVersion()  # type: Version
+        self._application: Application = application
+        self._api_version: Version = application.getAPIVersion()
 
-        self._all_plugins = []        # type: List[str]
-        self._metadata = {}           # type: Dict[str, Dict[str, Any]]
+        self._all_plugins: List[str] = []
+        self._metadata: Dict[str, Dict[str, Any]] = {}
 
-        self._plugins_installed = []  # type: List[str]
+        self._plugins_installed: List[str] = []
 
         # NOTE: The disabled_plugins and plugins_to_remove is explicitly set to None.
         # When actually loading the preferences, it's set to a list. This way we can see the
         # difference between no list and an empty one.
-        self._disabled_plugins = []  # type: List[str]
-        self._outdated_plugins = []  # type: List[str]
-        self._plugins_to_install = dict()  # type: Dict[str, Dict[str, str]]
-        self._plugins_to_remove = []  # type: List[str]
+        self._disabled_plugins: List[str] = []
+        self._outdated_plugins: List[str] = []
+        self._plugins_to_install: Dict[str, Dict[str, str]] = dict()
+        self._plugins_to_remove: List[str] = []
 
-        self._plugins = {}            # type: Dict[str, types.ModuleType]
-        self._found_plugins = {}      # type: Dict[str, types.ModuleType]  # Cache to speed up _findPlugin
-        self._plugin_objects = {}     # type: Dict[str, PluginObject]
+        self._plugins: Dict[str, types.ModuleType] = {}
+        self._found_plugins: Dict[str, types.ModuleType] = {}       # Cache to speed up _findPlugin
+        self._plugin_objects: Dict[str, PluginObject] = {}
 
-        self._plugin_locations = []  # type: List[str]
-        self._plugin_folder_cache = {}  # type: Dict[str, List[Tuple[str, str]]]  # Cache to speed up _locatePlugin
+        self._plugin_locations: List[str] = []
+        self._plugin_folder_cache: Dict[str, List[Tuple[str, str]]] = {}   # Cache to speed up _locatePlugin
 
-        self._bundled_plugin_cache = {}  # type: Dict[str, bool]
+        self._bundled_plugin_cache: Dict[str, bool] = {}
 
-        self._supported_file_types = {"umplugin": "Uranium Plugin"} # type: Dict[str, str]
+        self._supported_file_types: Dict[str, str] = {"umplugin": "Uranium Plugin"}
 
-        self._check_if_trusted = False  # type: bool
-        self._clean_hierarchy_sent_messages = []  # type: List[str]
-        self._debug_mode = False  # type: bool
-        self._checked_plugin_ids = []     # type: List[str]
-        self._distrusted_plugin_ids = []  # type: List[str]
-        self._trust_checker = None  # type: Optional[Trust]
+        self._check_if_trusted: bool = False
+        self._clean_hierarchy_sent_messages: List[str] = []
+        self._debug_mode: bool = False
+        self._checked_plugin_ids: List[str] = []
+        self._distrusted_plugin_ids: List[str] = []
+        self._trust_checker: Optional[Trust] = None
         self.plugins_enabled_or_disabled = False  # Flag indicating if there were any plugins' en-/disabled this session
 
     def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
@@ -106,7 +106,7 @@ class PluginRegistry(QObject):
 
         # File to store plugin info, such as which ones to install/remove and which ones are disabled.
         # At this point we can load this here because we already know the actual Application name, so the directory name
-        self._plugin_config_filename = os.path.join(os.path.abspath(config_path), "plugins.json") # type: str
+        self._plugin_config_filename: str = os.path.join(os.path.abspath(config_path), "plugins.json")
 
         from UM.Settings.ContainerRegistry import ContainerRegistry
         container_registry = ContainerRegistry.getInstance()
@@ -540,8 +540,8 @@ class PluginRegistry(QObject):
                 for info in zip_ref.infolist():
                     extracted_path = zip_ref.extract(info.filename, path = plugin_folder)
                     permissions = os.stat(extracted_path).st_mode
-                    os.chmod(extracted_path, permissions | stat.S_IEXEC) # Make these files executable.
-        except: # Installing a new plugin should never crash the application.
+                    os.chmod(extracted_path, permissions | stat.S_IEXEC)  # Make these files executable.
+        except:  # Installing a new plugin should never crash the application.
             Logger.logException("e", "An exception occurred while installing plugin {path}".format(path = plugin_path))
 
         if plugin_id in self._disabled_plugins:
@@ -630,7 +630,7 @@ class PluginRegistry(QObject):
             highest_version = Version(0)
 
             for loc in locations:
-                meta_data = {}  # type: Dict[str, Any]
+                meta_data: Dict[str, Any]  = {}
                 plugin_location = os.path.join(loc, plugin_id)
                 metadata_file = os.path.join(plugin_location, "plugin.json")
                 try:
@@ -684,7 +684,7 @@ class PluginRegistry(QObject):
                 return None
 
         try:
-            module = imp.load_module(plugin_id, file, path, desc) #type: ignore #MyPy gets the wrong output type from imp.find_module for some reason.
+            module = imp.load_module(plugin_id, file, path, desc)  # type: ignore #MyPy gets the wrong output type from imp.find_module for some reason.
         except Exception:
             Logger.logException("e", "Import error loading module %s", plugin_id)
             return None
@@ -757,7 +757,7 @@ class PluginRegistry(QObject):
             raise InvalidMetaDataError(plugin_id)
         else:
             # Store the api_version as a Version object.
-            all_supported_sdk_versions = []  # type: List[Version]
+            all_supported_sdk_versions: List[Version] = []
             if "supported_sdk_versions" in meta_data["plugin"]:
                 all_supported_sdk_versions += [Version(supported_version) for supported_version in
                                                meta_data["plugin"]["supported_sdk_versions"]]
@@ -793,7 +793,7 @@ class PluginRegistry(QObject):
         location = os.path.join(location, plugin_id)
 
         try:
-            meta_data = plugin.getMetaData() #type: ignore #We catch the AttributeError that this would raise if the module has no getMetaData function.
+            meta_data = plugin.getMetaData()  # type: ignore #We catch the AttributeError that this would raise if the module has no getMetaData function.
             metadata_file = os.path.join(location, "plugin.json")
             try:
                 with open(metadata_file, "r", encoding = "utf-8") as file_stream:
@@ -938,8 +938,8 @@ class PluginRegistry(QObject):
         if plugin_type in cls._type_register_map:
             del cls._type_register_map[plugin_type]
 
-    _type_register_map = {}  # type: Dict[str, Callable[[Any], None]]
-    __instance = None    # type: PluginRegistry
+    _type_register_map: Dict[str, Callable[[Any], None]]  = {}
+    __instance: Optional["PluginRegistry"] = None
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "PluginRegistry":
