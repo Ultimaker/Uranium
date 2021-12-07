@@ -498,21 +498,22 @@ class PluginRegistry(QObject):
     #   Uninstall a plugin with a given ID:
     @pyqtSlot(str, result = "QVariantMap")
     def uninstallPlugin(self, plugin_id: str) -> Dict[str, str]:
-        in_to_install = plugin_id in self._plugins_to_install
-        if in_to_install:
+        if plugin_id in self._plugins_to_install:
             del self._plugins_to_install[plugin_id]
             self._savePluginData()
             Logger.log("i", "Plugin '%s' removed from to-be-installed list.", plugin_id)
-        else:
-            if plugin_id not in self._plugins_to_remove:
-                self._plugins_to_remove.append(plugin_id)
+        elif plugin_id not in self._plugins_to_remove:
+            self._plugins_to_remove.append(plugin_id)
             self._savePluginData()
             Logger.log("i", "Plugin '%s' has been scheduled for later removal.", plugin_id)
 
-            # Remove the plugin object from the Plugin Registry:
-            self._plugins.pop(plugin_id, None)
-            if plugin_id in self._plugins_installed:
-                self._plugins_installed.remove(plugin_id)
+        # Remove the plugin object from the Plugin Registry:
+        if plugin_id in self._plugins:
+            del self._plugins[plugin_id]
+
+        if plugin_id in self._plugins_installed:
+            self._plugins_installed.remove(plugin_id)
+
         self.pluginRemoved.emit(plugin_id)
 
         result = {
