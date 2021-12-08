@@ -1,8 +1,10 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, pyqtSignal
+from operator import itemgetter
 from typing import Any, Callable, Dict, List, Optional
+
+from PyQt5.QtCore import QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, pyqtSignal
 
 
 class ListModel(QAbstractListModel):
@@ -171,7 +173,7 @@ class ListModel(QAbstractListModel):
 
         self.beginResetModel()
         if key:
-            self._items = [{key: item} for item in sorted([k[key] for k in self._items], key = fun, reverse = reverse)]
+            self._items = sorted(self._items, key = lambda item: fun(itemgetter(key)(item)), reverse = reverse)
         else:
             self._items.sort(key = fun, reverse = reverse)
         self.endResetModel()
