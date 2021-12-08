@@ -501,10 +501,14 @@ class PluginRegistry(QObject):
         if plugin_id in self._plugins_to_install:
             del self._plugins_to_install[plugin_id]
             self._savePluginData()
+            message_text = i18n_catalog.i18nc("@info:status", "Plugin no longer scheduled to be installed.")
             Logger.log("i", "Plugin '%s' removed from to-be-installed list.", plugin_id)
         elif plugin_id not in self._plugins_to_remove:
             self._plugins_to_remove.append(plugin_id)
             self._savePluginData()
+            message_text = i18n_catalog.i18nc("@info:status",
+                "The plugin has been removed.\nPlease restart {0} to finish uninstall.",
+                self._application.getApplicationName())
             Logger.log("i", "Plugin '%s' has been scheduled for later removal.", plugin_id)
 
         # Remove the plugin object from the Plugin Registry:
@@ -518,7 +522,7 @@ class PluginRegistry(QObject):
 
         result = {
             "status": "ok",
-            "message": i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart {0} to finish uninstall.", self._application.getApplicationName()),
+            "message": message_text,
             "id": plugin_id
         }
         return result
