@@ -301,10 +301,10 @@ class RenderBatch:
         if mesh.getVertexCount() == 0:
             return
 
-        if self._render_range is not None:
-            self._shader.setUniformValue("u_drawRange", [self._render_range[0], self._render_range[1]])
-        else:
-            self._shader.setUniformValue("u_drawRange", [-1.0, -1.0])
+        #if self._render_range is not None:
+        #    self._shader.setUniformValue("u_drawRange", [self._render_range[0], self._render_range[1]])
+        #else:
+        self._shader.setUniformValue("u_drawRange", [-1.0, -1.0])
 
         transformation = item["transformation"]
         normal_matrix = item["normal_transformation"]
@@ -333,7 +333,13 @@ class RenderBatch:
             # However, this Python wrapper can only handle either the array, or None, which serves as a 0-offset.
             # As other offsets do not seem possible (everything was tried), the range is instead handled in the shader.
             elem_count = mesh.getFaceCount() * self._render_mode_to_vertex_count.get(self._render_mode, 1)
-            self._gl.glDrawElements(self._render_mode, elem_count, self._gl.GL_UNSIGNED_INT, None)
+            if self._render_range is not None:
+                start, end = self._render_range
+                start = int(start * self._render_mode_to_vertex_count.get(self._render_mode, 1))
+                end = int(end * self._render_mode_to_vertex_count.get(self._render_mode, 1))
+                self._gl.glDrawRangeElements(self._render_mode, start, end, end - start, self._gl.GL_UNSIGNED_INT, None)
+            else:
+                self._gl.glDrawElements(self._render_mode, elem_count, self._gl.GL_UNSIGNED_INT, None)
         else:
             self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
 
