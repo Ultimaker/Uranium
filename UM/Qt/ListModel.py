@@ -16,8 +16,8 @@ class ListModel(QAbstractListModel):
 
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
-        self._items = []  # type: List[Dict[str, Any]]
-        self._role_names = {}  # type: Dict[int, bytes]
+        self._items: List[Dict[str, Any]] = []
+        self._role_names: Dict[int, bytes] = {}
 
     itemsChanged = pyqtSignal()
 
