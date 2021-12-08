@@ -9,7 +9,7 @@ import stat  # For setting file permissions correctly;
 import time
 import types
 import zipfile
-from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, TYPE_CHECKING
 
 from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
@@ -87,7 +87,7 @@ class PluginRegistry(QObject):
         self._checked_plugin_ids: List[str] = []
         self._distrusted_plugin_ids: List[str] = []
         self._trust_checker: Optional[Trust] = None
-        self._plugins_enabled_or_disabled: bool = False  # Flag indicating if there were any plugins' en-/disabled this session
+        self._changed_activated_plugins_current_session: Set[str] = set()
 
     def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
         self._check_if_trusted = check_if_trusted
@@ -212,28 +212,26 @@ class PluginRegistry(QObject):
 
     hasPluginsEnabledOrDisabledChanged = pyqtSignal()
 
-    def setHasPluginsEnabledOrDisabled(self, value: bool) -> None:
-        if value != self._plugins_enabled_or_disabled:
-            self._plugins_enabled_or_disabled = value
-            self.hasPluginsEnabledOrDisabledChanged.emit()
-
-    @pyqtProperty(bool, fset = setHasPluginsEnabledOrDisabled, notify = hasPluginsEnabledOrDisabledChanged)
-    def hasPluginsEnabledOrDisabled(self) -> bool:
-        """A flag indicating if a plugin has ben set to enable or disable this Cura session"""
-        return self._plugins_enabled_or_disabled
-
     #   Remove plugin from the list of enabled plugins and save to preferences:
     def disablePlugin(self, plugin_id: str) -> None:
         if plugin_id not in self._disabled_plugins:
             self._disabled_plugins.append(plugin_id)
-            self.setHasPluginsEnabledOrDisabled(True)
+            if plugin_id not in self._changed_activated_plugins_current_session:
+                self._changed_activated_plugins_current_session.add(plugin_id)
+            else:
+                self._changed_activated_plugins_current_session.remove(plugin_id)
+            self.hasPluginsEnabledOrDisabledChanged.emit()
         self._savePluginData()
 
     #   Add plugin to the list of enabled plugins and save to preferences:
     def enablePlugin(self, plugin_id: str) -> None:
         if plugin_id in self._disabled_plugins:
             self._disabled_plugins.remove(plugin_id)
-            self.setHasPluginsEnabledOrDisabled(True)
+            if plugin_id not in self._changed_activated_plugins_current_session:
+                self._changed_activated_plugins_current_session.add(plugin_id)
+            else:
+                self._changed_activated_plugins_current_session.remove(plugin_id)
+            self.hasPluginsEnabledOrDisabledChanged.emit()
         self._savePluginData()
 
     #   Get a list of enabled plugins:
@@ -265,6 +263,11 @@ class PluginRegistry(QObject):
     #   Get a list of disabled plugins:
     def getDisabledPlugins(self) -> List[str]:
         return self._disabled_plugins
+
+    def getCurrentSessionActivationChangedPlugins(self) -> Set[str]:
+        """Returns a set a plugins whom have changed their activation status in the current session, toggled between
+        en-/disabled after the last start-up status"""
+        return self._changed_activated_plugins_current_session
 
     #   Get a list of installed plugins:
     #   NOTE: These are plugins which have already been registered. This list is
