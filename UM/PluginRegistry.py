@@ -477,6 +477,18 @@ class PluginRegistry(QObject):
         except Exception:
             self.removeCorruptedPluginMessage(plugin_id)
 
+    def _acceptedRemoveCorruptedPluginMessage(self, plugin_id: str, original_message: Message):
+        message_data = self.uninstallPlugin(plugin_id)
+        original_message.hide()
+        message = Message(text = message_data["message"], message_type = Message.MessageType.NEUTRAL, lifetime = 0)
+        message.addAction("dismiss",
+                           name = i18n_catalog.i18nc("@action:button", "Dismiss"),
+                           icon = "",
+                           description = "Dismiss this message",
+                           button_align = Message.ActionButtonAlignment.ALIGN_RIGHT)
+        message.pyQtActionTriggered.connect(lambda message, action: message.hide())
+        message.show()
+
     def removeCorruptedPluginMessage(self, plugin_id: str) -> None:
         """Shows a message to the user remove the corrupted plugin"""
         message_text = i18n_catalog.i18nc("@error",
@@ -490,7 +502,7 @@ class PluginRegistry(QObject):
                                button_align = Message.ActionButtonAlignment.ALIGN_RIGHT)
 
         # Listen for the pyqt signal, since that one does support lambda's
-        unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: (self.uninstallPlugin(plugin_id), message.hide()))
+        unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: self._acceptedRemoveCorruptedPluginMessage(plugin_id, message))
 
         unable_to_load_plugin_message.show()
         Logger.logException("e", "Error loading plugin %s:", plugin_id)
