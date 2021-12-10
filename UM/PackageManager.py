@@ -8,7 +8,7 @@ import tempfile
 import urllib.parse  # For interpreting escape characters using unquote_plus.
 import zipfile
 from json import JSONDecodeError
-from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING, Mapping
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
 
@@ -25,8 +25,8 @@ catalog = i18nCatalog("uranium")
 if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
 
-PackageData = Dict[str, Any]
-PackageDataDict = Dict[str, PackageData]
+PackageData = Mapping[str, Any]
+PackageDataDict = Mapping[str, PackageData]
 
 class PackageManager(QObject):
     Version = 1
@@ -79,7 +79,7 @@ class PackageManager(QObject):
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
         self._available_package_versions: Dict[str, Set[UMVersion]] = {}
 
-        self._packages_with_update_available: Set[str] = set()
+        self._packages_with_update_available: PackageDataDict = dict()
 
     packageInstalled = Signal()  # Emits the package_id (str) of an installed package
     installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
@@ -102,9 +102,10 @@ class PackageManager(QObject):
 
     @pyqtProperty("QStringList", notify = packagesWithUpdateChanged)
     def packagesWithUpdate(self) -> Set[str]:
-        return self._packages_with_update_available
+        return set(self._packages_with_update_available.keys())
 
-    def setPackagesWithUpdate(self, packages: Set[str]):
+
+    def setPackagesWithUpdate(self, packages: PackageDataDict) -> None:
         """Alternative way of setting the available package updates without having to check all packages in the
         cloud. """
 
@@ -501,7 +502,7 @@ class PackageManager(QObject):
                     # In that case we remove it from the list. This is actually a safe check (could be removed)
                     if not self.checkIfPackageCanUpdate(package_id):
                         # The install ensured that the package no longer has a valid update option.
-                        self._packages_with_update_available.remove(package_id)
+                        del self._packages_with_update_available[package_id]
                         self.packagesWithUpdateChanged.emit()
 
         if has_changes:
@@ -538,7 +539,7 @@ class PackageManager(QObject):
 
         # It might be that a certain update is suddenly available again!
         if self.checkIfPackageCanUpdate(package_id):
-            self._packages_with_update_available.add(package_id)
+            self._packages_with_update_available[package_id] = self.getInstalledPackageInfo(package_id)
             self.packagesWithUpdateChanged.emit()
 
     def isUserInstalledPackage(self, package_id: str) -> bool:
