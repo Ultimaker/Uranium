@@ -234,9 +234,6 @@ class PluginRegistry(QObject):
             self.hasPluginsEnabledOrDisabledChanged.emit()
         self._savePluginData()
 
-    def getDisabledPlugins(self) -> List[str]:
-        return self._disabled_plugins
-
     #   Get a list of enabled plugins:
     def getActivePlugins(self) -> List[str]:
         plugin_list = []

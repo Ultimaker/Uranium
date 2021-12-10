@@ -545,7 +545,8 @@ class PackageManager(QObject):
 
         # It might be that a certain update is suddenly available again!
         if self.checkIfPackageCanUpdate(package_id):
-            self._packages_with_update_available[package_id] = self.getInstalledPackageInfo(package_id)
+            pkg_info = self.getInstalledPackageInfo(package_id)
+            self._packages_with_update_available[package_id] = {} if pkg_info is None else pkg_info
             self.packagesWithUpdateChanged.emit()
 
     def isUserInstalledPackage(self, package_id: str) -> bool:
