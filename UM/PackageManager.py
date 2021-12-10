@@ -17,7 +17,6 @@ from UM.Logger import Logger
 from UM.Message import Message
 from UM.MimeTypeDatabase import MimeTypeDatabase  # To get the type of container we're loading.
 from UM.Resources import Resources
-from UM.Signal import Signal
 from UM.Version import Version as UMVersion
 
 catalog = i18nCatalog("uranium")
@@ -81,7 +80,9 @@ class PackageManager(QObject):
 
         self._packages_with_update_available: PackageDataDict = dict()
 
-    packageInstalled = Signal()  # Emits the package_id (str) of an installed package
+    packageInstalled = pyqtSignal(str)  # Emits the package_id (str) of an installed package
+    packageUninstalled = pyqtSignal(str)  # Emits the package_id (str) of an installed package
+    packageInstallingFailed = pyqtSignal(str)
     installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
     packagesWithUpdateChanged = pyqtSignal()
 
@@ -461,7 +462,7 @@ class PackageManager(QObject):
         :return: The to-be-installed package_id or None if something went wrong
         """
 
-        has_changes = False
+        has_changes = True
         package_id = ""
         try:
             # Get package information
@@ -492,8 +493,8 @@ class PackageManager(QObject):
 
                 self._to_install_package_dict[package_id] = {"package_info": package_info,
                                                              "filename": target_file_path}
-                has_changes = True
         except:
+            has_changes = False
             Logger.logException("c", "Failed to install package file '%s'", filename)
         finally:
             self._saveManagementData()
@@ -512,6 +513,7 @@ class PackageManager(QObject):
             self.packageInstalled.emit(package_id)
             return package_id
         else:
+            self.packageInstallingFailed.emit(package_id)
             return None
 
     # Schedules the given package to be removed upon the next start.
@@ -539,6 +541,7 @@ class PackageManager(QObject):
                 del self._to_install_package_dict[package_id]
         self._saveManagementData()
         self.installedPackagesChanged.emit()
+        self.packageUninstalled.emit(package_id)
 
         # It might be that a certain update is suddenly available again!
         if self.checkIfPackageCanUpdate(package_id):
