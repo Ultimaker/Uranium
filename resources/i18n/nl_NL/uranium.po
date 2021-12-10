@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.12\n"
 "Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
-"POT-Creation-Date: 2021-10-20 16:58+0200\n"
+"POT-Creation-Date: 2021-12-10 14:40+0100\n"
 "PO-Revision-Date: 2021-04-16 15:12+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, Ultimaker <info@ultimaker.com>, Dutch <info@bothof.nl>\n"
@@ -17,366 +17,89 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.1\n"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ-bestand"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter ondersteunt geen non-tekstmodus."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "Er is geen raster om te schrijven."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL-bestand"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "Niet-ondersteunde uitvoermodus bij het schrijven van STL naar stream."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL-bestand (ASCII)"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL-bestand (binair)"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "Lokaal Bestand"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
-msgstr "Opslaan op schijf"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
-msgstr "Opslaan op schijf"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr "Naar schijf"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr "Opslaan op schijf"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "Er zijn geen bestandstypen beschikbaar om te schrijven!"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "Het Bestand Bestaat Al"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+#: /home/clamboo/Desktop/Uranium/UM/VersionUpgradeManager.py:173
 #, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "Het bestand <filename>{0}</filename> bestaat al. Weet u zeker dat u dit bestand wilt overschrijven?"
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "Er is een configuratie van een oudere versie van {0} geïmporteerd."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "Opslaan als <filename>{0}</filename>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "Opslaan"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Toegang geweigerd tijdens opslaan als <filename>{0}</filename>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Kan niet opslaan als <filename>{0}</filename>: <message>{1}</message>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "Opgeslagen als <filename>{0}</filename>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Bestand opgeslagen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "Map Openen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "De map met het bestand openen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Fout"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Er is een fout opgetreden tijdens het opslaan naar <filename>{0}</filename>: <message>{1}</message>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Spiegelen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Model Spiegelen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "Object plat op platform plaatsen..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:358
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "Objectrotatie"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Roteren"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Model Roteren"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Schalen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Model Schalen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Verplaatsen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Model Verplaatsen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:12
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} BETA is available!"
-msgstr "{application_name} {version_number} BÈTA is beschikbaar!"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "Probeer de nieuwste BÈTA-versie uit en help ons {application_name} te verbeteren."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
-msgctxt "@action:button"
-msgid "Download"
-msgstr "Downloaden"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:23
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "Meer informatie"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:12
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "{application_name} {version_number} is beschikbaar!"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:16
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr "{application_name} {version_number} biedt een betere en betrouwbaardere printervaring."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr "Updatecontrole"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Controleren op Updates"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "Het controleren op updates wordt in de door u gebruikte versie niet ondersteund."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Waarschuwing"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Er is geen nieuwe versie gevonden."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:174
+#: /home/clamboo/Desktop/Uranium/UM/VersionUpgradeManager.py:174
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Versie-upgrade"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "Eenvoudig"
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:313
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+"De invoegtoepassing is geïnstalleerd.\n"
+"Start de toepassing opnieuw om de invoegtoepassing te activeren."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:380
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr "Plug-in {} is niet geladen omdat deze niet kon worden geverifieerd."
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:485
 msgctxt "@action:button"
-msgid "Reset"
-msgstr "Herstellen"
+msgid "Dismiss"
+msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:46
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:495
+msgctxt "@error"
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+msgstr "De plug-in {} kon niet worden geladen. De plug-in opnieuw installeren kan het probleem misschien oplossen"
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:499
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr "Plug-in verwijderen"
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:516
+msgctxt "@info:status"
+msgid "Plugin no longer scheduled to be installed."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:522
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
 msgstr ""
-"Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
-"- {profiles}\n"
-" Wilt u de standaardinstellingen herstellen? Hiermee worden al uw huidige printers en profielen gewist."
+"De invoegtoepassing is verwijderd.\n"
+"Start {0} opnieuw om het verwijderen te voltooien."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr "Herstellen naar fabrieksinstellingen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:53
-msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr "Als u de instellingen herstelt, worden alle huidige printers en profielen verwijderd. Weet u zeker dat u de instellingen wilt herstellen?"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:883
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:907
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/clamboo/Desktop/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Alle Ondersteunde Typen ({0})"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:72
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:884
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:908
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/FileHandler.py:72
+#: /home/clamboo/Desktop/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Alle Bestanden (*)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:41
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "Kan geen bestanden openen van het type <filename>{0}</filename>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:44
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "Ongeldig bestand"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk beschadigd of ontoegankelijk."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:98
-msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr "Kan bestand niet openen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "Laden"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:87
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr "Er waren geen modellen in <filename>{0}</filename>."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:90
-msgctxt "@info:title"
-msgid "No Models in File"
-msgstr "Geen modellen in bestand"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk corrupt of ontoegankelijk, of het bevat geen modellen."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:71
+#: /home/clamboo/Desktop/Uranium/UM/Mesh/ReadMeshJob.py:71
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "Het model is automatisch geschaald naar {0}% van de oorspronkelijke grootte"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
+#: /home/clamboo/Desktop/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Object schalen"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:286
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:286
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid ""
@@ -386,18 +109,18 @@ msgstr ""
 "Er zijn fouten opgetreden bij het deïnstalleren van de volgende packages:\n"
 "{packages}"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:288
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:288
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "Fouten bij het de-installeren"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:299
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:299
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "Plugin {package_id} installeren..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:587
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:587
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -409,63 +132,37 @@ msgstr ""
 "{error}.\n"
 "Probeer de upgrade later opnieuw uit te voeren."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:590
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:590
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Fout bij het bijwerken"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:311
-msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr ""
-"De invoegtoepassing is geïnstalleerd.\n"
-"Start de toepassing opnieuw om de invoegtoepassing te activeren."
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Fout"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:378
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "Plug-in {} is niet geladen omdat deze niet kon worden geverifieerd."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
-msgctxt "@error"
-msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr "De plug-in {} kon niet worden geladen. De plug-in opnieuw installeren kan het probleem misschien oplossen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
-msgctxt "@action:button"
-msgid "Remove plugin"
-msgstr "Plug-in verwijderen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr ""
-"De invoegtoepassing is verwijderd.\n"
-"Start {0} opnieuw om het verwijderen te voltooien."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
 msgid "From Disk"
 msgstr "Vanaf schijf"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:128
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:128
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}d {1:0>2}u {2:0>2}min"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:130
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:130
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}u {1:0>2}min"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -473,8 +170,8 @@ msgid_plural "{0} days"
 msgstr[0] "{0} dag"
 msgstr[1] "{0} dagen"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:135
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -482,9 +179,9 @@ msgid_plural "{0} hours"
 msgstr[0] "{0} uur"
 msgstr[1] "{0} uur"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:137
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:135
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:137
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -492,268 +189,521 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuut"
 msgstr[1] "{0} minuten"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:189
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:210
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:192
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:213
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Invoegtoepassingen laden..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:191
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:194
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
 msgstr "Plugin {plugin_id} laden..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:197
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:200
 msgctxt "@info:progress"
 msgid "Initializing package manager..."
 msgstr "Pakketbeheer initialiseren..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:205
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:208
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "Uw configuratie is mogelijk beschadigd."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:207
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:210
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr "Configuratiefouten"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:219
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:222
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Configuratie bijwerken..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:225
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:228
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Voorkeuren laden..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:315
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:318
 msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "UI laden ..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
+#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:59
+#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:64
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "Kan OpenGL niet initialiseren"
+
+#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:74
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is ondersteuning voor Framebuffer-objecten vereist. Controleer het stuurprogramma voor uw videokaart."
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:41
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "Kan geen bestanden openen van het type <filename>{0}</filename>"
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:44
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr "Ongeldig bestand"
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:59
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk beschadigd of ontoegankelijk."
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:62
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:98
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr "Kan bestand niet openen"
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:71
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "Laden"
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:87
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr "Er waren geen modellen in <filename>{0}</filename>."
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:90
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr "Geen modellen in bestand"
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:95
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk corrupt of ontoegankelijk, of het bevat geen modellen."
+
+#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
+msgctxt "@action:button"
+msgid "Reset"
+msgstr "Herstellen"
+
+#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:46
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr ""
+"Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
+"- {profiles}\n"
+" Wilt u de standaardinstellingen herstellen? Hiermee worden al uw huidige printers en profielen gewist."
+
+#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:51
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr "Herstellen naar fabrieksinstellingen"
+
+#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:53
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr "Als u de instellingen herstelt, worden alle huidige printers en profielen verwijderd. Weet u zeker dat u de instellingen wilt herstellen?"
+
+#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:192
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Wilt u {filename} opnieuw laden?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:193
+#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:193
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Het bestand is gewijzigd"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
+#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:194
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Opnieuw laden"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
+#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:194
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Hiermee wordt het opnieuw laden van de bestanden vanaf de schijf geactiveerd."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "Er is een configuratie van een oudere versie van {0} geïmporteerd."
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "Er is geen raster om te schrijven."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:59
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:64
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "Kan OpenGL niet initialiseren"
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "Niet-ondersteunde uitvoermodus bij het schrijven van STL naar stream."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:74
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is ondersteuning voor Framebuffer-objecten vereist. Controleer het stuurprogramma voor uw videokaart."
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL-bestand (ASCII)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "Plat neerleggen"
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL-bestand (binair)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "Selecteer de kant die u wilt uitlijnen met het platform"
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ-bestand"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "Roteren in Stappen"
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STL-bestand"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "Schalen in Stappen"
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "OBJWriter ondersteunt geen non-tekstmodus."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "Uniform Schalen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:222
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr "Model vergrendelen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "Verwijderen Bevestigen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Weet u zeker dat u %1 wilt verwijderen? Deze bewerking kan niet ongedaan worden gemaakt!"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Printers"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
-msgid "Type"
-msgstr "Type"
+msgid "Mirror"
+msgstr "Spiegelen"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Model Spiegelen"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "Schalen"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Model Schalen"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "Object plat op platform plaatsen..."
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.py:358
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "Objectrotatie"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Roteren"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Model Roteren"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Verplaatsen"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Model Verplaatsen"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "Lokaal Bestand"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr "Opslaan op schijf"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr "Opslaan op schijf"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr "Naar schijf"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
-msgid "Preferences"
-msgstr "Voorkeuren"
+msgid "Save to Disk"
+msgstr "Opslaan op schijf"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:112
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "Er zijn geen bestandstypen beschikbaar om te schrijven!"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "Het Bestand Bestaat Al"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "Het bestand <filename>{0}</filename> bestaat al. Weet u zeker dat u dit bestand wilt overschrijven?"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "Opslaan als <filename>{0}</filename>"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "Opslaan"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "Toegang geweigerd tijdens opslaan als <filename>{0}</filename>"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Kan niet opslaan als <filename>{0}</filename>: <message>{1}</message>"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "Opgeslagen als <filename>{0}</filename>"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Bestand opgeslagen"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
 msgctxt "@action:button"
-msgid "Defaults"
-msgstr "Standaardwaarden"
+msgid "Open Folder"
+msgstr "Map Openen"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:120
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "De map met het bestand openen"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Er is een fout opgetreden tijdens het opslaan naar <filename>{0}</filename>: <message>{1}</message>"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "Eenvoudig"
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "{application_name} {version_number} is beschikbaar!"
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr "{application_name} {version_number} biedt een betere en betrouwbaardere printervaring."
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
 msgctxt "@action:button"
-msgid "Close"
-msgstr "Sluiten"
+msgid "Download"
+msgstr "Downloaden"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
-msgctxt "@title:tab"
-msgid "General"
-msgstr "Algemeen"
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "Meer informatie"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:151
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Instellingen"
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number}-BETA is available!"
+msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr "Probeer de nieuwste BÈTA-versie uit en help ons {application_name} te verbeteren."
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr "Updatecontrole"
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Controleren op Updates"
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "Het controleren op updates wordt in de door u gebruikte versie niet ondersteund."
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Er is geen nieuwe versie gevonden."
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
 msgctxt "@title:window"
 msgid "Rename"
 msgstr "Hernoemen"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
 msgctxt "@info"
 msgid "Please provide a new name."
 msgstr "Geef een nieuwe naam op."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
 msgctxt "@action:button"
 msgid "OK"
 msgstr "OK"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "Verwijderen Bevestigen"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Weet u zeker dat u %1 wilt verwijderen? Deze bewerking kan niet ongedaan worden gemaakt!"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "Deze instelling is door de actieve machine verborgen en wordt niet zichtbaar."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
 msgstr[0] "Deze instelling is verborgen vanwege de waarde van %1. Wijzig de waarde van die instelling om deze instelling zichtbaar te maken."
 msgstr[1] "Deze instelling is verborgen vanwege de waarden van %1. Wijzig de waarden van die instellingen om deze instelling zichtbaar te maken."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "Voorkeuren"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:112
+msgctxt "@action:button"
+msgid "Defaults"
+msgstr "Standaardwaarden"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:120
+msgctxt "@action:button"
+msgid "Close"
+msgstr "Sluiten"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
+msgctxt "@title:tab"
+msgid "General"
+msgstr "Algemeen"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:151
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Instellingen"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Printers"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Type"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
 msgstr "Terug"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
 msgstr "Voltooien"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
 msgstr "Volgende"
 
-#: ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Voert logboekinformatie uit naar de console."
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "Schalen in Stappen"
 
-#: ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Consolelogger"
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "Uniform Schalen"
 
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Maakt het mogelijk Wavefront OBJ-bestanden te lezen."
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "Plat neerleggen"
 
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ-lezer"
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "Selecteer de kant die u wilt uitlijnen met het platform"
 
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Maakt het mogelijk Wavefront OBJ-bestanden te schrijven."
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "Roteren in Stappen"
 
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ-schrijver"
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Biedt ondersteuning voor het lezen van STL-bestanden."
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL-lezer"
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Biedt ondersteuning voor het schrijven van STL-bestanden."
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL-schrijver"
-
-#: FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Voert logboekinformatie uit naar een bestand in de instellingenmap."
-
-#: FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
-msgstr "Bestandenlogger"
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:222
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "Model vergrendelen"
 
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
@@ -765,55 +715,45 @@ msgctxt "name"
 msgid "Local Container Provider"
 msgstr "Lokale containerprovider"
 
-#: LocalFileOutputDevice/plugin.json
+#: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Maakt opslaan als lokaal bestand mogelijk."
+msgid "Provides support for writing STL files."
+msgstr "Biedt ondersteuning voor het schrijven van STL-bestanden."
 
-#: LocalFileOutputDevice/plugin.json
+#: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Uitvoerapparaat voor lokaal bestand"
+msgid "STL Writer"
+msgstr "STL-schrijver"
 
-#: Tools/CameraTool/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Biedt het gereedschap waarmee u de camera kunt verplaatsen."
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Maakt het mogelijk Wavefront OBJ-bestanden te lezen."
 
-#: Tools/CameraTool/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
-msgid "Camera Tool"
-msgstr "Cameragereedschap"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ-lezer"
 
-#: Tools/MirrorTool/plugin.json
+#: FileHandlers/STLReader/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Biedt het Spiegelgereedschap."
+msgid "Provides support for reading STL files."
+msgstr "Biedt ondersteuning voor het lezen van STL-bestanden."
 
-#: Tools/MirrorTool/plugin.json
+#: FileHandlers/STLReader/plugin.json
 msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Spiegelgereedschap"
+msgid "STL Reader"
+msgstr "STL-lezer"
 
-#: Tools/RotateTool/plugin.json
+#: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Biedt het Rotatiegereedschap."
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Maakt het mogelijk Wavefront OBJ-bestanden te schrijven."
 
-#: Tools/RotateTool/plugin.json
+#: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Rotatiegereedschap"
-
-#: Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Biedt het Schaalgereedschap."
-
-#: Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Schaalgereedschap"
+msgid "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ-schrijver"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
@@ -825,6 +765,46 @@ msgctxt "name"
 msgid "Selection Tool"
 msgstr "Selectiegereedschap"
 
+#: Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr "Biedt het Spiegelgereedschap."
+
+#: Tools/MirrorTool/plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Spiegelgereedschap"
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Biedt het Schaalgereedschap."
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Schaalgereedschap"
+
+#: Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Biedt het Rotatiegereedschap."
+
+#: Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Rotatiegereedschap"
+
+#: Tools/CameraTool/plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Biedt het gereedschap waarmee u de camera kunt verplaatsen."
+
+#: Tools/CameraTool/plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Cameragereedschap"
+
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
@@ -835,55 +815,35 @@ msgctxt "name"
 msgid "Move Tool"
 msgstr "Verplaatsgereedschap"
 
-#: UpdateChecker/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Controleert of er updates zijn voor de software."
+msgid "Enables saving to local files."
+msgstr "Maakt opslaan als lokaal bestand mogelijk."
 
-#: UpdateChecker/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "name"
-msgid "Update Checker"
-msgstr "Updatecontrole"
+msgid "Local File Output Device"
+msgstr "Uitvoerapparaat voor lokaal bestand"
 
-#: UraniumExampleExtensionPlugin/plugin.json
+#: ConsoleLogger/plugin.json
 msgctxt "description"
-msgid "Example extension to instruct people on how to create Uranium extensions."
-msgstr "Voorbeeldextensie om gebruikers te tonen hoe Uranium-extensies worden gemaakt."
+msgid "Outputs log information to the console."
+msgstr "Voert logboekinformatie uit naar de console."
 
-#: UraniumExampleExtensionPlugin/plugin.json
+#: ConsoleLogger/plugin.json
 msgctxt "name"
-msgid "Example Extension"
-msgstr "Voorbeeldextensie"
+msgid "Console Logger"
+msgstr "Consolelogger"
 
-#: UraniumExampleFileReaderPlugin/plugin.json
+#: FileLogger/plugin.json
 msgctxt "description"
-msgid "Example file reader to instruct people on how to create Uranium file readers."
-msgstr "Voorbeeldbestandslezer om gebruikers te tonen hoe Uranium-bestandslezers worden gemaakt."
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Voert logboekinformatie uit naar een bestand in de instellingenmap."
 
-#: UraniumExampleFileReaderPlugin/plugin.json
+#: FileLogger/plugin.json
 msgctxt "name"
-msgid "Example File Reader"
-msgstr "Voorbeeldbestandslezer"
-
-#: UraniumExampleOutputDevicePlugin/plugin.json
-msgctxt "description"
-msgid "Example output device to instruct people on how to create Uranium output devices."
-msgstr "Voorbeelduitvoerapparaat om gebruikers te tonen hoe Uranium-uitvoerapparaten worden gemaakt."
-
-#: UraniumExampleOutputDevicePlugin/plugin.json
-msgctxt "name"
-msgid "Example Output Device"
-msgstr "Voorbeelduitvoerapparaat"
-
-#: UraniumExampleToolPlugin/plugin.json
-msgctxt "description"
-msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr "Voorbeeldgereedschap om gebruikers te tonen hoe Uranium-gereedschap wordt gemaakt."
-
-#: UraniumExampleToolPlugin/plugin.json
-msgctxt "name"
-msgid "Example Tool"
-msgstr "Voorbeeldgereedschap"
+msgid "File Logger"
+msgstr "Bestandenlogger"
 
 #: Views/SimpleView/plugin.json
 msgctxt "description"
@@ -895,7 +855,52 @@ msgctxt "name"
 msgid "Simple View"
 msgstr "Eenvoudige Weergave"
 
-#, python-format, python-brace-format
+#: UpdateChecker/plugin.json
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Controleert of er updates zijn voor de software."
+
+#: UpdateChecker/plugin.json
+msgctxt "name"
+msgid "Update Checker"
+msgstr "Updatecontrole"
+
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number} BETA is available!"
+#~ msgstr "{application_name} {version_number} BÈTA is beschikbaar!"
+
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "Voorbeeldextensie om gebruikers te tonen hoe Uranium-extensies worden gemaakt."
+
+#~ msgctxt "name"
+#~ msgid "Example Extension"
+#~ msgstr "Voorbeeldextensie"
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "Voorbeeldbestandslezer om gebruikers te tonen hoe Uranium-bestandslezers worden gemaakt."
+
+#~ msgctxt "name"
+#~ msgid "Example File Reader"
+#~ msgstr "Voorbeeldbestandslezer"
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "Voorbeelduitvoerapparaat om gebruikers te tonen hoe Uranium-uitvoerapparaten worden gemaakt."
+
+#~ msgctxt "name"
+#~ msgid "Example Output Device"
+#~ msgstr "Voorbeelduitvoerapparaat"
+
+#~ msgctxt "description"
+#~ msgid "Example tool to instruct people on how to create Uranium tools."
+#~ msgstr "Voorbeeldgereedschap om gebruikers te tonen hoe Uranium-gereedschap wordt gemaakt."
+
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "Voorbeeldgereedschap"
+
 #~ msgctxt "@info:status"
 #~ msgid "Auto scaled object to {0}% of original size"
 #~ msgstr "Het object is automatisch geschaald naar {0}% van het oorspronkelijke formaat"
