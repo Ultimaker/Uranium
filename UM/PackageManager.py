@@ -8,7 +8,7 @@ import tempfile
 import urllib.parse  # For interpreting escape characters using unquote_plus.
 import zipfile
 from json import JSONDecodeError
-from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING, Mapping
+from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING, MutableMapping
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
 
@@ -25,8 +25,8 @@ catalog = i18nCatalog("uranium")
 if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
 
-PackageData = Mapping[str, Any]
-PackageDataDict = Mapping[str, PackageData]
+PackageData = MutableMapping[str, Any]
+PackageDataDict = MutableMapping[str, PackageData]
 
 class PackageManager(QObject):
     Version = 1
@@ -91,19 +91,22 @@ class PackageManager(QObject):
         self._installAllScheduledPackages()
 
     # Notify the Package manager that there is an alternative version for a given package.
-    def addAvailablePackageVersion(self, package_id: str, version: "UMVersion") -> None:
+    def addAvailablePackageVersion(self, package_id: str, version: "UMVersion", package) -> None:
         if package_id not in self._available_package_versions:
             self._available_package_versions[package_id] = set()
         self._available_package_versions[package_id].add(version)
 
         if self.checkIfPackageCanUpdate(package_id):
-            self._packages_with_update_available.add(package_id)
+            self._packages_with_update_available[package_id] = package
             self.packagesWithUpdateChanged.emit()
 
     @pyqtProperty("QStringList", notify = packagesWithUpdateChanged)
     def packagesWithUpdate(self) -> Set[str]:
         return set(self._packages_with_update_available.keys())
 
+    @property
+    def package_infosWithUpdate(self) -> PackageDataDict:
+        return self._packages_with_update_available
 
     def setPackagesWithUpdate(self, packages: PackageDataDict) -> None:
         """Alternative way of setting the available package updates without having to check all packages in the
