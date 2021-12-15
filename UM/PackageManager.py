@@ -92,13 +92,13 @@ class PackageManager(QObject):
         self._installAllScheduledPackages()
 
     # Notify the Package manager that there is an alternative version for a given package.
-    def addAvailablePackageVersion(self, package_id: str, version: "UMVersion", package) -> None:
+    def addAvailablePackageVersion(self, package_id: str, version: "UMVersion", package: Optional[PackageData] = None) -> None:
         if package_id not in self._available_package_versions:
             self._available_package_versions[package_id] = set()
         self._available_package_versions[package_id].add(version)
 
         if self.checkIfPackageCanUpdate(package_id):
-            self._packages_with_update_available[package_id] = package
+            self._packages_with_update_available[package_id] = {} if package is None else package
             self.packagesWithUpdateChanged.emit()
 
     @pyqtProperty("QStringList", notify = packagesWithUpdateChanged)
