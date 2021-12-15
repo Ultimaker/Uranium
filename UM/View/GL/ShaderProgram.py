@@ -348,7 +348,7 @@ class ShaderProgram:
         del self._attribute_bindings[key]
 
     def _matrixToQMatrix4x4(self, m):
-        return QMatrix4x4(m.getData().flatten())
+        return QMatrix4x4(m.getFlatData())
 
     def _setUniformValueDirect(self, uniform: int, value: Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]) -> None:
         if type(value) is Vector:
