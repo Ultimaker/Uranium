@@ -87,7 +87,7 @@ class ContainerQuery:
         # cache if it's not there yet.
         key_so_far = (self._ignore_case, )  # type: Tuple[Any, ...]
         if candidates is None:
-            filtered_candidates = list(self._registry.metadata.values())
+            filtered_candidates = self._registry.metadata.values()
         else:
             filtered_candidates = candidates
 
