@@ -210,7 +210,7 @@ class PluginRegistry(QObject):
                 return False
         return True
 
-    hasPluginsEnabledOrDisabledChanged = pyqtSignal()
+    pluginsEnabledOrDisabledChanged = pyqtSignal()
 
     #   Remove plugin from the list of enabled plugins and save to preferences:
     def disablePlugin(self, plugin_id: str) -> None:
@@ -220,7 +220,7 @@ class PluginRegistry(QObject):
                 self._changed_activated_plugins_current_session.add(plugin_id)
             else:
                 self._changed_activated_plugins_current_session.remove(plugin_id)
-            self.hasPluginsEnabledOrDisabledChanged.emit()
+            self.pluginsEnabledOrDisabledChanged.emit()
         self._savePluginData()
 
     #   Add plugin to the list of enabled plugins and save to preferences:
@@ -231,7 +231,7 @@ class PluginRegistry(QObject):
                 self._changed_activated_plugins_current_session.add(plugin_id)
             else:
                 self._changed_activated_plugins_current_session.remove(plugin_id)
-            self.hasPluginsEnabledOrDisabledChanged.emit()
+            self.pluginsEnabledOrDisabledChanged.emit()
         self._savePluginData()
 
     #   Get a list of enabled plugins:
