@@ -455,6 +455,20 @@ class PackageManager(QObject):
         filename = QUrl(file_url).toLocalFile()
         return self.installPackage(filename)
 
+    def reinstallPackage(self, package_id: str) -> bool:
+        """Attempts to 'reinstall' a package which was scheduled for removal on the next start-up
+
+        :param package_id: The package ID to be reinstalled
+        :return: True if it was successfully 'reinstalled' False otherwise
+        """
+        if package_id not in self._to_remove_package_dict:
+            return False
+        if package_id in self._installed_package_dict:
+            del self._to_remove_package_dict[package_id]
+            self._to_remove_package_set.remove(package_id)
+            return True
+        return False
+
     @pyqtSlot(str)
     def installPackage(self, filename: str) -> Optional[str]:
         """Schedules the given package file to be installed upon the next start.
