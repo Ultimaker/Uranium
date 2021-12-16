@@ -466,6 +466,7 @@ class PackageManager(QObject):
         if package_id in self._installed_package_dict:
             del self._to_remove_package_dict[package_id]
             self._to_remove_package_set.remove(package_id)
+            self._saveManagementData()
             self.installedPackagesChanged.emit()
             self.packageInstalled.emit(package_id)
             Logger.info(f"Reinstalled package [{package_id}]")
