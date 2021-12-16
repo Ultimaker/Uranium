@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import cast
@@ -19,7 +19,7 @@ class FixtureApplication(Application):
     engineCreatedSignal = Signal()
 
     def __init__(self):
-        super().__init__(name = "test", version = "1.0", api_version = "7.8.0")
+        super().__init__(name = "test", version = "1.0", api_version = "7.9.0")
         super().initialize()
         Signal._signalQueue = self
 
