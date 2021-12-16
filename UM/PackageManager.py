@@ -78,7 +78,7 @@ class PackageManager(QObject):
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
         self._available_package_versions: Dict[str, Set[UMVersion]] = {}
 
-        self._packages_with_update_available: PackageDataDict = dict()
+        self._packages_with_update_available = set()
 
     packageInstalled = pyqtSignal(str)  # Emits the package_id (str) of an installed package
     packageUninstalled = pyqtSignal(str)  # Emits the package_id (str) of an installed package
@@ -92,21 +92,17 @@ class PackageManager(QObject):
         self._installAllScheduledPackages()
 
     # Notify the Package manager that there is an alternative version for a given package.
-    def addAvailablePackageVersion(self, package_id: str, version: "UMVersion", package: Optional[PackageData] = None) -> None:
+    def addAvailablePackageVersion(self, package_id: str, version: "UMVersion") -> None:
         if package_id not in self._available_package_versions:
             self._available_package_versions[package_id] = set()
         self._available_package_versions[package_id].add(version)
 
         if self.checkIfPackageCanUpdate(package_id):
-            self._packages_with_update_available[package_id] = {} if package is None else package
+            self._packages_with_update_available.add(package_id)
             self.packagesWithUpdateChanged.emit()
 
     @pyqtProperty("QStringList", notify = packagesWithUpdateChanged)
     def packagesWithUpdate(self) -> Set[str]:
-        return set(self._packages_with_update_available.keys())
-
-    @property
-    def package_infosWithUpdate(self) -> PackageDataDict:
         return self._packages_with_update_available
 
     def setPackagesWithUpdate(self, packages: PackageDataDict) -> None:
