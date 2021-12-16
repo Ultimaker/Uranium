@@ -144,12 +144,13 @@ class PackageManager(QObject):
 
         installed_package_dict = self._installed_package_dict.get(package_id)
         if installed_package_dict is not None:
-            current_version = UMVersion(installed_package_dict["package_info"]["package_version"])
+            if package_id not in self.getToRemovePackageIDs():
+                current_version = UMVersion(installed_package_dict["package_info"]["package_version"])
+        # One way to check if the package has been updated in looking at the to_install information in the packages.json
+        to_install_package_dict = self._to_install_package_dict.get(package_id)
+        if to_install_package_dict is not None: # If it's marked as to_install, that means package will be installed upon restarting
+            return False
 
-            # One way to check if the package has been updated in looking at the to_install information in the packages.json
-            to_install_package_dict = self._to_install_package_dict.get(package_id)
-            if to_install_package_dict is not None: # If it's marked as to_install, that means package will be installed upon restarting
-                return False
         if current_version is not None:
             for available_version in available_versions:
                 if current_version < available_version:
@@ -514,12 +515,7 @@ class PackageManager(QObject):
                 self.installedPackagesChanged.emit()
 
                 if package_id in self._packages_with_update_available:
-                    # After installing the update, the check will return that not other updates are available.
-                    # In that case we remove it from the list. This is actually a safe check (could be removed)
-                    if not self.checkIfPackageCanUpdate(package_id):
-                        # The install ensured that the package no longer has a valid update option.
-                        self._packages_with_update_available.remove(package_id)
-                        self.packagesWithUpdateChanged.emit()
+                    self.packagesWithUpdateChanged.emit()
 
         if has_changes:
             self.packageInstalled.emit(package_id)
@@ -540,9 +536,9 @@ class PackageManager(QObject):
             return
 
         if package_id not in self._to_install_package_dict or force_add:
-            if not self.isBundledPackage(package_id):
-                # Schedule for a delayed removal
-                self._to_remove_package_set.add(package_id)
+
+            # Schedule for a delayed removal
+            self._to_remove_package_set.add(package_id)
         else:
             if package_id in self._to_install_package_dict:
                 # Remove from the delayed installation list if present
@@ -552,10 +548,8 @@ class PackageManager(QObject):
 
         self._saveManagementData()
         self.installedPackagesChanged.emit()
-
-        self.packageUninstalled.emit(package_id)
-        if self.isBundledPackage(package_id):
-            self.packageInstalled.emit(package_id)
+        if not self.isBundledPackage(package_id):
+            self.packageUninstalled.emit(package_id)
 
         # It might be that a certain update is suddenly available again!
         if self.checkIfPackageCanUpdate(package_id):
