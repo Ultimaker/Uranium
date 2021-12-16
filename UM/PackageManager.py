@@ -70,7 +70,6 @@ class PackageManager(QObject):
         self._bundled_package_dict: PackageDataDict = {}  # A dict of all bundled packages
         self._installed_package_dict: PackageDataDict = {}  # A dict of all installed packages
         self._to_remove_package_set: Set[str] = set()  # A set of packages that need to be removed at the next start
-        self._to_remove_package_dict: PackageDataDict = {}  # A dict of packages that need to be removed at the next start
         self._to_install_package_dict: PackageDataDict = {}  # A dict of packages that need to be installed at the next start
         self._dismissed_packages: Set[str] = set()  # A set of packages that are dismissed by the user
         self._installed_packages: PackageDataDict = {}  # A dict of packages that were installed during startup
@@ -105,7 +104,7 @@ class PackageManager(QObject):
     def packagesWithUpdate(self) -> Set[str]:
         return self._packages_with_update_available
 
-    def setPackagesWithUpdate(self, packages: PackageDataDict) -> None:
+    def setPackagesWithUpdate(self, packages: Set[str]) -> None:
         """Alternative way of setting the available package updates without having to check all packages in the
         cloud. """
 
@@ -150,13 +149,13 @@ class PackageManager(QObject):
             # One way to check if the package has been updated in looking at the to_install information in the packages.json
             to_install_package_dict = self._to_install_package_dict.get(package_id)
             if to_install_package_dict is not None: # If it's marked as to_install, that means package will be installed upon restarting
-                    return False
-
+                return False
         if current_version is not None:
             for available_version in available_versions:
                 if current_version < available_version:
                     # Stop looking, there is at least one version that is higher.
                     return True
+
         return False
 
     # (for initialize) Loads the package management file if exists
@@ -457,10 +456,9 @@ class PackageManager(QObject):
         :param package_id: The package ID to be reinstalled
         :return: True if it was successfully 'reinstalled' False otherwise
         """
-        if package_id not in self._to_remove_package_dict:
+        if package_id not in self._to_remove_package_set:
             return False
         if package_id in self._installed_package_dict:
-            del self._to_remove_package_dict[package_id]
             self._to_remove_package_set.remove(package_id)
             self._saveManagementData()
             self.installedPackagesChanged.emit()
@@ -520,7 +518,7 @@ class PackageManager(QObject):
                     # In that case we remove it from the list. This is actually a safe check (could be removed)
                     if not self.checkIfPackageCanUpdate(package_id):
                         # The install ensured that the package no longer has a valid update option.
-                        del self._packages_with_update_available[package_id]
+                        self._packages_with_update_available.remove(package_id)
                         self.packagesWithUpdateChanged.emit()
 
         if has_changes:
@@ -540,30 +538,28 @@ class PackageManager(QObject):
         if not self.isPackageInstalled(package_id):
             Logger.log("w", "Attempt to remove package [%s] that is not installed, do nothing.", package_id)
             return
-        # Extra safety check
-        if package_id not in self._installed_package_dict and package_id in self._bundled_package_dict:
-            Logger.log("w", "Not uninstalling [%s] because it is a bundled package.", package_id)
-            return
 
         if package_id not in self._to_install_package_dict or force_add:
-            # Schedule for a delayed removal:
-            self._to_remove_package_set.add(package_id)
-            self._to_remove_package_dict[package_id] = self._installed_package_dict[package_id]
+            if not self.isBundledPackage(package_id):
+                # Schedule for a delayed removal
+                self._to_remove_package_set.add(package_id)
         else:
             if package_id in self._to_install_package_dict:
                 # Remove from the delayed installation list if present
                 del self._to_install_package_dict[package_id]
                 if package_id in self._installed_package_dict:
                     self._to_remove_package_set.add(package_id)
-                    self._to_remove_package_dict[package_id] = self._installed_package_dict[package_id]
+
         self._saveManagementData()
         self.installedPackagesChanged.emit()
+
         self.packageUninstalled.emit(package_id)
+        if self.isBundledPackage(package_id):
+            self.packageInstalled.emit(package_id)
 
         # It might be that a certain update is suddenly available again!
         if self.checkIfPackageCanUpdate(package_id):
-            pkg_info = self.getInstalledPackageInfo(package_id)
-            self._packages_with_update_available[package_id] = {} if pkg_info is None else pkg_info
+            self._packages_with_update_available.add(package_id)
             self.packagesWithUpdateChanged.emit()
 
     def isUserInstalledPackage(self, package_id: str) -> bool:
@@ -766,15 +762,12 @@ class PackageManager(QObject):
     def getPackagesInstalledOnStartup(self) -> PackageDataDict:
         return self._installed_packages
 
-    def getPackagesToRemove(self) -> PackageDataDict:
-        return self._to_remove_package_dict
-
     def getPackagesToInstall(self) -> PackageDataDict:
         return self._to_install_package_dict
 
     @pyqtProperty(bool, notify = installedPackagesChanged)
     def hasPackagesToRemoveOrInstall(self) -> bool:
-        return len(self._to_remove_package_dict) > 0 or len(self._to_install_package_dict) > 0
+        return len(self._to_remove_package_set) > 0 or len(self._to_install_package_dict) > 0
 
     def canDowngrade(self, package_id: str) -> bool:
         """ Checks if the local installed package has a higher version than the bundled package
