@@ -557,6 +557,9 @@ class PackageManager(QObject):
             if package_id in self._to_install_package_dict:
                 # Remove from the delayed installation list if present
                 del self._to_install_package_dict[package_id]
+                if package_id in self._installed_package_dict:
+                    self._to_remove_package_set.add(package_id)
+                    self._to_remove_package_dict[package_id] = self._installed_package_dict[package_id]
         self._saveManagementData()
         self.installedPackagesChanged.emit()
         self.packageUninstalled.emit(package_id)
