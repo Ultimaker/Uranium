@@ -77,7 +77,7 @@ class PackageManager(QObject):
         # There can be plugins that provide remote packages (and thus, newer / different versions for a package).
         self._available_package_versions: Dict[str, Set[UMVersion]] = {}
 
-        self._packages_with_update_available = set()
+        self._packages_with_update_available: Set[str] = set()
 
     packageInstalled = pyqtSignal(str)  # Emits the package_id (str) of an installed package
     packageUninstalled = pyqtSignal(str)  # Emits the package_id (str) of an installed package
