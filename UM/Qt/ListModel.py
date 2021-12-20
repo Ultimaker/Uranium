@@ -1,8 +1,10 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from operator import itemgetter
+from typing import Any, Callable, Dict, List, Optional
+
 from PyQt5.QtCore import QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, pyqtSignal
-from typing import Any, Callable, Dict, List
 
 
 class ListModel(QAbstractListModel):
@@ -16,8 +18,8 @@ class ListModel(QAbstractListModel):
 
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
-        self._items = []  # type: List[Dict[str, Any]]
-        self._role_names = {}  # type: Dict[int, bytes]
+        self._items: List[Dict[str, Any]] = []
+        self._role_names: Dict[int, bytes] = {}
 
     itemsChanged = pyqtSignal()
 
@@ -161,14 +163,19 @@ class ListModel(QAbstractListModel):
         self._items[index][property] = value
         self.dataChanged.emit(self.index(index, 0), self.index(index, 0))
 
-    def sort(self, fun: Callable[[Any], float]) -> None:
+    def sort(self, fun: Callable[[Any], float], key: Optional[str] = None, reverse = False) -> None:
         """Sort the list.
 
         :param fun: The callable to use for determining the sort key.
+        :param key: Use the sorting function on the underlying data
+        :param reverse: reverse the sorted results
         """
 
         self.beginResetModel()
-        self._items.sort(key = fun)
+        if key:
+            self._items = sorted(self._items, key = lambda item: fun(itemgetter(key)(item)), reverse = reverse)
+        else:
+            self._items.sort(key = fun, reverse = reverse)
         self.endResetModel()
 
     @pyqtSlot(str, QVariant, result = int)

@@ -8,7 +8,7 @@ import tempfile
 import urllib.parse  # For interpreting escape characters using unquote_plus.
 import zipfile
 from json import JSONDecodeError
-from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING, MutableMapping
 
 from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
 
@@ -17,7 +17,6 @@ from UM.Logger import Logger
 from UM.Message import Message
 from UM.MimeTypeDatabase import MimeTypeDatabase  # To get the type of container we're loading.
 from UM.Resources import Resources
-from UM.Signal import Signal
 from UM.Version import Version as UMVersion
 
 catalog = i18nCatalog("uranium")
@@ -25,8 +24,8 @@ catalog = i18nCatalog("uranium")
 if TYPE_CHECKING:
     from UM.Qt.QtApplication import QtApplication
 
-PackageData = Dict[str, Any]
-PackageDataDict = Dict[str, PackageData]
+PackageData = MutableMapping[str, Any]
+PackageDataDict = MutableMapping[str, PackageData]
 
 class PackageManager(QObject):
     Version = 1
@@ -71,7 +70,6 @@ class PackageManager(QObject):
         self._bundled_package_dict: PackageDataDict = {}  # A dict of all bundled packages
         self._installed_package_dict: PackageDataDict = {}  # A dict of all installed packages
         self._to_remove_package_set: Set[str] = set()  # A set of packages that need to be removed at the next start
-        self._to_remove_package_dict: PackageDataDict = {}  # A dict of packages that need to be removed at the next start
         self._to_install_package_dict: PackageDataDict = {}  # A dict of packages that need to be installed at the next start
         self._dismissed_packages: Set[str] = set()  # A set of packages that are dismissed by the user
         self._installed_packages: PackageDataDict = {}  # A dict of packages that were installed during startup
@@ -81,7 +79,9 @@ class PackageManager(QObject):
 
         self._packages_with_update_available: Set[str] = set()
 
-    packageInstalled = Signal()  # Emits the package_id (str) of an installed package
+    packageInstalled = pyqtSignal(str)  # Emits the package_id (str) of an installed package
+    packageUninstalled = pyqtSignal(str)  # Emits the package_id (str) of an installed package
+    packageInstallingFailed = pyqtSignal(str)
     installedPackagesChanged = pyqtSignal()  # Emitted whenever the installed packages collection have been changed.
     packagesWithUpdateChanged = pyqtSignal()
 
@@ -104,7 +104,7 @@ class PackageManager(QObject):
     def packagesWithUpdate(self) -> Set[str]:
         return self._packages_with_update_available
 
-    def setPackagesWithUpdate(self, packages: Set[str]):
+    def setPackagesWithUpdate(self, packages: Set[str]) -> None:
         """Alternative way of setting the available package updates without having to check all packages in the
         cloud. """
 
@@ -144,18 +144,19 @@ class PackageManager(QObject):
 
         installed_package_dict = self._installed_package_dict.get(package_id)
         if installed_package_dict is not None:
-            current_version = UMVersion(installed_package_dict["package_info"]["package_version"])
-
-            # One way to check if the package has been updated in looking at the to_install information in the packages.json
-            to_install_package_dict = self._to_install_package_dict.get(package_id)
-            if to_install_package_dict is not None: # If it's marked as to_install, that means package will be installed upon restarting
-                    return False
+            if package_id not in self.getToRemovePackageIDs():
+                current_version = UMVersion(installed_package_dict["package_info"]["package_version"])
+        # One way to check if the package has been updated in looking at the to_install information in the packages.json
+        to_install_package_dict = self._to_install_package_dict.get(package_id)
+        if to_install_package_dict is not None: # If it's marked as to_install, that means package will be installed upon restarting
+            return False
 
         if current_version is not None:
             for available_version in available_versions:
                 if current_version < available_version:
                     # Stop looking, there is at least one version that is higher.
                     return True
+
         return False
 
     # (for initialize) Loads the package management file if exists
@@ -450,6 +451,23 @@ class PackageManager(QObject):
         filename = QUrl(file_url).toLocalFile()
         return self.installPackage(filename)
 
+    def reinstallPackage(self, package_id: str) -> bool:
+        """Attempts to 'reinstall' a package which was scheduled for removal on the next start-up
+
+        :param package_id: The package ID to be reinstalled
+        :return: True if it was successfully 'reinstalled' False otherwise
+        """
+        if package_id not in self._to_remove_package_set:
+            return False
+        if package_id in self._installed_package_dict:
+            self._to_remove_package_set.remove(package_id)
+            self._saveManagementData()
+            self.installedPackagesChanged.emit()
+            self.packageInstalled.emit(package_id)
+            Logger.info(f"Reinstalled package [{package_id}]")
+            return True
+        return False
+
     @pyqtSlot(str)
     def installPackage(self, filename: str) -> Optional[str]:
         """Schedules the given package file to be installed upon the next start.
@@ -457,7 +475,7 @@ class PackageManager(QObject):
         :return: The to-be-installed package_id or None if something went wrong
         """
 
-        has_changes = False
+        has_changes = True
         package_id = ""
         try:
             # Get package information
@@ -488,8 +506,8 @@ class PackageManager(QObject):
 
                 self._to_install_package_dict[package_id] = {"package_info": package_info,
                                                              "filename": target_file_path}
-                has_changes = True
         except:
+            has_changes = False
             Logger.logException("c", "Failed to install package file '%s'", filename)
         finally:
             self._saveManagementData()
@@ -497,17 +515,13 @@ class PackageManager(QObject):
                 self.installedPackagesChanged.emit()
 
                 if package_id in self._packages_with_update_available:
-                    # After installing the update, the check will return that not other updates are available.
-                    # In that case we remove it from the list. This is actually a safe check (could be removed)
-                    if not self.checkIfPackageCanUpdate(package_id):
-                        # The install ensured that the package no longer has a valid update option.
-                        self._packages_with_update_available.remove(package_id)
-                        self.packagesWithUpdateChanged.emit()
+                    self.packagesWithUpdateChanged.emit()
 
         if has_changes:
             self.packageInstalled.emit(package_id)
             return package_id
         else:
+            self.packageInstallingFailed.emit(package_id)
             return None
 
     # Schedules the given package to be removed upon the next start.
@@ -520,21 +534,22 @@ class PackageManager(QObject):
         if not self.isPackageInstalled(package_id):
             Logger.log("w", "Attempt to remove package [%s] that is not installed, do nothing.", package_id)
             return
-        # Extra safety check
-        if package_id not in self._installed_package_dict and package_id in self._bundled_package_dict:
-            Logger.log("w", "Not uninstalling [%s] because it is a bundled package.", package_id)
-            return
 
         if package_id not in self._to_install_package_dict or force_add:
-            # Schedule for a delayed removal:
+
+            # Schedule for a delayed removal
             self._to_remove_package_set.add(package_id)
-            self._to_remove_package_dict[package_id] = self._installed_package_dict[package_id]
         else:
             if package_id in self._to_install_package_dict:
                 # Remove from the delayed installation list if present
                 del self._to_install_package_dict[package_id]
+                if package_id in self._installed_package_dict:
+                    self._to_remove_package_set.add(package_id)
+
         self._saveManagementData()
         self.installedPackagesChanged.emit()
+        if not self.isBundledPackage(package_id):
+            self.packageUninstalled.emit(package_id)
 
         # It might be that a certain update is suddenly available again!
         if self.checkIfPackageCanUpdate(package_id):
@@ -545,6 +560,11 @@ class PackageManager(QObject):
         """Is the package an user installed package?"""
 
         return package_id in self._installed_package_dict
+
+    def isBundledPackage(self, package_id: str) -> bool:
+        """Is the package a bundled package?"""
+
+        return package_id in self._bundled_package_dict
 
     # Removes everything associated with the given package ID.
     def _purgePackage(self, package_id: str) -> None:
@@ -736,10 +756,30 @@ class PackageManager(QObject):
     def getPackagesInstalledOnStartup(self) -> PackageDataDict:
         return self._installed_packages
 
-    def getPackagesToRemove(self) -> PackageDataDict:
-        return self._to_remove_package_dict
-
     def getPackagesToInstall(self) -> PackageDataDict:
         return self._to_install_package_dict
+
+    @pyqtProperty(bool, notify = installedPackagesChanged)
+    def hasPackagesToRemoveOrInstall(self) -> bool:
+        return len(self._to_remove_package_set) > 0 or len(self._to_install_package_dict) > 0
+
+    def canDowngrade(self, package_id: str) -> bool:
+        """ Checks if the local installed package has a higher version than the bundled package
+
+        :return: ``True`` if the package can be downgraded to a bundled version, ``False`` if the bundled version is
+        higher or the same. Also returns ``False`` if there is only a bundled or an installed package present on the
+        system.
+        """
+        local_package = self.getInstalledPackageInfo(package_id)
+        if local_package is None:
+            return False
+
+        bundled_package = self.getBundledPackageInfo(package_id)
+        if bundled_package is None:
+            return False
+
+        local_version = UMVersion(local_package["package_version"])
+        bundled_version = UMVersion(bundled_package["package_version"])
+        return bundled_version < local_version
 
 __all__ = ["PackageManager"]
