@@ -1,6 +1,6 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
@@ -13,9 +13,9 @@ class StageModel(ListModel):
     Use it to populate a stage based menu (like top bar).
     """
 
-    IdRole = Qt.UserRole + 1
-    NameRole = Qt.UserRole + 2
-    StageRole = Qt.UserRole + 4
+    IdRole = Qt.ItemDataRole.UserRole + 1
+    NameRole = Qt.ItemDataRole.UserRole + 2
+    StageRole = Qt.ItemDataRole.UserRole + 4
 
     def __init__(self, parent = None):
         super().__init__(parent)

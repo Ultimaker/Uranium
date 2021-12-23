@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 
 from UM.Event import Event, MouseEvent
 from UM.Math.Vector import Vector
@@ -20,7 +20,7 @@ class MirrorTool(Tool):
         super().__init__()
 
         self._handle = MirrorToolHandle.MirrorToolHandle()
-        self._shortcut_key = Qt.Key_M
+        self._shortcut_key = Qt.Key.Key_M
 
         self._operation_started = False
 

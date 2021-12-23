@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtProperty, Q_ENUMS
+from PyQt6.QtCore import QObject, pyqtSignal, pyqtProperty  #, Q_ENUMS
 
 from UM.i18n import i18nCatalog
 from UM.Application import Application
@@ -12,7 +12,7 @@ i18n_catalog = i18nCatalog("uranium")
 
 class BackendProxy(QObject):
 
-    Q_ENUMS(BackendState) # Expose the BackendState enum to QML
+    #Q_ENUMS(BackendState) # Expose the BackendState enum to QML
 
     def __init__(self, parent = None):
         super().__init__(parent)

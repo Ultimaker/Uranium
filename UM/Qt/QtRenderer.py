@@ -2,7 +2,8 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
-from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLVertexArrayObject
+from PyQt6.QtGui import QColor
+from PyQt6.QtOpenGL import QOpenGLBuffer, QOpenGLVertexArrayObject
 from typing import List, Tuple, Dict, Optional
 
 import UM.Qt.QtApplication

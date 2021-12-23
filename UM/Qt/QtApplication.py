@@ -7,14 +7,14 @@ import signal
 from typing import List
 from typing import Any, cast, Dict, Optional
 
-from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt6.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
 
 from UM.FileProvider import FileProvider
 from UM.FlameProfiler import pyqtSlot
-from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
-from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
-from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat
-from PyQt5.QtCore import QTimer
+from PyQt6.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
+from PyQt6.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
+from PyQt6.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat
+from PyQt6.QtCore import QTimer
 
 from UM.Backend.Backend import Backend #For typing.
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
@@ -54,7 +54,7 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
-from PyQt5.QtCore import QObject
+from PyQt6.QtCore import QObject
 
 
 # Raised when we try to use an unsupported version of a dependency.
@@ -79,13 +79,13 @@ class QtApplication(QApplication, Application):
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
-                plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
+                plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt6", "plugins")
                 Logger.log("i", "Adding QT5 plugin path: %s", plugin_path)
                 QCoreApplication.addLibraryPath(plugin_path)
             else:
                 import site
                 for sitepackage_dir in site.getsitepackages():
-                    QCoreApplication.addLibraryPath(os.path.join(sitepackage_dir, "PyQt5", "plugins"))
+                    QCoreApplication.addLibraryPath(os.path.join(sitepackage_dir, "PyQt6", "plugins"))
         elif sys.platform == "darwin":
             plugin_path = os.path.join(self.getInstallPrefix(), "Resources", "plugins")
 
@@ -154,8 +154,8 @@ class QtApplication(QApplication, Application):
         self.setStyle("fusion")
 
         if preferences.getValue("view/force_empty_shader_cache"):
-            self.setAttribute(Qt.AA_DisableShaderDiskCache)
-        self.setAttribute(Qt.AA_UseDesktopOpenGL)
+            self.setAttribute(Qt.ApplicationAttribute.AA_DisableShaderDiskCache)
+        self.setAttribute(Qt.ApplicationAttribute.AA_UseDesktopOpenGL)
         if preferences.getValue("view/opengl_version_detect") != OpenGLContext.OpenGlVersionDetect.ForceModern:
             major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion(
                 preferences.getValue("view/opengl_version_detect") == OpenGLContext.OpenGlVersionDetect.ForceLegacy)
@@ -390,7 +390,7 @@ class QtApplication(QApplication, Application):
 
     def exec_(self, *args: Any, **kwargs: Any) -> None:
         self.applicationRunning.emit()
-        super().exec_(*args, **kwargs)
+        super().exec(*args, **kwargs)
 
     @pyqtSlot()
     def reloadQML(self) -> None:
@@ -562,7 +562,7 @@ class QtApplication(QApplication, Application):
 
         if QtApplication.splash:
             self.processEvents()  # Process events from previous loading phase before updating the message
-            QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)  # Now update the message
+            QtApplication.splash.showMessage(message, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)  # Now update the message
             self.processEvents()  # And make sure it is immediately visible
         elif self.getIsHeadLess():
             Logger.log("d", message)
@@ -669,7 +669,7 @@ class _QtFunctionEvent(QEvent):
     Wrapper around a FunctionEvent object to make Qt handle the event properly.
     """
 
-    QtFunctionEvent = QEvent.User + 1
+    QtFunctionEvent = QEvent.Type.User + 1
 
     def __init__(self, fevent: QEvent) -> None:
         super().__init__(self.QtFunctionEvent)

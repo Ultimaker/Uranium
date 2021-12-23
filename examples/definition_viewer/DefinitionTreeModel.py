@@ -1,13 +1,13 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant, pyqtProperty, pyqtSignal, pyqtSlot
+from PyQt6.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant, pyqtProperty, pyqtSignal, pyqtSlot
 
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Settings.ContainerRegistry import ContainerRegistry
 
 class DefinitionTreeModel(QAbstractItemModel):
-    KeyRole = Qt.UserRole + 1
+    KeyRole = Qt.ItemDataRole.UserRole + 1
 
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)

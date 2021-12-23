@@ -5,7 +5,7 @@ import itertools
 import sys
 from typing import Iterable, Union, Optional
 
-from PyQt5.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QMessageBox
 
 from UM.i18n import i18nCatalog
 from UM.Message import Message

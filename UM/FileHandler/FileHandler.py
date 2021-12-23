@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING, cast
 
 from .FileReader import FileReader
 from .FileWriter import FileWriter
-from PyQt5.QtCore import QFileInfo, QObject, pyqtProperty, pyqtSlot, QUrl
+from PyQt6.QtCore import QFileInfo, QObject, pyqtProperty, pyqtSlot, QUrl
 
 from UM.Logger import Logger
 from UM.Platform import Platform

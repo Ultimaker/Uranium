@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import List, Tuple, TYPE_CHECKING, Optional
 
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Logger import Logger
@@ -44,7 +44,7 @@ class ScaleTool(Tool):
 
         self._move_up = True
 
-        self._shortcut_key = Qt.Key_S
+        self._shortcut_key = Qt.Key.Key_S
 
         # We use the position of the scale handle when the operation starts.
         # This is done in order to prevent runaway reactions (drag changes of 100+)

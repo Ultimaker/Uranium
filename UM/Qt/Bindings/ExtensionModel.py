@@ -1,7 +1,7 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 from UM.FlameProfiler import pyqtSlot
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
@@ -9,9 +9,9 @@ from UM.Logger import Logger
 
 
 class ExtensionModel(ListModel):
-    NameRole = Qt.UserRole + 1
-    ActionsRole = Qt.UserRole + 2
-    ExtensionRole = Qt.UserRole + 3
+    NameRole = Qt.ItemDataRole.UserRole + 1
+    ActionsRole = Qt.ItemDataRole.UserRole + 2
+    ExtensionRole = Qt.ItemDataRole.UserRole + 3
 
     def __init__(self, parent = None):
         super().__init__(parent)

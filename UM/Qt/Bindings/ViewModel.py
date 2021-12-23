@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
@@ -9,11 +9,11 @@ from UM.PluginRegistry import PluginRegistry
 
 
 class ViewModel(ListModel):
-    IdRole = Qt.UserRole + 1
-    NameRole = Qt.UserRole + 2
-    ActiveRole = Qt.UserRole + 3
-    DescriptionRole = Qt.UserRole + 4
-    IconRole = Qt.UserRole + 5
+    IdRole = Qt.ItemDataRole.UserRole + 1
+    NameRole = Qt.ItemDataRole.UserRole + 2
+    ActiveRole = Qt.ItemDataRole.UserRole + 3
+    DescriptionRole = Qt.ItemDataRole.UserRole + 4
+    IconRole = Qt.ItemDataRole.UserRole + 5
 
     def __init__(self, parent = None) -> None:
         super().__init__(parent)

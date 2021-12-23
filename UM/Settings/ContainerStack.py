@@ -5,10 +5,10 @@ import configparser
 import io
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+from PyQt6.QtCore import QObject, pyqtProperty, pyqtSignal
 
 from UM.Logger import Logger
-from PyQt5.QtQml import QQmlEngine
+from PyQt6.QtQml import QQmlEngine
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
@@ -62,7 +62,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         """
 
         super().__init__()
-        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.ObjectOwnership.CppOwnership)
 
         self._metadata = {
             "id": stack_id,

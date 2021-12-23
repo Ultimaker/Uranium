@@ -1,13 +1,13 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import Arcus
+#import Arcus
 
 from UM.Signal import Signal, signalemitter
 
 
 @signalemitter
-class SignalSocket(Arcus.Socket):
+class SignalSocket:  #(Arcus.Socket):
     """A small extension of an Arcus socket that emits queued signals when socket events happen."""
 
     def __init__(self):
@@ -17,7 +17,7 @@ class SignalSocket(Arcus.Socket):
         self._listener.stateChangedCallback = self._onStateChanged
         self._listener.messageReceivedCallback = self._onMessageReceived
         self._listener.errorCallback = self._onError
-        self.addListener(self._listener)
+        #self.addListener(self._listener)
 
     stateChanged = Signal()
     messageReceived = Signal()
@@ -32,7 +32,7 @@ class SignalSocket(Arcus.Socket):
     def _onError(self, error):
         self.error.emit(error)
 
-class _SocketListener(Arcus.SocketListener):
+class _SocketListener:  #(Arcus.SocketListener):
     def __init__(self):
         super().__init__()
 

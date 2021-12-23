@@ -3,7 +3,7 @@
 
 from UM.Qt.ListModel import ListModel
 
-from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal
+from PyQt6.QtCore import pyqtProperty, Qt, pyqtSignal
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.DefinitionContainer import DefinitionContainer
@@ -15,9 +15,9 @@ class DefinitionContainersModel(ListModel):
     changed.
     """
 
-    NameRole = Qt.UserRole + 1          # Human readable name (string)
-    IdRole = Qt.UserRole + 2            # Unique ID of Definition
-    SectionRole = Qt.UserRole + 3       # Section of definition / machine. (string)
+    NameRole = Qt.ItemDataRole.UserRole + 1          # Human readable name (string)
+    IdRole = Qt.ItemDataRole.UserRole + 2            # Unique ID of Definition
+    SectionRole = Qt.ItemDataRole.UserRole + 3       # Section of definition / machine. (string)
 
     def __init__(self, parent = None):
         super().__init__(parent)

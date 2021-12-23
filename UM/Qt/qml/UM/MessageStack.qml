@@ -2,8 +2,8 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.3
-import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.3
+import QtQuick.Controls 2.2
+import QtQuick.Controls.Styles 2.2
 import QtQuick.Layouts 1.1
 
 import UM 1.4 as UM
@@ -138,7 +138,7 @@ ListView
                 id: closeButton
                 implicitWidth: UM.Theme.getSize("message_close").width
                 implicitHeight: UM.Theme.getSize("message_close").height
-                Layout.alignment: Qt.AlignTop
+                Layout.alignment: Qt.AlignmentFlag.AlignTop
 
                 style: ButtonStyle
                 {

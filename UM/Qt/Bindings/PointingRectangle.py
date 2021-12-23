@@ -1,10 +1,10 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtProperty, pyqtSignal
-from PyQt5.QtCore import QPoint
-from PyQt5.QtGui import QColor
-from PyQt5.QtQuick import QQuickItem, QSGGeometryNode, QSGGeometry, QSGFlatColorMaterial
+from PyQt6.QtCore import pyqtProperty, pyqtSignal
+from PyQt6.QtCore import QPoint
+from PyQt6.QtGui import QColor
+from PyQt6.QtQuick import QQuickItem, QSGGeometryNode, QSGGeometry, QSGFlatColorMaterial
 
 
 class PointingRectangle(QQuickItem):

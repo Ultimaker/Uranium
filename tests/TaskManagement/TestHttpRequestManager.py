@@ -2,7 +2,7 @@ import time
 from unittest import mock
 
 import pytest
-from PyQt5.Qt import QCoreApplication, QNetworkReply
+from PyQt6.Qt import QCoreApplication, QNetworkReply
 
 from UM.TaskManagement.HttpRequestManager import HttpRequestManager
 

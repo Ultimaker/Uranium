@@ -1,12 +1,12 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
 
-from PyQt5.QtQml import QQmlEngine
+from PyQt6.QtQml import QQmlEngine
 
 
 class OutputDevicesModel(ListModel):
@@ -25,17 +25,17 @@ class OutputDevicesModel(ListModel):
 
     """
 
-    IdRole = Qt.UserRole + 1
-    NameRole = Qt.UserRole + 2
-    ShortDescriptionRole = Qt.UserRole + 3
-    DescriptionRole = Qt.UserRole + 4
-    IconNameRole = Qt.UserRole + 5
-    PriorityRole = Qt.UserRole + 6
+    IdRole = Qt.ItemDataRole.UserRole + 1
+    NameRole = Qt.ItemDataRole.UserRole + 2
+    ShortDescriptionRole = Qt.ItemDataRole.UserRole + 3
+    DescriptionRole = Qt.ItemDataRole.UserRole + 4
+    IconNameRole = Qt.ItemDataRole.UserRole + 5
+    PriorityRole = Qt.ItemDataRole.UserRole + 6
 
     def __init__(self, parent = None):
         super().__init__(parent)
         # Ensure that this model doesn't get garbage collected (Now the bound object is destroyed when the wrapper is)
-        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.ObjectOwnership.CppOwnership)
         self._device_manager = Application.getInstance().getOutputDeviceManager()
 
         self.addRoleName(self.IdRole, "id")

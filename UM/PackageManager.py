@@ -10,7 +10,7 @@ import zipfile
 from json import JSONDecodeError
 from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING
 
-from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
+from PyQt6.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
 
 from UM import i18nCatalog
 from UM.Logger import Logger

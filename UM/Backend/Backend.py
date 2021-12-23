@@ -16,7 +16,7 @@ import UM.Application
 from UM.PluginObject import PluginObject
 from UM.Platform import Platform
 
-import Arcus
+#import Arcus
 
 
 class BackendState(IntEnum):
@@ -251,10 +251,10 @@ class Backend(PluginObject):
             # installed on a path with non-ascii characters GitHub issue #3907
             protocol_file = protocol_file.replace("\\", "/").encode(sys.getfilesystemencoding())
 
-        if not self._socket.registerAllMessageTypes(protocol_file):
-            Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
+        #if not self._socket.registerAllMessageTypes(protocol_file):
+        #    Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
 
         if UM.Application.Application.getInstance().getUseExternalBackend():
             Logger.log("i", "Listening for backend connections on %s", self._port)
 
-        self._socket.listen("127.0.0.1", self._port)
+        #self._socket.listen("127.0.0.1", self._port)

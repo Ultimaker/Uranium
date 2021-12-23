@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QPoint
+from PyQt6.QtCore import QPoint
 
 from UM.Qt.Bindings.PointingRectangle import PointingRectangle
 import pytest

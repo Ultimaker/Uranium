@@ -7,8 +7,8 @@ from collections import deque
 from threading import RLock
 from typing import Callable, cast, Dict, Set, Union, Optional, Any
 
-from PyQt5.QtCore import QObject, QUrl, Qt, pyqtSignal, pyqtProperty
-from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
+from PyQt6.QtCore import QObject, QUrl, Qt, pyqtSignal, pyqtProperty
+from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from UM.Logger import Logger
 from UM.TaskManagement.HttpRequestData import HttpRequestData
@@ -347,15 +347,18 @@ class HttpRequestManager(TaskManager):
         reply = method(*args)
         request_data.reply = reply
 
-        # Connect callback signals
-        reply.error.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.QueuedConnection)
-        reply.finished.connect(lambda rd = request_data: self._onRequestFinished(rd), type = Qt.QueuedConnection)
+        try:
+            # Connect callback signals
+            reply.errorOccurred.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.ConnectionType.QueuedConnection)
+            reply.finished.connect(lambda rd = request_data: self._onRequestFinished(rd), type = Qt.ConnectionType.QueuedConnection)
 
-        # Only connect download/upload progress callbacks when necessary to reduce CPU usage.
-        if request_data.download_progress_callback is not None or request_data.timeout is not None:
-            reply.downloadProgress.connect(request_data.onDownloadProgressCallback, type = Qt.QueuedConnection)
-        if request_data.upload_progress_callback is not None or request_data.timeout is not None:
-            reply.uploadProgress.connect(request_data.onUploadProgressCallback, type = Qt.QueuedConnection)
+            # Only connect download/upload progress callbacks when necessary to reduce CPU usage.
+            if request_data.download_progress_callback is not None or request_data.timeout is not None:
+                reply.downloadProgress.connect(request_data.onDownloadProgressCallback, type = Qt.ConnectionType.QueuedConnection)
+            if request_data.upload_progress_callback is not None or request_data.timeout is not None:
+                reply.uploadProgress.connect(request_data.onUploadProgressCallback, type = Qt.ConnectionType.QueuedConnection)
+        except Exception as ex:
+            print(ex)
 
         with self._request_lock:
             self._requests_in_progress.add(request_data)
@@ -366,7 +369,7 @@ class HttpRequestManager(TaskManager):
         if request_data.reply is not None:
             error_string = request_data.reply.errorString()
 
-        if error == QNetworkReply.UnknownNetworkError or QNetworkReply.HostNotFoundError:
+        if error == QNetworkReply.NetworkError.UnknownNetworkError or QNetworkReply.NetworkError.HostNotFoundError:
             self._setInternetReachable(False)
             # manager seems not always able to recover from a total loss of network access, so re-create it
             self._network_manager = QNetworkAccessManager(self)
@@ -410,8 +413,8 @@ class HttpRequestManager(TaskManager):
         reply = request_data.reply
         if reply is not None:
             reply_error = reply.error()  # error() must only be called once
-            if reply_error != QNetworkReply.NoError:
-                if reply_error == QNetworkReply.OperationCanceledError:
+            if reply_error != QNetworkReply.NetworkError.NoError:
+                if reply_error == QNetworkReply.NetworkError.OperationCanceledError:
                     Logger.log("d", "%s was aborted, do nothing", request_data)
 
                 # stop processing for any kind of error

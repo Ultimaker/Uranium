@@ -5,8 +5,8 @@ import json
 import collections
 import copy
 
-from PyQt5.QtCore import QObject, pyqtProperty
-from PyQt5.QtQml import QQmlEngine
+from PyQt6.QtCore import QObject, pyqtProperty
+from PyQt6.QtQml import QQmlEngine
 
 from UM.i18n import i18nCatalog #For typing.
 from UM.Logger import Logger
@@ -56,7 +56,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         """
 
         super().__init__()
-        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.ObjectOwnership.CppOwnership)
 
         self._metadata = {"id": container_id,
                           "name": container_id,

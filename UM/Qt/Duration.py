@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Optional
 
-from PyQt5.QtCore import QObject, pyqtProperty, Q_ENUMS, pyqtSignal
+from PyQt6.QtCore import QObject, pyqtProperty, pyqtSignal  # Q_ENUMS
 from UM.FlameProfiler import pyqtSlot
 
 from datetime import timedelta
@@ -19,7 +19,7 @@ class DurationFormat(QObject):
         Short = 1
         Long = 2
         ISO8601 = 3
-    Q_ENUMS(Format)
+    #Q_ENUMS(Format)
 
 
 class Duration(QObject):
