@@ -60,6 +60,8 @@ class _CallFunctionEvent(QEvent):
 #
 class TaskManager(QObject):
 
+    __instance = None  # type: Optional[TaskManager]
+
     TIME_TOLERANCE = 0.10  # Add 10% to the delayed events to compensate for timer inaccuracy.
 
     # Acquires a new unique Qt event type integer.
@@ -72,6 +74,10 @@ class TaskManager(QObject):
         return new_type
 
     def __init__(self, parent: Optional["QObject"]) -> None:
+        if TaskManager.__instance is not None:
+            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+        TaskManager.__instance = self
+
         super().__init__(parent = parent)
         self._event_type = TaskManager.acquireNewEventType()
         # For storing all delayed events

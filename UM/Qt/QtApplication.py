@@ -117,7 +117,7 @@ class QtApplication(QApplication, Application):
 
         self._configuration_error_message = None #type: Optional[ConfigurationErrorMessage]
 
-        self._http_network_request_manager = HttpRequestManager(parent = self)
+        self._http_network_request_manager = None #type: Optional[HttpRequestManager]
 
         #Metadata required for the file dialogues.
         self.setOrganizationDomain("https://ultimaker.com/")
@@ -634,6 +634,8 @@ class QtApplication(QApplication, Application):
         return self._package_manager
 
     def getHttpRequestManager(self) -> "HttpRequestManager":
+        if not self._http_network_request_manager:
+            self._http_network_request_manager = HttpRequestManager(parent=self)
         return self._http_network_request_manager
 
     @classmethod
@@ -672,7 +674,7 @@ class _QtFunctionEvent(QEvent):
     Wrapper around a FunctionEvent object to make Qt handle the event properly.
     """
 
-    QtFunctionEvent = QEvent.User + 1
+    QtFunctionEvent = QEvent.Type.User + 1
 
     def __init__(self, fevent: QEvent) -> None:
         super().__init__(self.QtFunctionEvent)
