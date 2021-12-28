@@ -12,7 +12,7 @@ from UM.Scene.Camera import Camera
 from UM.View.GL.OpenGL import OpenGL
 from UM.View.GL.OpenGLContext import OpenGLContext
 
-from PyQt5.QtGui import QOpenGLVertexArrayObject
+from PyQt6.QtOpenGL import QOpenGLVertexArrayObject
 
 from UM.View.GL.ShaderProgram import ShaderProgram
 

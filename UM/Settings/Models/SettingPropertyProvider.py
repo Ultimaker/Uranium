@@ -2,8 +2,8 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Optional, List, Set, Any
 
-from PyQt5.QtCore import QObject, QTimer, pyqtProperty, pyqtSignal
-from PyQt5.QtQml import QQmlPropertyMap
+from PyQt6.QtCore import QObject, QTimer, pyqtProperty, pyqtSignal
+from PyQt6.QtQml import QQmlPropertyMap
 from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger

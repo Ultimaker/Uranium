@@ -5,9 +5,9 @@ import platform
 import json
 from typing import TYPE_CHECKING, Dict, Optional, Tuple, Type
 
-from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtNetwork import QNetworkRequest
+from PyQt6.QtCore import QUrl
+from PyQt6.QtGui import QDesktopServices
+from PyQt6.QtNetwork import QNetworkRequest
 
 from UM.Application import Application
 from UM.Extension import Extension
@@ -20,7 +20,7 @@ from .NewBetaVersionMessage import NewBetaVersionMessage
 from .NewVersionMessage import NewVersionMessage
 
 if TYPE_CHECKING:
-    from PyQt5.QtNetwork import QNetworkReply
+    from PyQt6.QtNetwork import QNetworkReply
 
 
 i18n_catalog = i18nCatalog("uranium")

@@ -7,14 +7,14 @@ import signal
 from typing import List
 from typing import Any, cast, Dict, Optional
 
-from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt6.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
 
 from UM.FileProvider import FileProvider
 from UM.FlameProfiler import pyqtSlot
-from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
-from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
-from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat
-from PyQt5.QtCore import QTimer
+from PyQt6.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
+from PyQt6.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
+from PyQt6.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat
+from PyQt6.QtCore import QTimer
 
 from UM.Backend.Backend import Backend #For typing.
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
@@ -54,7 +54,7 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
-from PyQt5.QtCore import QObject
+from PyQt6.QtCore import QObject
 
 
 # Raised when we try to use an unsupported version of a dependency.
@@ -79,13 +79,13 @@ class QtApplication(QApplication, Application):
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
-                plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
+                plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt6", "plugins")
                 Logger.log("i", "Adding QT5 plugin path: %s", plugin_path)
                 QCoreApplication.addLibraryPath(plugin_path)
             else:
                 import site
                 for sitepackage_dir in site.getsitepackages():
-                    QCoreApplication.addLibraryPath(os.path.join(sitepackage_dir, "PyQt5", "plugins"))
+                    QCoreApplication.addLibraryPath(os.path.join(sitepackage_dir, "PyQt6", "plugins"))
         elif sys.platform == "darwin":
             plugin_path = os.path.join(self.getInstallPrefix(), "Resources", "plugins")
 

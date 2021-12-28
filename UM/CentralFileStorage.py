@@ -6,7 +6,7 @@ import os  # To remove duplicate files.
 import os.path  # To re-format files with their proper file extension but with a version number in between.
 import shutil  # To move files in constant-time.
 from typing import List, Tuple, Dict
-from PyQt5.QtCore import QCoreApplication
+from PyQt6.QtCore import QCoreApplication
 
 from UM.Logger import Logger
 from UM.Resources import Resources  # To get the central storage location.

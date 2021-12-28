@@ -3,7 +3,7 @@
 
 import os
 from typing import Any, cast, Dict, Generator, List, Tuple
-from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl, QTimer
+from PyQt6.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl, QTimer
 
 from UM.Qt.ListModel import ListModel
 from UM.PluginRegistry import PluginRegistry  # For getting the possible profile readers and writers.

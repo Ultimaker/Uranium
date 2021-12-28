@@ -4,9 +4,9 @@
 import os
 import sys
 
-from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt6.QtCore import QUrl
+from PyQt6.QtGui import QDesktopServices
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
 from UM.Application import Application
 from UM.FileHandler.WriteFileJob import WriteFileJob

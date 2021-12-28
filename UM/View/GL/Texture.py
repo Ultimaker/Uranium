@@ -1,8 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtGui import QOpenGLTexture, QImage, QAbstractOpenGLFunctions
-
+from PyQt6.QtGui import QImage
+from PyQt6.QtOpenGL import QOpenGLTexture, QAbstractOpenGLFunctions
 
 class Texture:
     """A class describing the interface to be used for texture objects.

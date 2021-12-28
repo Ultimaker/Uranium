@@ -2,8 +2,8 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import List
 
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtQml import QQmlEngine
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtQml import QQmlEngine
 
 from UM.Application import Application
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager

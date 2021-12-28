@@ -7,8 +7,8 @@ import copy
 import os
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
-from PyQt5.QtQml import QQmlEngine #To take ownership of this class ourselves.
+from PyQt6.QtCore import QObject, pyqtProperty, pyqtSignal
+from PyQt6.QtQml import QQmlEngine #To take ownership of this class ourselves.
 
 from UM.FastConfigParser import FastConfigParser
 from UM.Trust import Trust

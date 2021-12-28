@@ -3,7 +3,7 @@
 
 from typing import Optional
 
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Job import Job

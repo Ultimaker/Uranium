@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from PyQt5.QtCore import QUrl
+from PyQt6.QtCore import QUrl
 from unittest.mock import MagicMock, patch
 
 from UM.Application import Application

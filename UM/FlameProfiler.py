@@ -7,7 +7,7 @@ from contextlib import contextmanager
 import functools
 from typing import List, Callable, Any
 
-from PyQt5.QtCore import pyqtSlot as pyqt5PyqtSlot
+from PyQt6.QtCore import pyqtSlot as PyQt6PyqtSlot
 from UM.Logger import Logger
 # A simple profiler which produces data suitable for viewing as a flame graph
 # when using the Big Flame Graph plugin.
@@ -215,9 +215,9 @@ def profile(function):
 
 
 def pyqtSlot(*args, **kwargs) -> Callable[..., Any]:
-    """Drop in replacement for PyQt5's pyqtSlot decorator which records profiling information.
+    """Drop in replacement for PyQt6's pyqtSlot decorator which records profiling information.
 
-    See the PyQt5 documentation for information about pyqtSlot.
+    See the PyQt6 documentation for information about pyqtSlot.
     """
 
     if enabled():
@@ -230,9 +230,9 @@ def pyqtSlot(*args, **kwargs) -> Callable[..., Any]:
                 else:
                     return function(*args2, **kwargs2)
 
-            return pyqt5PyqtSlot(*args, **kwargs)(wrapped)
+            return PyQt6PyqtSlot(*args, **kwargs)(wrapped)
         return wrapIt
     else:
         def dontWrapIt(function):
-            return pyqt5PyqtSlot(*args, **kwargs)(function)
+            return PyQt6PyqtSlot(*args, **kwargs)(function)
         return dontWrapIt

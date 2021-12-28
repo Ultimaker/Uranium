@@ -3,7 +3,7 @@
 
 from typing import Callable, Optional
 
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 from UM.FlameProfiler import pyqtSlot
 from UM.i18n import i18nCatalog
 from UM.Qt.ListModel import ListModel

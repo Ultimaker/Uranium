@@ -5,8 +5,8 @@ import json
 import collections
 import copy
 
-from PyQt5.QtCore import QObject, pyqtProperty
-from PyQt5.QtQml import QQmlEngine
+from PyQt6.QtCore import QObject, pyqtProperty
+from PyQt6.QtQml import QQmlEngine
 
 from UM.i18n import i18nCatalog #For typing.
 from UM.Logger import Logger

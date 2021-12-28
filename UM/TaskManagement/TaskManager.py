@@ -3,7 +3,7 @@
 
 from typing import Any, Callable, Dict, Optional, cast
 
-from PyQt5.QtCore import QObject, QCoreApplication, QEvent, QTimer
+from PyQt6.QtCore import QObject, QCoreApplication, QEvent, QTimer
 
 
 __all__ = ["TaskManager"]

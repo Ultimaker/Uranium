@@ -11,8 +11,8 @@ import types
 import zipfile
 from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 
-from PyQt5.QtCore import QCoreApplication
-from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
+from PyQt6.QtCore import QCoreApplication
+from PyQt6.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
 from UM.CentralFileStorage import CentralFileStorage
 from UM.Logger import Logger

@@ -2,7 +2,8 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Dict, Optional, Tuple, Any
-from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat, QWindow
+from PyQt6.QtGui import QOpenGLContext, QSurfaceFormat, QWindow
+from PyQt6.QtOpenGL import QOpenGLVersionProfile
 
 from UM.Logger import Logger
 from UM.Platform import Platform
@@ -167,7 +168,7 @@ class OpenGLContext:
                     Logger.log("e", "Could not initialize OpenGL to get gpu type")
                 else:
                     # WORKAROUND: Cura/#1117 Cura-packaging/12
-                    # Some Intel GPU chipsets return a string, which is not undecodable via PyQt5.
+                    # Some Intel GPU chipsets return a string, which is not undecodable via PyQt6.
                     # This workaround makes the code fall back to a "Unknown" renderer in these cases.
                     try:
                         gpu_type = gl.glGetString(gl.GL_RENDERER)

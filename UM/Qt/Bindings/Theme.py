@@ -7,9 +7,9 @@ import sys
 import warnings
 from typing import Dict, Optional, List
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
-from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase
-from PyQt5.QtQml import QQmlComponent, QQmlContext
+from PyQt6.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
+from PyQt6.QtGui import QColor, QFont, QFontMetrics, QFontDatabase
+from PyQt6.QtQml import QQmlComponent, QQmlContext
 
 import UM.Application
 from UM.FlameProfiler import pyqtSlot

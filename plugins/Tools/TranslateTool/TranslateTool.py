@@ -4,7 +4,7 @@
 import time
 from typing import cast, List, Optional, Union
 
-from PyQt5.QtCore import Qt, QTimer
+from PyQt6.QtCore import Qt, QTimer
 
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Math.Float import Float

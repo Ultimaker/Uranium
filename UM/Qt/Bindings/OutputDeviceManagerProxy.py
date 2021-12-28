@@ -1,7 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
+from PyQt6.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 from typing import List, Mapping, Optional, TYPE_CHECKING
 
 from UM.Application import Application
@@ -14,7 +14,7 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Selection import Selection
 
 if TYPE_CHECKING:
-    from PyQt5.QtQml import QQmlEngine, QJSEngine
+    from PyQt6.QtQml import QQmlEngine, QJSEngine
     from UM.FileHandler.FileHandler import FileHandler
     from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 

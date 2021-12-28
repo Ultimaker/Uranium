@@ -5,7 +5,7 @@ import collections
 import os.path
 from typing import List, Any, Dict, Set, Optional
 
-from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
+from PyQt6.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
 
 from UM.Decorators import deprecated
 from UM.FlameProfiler import pyqtSlot

@@ -3,7 +3,7 @@
 
 from typing import Optional
 
-from PyQt5.QtCore import pyqtSignal, QObject
+from PyQt6.QtCore import pyqtSignal, QObject
 
 from UM.Application import Application
 from UM.OutputDevice.OutputDevice import OutputDevice

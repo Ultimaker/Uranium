@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from PyQt5.QtCore import Qt, QModelIndex
+from PyQt6.QtCore import Qt, QModelIndex
 
 from UM.Qt.ListModel import ListModel
 from copy import deepcopy

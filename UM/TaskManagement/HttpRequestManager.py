@@ -7,8 +7,8 @@ from collections import deque
 from threading import RLock
 from typing import Callable, cast, Dict, Set, Union, Optional, Any
 
-from PyQt5.QtCore import QObject, QUrl, Qt, pyqtSignal, pyqtProperty
-from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
+from PyQt6.QtCore import QObject, QUrl, Qt, pyqtSignal, pyqtProperty
+from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from UM.Logger import Logger
 from UM.TaskManagement.HttpRequestData import HttpRequestData
