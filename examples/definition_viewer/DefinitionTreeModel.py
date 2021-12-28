@@ -7,7 +7,7 @@ from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Settings.ContainerRegistry import ContainerRegistry
 
 class DefinitionTreeModel(QAbstractItemModel):
-    KeyRole = Qt.UserRole + 1
+    KeyRole = Qt.ItemDataRole.UserRole + 1
 
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)

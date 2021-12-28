@@ -11,14 +11,14 @@ from UM.PluginRegistry import PluginRegistry
 
 
 class ToolModel(ListModel):
-    IdRole = Qt.UserRole + 1
-    NameRole = Qt.UserRole + 2
-    IconRole = Qt.UserRole + 3
-    ToolActiveRole = Qt.UserRole + 4
-    ToolEnabledRole = Qt.UserRole + 5
-    DescriptionRole = Qt.UserRole + 6
-    LocationRole = Qt.UserRole + 7
-    ShortcutRole = Qt.UserRole + 8
+    IdRole = Qt.ItemDataRole.UserRole + 1
+    NameRole = Qt.ItemDataRole.UserRole + 2
+    IconRole = Qt.ItemDataRole.UserRole + 3
+    ToolActiveRole = Qt.ItemDataRole.UserRole + 4
+    ToolEnabledRole = Qt.ItemDataRole.UserRole + 5
+    DescriptionRole = Qt.ItemDataRole.UserRole + 6
+    LocationRole = Qt.ItemDataRole.UserRole + 7
+    ShortcutRole = Qt.ItemDataRole.UserRole + 8
 
     def __init__(self, parent = None):
         super().__init__(parent)

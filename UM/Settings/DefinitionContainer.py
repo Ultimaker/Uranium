@@ -56,7 +56,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         """
 
         super().__init__()
-        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.ObjectOwnership.CppOwnership)
 
         self._metadata = {"id": container_id,
                           "name": container_id,

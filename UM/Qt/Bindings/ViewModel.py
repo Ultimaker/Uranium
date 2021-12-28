@@ -8,11 +8,11 @@ from UM.Application import Application
 
 
 class ViewModel(ListModel):
-    IdRole = Qt.UserRole + 1
-    NameRole = Qt.UserRole + 2
-    ActiveRole = Qt.UserRole + 3
-    DescriptionRole = Qt.UserRole + 4
-    IconRole = Qt.UserRole + 5
+    IdRole = Qt.ItemDataRole.UserRole + 1
+    NameRole = Qt.ItemDataRole.UserRole + 2
+    ActiveRole = Qt.ItemDataRole.UserRole + 3
+    DescriptionRole = Qt.ItemDataRole.UserRole + 4
+    IconRole = Qt.ItemDataRole.UserRole + 5
 
     def __init__(self, parent = None) -> None:
         super().__init__(parent)

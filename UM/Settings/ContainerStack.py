@@ -62,7 +62,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         """
 
         super().__init__()
-        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.ObjectOwnership.CppOwnership)
 
         self._metadata = {
             "id": stack_id,

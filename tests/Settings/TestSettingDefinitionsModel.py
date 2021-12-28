@@ -339,7 +339,7 @@ def test_dataUnhappy():
     assert model.data(QModelIndex(), model.KeyRole) == QVariant()
 
     # Unknown role
-    assert model.data(model.index(0, 0), Qt.UserRole + 100) == QVariant()
+    assert model.data(model.index(0, 0), Qt.ItemDataRole.UserRole + 100) == QVariant()
 
     empty_model = SettingDefinitionsModel()
     assert empty_model.data(model.index(0, 0), model.KeyRole) == QVariant()

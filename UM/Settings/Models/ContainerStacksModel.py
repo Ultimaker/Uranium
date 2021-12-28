@@ -13,9 +13,9 @@ class ContainerStacksModel(ListModel):
     changed.
     """
 
-    NameRole = Qt.UserRole + 1
-    IdRole = Qt.UserRole + 2
-    MetaDataRole = Qt.UserRole + 3
+    NameRole = Qt.ItemDataRole.UserRole + 1
+    IdRole = Qt.ItemDataRole.UserRole + 2
+    MetaDataRole = Qt.ItemDataRole.UserRole + 3
 
     def __init__(self, parent = None):
         super().__init__(parent)
