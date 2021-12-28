@@ -157,14 +157,14 @@ class QtApplication(QApplication, Application):
         self.setStyle("fusion")
 
         if preferences.getValue("view/force_empty_shader_cache"):
-            self.setAttribute(Qt.AA_DisableShaderDiskCache)
-        self.setAttribute(Qt.AA_UseDesktopOpenGL)
+            self.setAttribute(Qt.ApplicationAttribute.AA_DisableShaderDiskCache)
+        self.setAttribute(Qt.ApplicationAttribute.AA_UseDesktopOpenGL)
         if preferences.getValue("view/opengl_version_detect") != OpenGLContext.OpenGlVersionDetect.ForceModern:
             major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion(
                 preferences.getValue("view/opengl_version_detect") == OpenGLContext.OpenGlVersionDetect.ForceLegacy)
         else:
             Logger.info("Force 'modern' OpenGL (4.1 core) -- overrides 'force legacy opengl' preference.")
-            major_version, minor_version, profile = (4, 1, QSurfaceFormat.CoreProfile)
+            major_version, minor_version, profile = (4, 1, QSurfaceFormat.OpenGLContextProfile.CoreProfile)
 
         if major_version is None or minor_version is None or profile is None:
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
@@ -565,7 +565,7 @@ class QtApplication(QApplication, Application):
 
         if QtApplication.splash:
             self.processEvents()  # Process events from previous loading phase before updating the message
-            QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)  # Now update the message
+            QtApplication.splash.showMessage(message, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)  # Now update the message
             self.processEvents()  # And make sure it is immediately visible
         elif self.getIsHeadLess():
             Logger.log("d", message)
