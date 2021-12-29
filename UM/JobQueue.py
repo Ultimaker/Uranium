@@ -29,9 +29,9 @@ class JobQueue:
 
         if JobQueue.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        JobQueue.__instance = self
 
         super().__init__()
+        JobQueue.__instance = self
 
         if thread_count == "auto":
             try:

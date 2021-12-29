@@ -46,9 +46,9 @@ class OpenGL:
     def __init__(self) -> None:
         if OpenGL.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        OpenGL.__instance = self
 
         super().__init__()
+        OpenGL.__instance = self
 
         profile = QOpenGLVersionProfile()
         profile.setVersion(OpenGLContext.major_version, OpenGLContext.minor_version)

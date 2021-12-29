@@ -85,9 +85,9 @@ class HttpRequestManager(TaskManager):
                  enable_request_benchmarking: bool = False) -> None:
         if HttpRequestManager.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        HttpRequestManager.__instance = self
 
         super().__init__(parent)
+        HttpRequestManager.__instance = self
 
         self._network_manager = QNetworkAccessManager(self)
         self._account_manager = None

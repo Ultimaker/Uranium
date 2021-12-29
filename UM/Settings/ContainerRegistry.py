@@ -47,9 +47,9 @@ class ContainerRegistry(ContainerRegistryInterface):
     def __init__(self, application: "QtApplication") -> None:
         if ContainerRegistry.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        ContainerRegistry.__instance = self
 
         super().__init__()
+        ContainerRegistry.__instance = self
 
         self._application = application  # type: QtApplication
 

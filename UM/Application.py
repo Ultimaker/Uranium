@@ -55,9 +55,9 @@ class Application:
 
         if Application.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        Application.__instance = self
 
         super().__init__()  # Call super to make multiple inheritance work.
+        Application.__instance = self
 
         self._api_version = Version(api_version)  # type: Version
 
