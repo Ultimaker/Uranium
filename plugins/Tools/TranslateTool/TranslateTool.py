@@ -42,7 +42,7 @@ class TranslateTool(Tool):
         self._grid_size = 10
         self._moved = False
 
-        self._shortcut_key = Qt.Key_T
+        self._shortcut_key = Qt.Key.Key_T
 
         self._distance_update_time = None #type: Optional[float]
         self._distance = None #type: Optional[Vector]

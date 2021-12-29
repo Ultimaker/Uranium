@@ -20,7 +20,7 @@ class MirrorTool(Tool):
         super().__init__()
 
         self._handle = MirrorToolHandle.MirrorToolHandle()
-        self._shortcut_key = Qt.Key_M
+        self._shortcut_key = Qt.Key.Key_M
 
         self._operation_started = False
 

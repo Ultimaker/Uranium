@@ -51,7 +51,7 @@ class RotateTool(Tool):
         self._angle = None
         self._angle_update_time = None
 
-        self._shortcut_key = Qt.Key_R
+        self._shortcut_key = Qt.Key.Key_R
 
         self._progress_message = None
         self._iterations = 0
