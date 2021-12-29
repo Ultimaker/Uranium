@@ -138,7 +138,7 @@ ListView
                 id: closeButton
                 implicitWidth: UM.Theme.getSize("message_close").width
                 implicitHeight: UM.Theme.getSize("message_close").height
-                Layout.alignment: Qt.AlignTop
+                Layout.alignment: Qt.AlignmentFlag.AlignTop
 
                 style: ButtonStyle
                 {

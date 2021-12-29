@@ -15,10 +15,10 @@ class QtKeyDevice(InputDevice):
         super().__init__()
 
     def handleEvent(self, event):
-        if event.type() == QEvent.KeyPress:
+        if event.type() == QEvent.Type.KeyPress:
             e = KeyEvent(KeyEvent.KeyPressEvent, self._qtKeyToUMKey(event.key()))
             self.event.emit(e)
-        elif event.type() == QEvent.KeyRelease:
+        elif event.type() == QEvent.Type.KeyRelease:
             e = KeyEvent(KeyEvent.KeyReleaseEvent, self._qtKeyToUMKey(event.key()))
             self.event.emit(e)
 
