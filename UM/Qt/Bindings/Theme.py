@@ -229,10 +229,10 @@ class Theme(QObject):
                 else:
                     q_font.setWeight(font.get("weight", 50))
 
-                q_font.setLetterSpacing(QFont.AbsoluteSpacing, font.get("letterSpacing", 0))
+                q_font.setLetterSpacing(QFont.SpacingType.AbsoluteSpacing, font.get("letterSpacing", 0))
                 q_font.setItalic(font.get("italic", False))
                 q_font.setPointSize(int(font.get("size", 1) * system_font_size))
-                q_font.setCapitalization(QFont.AllUppercase if font.get("capitalize", False) else QFont.MixedCase)
+                q_font.setCapitalization(QFont.Capitalization.AllUppercase if font.get("capitalize", False) else QFont.Capitalization.MixedCase)
 
                 self._fonts[name] = q_font
 
@@ -294,7 +294,7 @@ class Theme(QObject):
     def _initializeDefaults(self) -> None:
         self._fonts = {
             "system": QCoreApplication.instance().font(),
-            "fixed": QFontDatabase.systemFont(QFontDatabase.FixedFont)
+            "fixed": QFontDatabase.systemFont(QFontDatabase.SystemFont.FixedFont)
         }
 
         palette = QCoreApplication.instance().palette()

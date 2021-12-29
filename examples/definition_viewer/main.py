@@ -75,4 +75,4 @@ if file_name:
     engine.rootContext().setContextProperty("open_file", QUrl.fromLocalFile(file_name))
 
 engine.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "main.qml"))
-app.exec_()
+app.exec()

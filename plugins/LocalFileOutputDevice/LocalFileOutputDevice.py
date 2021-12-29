@@ -122,7 +122,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         if selected_filter is not None:
             dialog.selectNameFilter(selected_filter)
 
-        if not dialog.exec_():
+        if not dialog.exec():
             raise OutputDeviceError.UserCanceledError()
 
         save_path = dialog.directory().absolutePath()

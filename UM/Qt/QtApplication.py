@@ -391,9 +391,9 @@ class QtApplication(QApplication, Application):
     def setMainQml(self, path: str) -> None:
         self._main_qml = path
 
-    def exec_(self, *args: Any, **kwargs: Any) -> None:
+    def exec(self, *args: Any, **kwargs: Any) -> None:
         self.applicationRunning.emit()
-        super().exec_(*args, **kwargs)
+        super().exec(*args, **kwargs)
 
     @pyqtSlot()
     def reloadQML(self) -> None:
@@ -635,7 +635,7 @@ class QtApplication(QApplication, Application):
 
     def getHttpRequestManager(self) -> "HttpRequestManager":
         if not self._http_network_request_manager:
-            self._http_network_request_manager = HttpRequestManager(parent=self)
+            self._http_network_request_manager = HttpRequestManager.getInstance(parent=self)
         return self._http_network_request_manager
 
     @classmethod

@@ -83,7 +83,7 @@ class UpdateChecker(Extension):
                         int(data[application_name][os]["revision"])]), data[application_name][os]["url"]
 
     def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool) -> None:
-        if reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) != 200:
+        if reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute) != 200:
             Logger.log("w", "Something went wrong when checking for updates. We didn't get the expected response")
             return
         try:

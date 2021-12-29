@@ -228,7 +228,7 @@ class MainWindow(QQuickWindow):
         self._mouse_device.handleEvent(event)
 
     def moveEvent(self, event):
-        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection)
+        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.ConnectionType.QueuedConnection)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -238,7 +238,7 @@ class MainWindow(QQuickWindow):
 
         self._updateViewportGeometry(win_w, win_h)
 
-        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection)
+        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.ConnectionType.QueuedConnection)
 
     def hideEvent(self, event):
         if Application.getInstance().getMainWindow() == self:
