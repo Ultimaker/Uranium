@@ -200,26 +200,27 @@ class Polygon:
         """Check to see whether this polygon intersects with another polygon.
 
         :param other: :type{Polygon} The polygon to check for intersection.
-        :return: A tuple of the x and y distance of intersection, or None if no intersection occured.
+        :return: A tuple of the x and y distance of intersection, or None if no intersection occurred.
         """
-
         if not self.isValid() or not other.isValid():
             return None
 
-        polygon_me = ShapelyUtil.polygon2ShapelyPolygon(self)
-        polygon_other = ShapelyUtil.polygon2ShapelyPolygon(other)
-        if polygon_other.is_empty or polygon_me.is_empty:
-            return None
-        if not (polygon_me.is_valid and polygon_other.is_valid):  # If not valid
+        clipper = pyclipper.Pyclipper()
+        clipper.AddPath(self.getPoints(), pyclipper.PT_SUBJECT, closed = True)
+        clipper.AddPath(other.getPoints(), pyclipper.PT_CLIP, closed = True)
+        intersection_points = clipper.Execute(pyclipper.CT_INTERSECTION)
+
+        if len(intersection_points) == 0:
             return None
 
-        polygon_intersection = polygon_me.intersection(polygon_other)
-        ret_size = None
-        if polygon_intersection and polygon_intersection.area > 0:
-            ret_size = (polygon_intersection.bounds[2] - polygon_intersection.bounds[0],
-                        polygon_intersection.bounds[3] - polygon_intersection.bounds[1],
-                        )
-        return ret_size
+        # Find the bounds of the intersection area.
+        mini = (math.inf, math.inf)
+        maxi = (-math.inf, -math.inf)
+        for poly in intersection_points:  # Each simple polygon in the complex intersection multi-polygon.
+            for vertex in poly:
+                mini = (min(mini[0], vertex[0]), min(mini[1], vertex[1]))
+                maxi = (max(maxi[0], vertex[0]), max(maxi[1], vertex[1]))
+        return maxi[0] - mini[0], maxi[1] - mini[1]
 
     def getConvexHull(self) -> "Polygon":
         """Calculate the convex hull around the set of points of this polygon.
