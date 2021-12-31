@@ -478,7 +478,10 @@ class Resources:
         if not os.path.exists(cls.__config_storage_path) or not os.path.exists(cls.__data_storage_path):
             cls._copyLatestDirsIfPresent()
         if not os.path.exists(cls.__cache_storage_path):
-            os.makedirs(cls.__cache_storage_path, exist_ok = True)
+            try:
+                os.makedirs(cls.__cache_storage_path, exist_ok = True)
+            except EnvironmentError as e:
+                Logger.error(f"Unable to create cache path: {e}")
 
         cls.__paths.insert(0, cls.__data_storage_path)
 

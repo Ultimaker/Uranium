@@ -89,6 +89,8 @@ class PluginRegistry(QObject):
         self._trust_checker: Optional[Trust] = None
         self._changed_activated_plugins_current_session: Set[str] = set()
 
+    pluginRemoved = pyqtSignal(str)
+
     def setCheckIfTrusted(self, check_if_trusted: bool, debug_mode: bool = False) -> None:
         self._check_if_trusted = check_if_trusted
         if self._check_if_trusted:
@@ -430,6 +432,7 @@ class PluginRegistry(QObject):
 
         # If not found, raise error:
         if not plugin:
+            self.removeCorruptedPluginMessage(plugin_id)
             raise PluginNotFoundError(plugin_id)
 
         # If found, but isn't in the metadata dictionary, add it:
@@ -462,6 +465,7 @@ class PluginRegistry(QObject):
             to_register = plugin.register(self._application)  # type: ignore  # We catch AttributeError on this in case register() doesn't exist.
             if not to_register:
                 Logger.log("w", "Plugin %s did not return any objects to register", plugin_id)
+                self.removeCorruptedPluginMessage(plugin_id)
                 return
             for plugin_type, plugin_object in to_register.items():
                 if type(plugin_object) == list:
@@ -489,48 +493,68 @@ class PluginRegistry(QObject):
             Logger.info("Loaded plugin %s", plugin_id)
 
         except Exception:
-            message_text = i18n_catalog.i18nc("@error",
-                                              "The plugin {} could not be loaded. Re-installing the plugin might solve "
-                                              "the issue", plugin_id)
-            unable_to_load_plugin_message = Message(text = message_text, message_type = Message.MessageType.ERROR)
-            unable_to_load_plugin_message.addAction("remove",
-                                   name = i18n_catalog.i18nc("@action:button", "Remove plugin"),
-                                   icon = "",
-                                   description = "Remove the plugin",
-                                   button_align = Message.ActionButtonAlignment.ALIGN_RIGHT)
+            self.removeCorruptedPluginMessage(plugin_id)
 
-            # Listen for the pyqt signal, since that one does support lambda's
-            unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: (self.uninstallPlugin(plugin_id), message.hide()))
+    def _acceptedRemoveCorruptedPluginMessage(self, plugin_id: str, original_message: Message):
+        message_data = self.uninstallPlugin(plugin_id)
+        original_message.hide()
+        message = Message(text = message_data["message"], message_type = Message.MessageType.NEUTRAL, lifetime = 0)
+        message.addAction("dismiss",
+                           name = i18n_catalog.i18nc("@action:button", "Dismiss"),
+                           icon = "",
+                           description = "Dismiss this message",
+                           button_align = Message.ActionButtonAlignment.ALIGN_RIGHT)
+        message.pyQtActionTriggered.connect(lambda message, action: message.hide())
+        message.show()
 
-            unable_to_load_plugin_message.show()
-            Logger.logException("e", "Error loading plugin %s:", plugin_id)
+    def removeCorruptedPluginMessage(self, plugin_id: str) -> None:
+        """Shows a message to the user remove the corrupted plugin"""
+        message_text = i18n_catalog.i18nc("@error",
+                                          "The plugin {} could not be loaded. Re-installing the plugin might solve "
+                                          "the issue", plugin_id)
+        unable_to_load_plugin_message = Message(text = message_text, message_type = Message.MessageType.ERROR, lifetime = 0)
+        unable_to_load_plugin_message.addAction("remove",
+                               name = i18n_catalog.i18nc("@action:button", "Remove plugin"),
+                               icon = "",
+                               description = "Remove the plugin",
+                               button_align = Message.ActionButtonAlignment.ALIGN_RIGHT)
+
+        # Listen for the pyqt signal, since that one does support lambda's
+        unable_to_load_plugin_message.pyQtActionTriggered.connect(lambda message, action: self._acceptedRemoveCorruptedPluginMessage(plugin_id, message))
+
+        unable_to_load_plugin_message.show()
+        Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
     #   Uninstall a plugin with a given ID:
     @pyqtSlot(str, result = "QVariantMap")
     def uninstallPlugin(self, plugin_id: str) -> Dict[str, str]:
-        result = {"status": "error", "message": "", "id": plugin_id}
-        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease restart {0} to finish uninstall.", self._application.getApplicationName())
-
-        if plugin_id not in self._plugins_installed:
-            return result
-
-        in_to_install = plugin_id in self._plugins_to_install
-        if in_to_install:
+        if plugin_id in self._plugins_to_install:
             del self._plugins_to_install[plugin_id]
             self._savePluginData()
+            message_text = i18n_catalog.i18nc("@info:status", "Plugin no longer scheduled to be installed.")
             Logger.log("i", "Plugin '%s' removed from to-be-installed list.", plugin_id)
-        else:
-            if plugin_id not in self._plugins_to_remove:
-                self._plugins_to_remove.append(plugin_id)
+        elif plugin_id not in self._plugins_to_remove:
+            self._plugins_to_remove.append(plugin_id)
             self._savePluginData()
+            message_text = i18n_catalog.i18nc("@info:status",
+                "The plugin has been removed.\nPlease restart {0} to finish uninstall.",
+                self._application.getApplicationName())
             Logger.log("i", "Plugin '%s' has been scheduled for later removal.", plugin_id)
 
-            # Remove the plugin object from the Plugin Registry:
-            self._plugins.pop(plugin_id, None)
+        # Remove the plugin object from the Plugin Registry:
+        if plugin_id in self._plugins:
+            del self._plugins[plugin_id]
+
+        if plugin_id in self._plugins_installed:
             self._plugins_installed.remove(plugin_id)
 
-        result["status"] = "ok"
-        result["message"] = success_message
+        self.pluginRemoved.emit(plugin_id)
+
+        result = {
+            "status": "ok",
+            "message": message_text,
+            "id": plugin_id
+        }
         return result
 
     # Installs the given plugin file. It will overwrite the existing plugin if present.

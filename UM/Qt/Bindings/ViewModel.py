@@ -5,7 +5,6 @@ from PyQt5.QtCore import Qt
 
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
-from UM.PluginRegistry import PluginRegistry
 
 
 class ViewModel(ListModel):
@@ -35,8 +34,8 @@ class ViewModel(ListModel):
         if current_view is None:
             return
 
-        for view_id in views:
-            view_meta_data = PluginRegistry.getInstance().getMetaData(view_id).get("view", {})
+        for view_id,view in views.items():
+            view_meta_data = view.getMetaData()
 
             # Skip view modes that are marked as not visible
             if "visible" in view_meta_data and not view_meta_data["visible"]:

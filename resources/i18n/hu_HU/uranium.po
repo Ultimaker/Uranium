@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.12\n"
+"Project-Id-Version: Uranium 4.13\n"
 "Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
-"POT-Creation-Date: 2021-10-20 16:58+0200\n"
+"POT-Creation-Date: 2021-12-10 14:40+0100\n"
 "PO-Revision-Date: 2019-10-10 22:30+0200\n"
 "Last-Translator: Nagy Attila\n"
 "Language-Team: AT-VLOG <LL@li.org>\n"
@@ -16,273 +16,281 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Hullámfront OBJ fájl"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "Az OBJWriter nem támogatja a nem szöveges módot."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "Nincs háló, amelybe írhatnánk"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL fájl"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "Nem támogatott kimeneti mód az STL adatfolyam írására."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL fájl (ASCII)"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL fájl (bináris)"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "Helyi fájl"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "Ez a fájltípus nem írható!"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "A fájl használatban van."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+#: /home/clamboo/Desktop/Uranium/UM/VersionUpgradeManager.py:173
 #, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "A <filename>{0}</filename> fájl használatban van. Biztosan felül akarod írni ?"
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "A konfiguráció egy régebbi {0} verzióból lett importálva."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "Mentés a(z) <filename>{0}</filename> fájlba."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "Mentés"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Hozzáférés megtagadva a <filename>{0}</filename> fájlba történő íráskor."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Sikertelen mentés a(z) <filename>{0}</filename> fájlba: <message>{1}</message>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "Mentés <filename>{0}</filename> fájlba."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Fájl elmentve."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "Mappa megnyitása"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "A fájlt tartalmazó mappa megnyitása."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Hiba"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Valami hiba történt <filename>{0}</filename> mentésekor: <message>{1}</message>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Tükrözés"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Modell tükrözés"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "Alapsíkra fektetés"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:358
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "Elforgatás"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Forgatás"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Modell forgatása"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Méretezés"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Méretarányos modell"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Mozgatás"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Modell mozgatása"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:12
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} BETA is available!"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:16
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:20
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:20
-msgctxt "@action:button"
-msgid "Download"
-msgstr "Letöltés"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:23
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "Tudj meg többet"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:12
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "Az {application_name} {version_number} elérhető!"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:16
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr "Az {application_name} {version_number} jobb és megbízhatóbb szolgáltatást nyújthat."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr "Frissítések"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Frissítések ellenőrzése."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "Ez a verzió nem támogatja a frissítések ellenőrzését."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Figyelem"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Nem találtam új verziót."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:174
+#: /home/clamboo/Desktop/Uranium/UM/VersionUpgradeManager.py:174
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Verzió frissítés"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "Egyszerű"
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:313
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+"A kiegészítő telepítve lett.\n"
+"Aktiválásához indítsd újra az alkalmazást."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:380
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:485
+msgctxt "@action:button"
+msgid "Dismiss"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:495
+msgctxt "@error"
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:499
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:516
+msgctxt "@info:status"
+msgid "Plugin no longer scheduled to be installed."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:522
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr ""
+"A kiegészítő törölve lett.\n"
+"Indítsd újra a {0} alkalmazást."
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:907
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/clamboo/Desktop/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
+#, python-brace-format
+msgctxt "@item:inlistbox"
+msgid "All Supported Types ({0})"
+msgstr "Minden támogatott típus ({0})"
+
+#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:908
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/FileHandler.py:72
+#: /home/clamboo/Desktop/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
+msgstr "Minden fájl (*)"
+
+#: /home/clamboo/Desktop/Uranium/UM/Mesh/ReadMeshJob.py:71
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled model to {0}% of original size"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/Mesh/ReadMeshJob.py:73
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "Tárgy méretezés"
+
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:286
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid ""
+"There were some errors uninstalling the following packages:\n"
+"{packages}"
+msgstr "Hiba történt a következő csomagok eltávolításakor:{packages}"
+
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:288
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr "Eltávolítási hibák"
+
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:299
+#, python-brace-format
+msgctxt "@info:progress Don't translate {package_id}"
+msgid "Installing plugin {package_id}..."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:587
+#, python-brace-format
+msgctxt "@error:update"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr ""
+"Hiba történt a (z) {package} csomag eltávolításában az új verzió telepítése előtt.{error}.\n"
+"Próbáld meg később a frissítést."
+
+#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:590
+msgctxt "@info:title"
+msgid "Updating error"
+msgstr "Frissítési hiba"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Hiba"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:128
+#, python-brace-format
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2}n {1:0>2}ó {2:0>2}perc"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:130
+#, python-brace-format
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2}ó {1:0>2}perc"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} nap"
+msgstr[1] "{0} nap"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:135
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} óra"
+msgstr[1] "{0} óra"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:135
+#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:137
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} perc"
+msgstr[1] "{0} perc"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:192
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:213
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "Plugin betöltése..."
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:194
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:200
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:208
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr "A konfigurációd sérültnek tűnik."
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:210
+msgctxt "@info:title"
+msgid "Configuration errors"
+msgstr "Konfigurációs hibák"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:222
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "Konfiguráció frissítése..."
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:228
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "Preferenciák betöltése..."
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:318
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:59
+#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:64
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "Az OpenGL inicializálás sikertelen."
+
+#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:74
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Kritikus OpenGL kiterjesztés hiányzik. Ez szükséges a Framebuffer tárgyak megjelenítéséhez. Kérlek ellenőrizd a videókártyád driverét."
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:41
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "Nem lehet megnyitni a <filename>{0}</filename> típusú fájlokat"
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:44
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr "Érvénytelen fájl"
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:59
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:62
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:98
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:71
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "Betöltés"
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:87
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:90
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:95
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Alaphelyzet"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:46
+#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -294,462 +302,404 @@ msgstr ""
 "- {profiles}\n"
 " Szeretnéd betölteni a gyári alapértékekekt? Ez visszaállít minden értéketalpértékre a jelenlegi printernél és a profilban."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
+#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@title:window"
 msgid "Reset to factory"
 msgstr "Gyári visszaállítás"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:53
+#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:53
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "Mindent visszaállítunk gyári értékekre a jelenlegi nyomtatónál és profilban.Biztosan végrehajtjuk?"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:883
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
-#, python-brace-format
-msgctxt "@item:inlistbox"
-msgid "All Supported Types ({0})"
-msgstr "Minden támogatott típus ({0})"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:72
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:884
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr "Minden fájl (*)"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:41
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "Nem lehet megnyitni a <filename>{0}</filename> típusú fájlokat"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:44
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "Érvénytelen fájl"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:98
-msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "Betöltés"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:87
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:90
-msgctxt "@info:title"
-msgid "No Models in File"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:71
-#, python-format, python-brace-format
-msgctxt "@info:status"
-msgid "Auto scaled model to {0}% of original size"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:73
-msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "Tárgy méretezés"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:286
-#, python-brace-format
-msgctxt "@error:uninstall"
-msgid ""
-"There were some errors uninstalling the following packages:\n"
-"{packages}"
-msgstr "Hiba történt a következő csomagok eltávolításakor:{packages}"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:288
-msgctxt "@info:title"
-msgid "Uninstalling errors"
-msgstr "Eltávolítási hibák"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:299
-#, python-brace-format
-msgctxt "@info:progress Don't translate {package_id}"
-msgid "Installing plugin {package_id}..."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:587
-#, python-brace-format
-msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr ""
-"Hiba történt a (z) {package} csomag eltávolításában az új verzió telepítése előtt.{error}.\n"
-"Próbáld meg később a frissítést."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:590
-msgctxt "@info:title"
-msgid "Updating error"
-msgstr "Frissítési hiba"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:311
-msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr ""
-"A kiegészítő telepítve lett.\n"
-"Aktiválásához indítsd újra az alkalmazást."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:378
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:475
-msgctxt "@error"
-msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:479
-msgctxt "@action:button"
-msgid "Remove plugin"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:494
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr ""
-"A kiegészítő törölve lett.\n"
-"Indítsd újra a {0} alkalmazást."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:128
-#, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
-msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}n {1:0>2}ó {2:0>2}perc"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:130
-#, python-brace-format
-msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}ó {1:0>2}perc"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is days"
-msgid "{0} day"
-msgid_plural "{0} days"
-msgstr[0] "{0} nap"
-msgstr[1] "{0} nap"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is hours"
-msgid "{0} hour"
-msgid_plural "{0} hours"
-msgstr[0] "{0} óra"
-msgstr[1] "{0} óra"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:133
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:137
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is minutes"
-msgid "{0} minute"
-msgid_plural "{0} minutes"
-msgstr[0] "{0} perc"
-msgstr[1] "{0} perc"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:189
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:210
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "Plugin betöltése..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:191
-#, python-brace-format
-msgctxt "@info:progress"
-msgid "Loading plugin {plugin_id}..."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:197
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:205
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr "A konfigurációd sérültnek tűnik."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:207
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr "Konfigurációs hibák"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:219
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "Konfiguráció frissítése..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:225
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "Preferenciák betöltése..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:315
-msgctxt "@info:progress"
-msgid "Loading UI..."
-msgstr ""
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
+#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:192
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Szeretnéd újra betölteni {filename}"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:193
+#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:193
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "A fájl módosult"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
+#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:194
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Újratöltés"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:194
+#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:194
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Ez elindítja a módosult fájlok újratöltését a lemezről."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "A konfiguráció egy régebbi {0} verzióból lett importálva."
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "Nincs háló, amelybe írhatnánk"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:59
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:64
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "Az OpenGL inicializálás sikertelen."
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "Nem támogatott kimeneti mód az STL adatfolyam írására."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:74
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Kritikus OpenGL kiterjesztés hiányzik. Ez szükséges a Framebuffer tárgyak megjelenítéséhez. Kérlek ellenőrizd a videókártyád driverét."
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL fájl (ASCII)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "Fektetés"
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL fájl (bináris)"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "Válasz egy felületet, amit az alpsíkra igazítunk."
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Hullámfront OBJ fájl"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "Durva forgatás"
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STL fájl"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "Durva méretezés"
+#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "Az OBJWriter nem támogatja a nem szöveges módot."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "Egységesen"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:222
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr "Zárolás"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "Etávolítás jóváhagyása"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Biztosan eltávolítani akarja a (z)%1 fájlt? Ez nem vonható vissza!"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Nyomtatók"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
-msgid "Type"
-msgstr "Típus"
+msgid "Mirror"
+msgstr "Tükrözés"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Modell tükrözés"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "Méretezés"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Méretarányos modell"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "Alapsíkra fektetés"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.py:358
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "Elforgatás"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Forgatás"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Modell forgatása"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Mozgatás"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Modell mozgatása"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "Helyi fájl"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
-msgid "Preferences"
-msgstr "Preferenciák"
+msgid "Save to Disk"
+msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:112
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "Ez a fájltípus nem írható!"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "A fájl használatban van."
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "A <filename>{0}</filename> fájl használatban van. Biztosan felül akarod írni ?"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "Mentés a(z) <filename>{0}</filename> fájlba."
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "Mentés"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "Hozzáférés megtagadva a <filename>{0}</filename> fájlba történő íráskor."
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Sikertelen mentés a(z) <filename>{0}</filename> fájlba: <message>{1}</message>"
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "Mentés <filename>{0}</filename> fájlba."
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Fájl elmentve."
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
 msgctxt "@action:button"
-msgid "Defaults"
-msgstr "Alapértelmezett"
+msgid "Open Folder"
+msgstr "Mappa megnyitása"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:120
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "A fájlt tartalmazó mappa megnyitása."
+
+#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Valami hiba történt <filename>{0}</filename> mentésekor: <message>{1}</message>"
+
+#: /home/clamboo/Desktop/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "Egyszerű"
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "Az {application_name} {version_number} elérhető!"
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr "Az {application_name} {version_number} jobb és megbízhatóbb szolgáltatást nyújthat."
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
 msgctxt "@action:button"
-msgid "Close"
-msgstr "Bezár"
+msgid "Download"
+msgstr "Letöltés"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
-msgctxt "@title:tab"
-msgid "General"
-msgstr "Általános"
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "Tudj meg többet"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:151
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Beállítások"
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number}-BETA is available!"
+msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr ""
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr "Frissítések"
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Frissítések ellenőrzése."
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "Ez a verzió nem támogatja a frissítések ellenőrzését."
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Figyelem"
+
+#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Nem találtam új verziót."
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
 msgctxt "@title:window"
 msgid "Rename"
 msgstr "Átnevezés"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
 msgctxt "@info"
 msgid "Please provide a new name."
 msgstr "Adjon meg egy új nevet."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
 msgstr "Elvet"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
 msgctxt "@action:button"
 msgid "OK"
 msgstr "OK"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "Etávolítás jóváhagyása"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Biztosan eltávolítani akarja a (z)%1 fájlt? Ez nem vonható vissza!"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "A beállítás rejtett lesz az aktív gépnél és nem lesz látható."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
 msgstr[0] "Ez a beállítás az értékek %1 -át rejtette el. Állítd át az értéketha látni szeretnéd a beállítást."
 msgstr[1] "Ez a beállítás az értékek %1 -át rejtette el. Állítd át az értéketha látni szeretnéd a beállítást."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "Preferenciák"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:112
+msgctxt "@action:button"
+msgid "Defaults"
+msgstr "Alapértelmezett"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:120
+msgctxt "@action:button"
+msgid "Close"
+msgstr "Bezár"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
+msgctxt "@title:tab"
+msgid "General"
+msgstr "Általános"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:151
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Beállítások"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Nyomtatók"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Típus"
+
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
 msgstr "Vissza"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
 msgstr "Befejezve"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
+#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
 msgstr "Következő"
 
-#: ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Kimeneti napló a konzolra."
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "Durva méretezés"
 
-#: ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Konzol naplózó"
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "Egységesen"
 
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Wavefront OBJ fájlok olvasásának biztosítása."
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "Fektetés"
 
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ olvasó"
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "Válasz egy felületet, amit az alpsíkra igazítunk."
 
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Wavefront OBJ fájlok írásának biztosítása."
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "Durva forgatás"
 
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ író"
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "STL fájlok olvasásának támogatása"
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL olvasó"
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "STL fájlok írásának támogatása."
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL író"
-
-#: FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Naplóadatokat ment ki a beállítási mappában lévő fájlba."
-
-#: FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
-msgstr "Fájl loggolás"
+#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:222
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "Zárolás"
 
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
@@ -761,55 +711,45 @@ msgctxt "name"
 msgid "Local Container Provider"
 msgstr "Helyi tároló biztosítása"
 
-#: LocalFileOutputDevice/plugin.json
+#: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Mentés engedélyezése helyi fájlba."
+msgid "Provides support for writing STL files."
+msgstr "STL fájlok írásának támogatása."
 
-#: LocalFileOutputDevice/plugin.json
+#: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Helyi fájl kimeneti eszköz"
+msgid "STL Writer"
+msgstr "STL író"
 
-#: Tools/CameraTool/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Kamera kezelő eszköz biztosítása"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Wavefront OBJ fájlok olvasásának biztosítása."
 
-#: Tools/CameraTool/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
-msgid "Camera Tool"
-msgstr "Kamera eszköz"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ olvasó"
 
-#: Tools/MirrorTool/plugin.json
+#: FileHandlers/STLReader/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Tükröző eszköz biztosítása"
+msgid "Provides support for reading STL files."
+msgstr "STL fájlok olvasásának támogatása"
 
-#: Tools/MirrorTool/plugin.json
+#: FileHandlers/STLReader/plugin.json
 msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Tükröző eszköz"
+msgid "STL Reader"
+msgstr "STL olvasó"
 
-#: Tools/RotateTool/plugin.json
+#: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Forgatás eszköz biztosítása"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Wavefront OBJ fájlok írásának biztosítása."
 
-#: Tools/RotateTool/plugin.json
+#: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Forgatás eszköz"
-
-#: Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Méretező eszköz biztosítása"
-
-#: Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Méretező eszköz"
+msgid "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ író"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
@@ -821,6 +761,46 @@ msgctxt "name"
 msgid "Selection Tool"
 msgstr "Kiválasztó eszköz"
 
+#: Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr "Tükröző eszköz biztosítása"
+
+#: Tools/MirrorTool/plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Tükröző eszköz"
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Méretező eszköz biztosítása"
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Méretező eszköz"
+
+#: Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Forgatás eszköz biztosítása"
+
+#: Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Forgatás eszköz"
+
+#: Tools/CameraTool/plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Kamera kezelő eszköz biztosítása"
+
+#: Tools/CameraTool/plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Kamera eszköz"
+
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
@@ -831,55 +811,35 @@ msgctxt "name"
 msgid "Move Tool"
 msgstr "Mozgatás eszköz"
 
-#: UpdateChecker/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Szoftver frissítés ellenőrzése."
+msgid "Enables saving to local files."
+msgstr "Mentés engedélyezése helyi fájlba."
 
-#: UpdateChecker/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "name"
-msgid "Update Checker"
-msgstr "Frissítések"
+msgid "Local File Output Device"
+msgstr "Helyi fájl kimeneti eszköz"
 
-#: UraniumExampleExtensionPlugin/plugin.json
+#: ConsoleLogger/plugin.json
 msgctxt "description"
-msgid "Example extension to instruct people on how to create Uranium extensions."
-msgstr "Ez egy példa a kiterjesztésekre, hogy bemutassuk, hogyan lehet készíteni Uranium kiterjesztéseket."
+msgid "Outputs log information to the console."
+msgstr "Kimeneti napló a konzolra."
 
-#: UraniumExampleExtensionPlugin/plugin.json
+#: ConsoleLogger/plugin.json
 msgctxt "name"
-msgid "Example Extension"
-msgstr "Példa kiterjesztés"
+msgid "Console Logger"
+msgstr "Konzol naplózó"
 
-#: UraniumExampleFileReaderPlugin/plugin.json
+#: FileLogger/plugin.json
 msgctxt "description"
-msgid "Example file reader to instruct people on how to create Uranium file readers."
-msgstr "Fájl olvasó példa arra, hogyan készítsünk Uránium fájl olvasókat."
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Naplóadatokat ment ki a beállítási mappában lévő fájlba."
 
-#: UraniumExampleFileReaderPlugin/plugin.json
+#: FileLogger/plugin.json
 msgctxt "name"
-msgid "Example File Reader"
-msgstr "Fájl olvasó példa"
-
-#: UraniumExampleOutputDevicePlugin/plugin.json
-msgctxt "description"
-msgid "Example output device to instruct people on how to create Uranium output devices."
-msgstr "Kimeneti eszköz példa arra, hogyan készítsünk Uránium kimeneti eszközt."
-
-#: UraniumExampleOutputDevicePlugin/plugin.json
-msgctxt "name"
-msgid "Example Output Device"
-msgstr "Kimeneti eszköz példa"
-
-#: UraniumExampleToolPlugin/plugin.json
-msgctxt "description"
-msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr "Példa eszköz, hogyan készítsünk Uranium eszközöket."
-
-#: UraniumExampleToolPlugin/plugin.json
-msgctxt "name"
-msgid "Example Tool"
-msgstr "Példa eszköz"
+msgid "File Logger"
+msgstr "Fájl loggolás"
 
 #: Views/SimpleView/plugin.json
 msgctxt "description"
@@ -891,7 +851,48 @@ msgctxt "name"
 msgid "Simple View"
 msgstr "Egyszerű nézet"
 
-#, python-format, python-brace-format
+#: UpdateChecker/plugin.json
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Szoftver frissítés ellenőrzése."
+
+#: UpdateChecker/plugin.json
+msgctxt "name"
+msgid "Update Checker"
+msgstr "Frissítések"
+
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "Ez egy példa a kiterjesztésekre, hogy bemutassuk, hogyan lehet készíteni Uranium kiterjesztéseket."
+
+#~ msgctxt "name"
+#~ msgid "Example Extension"
+#~ msgstr "Példa kiterjesztés"
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "Fájl olvasó példa arra, hogyan készítsünk Uránium fájl olvasókat."
+
+#~ msgctxt "name"
+#~ msgid "Example File Reader"
+#~ msgstr "Fájl olvasó példa"
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "Kimeneti eszköz példa arra, hogyan készítsünk Uránium kimeneti eszközt."
+
+#~ msgctxt "name"
+#~ msgid "Example Output Device"
+#~ msgstr "Kimeneti eszköz példa"
+
+#~ msgctxt "description"
+#~ msgid "Example tool to instruct people on how to create Uranium tools."
+#~ msgstr "Példa eszköz, hogyan készítsünk Uranium eszközöket."
+
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "Példa eszköz"
+
 #~ msgctxt "@info:status"
 #~ msgid "Auto scaled object to {0}% of original size"
 #~ msgstr "Automatikus méretezés az eredeti méretről {0}% of méretre"

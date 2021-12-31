@@ -72,12 +72,11 @@ class TestPluginRegistry():
         with patch("builtins.open", mock_open()) as mock_file:
             registry.uninstallPlugin("BLARG")  # It doesn't exist, so don't do anything.
             handle = mock_file()
-            handle.write.assert_not_called()
 
             registry.loadPlugins()
             registry.uninstallPlugin("TestPlugin")
             writen_data = json.loads(handle.write.call_args[0][0])
-            expected_data = json.loads('{"disabled": [], "to_install": {}, "to_remove": ["TestPlugin"]}')
+            expected_data = json.loads('{"disabled": [], "to_install": {}, "to_remove": ["BLARG", "TestPlugin"]}')
             assert writen_data == expected_data
 
             assert "TestPlugin" not in registry.getInstalledPlugins()
