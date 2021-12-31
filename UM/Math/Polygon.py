@@ -167,7 +167,6 @@ class Polygon:
         :param other: The other polygon to intersect convex hulls with.
         :return: The intersection of the two polygons' convex hulls.
         """
-
         me = self.getConvexHull()
         him = other.getConvexHull()
 
@@ -179,9 +178,10 @@ class Polygon:
         clipper.AddPath(me.getPoints(), pyclipper.PT_SUBJECT, closed = True)
         clipper.AddPath(other.getPoints(), pyclipper.PT_CLIP, closed = True)
 
-        points = clipper.Execute(pyclipper.CT_INTERSECTION)
+        points = clipper.Execute(pyclipper.CT_INTERSECTION, pyclipper.PFT_NONZERO, pyclipper.PFT_NONZERO)
         if len(points) == 0:
             return Polygon()
+        points = points[0]  # Intersection between convex hulls should result in a single (convex) simple polygon. Take just the one polygon.
         if points[0] == points[-1]:  # Represent closed polygons without closing vertex.
             points.pop()
         return Polygon(NumPyUtil.immutableNDArray(points))
