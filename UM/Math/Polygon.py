@@ -191,22 +191,10 @@ class Polygon:
     #   \param other The other polygon to combine convex hulls with.
     #   \return The convex hull of the union of the two polygons' convex hulls.
     def unionConvexHulls(self, other: "Polygon") -> "Polygon":
-        my_hull = self.getConvexHull()
-        other_hull = other.getConvexHull()
-
-        if not my_hull.isValid():
-            return other_hull
-        if not other_hull.isValid():
-            return my_hull
-
-        my_polygon = ShapelyUtil.polygon2ShapelyPolygon(my_hull)
-        other_polygon = ShapelyUtil.polygon2ShapelyPolygon(other_hull)
-
-        polygon_union = my_polygon.union(other_polygon).convex_hull
-        if polygon_union.area == 0:
-            return Polygon()
-
-        return Polygon(points = [list(p) for p in polygon_union.exterior.coords[:-1]])
+        # Combine all points and take the convex hull of that.
+        all_points = numpy.append(self.getPoints(), other.getPoints())
+        combined_polys = Polygon(all_points)
+        return combined_polys.getConvexHull()
 
     def intersectsPolygon(self, other: "Polygon") -> Optional[Tuple[float, float]]:
         """Check to see whether this polygon intersects with another polygon.
