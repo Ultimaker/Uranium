@@ -1,9 +1,11 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 from typing import Optional, Tuple, List, Union
 
 import numpy
 import math
+import pyclipper
 import scipy.spatial
 
 from UM.Logger import Logger
@@ -173,15 +175,14 @@ class Polygon:
         if len(me._points) <= 2 or len(him._points) <= 2:
             return Polygon()
 
-        polygen_me = ShapelyUtil.polygon2ShapelyPolygon(me)
-        polygon_him = ShapelyUtil.polygon2ShapelyPolygon(him)
+        clipper = pyclipper.Pyclipper()
+        clipper.AddPath(me._points, pyclipper.PT_SUBJECT, closed = True)
+        clipper.AddPath(other._points, pyclipper.PT_CLIP, closed = True)
 
-        polygon_intersection = polygen_me.intersection(polygon_him)
-        if polygon_intersection.area == 0:
+        points = clipper.Execute(pyclipper.CT_INTERSECTION)
+        if len(points) == 0:
             return Polygon()
-
-        points = [list(p) for p in polygon_intersection.exterior.coords]
-        if points[0] == points[-1]:
+        if points[0] == points[-1]:  # Represent closed polygons without closing vertex.
             points.pop()
         return Polygon(points)
 
