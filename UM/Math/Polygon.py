@@ -172,19 +172,19 @@ class Polygon:
         him = other.getConvexHull()
 
         # If either polygon has no surface area, then the intersection is empty.
-        if len(me._points) <= 2 or len(him._points) <= 2:
+        if len(me.getPoints()) <= 2 or len(him.getPoints()) <= 2:
             return Polygon()
 
         clipper = pyclipper.Pyclipper()
-        clipper.AddPath(me._points, pyclipper.PT_SUBJECT, closed = True)
-        clipper.AddPath(other._points, pyclipper.PT_CLIP, closed = True)
+        clipper.AddPath(me.getPoints(), pyclipper.PT_SUBJECT, closed = True)
+        clipper.AddPath(other.getPoints(), pyclipper.PT_CLIP, closed = True)
 
         points = clipper.Execute(pyclipper.CT_INTERSECTION)
         if len(points) == 0:
             return Polygon()
         if points[0] == points[-1]:  # Represent closed polygons without closing vertex.
             points.pop()
-        return Polygon(points)
+        return Polygon(NumPyUtil.immutableNDArray(points))
 
     #  Computes the convex hull of the union of the convex hulls of this and another polygon.
     #
