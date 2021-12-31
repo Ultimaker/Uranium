@@ -10,7 +10,6 @@ import scipy.spatial
 
 from UM.Logger import Logger
 from UM.Math import NumPyUtil
-from UM.Math import ShapelyUtil
 
 class Polygon:
     """A class representing an immutable arbitrary 2-dimensional polygon."""
