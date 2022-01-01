@@ -14,6 +14,11 @@ from UM.Math import NumPyUtil
 class Polygon:
     """A class representing an immutable arbitrary 2-dimensional polygon."""
 
+    CLIPPER_PRECISION = 1000
+    """
+    Number of units per mm to use in clipper operations.
+    """
+
     @staticmethod
     def approximatedCircle(radius, num_segments = 8):
         """Return vertices from an approximate circle.
@@ -31,6 +36,15 @@ class Polygon:
             points.append([radius * -math.cos(i * step), radius * math.sin(i * step)])
 
         return Polygon(points = numpy.array(points, numpy.float32))
+
+    @staticmethod
+    def _fromClipperPoints(points: numpy.ndarray) -> "Polygon":
+        """
+        Converts the clipper point representation into a normal polygon.
+        :param points: The clipper
+        :return:
+        """
+        return Polygon(points = points.astype(numpy.float32) / Polygon.CLIPPER_PRECISION)
 
     def __init__(self, points: Optional[Union[numpy.ndarray, List]] = None):
         if points is not None:
@@ -174,8 +188,8 @@ class Polygon:
             return Polygon()
 
         clipper = pyclipper.Pyclipper()
-        clipper.AddPath(me.getPoints(), pyclipper.PT_SUBJECT, closed = True)
-        clipper.AddPath(other.getPoints(), pyclipper.PT_CLIP, closed = True)
+        clipper.AddPath(me._clipperPoints(), pyclipper.PT_SUBJECT, closed = True)
+        clipper.AddPath(other._clipperPoints(), pyclipper.PT_CLIP, closed = True)
 
         points = clipper.Execute(pyclipper.CT_INTERSECTION, pyclipper.PFT_NONZERO, pyclipper.PFT_NONZERO)
         if len(points) == 0:
@@ -183,7 +197,7 @@ class Polygon:
         points = points[0]  # Intersection between convex hulls should result in a single (convex) simple polygon. Take just the one polygon.
         if points[0] == points[-1]:  # Represent closed polygons without closing vertex.
             points.pop()
-        return Polygon(NumPyUtil.immutableNDArray(points))
+        return self._fromClipperPoints(numpy.array(points))
 
     #  Computes the convex hull of the union of the convex hulls of this and another polygon.
     #
@@ -205,8 +219,8 @@ class Polygon:
             return None
 
         clipper = pyclipper.Pyclipper()
-        clipper.AddPath(self.getPoints(), pyclipper.PT_SUBJECT, closed = True)
-        clipper.AddPath(other.getPoints(), pyclipper.PT_CLIP, closed = True)
+        clipper.AddPath(self._clipperPoints(), pyclipper.PT_SUBJECT, closed = True)
+        clipper.AddPath(other._clipperPoints(), pyclipper.PT_CLIP, closed = True)
         intersection_points = clipper.Execute(pyclipper.CT_INTERSECTION)
 
         if len(intersection_points) == 0:
@@ -219,7 +233,7 @@ class Polygon:
             for vertex in poly:
                 mini = (min(mini[0], vertex[0]), min(mini[1], vertex[1]))
                 maxi = (max(maxi[0], vertex[0]), max(maxi[1], vertex[1]))
-        return maxi[0] - mini[0], maxi[1] - mini[1]
+        return float(maxi[0] - mini[0]) / self.CLIPPER_PRECISION, float(maxi[1] - mini[1]) / self.CLIPPER_PRECISION
 
     def getConvexHull(self) -> "Polygon":
         """Calculate the convex hull around the set of points of this polygon.
@@ -296,6 +310,18 @@ class Polygon:
             return 0
         else:
             return -1
+
+    def _clipperPoints(self) -> numpy.ndarray:
+        """
+        Converts the vertices to a representation useful for PyClipper.
+
+        This is necessary because Clipper uses integer-coordinates, but the coordinates in the rest of the front-end are
+        one millimeter per unit. Without this conversion, vertices would be rounded to millimeters. With this conversion
+        the units represent micrometers, allowing much greater precision.
+        :return: A vertex representation useful for Clipper.
+        """
+        return (self.getPoints() * self.CLIPPER_PRECISION).astype(numpy.int32)
+
 
 
 __all__ = ["Polygon"]
