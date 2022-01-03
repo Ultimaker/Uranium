@@ -477,9 +477,15 @@ class ContainerRegistry(ContainerRegistryInterface):
                     modified_time = provider.getLastModifiedTime(container_id)
                     if metadata.get("type") in self._database_handlers:
                         # Only add it to the database if we have an actual handler.
-                        cursor.execute(
-                            "INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
-                            (container_id, metadata["name"], modified_time, metadata["type"]))
+                        try:
+                            cursor.execute(
+                                "INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
+                                (container_id, metadata["name"], modified_time, metadata["type"]))
+                        except db.DatabaseError as e:
+                            Logger.warning(f"Unable to edit database to insert new cache records for containers, recreating database: {str(e)}")
+                            self._recreateCorruptDataBase(self._database_handlers[metadata["type"]].cursor)
+                            cursor = self._getDatabaseConnection().cursor()  # After recreating the database, all the cursors have changed.
+                            cursor.execute("begin")
                         self._addMetadataToDatabase(metadata)
 
                     self.metadata[container_id] = metadata
@@ -491,7 +497,13 @@ class ContainerRegistry(ContainerRegistryInterface):
                     if modified_time > db_last_modified_time:
                         # Metadata is outdated, so load from file and update the database
                         metadata = provider.loadMetadata(container_id)
-                        cursor.execute("UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?", (metadata["name"], modified_time, metadata["type"], metadata["id"]))
+                        try:
+                            cursor.execute("UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?", (metadata["name"], modified_time, metadata["type"], metadata["id"]))
+                        except db.DatabaseError as e:
+                            Logger.warning(f"Unable to update timestamp of container cache in database, recreating database: {str(e)}")
+                            self._recreateCorruptDataBase(self._database_handlers[metadata["type"]].cursor)
+                            cursor = self._getDatabaseConnection().cursor()  # After recreating the database, all the cursors have changed.
+                            cursor.execute("begin")
                         self._updateMetadataInDatabase(metadata)
                         self.metadata[container_id] = metadata
                         self.source_provider[container_id] = provider

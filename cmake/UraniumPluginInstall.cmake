@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2021 Ultimaker B.V.
 # UraniumPluginInstall.cmake is released under the terms of the LGPLv3 or higher.
 
 #
@@ -9,18 +9,7 @@
 # form of "a;b;c" or "a,b,c". By default all plugins will be installed.
 #
 
-# FIXME: Remove the code for CMake <3.12 once we have switched over completely.
-# FindPython3 is a new module since CMake 3.12. It deprecates FindPythonInterp and FindPythonLibs. The FindPython3
-# module is copied from the CMake repository here so in CMake <3.12 we can still use it.
-if(${CMAKE_VERSION} VERSION_LESS 3.12)
-    # Use FindPythonInterp and FindPythonLibs for CMake <3.12
-    find_package(PythonInterp 3 REQUIRED)
-
-    set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
-else()
-    # Use FindPython3 for CMake >=3.12
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
-endif()
+find_package(PythonInterp 3 REQUIRED)
 
 # Options or configuration variables
 set(UM_NO_INSTALL_PLUGINS "" CACHE STRING "A list of plugins that should not be installed, separated with ';' or ','.")

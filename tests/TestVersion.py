@@ -75,6 +75,7 @@ def test_wrongType():
     version = Version(None)
     assert version == Version("0")
 
+
 def test_compareStrings():
     version_string = "1.0.0"
     version = Version(version_string)
@@ -90,3 +91,13 @@ def test_compareStrings():
     # Defend people from ignoring the typing.
     assert not version > None
     assert not version < None
+
+
+def test_compareBeta():
+    normal_version = Version("1.0.0")
+    beta_version = Version("1.0.0-BETA")
+    assert normal_version > beta_version
+
+
+def test_comparePostfixVersion():
+    assert Version("1.0.0-alpha.1") < Version("1.0.0-alpha.2")

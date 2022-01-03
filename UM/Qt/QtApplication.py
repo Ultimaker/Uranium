@@ -147,6 +147,9 @@ class QtApplication(QApplication, Application):
         # Initialize the package manager to remove and install scheduled packages.
         self._package_manager = self._package_manager_class(self, parent = self)
 
+        # If a plugin is removed, check if the matching package is also removed.
+        self._plugin_registry.pluginRemoved.connect(lambda plugin_id: self._package_manager.removePackage(plugin_id))
+
         self._mesh_file_handler = MeshFileHandler(self) #type: MeshFileHandler
         self._workspace_file_handler = WorkspaceFileHandler(self) #type: WorkspaceFileHandler
 
