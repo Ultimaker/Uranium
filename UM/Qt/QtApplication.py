@@ -96,28 +96,28 @@ class QtApplication(QApplication, Application):
         # use Qt Quick Scene Graph "basic" render loop
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
-        super().__init__(sys.argv, **kwargs) # type: ignore
+        super().__init__(sys.argv, **kwargs)
 
-        self._qml_import_paths = [] #type: List[str]
-        self._main_qml = "main.qml" #type: str
-        self._qml_engine = None #type: Optional[QQmlApplicationEngine]
-        self._main_window = None #type: Optional[MainWindow]
-        self._tray_icon_name = tray_icon_name #type: Optional[str]
-        self._tray_icon = None #type: Optional[str]
-        self._tray_icon_widget = None #type: Optional[QSystemTrayIcon]
-        self._theme = None #type: Optional[Theme]
-        self._renderer = None #type: Optional[QtRenderer]
+        self._qml_import_paths: List[str] = []
+        self._main_qml: str = "main.qml"
+        self._qml_engine: Optional[QQmlApplicationEngine] = None
+        self._main_window: Optional[MainWindow] = None
+        self._tray_icon_name: Optional[str] = tray_icon_name
+        self._tray_icon: Optional[str] = None
+        self._tray_icon_widget: Optional[QSystemTrayIcon] = None
+        self._theme: Optional[Theme] = None
+        self._renderer: Optional[QtRenderer] = None
 
-        self._job_queue = None #type: Optional[JobQueue]
-        self._version_upgrade_manager = None #type: Optional[VersionUpgradeManager]
+        self._job_queue: Optional[JobQueue] = None
+        self._version_upgrade_manager: Optional[VersionUpgradeManager] = None
 
-        self._is_shutting_down = False #type: bool
+        self._is_shutting_down: bool = False
 
-        self._recent_files = [] #type: List[QUrl]
+        self._recent_files: List[QUrl] = []
 
-        self._configuration_error_message = None #type: Optional[ConfigurationErrorMessage]
+        self._configuration_error_message: Optional[ConfigurationErrorMessage] = None
 
-        self._http_network_request_manager = None #type: Optional[HttpRequestManager]
+        self._http_network_request_manager: Optional[HttpRequestManager] = None
 
         #Metadata required for the file dialogues.
         self.setOrganizationDomain("https://ultimaker.com/")
@@ -541,7 +541,7 @@ class QtApplication(QApplication, Application):
 
         return self.getBackend()
 
-    splash = None  # type: Optional[QSplashScreen]
+    splash: Optional[QSplashScreen] = None
     """Create a class variable so we can manage the splash in the CrashHandler dialog when the Application instance
     is not yet created, e.g. when an error occurs during the initialization
     """

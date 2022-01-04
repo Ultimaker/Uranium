@@ -74,7 +74,7 @@ class TaskManager(QObject):
         super().__init__(parent = parent)
         self._event_type = TaskManager.acquireNewEventType()
         # For storing all delayed events
-        self._delayed_events = dict()  # type: Dict[_CallFunctionEvent, Dict[str, Any]]
+        self._delayed_events: Dict[_CallFunctionEvent, Dict[str, Any]] = dict()
 
     @property
     def event_type(self) -> int:
