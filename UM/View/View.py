@@ -3,7 +3,7 @@
 
 from typing import Optional, Union, Dict, TYPE_CHECKING
 
-from PyQt5.QtCore import QUrl, QObject, pyqtProperty
+from PyQt6.QtCore import QUrl, QObject, pyqtProperty
 
 from UM.View.Renderer import Renderer
 from UM.PluginObject import PluginObject

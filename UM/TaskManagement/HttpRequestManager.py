@@ -7,8 +7,8 @@ from collections import deque
 from threading import RLock
 from typing import Callable, cast, Dict, Set, Union, Optional, Any
 
-from PyQt5.QtCore import QObject, QUrl, Qt, pyqtSignal, pyqtProperty
-from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
+from PyQt6.QtCore import QObject, QUrl, Qt, pyqtSignal, pyqtProperty
+from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 from UM.Logger import Logger
 from UM.TaskManagement.HttpRequestData import HttpRequestData
@@ -85,9 +85,9 @@ class HttpRequestManager(TaskManager):
                  enable_request_benchmarking: bool = False) -> None:
         if HttpRequestManager.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        HttpRequestManager.__instance = self
 
         super().__init__(parent)
+        HttpRequestManager.__instance = self
 
         self._network_manager = QNetworkAccessManager(self)
         self._account_manager = None
@@ -219,7 +219,7 @@ class HttpRequestManager(TaskManager):
     @staticmethod
     def replyIndicatesSuccess(reply: QNetworkReply, error: Optional["QNetworkReply.NetworkError"] = None) -> bool:
         """Returns whether reply status code indicates success and error is None"""
-        return error is None and 200 <= reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) < 300
+        return error is None and 200 <= reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute) < 300
 
     @staticmethod
     def safeHttpStatus(reply: Optional[QNetworkReply]):
@@ -227,13 +227,13 @@ class HttpRequestManager(TaskManager):
         if reply is None:
             return -1
 
-        return reply.attribute(QNetworkRequest.HttpStatusCodeAttribute) or -1
+        return reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute) or -1
 
     @staticmethod
     def qt_network_error_name(error: QNetworkReply.NetworkError):
         """String representation of a NetworkError, eg 'ProtocolInvalidOperationError'"""
 
-        for k, v in QNetworkReply.__dict__.items():
+        for k, v in QNetworkReply.NetworkError.__dict__.items():
             if v == error:
                 return k
         return "Unknown Qt Network error"
@@ -255,14 +255,7 @@ class HttpRequestManager(TaskManager):
             raise ValueError("Timeout must be a positive number if provided, but [%s] was given" % timeout)
 
         request = QNetworkRequest(QUrl(url))
-
-        # Make sure that Qt handles redirects
-        if hasattr(QNetworkRequest, "FollowRedirectsAttribute"):
-            # Patch for Qt 5.6-5.8
-            request.setAttribute(QNetworkRequest.FollowRedirectsAttribute, True)
-        if hasattr(QNetworkRequest, "RedirectPolicyAttribute"):
-            # Patch for Qt 5.9+
-            request.setAttribute(QNetworkRequest.RedirectPolicyAttribute, True)
+        request.setAttribute(QNetworkRequest.Attribute.RedirectPolicyAttribute, QNetworkRequest.RedirectPolicy.ManualRedirectPolicy)
 
         # Set headers
         if headers_dict is not None:
@@ -348,14 +341,14 @@ class HttpRequestManager(TaskManager):
         request_data.reply = reply
 
         # Connect callback signals
-        reply.error.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.QueuedConnection)
-        reply.finished.connect(lambda rd = request_data: self._onRequestFinished(rd), type = Qt.QueuedConnection)
+        reply.errorOccurred.connect(lambda err, rd = request_data: self._onRequestError(rd, err), type = Qt.ConnectionType.QueuedConnection)
+        reply.finished.connect(lambda rd = request_data: self._onRequestFinished(rd), type = Qt.ConnectionType.QueuedConnection)
 
         # Only connect download/upload progress callbacks when necessary to reduce CPU usage.
         if request_data.download_progress_callback is not None or request_data.timeout is not None:
-            reply.downloadProgress.connect(request_data.onDownloadProgressCallback, type = Qt.QueuedConnection)
+            reply.downloadProgress.connect(request_data.onDownloadProgressCallback, type = Qt.ConnectionType.QueuedConnection)
         if request_data.upload_progress_callback is not None or request_data.timeout is not None:
-            reply.uploadProgress.connect(request_data.onUploadProgressCallback, type = Qt.QueuedConnection)
+            reply.uploadProgress.connect(request_data.onUploadProgressCallback, type = Qt.ConnectionType.QueuedConnection)
 
         with self._request_lock:
             self._requests_in_progress.add(request_data)
@@ -366,7 +359,7 @@ class HttpRequestManager(TaskManager):
         if request_data.reply is not None:
             error_string = request_data.reply.errorString()
 
-        if error == QNetworkReply.UnknownNetworkError or QNetworkReply.HostNotFoundError:
+        if error == QNetworkReply.NetworkError.UnknownNetworkError or QNetworkReply.NetworkError.HostNotFoundError:
             self._setInternetReachable(False)
             # manager seems not always able to recover from a total loss of network access, so re-create it
             self._network_manager = QNetworkAccessManager(self)
@@ -410,8 +403,8 @@ class HttpRequestManager(TaskManager):
         reply = request_data.reply
         if reply is not None:
             reply_error = reply.error()  # error() must only be called once
-            if reply_error != QNetworkReply.NoError:
-                if reply_error == QNetworkReply.OperationCanceledError:
+            if reply_error != QNetworkReply.NetworkError.NoError:
+                if reply_error == QNetworkReply.NetworkError.OperationCanceledError:
                     Logger.log("d", "%s was aborted, do nothing", request_data)
 
                 # stop processing for any kind of error
@@ -438,7 +431,7 @@ class HttpRequestManager(TaskManager):
                 if reply is not None:
                     # Even after the request was successfully finished, an error may still be emitted if
                     # the network connection is lost seconds later. Bug in Qt? Fixes CURA-7349
-                    reply.error.disconnect()
+                    reply.errorOccurred.disconnect()
 
                     if request_data.download_progress_callback is not None:
                         reply.downloadProgress.disconnect(request_data.onDownloadProgressCallback)

@@ -3,13 +3,13 @@
 from typing import List, TYPE_CHECKING
 from urllib.parse import urlparse
 
-from PyQt5.QtCore import pyqtSlot, QUrl, QObject
-from PyQt5.QtGui import QDesktopServices
+from PyQt6.QtCore import pyqtSlot, QUrl, QObject
+from PyQt6.QtGui import QDesktopServices
 
 from UM.Logger import Logger
 
 if TYPE_CHECKING:
-    from PyQt5.QtQml import QQmlEngine, QJSEngine
+    from PyQt6.QtQml import QQmlEngine, QJSEngine
 
 
 class UrlUtil(QObject):

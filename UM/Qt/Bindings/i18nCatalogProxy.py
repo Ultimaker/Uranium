@@ -3,8 +3,8 @@
 
 import inspect
 
-from PyQt5.QtCore import pyqtProperty, pyqtSignal, QObject, QCoreApplication, pyqtSlot
-from PyQt5.QtQml import QJSValue
+from PyQt6.QtCore import pyqtProperty, pyqtSignal, QObject, QCoreApplication, pyqtSlot
+from PyQt6.QtQml import QJSValue
 
 from UM.i18n import i18nCatalog
 

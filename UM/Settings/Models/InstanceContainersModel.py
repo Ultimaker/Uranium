@@ -3,7 +3,7 @@
 
 import os
 from typing import Any, cast, Dict, Generator, List, Tuple
-from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl, QTimer
+from PyQt6.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl, QTimer
 
 from UM.Qt.ListModel import ListModel
 from UM.PluginRegistry import PluginRegistry  # For getting the possible profile readers and writers.
@@ -19,11 +19,11 @@ class InstanceContainersModel(ListModel):
     changed.
     """
 
-    NameRole = Qt.UserRole + 1  # Human readable name (string)
-    IdRole = Qt.UserRole + 2    # Unique ID of the InstanceContainer
-    MetaDataRole = Qt.UserRole + 3
-    ReadOnlyRole = Qt.UserRole + 4
-    SectionRole = Qt.UserRole + 5
+    NameRole = Qt.ItemDataRole.UserRole + 1  # Human readable name (string)
+    IdRole = Qt.ItemDataRole.UserRole + 2    # Unique ID of the InstanceContainer
+    MetaDataRole = Qt.ItemDataRole.UserRole + 3
+    ReadOnlyRole = Qt.ItemDataRole.UserRole + 4
+    SectionRole = Qt.ItemDataRole.UserRole + 5
 
     def __init__(self, parent = None) -> None:
         super().__init__(parent)

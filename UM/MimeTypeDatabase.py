@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os.path
-from PyQt5.QtCore import QMimeDatabase, QMimeType
+from PyQt6.QtCore import QMimeDatabase, QMimeType
 from typing import cast, List, Optional
 
 

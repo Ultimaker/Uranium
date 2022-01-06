@@ -2,8 +2,8 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import List
 
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtQml import QQmlEngine
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtQml import QQmlEngine
 
 from UM.Application import Application
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
@@ -21,17 +21,17 @@ class ProjectOutputDevicesModel(ListModel):
 
     """
 
-    IdRole = Qt.UserRole + 1
-    NameRole = Qt.UserRole + 2
-    PriorityRole = Qt.UserRole + 3
-    ShortcutRole = Qt.UserRole + 4
+    IdRole = Qt.ItemDataRole.UserRole + 1
+    NameRole = Qt.ItemDataRole.UserRole + 2
+    PriorityRole = Qt.ItemDataRole.UserRole + 3
+    ShortcutRole = Qt.ItemDataRole.UserRole + 4
 
     projectOutputDevicesChanged = pyqtSignal()
 
     def __init__(self, parent = None):
         super().__init__(parent)
         # Ensure that this model doesn't get garbage collected (Now the bound object is destroyed when the wrapper is)
-        QQmlEngine.setObjectOwnership(self, QQmlEngine.CppOwnership)
+        QQmlEngine.setObjectOwnership(self, QQmlEngine.ObjectOwnership.CppOwnership)
         self._device_manager = Application.getInstance().getOutputDeviceManager()  # type: OutputDeviceManager
 
         self.addRoleName(self.IdRole, "id")

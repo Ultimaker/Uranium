@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
+from PyQt6.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
 
 from UM.Qt.Bindings import StageModel, FileProviderModel, ProjectOutputDevicesModel
 from UM.Qt.Duration import Duration, DurationFormat
@@ -73,16 +73,16 @@ class Bindings:
         qmlRegisterType(VisibleMessagesModel.VisibleMessagesModel, "UM", 1, 0, "VisibleMessagesModel")
 
         # Singleton proxy objects
-        qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
-        qmlRegisterSingletonType(ApplicationProxy.ApplicationProxy, "UM", 1, 0, "Application", Bindings.createApplicationProxy)
-        qmlRegisterSingletonType(BackendProxy.BackendProxy, "UM", 1, 0, "Backend", Bindings.createBackendProxy)
-        qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
-        qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, "OperationStack", Bindings.createOperationStackProxy)
-        qmlRegisterSingletonType(MeshFileHandler, "UM", 1, 0, "MeshFileHandler", MeshFileHandler.getInstance)
-        qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, "UM", 1, 0, "Preferences", PreferencesProxy.createPreferencesProxy)
-        qmlRegisterSingletonType(Theme.Theme, "UM", 1, 0, "Theme", Theme.createTheme)
-        qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, "ActiveTool", ActiveToolProxy.createActiveToolProxy)
-        qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, "Selection", SelectionProxy.createSelectionProxy)
+        qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, Bindings.createControllerProxy, "Controller")
+        qmlRegisterSingletonType(ApplicationProxy.ApplicationProxy, "UM", 1, 0, Bindings.createApplicationProxy, "Application")
+        qmlRegisterSingletonType(BackendProxy.BackendProxy, "UM", 1, 0, Bindings.createBackendProxy, "Backend")
+        qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, Bindings.createResourcesProxy, "Resources")
+        qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, Bindings.createOperationStackProxy, "OperationStack")
+        qmlRegisterSingletonType(MeshFileHandler, "UM", 1, 0, MeshFileHandler.getInstance, "MeshFileHandler")
+        qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, "UM", 1, 0, PreferencesProxy.createPreferencesProxy, "Preferences")
+        qmlRegisterSingletonType(Theme.Theme, "UM", 1, 0, Theme.createTheme, "Theme")
+        qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, ActiveToolProxy.createActiveToolProxy, "ActiveTool")
+        qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, SelectionProxy.createSelectionProxy, "Selection")
 
         qmlRegisterUncreatableType(Duration, "UM", 1, 0, "Duration", "")
         qmlRegisterUncreatableType(DurationFormat, "UM", 1, 0, "DurationFormat", "")
@@ -91,7 +91,7 @@ class Bindings:
         qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")
         qmlRegisterType(i18nCatalogProxy.i18nCatalogProxy, "UM", 1, 1, "I18nCatalog")
 
-        qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
+        qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, OutputDeviceManagerProxy.createOutputDeviceManagerProxy, "OutputDeviceManager")
 
         # Additions after 2.1. Uses API version 1.2
         qmlRegisterType(SettingDefinitionsModel, "UM", 1, 2, "SettingDefinitionsModel")
@@ -103,14 +103,14 @@ class Bindings:
         qmlRegisterType(ContainerPropertyProvider, "UM", 1, 2, "ContainerPropertyProvider")
 
         # Additions after 2.3;
-        qmlRegisterSingletonType(WorkspaceFileHandler, "UM", 1, 3, "WorkspaceFileHandler", WorkspaceFileHandler.getInstance)
-        qmlRegisterSingletonType(OpenGLContextProxy.OpenGLContextProxy, "UM", 1, 3, "OpenGLContextProxy", Bindings.createOpenGLContextProxy)
+        qmlRegisterSingletonType(WorkspaceFileHandler, "UM", 1, 3, WorkspaceFileHandler.getInstance, "WorkspaceFileHandler")
+        qmlRegisterSingletonType(OpenGLContextProxy.OpenGLContextProxy, "UM", 1, 3, Bindings.createOpenGLContextProxy, "OpenGLContextProxy")
 
         # Additions after 3.1
         qmlRegisterType(StageModel.StageModel, "UM", 1, 4, "StageModel")
 
         # Additions after 4.6
-        qmlRegisterSingletonType(Utilities.UrlUtil, "UM", 1, 5, "UrlUtil", Utilities.createUrlUtil)
+        qmlRegisterSingletonType(Utilities.UrlUtil, "UM", 1, 5, Utilities.createUrlUtil, "UrlUtil")
 
         # Additions after 4.9
         qmlRegisterType(FileProviderModel.FileProviderModel, "UM", 1, 6, "FileProviderModel")

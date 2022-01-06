@@ -4,7 +4,7 @@
 from enum import IntEnum
 from typing import Optional, Union, Dict, List
 
-from PyQt5.QtCore import QTimer, pyqtSignal, QObject
+from PyQt6.QtCore import QTimer, pyqtSignal, QObject
 
 from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter

@@ -4,8 +4,9 @@
 import sys
 import ctypes   # type: ignore
 
-from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer
-from PyQt5.QtWidgets import QMessageBox
+from PyQt6.QtGui import QOpenGLContext
+from PyQt6.QtOpenGL import QOpenGLVersionProfile, QOpenGLFramebufferObject, QOpenGLBuffer
+from PyQt6.QtWidgets import QMessageBox
 from typing import Any, TYPE_CHECKING, cast, Optional
 
 from UM.Logger import Logger
@@ -45,9 +46,9 @@ class OpenGL:
     def __init__(self) -> None:
         if OpenGL.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        OpenGL.__instance = self
 
         super().__init__()
+        OpenGL.__instance = self
 
         profile = QOpenGLVersionProfile()
         profile.setVersion(OpenGLContext.major_version, OpenGLContext.minor_version)
@@ -91,7 +92,7 @@ class OpenGL:
 
         self._gpu_type = "Unknown"  # type: str
         # WORKAROUND: Cura/#1117 Cura-packaging/12
-        # Some Intel GPU chipsets return a string, which is not undecodable via PyQt5.
+        # Some Intel GPU chipsets return a string, which is not undecodable via PyQt6.
         # This workaround makes the code fall back to a "Unknown" renderer in these cases.
         try:
             self._gpu_type = self._gl.glGetString(self._gl.GL_RENDERER)

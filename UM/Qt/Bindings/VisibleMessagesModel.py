@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 from typing import Union
 
-from PyQt5.QtCore import Qt, QUrl
+from PyQt6.QtCore import Qt, QUrl
 
 from UM.Application import Application
 from UM.FlameProfiler import pyqtSlot
@@ -10,21 +10,21 @@ from UM.Qt.ListModel import ListModel
 
 
 class VisibleMessagesModel(ListModel):
-    TextRole = Qt.UserRole + 1
-    MaxProgressRole = Qt.UserRole + 2
-    ProgressRole = Qt.UserRole + 3
-    IDRole = Qt.UserRole + 4
-    ActionsRole = Qt.UserRole + 5
-    IconRole = Qt.UserRole + 6
-    DescriptionRole = Qt.UserRole + 7
-    DismissableRole = Qt.UserRole + 8
-    TileRole = Qt.UserRole + 9
-    StyleRole = Qt.UserRole + 10
-    ImageSourceRole = Qt.UserRole + 11
-    ImageCaptionRole = Qt.UserRole + 12
-    OptionTextRole = Qt.UserRole + 13
-    OptionStateRole = Qt.UserRole + 14
-    MessageTypeRole = Qt.UserRole + 15
+    TextRole = Qt.ItemDataRole.UserRole + 1
+    MaxProgressRole = Qt.ItemDataRole.UserRole + 2
+    ProgressRole = Qt.ItemDataRole.UserRole + 3
+    IDRole = Qt.ItemDataRole.UserRole + 4
+    ActionsRole = Qt.ItemDataRole.UserRole + 5
+    IconRole = Qt.ItemDataRole.UserRole + 6
+    DescriptionRole = Qt.ItemDataRole.UserRole + 7
+    DismissableRole = Qt.ItemDataRole.UserRole + 8
+    TileRole = Qt.ItemDataRole.UserRole + 9
+    StyleRole = Qt.ItemDataRole.UserRole + 10
+    ImageSourceRole = Qt.ItemDataRole.UserRole + 11
+    ImageCaptionRole = Qt.ItemDataRole.UserRole + 12
+    OptionTextRole = Qt.ItemDataRole.UserRole + 13
+    OptionStateRole = Qt.ItemDataRole.UserRole + 14
+    MessageTypeRole = Qt.ItemDataRole.UserRole + 15
 
     def __init__(self, parent=None):
         super().__init__(parent)

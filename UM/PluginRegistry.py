@@ -11,8 +11,8 @@ import types
 import zipfile
 from typing import Any, Callable, Dict, List, Optional, Tuple, TYPE_CHECKING
 
-from PyQt5.QtCore import QCoreApplication
-from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
+from PyQt6.QtCore import QCoreApplication
+from PyQt6.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
 from UM.CentralFileStorage import CentralFileStorage
 from UM.Logger import Logger
@@ -49,9 +49,10 @@ class PluginRegistry(QObject):
     def __init__(self, application: "Application", parent: QObject = None) -> None:
         if PluginRegistry.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        PluginRegistry.__instance = self
 
         super().__init__(parent)
+        PluginRegistry.__instance = self
+
         self.preloaded_plugins = []  # type: List[str]  # List of plug-in names that must be loaded before the rest, if the plug-ins are available. They are loaded in this order too.
 
         self._application = application  # type: Application

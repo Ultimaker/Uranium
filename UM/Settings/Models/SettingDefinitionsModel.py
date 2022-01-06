@@ -5,7 +5,7 @@ import collections
 import os.path
 from typing import List, Any, Dict, Set, Optional
 
-from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
+from PyQt6.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
 
 from UM.Decorators import deprecated
 from UM.FlameProfiler import pyqtSlot
@@ -32,10 +32,10 @@ class SettingDefinitionsModel(QAbstractListModel):
     are applied.
     """
 
-    KeyRole = Qt.UserRole + 1
-    DepthRole = Qt.UserRole + 2
-    VisibleRole = Qt.UserRole + 3
-    ExpandedRole = Qt.UserRole + 4
+    KeyRole = Qt.ItemDataRole.UserRole + 1
+    DepthRole = Qt.ItemDataRole.UserRole + 2
+    VisibleRole = Qt.ItemDataRole.UserRole + 3
+    ExpandedRole = Qt.ItemDataRole.UserRole + 4
 
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent)

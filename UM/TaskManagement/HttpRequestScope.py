@@ -1,7 +1,7 @@
 import platform
 from typing import Dict
 
-from PyQt5.QtNetwork import QNetworkRequest
+from PyQt6.QtNetwork import QNetworkRequest
 
 from UM.Application import Application
 

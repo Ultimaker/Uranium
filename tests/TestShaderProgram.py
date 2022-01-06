@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, call
 
 import pytest
-from PyQt5.QtGui import QOpenGLShader
+from PyQt6.QtOpenGL import QOpenGLShader
 
 from UM.View.GL.ShaderProgram import ShaderProgram, InvalidShaderProgramError
 import os

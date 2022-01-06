@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING, cast
 
 from .FileReader import FileReader
 from .FileWriter import FileWriter
-from PyQt5.QtCore import QFileInfo, QObject, pyqtProperty, pyqtSlot, QUrl
+from PyQt6.QtCore import QFileInfo, QObject, pyqtProperty, pyqtSlot, QUrl
 
 from UM.Logger import Logger
 from UM.Platform import Platform
@@ -37,9 +37,9 @@ class FileHandler(QObject):
     def __init__(self, application: "QtApplication", writer_type: str = "unknown_file_writer", reader_type: str = "unknown_file_reader", parent: QObject = None) -> None:
         if cast(FileHandler, self.__class__).__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        cast(FileHandler, self.__class__).__instance = self
 
         super().__init__(parent)
+        cast(FileHandler, self.__class__).__instance = self
 
         self._application = application
         self._readers = {} # type: Dict[str, FileReader]

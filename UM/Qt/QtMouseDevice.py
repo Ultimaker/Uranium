@@ -1,7 +1,7 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, QEvent
+from PyQt6.QtCore import Qt, QEvent
 
 from UM.InputDevice import InputDevice
 from UM.Event import MouseEvent, WheelEvent
@@ -17,25 +17,25 @@ class QtMouseDevice(InputDevice):
         self._window = window
 
     def handleEvent(self, event):
-        if event.type() == QEvent.MouseButtonPress:
+        if event.type() == QEvent.Type.MouseButtonPress:
             ex, ey = self._normalizeCoordinates(event.windowPos().x(), event.windowPos().y())
             e = MouseEvent(MouseEvent.MousePressEvent, ex, ey, self._x, self._y, self._qtButtonsToButtonList(event.buttons()))
             self._x = ex
             self._y = ey
             self.event.emit(e)
-        elif event.type() == QEvent.MouseMove:
+        elif event.type() == QEvent.Type.MouseMove:
             ex, ey = self._normalizeCoordinates(event.windowPos().x(), event.windowPos().y())
             e = MouseEvent(MouseEvent.MouseMoveEvent, ex, ey, self._x, self._y, self._qtButtonsToButtonList(event.buttons()))
             self._x = ex
             self._y = ey
             self.event.emit(e)
-        elif event.type() == QEvent.MouseButtonRelease:
+        elif event.type() == QEvent.Type.MouseButtonRelease:
             ex, ey = self._normalizeCoordinates(event.windowPos().x(), event.windowPos().y())
             e = MouseEvent(MouseEvent.MouseReleaseEvent, ex, ey, self._x, self._y, self._qtButtonsToButtonList(event.button()))
             self._x = ex
             self._y = ey
             self.event.emit(e)
-        elif event.type() == QEvent.Wheel:
+        elif event.type() == QEvent.Type.Wheel:
             delta = event.angleDelta()
             e = WheelEvent(delta.x(), delta.y())
             self.event.emit(e)
@@ -43,11 +43,11 @@ class QtMouseDevice(InputDevice):
     def _qtButtonsToButtonList(self, qt_buttons):
         buttons = []
 
-        if qt_buttons & Qt.LeftButton:
+        if qt_buttons & Qt.MouseButton.LeftButton:
             buttons.append(MouseEvent.LeftButton)
-        if qt_buttons & Qt.RightButton:
+        if qt_buttons & Qt.MouseButton.RightButton:
             buttons.append(MouseEvent.RightButton)
-        if qt_buttons & Qt.MiddleButton:
+        if qt_buttons & Qt.MouseButton.MiddleButton:
             buttons.append(MouseEvent.MiddleButton)
 
         return buttons

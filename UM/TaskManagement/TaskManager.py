@@ -3,7 +3,7 @@
 
 from typing import Any, Callable, Dict, Optional, cast
 
-from PyQt5.QtCore import QObject, QCoreApplication, QEvent, QTimer
+from PyQt6.QtCore import QObject, QCoreApplication, QEvent, QTimer
 
 
 __all__ = ["TaskManager"]
@@ -59,7 +59,6 @@ class _CallFunctionEvent(QEvent):
 # tolerance to all the specified delay.
 #
 class TaskManager(QObject):
-
     TIME_TOLERANCE = 0.10  # Add 10% to the delayed events to compensate for timer inaccuracy.
 
     # Acquires a new unique Qt event type integer.
@@ -75,7 +74,7 @@ class TaskManager(QObject):
         super().__init__(parent = parent)
         self._event_type = TaskManager.acquireNewEventType()
         # For storing all delayed events
-        self._delayed_events = dict()  # type: Dict[_CallFunctionEvent, Dict[str, Any]]
+        self._delayed_events: Dict[_CallFunctionEvent, Dict[str, Any]] = dict()
 
     @property
     def event_type(self) -> int:

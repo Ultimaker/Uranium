@@ -1,8 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, QEvent, QObject
-from PyQt5.QtGui import QKeyEvent
+from PyQt6.QtCore import Qt, QEvent, QObject
+from PyQt6.QtGui import QKeyEvent
 
 from UM.InputDevice import InputDevice
 from UM.Event import KeyEvent
@@ -15,41 +15,41 @@ class QtKeyDevice(InputDevice):
         super().__init__()
 
     def handleEvent(self, event):
-        if event.type() == QEvent.KeyPress:
+        if event.type() == QEvent.Type.KeyPress:
             e = KeyEvent(KeyEvent.KeyPressEvent, self._qtKeyToUMKey(event.key()))
             self.event.emit(e)
-        elif event.type() == QEvent.KeyRelease:
+        elif event.type() == QEvent.Type.KeyRelease:
             e = KeyEvent(KeyEvent.KeyReleaseEvent, self._qtKeyToUMKey(event.key()))
             self.event.emit(e)
 
     def _qtKeyToUMKey(self, key):
-        if key == Qt.Key_Shift:
+        if key == Qt.Key.Key_Shift:
             return KeyEvent.ShiftKey
-        elif key == Qt.Key_Control:
+        elif key == Qt.Key.Key_Control:
             return KeyEvent.ControlKey
-        elif key == Qt.Key_Alt:
+        elif key == Qt.Key.Key_Alt:
             return KeyEvent.AltKey
-        elif key == Qt.Key_Space:
+        elif key == Qt.Key.Key_Space:
             return KeyEvent.SpaceKey
-        elif key == Qt.Key_Meta:
+        elif key == Qt.Key.Key_Meta:
             return KeyEvent.MetaKey
-        elif key == Qt.Key_Enter or key == Qt.Key_Return:
+        elif key == Qt.Key.Key_Enter or key == Qt.Key.Key_Return:
             return KeyEvent.EnterKey
-        elif key == Qt.Key_Up:
+        elif key == Qt.Key.Key_Up:
             return KeyEvent.UpKey
-        elif key == Qt.Key_Down:
+        elif key == Qt.Key.Key_Down:
             return KeyEvent.DownKey
-        elif key == Qt.Key_Left:
+        elif key == Qt.Key.Key_Left:
             return KeyEvent.LeftKey
-        elif key == Qt.Key_Right:
+        elif key == Qt.Key.Key_Right:
             return KeyEvent.RightKey
-        elif key == Qt.Key_Minus:
+        elif key == Qt.Key.Key_Minus:
             return KeyEvent.MinusKey
-        elif key == Qt.Key_Underscore:
+        elif key == Qt.Key.Key_Underscore:
             return KeyEvent.UnderscoreKey
-        elif key == Qt.Key_Plus:
+        elif key == Qt.Key.Key_Plus:
             return KeyEvent.PlusKey
-        elif key == Qt.Key_Equal:
+        elif key == Qt.Key.Key_Equal:
             return KeyEvent.EqualKey
 
         return key

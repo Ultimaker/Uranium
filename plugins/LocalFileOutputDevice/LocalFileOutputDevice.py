@@ -4,9 +4,9 @@
 import os
 import sys
 
-from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt6.QtCore import QUrl
+from PyQt6.QtGui import QDesktopServices
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
 from UM.Application import Application
 from UM.FileHandler.WriteFileJob import WriteFileJob
@@ -122,7 +122,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         if selected_filter is not None:
             dialog.selectNameFilter(selected_filter)
 
-        if not dialog.exec_():
+        if not dialog.exec():
             raise OutputDeviceError.UserCanceledError()
 
         save_path = dialog.directory().absolutePath()

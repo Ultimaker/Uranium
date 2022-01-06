@@ -5,7 +5,8 @@ import ast
 import configparser
 from typing import Any, cast, Dict, List, Union, Optional
 
-from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
+from PyQt6.QtGui import QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
+from PyQt6.QtOpenGL import QOpenGLShader, QOpenGLShaderProgram
 from UM.Logger import Logger
 
 from UM.Math.Vector import Vector
