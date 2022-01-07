@@ -32,3 +32,4 @@ ImageButton 1.5 ImageButton.qml
 CheckBox 1.5 CheckBox.qml
 TextFieldWithUnit 1.5 TextFieldWithUnit.qml
 Label 1.5 Label.qml
+MenuItem 1.5 MenuItem.qml
