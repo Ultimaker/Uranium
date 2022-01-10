@@ -33,3 +33,4 @@ CheckBox 1.5 CheckBox.qml
 TextFieldWithUnit 1.5 TextFieldWithUnit.qml
 Label 1.5 Label.qml
 MenuItem 1.5 MenuItem.qml
+Menu 1.5 Menu.qml
