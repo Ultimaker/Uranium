@@ -7,9 +7,9 @@ msgstr ""
 "Project-Id-Version: Uranium 4.13\n"
 "Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
 "POT-Creation-Date: 2021-12-10 14:40+0100\n"
-"PO-Revision-Date: 2021-10-31 01:24+0800\n"
-"Last-Translator: Valen Chang <carf17771@gmail.com>\n"
-"Language-Team: Valen Chang <carf17771@gmail.com>/Zhang Heh Ji <dinowchang@gmail.com>\n"
+"PO-Revision-Date: 2022-01-02 20:28+0800\n"
+"Last-Translator: Valen Chang  <carf17771@gmail.com>\n"
+"Language-Team: Valen Chang <carf17771@gmail.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgstr "插件 {} 因無法驗証而沒有被載入。"
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:485
 msgctxt "@action:button"
 msgid "Dismiss"
-msgstr ""
+msgstr "解散"
 
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:495
 msgctxt "@error"
@@ -63,7 +63,7 @@ msgstr "移除插件"
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:516
 msgctxt "@info:status"
 msgid "Plugin no longer scheduled to be installed."
-msgstr ""
+msgstr "不再計畫安裝插件."
 
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:522
 #, python-brace-format
@@ -548,7 +548,7 @@ msgstr "瞭解更多"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number}-BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number}-BETA測試版已推出!"
 
 #: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
 #, python-brace-format
