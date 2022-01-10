@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.13\n"
 "Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
 "POT-Creation-Date: 2021-12-10 14:40+0100\n"
-"PO-Revision-Date: 2021-04-16 15:09+0200\n"
+"PO-Revision-Date: 2022-01-10 12:21+0100\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, French <info@bothof.nl>\n"
 "Language: fr_FR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 3.0\n"
 
 #: /home/clamboo/Desktop/Uranium/UM/VersionUpgradeManager.py:173
 #, python-brace-format
@@ -51,7 +51,7 @@ msgstr "Ignorer"
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:495
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr "Le plugin {} n'a pas pu être chargé. La réinstallation du plugin peut résoudre le problème."
+msgstr "Le plugin {} n'a pas pu être chargé. La réinstallation du plugin peut résoudre le problème"
 
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:499
 msgctxt "@action:button"
