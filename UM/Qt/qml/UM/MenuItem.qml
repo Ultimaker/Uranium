@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
+import UM 1.5 as UM
 
 MenuItem
 {
@@ -36,7 +37,7 @@ MenuItem
         Item
         {
             // Spacer
-            width: root.indicatorVisible ? root.indicator.width + 4 : 0
+            width: root.indicatorVisible ? root.indicator.width + UM.Theme.getSize("narrow_margin").width : 0
         }
 
         Label
