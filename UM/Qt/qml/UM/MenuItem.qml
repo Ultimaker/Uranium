@@ -14,7 +14,7 @@ MenuItem
         id: _shortcut
         enabled: root.enabled
         onActivated: root.triggered()
-        sequence: root.action!= null ? root.action.shortcut: null
+        sequence: root.action != null ? root.action.shortcut: null
     }
 
     function replaceText(txt)
@@ -22,7 +22,7 @@ MenuItem
         var index = txt.indexOf("&")
         if(index >= 0)
         {
-            txt = txt.replace(txt.substr(index, 2), ("<u>" + txt.substr(index + 1, 1) +"</u>"))
+            txt = txt.replace(txt.substr(index, 2), "<u>" + txt.substr(index + 1, 1) + "</u>")
         }
         return txt
     }
