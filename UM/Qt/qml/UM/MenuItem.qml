@@ -48,7 +48,7 @@ MenuItem
         Item
         {
             // Spacer
-            width: root.indicatorVisible ? root.indicator.width + UM.Theme.getSize("narrow_margin").width : 0
+            width: root.indicatorVisible ? root.indicator.width + 2 * UM.Theme.getSize("narrow_margin").width : 0
         }
 
         Label
