@@ -27,8 +27,7 @@ CheckBox
 
         color: UM.Theme.getColor("checkbox")
         Behavior on color { ColorAnimation { duration: 50; } }
-
-        radius: control.exclusiveGroup ? Math.round(UM.Theme.getSize("checkbox").width / 2) : UM.Theme.getSize("checkbox_radius").width
+        radius: UM.Theme.getSize("checkbox_radius").width
         anchors.verticalCenter: parent.verticalCenter
         border.width: UM.Theme.getSize("default_lining").width
         border.color: UM.Theme.getColor("checkbox_border")
@@ -41,7 +40,7 @@ CheckBox
 
             sourceSize.height: width
             color: UM.Theme.getColor("checkbox_mark")
-            source: control.exclusiveGroup ? UM.Theme.getIcon("Dot") : UM.Theme.getIcon("Check")
+            source: UM.Theme.getIcon("Check")
             opacity: control.checked
             Behavior on opacity { NumberAnimation { duration: 100; } }
         }
