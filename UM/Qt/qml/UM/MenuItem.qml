@@ -13,7 +13,10 @@ MenuItem
     Shortcut
     {
         id: _shortcut
-        enabled: root.enabled
+        // If this menuItem has an action, the shortcut stuff is handled by the action (so this shortcut is disabled)
+        // If only a shortcut is set, the menu item does need to handle it.
+        // If both handle it at the same time, the action is only triggered half the time.
+        enabled: root.action == null && root.enabled
         onActivated: root.triggered()
         sequence: root.action != null ? root.action.shortcut: null
     }
