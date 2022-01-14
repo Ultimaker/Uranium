@@ -475,7 +475,7 @@ class WeakImmutableList(Generic[T], Iterable):
         """
 
         new_instance = WeakImmutableList()  # type: WeakImmutableList[T]
-        new_instance.__list = self.__cleanList()
+        new_instance.__list = self.__list.copy()
         new_instance.__list.append(ReferenceType(item))
         return new_instance
 
