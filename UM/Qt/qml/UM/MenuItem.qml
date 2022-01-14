@@ -59,7 +59,7 @@ MenuItem
             text: replaceText(root.text)
             Layout.fillWidth: true
             elide: Label.ElideRight
-            verticalAlignment: Qt.AlignVCenter
+            wrapMode: Text.NoWrap
         }
 
         Item
@@ -70,7 +70,7 @@ MenuItem
         UM.Label
         {
             text: _shortcut.nativeText
-            verticalAlignment: Qt.AlignVCenter
+
         }
     }
 }
