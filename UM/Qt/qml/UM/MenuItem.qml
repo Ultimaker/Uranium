@@ -9,7 +9,7 @@ MenuItem
 
     property alias shortcut: _shortcut.sequence
     property bool indicatorVisible: root.icon.source.length > 0 || root.checkable
-
+    height: visible ? implicitHeight : 0
     Shortcut
     {
         id: _shortcut
@@ -54,7 +54,7 @@ MenuItem
             width: root.indicatorVisible ? root.indicator.width + 2 * UM.Theme.getSize("narrow_margin").width : 0
         }
 
-        Label
+        UM.Label
         {
             text: replaceText(root.text)
             Layout.fillWidth: true
@@ -67,7 +67,7 @@ MenuItem
             Layout.fillWidth: true
         }
 
-        Label
+        UM.Label
         {
             text: _shortcut.nativeText
             verticalAlignment: Qt.AlignVCenter
