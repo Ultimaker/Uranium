@@ -8,6 +8,8 @@ import UM 1.4 as UM
 //Scroll bar that uses our own theme.
 ScrollBar
 {
+    policy: parent.contentHeight > parent.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+
     background: Rectangle
     {
         implicitWidth: UM.Theme.getSize("scrollbar").width
