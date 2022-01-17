@@ -18,6 +18,7 @@ MenuItem
         // If both handle it at the same time, the action is only triggered half the time.
         enabled: root.action == null && root.enabled
         onActivated: root.triggered()
+        context: Qt.ApplicationShortcut
         sequence: root.action != null ? root.action.shortcut: null
     }
 
