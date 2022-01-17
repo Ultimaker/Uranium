@@ -22,6 +22,7 @@ SidebarCategoryHeader 1.0 Settings/SidebarCategoryHeader.qml
 TooltipArea 1.1 TooltipArea.qml
 
 ProgressBar 1.3 ProgressBar.qml
+ScrollBar 1.5 ScrollBar.qml
 SimpleButton 1.1 SimpleButton.qml
 TabRow 1.3 TabRow.qml
 TabRowButton 1.3 TabRowButton.qml
