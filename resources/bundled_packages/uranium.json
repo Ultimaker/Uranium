@@ -5,7 +5,8 @@
             "package_type": "plugin",
             "display_name": "Console Logger",
             "description": "Outputs log information to the console.",
-            "package_version": "1.0.1", "sdk_version": "7.8.0",
+            "package_version": "1.0.1",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -22,7 +23,7 @@
             "display_name": "Wavefront OBJ Reader",
             "description": "Makes it possible to read Wavefront OBJ files.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -39,7 +40,7 @@
             "display_name": "Wavefront OBJ Writer",
             "description": "Makes it possible to write Wavefront OBJ files.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -56,7 +57,7 @@
             "display_name": "STL Reader",
             "description": "Provides support for reading STL files.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -73,7 +74,7 @@
             "display_name": "STL Writer",
             "description": "Provides support for writing STL files.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -90,7 +91,7 @@
             "display_name": "File Logger",
             "description": "Outputs log information to a file in your settings folder.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -107,7 +108,7 @@
             "display_name": "Local Container Provider",
             "description": "Provides built-in setting containers that come with the installation of the application.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -124,7 +125,7 @@
             "display_name": "Local File Output Device",
             "description": "Enables saving to local files.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -141,7 +142,7 @@
             "display_name": "Camera Tool",
             "description": "Provides the tool to manipulate the camera.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -158,7 +159,7 @@
             "display_name": "Mirror Tool",
             "description": "Provides the Mirror tool.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -175,7 +176,7 @@
             "display_name": "Rotate Tool",
             "description": "Provides the Rotate tool.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -192,7 +193,7 @@
             "display_name": "Scale Tool",
             "description": "Provides the Scale tool.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -209,7 +210,7 @@
             "display_name": "Selection Tool",
             "description": "Provides the Selection tool.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -226,7 +227,7 @@
             "display_name": "Move Tool",
             "description": "Provides the Move tool.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -243,7 +244,7 @@
             "display_name": "Update Checker",
             "description": "Checks for updates of the software.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",
@@ -260,7 +261,7 @@
             "display_name": "Simple View",
             "description": "Provides a simple solid mesh view.",
             "package_version": "1.0.1",
-            "sdk_version": "7.8.0",
+            "sdk_version": "7.9.0",
             "website": "https://ultimaker.com",
             "author": {
                 "author_id": "UltimakerPackages",

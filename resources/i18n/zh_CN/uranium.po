@@ -47,7 +47,7 @@ msgstr "未加载插件{}，因为无法对其进行验证。"
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:485
 msgctxt "@action:button"
 msgid "Dismiss"
-msgstr ""
+msgstr "解除"
 
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:495
 msgctxt "@error"
@@ -62,7 +62,7 @@ msgstr "移除插件"
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:516
 msgctxt "@info:status"
 msgid "Plugin no longer scheduled to be installed."
-msgstr ""
+msgstr "取消计划安装插件。"
 
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:522
 #, python-brace-format
@@ -547,7 +547,7 @@ msgstr "详细了解"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number}-BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number}-BETA 版可用！"
 
 #: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
 #, python-brace-format
