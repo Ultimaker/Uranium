@@ -348,32 +348,35 @@ class ShaderProgram:
         del self._attribute_bindings[key]
 
     def _matrixToQMatrix4x4(self, m):
-        return QMatrix4x4(m.getData().flatten())
+        return QMatrix4x4(m.getFlatData())
 
     def _setUniformValueDirect(self, uniform: int, value: Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]) -> None:
-        if type(value) is Vector:
+        if type(value) is Matrix:
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, self._matrixToQMatrix4x4(
+                cast(Matrix, value)))
+        elif type(value) is Vector:
             value = cast(Vector, value)
             cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector3D(value.x, value.y, value.z))
-        elif type(value) is Matrix:
-            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, self._matrixToQMatrix4x4(cast(Matrix, value)))
         elif type(value) is Color:
             value = cast(Color, value)
             cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform,
                 QColor(round(value.r * 255), round(value.g * 255), round(value.b * 255), round(value.a * 255)))
-        elif type(value) is list and type(cast(List[List[float]], value)[0]) is list and len(cast(List[List[float]], value)[0]) == 4:
+        elif type(value) is list and type(cast(List[List[float]], value)[0]) is list and len(
+            cast(List[List[float]], value)[0]) == 4:
             value = cast(List[List[float]], value)
-            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, self._matrixToQMatrix4x4(Matrix(value)))
-        elif type(value) is list and len(cast(List[float], value)) == 2:
-            value = cast(List[float], value)
-            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector2D(value[0], value[1]))
-        elif type(value) is list and len(cast(List[float], value)) == 3:
-            value = cast(List[float], value)
-            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform,
+                                                                             self._matrixToQMatrix4x4(Matrix(value)))
         elif type(value) is list and len(cast(List[float], value)) == 4:
             value = cast(List[float], value)
             cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector4D(value[0], value[1], value[2], value[3]))
         elif type(value) is list and type(cast(List[List[float]], value)[0]) is list and len(cast(List[List[float]], value)[0]) == 2:
             value = cast(List[List[float]], value)
             cast(QOpenGLShaderProgram, self._shader_program).setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
+        elif type(value) is list and len(cast(List[float], value)) == 2:
+            value = cast(List[float], value)
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector2D(value[0], value[1]))
+        elif type(value) is list and len(cast(List[float], value)) == 3:
+            value = cast(List[float], value)
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
         else:
             cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, cast(Union[float, int], value))
