@@ -46,7 +46,7 @@ msgstr "プラグイン{}は検証できなかったため、読み込まれて�
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:485
 msgctxt "@action:button"
 msgid "Dismiss"
-msgstr ""
+msgstr "無視"
 
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:495
 msgctxt "@error"
@@ -61,7 +61,7 @@ msgstr "プラグインを削除"
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:516
 msgctxt "@info:status"
 msgid "Plugin no longer scheduled to be installed."
-msgstr ""
+msgstr "プラグインのインストールはスケジュールされなくなります。"
 
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:522
 #, python-brace-format
@@ -549,7 +549,7 @@ msgstr "詳しく見る"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number}-BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number}ベータ版が利用可能です。"
 
 #: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
 #, python-brace-format

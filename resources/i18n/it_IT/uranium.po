@@ -46,7 +46,7 @@ msgstr "Il plugin {} non è stato caricato in quanto non è stato possibile veri
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:485
 msgctxt "@action:button"
 msgid "Dismiss"
-msgstr ""
+msgstr "Rimuovi"
 
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:495
 msgctxt "@error"
@@ -61,7 +61,7 @@ msgstr "Rimuovi plugin"
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:516
 msgctxt "@info:status"
 msgid "Plugin no longer scheduled to be installed."
-msgstr ""
+msgstr "L'installazione del plugin non è più programmata."
 
 #: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:522
 #, python-brace-format
@@ -549,7 +549,7 @@ msgstr "Ulteriori informazioni"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number}-BETA is available!"
-msgstr ""
+msgstr "{application_name} {version_number}-BETA è disponibile!"
 
 #: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
 #, python-brace-format

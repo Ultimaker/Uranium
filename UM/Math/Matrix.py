@@ -129,6 +129,9 @@ class Matrix:
 
         return self._data.astype(numpy.float32)
 
+    def getFlatData(self):
+        return self._data.flatten()
+
     def setToIdentity(self) -> None:
         """Create a 4x4 identity matrix. This overwrites any existing data."""
 
