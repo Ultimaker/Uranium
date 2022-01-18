@@ -68,7 +68,7 @@ PreferencesPage
             }
             visible: scrollviewCaption != ""
             text: scrollviewCaption
-            width: objectListContainer.width
+            width: objectList.width
             elide: Text.ElideRight
         }
 
@@ -151,7 +151,7 @@ PreferencesPage
 
             anchors
             {
-                left: objectListContainer.right;
+                left: objectList.right
                 leftMargin: UM.Theme.getSize("default_margin").width;
                 top: parent.top;
                 bottom: parent.bottom;
