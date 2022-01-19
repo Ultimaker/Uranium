@@ -9,6 +9,7 @@ import UM 1.4 as UM
 ScrollBar
 {
     policy: parent.contentHeight > parent.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+    width: parent.contentHeight > parent.height ? undefined : 0
 
     background: Rectangle
     {
