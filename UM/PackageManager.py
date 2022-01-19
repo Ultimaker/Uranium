@@ -273,24 +273,28 @@ class PackageManager(QObject):
 
     # (for initialize) Removes all packages that have been scheduled to be removed.
     def _removeAllScheduledPackages(self) -> None:
+        Logger.info("Attempting to remove the following scheduled packages: {packages}".format(
+                                            packages = "- " + "\n- ".join(self._to_remove_package_set)))
         remove_failures = set()
         for package_id in self._to_remove_package_set:
             try:
                 self._purgePackage(package_id)
                 del self._installed_package_dict[package_id]
             except:
+                Logger.logException("w", f"Failed to remove package: [{package_id}]")
                 remove_failures.add(package_id)
 
         if remove_failures:
+
             message = Message(catalog.i18nc("@error:uninstall",
-                                            "There were some errors uninstalling the following packages:\n{packages}".format(
+                                            "There were some errors uninstalling the following packages: {packages}".format(
                                             packages = "- " + "\n- ".join(remove_failures))),
                               title = catalog.i18nc("@info:title", "Uninstalling errors"),
                               message_type = Message.MessageType.ERROR)
             message.show()
-
+        if self._to_remove_package_set:  # Only remove packages if something changed.
+            self._saveManagementData()
         self._to_remove_package_set = remove_failures
-        self._saveManagementData()
 
     # (for initialize) Installs all packages that have been scheduled to be installed.
     def _installAllScheduledPackages(self) -> None:
