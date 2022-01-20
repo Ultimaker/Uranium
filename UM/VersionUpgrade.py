@@ -19,8 +19,8 @@ class VersionUpgrade(PluginObject):
         """Initialises a version upgrade plugin instance."""
 
         super().__init__()
-        self._version_regex = re.compile("\nversion ?= ?(\d+)")
-        self._setting_version_regex = re.compile("\nsetting_version ?= ?(\d+)")
+        self._version_regex = re.compile(r"\nversion ?= ?(\d+)")
+        self._setting_version_regex = re.compile(r"\nsetting_version ?= ?(\d+)")
 
     def getCfgVersion(self, serialised: str) -> int:
         """
