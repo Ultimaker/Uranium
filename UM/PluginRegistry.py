@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import imp
@@ -511,7 +511,7 @@ class PluginRegistry(QObject):
         """Shows a message to the user remove the corrupted plugin"""
         message_text = i18n_catalog.i18nc("@error",
                                           "The plugin {} could not be loaded. Re-installing the plugin might solve "
-                                          "the issue", plugin_id)
+                                          "the issue.", plugin_id)
         unable_to_load_plugin_message = Message(text = message_text, message_type = Message.MessageType.ERROR, lifetime = 0)
         unable_to_load_plugin_message.addAction("remove",
                                name = i18n_catalog.i18nc("@action:button", "Remove plugin"),
