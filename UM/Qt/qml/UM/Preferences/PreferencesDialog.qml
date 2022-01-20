@@ -1,9 +1,9 @@
-// Copyright (c) 2021 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
-import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.1
+import QtQuick.Controls 1.1 as OldControls
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 
@@ -33,11 +33,12 @@ Dialog
         id: test
         anchors.fill: parent;
 
-        TableView
+        OldControls.TableView
         {
             id: pagesList;
 
-            anchors {
+            anchors
+            {
                 left: parent.left;
                 top: parent.top;
                 bottom: parent.bottom;
@@ -50,7 +51,7 @@ Dialog
 
             model: ListModel { id: configPagesModel; }
 
-            TableViewColumn { role: "name" }
+            OldControls.TableViewColumn { role: "name" }
 
             onClicked:
             {
@@ -62,9 +63,11 @@ Dialog
             }
         }
 
-        StackView {
+        StackView
+        {
             id: stackView
-            anchors {
+            anchors
+            {
                 left: pagesList.right
                 leftMargin: (UM.Theme.getSize("default_margin").width / 2) | 0
                 top: parent.top
@@ -74,31 +77,24 @@ Dialog
 
             initialItem: Item { property bool resetEnabled: false; }
 
-            delegate: StackViewDelegate
+            replaceEnter: Transition
             {
-                function transitionFinished(properties)
+                NumberAnimation
                 {
-                    properties.exitItem.opacity = 1
+                    properties: "opacity"
+                    from: 0
+                    to: 1
+                    duration: 100
                 }
-
-                pushTransition: StackViewTransition
+            }
+            replaceExit: Transition
+            {
+                NumberAnimation
                 {
-                    PropertyAnimation
-                    {
-                        target: enterItem
-                        property: "opacity"
-                        from: 0
-                        to: 1
-                        duration: 100
-                    }
-                    PropertyAnimation
-                    {
-                        target: exitItem
-                        property: "opacity"
-                        from: 1
-                        to: 0
-                        duration: 100
-                    }
+                    properties: "opacity"
+                    from: 1
+                    to: 0
+                    duration: 100
                 }
             }
         }
@@ -106,7 +102,7 @@ Dialog
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
-    leftButtons: Button
+    leftButtons: OldControls.Button
     {
         id: defaultsButton
         text: catalog.i18nc("@action:button", "Defaults");
@@ -114,7 +110,7 @@ Dialog
         onClicked: stackView.currentItem.reset();
     }
 
-    rightButtons: Button
+    rightButtons: OldControls.Button
     {
         id: closeButton
         text: catalog.i18nc("@action:button", "Close");
