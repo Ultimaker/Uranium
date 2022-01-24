@@ -23,13 +23,9 @@ CheckBox
         {
             if (!control.enabled)
             {
-                return UM.Theme.getColor("setting_control_disabled")
+                return UM.Theme.getColor("checkbox_disabled")
             }
-            if (control.hovered || control.activeFocus)
-            {
-                return UM.Theme.getColor("setting_control_highlight")
-            }
-            return UM.Theme.getColor("setting_control")
+            return UM.Theme.getColor("checkbox")
         }
 
         radius: UM.Theme.getSize("checkbox_radius").width
@@ -38,13 +34,13 @@ CheckBox
         {
             if (!enabled)
             {
-                return UM.Theme.getColor("setting_control_disabled_border")
+                return UM.Theme.getColor("checkbox_border")
             }
             if (control.hovered || control.activeFocus)
             {
-                return UM.Theme.getColor("setting_control_border_highlight")
+                return UM.Theme.getColor("checkbox_border_hover")
             }
-            return UM.Theme.getColor("setting_control_border")
+            return UM.Theme.getColor("checkbox_border")
         }
 
         UM.RecolorImage
