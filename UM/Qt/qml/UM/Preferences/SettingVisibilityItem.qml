@@ -73,7 +73,7 @@ Item {
         width: childrenRect.width;
         height: childrenRect.height;
         id: checkboxTooltipArea
-        CheckBox
+        UM.CheckBox
         {
             id: check
 
