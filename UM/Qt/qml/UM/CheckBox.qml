@@ -77,9 +77,9 @@ CheckBox
             {
                 switch (control.checkState)
                 {
-                    case Qt.Checked: return UM.Theme.getIcon("EmptyCheck", "low")
+                    case Qt.Checked: return UM.Theme.getIcon("CheckMark", "low")
                     case Qt.PartiallyChecked: return UM.Theme.getIcon("CheckBoxFill", "low")
-                    default: return UM.Theme.getIcon("EmptyCheck", "low")
+                    default: return UM.Theme.getIcon("CheckMark", "low")
                 }
             }
             opacity:
