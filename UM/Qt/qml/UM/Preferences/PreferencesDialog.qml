@@ -2,7 +2,8 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
-import QtQuick.Controls 1.1
+import QtQuick.Controls 1.1 as OldControls
+import QtQuick.Controls 2.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
@@ -33,7 +34,7 @@ Dialog
         id: test
         anchors.fill: parent;
 
-        TableView
+        OldControls.TableView
         {
             id: pagesList;
 
@@ -50,7 +51,7 @@ Dialog
 
             model: ListModel { id: configPagesModel; }
 
-            TableViewColumn { role: "name" }
+            OldControls.TableViewColumn { role: "name" }
 
             onClicked:
             {
@@ -62,7 +63,7 @@ Dialog
             }
         }
 
-        StackView {
+        OldControls.StackView {
             id: stackView
             anchors {
                 left: pagesList.right
@@ -74,14 +75,14 @@ Dialog
 
             initialItem: Item { property bool resetEnabled: false; }
 
-            delegate: StackViewDelegate
+            delegate: OldControls.StackViewDelegate
             {
                 function transitionFinished(properties)
                 {
                     properties.exitItem.opacity = 1
                 }
 
-                pushTransition: StackViewTransition
+                pushTransition: OldControls.StackViewTransition
                 {
                     PropertyAnimation
                     {
@@ -118,7 +119,7 @@ Dialog
     {
         id: closeButton
         text: catalog.i18nc("@action:button", "Close");
-        iconName: "dialog-close";
+        icon.name: "dialog-close";
         onClicked: base.accept();
     }
 
