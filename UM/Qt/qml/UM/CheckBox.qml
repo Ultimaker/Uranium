@@ -16,7 +16,7 @@ CheckBox
 
     indicator: Rectangle
     {
-        height: UM.Theme.getSize("checkbox").height
+        implicitHeight: UM.Theme.getSize("checkbox").height
         implicitWidth: UM.Theme.getSize("checkbox").width
 
         anchors.verticalCenter: parent.verticalCenter
