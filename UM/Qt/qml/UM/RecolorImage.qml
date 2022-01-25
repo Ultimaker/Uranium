@@ -12,6 +12,7 @@ Item
     property alias source: img.source
     property alias color: overlay.color
     property alias sourceSize: img.sourceSize
+    property alias mirror: img.mirror
 
     Image
     {
@@ -20,6 +21,7 @@ Item
         visible: false
         sourceSize.width: parent.width
         sourceSize.height: parent.height
+        layer.enabled: true
     }
 
     ColorOverlay {

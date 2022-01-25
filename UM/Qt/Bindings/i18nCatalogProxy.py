@@ -23,6 +23,7 @@ class i18nCatalogProxy(QObject): # [CodeStyle: Ultimaker code style requires cla
         self._i18nc_function = self._wrapFunction(engine, self, self._call_i18nc)
         self._i18np_function = self._wrapFunction(engine, self, self._call_i18np)
         self._i18ncp_function = self._wrapFunction(engine, self, self._call_i18ncp)
+        self._i18nIsRightToLeft_function = self._wrapFunction(engine, self, self._call_i18nIsRightToLeft)
 
     def setName(self, name):
         if name != self._name:
@@ -51,6 +52,10 @@ class i18nCatalogProxy(QObject): # [CodeStyle: Ultimaker code style requires cla
     def i18ncp(self):
         return self._i18ncp_function
 
+    @pyqtProperty(QJSValue, notify = nameChanged)
+    def i18nIsRightToLeft(self):
+        return self._i18nIsRightToLeft_function
+
     @pyqtSlot(str, result = str)
     def _call_i18n(self, message):
         return self._catalog.i18n(message)
@@ -67,6 +72,10 @@ class i18nCatalogProxy(QObject): # [CodeStyle: Ultimaker code style requires cla
     def _call_i18ncp(self, context, single, multiple, counter):
         return self._catalog.i18ncp(context, single, multiple, counter)
 
+    @pyqtSlot(result= bool)
+    def _call_i18nIsRightToLeft(self):
+        return self._catalog.i18nIsRightToLeft()
+    
     def _wrapFunction(self, engine, this_object, function):
         """Wrap a function in a bit of a javascript to re-trigger a method call on signal emit.
 
