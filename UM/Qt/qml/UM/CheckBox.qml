@@ -10,6 +10,8 @@ CheckBox
 {
     id: control
 
+    property alias tooltip: tooltip.text
+
     hoverEnabled: true
 
     indicator: Rectangle
@@ -73,9 +75,9 @@ CheckBox
             {
                 switch (control.checkState)
                 {
-                    case Qt.Checked: return UM.Theme.getIcon("CheckMark", "low")
+                    case Qt.Checked: return UM.Theme.getIcon("Check", "low")
                     case Qt.PartiallyChecked: return UM.Theme.getIcon("CheckBoxFill", "low")
-                    default: return UM.Theme.getIcon("CheckMark", "low")
+                    default: return UM.Theme.getIcon("Check", "low")
                 }
             }
             opacity:
@@ -101,5 +103,13 @@ CheckBox
         color: UM.Theme.getColor("text")
         renderType: Text.NativeRendering
         verticalAlignment: Text.AlignVCenter
+    }
+
+        ToolTip
+    {
+        id: tooltip
+        text: ""
+        delay: 500
+        visible: text != "" && control.hovered
     }
 }
