@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.10
@@ -17,7 +17,7 @@ CheckBox
     indicator: Rectangle
     {
         height: UM.Theme.getSize("checkbox").height
-        width: UM.Theme.getSize("checkbox").width
+        implicitWidth: UM.Theme.getSize("checkbox").width
 
         anchors.verticalCenter: parent.verticalCenter
 
