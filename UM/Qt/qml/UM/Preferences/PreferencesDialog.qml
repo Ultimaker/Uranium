@@ -9,7 +9,7 @@ import QtQuick.Window 2.1
 
 import ".."
 
-import UM 1.1 as UM
+import UM 1.5 as UM
 
 Dialog
 {
@@ -21,44 +21,65 @@ Dialog
     width: minimumWidth
     height: minimumHeight
 
-    property int currentPage: 0;
-    onCurrentPageChanged:
-    {
-        pagesList.selection.clear();
-        pagesList.selection.select(currentPage);
-    }
+    property alias currentPage: pagesList.currentIndex;
 
     Item
     {
         id: test
         anchors.fill: parent;
 
-        OldControls.TableView
+        Rectangle
         {
-            id: pagesList;
-
+            id: pagesListContainer
             anchors
             {
-                left: parent.left;
-                top: parent.top;
-                bottom: parent.bottom;
+                left: parent.left
+                top: parent.top
+                bottom: parent.bottom
             }
+            width: 7 * UM.Theme.getSize("line").width
 
-            width: 7 * UM.Theme.getSize("line").width;
+            color: UM.Theme.getColor("main_background")
+            border.width: UM.Theme.getSize("default_lining").width
+            border.color: UM.Theme.getColor("default_lining")
 
-            alternatingRowColors: false;
-            headerVisible: false;
-
-            model: ListModel { id: configPagesModel; }
-
-            OldControls.TableViewColumn { role: "name" }
-
-            onClicked:
+            ListView
             {
-                if(base.currentPage != row)
+                id: pagesList
+                anchors.fill: parent
+                anchors.margins: parent.border.width
+
+                ScrollBar.vertical: UM.ScrollBar {}
+                clip: true
+                model: ListModel { id: configPagesModel; }
+                currentIndex: 0
+
+                delegate: Rectangle
                 {
-                    stackView.replace(configPagesModel.get(row).item);
-                    base.currentPage = row;
+                    width: parent ? parent.width : 0
+                    height: pageLabel.height
+
+                    color: ListView.isCurrentItem ? UM.Theme.getColor("primary") : "transparent"
+
+                    UM.Label
+                    {
+                        id: pageLabel
+                        width: parent.width
+                        text: model.name
+                    }
+                    MouseArea
+                    {
+                        anchors.fill: parent
+                        onClicked:
+                        {
+                            pagesList.currentIndex = index;
+                        }
+                    }
+                }
+
+                onCurrentIndexChanged:
+                {
+                    stackView.replace(configPagesModel.get(currentIndex).item);
                 }
             }
         }
@@ -68,7 +89,7 @@ Dialog
             id: stackView
             anchors
             {
-                left: pagesList.right
+                left: pagesListContainer.right
                 leftMargin: (UM.Theme.getSize("default_margin").width / 2) | 0
                 top: parent.top
                 bottom: parent.bottom
