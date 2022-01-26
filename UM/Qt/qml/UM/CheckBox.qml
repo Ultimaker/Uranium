@@ -47,49 +47,51 @@ CheckBox
 
         UM.RecolorImage
         {
+            id: checkIcon
+
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
 
-            height:
-            {
-                switch(control.checkState)
-                {
-                    case Qt.Checked: return UM.Theme.getSize("checkbox_mark").height
-                    case Qt.PartiallyChecked: return UM.Theme.getSize("checkbox_square").height
-                    default: UM.Theme.getSize("checkbox_mark").height
-                }
-            }
             width: height
             sourceSize.height: height
 
-            color:
-            {
-                switch(control.checkState)
-                {
-                    case Qt.Checked: return !enabled ? UM.Theme.getColor("setting_control_disabled_text") : UM.Theme.getColor("checkbox_mark")
-                    case Qt.PartiallyChecked: return !enabled ? UM.Theme.getColor("setting_control_disabled_text") : UM.Theme.getColor("checkbox_square")
-                    default: return !enabled ? UM.Theme.getColor("setting_control_disabled_text") : UM.Theme.getColor("checkbox_mark")
-                }
-            }
-            source:
-            {
-                switch (control.checkState)
-                {
-                    case Qt.Checked: return UM.Theme.getIcon("Check", "low")
-                    case Qt.PartiallyChecked: return UM.Theme.getIcon("CheckBoxFill", "low")
-                    default: return UM.Theme.getIcon("Check", "low")
-                }
-            }
-            opacity:
-            {
-                switch (control.checkState)
-                {
-                    case Qt.Checked: return 1;
-                    case Qt.PartiallyChecked: return 1;
-                    default: 0;
-                }
-            }
             Behavior on opacity { NumberAnimation { duration: 100; } }
+
+            states: [
+                State
+                {
+                    name: "checked"
+                    when: (control.checkState == Qt.Checked)
+                    PropertyChanges {
+                        target: checkIcon
+                        height: UM.Theme.getSize("checkbox_mark").height
+                        color: !enabled ? UM.Theme.getColor("setting_control_disabled_text") : UM.Theme.getColor("checkbox_mark")
+                        source: UM.Theme.getIcon("Check", "low")
+                        opacity: 1
+                    }
+                },
+                State
+                {
+                    name: "partiallyChecked"
+                    when: (control.checkState == Qt.PartiallyChecked)
+                    PropertyChanges {
+                        target: checkIcon
+                        height: UM.Theme.getSize("checkbox_square").height
+                        color: !enabled ? UM.Theme.getColor("setting_control_disabled_text") : UM.Theme.getColor("checkbox_square")
+                        source: UM.Theme.getIcon("CheckBoxFill", "low")
+                        opacity: 1
+                    }
+                },
+                State
+                {
+                    name: "unchecked"
+                    when: (control.checkState == Qt.Unchecked)
+                    PropertyChanges {
+                        target: checkIcon
+                        opacity: 0
+                    }
+                }
+            ]
         }
     }
 
