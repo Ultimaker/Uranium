@@ -1,11 +1,11 @@
-// Copyright (c) 2018 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
-import QtQuick.Controls 1.1
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
 
-import UM 1.1 as UM
+import UM 1.5 as UM
 
 PreferencesPage
 {
@@ -68,87 +68,77 @@ PreferencesPage
             }
             visible: scrollviewCaption != ""
             text: scrollviewCaption
-            width: objectListContainer.width
+            width: objectList.width
             elide: Text.ElideRight
         }
 
-        ScrollView
+        ListView
         {
-            id: objectListContainer
+            id: objectList;
             anchors
             {
-                top: captionLabel.visible ? captionLabel.bottom : parent.top;
-                topMargin: captionLabel.visible ? UM.Theme.getSize("default_margin").height : 0;
-                bottom: parent.bottom;
-                left: parent.left;
+                top: captionLabel.visible ? captionLabel.bottom : parent.top
+                topMargin: captionLabel.visible ? UM.Theme.getSize("default_margin").height : 0
+                bottom: parent.bottom
+                left: parent.left
+            }
+            width: base.detailsVisible ? Math.round(parent.width * 0.4) | 0 : parent.width
+
+            clip: true
+            ScrollBar.vertical: UM.ScrollBar {}
+
+            currentIndex: activeIndex
+            onCurrentIndexChanged:
+            {
+                // Explicitly trigger onCurrentItemChanged
+                base.currentItem = null;
+                base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null;
             }
 
-            width: base.detailsVisible ? Math.round(parent.width * 0.4) | 0 : parent.width;
-            frameVisible: true;
-
-            Rectangle
+            section.property: base.sectionRole
+            section.criteria: ViewSection.FullString
+            section.delegate: Rectangle
             {
-                parent: viewport
-                anchors.fill: parent
+                width: objectList.width - objectList.ScrollBar.vertical.width
+                height: childrenRect.height;
                 color: palette.light
+
+                Label
+                {
+                    anchors.left: parent.left;
+                    anchors.leftMargin: UM.Theme.getSize("default_lining").width;
+                    text: section
+                    font.bold: true
+                    color: palette.text;
+                }
             }
 
-            ListView
+            delegate: Rectangle
             {
-                id: objectList;
-                currentIndex: activeIndex
-                onCurrentIndexChanged:
+                width: objectList.width - objectList.ScrollBar.vertical.width
+                height: Math.round(childrenRect.height)
+                color: ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.base : palette.alternateBase
+
+                Label
                 {
-                    // Explicitly trigger onCurrentItemChanged
-                    base.currentItem = null;
-                    base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null;
+                    anchors.left: parent.left;
+                    anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+                    anchors.right: parent.right;
+                    text: model.name
+                    elide: Text.ElideRight
+                    font.italic: model.id == activeId
+                    color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
                 }
 
-                section.property: base.sectionRole
-                section.criteria: ViewSection.FullString
-                section.delegate: Rectangle
+                MouseArea
                 {
-                    width: objectListContainer.viewport.width;
-                    height: childrenRect.height;
-                    color: palette.light
-
-                    Label
+                    anchors.fill: parent;
+                    onClicked:
                     {
-                        anchors.left: parent.left;
-                        anchors.leftMargin: UM.Theme.getSize("default_lining").width;
-                        text: section
-                        font.bold: true
-                        color: palette.text;
-                    }
-                }
-
-                delegate: Rectangle
-                {
-                    width: objectListContainer.viewport.width
-                    height: Math.round(childrenRect.height)
-                    color: ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.base : palette.alternateBase
-
-                    Label
-                    {
-                        anchors.left: parent.left;
-                        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
-                        anchors.right: parent.right;
-                        text: model.name
-                        elide: Text.ElideRight
-                        font.italic: model.id == activeId
-                        color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
-                    }
-
-                    MouseArea
-                    {
-                        anchors.fill: parent;
-                        onClicked:
+                        if(!parent.ListView.isCurrentItem)
                         {
-                            if(!parent.ListView.isCurrentItem)
-                            {
-                                parent.ListView.view.currentIndex = index;
-                                base.itemActivated();
-                            }
+                            parent.ListView.view.currentIndex = index;
+                            base.itemActivated();
                         }
                     }
                 }
@@ -161,7 +151,7 @@ PreferencesPage
 
             anchors
             {
-                left: objectListContainer.right;
+                left: objectList.right
                 leftMargin: UM.Theme.getSize("default_margin").width;
                 top: parent.top;
                 bottom: parent.bottom;
