@@ -53,6 +53,7 @@ UM.Dialog
             width: parent.width
             text: base.object
             maximumLength: 40
+            selectByMouse: true
             onTextChanged: base.textChanged(text)
         }
 

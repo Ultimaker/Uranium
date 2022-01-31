@@ -6,6 +6,9 @@ TextField
 {
     id: control
     property alias unit: unitLabel.text
+
+    selectByMouse: true
+
     background: Rectangle
     {
 
