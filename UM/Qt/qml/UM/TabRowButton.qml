@@ -1,5 +1,5 @@
-// Copyright (c) 2018 Ultimaker B.V.
-// Uranium is released under the terms of the LGPLv3 or higher.
+//Copyright (c) 2022 Ultimaker B.V.
+//Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.10
 import QtQuick.Controls 2.3
@@ -12,7 +12,6 @@ TabButton
 {
     anchors.top: parent.top
     height: parent.height
-    checked: model.index == 0 //First button is checked by default.
 
     background: Rectangle
     {

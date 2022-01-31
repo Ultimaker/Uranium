@@ -10,17 +10,9 @@ include(UraniumTranslationTools)
 
 include(GNUInstallDirs)
 
-if(NOT DEFINED Python_VERSION)
-    set(Python_VERSION
-            3.10
-            CACHE STRING "Python Version" FORCE)
-    message(STATUS "Setting Python version to ${Python_VERSION}. Set Python_VERSION if you want to compile against an other version.")
-endif()
-if(APPLE)
-    set(Python_FIND_FRAMEWORK NEVER)
-endif()
-find_package(Python ${Python_VERSION} EXACT REQUIRED COMPONENTS Interpreter)
-message(STATUS "Linking and building ${project_name} against Python ${Python_VERSION}")
+find_package(PythonInterp 3 REQUIRED)
+
+message("Using python version ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
 
 # # Checks using pylint
 # Note that we use exit 0 here to not mark the build as a failure on check failure
