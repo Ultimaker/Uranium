@@ -2,7 +2,6 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
-import QtQuick.Controls 1.1 as OldControls
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
@@ -123,20 +122,19 @@ Dialog
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
-    leftButtons: OldControls.Button
+    leftButtons: Button
     {
         id: defaultsButton
-        text: catalog.i18nc("@action:button", "Defaults");
-        enabled: stackView.currentItem.resetEnabled;
-        onClicked: stackView.currentItem.reset();
+        text: catalog.i18nc("@action:button", "Defaults")
+        enabled: stackView.currentItem.resetEnabled
+        onClicked: stackView.currentItem.reset()
     }
 
-    rightButtons: OldControls.Button
+    rightButtons: Button
     {
         id: closeButton
-        text: catalog.i18nc("@action:button", "Close");
-        iconName: "dialog-close";
-        onClicked: base.accept();
+        text: catalog.i18nc("@action:button", "Close")
+        onClicked: base.accept()
     }
 
     function setPage(index)

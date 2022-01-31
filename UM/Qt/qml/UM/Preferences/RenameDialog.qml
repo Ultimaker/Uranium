@@ -1,8 +1,8 @@
-// Copyright (c) 2019 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
-import QtQuick.Controls 1.1
+import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.1
 
@@ -53,6 +53,7 @@ UM.Dialog
             width: parent.width
             text: base.object
             maximumLength: 40
+            selectByMouse: true
             onTextChanged: base.textChanged(text)
         }
 
@@ -60,6 +61,14 @@ UM.Dialog
         {
             visible: !base.validName
             text: base.validationError
+        }
+    }
+
+    Item
+    {
+        ButtonGroup {
+            buttons: [cancelButton, okButton]
+            checkedButton: okButton
         }
     }
 
@@ -72,10 +81,10 @@ UM.Dialog
         },
         Button
         {
+            id: okButton
             text: catalog.i18nc("@action:button", "OK")
             onClicked: base.accept()
             enabled: base.validName
-            isDefault: true
         }
     ]
 }
