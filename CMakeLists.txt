@@ -12,7 +12,7 @@ include(GNUInstallDirs)
 
 find_package(PythonInterp 3 REQUIRED)
 
-message("Using python version ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
+message("Using python version ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
 
 # # Checks using pylint
 # Note that we use exit 0 here to not mark the build as a failure on check failure
