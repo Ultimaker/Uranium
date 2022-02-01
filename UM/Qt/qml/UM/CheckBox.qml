@@ -57,14 +57,16 @@ CheckBox
 
             Behavior on opacity { NumberAnimation { duration: 100; } }
 
-            states: [
+            states:
+            [
                 State
                 {
                     name: "checked"
                     when: (control.checkState == Qt.Checked)
-                    PropertyChanges {
+                    PropertyChanges
+                    {
                         target: checkIcon
-                        height: UM.Theme.getSize("checkbox_mark").height
+                        height: parent.height - Math.round((parent.height - UM.Theme.getSize("checkbox_mark").height) / 2) * 2 //Round border to pixels to properly center it.
                         color: !enabled ? UM.Theme.getColor("setting_control_disabled_text") : UM.Theme.getColor("checkbox_mark")
                         source: UM.Theme.getIcon("Check", "low")
                         opacity: 1
@@ -74,9 +76,10 @@ CheckBox
                 {
                     name: "partiallyChecked"
                     when: (control.checkState == Qt.PartiallyChecked)
-                    PropertyChanges {
+                    PropertyChanges
+                    {
                         target: checkIcon
-                        height: UM.Theme.getSize("checkbox_square").height
+                        height: parent.height - Math.round((parent.height - UM.Theme.getSize("checkbox_square").height) / 2) * 2 //Round border to pixels to properly center it.
                         color: !enabled ? UM.Theme.getColor("setting_control_disabled_text") : UM.Theme.getColor("checkbox_square")
                         source: UM.Theme.getIcon("CheckBoxFill", "low")
                         opacity: 1
@@ -86,7 +89,8 @@ CheckBox
                 {
                     name: "unchecked"
                     when: (control.checkState == Qt.Unchecked)
-                    PropertyChanges {
+                    PropertyChanges
+                    {
                         target: checkIcon
                         opacity: 0
                     }
