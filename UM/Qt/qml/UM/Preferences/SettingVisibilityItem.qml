@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-import UM 1.2 as UM
+import UM 1.5 as UM
 
 Item {
     // Use the depth of the model to move the item, but also leave space for the visibility / enabled exclamation mark.
@@ -73,7 +73,7 @@ Item {
         width: childrenRect.width;
         height: childrenRect.height;
         id: checkboxTooltipArea
-        CheckBox
+        UM.CheckBox
         {
             id: check
 
