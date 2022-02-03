@@ -143,7 +143,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
 
     def _performWrite(self, file_name, selected_type, file_handler, nodes):
         """Writes the specified nodes to a file. This is split from requestWrite to allow interception
-        in other plugins. See Ultimaker/Cura#10918.
+        in other plugins. See Ultimaker/Cura#10917.
 
         :param file_name: File path to write to.
         :param selected_type: Selected file type to write.
