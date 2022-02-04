@@ -22,7 +22,6 @@ Dialog
     property alias text: content.text //The text to show in the body of the dialogue.
 
     width: UM.Theme.getSize("small_popup_dialog").width
-    height: childrenRect.height
     anchors.centerIn: parent
 
     modal: true
