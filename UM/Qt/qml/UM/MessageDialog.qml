@@ -22,7 +22,10 @@ Dialog
     property alias text: content.text //The text to show in the body of the dialogue.
 
     width: UM.Theme.getSize("small_popup_dialog").width
-    anchors.centerIn: parent
+
+    // Overlay.overlay holds the "window overlay item"; the window container
+    // https://doc.qt.io/qt-5/qml-qtquick-controls2-overlay.html#overlay-attached-prop
+    anchors.centerIn: Overlay.overlay
 
     modal: true
 
