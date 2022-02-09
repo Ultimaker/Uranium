@@ -106,9 +106,9 @@ Window
             }
             height: childrenRect.height;
 
-            Row { id: leftButtonRow; anchors.left: parent.left; spacing: base.buttonSpacing }
+            Row { id: leftButtonRow; spacing: base.buttonSpacing }
 
-            Row { id: rightButtonRow; anchors.right: parent.right; spacing: base.buttonSpacing }
+            Row { id: rightButtonRow; spacing: base.buttonSpacing }
         }
     }
 
