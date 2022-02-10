@@ -11,62 +11,53 @@ UM.Dialog
 {
     id: base
 
-    height: UM.Theme.getSize("small_popup_dialog").height
-    width: UM.Theme.getSize("small_popup_dialog").width / 1.5
+    minimumHeight: UM.Theme.getSize("small_popup_dialog").height
+    minimumWidth: UM.Theme.getSize("small_popup_dialog").width / 1.5
+    height: minimumHeight
+    width: minimumWidth
 
-
-    property string color: "#FFFFFF"
+    property alias color: colorInput.text
 
     margin: UM.Theme.getSize("default_margin").width
     buttonSpacing: UM.Theme.getSize("default_margin").width
 
-    Item
+    UM.Label
     {
-        anchors.fill: parent
+        id: colorLabel
+        font: UM.Theme.getFont("large")
+        text: "Color Code (HEX)"
+    }
 
-        UM.Label
-        {
-            id: colorLabel
-            font: UM.Theme.getFont("large")
-            text: "Color Code (HEX)"
+    TextField
+    {
+        id: colorInput
+        text: "#FFFFFF"
+        anchors.top: colorLabel.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
+        validator: RegExpValidator { regExp: /^#([a-fA-F0-9]{6})$/ }
+    }
+
+    Rectangle
+    {
+        id: swatch
+        color: base.color
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors {
+            left: colorInput.right
+            top: colorInput.top
+            bottom: colorInput.bottom
         }
-
-        TextField
-        {
-            id: colorInput
-            anchors.top: colorLabel.bottom
-            anchors.topMargin: UM.Theme.getSize("default_margin").height
-            text: base.color
-            validator: RegExpValidator { regExp: /^#([a-fA-F0-9]{6})$/ }
-            onTextChanged: base.color = text
-        }
-
-        Rectangle
-        {
-            id: swatch
-            color: base.color
-            anchors.leftMargin: UM.Theme.getSize("default_margin").width
-            anchors {
-                left: colorInput.right
-                top: colorInput.top
-                bottom: colorInput.bottom
-
-            }
-            width: height
-
-        }
+        width: height
     }
 
     rightButtons:
     [
         Cura.PrimaryButton {
-            id: btnOk
             text: catalog.i18nc("@action:button", "OK")
             onClicked: base.accept()
         },
         Cura.SecondaryButton {
-            id: btnCancel
-            text: catalog.i18nc("@action:button","Cancel")
+            text: catalog.i18nc("@action:button", "Cancel")
             onClicked: base.close()
         }
     ]
