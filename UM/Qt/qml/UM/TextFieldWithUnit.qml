@@ -23,6 +23,7 @@ TextField
             id: unitLabel
             anchors.right: parent.right
             anchors.rightMargin: UM.Theme.getSize("setting_unit_margin").width
+            anchors.verticalCenter: parent.verticalCenter
             color: UM.Theme.getColor("setting_unit")
         }
     }
