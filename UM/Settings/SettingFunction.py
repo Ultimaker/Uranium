@@ -242,7 +242,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         if node.s not in self._knownNames and node.s not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.s.
             self.keys.add(node.s)  # type: ignore
 
-    def visit_Subscript(self, node: ast.Index):
+    def visit_Subscript(self, node: ast.Subscript):
         if type(node.value) == ast.Str:
             raise IllegalMethodError("Indexing on strings is not allowed")
         if type(node.value) == getattr(ast, "Constant", None) and isinstance(getattr(node.value, "value", None), str):
