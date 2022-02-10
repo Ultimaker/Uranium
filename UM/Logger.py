@@ -104,6 +104,7 @@ class Logger:
             try:
                 # Store the log lines for when a logger is added.
                 cls.__unlogged_lines.append((log_type, message))
+                print(message)
             except Exception as e:
                 print("!FAILED TO FAIL TO LOG! ", log_type, e)
 
