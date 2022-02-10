@@ -129,8 +129,9 @@ class Polygon:
 
         # In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points
         # such that the axis goes through the origin.
-        point_matrix = numpy.matrix(self._points)
-        point_matrix -= point_on_axis  # Moves all points such that the axis origin is at [0,0].
+        point_matrix = numpy.matrix(self._points)  # type: ignore
+        # Moves all points such that the axis origin is at [0,0].
+        point_matrix -= point_on_axis  # type: ignore
 
         # To mirror a coordinate, we have to add the projection of the point to the axis twice
         # (where v is the vector to reflect):
@@ -141,12 +142,12 @@ class Polygon:
         #  reflection(v) = R v
         #  R = 2 l l^T - I
         # This simplifies the entire reflection to one big matrix transformation.
-        axis_matrix = numpy.matrix(axis_direction)
+        axis_matrix = numpy.matrix(axis_direction) # type: ignore
         reflection = 2 * numpy.transpose(axis_matrix) * axis_matrix - numpy.identity(2)
         point_matrix = point_matrix * reflection  # Apply the actual transformation.
 
         # Shift the points back to the original coordinate space before the axis was normalised to the origin.
-        point_matrix += point_on_axis
+        point_matrix += point_on_axis # type: ignore
         return Polygon(point_matrix.getA()[::-1])
 
     def scale(self, factor: float, origin: Optional[List[float]] = None) -> "Polygon":
