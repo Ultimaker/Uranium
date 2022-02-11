@@ -31,6 +31,8 @@ Window
     property alias rightButtons: rightButtonRow.children;
     property alias backgroundColor: background.color
 
+    property real buttonSpacing: 0
+
     signal accepted();
     signal rejected();
 
@@ -104,9 +106,9 @@ Window
             }
             height: childrenRect.height;
 
-            Row { id: leftButtonRow; anchors.left: parent.left; }
+            Row { id: leftButtonRow; spacing: base.buttonSpacing }
 
-            Row { id: rightButtonRow; anchors.right: parent.right; }
+            Row { id: rightButtonRow; spacing: base.buttonSpacing }
         }
     }
 
