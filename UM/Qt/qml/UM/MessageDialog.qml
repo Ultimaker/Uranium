@@ -31,6 +31,10 @@ Dialog
 
     contentItem: UM.Label
     {
+        onLinkActivated: function (link)
+        {
+            Qt.openUrlExternally(link)
+        }
         id: content
     }
 }
