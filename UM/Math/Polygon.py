@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Optional, Tuple, List, Union
@@ -204,8 +204,12 @@ class Polygon:
     #   \param other The other polygon to combine convex hulls with.
     #   \return The convex hull of the union of the two polygons' convex hulls.
     def unionConvexHulls(self, other: "Polygon") -> "Polygon":
+        if len(self.getPoints()) == 0: # Concatenate doesn't deal well with empty arrays (since they are not the same dimension), so catch that case first.
+            return other
+        if len(other.getPoints()) == 0:
+            return self
         # Combine all points and take the convex hull of that.
-        all_points = numpy.append(self.getPoints(), other.getPoints())
+        all_points = numpy.concatenate((self.getPoints(), other.getPoints()))
         combined_polys = Polygon(all_points)
         return combined_polys.getConvexHull()
 
