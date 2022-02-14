@@ -550,7 +550,7 @@ class Matrix:
             if out is not data:
                 out[:] = numpy.array(data, copy = False)
             data = out
-        length = numpy.atleast_1d(numpy.sum(data*data, axis))
+        length = numpy.atleast_1d(numpy.sum(data * data, axis))  # type: ignore
         numpy.sqrt(length, length)
         if axis is not None:
             length = numpy.expand_dims(length, axis)

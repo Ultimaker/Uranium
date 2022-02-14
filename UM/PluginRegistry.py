@@ -940,8 +940,10 @@ class PluginRegistry(QObject):
 
         if not plugin:
             return None
-
-        path = os.path.dirname(self._plugins[plugin_id].__file__)
+        file_name = self._plugins[plugin_id].__file__
+        if file_name is None:
+            file_name = ""
+        path = os.path.dirname(file_name)
         if os.path.isdir(path):
             return path
 
