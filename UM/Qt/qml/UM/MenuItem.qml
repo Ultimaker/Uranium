@@ -9,7 +9,7 @@ MenuItem
 
     property alias shortcut: _shortcut.sequence
     property bool indicatorVisible: root.icon.source.length > 0 || root.checkable
-    height: visible ? implicitHeight : 0
+    height: visible ? UM.Theme.getSize("context_menu").height : 0
     Shortcut
     {
         id: _shortcut
