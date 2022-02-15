@@ -132,7 +132,6 @@ class Backend(PluginObject):
             su.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             su.wShowWindow = subprocess.SW_HIDE
             kwargs["startupinfo"] = su
-            kwargs["creationflags"] = 0x00000020  # NORMAL_PRIORITY_CLASS
         try:
             # STDIN needs to be None because we provide no input, but communicate via a local socket instead. The NUL device sometimes doesn't exist on some computers.
             # STDOUT and STDERR need to be pipes because we'd like to log the output on those channels into the application log.
