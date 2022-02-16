@@ -16,7 +16,7 @@ class TranslateToolHandle(ToolHandle):
         self._line_width = 0.3
         self._line_length = 40
         self._handle_position = 40
-        self._handle_height = 7
+        self._handle_height = 5
         self._handle_width = 3
 
         self._active_line_width = 0.8
