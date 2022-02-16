@@ -13,7 +13,7 @@ class TranslateToolHandle(ToolHandle):
         super().__init__(parent)
         self._name = "TranslateToolHandle"
         self._enabled_axis = [self.XAxis, self.YAxis, self.ZAxis]
-        self._line_width = 0.5
+        self._line_width = 0.3
         self._line_length = 40
         self._handle_position = 40
         self._handle_height = 7

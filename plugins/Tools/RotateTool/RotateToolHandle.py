@@ -26,7 +26,7 @@ class RotateToolHandle(ToolHandle):
         self._name = "RotateToolHandle"
         self._inner_radius = 40
         self._outer_radius = 40.5
-        self._line_width = 0.5
+        self._line_width = 0.3
         self._active_inner_radius = 37
         self._active_outer_radius = 44
         self._active_line_width = 3
