@@ -106,13 +106,13 @@ Window
             }
             height: childrenRect.height
 
-            Row {
+            RowLayout {
                 id: leftButtonRow
                 Layout.alignment: Qt.AlignLeft
                 spacing: base.buttonSpacing
             }
 
-            Row {
+            RowLayout {
                 id: rightButtonRow
                 Layout.alignment: Qt.AlignRight
                 spacing: base.buttonSpacing
