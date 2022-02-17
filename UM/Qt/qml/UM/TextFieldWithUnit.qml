@@ -8,7 +8,7 @@ TextField
     property alias unit: unitLabel.text
 
     selectByMouse: true
-
+    selectionColor: UM.Theme.getColor("text_selection")
     background: Rectangle
     {
 
