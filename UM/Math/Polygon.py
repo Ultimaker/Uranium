@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Optional, Tuple, List, Union
@@ -129,8 +129,9 @@ class Polygon:
 
         # In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points
         # such that the axis goes through the origin.
-        point_matrix = numpy.matrix(self._points)
-        point_matrix -= point_on_axis  # Moves all points such that the axis origin is at [0,0].
+        point_matrix = numpy.matrix(self._points)  # type: ignore
+        # Moves all points such that the axis origin is at [0,0].
+        point_matrix -= point_on_axis  # type: ignore
 
         # To mirror a coordinate, we have to add the projection of the point to the axis twice
         # (where v is the vector to reflect):
@@ -141,12 +142,12 @@ class Polygon:
         #  reflection(v) = R v
         #  R = 2 l l^T - I
         # This simplifies the entire reflection to one big matrix transformation.
-        axis_matrix = numpy.matrix(axis_direction)
+        axis_matrix = numpy.matrix(axis_direction) # type: ignore
         reflection = 2 * numpy.transpose(axis_matrix) * axis_matrix - numpy.identity(2)
         point_matrix = point_matrix * reflection  # Apply the actual transformation.
 
         # Shift the points back to the original coordinate space before the axis was normalised to the origin.
-        point_matrix += point_on_axis
+        point_matrix += point_on_axis # type: ignore
         return Polygon(point_matrix.getA()[::-1])
 
     def scale(self, factor: float, origin: Optional[List[float]] = None) -> "Polygon":
@@ -204,8 +205,12 @@ class Polygon:
     #   \param other The other polygon to combine convex hulls with.
     #   \return The convex hull of the union of the two polygons' convex hulls.
     def unionConvexHulls(self, other: "Polygon") -> "Polygon":
+        if len(self.getPoints()) == 0: # Concatenate doesn't deal well with empty arrays (since they are not the same dimension), so catch that case first.
+            return other
+        if len(other.getPoints()) == 0:
+            return self
         # Combine all points and take the convex hull of that.
-        all_points = numpy.append(self.getPoints(), other.getPoints())
+        all_points = numpy.concatenate((self.getPoints(), other.getPoints()))
         combined_polys = Polygon(all_points)
         return combined_polys.getConvexHull()
 

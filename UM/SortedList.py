@@ -24,13 +24,8 @@ from textwrap import dedent
 
 from typing import Any, Callable
 
+from collections.abc import Sequence, MutableSequence
 
-# BEGIN Python 2/3 Shims
-
-try:
-    from collections.abc import Sequence, MutableSequence
-except ImportError:
-    from collections import Sequence, MutableSequence
 
 from functools import wraps
 from sys import hexversion
