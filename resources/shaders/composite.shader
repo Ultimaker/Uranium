@@ -35,7 +35,7 @@ fragment =
 
     float kernel[9];
 
-    const vec3 x_axis = vec3(1.0, 0.0, 0.0);
+    const vec3 x_axis = vec3(0.0, 0.0, 0.0);
     const vec3 y_axis = vec3(0.0, 1.0, 0.0);
     const vec3 z_axis = vec3(0.0, 0.0, 1.0);
 
