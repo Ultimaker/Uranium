@@ -12,7 +12,7 @@ import UM 1.5 as UM
 
 Dialog
 {
-    id: base;
+    id: base
 
     title: catalog.i18nc("@title:window", "Preferences")
     minimumWidth: UM.Theme.getSize("modal_window_minimum").width
@@ -20,12 +20,12 @@ Dialog
     width: minimumWidth
     height: minimumHeight
 
-    property alias currentPage: pagesList.currentIndex;
+    property alias currentPage: pagesList.currentIndex
 
     Item
     {
         id: test
-        anchors.fill: parent;
+        anchors.fill: parent
 
         Rectangle
         {
@@ -50,7 +50,7 @@ Dialog
 
                 ScrollBar.vertical: UM.ScrollBar {}
                 clip: true
-                model: ListModel { id: configPagesModel; }
+                model: ListModel { id: configPagesModel }
                 currentIndex: 0
 
                 delegate: Rectangle
@@ -69,17 +69,11 @@ Dialog
                     MouseArea
                     {
                         anchors.fill: parent
-                        onClicked:
-                        {
-                            pagesList.currentIndex = index;
-                        }
+                        onClicked: pagesList.currentIndex = index
                     }
                 }
 
-                onCurrentIndexChanged:
-                {
-                    stackView.replace(configPagesModel.get(currentIndex).item);
-                }
+                onCurrentIndexChanged: stackView.replace(configPagesModel.get(currentIndex).item)
             }
         }
 
@@ -95,7 +89,7 @@ Dialog
                 right: parent.right
             }
 
-            initialItem: Item { property bool resetEnabled: false; }
+            initialItem: Item { property bool resetEnabled: false }
 
             replaceEnter: Transition
             {
@@ -133,7 +127,6 @@ Dialog
     function setPage(index)
     {
         stackView.replace(configPagesModel.get(index).item);
-
         base.currentPage = index
     }
 
