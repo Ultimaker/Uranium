@@ -49,6 +49,7 @@ PreferencesPage
             text: scrollviewCaption
             width: objectList.width
             elide: Text.ElideRight
+            textFormat: Text.StyledText
         }
 
         UM.SimpleButton
