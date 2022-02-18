@@ -9,7 +9,7 @@ import UM 1.5 as UM
 
 PreferencesPage
 {
-    id: base;
+    id: base
 
     property alias model: objectList.model
     property alias section: objectList.section
@@ -58,7 +58,7 @@ PreferencesPage
             bottom: parent.bottom
         }
 
-        Label
+        UM.Label
         {
             id: captionLabel
             anchors
@@ -116,10 +116,9 @@ PreferencesPage
             delegate: Rectangle
             {
                 width: objectList.width - objectList.ScrollBar.vertical.width
-                height: Math.round(childrenRect.height)
-                color: ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.base : palette.alternateBase
-
-                Label
+                height: childrenRect.height
+                color: ListView.isCurrentItem ? UM.Theme.getColor("text_selection") : UM.Theme.getColor("main_background")
+                UM.Label
                 {
                     anchors.left: parent.left
                     anchors.leftMargin: UM.Theme.getSize("default_margin").width
@@ -127,7 +126,6 @@ PreferencesPage
                     text: model.name
                     elide: Text.ElideRight
                     font.italic: model.id == activeId
-                    color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text
                 }
 
                 MouseArea
@@ -158,7 +156,7 @@ PreferencesPage
                 right: parent.right
             }
 
-            visible: base.detailsVisible;
+            visible: base.detailsVisible
         }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
