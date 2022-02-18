@@ -47,7 +47,7 @@ PreferencesPage
             }
             visible: scrollviewCaption != ""
             text: scrollviewCaption
-            width: objectList.width
+            width: objectListBackground.width
             elide: Text.ElideRight
             textFormat: Text.StyledText
         }
@@ -64,10 +64,12 @@ PreferencesPage
 
             onClicked: base.hamburgeButtonClicked(hamburgerButton)
         }
-
-        ListView
+        Rectangle
         {
-            id: objectList
+            id: objectListBackground
+            color: UM.Theme.getColor("main_background")
+            border.width: UM.Theme.getSize("default_lining").width
+            border.color: UM.Theme.getColor("thick_lining")
             anchors
             {
                 top: captionLabel.visible ? captionLabel.bottom : parent.top
@@ -76,60 +78,65 @@ PreferencesPage
                 left: parent.left
             }
             width: base.detailsVisible ? Math.round(parent.width * 0.4) | 0 : parent.width
-
-            clip: true
-            ScrollBar.vertical: UM.ScrollBar {}
-
-            currentIndex: activeIndex
-            onCurrentIndexChanged:
+            ListView
             {
-                // Explicitly trigger onCurrentItemChanged
-                base.currentItem = null;
-                base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null;
-            }
+                id: objectList
 
-            section.property: base.sectionRole
-            section.criteria: ViewSection.FullString
-            section.delegate: Rectangle
-            {
-                width: objectList.width - objectList.ScrollBar.vertical.width
-                height: childrenRect.height
-                color: palette.light
-
-                UM.Label
+                clip: true
+                ScrollBar.vertical: UM.ScrollBar {}
+                anchors.fill: parent
+                anchors.margins: UM.Theme.getSize("default_margin").height
+                currentIndex: activeIndex
+                onCurrentIndexChanged:
                 {
-                    anchors.left: parent.left
-                    anchors.leftMargin: UM.Theme.getSize("default_lining").width
-                    text: section
-                    font.bold: true
-                    color: palette.text
-                }
-            }
-
-            delegate: Rectangle
-            {
-                width: objectList.width - objectList.ScrollBar.vertical.width
-                height: childrenRect.height
-                color: ListView.isCurrentItem ? UM.Theme.getColor("text_selection") : UM.Theme.getColor("main_background")
-                UM.Label
-                {
-                    anchors.left: parent.left
-                    anchors.leftMargin: UM.Theme.getSize("default_margin").width
-                    anchors.right: parent.right
-                    text: model.name
-                    elide: Text.ElideRight
-                    font.italic: model.id == activeId
+                    // Explicitly trigger onCurrentItemChanged
+                    base.currentItem = null;
+                    base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null;
                 }
 
-                MouseArea
+                section.property: base.sectionRole
+                section.criteria: ViewSection.FullString
+                section.delegate: Rectangle
                 {
-                    anchors.fill: parent
-                    onClicked:
+                    width: objectList.width - objectList.ScrollBar.vertical.width
+                    height: childrenRect.height
+                    color: palette.light
+
+                    UM.Label
                     {
-                        if(!parent.ListView.isCurrentItem)
+                        anchors.left: parent.left
+                        anchors.leftMargin: UM.Theme.getSize("default_lining").width
+                        text: section
+                        font.bold: true
+                        color: palette.text
+                    }
+                }
+
+                delegate: Rectangle
+                {
+                    width: objectList.width - objectList.ScrollBar.vertical.width
+                    height: childrenRect.height
+                    color: ListView.isCurrentItem ? UM.Theme.getColor("text_selection") : UM.Theme.getColor("main_background")
+                    UM.Label
+                    {
+                        anchors.left: parent.left
+                        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+                        anchors.right: parent.right
+                        text: model.name
+                        elide: Text.ElideRight
+                        font.italic: model.id == activeId
+                    }
+
+                    MouseArea
+                    {
+                        anchors.fill: parent
+                        onClicked:
                         {
-                            parent.ListView.view.currentIndex = index;
-                            base.itemActivated();
+                            if(!parent.ListView.isCurrentItem)
+                            {
+                                parent.ListView.view.currentIndex = index;
+                                base.itemActivated();
+                            }
                         }
                     }
                 }
@@ -142,7 +149,7 @@ PreferencesPage
 
             anchors
             {
-                left: objectList.right
+                left: objectListBackground.right
                 leftMargin: UM.Theme.getSize("default_margin").width
                 top: parent.top
                 bottom: parent.bottom
