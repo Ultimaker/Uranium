@@ -27,8 +27,8 @@ Window
 
     property alias loader: contentLoader
 
-    property alias leftButtons: leftButtonRow.children;
-    property alias rightButtons: rightButtonRow.children;
+    property alias leftButtons: leftButtonRow.children
+    property alias rightButtons: rightButtonRow.children
     property alias backgroundColor: background.color
 
     property real buttonSpacing: 0
@@ -93,22 +93,30 @@ Window
             }
         }
 
-        Item {
-            id: buttonRow;
+        RowLayout {
+            id: buttonRow
 
             anchors {
-                bottom: parent.bottom;
-                bottomMargin: base.margin;
-                left: parent.left;
-                leftMargin: base.margin;
-                right: parent.right;
-                rightMargin: base.margin;
+                bottom: parent.bottom
+                bottomMargin: base.margin
+                left: parent.left
+                leftMargin: base.margin
+                right: parent.right
+                rightMargin: base.margin
             }
-            height: childrenRect.height;
+            height: childrenRect.height
 
-            Row { id: leftButtonRow; spacing: base.buttonSpacing }
+            RowLayout {
+                id: leftButtonRow
+                Layout.alignment: Qt.AlignLeft
+                spacing: base.buttonSpacing
+            }
 
-            Row { id: rightButtonRow; spacing: base.buttonSpacing }
+            RowLayout {
+                id: rightButtonRow
+                Layout.alignment: Qt.AlignRight
+                spacing: base.buttonSpacing
+            }
         }
     }
 
