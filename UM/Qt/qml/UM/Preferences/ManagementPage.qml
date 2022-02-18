@@ -11,31 +11,31 @@ PreferencesPage
 {
     id: base;
 
-    property alias model: objectList.model;
-    property alias section: objectList.section;
-    property alias delegate: objectList.delegate;
-    property string nameRole: "name";
+    property alias model: objectList.model
+    property alias section: objectList.section
+    property alias delegate: objectList.delegate
+    property string nameRole: "name"
     property string sectionRole: "group"
-    property bool detailsVisible: true;
+    property bool detailsVisible: true
 
-    property variant objectList: objectList;
+    property variant objectList: objectList
     property variant currentItem: null
-    property string scrollviewCaption: "";
+    property string scrollviewCaption: ""
 
-    default property alias details: detailsPane.children;
+    default property alias details: detailsPane.children
 
-    signal itemActivated();
+    signal itemActivated()
 
-    property alias buttons: buttonRow.children;
+    property alias buttons: buttonRow.children
 
-    resetEnabled: false;
+    resetEnabled: false
 
     property string activeId: ""
     property int activeIndex: -1
 
     Row
     {
-        id: buttonRow;
+        id: buttonRow
 
         anchors
         {
@@ -44,18 +44,18 @@ PreferencesPage
             top: parent.top
         }
 
-        height: childrenRect.height;
+        height: childrenRect.height
     }
 
     Item
     {
         anchors
         {
-            top: buttonRow.bottom;
-            topMargin: UM.Theme.getSize("default_margin").height;
-            left: parent.left;
-            right: parent.right;
-            bottom: parent.bottom;
+            top: buttonRow.bottom
+            topMargin: UM.Theme.getSize("default_margin").height
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
         }
 
         Label
@@ -63,8 +63,8 @@ PreferencesPage
             id: captionLabel
             anchors
             {
-                top: parent.top;
-                left: parent.left;
+                top: parent.top
+                left: parent.left
             }
             visible: scrollviewCaption != ""
             text: scrollviewCaption
@@ -74,7 +74,7 @@ PreferencesPage
 
         ListView
         {
-            id: objectList;
+            id: objectList
             anchors
             {
                 top: captionLabel.visible ? captionLabel.bottom : parent.top
@@ -100,16 +100,16 @@ PreferencesPage
             section.delegate: Rectangle
             {
                 width: objectList.width - objectList.ScrollBar.vertical.width
-                height: childrenRect.height;
+                height: childrenRect.height
                 color: palette.light
 
-                Label
+                UM.Label
                 {
-                    anchors.left: parent.left;
-                    anchors.leftMargin: UM.Theme.getSize("default_lining").width;
+                    anchors.left: parent.left
+                    anchors.leftMargin: UM.Theme.getSize("default_lining").width
                     text: section
                     font.bold: true
-                    color: palette.text;
+                    color: palette.text
                 }
             }
 
@@ -121,18 +121,18 @@ PreferencesPage
 
                 Label
                 {
-                    anchors.left: parent.left;
-                    anchors.leftMargin: UM.Theme.getSize("default_margin").width;
-                    anchors.right: parent.right;
+                    anchors.left: parent.left
+                    anchors.leftMargin: UM.Theme.getSize("default_margin").width
+                    anchors.right: parent.right
                     text: model.name
                     elide: Text.ElideRight
                     font.italic: model.id == activeId
-                    color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
+                    color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text
                 }
 
                 MouseArea
                 {
-                    anchors.fill: parent;
+                    anchors.fill: parent
                     onClicked:
                     {
                         if(!parent.ListView.isCurrentItem)
@@ -147,15 +147,15 @@ PreferencesPage
 
         Item
         {
-            id: detailsPane;
+            id: detailsPane
 
             anchors
             {
                 left: objectList.right
-                leftMargin: UM.Theme.getSize("default_margin").width;
-                top: parent.top;
-                bottom: parent.bottom;
-                right: parent.right;
+                leftMargin: UM.Theme.getSize("default_margin").width
+                top: parent.top
+                bottom: parent.bottom
+                right: parent.right
             }
 
             visible: base.detailsVisible;
