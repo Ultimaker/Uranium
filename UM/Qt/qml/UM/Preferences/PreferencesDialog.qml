@@ -105,14 +105,6 @@ Dialog
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
-    leftButtons: Button
-    {
-        id: defaultsButton
-        text: catalog.i18nc("@action:button", "Defaults")
-        enabled: stackView.currentItem.resetEnabled
-        onClicked: stackView.currentItem.reset()
-    }
-
     function setPage(index)
     {
         stackView.replace(configPagesModel.get(index).item);
