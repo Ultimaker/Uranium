@@ -25,6 +25,7 @@ PreferencesPage
     default property alias details: detailsPane.children
 
     signal itemActivated()
+    signal hamburgeButtonClicked(Item hamburger_button)
 
 
     resetEnabled: false
@@ -48,6 +49,19 @@ PreferencesPage
             text: scrollviewCaption
             width: objectList.width
             elide: Text.ElideRight
+        }
+
+        UM.SimpleButton
+        {
+            id: hamburgerButton
+            anchors.right: parent.right
+            width: UM.Theme.getSize("medium_button_icon").width
+            height: UM.Theme.getSize("medium_button_icon").height
+            iconSource: UM.Theme.getIcon("Hamburger")
+            hoverColor: UM.Theme.getColor("small_button_text_hover")
+            color: UM.Theme.getColor("small_button_text")
+
+            onClicked: base.hamburgeButtonClicked(hamburgerButton)
         }
 
         ListView
