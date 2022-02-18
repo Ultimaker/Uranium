@@ -59,6 +59,7 @@ MenuItem
         {
             text: replaceText(root.text)
             Layout.fillWidth: true
+            Layout.fillHeight:true
             elide: Label.ElideRight
             wrapMode: Text.NoWrap
         }
@@ -70,6 +71,7 @@ MenuItem
 
         UM.Label
         {
+            Layout.fillHeight: true
             text: _shortcut.nativeText
 
         }
