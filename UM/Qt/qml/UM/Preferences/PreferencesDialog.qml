@@ -130,13 +130,6 @@ Dialog
         onClicked: stackView.currentItem.reset()
     }
 
-    rightButtons: Button
-    {
-        id: closeButton
-        text: catalog.i18nc("@action:button", "Close")
-        onClicked: base.accept()
-    }
-
     function setPage(index)
     {
         stackView.replace(configPagesModel.get(index).item);
