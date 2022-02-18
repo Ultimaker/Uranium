@@ -11,13 +11,39 @@ import UM 1.5 as UM
 Item {
     // Use the depth of the model to move the item, but also leave space for the visibility / enabled exclamation mark.
 
-    x: definition ? (definition.depth + 1)* UM.Theme.getSize("default_margin").width : UM.Theme.getSize("default_margin").width
+    // Align checkbox with SettingVisibilityCategory icon with + 5
+    x: definition ? (definition.depth + 1) * UM.Theme.getSize("default_margin").width : UM.Theme.getSize("default_margin").width
+
+    UM.TooltipArea
+    {
+        text: definition ? definition.description : ""
+
+        width: childrenRect.width;
+        height: childrenRect.height;
+        id: checkboxTooltipArea
+        UM.CheckBox
+        {
+            id: check
+
+            text: definition ? definition.label: ""
+            checked: definition ? definition.visible: false
+            enabled: definition ? !definition.prohibited: false
+
+            MouseArea
+            {
+                anchors.fill: parent
+
+                onClicked: definitionsModel.setVisible(definition.key, !check.checked)
+            }
+        }
+    }
+
     UM.TooltipArea
     {
         width: height;
         height: check.height;
-        anchors.right: checkboxTooltipArea.left
-        anchors.rightMargin: 2 * screenScaleFactor
+        anchors.left: checkboxTooltipArea.right
+        anchors.leftMargin: 2 * screenScaleFactor
 
         text:
         {
@@ -64,30 +90,6 @@ Item {
         }
 
         visible: provider.properties.enabled == "False"
-    }
-
-    UM.TooltipArea
-    {
-        text: definition ? definition.description : ""
-
-        width: childrenRect.width;
-        height: childrenRect.height;
-        id: checkboxTooltipArea
-        UM.CheckBox
-        {
-            id: check
-
-            text: definition ? definition.label: ""
-            checked: definition ? definition.visible: false
-            enabled: definition ? !definition.prohibited: false
-
-            MouseArea
-            {
-                anchors.fill: parent
-
-                onClicked: definitionsModel.setVisible(definition.key, !check.checked)
-            }
-        }
     }
 
     UM.SettingPropertyProvider
