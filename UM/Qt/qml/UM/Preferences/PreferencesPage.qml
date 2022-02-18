@@ -13,6 +13,7 @@ Item
     property alias title: titleLabel.text
     default property alias contents: contentsItem.children
     property bool resetEnabled: true
+    property alias buttons: buttonRow.children
 
     function reset()
     {
@@ -33,10 +34,10 @@ Item
         }
     }
 
-    Label
+    Item
     {
-        id: titleLabel
-
+        id: titleBar
+        height: childrenRect.height
         anchors
         {
             top: parent.top
@@ -44,8 +45,18 @@ Item
             right: parent.right
             margins: UM.Theme.getSize("narrow_margin").width
         }
+        Label
+        {
+            id: titleLabel
+            font: UM.Theme.getFont("large")
+        }
+        Row
+        {
+            id: buttonRow
 
-        font: UM.Theme.getFont("large")
+            anchors.right: parent.right
+            height: childrenRect.height
+        }
     }
 
     Rectangle
@@ -53,7 +64,7 @@ Item
         color: UM.Theme.getColor("main_background")
         anchors
         {
-            top: titleLabel.bottom
+            top: titleBar.bottom
             left: parent.left
             right: parent.right
             bottom: parent.bottom

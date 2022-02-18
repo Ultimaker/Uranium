@@ -26,38 +26,16 @@ PreferencesPage
 
     signal itemActivated()
 
-    property alias buttons: buttonRow.children
 
     resetEnabled: false
 
     property string activeId: ""
     property int activeIndex: -1
 
-    Row
-    {
-        id: buttonRow
-
-        anchors
-        {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-        }
-
-        height: childrenRect.height
-    }
 
     Item
     {
-        anchors
-        {
-            top: buttonRow.bottom
-            topMargin: UM.Theme.getSize("default_margin").height
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-
+        anchors.fill: parent
         UM.Label
         {
             id: captionLabel
