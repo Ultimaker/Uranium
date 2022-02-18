@@ -8,10 +8,11 @@ import QtQuick.Window 2.1
 
 import UM 1.0 as UM
 
-Item {
-    property alias title: titleLabel.text;
-    default property alias contents: contentsItem.children;
-    property bool resetEnabled: true;
+Item
+{
+    property alias title: titleLabel.text
+    default property alias contents: contentsItem.children
+    property bool resetEnabled: true
 
     function reset()
     {
@@ -47,10 +48,9 @@ Item {
         font: UM.Theme.getFont("large")
     }
 
-    Item
+    Rectangle
     {
-        id: contentsItem
-
+        color: UM.Theme.getColor("main_background")
         anchors
         {
             top: titleLabel.bottom
@@ -60,7 +60,14 @@ Item {
             margins: UM.Theme.getSize("narrow_margin").width
             bottomMargin: 0
         }
+        Item
+        {
+            id: contentsItem
 
-        clip: true;
+            anchors.fill: parent
+            anchors.margins: UM.Theme.getSize("default_margin").width
+
+            clip: true
+        }
     }
 }
