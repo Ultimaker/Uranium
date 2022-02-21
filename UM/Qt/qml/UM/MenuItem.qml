@@ -43,6 +43,11 @@ MenuItem
         return txt
     }
 
+    arrow: Image
+    {
+        source: UM.Theme.getImage("ChevronSingleRight")
+    }
+
     contentItem: RowLayout
     {
         spacing: 0
