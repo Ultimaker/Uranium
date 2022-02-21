@@ -1,17 +1,23 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 from typing import Optional, Tuple, List, Union
 
 import numpy
 import math
+import pyclipper
 import scipy.spatial
 
 from UM.Logger import Logger
 from UM.Math import NumPyUtil
-from UM.Math import ShapelyUtil
 
 class Polygon:
     """A class representing an immutable arbitrary 2-dimensional polygon."""
+
+    CLIPPER_PRECISION = 1000
+    """
+    Number of units per mm to use in clipper operations.
+    """
 
     @staticmethod
     def approximatedCircle(radius, num_segments = 8):
@@ -30,6 +36,15 @@ class Polygon:
             points.append([radius * -math.cos(i * step), radius * math.sin(i * step)])
 
         return Polygon(points = numpy.array(points, numpy.float32))
+
+    @staticmethod
+    def _fromClipperPoints(points: numpy.ndarray) -> "Polygon":
+        """
+        Converts the clipper point representation into a normal polygon.
+        :param points: The clipper
+        :return:
+        """
+        return Polygon(points = points.astype(numpy.float32) / Polygon.CLIPPER_PRECISION)
 
     def __init__(self, points: Optional[Union[numpy.ndarray, List]] = None):
         if points is not None:
@@ -114,8 +129,9 @@ class Polygon:
 
         # In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points
         # such that the axis goes through the origin.
-        point_matrix = numpy.matrix(self._points)
-        point_matrix -= point_on_axis  # Moves all points such that the axis origin is at [0,0].
+        point_matrix = numpy.matrix(self._points)  # type: ignore
+        # Moves all points such that the axis origin is at [0,0].
+        point_matrix -= point_on_axis  # type: ignore
 
         # To mirror a coordinate, we have to add the projection of the point to the axis twice
         # (where v is the vector to reflect):
@@ -126,12 +142,12 @@ class Polygon:
         #  reflection(v) = R v
         #  R = 2 l l^T - I
         # This simplifies the entire reflection to one big matrix transformation.
-        axis_matrix = numpy.matrix(axis_direction)
+        axis_matrix = numpy.matrix(axis_direction) # type: ignore
         reflection = 2 * numpy.transpose(axis_matrix) * axis_matrix - numpy.identity(2)
         point_matrix = point_matrix * reflection  # Apply the actual transformation.
 
         # Shift the points back to the original coordinate space before the axis was normalised to the origin.
-        point_matrix += point_on_axis
+        point_matrix += point_on_axis # type: ignore
         return Polygon(point_matrix.getA()[::-1])
 
     def scale(self, factor: float, origin: Optional[List[float]] = None) -> "Polygon":
@@ -165,72 +181,64 @@ class Polygon:
         :param other: The other polygon to intersect convex hulls with.
         :return: The intersection of the two polygons' convex hulls.
         """
-
         me = self.getConvexHull()
         him = other.getConvexHull()
 
         # If either polygon has no surface area, then the intersection is empty.
-        if len(me._points) <= 2 or len(him._points) <= 2:
+        if len(me.getPoints()) <= 2 or len(him.getPoints()) <= 2:
             return Polygon()
 
-        polygen_me = ShapelyUtil.polygon2ShapelyPolygon(me)
-        polygon_him = ShapelyUtil.polygon2ShapelyPolygon(him)
+        clipper = pyclipper.Pyclipper()
+        clipper.AddPath(me._clipperPoints(), pyclipper.PT_SUBJECT, closed = True)
+        clipper.AddPath(other._clipperPoints(), pyclipper.PT_CLIP, closed = True)
 
-        polygon_intersection = polygen_me.intersection(polygon_him)
-        if polygon_intersection.area == 0:
+        points = clipper.Execute(pyclipper.CT_INTERSECTION, pyclipper.PFT_NONZERO, pyclipper.PFT_NONZERO)
+        if len(points) == 0:
             return Polygon()
-
-        points = [list(p) for p in polygon_intersection.exterior.coords]
-        if points[0] == points[-1]:
+        points = points[0]  # Intersection between convex hulls should result in a single (convex) simple polygon. Take just the one polygon.
+        if points[0] == points[-1]:  # Represent closed polygons without closing vertex.
             points.pop()
-        return Polygon(points)
+        return self._fromClipperPoints(numpy.array(points))
 
     #  Computes the convex hull of the union of the convex hulls of this and another polygon.
     #
     #   \param other The other polygon to combine convex hulls with.
     #   \return The convex hull of the union of the two polygons' convex hulls.
     def unionConvexHulls(self, other: "Polygon") -> "Polygon":
-        my_hull = self.getConvexHull()
-        other_hull = other.getConvexHull()
-
-        if not my_hull.isValid():
-            return other_hull
-        if not other_hull.isValid():
-            return my_hull
-
-        my_polygon = ShapelyUtil.polygon2ShapelyPolygon(my_hull)
-        other_polygon = ShapelyUtil.polygon2ShapelyPolygon(other_hull)
-
-        polygon_union = my_polygon.union(other_polygon).convex_hull
-        if polygon_union.area == 0:
-            return Polygon()
-
-        return Polygon(points = [list(p) for p in polygon_union.exterior.coords[:-1]])
+        if len(self.getPoints()) == 0: # Concatenate doesn't deal well with empty arrays (since they are not the same dimension), so catch that case first.
+            return other
+        if len(other.getPoints()) == 0:
+            return self
+        # Combine all points and take the convex hull of that.
+        all_points = numpy.concatenate((self.getPoints(), other.getPoints()))
+        combined_polys = Polygon(all_points)
+        return combined_polys.getConvexHull()
 
     def intersectsPolygon(self, other: "Polygon") -> Optional[Tuple[float, float]]:
         """Check to see whether this polygon intersects with another polygon.
 
         :param other: :type{Polygon} The polygon to check for intersection.
-        :return: A tuple of the x and y distance of intersection, or None if no intersection occured.
+        :return: A tuple of the x and y distance of intersection, or None if no intersection occurred.
         """
-
         if not self.isValid() or not other.isValid():
             return None
 
-        polygon_me = ShapelyUtil.polygon2ShapelyPolygon(self)
-        polygon_other = ShapelyUtil.polygon2ShapelyPolygon(other)
-        if polygon_other.is_empty or polygon_me.is_empty:
-            return None
-        if not (polygon_me.is_valid and polygon_other.is_valid):  # If not valid
+        clipper = pyclipper.Pyclipper()
+        clipper.AddPath(self._clipperPoints(), pyclipper.PT_SUBJECT, closed = True)
+        clipper.AddPath(other._clipperPoints(), pyclipper.PT_CLIP, closed = True)
+        intersection_points = clipper.Execute(pyclipper.CT_INTERSECTION)
+
+        if len(intersection_points) == 0:
             return None
 
-        polygon_intersection = polygon_me.intersection(polygon_other)
-        ret_size = None
-        if polygon_intersection and polygon_intersection.area > 0:
-            ret_size = (polygon_intersection.bounds[2] - polygon_intersection.bounds[0],
-                        polygon_intersection.bounds[3] - polygon_intersection.bounds[1],
-                        )
-        return ret_size
+        # Find the bounds of the intersection area.
+        mini = (math.inf, math.inf)
+        maxi = (-math.inf, -math.inf)
+        for poly in intersection_points:  # Each simple polygon in the complex intersection multi-polygon.
+            for vertex in poly:
+                mini = (min(mini[0], vertex[0]), min(mini[1], vertex[1]))
+                maxi = (max(maxi[0], vertex[0]), max(maxi[1], vertex[1]))
+        return float(maxi[0] - mini[0]) / self.CLIPPER_PRECISION, float(maxi[1] - mini[1]) / self.CLIPPER_PRECISION
 
     def getConvexHull(self) -> "Polygon":
         """Calculate the convex hull around the set of points of this polygon.
@@ -307,6 +315,18 @@ class Polygon:
             return 0
         else:
             return -1
+
+    def _clipperPoints(self) -> numpy.ndarray:
+        """
+        Converts the vertices to a representation useful for PyClipper.
+
+        This is necessary because Clipper uses integer-coordinates, but the coordinates in the rest of the front-end are
+        one millimeter per unit. Without this conversion, vertices would be rounded to millimeters. With this conversion
+        the units represent micrometers, allowing much greater precision.
+        :return: A vertex representation useful for Clipper.
+        """
+        return (self.getPoints() * self.CLIPPER_PRECISION).astype(numpy.int32)
+
 
 
 __all__ = ["Polygon"]

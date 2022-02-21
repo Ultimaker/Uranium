@@ -199,9 +199,7 @@ class RotateTool(Tool):
                     axis = math.floor((self._active_widget.value - self._active_widget.XPositive90.value) / 2)
 
                     angle = math.radians(90 if (self._active_widget.value - ToolHandle.AllAxis) % 2 else -90)
-                    axis +=  self._handle.XAxis
-
-                    rotation = Quaternion()
+                    axis += self._handle.XAxis
                     if axis == ToolHandle.XAxis:
                         rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_X)
                     elif axis == ToolHandle.YAxis:

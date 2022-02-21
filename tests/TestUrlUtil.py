@@ -2,12 +2,10 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 import re
 from unittest import TestCase
-from unittest.mock import patch
 from urllib.parse import urlparse
 
 from UM.Qt.Bindings.Utilities import UrlUtil
-
-from io import StringIO
+from UM.Logger import Logger
 
 
 class TestUrlUtil(TestCase):
@@ -37,17 +35,18 @@ class TestUrlUtil(TestCase):
         """
         invalid_schemes = [["mailto"], ["ftp"], ["blue", "potato"]]
         for schemes_list in invalid_schemes:
-            with patch('sys.stdout', new=StringIO()) as mock_output:  # re-routes the output inside mock_output
-                allowed_schemes = ["https"]
-                allowed_schemes.extend(schemes_list)
-                self.url_util._urlHasValidScheme("https://www.ultimaker.com", allowed_schemes)
 
-                # Ensure the correct message is outputted in the console
-                expected_output = re.sub(r'\W+', ' ', "Attempted to allow invalid schemes")  # remove special characters
-                console_ouput = re.sub(r'\W+', ' ', mock_output.getvalue().strip())
-                self.assertIn(expected_output, console_ouput)  # Assert the correct message is in the console output
-                for scheme in schemes_list:
-                    self.assertIn(scheme, console_ouput)  # Assert each of the schemes that are being tested appears in the console output
+            allowed_schemes = ["https"]
+            allowed_schemes.extend(schemes_list)
+            self.url_util._urlHasValidScheme("https://www.ultimaker.com", allowed_schemes)
+
+            # Ensure the correct message is outputted in the console
+            expected_output = re.sub(r'\W+', ' ', "Attempted to allow invalid schemes")  # remove special characters
+            log_lines = [message for message_type, message in Logger.getUnloggedLines()]
+            console_output = "\n".join(log_lines)
+            self.assertIn(expected_output, console_output)  # Assert the correct message is in the console output
+            for scheme in schemes_list:
+                self.assertIn(scheme, console_output)  # Assert each of the schemes that are being tested appears in the console output
 
     def test_urlHasValidScheme_url_scheme_not_in_allowed_schemes(self):
         """
@@ -59,17 +58,15 @@ class TestUrlUtil(TestCase):
         """
         invalid_combinations = (("https://www.ultimaker.com", ["http"]), ("http://www.ultimaker.com", ["https"]))
         for url, allowed_schemes in invalid_combinations:
-            with patch('sys.stdout', new=StringIO()) as mock_output:  # re-routes the output inside mock_output
+            # Ensure the function fails
+            self.assertFalse(self.url_util._urlHasValidScheme(url, allowed_schemes))
 
-                # Ensure the function fails
-                self.assertFalse(self.url_util._urlHasValidScheme(url, allowed_schemes))
-
-                # Ensure the correct message is outputted in the console
-                expected_output = "The scheme '{scheme}' is not in the allowed schemes".format(scheme = urlparse(url).scheme)
-                expected_output = re.sub(r'\W+', ' ', expected_output)  # remove special characters
-                console_ouput = mock_output.getvalue().strip()
-                console_ouput = re.sub(r'\W+', ' ', console_ouput)  # remove special characters
-                self.assertIn(expected_output, console_ouput)
-                for scheme in allowed_schemes:
-                    self.assertIn(scheme, console_ouput)
+            # Ensure the correct message is outputted in the console
+            expected_output = "The scheme '{scheme}' is not in the allowed schemes".format(scheme = urlparse(url).scheme)
+            log_lines = [message for message_type, message in Logger.getUnloggedLines()]
+            console_output = "\n".join(log_lines)
+            self.assertIn(expected_output, console_output)
+            console_output = re.sub(r'\W+', ' ', console_output)
+            for scheme in allowed_schemes:
+                self.assertIn(scheme, console_output)
 

@@ -26,7 +26,7 @@ class RotateToolHandle(ToolHandle):
         self._name = "RotateToolHandle"
         self._inner_radius = 40
         self._outer_radius = 40.5
-        self._line_width = 0.5
+        self._line_width = 0.3
         self._active_inner_radius = 37
         self._active_outer_radius = 44
         self._active_line_width = 3
@@ -35,7 +35,7 @@ class RotateToolHandle(ToolHandle):
         self._handle_offset_a = self._inner_radius * math.cos(math.radians(self._angle_offset))
         self._handle_offset_b = self._inner_radius * math.sin(math.radians(self._angle_offset))
 
-        self._handle_height = 7
+        self._handle_height = 5
         self._handle_width = 3
         self._active_handle_height = 9
         self._active_handle_width = 7

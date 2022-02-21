@@ -12,7 +12,7 @@ class ScaleToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._handle = "ScaleToolHandle"
-        self._line_width = 0.5
+        self._line_width = 0.3
         self._line_length= 40
         self._handle_position = 40
         self._handle_width = 4

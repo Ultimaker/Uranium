@@ -15,5 +15,5 @@ Dependencies
   - [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5)
   - [Numpy](https://github.com/numpy/numpy)
   - [Arcus](https://github.com/Ultimaker/libArcus)
-  - [Shapely](https://github.com/Toblerity/Shapely)
+  - [Pyclipper](https://github.com/fonttools/pyclipper)
   - [Scipy](https://github.com/scipy/scipy)

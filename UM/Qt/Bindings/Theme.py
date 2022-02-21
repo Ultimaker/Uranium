@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -285,6 +285,7 @@ class Theme(QObject):
                     Logger.log("e", error.toString())
 
         Logger.log("d", "Loaded theme %s", path)
+        Logger.info(f"System's em size is {self._em_height}px.")
         self._path = path
 
         # only emit the theme loaded signal once after all the themes in the inheritance chain have been loaded

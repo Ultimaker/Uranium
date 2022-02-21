@@ -3,7 +3,7 @@
 
 import collections  # To cache queries.
 import re
-from typing import Any, cast, Dict, List, Optional, Tuple, Type, TYPE_CHECKING
+from typing import Any, cast, Dict, List, Optional, Tuple, Type, TYPE_CHECKING, Union, ValuesView
 import functools
 
 if TYPE_CHECKING:
@@ -87,9 +87,9 @@ class ContainerQuery:
         # cache if it's not there yet.
         key_so_far = (self._ignore_case, )  # type: Tuple[Any, ...]
         if candidates is None:
-            filtered_candidates = list(self._registry.metadata.values())
+            filtered_candidates: Union[ValuesView[Dict[str, Any]], List[Dict[str, Any]]] = self._registry.metadata.values()
         else:
-            filtered_candidates = candidates
+            filtered_candidates = cast(List[Dict[str, Any]], candidates)
 
         # Filter on all the key-word arguments one by one.
         for key, value in self._kwargs.items():  # For each progressive filter...
@@ -121,6 +121,8 @@ class ContainerQuery:
                 self.cache[key_so_far] = ContainerQuery(self._registry, ignore_case = self._ignore_case, **cached_arguments)  # Cache this query for the next time.
                 self.cache[key_so_far]._result = filtered_candidates
 
+        if not isinstance(filtered_candidates, list):
+            filtered_candidates = list(filtered_candidates)
         self._result = filtered_candidates
 
     def __str__(self):

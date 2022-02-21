@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
@@ -32,29 +32,33 @@ Item {
         }
     }
 
-    Label {
-        id: titleLabel;
+    Label
+    {
+        id: titleLabel
 
-        anchors {
-            top: parent.top;
-            left: parent.left;
-            right: parent.right;
-            margins: 5 * screenScaleFactor;
+        anchors
+        {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            margins: UM.Theme.getSize("narrow_margin").width
         }
 
-        font.pointSize: 18;
+        font: UM.Theme.getFont("large")
     }
 
-    Item {
-        id: contentsItem;
+    Item
+    {
+        id: contentsItem
 
-        anchors {
-            top: titleLabel.bottom;
-            left: parent.left;
-            right: parent.right;
-            bottom: parent.bottom;
-            margins: 5 * screenScaleFactor;
-            bottomMargin: 0;
+        anchors
+        {
+            top: titleLabel.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            margins: UM.Theme.getSize("narrow_margin").width
+            bottomMargin: 0
         }
 
         clip: true;

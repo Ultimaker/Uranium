@@ -303,89 +303,22 @@ ListView
             }
         }
 
-        // Right aligned Action Buttons
         RowLayout
         {
             id: actionButtons
 
             anchors
             {
-                right: parent.right
-                rightMargin: UM.Theme.getSize("default_margin").width
-
-                top: totalProgressBar.bottom
-                topMargin: UM.Theme.getSize("narrow_margin").width
-            }
-
-            Repeater
-            {
-                model:
-                {
-                    var filteredModel = new Array()
-                    var sizeOfActions = message.actions == null ? 0 : message.actions.count
-                    if(sizeOfActions == 0)
-                    {
-                        return 0;
-                    }
-
-                    for(var index = 0; index < sizeOfActions; index++)
-                    {
-                        var actionButton = message.actions.getItem(index)
-
-                        var alignPosition = actionButton["button_align"]
-
-                        // ActionButtonStyle.BUTTON_ALIGN_RIGHT == 3
-                        if (alignPosition == 3)
-                        {
-                            filteredModel.push(actionButton)
-                        }
-                    }
-                    return filteredModel
-                }
-
-                // Put the delegate in a loader so we can connect to it's signals.
-                // We also need to use a different component based on the style of the action.
-                delegate: Loader
-                {
-                    id: actionButton
-                    sourceComponent:
-                    {
-                        if (modelData.button_style == 0)
-                        {
-                            return base.primaryButton
-                        } else if (modelData.button_style == 1)
-                        {
-                            return base.link
-                        } else if (modelData.button_style == 2)
-                        {
-                            return base.secondaryButton
-                        }
-                        return base.primaryButton // We got to use something, so use primary.
-                    }
-                    property var model: modelData
-                    Connections
-                    {
-                        target: actionButton.item
-                        function onClicked() { base.model.actionTriggered(message.model_id, modelData.action_id) }
-                    }
-                }
-            }
-        }
-
-        // Left aligned Action Buttons
-        RowLayout
-        {
-            id: leftActionButtons
-
-            anchors
-            {
-                left: messageLabel.left
+                left: parent.left
                 leftMargin: UM.Theme.getSize("narrow_margin").width
-
+                right: parent.right
+                rightMargin: UM.Theme.getSize("narrow_margin").width
                 top: totalProgressBar.bottom
                 topMargin: UM.Theme.getSize("narrow_margin").width
             }
+            spacing: UM.Theme.getSize("narrow_margin").width
 
+            //Left-aligned buttons.
             Repeater
             {
                 model:
@@ -400,9 +333,7 @@ ListView
                     for(var index = 0; index < sizeOfActions; index++)
                     {
                         var actionButton = message.actions.getItem(index)
-
                         var alignPosition = actionButton["button_align"]
-
                         // ActionButtonStyle.BUTTON_ALIGN_LEFT == 2
                         if (alignPosition == 2)
                         {
@@ -414,28 +345,118 @@ ListView
 
                 // Put the delegate in a loader so we can connect to it's signals.
                 // We also need to use a different component based on the style of the action.
-                delegate: Loader
+                // But since loaders can't get a size assigned by the layout, wrap that in an item to get the size of.
+                delegate: Item
                 {
-                    id: actionButton
-                    sourceComponent:
+                    id: actionButtonSize
+                    Layout.maximumWidth: childrenRect.width
+                    Layout.preferredWidth: 9999 //Something very high to make it scale the spacer first.
+                    Layout.preferredHeight: actionButton.item.height
+                    Layout.fillWidth: true
+                    Loader
                     {
-                        if (modelData.button_style == 0)
+                        id: actionButton
+                        sourceComponent:
                         {
-                            return base.primaryButton
-                        } else if (modelData.button_style == 1)
-                        {
-                            return base.link
-                        } else if (modelData.button_style == 2)
-                        {
-                            return base.secondaryButton
+                            if (modelData.button_style == 0)
+                            {
+                                return base.primaryButton
+                            }
+                            else if (modelData.button_style == 1)
+                            {
+                                return base.link
+                            }
+                            else if (modelData.button_style == 2)
+                            {
+                                return base.secondaryButton
+                            }
+                            return base.primaryButton // We got to use something, so use primary.
                         }
-                        return base.primaryButton // We got to use something, so use primary.
+                        onLoaded:
+                        {
+                            item.maximumWidth = Qt.binding(function() { return parent.width; });
+                        }
+                        property var model: modelData
+                        Connections
+                        {
+                            target: actionButton.item
+                            function onClicked() { base.model.actionTriggered(message.model_id, modelData.action_id) }
+                        }
                     }
-                    property var model: modelData
-                    Connections
+                }
+            }
+
+            //Spacer in the middle the fills the remaining space. Causes right-aligned buttons to be aligned right!
+            Item
+            {
+                Layout.fillWidth: true
+                Layout.preferredWidth: 0
+            }
+
+            //Right-aligned buttons.
+            Repeater
+            {
+                model:
+                {
+                    var filteredModel = new Array()
+                    var sizeOfActions = message.actions == null ? 0 : message.actions.count
+                    if(sizeOfActions == 0)
                     {
-                        target: actionButton.item
-                        function onClicked() { base.model.actionTriggered(message.model_id, modelData.action_id) }
+                        return 0;
+                    }
+
+                    for(var index = 0; index < sizeOfActions; index++)
+                    {
+                        var actionButton = message.actions.getItem(index)
+                        var alignPosition = actionButton["button_align"]
+                        // ActionButtonStyle.BUTTON_ALIGN_RIGHT == 3
+                        if (alignPosition == 3)
+                        {
+                            filteredModel.push(actionButton)
+                        }
+                    }
+                    return filteredModel
+                }
+
+                // Put the delegate in a loader so we can connect to it's signals.
+                // We also need to use a different component based on the style of the action.
+                // But since loaders can't get a size assigned by the layout, wrap that in an item to get the size of.
+                delegate: Item
+                {
+                    id: actionButtonSize
+                    Layout.maximumWidth: childrenRect.width
+                    Layout.preferredWidth: 9999 //Something very high to make it scale the spacer first.
+                    Layout.preferredHeight: actionButton.item.height
+                    Layout.fillWidth: true
+                    Loader
+                    {
+                        id: actionButton
+                        sourceComponent:
+                        {
+                            if (modelData.button_style == 0)
+                            {
+                                return base.primaryButton
+                            }
+                            else if (modelData.button_style == 1)
+                            {
+                                return base.link
+                            }
+                            else if (modelData.button_style == 2)
+                            {
+                                return base.secondaryButton
+                            }
+                            return base.primaryButton // We got to use something, so use primary.
+                        }
+                        onLoaded:
+                        {
+                            item.maximumWidth = Qt.binding(function() { return parent.width; });
+                        }
+                        property var model: modelData
+                        Connections
+                        {
+                            target: actionButton.item
+                            function onClicked() { base.model.actionTriggered(message.model_id, modelData.action_id) }
+                        }
                     }
                 }
             }

@@ -475,7 +475,7 @@ class WeakImmutableList(Generic[T], Iterable):
         """
 
         new_instance = WeakImmutableList()  # type: WeakImmutableList[T]
-        new_instance.__list = self.__cleanList()
+        new_instance.__list = self.__list.copy()
         new_instance.__list.append(ReferenceType(item))
         return new_instance
 
@@ -542,7 +542,7 @@ class WeakImmutablePairList(Generic[T, U], Iterable):
         """
 
         new_instance = WeakImmutablePairList()  # type: WeakImmutablePairList[T,U]
-        new_instance.__list = self.__cleanList()
+        new_instance.__list = self.__list.copy()
         new_instance.__list.append( (weakref.ref(left_item), weakref.ref(right_item)) )
         return new_instance
 
@@ -568,7 +568,7 @@ class WeakImmutablePairList(Generic[T, U], Iterable):
             return self # No changes needed
 
     # Create a new list with the missing values removed.
-    def __cleanList(self) -> List[Tuple[ReferenceType,ReferenceType]]:
+    def __cleanList(self) -> List[Tuple[ReferenceType, ReferenceType]]:
         return [pair for pair in self.__list if pair[0]() is not None and pair[1]() is not None]
 
     def __iter__(self):

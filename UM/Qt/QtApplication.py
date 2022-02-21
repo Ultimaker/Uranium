@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import sys
@@ -188,6 +188,9 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Initializing version upgrade manager ...")
         self._version_upgrade_manager = VersionUpgradeManager(self)
 
+    def isQmlEngineInitialized(self) -> bool:
+        return self._qml_engine_initialized
+
     def _displayLoadingPluginSplashMessage(self, plugin_id: Optional[str]) -> None:
         message = i18nCatalog("uranium").i18nc("@info:progress", "Loading plugins...")
         if plugin_id:
@@ -317,6 +320,7 @@ class QtApplication(QApplication, Application):
         i18n_catalog = i18nCatalog("uranium")
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading UI..."))
         self._qml_engine.load(self._main_qml)
+        self._qml_engine_initialized = True
         self.engineCreatedSignal.emit()
 
     recentFilesChanged = pyqtSignal()
