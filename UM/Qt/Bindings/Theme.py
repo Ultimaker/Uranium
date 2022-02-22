@@ -22,7 +22,6 @@ class Theme(QObject):
         super().__init__(parent)
 
         self._engine = engine
-        self._styles = None  # type: Optional[QObject]
         self._path = ""
         self._icons = {}  # type: Dict[str, Dict[str, QUrl]]
         self._deprecated_icons = {} # type: Dict[str, Dict[str, str]]
@@ -51,7 +50,6 @@ class Theme(QObject):
     themeLoaded = pyqtSignal()
 
     def reload(self):
-        self._styles = None
         self._path = ""
         self._icons = {}
         self._images = {}
@@ -169,10 +167,6 @@ class Theme(QObject):
         Logger.log("w", "No font %s defined in Theme", font_name)
         return QFont()
 
-    @pyqtProperty(QObject, notify = themeLoaded)
-    def styles(self):
-        return self._styles
-
     @pyqtSlot(str)
     def load(self, path: str, is_first_call: bool = True) -> None:
         if path == self._path:
@@ -272,17 +266,6 @@ class Theme(QObject):
             for image in os.listdir(imagesdir):
                 name = os.path.splitext(image)[0]
                 self._images[name] = QUrl.fromLocalFile(os.path.join(imagesdir, image))
-
-        styles = os.path.join(path, "styles.qml")
-        if os.path.isfile(styles):
-            c = QQmlComponent(self._engine, styles)
-            context = QQmlContext(self._engine, self._engine)
-            context.setContextProperty("Theme", self)
-            self._styles = c.create(context)
-
-            if c.isError():
-                for error in c.errors():
-                    Logger.log("e", error.toString())
 
         Logger.log("d", "Loaded theme %s", path)
         Logger.info(f"System's em size is {self._em_height}px.")
