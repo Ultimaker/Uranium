@@ -12,7 +12,7 @@ import UM 1.5 as UM
 
 Dialog
 {
-    id: base;
+    id: base
 
     title: catalog.i18nc("@title:window", "Preferences")
     minimumWidth: UM.Theme.getSize("modal_window_minimum").width
@@ -20,82 +20,65 @@ Dialog
     width: minimumWidth
     height: minimumHeight
 
-    property alias currentPage: pagesList.currentIndex;
+    property alias currentPage: pagesList.currentIndex
 
     Item
     {
         id: test
-        anchors.fill: parent;
+        anchors.fill: parent
 
-        Rectangle
+        ListView
         {
-            id: pagesListContainer
-            anchors
+            id: pagesList
+            width: UM.Theme.getSize("setting_control").width
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+
+            ScrollBar.vertical: UM.ScrollBar {}
+            clip: true
+            model: ListModel { id: configPagesModel }
+            currentIndex: 0
+
+            delegate: Rectangle
             {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
-            }
-            width: 7 * UM.Theme.getSize("line").width
+                width: parent ? parent.width : 0
+                height: pageLabel.height
 
-            color: UM.Theme.getColor("main_background")
-            border.width: UM.Theme.getSize("default_lining").width
-            border.color: UM.Theme.getColor("default_lining")
+                color: ListView.isCurrentItem ? UM.Theme.getColor("text_selection") : UM.Theme.getColor("main_background")
 
-            ListView
-            {
-                id: pagesList
-                anchors.fill: parent
-                anchors.margins: parent.border.width
-
-                ScrollBar.vertical: UM.ScrollBar {}
-                clip: true
-                model: ListModel { id: configPagesModel; }
-                currentIndex: 0
-
-                delegate: Rectangle
+                UM.Label
                 {
-                    width: parent ? parent.width : 0
-                    height: pageLabel.height
-
-                    color: ListView.isCurrentItem ? UM.Theme.getColor("primary") : "transparent"
-
-                    UM.Label
-                    {
-                        id: pageLabel
-                        width: parent.width
-                        text: model.name
-                    }
-                    MouseArea
-                    {
-                        anchors.fill: parent
-                        onClicked:
-                        {
-                            pagesList.currentIndex = index;
-                        }
-                    }
+                    id: pageLabel
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    width: parent.width
+                    text: model.name
                 }
-
-                onCurrentIndexChanged:
+                MouseArea
                 {
-                    stackView.replace(configPagesModel.get(currentIndex).item);
+                    anchors.fill: parent
+                    onClicked: pagesList.currentIndex = index
                 }
             }
+
+            onCurrentIndexChanged: stackView.replace(configPagesModel.get(currentIndex).item)
         }
+
 
         StackView
         {
             id: stackView
             anchors
             {
-                left: pagesListContainer.right
-                leftMargin: (UM.Theme.getSize("default_margin").width / 2) | 0
+                left: pagesList.right
+                leftMargin: UM.Theme.getSize("narrow_margin").width
                 top: parent.top
                 bottom: parent.bottom
                 right: parent.right
             }
 
-            initialItem: Item { property bool resetEnabled: false; }
+            initialItem: Item { property bool resetEnabled: false }
 
             replaceEnter: Transition
             {
@@ -122,25 +105,9 @@ Dialog
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
-    leftButtons: Button
-    {
-        id: defaultsButton
-        text: catalog.i18nc("@action:button", "Defaults")
-        enabled: stackView.currentItem.resetEnabled
-        onClicked: stackView.currentItem.reset()
-    }
-
-    rightButtons: Button
-    {
-        id: closeButton
-        text: catalog.i18nc("@action:button", "Close")
-        onClicked: base.accept()
-    }
-
     function setPage(index)
     {
         stackView.replace(configPagesModel.get(index).item);
-
         base.currentPage = index
     }
 
