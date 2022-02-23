@@ -135,7 +135,7 @@ Dialog
     // https://doc.qt.io/qt-5/qml-qtquick-controls2-dialogbuttonbox.html#details
     function click(standardButton)
     {
-        switch (button.standardButton)
+        switch (standardButton)
         {
             case Dialog.Ok:
             case Dialog.Open:
