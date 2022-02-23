@@ -143,6 +143,9 @@ Dialog
 
             case Dialog.Cancel:
             case Dialog.Close:
+            case Dialog.No:
+            case Dialog.NoToAll:
+            case Dialog.Abort:
                 root.rejected();
                 break;
 
@@ -161,12 +164,6 @@ Dialog
 
             case Dialog.Help:
                 root.helpRequested();
-                break;
-
-            case Dialog.No:
-            case Dialog.NoToAll:
-            case Dialog.Abort:
-                root.rejected();
                 break;
         }
 
