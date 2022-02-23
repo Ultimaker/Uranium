@@ -7,9 +7,18 @@ import QtQuick.Controls 2.15
 import UM 1.5 as UM
 
 /*
-* A small dialog that shows a message to the user, and provides several options on how to proceed.
+* A small dialog that shows a message, and zero or more buttons.
 *
-* This functions as a normal dialog with its standard buttons, but also allows defining a text to show in the dialog.
+* The buttons can be set by setting the standardButtons property by
+* combining zero or more standardButtons using the bitwise or ( | ) operator
+* https://doc.qt.io/qt-5/qml-qtquick-controls2-dialog.html#standardButtons-prop
+*
+* Ordering of the buttons is determined by the buttonsModel.buttons list
+* and is sorted on importance, where the "positive" button has a higher
+* precidence compared to the "negative" button (e.g. "cancel" < "ok", "no" < "yes")
+* The first button provided will be a Component of type primaryButton
+* All following buttons will be a Component of type SecondaryButton
+* Buttons fill the dialog footer from right to left
 */
 Dialog
 {
@@ -71,8 +80,6 @@ Dialog
         id: buttonsModel
 
         // All possible buttons with i18n translated copy
-        // Order of these buttons is importatant; sub set of buttons to be displayed are added from right to left
-        // in the bottom right of the dialog. The first of these button gets the role of "default button"
         property var buttons: [
             { standardButton: Dialog.Ok, text: catalog.i18nc("@option", "OK") },
             { standardButton: Dialog.Open, text: catalog.i18nc("@option", "Open") },
