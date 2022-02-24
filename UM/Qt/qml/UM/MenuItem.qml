@@ -43,6 +43,11 @@ MenuItem
         return txt
     }
 
+    arrow: Image
+    {
+        source: UM.Theme.getImage("ChevronSingleRight")
+    }
+
     contentItem: RowLayout
     {
         spacing: 0
@@ -52,7 +57,7 @@ MenuItem
         Item
         {
             // Spacer
-            width: root.indicatorVisible ? root.indicator.width + 2 * UM.Theme.getSize("narrow_margin").width : 0
+            width: root.indicatorVisible ? root.indicator.width + UM.Theme.getSize("default_margin").width : UM.Theme.getSize("default_margin").width
         }
 
         UM.Label
@@ -71,7 +76,13 @@ MenuItem
         UM.Label
         {
             text: _shortcut.nativeText
+            color: UM.Theme.getColor("text_lighter")
+        }
 
+        Item
+        {
+            // Right side margin
+            width: UM.Theme.getSize("default_margin").width
         }
     }
 }
