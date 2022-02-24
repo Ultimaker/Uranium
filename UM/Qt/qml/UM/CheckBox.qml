@@ -41,12 +41,12 @@ CheckBox
         UM.RecolorImage
         {
             anchors.centerIn: parent
-            width: Math.round(parent.width / 2.5)
-            height: Math.round(parent.height / 2.5)
+            width: Math.round(parent.width / 1.5)
+            height: Math.round(parent.height / 1.5)
 
             sourceSize.height: width
             color: UM.Theme.getColor("checkbox_mark")
-            source: UM.Theme.getIcon("Check")
+            source: UM.Theme.getIcon("Check", "low")
             opacity: control.checked
             Behavior on opacity { NumberAnimation { duration: 100; } }
         }
