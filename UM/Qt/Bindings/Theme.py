@@ -221,6 +221,15 @@ class Theme(QObject):
                     continue  # Skip this one then.
                 self._colors[name] = c
 
+        if "base_colors" in data:
+            for name, color in data["base_colors"].items():
+                try:
+                    c = QColor(color[0], color[1], color[2], color[3])
+                except IndexError:  # Color doesn't have enough components.
+                    Logger.log("w", "Colour {name} doesn't have enough components. Need to have 4, but had {num_components}.".format(name = name, num_components = len(color)))
+                    continue  # Skip this one then.
+                self._colors[name] = c
+
         fonts_dir = os.path.join(path, "fonts")
         if os.path.isdir(fonts_dir):
             for root, dirnames, filenames in os.walk(fonts_dir):
