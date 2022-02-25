@@ -199,7 +199,9 @@ Dialog
     {
         id: buttonsRow
         spacing: UM.Theme.getSize("default_margin").width
-        padding: root.padding
+        leftPadding: root.padding
+        rightPadding: root.padding
+        bottomPadding: root.padding
 
         layoutDirection: Qt.RightToLeft
         anchors.left: parent.left
