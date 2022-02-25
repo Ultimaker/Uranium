@@ -44,7 +44,7 @@ Dialog
 
     background: Rectangle
     {
-        color: UM.Theme.getColor("main_background")
+        color: UM.Theme.getColor("detail_background")
     }
 
     header: UM.Label
