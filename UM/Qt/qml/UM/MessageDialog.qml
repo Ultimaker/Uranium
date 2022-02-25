@@ -36,11 +36,25 @@ Dialog
     width: UM.Theme.getSize("small_popup_dialog").width
 
     property alias buttonSpacing: buttonsRow.spacing
-    property alias buttonPadding: buttonsRow.padding
+    padding: UM.Theme.getSize("default_margin").width
 
     // Overlay.overlay holds the "window overlay item"; the window container
     // https://doc.qt.io/qt-5/qml-qtquick-controls2-overlay.html#overlay-attached-prop
     anchors.centerIn: Overlay.overlay
+
+    background: Rectangle
+    {
+        color: UM.Theme.getColor("main_background")
+    }
+
+    header: UM.Label
+    {
+        text: root.title
+        font: UM.Theme.getFont("medium_bold")
+        topPadding: root.padding
+        leftPadding: root.padding
+        rightPadding: root.padding
+    }
 
     modal: true
 
@@ -182,7 +196,7 @@ Dialog
     {
         id: buttonsRow
         spacing: UM.Theme.getSize("default_margin").width
-        padding: UM.Theme.getSize("default_margin").width
+        padding: root.padding
 
         layoutDirection: Qt.RightToLeft
         anchors.left: parent.left
