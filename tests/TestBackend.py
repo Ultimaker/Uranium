@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
-import Arcus
+import pyArcus
 
 from UM.Backend.Backend import Backend
 
@@ -59,13 +59,13 @@ def test_startEngineWithoutCommand(backend):
 def test__onSocketStateChanged_listening(backend):
     backend.startEngine = MagicMock()
     with patch("UM.Application.Application.getInstance"):
-        backend._onSocketStateChanged(Arcus.SocketState.Listening)
+        backend._onSocketStateChanged(pyArcus.SocketState.SocketState.Listening)
     assert backend.startEngine.called_once_with()
 
 
 def test_onSocketStateChanged_connected(backend):
     backend.backendConnected = MagicMock()
-    backend._onSocketStateChanged(Arcus.SocketState.Connected)
+    backend._onSocketStateChanged(pyArcus.SocketState.SocketState.Connected)
     assert backend.backendConnected.emit.called_once_with()
 
 
@@ -86,7 +86,7 @@ def test_onSocketBindFailed(backend):
     port = backend._port
     backend._createSocket = MagicMock()
     bind_failed_error = MagicMock()
-    bind_failed_error.getErrorCode = MagicMock(return_value=Arcus.ErrorCode.BindFailedError)
+    bind_failed_error.getErrorCode = MagicMock(return_value=pyArcus.ErrorCode.BindFailedError)
     backend._onSocketError(bind_failed_error)
     assert backend._createSocket.call_count == 1
     assert port + 1 == backend._port
