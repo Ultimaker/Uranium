@@ -9,6 +9,8 @@ TextField
 
     selectByMouse: true
     selectionColor: UM.Theme.getColor("text_selection")
+    font: UM.Theme.getFont("default")
+    color: UM.Theme.getColor("text")
     background: Rectangle
     {
 
