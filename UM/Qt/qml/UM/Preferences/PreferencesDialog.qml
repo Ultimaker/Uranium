@@ -44,7 +44,7 @@ Dialog
                 width: parent ? parent.width : 0
                 height: pageLabel.height
 
-                color: ListView.isCurrentItem ? UM.Theme.getColor("text_selection") : UM.Theme.getColor("main_background")
+                color: ListView.isCurrentItem ? UM.Theme.getColor("background_3") : UM.Theme.getColor("main_background")
 
                 UM.Label
                 {
@@ -53,6 +53,8 @@ Dialog
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                     width: parent.width
+                    height: UM.Theme.getSize("setting_control").height
+                    color: UM.Theme.getColor("text_default")
                     text: model.name
                 }
                 MouseArea
