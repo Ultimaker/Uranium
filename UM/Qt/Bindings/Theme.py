@@ -198,7 +198,13 @@ class Theme(QObject):
 
         if "colors" in data:
             for name, value in data["colors"].items():
-                if isinstance(value, str):
+
+                if not is_first_call and isinstance(value, str):
+                    # Keep parent theme string colors as strings and parse later
+                    self._colors[name] = value
+                    continue
+
+                if isinstance(value, str) and is_first_call:
                     # value is reference to base_colors color name
                     try:
                         color = data["base_colors"][value]
@@ -223,6 +229,17 @@ class Theme(QObject):
                     Logger.log("w", "Colour {name} doesn't have enough components. Need to have 4, but had {num_components}.".format(name = name, num_components = len(color)))
                     continue  # Skip this one then.
                 self._colors[name] = c
+
+        if is_first_call and self._colors:
+            #Convert all string value colors to their referenced color
+            for name, color in self._colors.items():
+                if isinstance(color, str):
+                    try:
+                        c = self._colors[color]
+                        self._colors[name] = c
+                    except:
+                        Logger.log("w", "Colour {name} {color} does")
+
 
         fonts_dir = os.path.join(path, "fonts")
         if os.path.isdir(fonts_dir):
