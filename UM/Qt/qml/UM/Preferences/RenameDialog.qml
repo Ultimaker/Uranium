@@ -5,7 +5,7 @@ import QtQuick 2.1
 import QtQuick.Controls 2.0
 import QtQuick.Window 2.1
 
-import UM 1.1 as UM
+import UM 1.5 as UM
 
 UM.Dialog
 {
@@ -39,7 +39,7 @@ UM.Dialog
     {
         anchors.fill: parent
 
-        Label
+        UM.Label
         {
             text: base.explanation + "\n" //Newline to make some space using system theming.
             width: parent.width
@@ -56,7 +56,7 @@ UM.Dialog
             onTextChanged: base.textChanged(text)
         }
 
-        Label
+        UM.Label
         {
             visible: !base.validName
             text: base.validationError
