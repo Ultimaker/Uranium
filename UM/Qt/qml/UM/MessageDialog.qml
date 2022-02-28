@@ -84,7 +84,7 @@ Dialog
     // Change the buttonsModel in the event that the standardButtons property changes
     Connections {
         target: root
-        onStandardButtonsChanged: buttonsModel.update()
+        function onStandardButtonsChanged() { buttonsModel.update() }
     }
 
     property int defaultAction: 0;
