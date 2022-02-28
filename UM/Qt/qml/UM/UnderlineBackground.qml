@@ -18,6 +18,6 @@ Rectangle
         anchors.bottom: parent.bottom
         width: parent.width
         height: UM.Theme.getSize("default_lining").height
-        color: UM.Theme.getColor("border_field")
+        color: UM.Theme.getColor("border_main")
     }
 }

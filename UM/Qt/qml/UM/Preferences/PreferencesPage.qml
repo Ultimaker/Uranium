@@ -48,12 +48,14 @@ Item
         Label
         {
             id: titleLabel
-            font: UM.Theme.getFont("large")
+            anchors.verticalCenter: parent.verticalCenter
+            color: UM.Theme.getColor("text")
+            font: UM.Theme.getFont("large_bold")
         }
         Row
         {
             id: buttonRow
-
+            anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             height: childrenRect.height
         }
