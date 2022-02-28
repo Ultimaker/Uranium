@@ -16,7 +16,7 @@ import UM.Application
 from UM.PluginObject import PluginObject
 from UM.Platform import Platform
 
-import Arcus
+import pyArcus as Arcus
 
 
 class BackendState(IntEnum):
