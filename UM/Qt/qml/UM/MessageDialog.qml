@@ -152,6 +152,9 @@ Dialog
     // https://doc.qt.io/qt-5/qml-qtquick-controls2-dialogbuttonbox.html#details
     function click(standardButton)
     {
+        // close the dialog after a click event
+        root.close();
+
         switch (standardButton)
         {
             case Dialog.Ok:
@@ -190,9 +193,6 @@ Dialog
                 root.helpRequested();
                 break;
         }
-
-        // close the dialog after a click event
-        root.close();
     }
 
     footer: Row
