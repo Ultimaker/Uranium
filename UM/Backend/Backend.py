@@ -16,7 +16,7 @@ import UM.Application
 from UM.PluginObject import PluginObject
 from UM.Platform import Platform
 
-import pyArcus
+import pyArcus as Arcus
 
 
 class BackendState(IntEnum):
@@ -98,7 +98,7 @@ class Backend(PluginObject):
 
     def close(self):
         if self._socket:
-            while self._socket.getState() == pyArcus.SocketState.Opening:
+            while self._socket.getState() == Arcus.SocketState.Opening:
                 sleep(0.1)
             self._socket.close()
 
@@ -174,27 +174,27 @@ class Backend(PluginObject):
         """Private socket state changed handler."""
 
         self._logSocketState(state)
-        if state == pyArcus.SocketState.Listening:
+        if state == Arcus.SocketState.Listening:
             if not UM.Application.Application.getInstance().getUseExternalBackend():
                 self.startEngine()
-        elif state == pyArcus.SocketState.Connected:
+        elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()
 
     def _logSocketState(self, state):
         """Debug function created to provide more info for CURA-2127"""
 
-        if state == pyArcus.SocketState.Listening:
+        if state == Arcus.SocketState.Listening:
             Logger.log("d", "Socket state changed to Listening")
-        elif state == pyArcus.SocketState.Connecting:
+        elif state == Arcus.SocketState.Connecting:
             Logger.log("d", "Socket state changed to Connecting")
-        elif state == pyArcus.SocketState.Connected:
+        elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Socket state changed to Connected")
-        elif state == pyArcus.SocketState.Error:
+        elif state == Arcus.SocketState.Error:
             Logger.log("d", "Socket state changed to Error")
-        elif state == pyArcus.SocketState.Closing:
+        elif state == Arcus.SocketState.Closing:
             Logger.log("d", "Socket state changed to Closing")
-        elif state == pyArcus.SocketState.Closed:
+        elif state == Arcus.SocketState.Closed:
             Logger.log("d", "Socket state changed to Closed")
 
     def _onMessageReceived(self):
@@ -211,12 +211,12 @@ class Backend(PluginObject):
     def _onSocketError(self, error):
         """Private socket error handler"""
 
-        if error.getErrorCode() == pyArcus.ErrorCode.BindFailedError:
+        if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
             self._port += 1
             Logger.log("d", "Socket was unable to bind to port, increasing port number to %s", self._port)
-        elif error.getErrorCode() == pyArcus.ErrorCode.ConnectionResetError:
+        elif error.getErrorCode() == Arcus.ErrorCode.ConnectionResetError:
             Logger.log("i", "Backend crashed or closed.")
-        elif error.getErrorCode() == pyArcus.ErrorCode.Debug:
+        elif error.getErrorCode() == Arcus.ErrorCode.Debug:
             Logger.log("d", "Socket debug: %s", str(error))
             return
         else:
@@ -233,7 +233,7 @@ class Backend(PluginObject):
             self._socket.messageReceived.disconnect(self._onMessageReceived)
             self._socket.error.disconnect(self._onSocketError)
             # Hack for (at least) Linux. If the socket is connecting, the close will deadlock.
-            while self._socket.getState() == pyArcus.SocketState.Opening:
+            while self._socket.getState() == Arcus.SocketState.Opening:
                 sleep(0.1)
             # If the error occurred due to parsing, both connections believe that connection is okay.
             # So we need to force a close.

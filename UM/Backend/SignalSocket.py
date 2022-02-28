@@ -1,13 +1,13 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import pyArcus
+import pyArcus as Arcus
 
 from UM.Signal import Signal, signalemitter
 
 
 @signalemitter
-class SignalSocket(pyArcus.Socket):
+class SignalSocket(Arcus.Socket):
     """A small extension of an Arcus socket that emits queued signals when socket events happen."""
 
     def __init__(self):
@@ -32,7 +32,7 @@ class SignalSocket(pyArcus.Socket):
     def _onError(self, error):
         self.error.emit(error)
 
-class _SocketListener(pyArcus.SocketListener):
+class _SocketListener(Arcus.SocketListener):
     def __init__(self):
         super().__init__()
 
