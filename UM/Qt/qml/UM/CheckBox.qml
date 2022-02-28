@@ -3,7 +3,7 @@
 
 import QtQuick.Controls 2.15
 import QtQuick 2.15
-import UM 1.0 as UM
+import UM 1.5 as UM
 
 CheckBox
 {
@@ -31,7 +31,7 @@ CheckBox
         implicitWidth:  UM.Theme.getSize("checkbox").width
         implicitHeight: UM.Theme.getSize("checkbox").height
 
-        color: UM.Theme.getColor("checkbox")
+        color: control.enabled ? UM.Theme.getColor("checkbox") : UM.Theme.getColor("checkbox_disabled")
         Behavior on color { ColorAnimation { duration: 50; } }
         radius: UM.Theme.getSize("checkbox_radius").width
         anchors.verticalCenter: parent.verticalCenter
@@ -45,18 +45,17 @@ CheckBox
             height: Math.round(parent.height / 2.5)
 
             sourceSize.height: width
-            color: UM.Theme.getColor("checkbox_mark")
+            color: control.enabled ? UM.Theme.getColor("checkbox_mark") : UM.Theme.getColor("checkbox_disabled")
             source: UM.Theme.getIcon("Check")
             opacity: control.checked
             Behavior on opacity { NumberAnimation { duration: 100; } }
         }
     }
-    contentItem: Label
+    contentItem: UM.Label
     {
         text: control.text
         height: contentHeight
-        color: UM.Theme.getColor("checkbox_text")
-        font: UM.Theme.getFont("default")
+        color: control.enabled ? UM.Theme.getColor("checkbox_text"): UM.Theme.getColor("checkbox_disabled")
         elide: Text.ElideRight
         renderType: Text.NativeRendering
         verticalAlignment: Text.AlignVCenter

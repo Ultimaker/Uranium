@@ -2,7 +2,6 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
-import QtQuick.Controls 1.2
 
 import UM 1.5 as UM
 
@@ -170,7 +169,7 @@ Item
         }
     }
 
-    CheckBox
+    UM.CheckBox
     {
         property var checkbox_state: 0; // if the state number is 2 then the checkbox has "partially" state
 
@@ -207,8 +206,7 @@ Item
         anchors.left: textfields.left
         anchors.leftMargin: UM.Theme.getSize("default_margin").width
 
-        text: catalog.i18nc("@option:check","Lock Model")
-        style: UM.Theme.styles.partially_checkbox
+        text: catalog.i18nc("@option:check", "Lock Model")
 
         onClicked: {
 

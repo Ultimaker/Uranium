@@ -16,7 +16,7 @@ Menu
         if(parent)
         {
             root.parent.visible = shouldBeVisible
-            root.parent.height = shouldBeVisible ? UM.Theme.getSize("context_menu").height : 0
+            root.parent.height = shouldBeVisible ? UM.Theme.getSize("menu").height : 0
         }
     }
     Component.onCompleted: handleVisibility()

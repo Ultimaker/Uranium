@@ -6,7 +6,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 
-import UM 1.0 as UM
+import UM 1.5 as UM
 
 Item
 {
@@ -37,7 +37,7 @@ Item
     Item
     {
         id: titleBar
-        height: childrenRect.height
+        height: buttonRow.height
         anchors
         {
             top: parent.top
@@ -45,11 +45,10 @@ Item
             right: parent.right
             margins: UM.Theme.getSize("narrow_margin").width
         }
-        Label
+        UM.Label
         {
             id: titleLabel
             anchors.verticalCenter: parent.verticalCenter
-            color: UM.Theme.getColor("text")
             font: UM.Theme.getFont("large_bold")
         }
         Row
