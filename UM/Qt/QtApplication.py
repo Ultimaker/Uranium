@@ -517,9 +517,6 @@ class QtApplication(QApplication, Application):
         if self._qml_engine:
             self._qml_engine.deleteLater()
 
-        if self._tray_icon_widget:
-            self._tray_icon_widget.deleteLater()
-
         self.quit()
 
     def checkWindowMinimizedState(self) -> bool:
