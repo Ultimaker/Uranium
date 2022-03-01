@@ -6,8 +6,9 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
 
 import UM 1.5 as UM
+import Cura 1.5 as Cura
 
-UM.MessageDialog
+Cura.MessageDialog
 {
     property string object: "";
 

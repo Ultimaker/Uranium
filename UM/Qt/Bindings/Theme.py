@@ -209,7 +209,7 @@ class Theme(QObject):
                     try:
                         color = data["base_colors"][value]
                     except IndexError:
-                        Logger.log("w", "Colour {value} could not be found in base_colors".format())
+                        Logger.log("w", "Colour {value} could not be found in base_colors".format(value = value))
                         continue
                 else:
                     color = value
@@ -238,7 +238,7 @@ class Theme(QObject):
                         c = self._colors[color]
                         self._colors[name] = c
                     except:
-                        Logger.log("w", "Colour {name} {color} does")
+                        Logger.log("w", "Colour {name} {color} does".format(name = name, color = color))
 
 
         fonts_dir = os.path.join(path, "fonts")
