@@ -41,13 +41,13 @@ CheckBox
         UM.RecolorImage
         {
             anchors.centerIn: parent
-            width: Math.round(parent.width / 2.5)
-            height: Math.round(parent.height / 2.5)
+            width: control.checkState == Qt.PartiallyChecked ? Math.round(parent.width / 1.8) : Math.round(parent.width / 1.5)
+            height: control.checkState == Qt.PartiallyChecked ? Math.round(parent.height / 1.8) : Math.round(parent.height / 1.5)
 
             sourceSize.height: width
-            color: UM.Theme.getColor("checkbox_mark")
-            source: UM.Theme.getIcon("Check")
-            opacity: control.checked
+            color: control.checkState == Qt.PartiallyChecked ? UM.Theme.getColor("checkbox_border") : UM.Theme.getColor("checkbox_mark")
+            source: control.checkState == Qt.PartiallyChecked ? UM.Theme.getIcon("Solid") : UM.Theme.getIcon("Check", "low")
+            opacity: control.checkState != Qt.Unchecked
             Behavior on opacity { NumberAnimation { duration: 100; } }
         }
     }
