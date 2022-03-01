@@ -119,6 +119,4 @@ Window
             }
         }
     }
-
-    SystemPalette { id: palette; }
 }

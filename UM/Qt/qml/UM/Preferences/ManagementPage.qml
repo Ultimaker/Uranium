@@ -162,7 +162,6 @@ PreferencesPage
         }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
-        SystemPalette { id: palette }
 
         Connections
         {
