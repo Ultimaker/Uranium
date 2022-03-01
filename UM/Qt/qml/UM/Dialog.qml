@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.10
@@ -12,8 +12,8 @@ Window
 {
     id: base
 
-    modality: Qt.ApplicationModal;
-    flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint;
+    modality: Qt.ApplicationModal
+    flags: Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
 
     minimumWidth: screenScaleFactor * 640;
     minimumHeight: screenScaleFactor * 480;
