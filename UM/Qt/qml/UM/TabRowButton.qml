@@ -18,7 +18,7 @@ TabButton
         radius: UM.Theme.getSize("default_radius").width
         border.color: UM.Theme.getColor("lining")
         border.width: UM.Theme.getSize("default_lining").width
-        color: UM.Theme.getColor(parent.checked ? "main_background" : (parent.hovered ? "action_button_hovered" : "secondary"))
+        color: UM.Theme.getColor(parent.checked ? "main_background" : (parent.hovered ? "expandable_hover" : "expandable_active"))
 
         //Make the lining go straight down on the bottom side of the left and right sides.
         Rectangle
