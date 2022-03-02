@@ -40,14 +40,32 @@ CheckBox
 
         UM.RecolorImage
         {
-            anchors.centerIn: parent
-            width: Math.round(parent.width / 2.5)
-            height: Math.round(parent.height / 2.5)
+            id: indicator_item
 
+            states: [
+                State {
+                    name: "unchecked"
+                    when: control.enabled && control.checkState == Qt.Unchecked
+                    PropertyChanges { target: indicator_item; width: Math.round(parent.width / 1.5); height: width }
+                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_mark"); source: UM.Theme.getIcon("Check", "low"); opacity: true; }
+                },
+                State {
+                    name: "partially_checked"
+                    when: control.enabled && control.checkState == Qt.PartiallyChecked
+                    PropertyChanges { target: indicator_item; width: Math.round(parent.width / 1.8); height: width  }
+                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_border"); source: UM.Theme.getIcon("Solid"); opacity: true; }
+                },
+                State {
+                    name: "checked"
+                    when: control.enabled && control.checkState == Qt.Checked
+                    PropertyChanges { target: indicator_item; width: Math.round(parent.width / 1.5); height: width  }
+                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_mark"); source: UM.Theme.getIcon("Check", "low"); opacity: false; }
+                }
+            ]
+
+            anchors.centerIn: parent
             sourceSize.height: width
-            color: control.enabled ? UM.Theme.getColor("checkbox_mark") : UM.Theme.getColor("checkbox_disabled")
-            source: UM.Theme.getIcon("Check")
-            opacity: control.checked
+
             Behavior on opacity { NumberAnimation { duration: 100; } }
         }
     }
