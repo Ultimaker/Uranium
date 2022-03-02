@@ -8,22 +8,33 @@ import UM 1.5 as UM
 
 import ".."
 
-Button {
-    id: base;
+Button
+{
+    id: base
 
-    background: Item { }
+    background: Rectangle {
+        color: UM.Theme.getColor("category_background")
+    }
 
     contentItem: Row
     {
         spacing: UM.Theme.getSize("default_lining").width
 
-        UM.RecolorImage
+        Item //Wrapper to give space before icon with fixed width. This allows aligning checkbox with category icon.
         {
-            anchors.verticalCenter: parent.verticalCenter
-            height: (label.height / 2) | 0
+            height: label.height
             width: height
-            source: base.checked ? UM.Theme.getIcon("ChevronSingleDown") : UM.Theme.getIcon("ChevronSingleRight");
-            color: base.hovered ? palette.highlight : palette.buttonText
+            anchors.verticalCenter: parent.verticalCenter
+
+            UM.RecolorImage
+            {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: (label.height / 2) | 0
+                width: height
+                source: base.checked ? UM.Theme.getIcon("ChevronSingleDown") : UM.Theme.getIcon("ChevronSingleRight");
+                color: base.hovered ? UM.Theme.getColor("primary_button_hover"): UM.Theme.getColor("text")
+            }
         }
         UM.RecolorImage
         {
@@ -31,22 +42,21 @@ Button {
             height: label.height
             width: height
             source: definition ? UM.Theme.getIcon(definition.icon) : ""
-            color: base.hovered ? palette.highlight : palette.buttonText
+            color: base.hovered ? UM.Theme.getColor("primary_button_hover") : UM.Theme.getColor("text")
         }
         UM.Label
         {
             id: label
             anchors.verticalCenter: parent.verticalCenter
             text: base.text
-            color: base.hovered ? palette.highlight : palette.buttonText
+            color: base.hovered ? UM.Theme.getColor("primary_button_hover") : UM.Theme.getColor("text")
             font.bold: true
         }
 
-        SystemPalette { id: palette }
     }
 
-    signal showTooltip(string text);
-    signal hideTooltip();
+    signal showTooltip(string text)
+    signal hideTooltip()
     signal contextMenuRequested()
 
     text: definition ? definition.label : ""

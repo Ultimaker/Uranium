@@ -197,13 +197,49 @@ class Theme(QObject):
             pass  # No metadata or no inherits keyword in the theme.json file
 
         if "colors" in data:
-            for name, color in data["colors"].items():
+            for name, value in data["colors"].items():
+
+                if not is_first_call and isinstance(value, str):
+                    # Keep parent theme string colors as strings and parse later
+                    self._colors[name] = value
+                    continue
+
+                if isinstance(value, str) and is_first_call:
+                    # value is reference to base_colors color name
+                    try:
+                        color = data["base_colors"][value]
+                    except IndexError:
+                        Logger.log("w", "Colour {value} could not be found in base_colors".format(value = value))
+                        continue
+                else:
+                    color = value
+
                 try:
                     c = QColor(color[0], color[1], color[2], color[3])
                 except IndexError:  # Color doesn't have enough components.
                     Logger.log("w", "Colour {name} doesn't have enough components. Need to have 4, but had {num_components}.".format(name = name, num_components = len(color)))
                     continue  # Skip this one then.
                 self._colors[name] = c
+
+        if "base_colors" in data:
+            for name, color in data["base_colors"].items():
+                try:
+                    c = QColor(color[0], color[1], color[2], color[3])
+                except IndexError:  # Color doesn't have enough components.
+                    Logger.log("w", "Colour {name} doesn't have enough components. Need to have 4, but had {num_components}.".format(name = name, num_components = len(color)))
+                    continue  # Skip this one then.
+                self._colors[name] = c
+
+        if is_first_call and self._colors:
+            #Convert all string value colors to their referenced color
+            for name, color in self._colors.items():
+                if isinstance(color, str):
+                    try:
+                        c = self._colors[color]
+                        self._colors[name] = c
+                    except:
+                        Logger.log("w", "Colour {name} {color} does".format(name = name, color = color))
+
 
         fonts_dir = os.path.join(path, "fonts")
         if os.path.isdir(fonts_dir):

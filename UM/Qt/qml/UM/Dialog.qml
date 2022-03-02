@@ -58,8 +58,8 @@ Window
 
     Rectangle {
         id: background
+        color: UM.Theme.getColor("detail_background")
         anchors.fill: parent;
-        color: palette.window;
 
         focus: base.visible;
 
@@ -119,6 +119,4 @@ Window
             }
         }
     }
-
-    SystemPalette { id: palette; }
 }

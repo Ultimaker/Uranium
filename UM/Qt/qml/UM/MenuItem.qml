@@ -9,7 +9,7 @@ MenuItem
 
     property alias shortcut: _shortcut.sequence
     property bool indicatorVisible: root.icon.source.length > 0 || root.checkable
-    height: visible ? implicitHeight : 0
+    height: visible ? UM.Theme.getSize("context_menu").height : 0
     Shortcut
     {
         id: _shortcut
@@ -64,6 +64,7 @@ MenuItem
         {
             text: replaceText(root.text)
             Layout.fillWidth: true
+            Layout.fillHeight:true
             elide: Label.ElideRight
             wrapMode: Text.NoWrap
         }
@@ -75,6 +76,7 @@ MenuItem
 
         UM.Label
         {
+            Layout.fillHeight: true
             text: _shortcut.nativeText
             color: UM.Theme.getColor("text_lighter")
         }

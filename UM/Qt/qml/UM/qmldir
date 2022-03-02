@@ -36,3 +36,4 @@ Label 1.5 Label.qml
 MenuItem 1.5 MenuItem.qml
 Menu 1.5 Menu.qml
 MessageDialog 1.5 MessageDialog.qml
+UnderlineBackground 1.5 UnderlineBackground.qml

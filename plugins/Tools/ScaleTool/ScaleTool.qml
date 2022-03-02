@@ -79,9 +79,7 @@ Item
         anchors.left: resetScaleButton.right
         anchors.leftMargin: UM.Theme.getSize("default_margin").width
         anchors.right: parent.right
-        anchors.top: resetScaleButton.top
-
-        spacing: UM.Theme.getSize("default_margin").height
+        anchors.verticalCenter: resetScaleButton.verticalCenter
 
         UM.CheckBox
         {

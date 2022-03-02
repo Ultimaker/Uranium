@@ -2,11 +2,10 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
-import QtQuick.Controls 1.1
-import QtQuick.Layouts 1.1
+import QtQuick.Controls 2.1
 import QtQuick.Window 2.1
 
-import UM 1.0 as UM
+import UM 1.5 as UM
 
 Item
 {
@@ -37,7 +36,7 @@ Item
     Item
     {
         id: titleBar
-        height: childrenRect.height
+        height: buttonRow.height
         anchors
         {
             top: parent.top
@@ -45,15 +44,16 @@ Item
             right: parent.right
             margins: UM.Theme.getSize("narrow_margin").width
         }
-        Label
+        UM.Label
         {
             id: titleLabel
-            font: UM.Theme.getFont("large")
+            anchors.verticalCenter: parent.verticalCenter
+            font: UM.Theme.getFont("large_bold")
         }
         Row
         {
             id: buttonRow
-
+            anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             height: childrenRect.height
         }

@@ -1,22 +1,47 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.1
+import QtQuick.Controls 2.1
 
 import UM 1.5 as UM
 
-Item {
+Item
+{
     // Use the depth of the model to move the item, but also leave space for the visibility / enabled exclamation mark.
 
-    x: definition ? (definition.depth + 1)* UM.Theme.getSize("default_margin").width : UM.Theme.getSize("default_margin").width
+    // Align checkbox with SettingVisibilityCategory icon with + 5
+    x: definition ? (definition.depth + 1) * UM.Theme.getSize("default_margin").width : UM.Theme.getSize("default_margin").width
+
     UM.TooltipArea
     {
-        width: height;
-        height: check.height;
-        anchors.right: checkboxTooltipArea.left
-        anchors.rightMargin: 2 * screenScaleFactor
+        text: definition ? definition.description : ""
+
+        width: childrenRect.width;
+        height: childrenRect.height;
+        id: checkboxTooltipArea
+        UM.CheckBox
+        {
+            id: check
+
+            text: definition ? definition.label: ""
+            checked: definition ? definition.visible: false
+            enabled: definition ? !definition.prohibited: false
+
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked: definitionsModel.setVisible(definition.key, !check.checked)
+            }
+        }
+    }
+
+    UM.TooltipArea
+    {
+        width: height
+        height: check.height
+        anchors.left: checkboxTooltipArea.right
+        anchors.leftMargin: 2 * screenScaleFactor
 
         text:
         {
@@ -49,8 +74,6 @@ Item {
             }
         }
 
-
-
         UM.RecolorImage
         {
             anchors.centerIn: parent
@@ -59,34 +82,10 @@ Item {
 
             source: UM.Theme.getIcon("Information")
 
-            color: palette.buttonText
+            color: UM.Theme.getColor("primary_button_text")
         }
 
         visible: provider.properties.enabled == "False"
-    }
-
-    UM.TooltipArea
-    {
-        text: definition ? definition.description : ""
-
-        width: childrenRect.width;
-        height: childrenRect.height;
-        id: checkboxTooltipArea
-        UM.CheckBox
-        {
-            id: check
-
-            text: definition ? definition.label: ""
-            checked: definition ? definition.visible: false
-            enabled: definition ? !definition.prohibited: false
-
-            MouseArea
-            {
-                anchors.fill: parent
-
-                onClicked: definitionsModel.setVisible(definition.key, !check.checked)
-            }
-        }
     }
 
     UM.SettingPropertyProvider
@@ -99,5 +98,4 @@ Item {
     }
 
     UM.I18nCatalog { id: catalog; name: "uranium" }
-    SystemPalette { id: palette }
 }

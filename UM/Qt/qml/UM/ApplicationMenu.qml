@@ -27,8 +27,6 @@ Rectangle
     width: menu.__isNative ? 0 : menu.__contentItem.width
     height: menu.__isNative ? 0 : menu.__contentItem.height
 
-    color: palette.window;
-
     Keys.forwardTo: menu.__contentItem;
 
     MenuBar
@@ -39,11 +37,5 @@ Rectangle
         {
             __contentItem.parent = menuBackground;
         }
-    }
-
-    SystemPalette
-    {
-        id: palette
-        colorGroup: SystemPalette.Active
     }
 }
