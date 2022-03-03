@@ -54,6 +54,7 @@ Item
         {
             id: buttonRow
             anchors.verticalCenter: parent.verticalCenter
+            spacing: UM.Theme.getSize("narrow_margin").width
             anchors.right: parent.right
             height: childrenRect.height
         }
