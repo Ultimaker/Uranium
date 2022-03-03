@@ -26,7 +26,7 @@ PreferencesPage
 
     signal itemActivated()
     signal hamburgeButtonClicked(Item hamburger_button)
-
+    property alias hamburgerButtonVisible: hamburgerButton.visible
 
     resetEnabled: false
 
