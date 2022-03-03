@@ -9,17 +9,19 @@ Item
     width: childrenRect.width
     height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "uranium"}
-    UM.ImageButton
+
+    UM.ToolbarButton
     {
         id: resetRotationButton
 
         anchors.left: parent.left;
 
-        //: Reset Rotation tool button
         text: catalog.i18nc("@action:button", "Reset")
-        imageSource: UM.Theme.getIcon("ArrowReset")
-        imageWidth: UM.Theme.getSize("medium_button_icon").width
-        imageHeight: UM.Theme.getSize("medium_button_icon").height
+        toolItem: UM.RecolorImage
+        {
+            source: UM.Theme.getIcon("ArrowReset")
+            color: UM.Theme.getColor("icon")
+        }
         property bool needBorder: true
 
         z: 2
@@ -27,7 +29,7 @@ Item
         onClicked: UM.ActiveTool.triggerAction("resetRotation")
     }
 
-    UM.ImageButton
+    UM.ToolbarButton
     {
         id: layFlatButton
 
@@ -36,9 +38,12 @@ Item
 
         //: Lay Flat tool button
         text: catalog.i18nc("@action:button", "Lay flat")
-        imageSource: UM.Theme.getIcon("LayFlat")
-        imageWidth: UM.Theme.getSize("medium_button_icon").width
-        imageHeight: UM.Theme.getSize("medium_button_icon").height
+
+        toolItem: UM.RecolorImage
+        {
+            source: UM.Theme.getIcon("LayFlat")
+            color: UM.Theme.getColor("icon")
+        }
 
         z: 1
 
@@ -48,8 +53,7 @@ Item
         // visible: ! UM.ActiveTool.properties.getValue("SelectFaceSupported");
     }
 
-    UM.ImageButton
-    {
+    UM.ToolbarButton{
         id: alignFaceButton
 
         anchors.left: layFlatButton.visible ? layFlatButton.right : resetRotationButton.right
@@ -57,13 +61,18 @@ Item
         width: visible ? UM.Theme.getIcon("LayFlatOnFace").width : 0
 
         text: catalog.i18nc("@action:button", "Select face to align to the build plate")
-        imageSource: UM.Theme.getIcon("LayFlatOnFace")
 
-        imageWidth: UM.Theme.getSize("medium_button_icon").width
-        imageHeight: UM.Theme.getSize("medium_button_icon").height
+        toolItem: UM.RecolorImage
+        {
+            source: UM.Theme.getIcon("LayFlatOnFace")
+            color: UM.Theme.getColor("icon")
+        }
+
+        checkable: true
+
         enabled: UM.Selection.selectionCount == 1
         checked: UM.ActiveTool.properties.getValue("SelectFaceToLayFlatMode")
-        onClicked: UM.ActiveTool.setProperty("SelectFaceToLayFlatMode", !checked)
+        onClicked: UM.ActiveTool.setProperty("SelectFaceToLayFlatMode", checked)
 
         visible: UM.ActiveTool.properties.getValue("SelectFaceSupported") == true //Might be undefined if we're switching away from the RotateTool!
     }
@@ -71,7 +80,6 @@ Item
     UM.CheckBox
     {
         id: snapRotationCheckbox
-        anchors.left: parent.left;
         anchors.top: resetRotationButton.bottom
         anchors.topMargin: UM.Theme.getSize("default_margin").width
 
