@@ -47,7 +47,7 @@ CheckBox
                     name: "unchecked"
                     when: control.enabled && control.checkState == Qt.Unchecked
                     PropertyChanges { target: indicator_item; width: Math.round(parent.width / 1.5); height: width }
-                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_mark"); source: UM.Theme.getIcon("Check", "low"); opacity: true; }
+                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_mark"); source: UM.Theme.getIcon("Check", "low"); opacity: false; }
                 },
                 State {
                     name: "partially_checked"
@@ -59,7 +59,7 @@ CheckBox
                     name: "checked"
                     when: control.enabled && control.checkState == Qt.Checked
                     PropertyChanges { target: indicator_item; width: Math.round(parent.width / 1.5); height: width  }
-                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_mark"); source: UM.Theme.getIcon("Check", "low"); opacity: false; }
+                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_mark"); source: UM.Theme.getIcon("Check", "low"); opacity: true; }
                 }
             ]
 
