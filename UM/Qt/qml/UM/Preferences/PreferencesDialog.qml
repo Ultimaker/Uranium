@@ -1,19 +1,18 @@
-// Copyright (c) 2021 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
-import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.1
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 
 import ".."
 
-import UM 1.1 as UM
+import UM 1.5 as UM
 
 Dialog
 {
-    id: base;
+    id: base
 
     title: catalog.i18nc("@title:window", "Preferences")
     minimumWidth: UM.Theme.getSize("modal_window_minimum").width
@@ -21,84 +20,86 @@ Dialog
     width: minimumWidth
     height: minimumHeight
 
-    property int currentPage: 0;
-    onCurrentPageChanged:
-    {
-        pagesList.selection.clear();
-        pagesList.selection.select(currentPage);
-    }
+    property alias currentPage: pagesList.currentIndex
 
     Item
     {
         id: test
-        anchors.fill: parent;
+        anchors.fill: parent
 
-        TableView
+        ListView
         {
-            id: pagesList;
+            id: pagesList
+            width: UM.Theme.getSize("setting_control").width
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
 
-            anchors {
-                left: parent.left;
-                top: parent.top;
-                bottom: parent.bottom;
-            }
+            ScrollBar.vertical: UM.ScrollBar {}
+            clip: true
+            model: ListModel { id: configPagesModel }
+            currentIndex: 0
 
-            width: 7 * UM.Theme.getSize("line").width;
-
-            alternatingRowColors: false;
-            headerVisible: false;
-
-            model: ListModel { id: configPagesModel; }
-
-            TableViewColumn { role: "name" }
-
-            onClicked:
+            delegate: Rectangle
             {
-                if(base.currentPage != row)
+                width: parent ? parent.width : 0
+                height: pageLabel.height
+
+                color: ListView.isCurrentItem ? UM.Theme.getColor("background_3") : UM.Theme.getColor("main_background")
+
+                UM.Label
                 {
-                    stackView.replace(configPagesModel.get(row).item);
-                    base.currentPage = row;
+                    id: pageLabel
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    width: parent.width
+                    height: UM.Theme.getSize("setting_control").height
+                    color: UM.Theme.getColor("text_default")
+                    text: model.name
+                }
+                MouseArea
+                {
+                    anchors.fill: parent
+                    onClicked: pagesList.currentIndex = index
                 }
             }
+
+            onCurrentIndexChanged: stackView.replace(configPagesModel.get(currentIndex).item)
         }
 
-        StackView {
+
+        StackView
+        {
             id: stackView
-            anchors {
+            anchors
+            {
                 left: pagesList.right
-                leftMargin: (UM.Theme.getSize("default_margin").width / 2) | 0
+                leftMargin: UM.Theme.getSize("narrow_margin").width
                 top: parent.top
                 bottom: parent.bottom
                 right: parent.right
             }
 
-            initialItem: Item { property bool resetEnabled: false; }
+            initialItem: Item { property bool resetEnabled: false }
 
-            delegate: StackViewDelegate
+            replaceEnter: Transition
             {
-                function transitionFinished(properties)
+                NumberAnimation
                 {
-                    properties.exitItem.opacity = 1
+                    properties: "opacity"
+                    from: 0
+                    to: 1
+                    duration: 100
                 }
-
-                pushTransition: StackViewTransition
+            }
+            replaceExit: Transition
+            {
+                NumberAnimation
                 {
-                    PropertyAnimation
-                    {
-                        target: enterItem
-                        property: "opacity"
-                        from: 0
-                        to: 1
-                        duration: 100
-                    }
-                    PropertyAnimation
-                    {
-                        target: exitItem
-                        property: "opacity"
-                        from: 1
-                        to: 0
-                        duration: 100
-                    }
+                    properties: "opacity"
+                    from: 1
+                    to: 0
+                    duration: 100
                 }
             }
         }
@@ -106,26 +107,9 @@ Dialog
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
-    leftButtons: Button
-    {
-        id: defaultsButton
-        text: catalog.i18nc("@action:button", "Defaults");
-        enabled: stackView.currentItem.resetEnabled;
-        onClicked: stackView.currentItem.reset();
-    }
-
-    rightButtons: Button
-    {
-        id: closeButton
-        text: catalog.i18nc("@action:button", "Close");
-        iconName: "dialog-close";
-        onClicked: base.accept();
-    }
-
     function setPage(index)
     {
         stackView.replace(configPagesModel.get(index).item);
-
         base.currentPage = index
     }
 

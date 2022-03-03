@@ -2,7 +2,7 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
-import QtQuick.Controls 1.1
+import QtQuick.Controls 2.4
 
 /**
  * This is a workaround for lacking API in the QtQuick Controls MenuBar.
@@ -27,8 +27,6 @@ Rectangle
     width: menu.__isNative ? 0 : menu.__contentItem.width
     height: menu.__isNative ? 0 : menu.__contentItem.height
 
-    color: palette.window;
-
     Keys.forwardTo: menu.__contentItem;
 
     MenuBar
@@ -39,11 +37,5 @@ Rectangle
         {
             __contentItem.parent = menuBackground;
         }
-    }
-
-    SystemPalette
-    {
-        id: palette
-        colorGroup: SystemPalette.Active
     }
 }

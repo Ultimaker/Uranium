@@ -1,59 +1,65 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
-import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.1
-import QtQuick.Layouts 1.1
+import QtQuick.Controls 2.1
 
-import UM 1.1 as UM
+import UM 1.5 as UM
 
 import ".."
 
-Button {
-    id: base;
+Button
+{
+    id: base
 
-    style: ButtonStyle {
-        background: Item { }
-        label: Row
-        {
-            spacing: UM.Theme.getSize("default_lining").width
-
-            UM.RecolorImage
-            {
-                anchors.verticalCenter: parent.verticalCenter
-                height: (label.height / 2) | 0
-                width: height
-                source: control.checked ? UM.Theme.getIcon("ChevronSingleDown") : UM.Theme.getIcon("ChevronSingleRight");
-                color: control.hovered ? palette.highlight : palette.buttonText
-            }
-            UM.RecolorImage
-            {
-                anchors.verticalCenter: parent.verticalCenter
-                height: label.height
-                width: height
-                source: control.iconSource
-                color: control.hovered ? palette.highlight : palette.buttonText
-            }
-            Label
-            {
-                id: label
-                anchors.verticalCenter: parent.verticalCenter
-                text: control.text
-                color: control.hovered ? palette.highlight : palette.buttonText
-                font.bold: true
-            }
-
-            SystemPalette { id: palette }
-        }
+    background: Rectangle {
+        color: UM.Theme.getColor("category_background")
     }
 
-    signal showTooltip(string text);
-    signal hideTooltip();
+    contentItem: Row
+    {
+        spacing: UM.Theme.getSize("default_lining").width
+
+        Item //Wrapper to give space before icon with fixed width. This allows aligning checkbox with category icon.
+        {
+            height: label.height
+            width: height
+            anchors.verticalCenter: parent.verticalCenter
+
+            UM.RecolorImage
+            {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: (label.height / 2) | 0
+                width: height
+                source: base.checked ? UM.Theme.getIcon("ChevronSingleDown") : UM.Theme.getIcon("ChevronSingleRight");
+                color: base.hovered ? UM.Theme.getColor("primary_button_hover"): UM.Theme.getColor("text")
+            }
+        }
+        UM.RecolorImage
+        {
+            anchors.verticalCenter: parent.verticalCenter
+            height: label.height
+            width: height
+            source: definition ? UM.Theme.getIcon(definition.icon) : ""
+            color: base.hovered ? UM.Theme.getColor("primary_button_hover") : UM.Theme.getColor("text")
+        }
+        UM.Label
+        {
+            id: label
+            anchors.verticalCenter: parent.verticalCenter
+            text: base.text
+            color: base.hovered ? UM.Theme.getColor("primary_button_hover") : UM.Theme.getColor("text")
+            font.bold: true
+        }
+
+    }
+
+    signal showTooltip(string text)
+    signal hideTooltip()
     signal contextMenuRequested()
 
     text: definition ? definition.label : ""
-    iconSource: definition ? UM.Theme.getIcon(definition.icon) : ""
 
     checkable: true
     checked: definition? definition.expanded : ""
