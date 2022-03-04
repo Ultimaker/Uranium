@@ -9,7 +9,7 @@ import UM 1.5 as UM
 ToolTip
 {
     // Defines the alignment of the content, by default to the left
-    property int contentAlignment: Text.AlignRight
+    property int contentAlignment: UM.Enums.ContentAlignment.AlignRight
 
     property alias tooltipText: tooltip.text
     property alias arrowSize: backgroundRect.arrowSize
@@ -35,7 +35,7 @@ ToolTip
 
     x:
     {
-        if (contentAlignment == Text.AlignLeft)
+        if (contentAlignment == UM.Enums.ContentAlignment.AlignLeft)
         {
             return (label.width + Math.round(UM.Theme.getSize("default_arrow").width * 1.2) + padding * 2) * -1
         }
