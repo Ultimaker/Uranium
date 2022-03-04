@@ -3,7 +3,9 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
+print("About to import pyArcus", file = sys.stderr)
 import pyArcus as Arcus
+print("Completed importing pyArcus", file = sys.stderr)
 
 from UM.Backend.Backend import Backend
 

@@ -16,7 +16,10 @@ import UM.Application
 from UM.PluginObject import PluginObject
 from UM.Platform import Platform
 
+import sys
+print("About to import pyArcus", file = sys.stderr)
 import pyArcus as Arcus
+print("Completed importing pyArcus", file = sys.stderr)
 
 
 class BackendState(IntEnum):

@@ -11,7 +11,9 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 # is a race condition between Arcus and PyQt. Importing Arcus
 # first seems to prevent Sip from going into a state where it
 # tries to create PyQt objects on a non-main thread.
+print("About to import pyArcus", file = sys.stderr)
 import pyArcus as Arcus  # @UnusedImport
+print("Completed importing pyArcus", file = sys.stderr)
 
 from UM.Math.Vector import Vector
 import CameraTool
