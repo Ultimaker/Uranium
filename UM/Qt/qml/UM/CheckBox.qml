@@ -67,7 +67,7 @@ CheckBox
                         target: indicator_item
                         width: Math.round(parent.width / 1.8)
                         height: width
-                        color: control.enabled ? UM.Theme.getColor("checkbox_mark") : UM.Theme.getColor("checkbox_mark_disabled")
+                        color: control.enabled ? UM.Theme.getColor("checkbox_square") : UM.Theme.getColor("checkbox_mark_disabled")
                         source: UM.Theme.getIcon("Solid")
                     }
                 },
