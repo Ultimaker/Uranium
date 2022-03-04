@@ -9,7 +9,7 @@ CheckBox
 {
     id: control
     property alias tooltip: tooltip.text
-    enabled: false
+
     hoverEnabled: true
     states: [
         State {
