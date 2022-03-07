@@ -12,9 +12,6 @@ Button
 
     height: enabled ? UM.Theme.getSize("section").height : 0
 
-    // To avoid overlapping with the scrollBars
-    anchors.rightMargin: 2 * UM.Theme.getSize("thin_margin").width
-
     property var expanded: false
 
     property alias arrow: category_arrow

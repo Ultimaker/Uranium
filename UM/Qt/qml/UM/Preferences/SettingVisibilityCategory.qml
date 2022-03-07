@@ -12,9 +12,6 @@ UM.CategoryButton
 {
     id: base
 
-    // To avoid overlapping with the scrollBars
-    anchors.rightMargin: 2 * UM.Theme.getSize("thin_margin").width
-
     categoryIcon: definition ? UM.Theme.getIcon(definition.icon) : ""
     labelText: definition ? definition.label : ""
     expanded: definition ? definition.expanded : false
