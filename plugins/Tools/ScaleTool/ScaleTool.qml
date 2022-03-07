@@ -53,7 +53,7 @@ Item
         selected_item.focus = true
     }
 
-    UM.ImageButton
+    UM.ToolbarButton
     {
         id: resetScaleButton
         anchors.top: textfields.bottom
@@ -64,9 +64,12 @@ Item
 
         //: Reset scale tool button
         text: catalog.i18nc("@action:button","Reset")
-        imageSource: UM.Theme.getIcon("ArrowReset")
-        imageWidth: UM.Theme.getSize("medium_button_icon").width
-        imageHeight: UM.Theme.getSize("medium_button_icon").height
+
+        toolItem: UM.RecolorImage
+        {
+            source: UM.Theme.getIcon("ArrowReset")
+            color: UM.Theme.getColor("icon")
+        }
 
         onClicked: UM.ActiveTool.triggerAction("resetScale")
     }

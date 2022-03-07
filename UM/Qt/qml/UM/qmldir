@@ -1,39 +1,42 @@
 module Uranium
 
-ApplicationMenu 1.0 ApplicationMenu.qml
-RecolorImage 1.0 RecolorImage.qml
-MessageStack 1.0 MessageStack.qml
-Dialog 1.0 Dialog.qml
+ApplicationMenu         1.0 ApplicationMenu.qml
+RecolorImage            1.0 RecolorImage.qml
+MessageStack            1.0 MessageStack.qml
+Dialog                  1.0 Dialog.qml
 
-PreferencesDialog 1.0 Preferences/PreferencesDialog.qml
-PreferencesPage 1.0 Preferences/PreferencesPage.qml
-ManagementPage 1.0 Preferences/ManagementPage.qml
-RenameDialog 1.1 Preferences/RenameDialog.qml
-ConfirmRemoveDialog 1.1 Preferences/ConfirmRemoveDialog.qml
-SettingVisibilityItem 1.1 Preferences/SettingVisibilityItem.qml
+PreferencesDialog       1.0 Preferences/PreferencesDialog.qml
+PreferencesPage         1.0 Preferences/PreferencesPage.qml
+ManagementPage          1.0 Preferences/ManagementPage.qml
+RenameDialog            1.1 Preferences/RenameDialog.qml
+ConfirmRemoveDialog     1.1 Preferences/ConfirmRemoveDialog.qml
+SettingVisibilityItem   1.1 Preferences/SettingVisibilityItem.qml
 SettingVisibilityCategory 1.1 Preferences/SettingVisibilityCategory.qml
 
-SettingItem 1.0 Settings/SettingItem.qml
-SettingItemStyle 1.0 Settings/SettingItemStyle.qml
-SettingView 1.0 Settings/SettingView.qml
-SidebarCategoryHeader 1.0 Settings/SidebarCategoryHeader.qml
+SettingItem             1.0 Settings/SettingItem.qml
+SettingItemStyle        1.0 Settings/SettingItemStyle.qml
+SettingView             1.0 Settings/SettingView.qml
+SidebarCategoryHeader   1.0 Settings/SidebarCategoryHeader.qml
 
-TooltipArea 1.1 TooltipArea.qml
+TooltipArea             1.1 TooltipArea.qml
 
-ProgressBar 1.3 ProgressBar.qml
-ScrollBar 1.5 ScrollBar.qml
-SimpleButton 1.1 SimpleButton.qml
-TabRow 1.3 TabRow.qml
-TabRowButton 1.3 TabRowButton.qml
-CheckBox 1.5 CheckBox.qml
+ProgressBar             1.3 ProgressBar.qml
+ScrollBar               1.5 ScrollBar.qml
+SimpleButton            1.1 SimpleButton.qml
+TabRow                  1.3 TabRow.qml
+TabRowButton            1.3 TabRowButton.qml
+CheckBox                1.5 CheckBox.qml
 
-StatusIcon 1.4 StatusIcon.qml
+StatusIcon              1.4 StatusIcon.qml
 
-ImageButton 1.5 ImageButton.qml
-CheckBox 1.5 CheckBox.qml
-TextFieldWithUnit 1.5 TextFieldWithUnit.qml
-Label 1.5 Label.qml
-MenuItem 1.5 MenuItem.qml
-Menu 1.5 Menu.qml
-MessageDialog 1.5 MessageDialog.qml
-UnderlineBackground 1.5 UnderlineBackground.qml
+ImageButton             1.5 ImageButton.qml
+CheckBox                1.5 CheckBox.qml
+TextFieldWithUnit       1.5 TextFieldWithUnit.qml
+Label                   1.5 Label.qml
+MenuItem                1.5 MenuItem.qml
+Menu                    1.5 Menu.qml
+MessageDialog           1.5 MessageDialog.qml
+UnderlineBackground     1.5 UnderlineBackground.qml
+ToolTip                 1.5 ToolTip.qml
+ToolbarButton           1.5 ToolbarButton.qml
+Enums                   1.5 Enums.qml
