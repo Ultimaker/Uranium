@@ -50,13 +50,14 @@ CheckBox
             states: [
                 State {
                     name: "unchecked"
-                    when: control.enabled && control.checkState == Qt.Unchecked
+                    when: control.checkState == Qt.Unchecked
                     PropertyChanges
                     {
                         target: indicator_item
                         width: Math.round(parent.width / 1.5)
                         height: width
-                        opacity: false
+                        visible: false
+                        source: ""
                     }
                 },
                 State {
