@@ -10,7 +10,7 @@ Button
 {
     id: base
 
-    height: enabled ? UM.Theme.getSize("section").height : 0
+    height: enabled ? UM.Theme.getSize("section_header").height : 0
 
     property var expanded: false
 
@@ -108,8 +108,10 @@ Button
         id: icon
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
+        anchors.leftMargin: UM.Theme.getSize("narrow_margin").width
+
         color: base.text_color
-        width: UM.Theme.getSize("section_icon").width
+        width: UM.Theme.getSize("section_icon").width 
         height: UM.Theme.getSize("section_icon").height
         sourceSize.width: width
         sourceSize.height: width
