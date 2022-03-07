@@ -30,7 +30,7 @@ Dialog
         ListView
         {
             id: pagesList
-            width: UM.Theme.getSize("setting_control").width
+            width: UM.Theme.getSize("preferences_page_list").width
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 

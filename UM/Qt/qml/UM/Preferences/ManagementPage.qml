@@ -77,7 +77,7 @@ PreferencesPage
                 bottom: parent.bottom
                 left: parent.left
             }
-            width: base.detailsVisible ? Math.round(parent.width * 0.4) | 0 : parent.width
+            width: base.detailsVisible ? Math.round(parent.width * 0.3) | 0 : parent.width
             ListView
             {
                 id: objectList
