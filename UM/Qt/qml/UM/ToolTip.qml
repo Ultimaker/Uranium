@@ -35,11 +35,13 @@ ToolTip
 
     x:
     {
-        if (contentAlignment == UM.Enums.ContentAlignment.AlignLeft)
+        switch (contentAlignment)
         {
-            return (label.width + Math.round(UM.Theme.getSize("default_arrow").width * 1.2) + padding * 2) * -1
+            case UM.Enums.ContentAlignment.AlignLeft:
+                return (label.width + Math.round(UM.Theme.getSize("default_arrow").width * 1.2) + padding * 2) * -1;
+            case UM.Enums.ContentAlignment.AlignRight:
+                return parent.width + Math.round(UM.Theme.getSize("default_arrow").width * 1.2 + padding);
         }
-        return parent.width + Math.round(UM.Theme.getSize("default_arrow").width * 1.2 + padding)
     }
 
     y: Math.round(parent.height / 2 - label.height / 2 ) - padding
