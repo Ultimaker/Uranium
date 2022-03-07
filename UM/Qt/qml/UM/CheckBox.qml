@@ -15,13 +15,17 @@ CheckBox
         State {
             name: "hovered"
             when: control.hovered
-            PropertyChanges { target: indicator_background; color: UM.Theme.getColor("checkbox_hover")}
-            PropertyChanges { target: indicator_background; border.color: UM.Theme.getColor("checkbox_border_hover")}
+            PropertyChanges { target: indicator_background; border.color: UM.Theme.getColor("checkbox_border_hover"); }
         },
         State {
             name: "disabled"
             when: !control.enabled
-            PropertyChanges { target: indicator_background; color: UM.Theme.getColor("checkbox_disabled")}
+            PropertyChanges
+            {
+                target: indicator_background
+                color: UM.Theme.getColor("checkbox_disabled")
+                border.color: UM.Theme.getColor("checkbox_border_disabled")
+            }
         }
     ]
 
@@ -30,36 +34,52 @@ CheckBox
         id: indicator_background
         implicitWidth:  UM.Theme.getSize("checkbox").width
         implicitHeight: UM.Theme.getSize("checkbox").height
+        anchors.verticalCenter: parent.verticalCenter
 
-        color: control.enabled ? UM.Theme.getColor("checkbox") : UM.Theme.getColor("checkbox_disabled")
+        color: UM.Theme.getColor("checkbox")
+        border.color: UM.Theme.getColor("checkbox_border")
+        border.width: UM.Theme.getSize("default_lining").width
+
         Behavior on color { ColorAnimation { duration: 50; } }
         radius: UM.Theme.getSize("checkbox_radius").width
-        anchors.verticalCenter: parent.verticalCenter
-        border.width: UM.Theme.getSize("default_lining").width
-        border.color: UM.Theme.getColor("checkbox_border")
 
         UM.RecolorImage
         {
             id: indicator_item
+            height: width
 
             states: [
                 State {
                     name: "unchecked"
-                    when: control.enabled && control.checkState == Qt.Unchecked
-                    PropertyChanges { target: indicator_item; width: Math.round(parent.width / 1.5); height: width }
-                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_mark"); source: UM.Theme.getIcon("Check", "low"); opacity: false; }
+                    when: control.checkState == Qt.Unchecked
+                    PropertyChanges
+                    {
+                        target: indicator_item
+                        visible: false
+                        source: ""
+                    }
                 },
                 State {
                     name: "partially_checked"
-                    when: control.enabled && control.checkState == Qt.PartiallyChecked
-                    PropertyChanges { target: indicator_item; width: Math.round(parent.width / 1.8); height: width  }
-                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_border"); source: UM.Theme.getIcon("Solid"); opacity: true; }
+                    when: control.checkState == Qt.PartiallyChecked
+                    PropertyChanges
+                    {
+                        target: indicator_item
+                        width: Math.round(parent.width / 1.8)
+                        color: control.enabled ? UM.Theme.getColor("checkbox_square") : UM.Theme.getColor("checkbox_mark_disabled")
+                        source: UM.Theme.getIcon("Solid")
+                    }
                 },
                 State {
                     name: "checked"
-                    when: control.enabled && control.checkState == Qt.Checked
-                    PropertyChanges { target: indicator_item; width: Math.round(parent.width / 1.5); height: width  }
-                    PropertyChanges { target: indicator_item; color: UM.Theme.getColor("checkbox_mark"); source: UM.Theme.getIcon("Check", "low"); opacity: true; }
+                    when: control.checkState == Qt.Checked
+                    PropertyChanges
+                    {
+                        target: indicator_item
+                        width: Math.round(parent.width / 1.5)
+                        color: control.enabled ? UM.Theme.getColor("checkbox_mark") : UM.Theme.getColor("checkbox_mark_disabled")
+                        source: UM.Theme.getIcon("Check", "low")
+                    }
                 }
             ]
 
@@ -73,7 +93,7 @@ CheckBox
     {
         text: control.text
         height: contentHeight
-        color: control.enabled ? UM.Theme.getColor("checkbox_text"): UM.Theme.getColor("checkbox_disabled")
+        color: control.enabled ? UM.Theme.getColor("checkbox_text"): UM.Theme.getColor("checkbox_text_disabled")
         elide: Text.ElideRight
         renderType: Text.NativeRendering
         verticalAlignment: Text.AlignVCenter
