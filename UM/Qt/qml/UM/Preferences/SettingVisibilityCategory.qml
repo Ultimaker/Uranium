@@ -8,61 +8,20 @@ import UM 1.5 as UM
 
 import ".."
 
-Button
+UM.CategoryButton
 {
     id: base
 
-    background: Rectangle {
-        color: UM.Theme.getColor("category_background")
-    }
+    // To avoid overlapping with the scrollBars
+    anchors.rightMargin: 2 * UM.Theme.getSize("thin_margin").width
 
-    contentItem: Row
-    {
-        spacing: UM.Theme.getSize("default_lining").width
-
-        Item //Wrapper to give space before icon with fixed width. This allows aligning checkbox with category icon.
-        {
-            height: label.height
-            width: height
-            anchors.verticalCenter: parent.verticalCenter
-
-            UM.RecolorImage
-            {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                height: (label.height / 2) | 0
-                width: height
-                source: base.checked ? UM.Theme.getIcon("ChevronSingleDown") : UM.Theme.getIcon("ChevronSingleRight");
-                color: base.hovered ? UM.Theme.getColor("primary_button_hover"): UM.Theme.getColor("text")
-            }
-        }
-        UM.RecolorImage
-        {
-            anchors.verticalCenter: parent.verticalCenter
-            height: label.height
-            width: height
-            source: definition ? UM.Theme.getIcon(definition.icon) : ""
-            color: base.hovered ? UM.Theme.getColor("primary_button_hover") : UM.Theme.getColor("text")
-        }
-        UM.Label
-        {
-            id: label
-            anchors.verticalCenter: parent.verticalCenter
-            text: base.text
-            color: base.hovered ? UM.Theme.getColor("primary_button_hover") : UM.Theme.getColor("text")
-            font.bold: true
-        }
-
-    }
+    categoryIcon: definition ? UM.Theme.getIcon(definition.icon) : ""
+    labelText: definition ? definition.label : ""
+    expanded: definition ? definition.expanded : false
 
     signal showTooltip(string text)
     signal hideTooltip()
     signal contextMenuRequested()
 
-    text: definition ? definition.label : ""
-
-    checkable: true
-    checked: definition? definition.expanded : ""
-
-    onClicked: definition.expanded ? settingDefinitionsModel.collapseRecursive(definition.key) : settingDefinitionsModel.expandRecursive(definition.key)
+    onClicked: expanded ? settingDefinitionsModel.collapseRecursive(definition.key) : settingDefinitionsModel.expandRecursive(definition.key)
 }
