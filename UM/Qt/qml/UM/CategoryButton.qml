@@ -14,9 +14,9 @@ Button
 
     property var expanded: false
 
-    property alias arrow: category_arrow
+    property alias arrow: categoryArrow
     property alias categoryIcon: icon.source
-    property alias labelText: settingNameLabel.text
+    property alias labelText: categoryLabel.text
 
     property color text_color:
     {
@@ -72,7 +72,7 @@ Button
 
         Label
         {
-            id: settingNameLabel
+            id: categoryLabel
             anchors
             {
                 left: parent.left
@@ -91,7 +91,7 @@ Button
 
         UM.RecolorImage
         {
-            id: category_arrow
+            id: categoryArrow
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: UM.Theme.getSize("narrow_margin").width
