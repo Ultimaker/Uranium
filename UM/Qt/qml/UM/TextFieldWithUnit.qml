@@ -13,7 +13,7 @@ TextField
     color: UM.Theme.getColor("text")
     background: UM.UnderlineBackground
     {
-        liningColor: control.hovered ? UM.Theme.getColor("border_main_light") : UM.Theme.getColor("border_field_light")
+        liningColor: control.hovered ? UM.Theme.getColor("border_main") : UM.Theme.getColor("border_field_light")
 
         UM.Label
         {
