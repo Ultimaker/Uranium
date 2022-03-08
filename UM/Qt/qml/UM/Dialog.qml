@@ -13,7 +13,8 @@ Window
     id: base
 
     modality: Qt.ApplicationModal
-    flags: Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
+    flags: (Qt.platform.os == "windows" ? Qt.Dialog : Qt.Window)  // <-- Ugly workaround for a bug in Windows, where the close-button doesn't show up unless we have a Dialog (but _not_ a Window).
+        | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint
 
     minimumWidth: screenScaleFactor * 640;
     minimumHeight: screenScaleFactor * 480;
