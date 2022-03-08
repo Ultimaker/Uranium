@@ -30,7 +30,7 @@ Dialog
         ListView
         {
             id: pagesList
-            width: UM.Theme.getSize("preferences_page_list").width
+            width: UM.Theme.getSize("preferences_page_list_item").width
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
@@ -53,7 +53,7 @@ Dialog
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                     width: parent.width
-                    height: UM.Theme.getSize("setting_control").height
+                    height: UM.Theme.getSize("preferences_page_list_item").height
                     color: UM.Theme.getColor("text_default")
                     text: model.name
                 }
