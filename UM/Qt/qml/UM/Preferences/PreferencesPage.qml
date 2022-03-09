@@ -20,10 +20,11 @@ Item
     }
     function boolCheck(value) //Hack to ensure a good match between python and qml.
     {
-        if(value == "True")
+        if (value == "True")
         {
             return true
-        }else if(value == "False" || value == undefined)
+        }
+        else if (value == "False" || value == undefined)
         {
             return false
         }

@@ -14,8 +14,8 @@ PreferencesPage
     property alias model: objectList.model
     property alias section: objectList.section
     property alias delegate: objectList.delegate
-    property string nameRole: "name"
-    property string sectionRole: "group"
+    property alias sectionRole: objectList.section.property
+
     property bool detailsVisible: true
 
     property variant objectList: objectList
@@ -34,135 +34,133 @@ PreferencesPage
     property string activeId: ""
     property int activeIndex: -1
 
-
-    Item
+    UM.Label
     {
-        anchors.fill: parent
-        UM.Label
+        id: captionLabel
+        anchors
         {
-            id: captionLabel
-            anchors
-            {
-                top: parent.top
-                left: parent.left
-            }
-            visible: scrollviewCaption != ""
-            text: scrollviewCaption
-            width: objectListBackground.width
-            elide: Text.ElideRight
-            textFormat: Text.StyledText
+            top: parent.top
+            left: parent.left
         }
+        visible: scrollviewCaption != ""
+        text: scrollviewCaption
+        width: objectListBackground.width
+        elide: Text.ElideRight
+        textFormat: Text.StyledText
+    }
 
-        UM.SimpleButton
+    UM.SimpleButton
+    {
+        id: hamburgerButton
+        anchors.right: parent.right
+        width: UM.Theme.getSize("medium_button_icon").width
+        height: UM.Theme.getSize("medium_button_icon").height
+        iconSource: UM.Theme.getIcon("Hamburger")
+        hoverColor: UM.Theme.getColor("small_button_text_hover")
+        color: UM.Theme.getColor("small_button_text")
+
+        onClicked: base.hamburgeButtonClicked(hamburgerButton)
+    }
+
+    Rectangle
+    {
+        id: objectListBackground
+        color: UM.Theme.getColor("main_background")
+        border.width: UM.Theme.getSize("default_lining").width
+        border.color: UM.Theme.getColor("thick_lining")
+        anchors
         {
-            id: hamburgerButton
-            anchors.right: parent.right
-            width: UM.Theme.getSize("medium_button_icon").width
-            height: UM.Theme.getSize("medium_button_icon").height
-            iconSource: UM.Theme.getIcon("Hamburger")
-            hoverColor: UM.Theme.getColor("small_button_text_hover")
-            color: UM.Theme.getColor("small_button_text")
-
-            onClicked: base.hamburgeButtonClicked(hamburgerButton)
+            top: captionLabel.visible ? captionLabel.bottom : parent.top
+            topMargin: captionLabel.visible ? UM.Theme.getSize("default_margin").height : 0
+            bottom: parent.bottom
+            left: parent.left
         }
-        Rectangle
+        width: base.detailsVisible ? Math.round(parent.width * 0.3) : parent.width
+        ListView
         {
-            id: objectListBackground
-            color: UM.Theme.getColor("main_background")
-            border.width: UM.Theme.getSize("default_lining").width
-            border.color: UM.Theme.getColor("thick_lining")
-            anchors
-            {
-                top: captionLabel.visible ? captionLabel.bottom : parent.top
-                topMargin: captionLabel.visible ? UM.Theme.getSize("default_margin").height : 0
-                bottom: parent.bottom
-                left: parent.left
-            }
-            width: base.detailsVisible ? Math.round(parent.width * 0.3) : parent.width
-            ListView
-            {
-                id: objectList
+            id: objectList
 
-                clip: true
-                ScrollBar.vertical: UM.ScrollBar {}
-                anchors.fill: parent
-                anchors.margins: UM.Theme.getSize("default_margin").height
-                anchors.topMargin: UM.Theme.getSize("narrow_margin").height
-                currentIndex: activeIndex
-                interactive: false
-                onCurrentIndexChanged:
+            clip: true
+            ScrollBar.vertical: UM.ScrollBar {}
+            anchors.fill: parent
+            anchors.margins: UM.Theme.getSize("default_margin").height
+            anchors.topMargin: UM.Theme.getSize("narrow_margin").height
+            currentIndex: activeIndex
+            interactive: false
+            onCurrentIndexChanged:
+            {
+                // Explicitly trigger onCurrentItemChanged
+                base.currentItem = null;
+                base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null;
+            }
+
+            section.criteria: ViewSection.FullString
+            section.delegate: Rectangle
+            {
+                width: objectList.width - objectList.ScrollBar.vertical.width
+                height: childrenRect.height + UM.Theme.getSize("narrow_margin").height
+                color: UM.Theme.getColor("background_1")
+
+                UM.Label
                 {
-                    // Explicitly trigger onCurrentItemChanged
-                    base.currentItem = null;
-                    base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null;
+                    anchors.left: parent.left
+                    anchors.leftMargin: UM.Theme.getSize("default_lining").width
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: section
+                    font: UM.Theme.getFont("default_bold")
+                    color: UM.Theme.getColor("text_default")
+                }
+            }
+
+            delegate: Rectangle
+            {
+                width: objectList.width - objectList.ScrollBar.vertical.width
+                height: childrenRect.height
+                color: ListView.isCurrentItem ? UM.Theme.getColor("text_selection") : UM.Theme.getColor("main_background")
+                UM.Label
+                {
+                    anchors.left: parent.left
+                    anchors.leftMargin: UM.Theme.getSize("default_margin").width
+                    anchors.right: parent.right
+                    text: model.name
+                    elide: Text.ElideRight
+                    font.italic: model.id == activeId
                 }
 
-                section.property: base.sectionRole
-                section.criteria: ViewSection.FullString
-                section.delegate: Rectangle
+                MouseArea
                 {
-                    width: objectList.width - objectList.ScrollBar.vertical.width
-                    height: childrenRect.height + UM.Theme.getSize("narrow_margin").height
-                    color: UM.Theme.getColor("background_1")
-
-                    UM.Label
+                    anchors.fill: parent
+                    onClicked:
                     {
-                        anchors.left: parent.left
-                        anchors.leftMargin: UM.Theme.getSize("default_lining").width
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: section
-                        font: UM.Theme.getFont("default_bold")
-                        color: UM.Theme.getColor("text_default")
-                    }
-                }
-
-                delegate: Rectangle
-                {
-                    width: objectList.width - objectList.ScrollBar.vertical.width
-                    height: childrenRect.height
-                    color: ListView.isCurrentItem ? UM.Theme.getColor("text_selection") : UM.Theme.getColor("main_background")
-                    UM.Label
-                    {
-                        anchors.left: parent.left
-                        anchors.leftMargin: UM.Theme.getSize("default_margin").width
-                        anchors.right: parent.right
-                        text: model.name
-                        elide: Text.ElideRight
-                        font.italic: model.id == activeId
-                    }
-
-                    MouseArea
-                    {
-                        anchors.fill: parent
-                        onClicked:
+                        if(!parent.ListView.isCurrentItem)
                         {
-                            if(!parent.ListView.isCurrentItem)
-                            {
-                                parent.ListView.view.currentIndex = index;
-                                base.itemActivated();
-                            }
+                            parent.ListView.view.currentIndex = index;
+                            base.itemActivated();
                         }
                     }
                 }
             }
         }
+    }
 
-        Item
+    Item
+    {
+        id: detailsPane
+
+        anchors
         {
-            id: detailsPane
-
-            anchors
-            {
-                left: objectListBackground.right
-                leftMargin: UM.Theme.getSize("default_margin").width
-                top: parent.top
-                bottom: parent.bottom
-                right: parent.right
-            }
-
-            visible: base.detailsVisible
+            left: objectListBackground.right
+            leftMargin: UM.Theme.getSize("default_margin").width
+            top: parent.top
+            bottom: parent.bottom
+            right: parent.right
         }
 
+        visible: base.detailsVisible
+    }
+
+    Item
+    {
         Connections
         {
             target: objectList.model
