@@ -22,7 +22,8 @@ PreferencesPage
     property variant currentItem: null
     property string scrollviewCaption: ""
 
-    default property alias details: detailsPane.children
+    default property alias content: detailsPane.children
+    property alias listContent: objectListBackground.children
 
     signal itemActivated()
     signal hamburgeButtonClicked(Item hamburger_button)
@@ -77,7 +78,7 @@ PreferencesPage
                 bottom: parent.bottom
                 left: parent.left
             }
-            width: base.detailsVisible ? Math.round(parent.width * 0.3) | 0 : parent.width
+            width: base.detailsVisible ? Math.round(parent.width * 0.3) : parent.width
             ListView
             {
                 id: objectList
@@ -161,8 +162,6 @@ PreferencesPage
 
             visible: base.detailsVisible
         }
-
-        UM.I18nCatalog { id: catalog; name: "uranium"; }
 
         Connections
         {
