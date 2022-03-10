@@ -20,7 +20,8 @@ PreferencesPage
 
     property variant objectList: objectList
     property variant currentItem: null
-    property string scrollviewCaption: ""
+    property alias detailsPlaneCation: detailsPlaneCationLabel.text
+    property alias scrollviewCaption: scrollViewCaptionLabel.text
 
     default property alias content: detailsPane.children
     property alias listContent: objectListBackground.children
@@ -36,30 +37,16 @@ PreferencesPage
 
     UM.Label
     {
-        id: captionLabel
+        id: scrollViewCaptionLabel
         anchors
         {
             top: parent.top
             left: parent.left
         }
-        visible: scrollviewCaption != ""
-        text: scrollviewCaption
+        visible: text != ""
         width: objectListBackground.width
         elide: Text.ElideRight
         textFormat: Text.StyledText
-    }
-
-    UM.SimpleButton
-    {
-        id: hamburgerButton
-        anchors.right: parent.right
-        width: UM.Theme.getSize("medium_button_icon").width
-        height: UM.Theme.getSize("medium_button_icon").height
-        iconSource: UM.Theme.getIcon("Hamburger")
-        hoverColor: UM.Theme.getColor("small_button_text_hover")
-        color: UM.Theme.getColor("small_button_text")
-
-        onClicked: base.hamburgeButtonClicked(hamburgerButton)
     }
 
     Rectangle
@@ -70,8 +57,8 @@ PreferencesPage
         border.color: UM.Theme.getColor("thick_lining")
         anchors
         {
-            top: captionLabel.visible ? captionLabel.bottom : parent.top
-            topMargin: captionLabel.visible ? UM.Theme.getSize("default_margin").height : 0
+            top: scrollViewCaptionLabel.visible ? scrollViewCaptionLabel.bottom : parent.top
+            topMargin: scrollViewCaptionLabel.visible ? UM.Theme.getSize("default_margin").height : 0
             bottom: parent.bottom
             left: parent.left
         }
@@ -145,13 +132,47 @@ PreferencesPage
 
     Item
     {
-        id: detailsPane
+        id: detailsPlaneCation
+        height: childrenRect.height
 
         anchors
         {
             left: objectListBackground.right
             leftMargin: UM.Theme.getSize("default_margin").width
             top: parent.top
+            right: parent.right
+        }
+
+        UM.Label
+        {
+            id: detailsPlaneCationLabel
+            anchors.verticalCenter: hamburgerButton.verticalCenter
+            font: UM.Theme.getFont("large_bold")
+        }
+
+        UM.ToolbarButton
+        {
+            id: hamburgerButton
+            anchors.right: parent.right
+            toolItem: UM.RecolorImage
+            {
+                source: UM.Theme.getIcon("Hamburger")
+                color: UM.Theme.getColor("icon")
+            }
+            onClicked: base.hamburgeButtonClicked(hamburgerButton)
+        }
+    }
+
+    Item
+    {
+        id: detailsPane
+
+        anchors
+        {
+            left: objectListBackground.right
+            leftMargin: UM.Theme.getSize("default_margin").width
+            top: detailsPlaneCation.bottom
+            topMargin: UM.Theme.getSize("narrow_margin").width
             bottom: parent.bottom
             right: parent.right
         }
