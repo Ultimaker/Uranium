@@ -88,7 +88,7 @@ PreferencesPage
                 anchors.margins: UM.Theme.getSize("default_margin").height
                 anchors.topMargin: UM.Theme.getSize("narrow_margin").height
                 currentIndex: activeIndex
-                interactive: false
+                boundsBehavior: Flickable.StopAtBounds
                 onCurrentIndexChanged:
                 {
                     // Explicitly trigger onCurrentItemChanged
