@@ -53,7 +53,6 @@ Button
     {
         id: backgroundRectangle
         height: base.height
-        anchors.verticalCenter: parent.verticalCenter
 
         color: UM.Theme.getColor("setting_category")
         Behavior on color { ColorAnimation { duration: 50 } }
@@ -78,7 +77,7 @@ Button
             anchors
             {
                 left: parent.left
-                leftMargin: (0.9 * UM.Theme.getSize("default_margin").width) + UM.Theme.getSize("section_icon").width
+                leftMargin: UM.Theme.getSize("default_margin").width + UM.Theme.getSize("section_icon").width
                 right: parent.right
                 verticalCenter: parent.verticalCenter
             }
