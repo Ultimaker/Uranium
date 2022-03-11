@@ -32,7 +32,6 @@ Button
             name: "disabled"
             when: !base.enabled
             PropertyChanges { target: categoryLabel; color: UM.Theme.getColor("setting_category_disabled_text") }
-            PropertyChanges { target: categoryArrow; color: UM.Theme.getColor("setting_category_disabled_text") }
             PropertyChanges { target: icon; color: UM.Theme.getColor("setting_category_disabled_text") }
             PropertyChanges { target: backgroundRectangle; color: UM.Theme.getColor("setting_category_disabled") }
         },
@@ -41,7 +40,6 @@ Button
             name: "hovered"
             when: base.hovered
             PropertyChanges { target: categoryLabel; color: UM.Theme.getColor("setting_category_active_text") }
-            PropertyChanges { target: categoryArrow; color: UM.Theme.getColor("setting_category_active_text") }
             PropertyChanges { target: icon; color: UM.Theme.getColor("setting_category_active_text") }
             PropertyChanges { target: backgroundRectangle; color: UM.Theme.getColor("setting_category_hover") }
         },
@@ -50,7 +48,6 @@ Button
             name: "active"
             when: base.pressed || base.activeFocus
             PropertyChanges { target: categoryLabel; color: UM.Theme.getColor("setting_category_active_text") }
-            PropertyChanges { target: categoryArrow; color: UM.Theme.getColor("setting_category_active_text") }
             PropertyChanges { target: icon; color: UM.Theme.getColor("setting_category_active_text") }
             PropertyChanges { target: backgroundRectangle; color: UM.Theme.getColor("setting_category") }
         }
@@ -104,7 +101,7 @@ Button
             width: UM.Theme.getSize("standard_arrow").width
             height: UM.Theme.getSize("standard_arrow").height
             sourceSize.height: width
-            color: UM.Theme.getColor("setting_category_text")
+            color: UM.Theme.getColor("setting_control_button")
             source: expanded ? UM.Theme.getIcon("ChevronSingleDown") : UM.Theme.getIcon("ChevronSingleLeft")
         }
     }
