@@ -1,6 +1,13 @@
 // Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
+// Button used to collapse and de-collapse group, or a category, of settings
+// the button contains
+//   - the title of the category,
+//   - an optional icon and
+//   - a chevron button to display the colapsetivity of the settings
+// Mainly used for the collapsable categories in the settings pannel
+
 import QtQuick 2.2
 import QtQuick.Controls 2.1
 
