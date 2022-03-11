@@ -68,6 +68,7 @@ CheckBox
                         width: Math.round(parent.width / 1.8)
                         color: control.enabled ? UM.Theme.getColor("checkbox_square") : UM.Theme.getColor("checkbox_mark_disabled")
                         source: UM.Theme.getIcon("Solid")
+                        visible: true
                     }
                 },
                 State {
@@ -79,6 +80,7 @@ CheckBox
                         width: Math.round(parent.width / 1.5)
                         color: control.enabled ? UM.Theme.getColor("checkbox_mark") : UM.Theme.getColor("checkbox_mark_disabled")
                         source: UM.Theme.getIcon("Check", "low")
+                        visible: true
                     }
                 }
             ]
