@@ -40,3 +40,4 @@ UnderlineBackground     1.5 UnderlineBackground.qml
 ToolTip                 1.5 ToolTip.qml
 ToolbarButton           1.5 ToolbarButton.qml
 Enums                   1.5 Enums.qml
+CategoryButton      1.5 CategoryButton.qml
