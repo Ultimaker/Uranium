@@ -52,18 +52,13 @@ PreferencesPage
             textFormat: Text.StyledText
         }
 
-        UM.SimpleButton
+        UM.BurgerButton
         {
             id: hamburgerButton
             anchors.right: parent.right
-            width: UM.Theme.getSize("medium_button_icon").width
-            height: UM.Theme.getSize("medium_button_icon").height
-            iconSource: UM.Theme.getIcon("Hamburger")
-            hoverColor: UM.Theme.getColor("small_button_text_hover")
-            color: UM.Theme.getColor("small_button_text")
-
             onClicked: base.hamburgeButtonClicked(hamburgerButton)
         }
+
         Rectangle
         {
             id: objectListBackground
