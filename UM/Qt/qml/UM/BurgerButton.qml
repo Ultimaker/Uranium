@@ -37,5 +37,4 @@ Button
             color: UM.Theme.getColor("background")
         }
     }
-
 }
