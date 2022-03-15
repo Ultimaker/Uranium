@@ -206,7 +206,7 @@ class Signal:
             return
 
         if self.__type != Signal.Direct:
-            self.__performEmitIndirect(*args, **kwargs)
+            self.__handleEmitIndirect(*args, **kwargs)
         else:
             self.__performEmit(*args, **kwargs)
 
@@ -303,19 +303,22 @@ class Signal:
 
     _signalQueue = None  # type: Application
 
-    def __performEmitIndirect(self, *args, **kwargs) -> None:
+    def __handleEmitIndirect(self, *args, **kwargs) -> None:
         # Handle any indirect emits of signals (eg; type is "Auto" or "Queued"
         try:
             if self.__type == Signal.Queued:
-                Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
+                Signal._app.functionEvent(CallFunctionEvent(self.__performEmitIndirect, args, kwargs))
             if self.__type == Signal.Auto:
                 if threading.current_thread() is not Signal._app.getMainThread():
-                    Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
+                    Signal._app.functionEvent(CallFunctionEvent(self.__performEmitIndirect, args, kwargs))
                 else:
                     # Signal is emitted from the main thread, so call it directly!
                     self.__performEmit(*args, **kwargs)
         except AttributeError:  # If Signal._app is not set
             pass
+
+    def __performEmitIndirect(self, *args, **kwargs):
+        self.__performEmit(*args, **kwargs)
 
     # Private implementation of the actual emit.
     # This is done to make it possible to freely push function events without needing to maintain state.
