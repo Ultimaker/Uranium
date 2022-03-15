@@ -19,14 +19,7 @@ Button
         implicitHeight: implicitWidth
         radius: Math.round(width * 0.5)
 
-        color:
-        {
-            if(control.hovered)
-            {
-                return UM.Theme.getColor("toolbar_button_hover")
-            }
-            return UM.Theme.getColor("toolbar_background")
-        }
+        color: control.hovered ? UM.Theme.getColor("toolbar_button_hover"): UM.Theme.getColor("toolbar_background")
 
         UM.RecolorImage
         {
