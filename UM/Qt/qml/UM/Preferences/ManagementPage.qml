@@ -20,7 +20,7 @@ PreferencesPage
 
     property variant objectList: objectList
     property variant currentItem: null
-    property alias detailsPlaneCation: detailsPlaneCationLabel.text
+    property alias detailsPlaneCaption: detailsPlaneCaptionLabel.text
     property alias scrollviewCaption: scrollViewCaptionLabel.text
 
     default property alias content: detailsPane.children
@@ -134,7 +134,7 @@ PreferencesPage
 
     Item
     {
-        id: detailsPlaneCation
+        id: detailsPlaneCaption
         height: childrenRect.height
 
         anchors
@@ -147,7 +147,7 @@ PreferencesPage
 
         UM.Label
         {
-            id: detailsPlaneCationLabel
+            id: detailsPlaneCaptionLabel
             anchors.verticalCenter: hamburgerButton.verticalCenter
             font: UM.Theme.getFont("large_bold")
         }
@@ -173,7 +173,7 @@ PreferencesPage
         {
             left: objectListBackground.right
             leftMargin: UM.Theme.getSize("default_margin").width
-            top: detailsPlaneCation.bottom
+            top: detailsPlaneCaption.bottom
             topMargin: UM.Theme.getSize("narrow_margin").width
             bottom: parent.bottom
             right: parent.right
