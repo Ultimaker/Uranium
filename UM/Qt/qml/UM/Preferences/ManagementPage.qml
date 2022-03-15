@@ -113,6 +113,7 @@ PreferencesPage
                     text: model.name
                     elide: Text.ElideRight
                     font.italic: model.id == activeId
+                    wrapMode: Text.NoWrap
                 }
 
                 MouseArea
