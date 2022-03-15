@@ -11,23 +11,24 @@ Button
     id: control
     padding: 0
 
-    background: Item {}
+    implicitWidth: Math.round(UM.Theme.getSize("button").width * 0.75)
+    implicitHeight: implicitWidth
 
-    contentItem: Rectangle
+    background: Rectangle
     {
-        implicitWidth: Math.round(UM.Theme.getSize("button").width * 0.75)
-        implicitHeight: implicitWidth
         radius: Math.round(width * 0.5)
-
         color: control.hovered ? UM.Theme.getColor("toolbar_button_hover"): UM.Theme.getColor("toolbar_background")
+    }
 
+    contentItem: Item
+    {
         UM.RecolorImage
         {
             anchors.centerIn: parent
             implicitWidth: Math.round(UM.Theme.getSize("button").width / 2)
             implicitHeight: implicitWidth
             source: UM.Theme.getIcon("Hamburger")
-            color: UM.Theme.getColor("background")
+            color: UM.Theme.getColor("icon")
         }
     }
 }
