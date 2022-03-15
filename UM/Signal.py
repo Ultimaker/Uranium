@@ -205,18 +205,10 @@ class Signal:
                 self._postponed_emits.append((args, kwargs))
             return
 
-        try:
-            if self.__type == Signal.Queued:
-                Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
-                return
-            if self.__type == Signal.Auto:
-                if threading.current_thread() is not Signal._app.getMainThread():
-                    Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
-                    return
-        except AttributeError: # If Signal._app is not set
-            return
-
-        self.__performEmit(*args, **kwargs)
+        if self.__type != Signal.Direct:
+            self.__performEmitIndirect(*args, **kwargs)
+        else:
+            self.__performEmit(*args, **kwargs)
 
     @call_if_enabled(_traceConnect, _isTraceEnabled())
     def connect(self, connector: Union["Signal", Callable[[], None]]) -> None:
@@ -310,6 +302,20 @@ class Signal:
     """
 
     _signalQueue = None  # type: Application
+
+    def __performEmitIndirect(self, *args, **kwargs) -> None:
+        # Handle any indirect emits of signals (eg; type is "Auto" or "Queued"
+        try:
+            if self.__type == Signal.Queued:
+                Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
+            if self.__type == Signal.Auto:
+                if threading.current_thread() is not Signal._app.getMainThread():
+                    Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
+                else:
+                    # Signal is emitted from the main thread, so call it directly!
+                    self.__performEmit(*args, **kwargs)
+        except AttributeError:  # If Signal._app is not set
+            pass
 
     # Private implementation of the actual emit.
     # This is done to make it possible to freely push function events without needing to maintain state.
