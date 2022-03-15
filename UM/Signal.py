@@ -27,6 +27,13 @@ if MYPY:
     from UM.Application import Application
 
 
+@contextlib.contextmanager
+def acquire_timeout(lock, timeout):
+    result = lock.acquire(timeout=timeout)
+    yield result
+    if result:
+        lock.release()
+
 # Helper functions for tracing signal emission.
 def _traceEmit(signal: Any, *args: Any, **kwargs: Any) -> None:
     Logger.log("d", "Emitting %s with arguments %s", str(signal.getName()), str(args) + str(kwargs))
@@ -326,10 +333,19 @@ class Signal:
         # Quickly make some private references to the collections we need to process.
         # Although the these fields are always safe to use read and use with regards to threading,
         # we want to operate on a consistent snapshot of the whole set of fields.
-        with self.__lock:
-            functions = self.__functions
-            methods = self.__methods
-            signals = self.__signals
+
+        # The acquire_timeout is here for debugging / profiling purposes, which might help us figure out why certain
+        # people experience slowdowns. At a certain point this can be removed. 
+        copy_successful = False
+        while not copy_successful:
+            with acquire_timeout(self.__lock, 0.5) as acquired:
+                if acquired:
+                    functions = self.__functions
+                    methods = self.__methods
+                    signals = self.__signals
+                    copy_successful = True
+                else:
+                    Logger.log("w", "Getting lock for signal [%s] took more than 0.5 seconds, this should not happen!", self)
 
         if not FlameProfiler.isRecordingProfile():
             # Call handler functions
