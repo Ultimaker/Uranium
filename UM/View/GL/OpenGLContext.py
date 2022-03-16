@@ -3,7 +3,7 @@
 
 from typing import Dict, Optional, Tuple, Any
 from PyQt6.QtGui import QOpenGLContext, QSurfaceFormat, QWindow, QSurface
-from PyQt6.QtOpenGL import QOpenGLVersionProfile
+from PyQt6.QtOpenGL import QOpenGLVersionProfile, QOpenGLVersionFunctionsFactory
 
 from UM.Logger import Logger
 from UM.Platform import Platform
@@ -156,7 +156,7 @@ class OpenGLContext:
                 gl_profile.setVersion(major_version, minor_version)
                 gl_profile.setProfile(profile)
 
-                gl = cls.detect_ogl_context.versionFunctions(gl_profile) # type: Any #It's actually a protected class in PyQt that depends on the requested profile and the implementation of your graphics card.
+                gl = QOpenGLVersionFunctionsFactory.get(gl_profile, cls.detect_ogl_context)
 
                 gpu_type = "Unknown"  # type: str
 
