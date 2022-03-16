@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Dict, Optional, Tuple, Any
-from PyQt6.QtGui import QOpenGLContext, QSurfaceFormat, QWindow
+from PyQt6.QtGui import QOpenGLContext, QSurfaceFormat, QWindow, QSurface
 from PyQt6.QtOpenGL import QOpenGLVersionProfile
 
 from UM.Logger import Logger
@@ -147,7 +147,7 @@ class OpenGLContext:
                     return major_version, minor_version, QSurfaceFormat.OpenGLContextProfile.CoreProfile
 
                 gl_window = QWindow()
-                gl_window.setSurfaceType(QWindow.OpenGLSurface)
+                gl_window.setSurfaceType(QSurface.SurfaceType.OpenGLSurface)
                 gl_window.showMinimized()
 
                 cls.detect_ogl_context.makeCurrent(gl_window)
