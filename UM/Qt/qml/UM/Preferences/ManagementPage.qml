@@ -6,6 +6,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
 
 import UM 1.5 as UM
+import Cura 1.5 as Cura
 
 PreferencesPage
 {
@@ -96,11 +97,12 @@ PreferencesPage
                 section.delegate: Rectangle
                 {
                     width: objectList.width - objectList.ScrollBar.vertical.width
-                    height: childrenRect.height + UM.Theme.getSize("narrow_margin").height
+                    height: sectionLabel.height + UM.Theme.getSize("narrow_margin").height
                     color: UM.Theme.getColor("background_1")
 
                     UM.Label
                     {
+                        id: sectionLabel
                         anchors.left: parent.left
                         anchors.leftMargin: UM.Theme.getSize("default_lining").width
                         anchors.verticalCenter: parent.verticalCenter
@@ -122,7 +124,21 @@ PreferencesPage
                         anchors.right: parent.right
                         text: model.name
                         elide: Text.ElideRight
-                        font.italic: model.id == activeId
+                        font.italic:
+                        {
+                            if (model.id == activeId)
+                            {
+                                return true
+                            }
+                            if (model.is_read_only)
+                            {
+                                return (model.name == Cura.MachineManager.activeQualityOrQualityChangesName) && (model.intent_category == Cura.MachineManager.activeIntentCategory);
+                            }
+                            else
+                            {
+                                return model.name == Cura.MachineManager.activeQualityOrQualityChangesName;
+                            }
+                        }
                         wrapMode: Text.NoWrap
                     }
 
