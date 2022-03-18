@@ -6,7 +6,6 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
 
 import UM 1.5 as UM
-import Cura 1.5 as Cura
 
 PreferencesPage
 {
@@ -28,6 +27,8 @@ PreferencesPage
     signal itemActivated()
     signal hamburgeButtonClicked(Item hamburger_button)
     property alias hamburgerButtonVisible: hamburgerButton.visible
+
+    property var isActiveModelFunction: function(model, id) { return model.id == id }
 
     resetEnabled: false
 
@@ -124,21 +125,7 @@ PreferencesPage
                         anchors.right: parent.right
                         text: model.name
                         elide: Text.ElideRight
-                        font.italic:
-                        {
-                            if (model.id == activeId)
-                            {
-                                return true
-                            }
-                            if (model.is_read_only)
-                            {
-                                return (model.name == Cura.MachineManager.activeQualityOrQualityChangesName) && (model.intent_category == Cura.MachineManager.activeIntentCategory);
-                            }
-                            else
-                            {
-                                return model.name == Cura.MachineManager.activeQualityOrQualityChangesName;
-                            }
-                        }
+                        font.italic: isActiveModelFunction(model, activeId)
                         wrapMode: Text.NoWrap
                     }
 
