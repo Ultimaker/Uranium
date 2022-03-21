@@ -22,6 +22,6 @@ TabBar
         width: parent.width
         anchors.bottom: parent.bottom
         height: UM.Theme.getSize("default_lining").height
-        color: UM.Theme.getColor("lining")
+        color: UM.Theme.getColor("border_main")
     }
 }
