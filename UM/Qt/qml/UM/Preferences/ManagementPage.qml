@@ -30,6 +30,8 @@ PreferencesPage
     signal hamburgeButtonClicked(Item hamburger_button)
     property alias hamburgerButtonVisible: hamburgerButton.visible
 
+    property var isActiveModelFunction: function(model, id) { return model.id == id }
+
     resetEnabled: false
 
     property string activeId: ""
