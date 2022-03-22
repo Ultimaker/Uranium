@@ -88,11 +88,12 @@ PreferencesPage
             section.delegate: Rectangle
             {
                 width: objectList.width - objectList.ScrollBar.vertical.width
-                height: childrenRect.height + UM.Theme.getSize("narrow_margin").height
+                height: sectionLabel.height + UM.Theme.getSize("narrow_margin").height
                 color: UM.Theme.getColor("background_1")
 
                 UM.Label
                 {
+                    id: sectionLabel
                     anchors.left: parent.left
                     anchors.leftMargin: UM.Theme.getSize("default_lining").width
                     anchors.verticalCenter: parent.verticalCenter
@@ -114,7 +115,7 @@ PreferencesPage
                     anchors.right: parent.right
                     text: model.name
                     elide: Text.ElideRight
-                    font.italic: model.id == activeId
+                    font: isActiveModelFunction(model, activeId) ? UM.Theme.getFont("default_italic") : UM.Theme.getFont("default")
                     wrapMode: Text.NoWrap
                 }
 
