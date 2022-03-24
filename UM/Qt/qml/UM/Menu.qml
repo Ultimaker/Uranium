@@ -22,7 +22,8 @@ Menu
 
     // Automatically set the width to fit the widest MenuItem
     // https://martin.rpdev.net/2018/03/13/qt-quick-controls-2-automatically-set-the-width-of-menus.html
-    width: {
+    width:
+    {
         var result = 0;
         var padding = 0;
         for (var i = 0; i < count; ++i) {
