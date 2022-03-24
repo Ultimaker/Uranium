@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import functools  # For partial to update files that were changed.
@@ -8,7 +8,6 @@ from typing import Callable, List, Optional, Set, Any, Dict
 
 from PyQt5.QtCore import QFileSystemWatcher  # To watch files for changes.
 
-from UM.Decorators import deprecated
 from UM.Logger import Logger
 from UM.Mesh.ReadMeshJob import ReadMeshJob  # To reload a mesh when its file was changed.
 from UM.Message import Message  # To display a message for reloading files that were changed.
@@ -77,10 +76,6 @@ class Scene:
                 self._disconnectSignalsRoot()
             else:
                 self._connectSignalsRoot()
-
-    @deprecated("Scene lock is no longer used", "4.5")
-    def getSceneLock(self) -> threading.Lock:
-        return self._lock
 
     def getRoot(self) -> "SceneNode":
         """Get the root node of the scene."""
