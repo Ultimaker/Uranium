@@ -22,7 +22,6 @@ class Theme(QObject):
         super().__init__(parent)
 
         self._engine = engine
-        self._styles = None  # type: Optional[QObject]
         self._path = ""
         self._icons = {}  # type: Dict[str, Dict[str, QUrl]]
         self._deprecated_icons = {} # type: Dict[str, Dict[str, str]]
@@ -51,7 +50,6 @@ class Theme(QObject):
     themeLoaded = pyqtSignal()
 
     def reload(self):
-        self._styles = None
         self._path = ""
         self._icons = {}
         self._images = {}
@@ -169,10 +167,6 @@ class Theme(QObject):
         Logger.log("w", "No font %s defined in Theme", font_name)
         return QFont()
 
-    @pyqtProperty(QObject, notify = themeLoaded)
-    def styles(self):
-        return self._styles
-
     @pyqtSlot(str)
     def load(self, path: str, is_first_call: bool = True) -> None:
         if path == self._path:
@@ -203,13 +197,49 @@ class Theme(QObject):
             pass  # No metadata or no inherits keyword in the theme.json file
 
         if "colors" in data:
-            for name, color in data["colors"].items():
+            for name, value in data["colors"].items():
+
+                if not is_first_call and isinstance(value, str):
+                    # Keep parent theme string colors as strings and parse later
+                    self._colors[name] = value
+                    continue
+
+                if isinstance(value, str) and is_first_call:
+                    # value is reference to base_colors color name
+                    try:
+                        color = data["base_colors"][value]
+                    except IndexError:
+                        Logger.log("w", "Colour {value} could not be found in base_colors".format(value = value))
+                        continue
+                else:
+                    color = value
+
                 try:
                     c = QColor(color[0], color[1], color[2], color[3])
                 except IndexError:  # Color doesn't have enough components.
                     Logger.log("w", "Colour {name} doesn't have enough components. Need to have 4, but had {num_components}.".format(name = name, num_components = len(color)))
                     continue  # Skip this one then.
                 self._colors[name] = c
+
+        if "base_colors" in data:
+            for name, color in data["base_colors"].items():
+                try:
+                    c = QColor(color[0], color[1], color[2], color[3])
+                except IndexError:  # Color doesn't have enough components.
+                    Logger.log("w", "Colour {name} doesn't have enough components. Need to have 4, but had {num_components}.".format(name = name, num_components = len(color)))
+                    continue  # Skip this one then.
+                self._colors[name] = c
+
+        if is_first_call and self._colors:
+            #Convert all string value colors to their referenced color
+            for name, color in self._colors.items():
+                if isinstance(color, str):
+                    try:
+                        c = self._colors[color]
+                        self._colors[name] = c
+                    except:
+                        Logger.log("w", "Colour {name} {color} does".format(name = name, color = color))
+
 
         fonts_dir = os.path.join(path, "fonts")
         if os.path.isdir(fonts_dir):
@@ -272,17 +302,6 @@ class Theme(QObject):
             for image in os.listdir(imagesdir):
                 name = os.path.splitext(image)[0]
                 self._images[name] = QUrl.fromLocalFile(os.path.join(imagesdir, image))
-
-        styles = os.path.join(path, "styles.qml")
-        if os.path.isfile(styles):
-            c = QQmlComponent(self._engine, styles)
-            context = QQmlContext(self._engine, self._engine)
-            context.setContextProperty("Theme", self)
-            self._styles = c.create(context)
-
-            if c.isError():
-                for error in c.errors():
-                    Logger.log("e", error.toString())
 
         Logger.log("d", "Loaded theme %s", path)
         Logger.info(f"System's em size is {self._em_height}px.")

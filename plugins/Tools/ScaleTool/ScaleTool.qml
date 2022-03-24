@@ -1,10 +1,9 @@
-// Copyright (c) 2018 Ultimaker B.V.
+// Copyright (c) 2021 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
-import QtQuick.Controls 1.2
-
-import UM 1.1 as UM
+import QtQuick.Controls 2.2
+import UM 1.5 as UM
 
 Item
 {
@@ -15,16 +14,16 @@ Item
 
     // We use properties for the text as doing the bindings indirectly doesn't cause any breaks
     // Javascripts don't seem to play well with the bindings (and sometimes break em)
-    property string xPercentageText;
-    property string yPercentageText;
-    property string zPercentageText;
+    property string xPercentageText
+    property string yPercentageText
+    property string zPercentageText
 
     property string heightText
     property string depthText
     property string widthText
 
     function getPercentage(scale){
-        return scale * 100;
+        return scale * 100
     }
 
     //Rounds a floating point number to 4 decimals. This prevents floating
@@ -54,54 +53,53 @@ Item
         selected_item.focus = true
     }
 
-    Button
+    UM.ToolbarButton
     {
         id: resetScaleButton
         anchors.top: textfields.bottom
-        anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
         anchors.left: textfields.left
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
         z: 1
 
         //: Reset scale tool button
         text: catalog.i18nc("@action:button","Reset")
-        iconSource: UM.Theme.getIcon("ArrowReset");
-        property bool needBorder: true
 
-        style: UM.Theme.styles.tool_button;
+        toolItem: UM.RecolorImage
+        {
+            source: UM.Theme.getIcon("ArrowReset")
+            color: UM.Theme.getColor("icon")
+        }
 
-        onClicked: UM.ActiveTool.triggerAction("resetScale");
+        onClicked: UM.ActiveTool.triggerAction("resetScale")
     }
 
 
     Flow
     {
-        id: checkboxes;
+        id: checkboxes
 
-        anchors.left: resetScaleButton.right;
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
-        anchors.right: parent.right;
-        anchors.top: resetScaleButton.top;
+        anchors.left: resetScaleButton.right
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors.right: parent.right
+        anchors.verticalCenter: resetScaleButton.verticalCenter
 
-        spacing: UM.Theme.getSize("default_margin").height;
-
-        CheckBox
+        UM.CheckBox
         {
             id: snapScalingCheckbox
 
             width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
             text: catalog.i18nc("@option:check", "Snap Scaling")
 
-            style: UM.Theme.styles.checkbox;
-            checked: UM.ActiveTool.properties.getValue("ScaleSnap");
+            checked: UM.ActiveTool.properties.getValue("ScaleSnap")
             onClicked:
             {
-                UM.ActiveTool.setProperty("ScaleSnap", checked);
+                UM.ActiveTool.setProperty("ScaleSnap", checked)
                 if (snapScalingCheckbox.checked)
                 {
-                    UM.ActiveTool.setProperty("ScaleX", parseFloat(xPercentage.text) / 100);
-                    UM.ActiveTool.setProperty("ScaleY", parseFloat(yPercentage.text) / 100);
-                    UM.ActiveTool.setProperty("ScaleZ", parseFloat(zPercentage.text) / 100);
+                    UM.ActiveTool.setProperty("ScaleX", parseFloat(xPercentage.text) / 100)
+                    UM.ActiveTool.setProperty("ScaleY", parseFloat(yPercentage.text) / 100)
+                    UM.ActiveTool.setProperty("ScaleZ", parseFloat(zPercentage.text) / 100)
                 }
             }
         }
@@ -113,16 +111,15 @@ Item
             value: UM.ActiveTool.properties.getValue("ScaleSnap")
         }
 
-        CheckBox
+        UM.CheckBox
         {
             id: uniformScalingCheckbox
 
             width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
             text: catalog.i18nc("@option:check", "Uniform Scaling")
 
-            style: UM.Theme.styles.checkbox;
-            checked: !UM.ActiveTool.properties.getValue("NonUniformScale");
-            onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked);
+            checked: !UM.ActiveTool.properties.getValue("NonUniformScale")
+            onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked)
         }
 
         Binding
@@ -135,53 +132,44 @@ Item
 
     Grid
     {
-        id: textfields;
+        id: textfields
 
-        anchors.top: parent.top;
+        anchors.top: parent.top
 
-        columns: 3;
-        flow: Grid.TopToBottom;
-        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2);
+        columns: 3
+        flow: Grid.TopToBottom
+        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
 
-        Label
+        UM.Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: "X";
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("x_axis");
-            verticalAlignment: Text.AlignVCenter;
-            renderType: Text.NativeRendering
+            height: UM.Theme.getSize("setting_control").height
+            text: "X"
+            color: UM.Theme.getColor("x_axis")
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
-        Label
+        UM.Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: "Y";
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("z_axis"); // This is intentional. The internal axis are switched.
-            verticalAlignment: Text.AlignVCenter;
-            renderType: Text.NativeRendering
+            height: UM.Theme.getSize("setting_control").height
+            text: "Y"
+            color: UM.Theme.getColor("z_axis") // This is intentional. The internal axis are switched.
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
-        Label
+        UM.Label
         {
-            height: UM.Theme.getSize("setting_control").height;
-            text: "Z";
-            font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("y_axis"); // This is intentional. The internal axis are switched.
-            verticalAlignment: Text.AlignVCenter;
-            renderType: Text.NativeRendering
+            height: UM.Theme.getSize("setting_control").height
+            text: "Z"
+            color: UM.Theme.getColor("y_axis") // This is intentional. The internal axis are switched.
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
-        TextField
+        UM.TextFieldWithUnit
         {
             id: widthTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "mm"
+
             text: widthText
             validator: DoubleValidator
             {
@@ -193,18 +181,18 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectWidth", modified_text);
+                UM.ActiveTool.setProperty("ObjectWidth", modified_text)
             }
             Keys.onBacktabPressed: selectTextInTextfield(yPercentage)
             Keys.onTabPressed: selectTextInTextfield(xPercentage)
         }
-        TextField
+
+        UM.TextFieldWithUnit
         {
             id: depthTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "mm"
             text: depthText
             validator: DoubleValidator
             {
@@ -216,18 +204,18 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectDepth", modified_text);
+                UM.ActiveTool.setProperty("ObjectDepth", modified_text)
             }
             Keys.onBacktabPressed: selectTextInTextfield(xPercentage)
             Keys.onTabPressed: selectTextInTextfield(zPercentage)
         }
-        TextField
+        UM.TextFieldWithUnit
         {
             id: heightTextField
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "mm";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "mm"
+
             text: heightText
             validator: DoubleValidator
             {
@@ -239,7 +227,7 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectHeight", modified_text);
+                UM.ActiveTool.setProperty("ObjectHeight", modified_text)
             }
             Keys.onBacktabPressed: selectTextInTextfield(zPercentage)
             Keys.onTabPressed: selectTextInTextfield(yPercentage)
@@ -266,40 +254,39 @@ Item
 
         function evaluateTextChange(text, lastEnteredValue, valueName, scaleName)
         {
-            var currentModelSize = UM.ActiveTool.properties.getValue(valueName);
-            var parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize);
+            var currentModelSize = UM.ActiveTool.properties.getValue(valueName)
+            var parsedValue = textfields.validateMinimumSize(text, lastEnteredValue, currentModelSize)
             if (parsedValue > 0 && ! UM.ActiveTool.properties.getValue("NonUniformScale"))
             {
-                var scale = parsedValue / lastEnteredValue;
-                var x = UM.ActiveTool.properties.getValue("ScaleX") * 100;
-                var y = UM.ActiveTool.properties.getValue("ScaleY") * 100;
-                var z = UM.ActiveTool.properties.getValue("ScaleZ") * 100;
+                var scale = parsedValue / lastEnteredValue
+                var x = UM.ActiveTool.properties.getValue("ScaleX") * 100
+                var y = UM.ActiveTool.properties.getValue("ScaleY") * 100
+                var z = UM.ActiveTool.properties.getValue("ScaleZ") * 100
                 var newX = textfields.validateMinimumSize(
-                    (x * scale).toString(), x, UM.ActiveTool.properties.getValue("ObjectWidth"));
+                    (x * scale).toString(), x, UM.ActiveTool.properties.getValue("ObjectWidth"))
                 var newY = textfields.validateMinimumSize(
-                    (y * scale).toString(), y, UM.ActiveTool.properties.getValue("ObjectHeight"));
+                    (y * scale).toString(), y, UM.ActiveTool.properties.getValue("ObjectHeight"))
                 var newZ = textfields.validateMinimumSize(
-                    (z * scale).toString(), z, UM.ActiveTool.properties.getValue("ObjectDepth"));
+                    (z * scale).toString(), z, UM.ActiveTool.properties.getValue("ObjectDepth"))
                 if (newX <= 0 || newY <= 0 || newZ <= 0)
                 {
-                    parsedValue = -1;
+                    parsedValue = -1
                 }
             }
             if (parsedValue > 0)
             {
-                UM.ActiveTool.setProperty(scaleName, parsedValue / 100);
-                lastEnteredValue = parsedValue;
+                UM.ActiveTool.setProperty(scaleName, parsedValue / 100)
+                lastEnteredValue = parsedValue
             } // 'else' the value is not valid (the object will become too small)
-            return lastEnteredValue;
+            return lastEnteredValue
         }
 
-        TextField
+        UM.TextFieldWithUnit
         {
             id: xPercentage
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "%";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "%"
             text: xPercentageText
             validator: DoubleValidator
             {
@@ -312,13 +299,12 @@ Item
             Keys.onBacktabPressed: selectTextInTextfield(widthTextField)
             Keys.onTabPressed: selectTextInTextfield(depthTextField)
         }
-        TextField
+        UM.TextFieldWithUnit
         {
             id: zPercentage
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "%";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "%"
             text: zPercentageText
             validator: DoubleValidator
             {
@@ -331,13 +317,13 @@ Item
             Keys.onBacktabPressed: selectTextInTextfield(depthTextField)
             Keys.onTabPressed: selectTextInTextfield(heightTextField)
         }
-        TextField
+        UM.TextFieldWithUnit
         {
             id: yPercentage
-            width: UM.Theme.getSize("setting_control").width;
-            height: UM.Theme.getSize("setting_control").height;
-            property string unit: "%";
-            style: UM.Theme.styles.text_field;
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "%"
+
 
             text: yPercentageText
             validator: DoubleValidator

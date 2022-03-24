@@ -27,6 +27,13 @@ if MYPY:
     from UM.Application import Application
 
 
+@contextlib.contextmanager
+def acquire_timeout(lock, timeout):
+    result = lock.acquire(timeout=timeout)
+    yield result
+    if result:
+        lock.release()
+
 # Helper functions for tracing signal emission.
 def _traceEmit(signal: Any, *args: Any, **kwargs: Any) -> None:
     Logger.log("d", "Emitting %s with arguments %s", str(signal.getName()), str(args) + str(kwargs))
@@ -205,18 +212,10 @@ class Signal:
                 self._postponed_emits.append((args, kwargs))
             return
 
-        try:
-            if self.__type == Signal.Queued:
-                Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
-                return
-            if self.__type == Signal.Auto:
-                if threading.current_thread() is not Signal._app.getMainThread():
-                    Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
-                    return
-        except AttributeError: # If Signal._app is not set
-            return
-
-        self.__performEmit(*args, **kwargs)
+        if self.__type != Signal.Direct:
+            self.__handleEmitIndirect(*args, **kwargs)
+        else:
+            self.__performEmit(*args, **kwargs)
 
     @call_if_enabled(_traceConnect, _isTraceEnabled())
     def connect(self, connector: Union["Signal", Callable[[], None]]) -> None:
@@ -311,16 +310,42 @@ class Signal:
 
     _signalQueue = None  # type: Application
 
+    def __handleEmitIndirect(self, *args, **kwargs) -> None:
+        # Handle any indirect emits of signals (eg; type is "Auto" or "Queued"
+        try:
+            if self.__type == Signal.Queued:
+                Signal._app.functionEvent(CallFunctionEvent(self.__performEmitIndirect, args, kwargs))
+            if self.__type == Signal.Auto:
+                if threading.current_thread() is not Signal._app.getMainThread():
+                    Signal._app.functionEvent(CallFunctionEvent(self.__performEmitIndirect, args, kwargs))
+                else:
+                    # Signal is emitted from the main thread, so call it directly!
+                    self.__performEmit(*args, **kwargs)
+        except AttributeError:  # If Signal._app is not set
+            pass
+
+    def __performEmitIndirect(self, *args, **kwargs):
+        self.__performEmit(*args, **kwargs)
+
     # Private implementation of the actual emit.
     # This is done to make it possible to freely push function events without needing to maintain state.
     def __performEmit(self, *args, **kwargs) -> None:
         # Quickly make some private references to the collections we need to process.
         # Although the these fields are always safe to use read and use with regards to threading,
         # we want to operate on a consistent snapshot of the whole set of fields.
-        with self.__lock:
-            functions = self.__functions
-            methods = self.__methods
-            signals = self.__signals
+
+        # The acquire_timeout is here for debugging / profiling purposes, which might help us figure out why certain
+        # people experience slowdowns. At a certain point this can be removed. 
+        copy_successful = False
+        while not copy_successful:
+            with acquire_timeout(self.__lock, 0.5) as acquired:
+                if acquired:
+                    functions = self.__functions
+                    methods = self.__methods
+                    signals = self.__signals
+                    copy_successful = True
+                else:
+                    Logger.log("w", "Getting lock for signal [%s] took more than 0.5 seconds, this should not happen!", self)
 
         if not FlameProfiler.isRecordingProfile():
             # Call handler functions

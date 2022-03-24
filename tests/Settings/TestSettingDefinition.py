@@ -120,7 +120,7 @@ toFloatConversionData = [
 
 @pytest.mark.parametrize("data,expected", toFloatConversionData)
 def test_toFloatConversion(data, expected):
-    assert UM.Settings.SettingDefinition._toFloatConversion(data) == expected
+    assert UM.Settings.SettingDefinition.toFloatConversion(data) == expected
 
 toIntConversionData = [
     ("12", 12),
@@ -131,7 +131,7 @@ toIntConversionData = [
 
 @pytest.mark.parametrize("data,expected", toIntConversionData)
 def test_toIntConversion(data, expected):
-    assert UM.Settings.SettingDefinition._toIntConversion(data) == expected
+    assert UM.Settings.SettingDefinition.toIntConversion(data) == expected
 
 
 def test_addSupportedProperty():
