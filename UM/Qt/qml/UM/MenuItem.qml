@@ -45,13 +45,12 @@ MenuItem
 
     arrow: Image
     {
-        source: UM.Theme.getImage("ChevronSingleRight")
+        source: UM.Theme.getIcon("ChevronSingleRight")
     }
 
     contentItem: RowLayout
     {
         spacing: 0
-        width: root.width
         opacity: root.enabled ? 1 : 0.5
 
         Item

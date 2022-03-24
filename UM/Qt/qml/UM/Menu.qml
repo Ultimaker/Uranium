@@ -10,7 +10,7 @@ Menu
     // This is a work around for menu's not actually being visual items. Upon creation, a visual item is created
     // The work around is based on the suggestion given in https://stackoverflow.com/questions/59167352/qml-how-to-hide-submenu
     property bool shouldBeVisible: true
-    onParentChanged:  handleVisibility()
+    onParentChanged: handleVisibility()
     function handleVisibility()
     {
         if(parent)
