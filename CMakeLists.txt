@@ -20,6 +20,11 @@ if(APPLE)
 endif()
 find_package(Python ${Python_VERSION} EXACT REQUIRED COMPONENTS Interpreter)
 message(STATUS "Linking and building ${project_name} against Python ${Python_VERSION}")
+if(NOT DEFINED Python_SITELIB_LOCAL)
+    set(Python_SITELIB_LOCAL
+            ${Python_SITELIB}
+            CACHE PATH "Local alternative site-package location to install Uranium" FORCE)
+endif()
 
 include(UraniumTranslationTools)
 
@@ -50,7 +55,7 @@ add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages 
 CREATE_TRANSLATION_TARGETS()
 
 
-install(DIRECTORY UM DESTINATION ${Python_SITELIB})
+install(DIRECTORY UM DESTINATION ${Python_SITELIB_LOCAL})
 
 install(FILES ${CMAKE_SOURCE_DIR}/cmake/UraniumTranslationTools.cmake
         DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules/ )
