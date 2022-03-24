@@ -60,7 +60,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._update_visible_row_scheduled: bool = False
         self._destroyed: bool = False
 
-        self._filter_dict: Dict[str, str] = {}
+        self._filter_dict: Dict[str, Any] = {}
 
         self._role_names: Dict[int, bytes] = {
             self.KeyRole: b"key",
