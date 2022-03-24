@@ -1,38 +1,40 @@
+# Copyright (c) 2022 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
+
 project(uranium NONE)
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.18)
 
-message(STATUS ${CMAKE_MODULE_PATH})
-
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/
-                      ${CMAKE_MODULE_PATH})
-include(UraniumTranslationTools)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
 
 include(GNUInstallDirs)
 
-find_package(PythonInterp 3 REQUIRED)
+if(NOT DEFINED Python_VERSION)
+    set(Python_VERSION
+            3.10
+            CACHE STRING "Python Version" FORCE)
+    message(STATUS "Setting Python version to ${Python_VERSION}. Set Python_VERSION if you want to compile against an other version.")
+endif()
+if(APPLE)
+    set(Python_FIND_FRAMEWORK NEVER)
+endif()
+find_package(Python ${Python_VERSION} EXACT REQUIRED COMPONENTS Interpreter)
+message(STATUS "Linking and building ${project_name} against Python ${Python_VERSION}")
 
-message("Using python version ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
+include(UraniumTranslationTools)
 
-# # Checks using pylint
+# Checks using pylint
 # Note that we use exit 0 here to not mark the build as a failure on check failure
 # In addition, the specified pylint configuration uses the spellchecker plugin. This required python-enchant to be installed.
 add_custom_target(check)
-add_custom_command(TARGET check POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pylint --rcfile=${CMAKE_SOURCE_DIR}/pylint.cfg UM --msg-template=\"{path}:{line}: [{msg_id}({symbol}) , {obj}] {msg}\" > ${CMAKE_BINARY_DIR}/pylint.log || exit 0 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+add_custom_command(TARGET check POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${Python_EXECUTABLE} -m pylint --rcfile=${CMAKE_SOURCE_DIR}/pylint.cfg UM --msg-template=\"{path}:{line}: [{msg_id}({symbol}) , {obj}] {msg}\" > ${CMAKE_BINARY_DIR}/pylint.log || exit 0 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# # Check using Mypy
+# Check using Mypy
 add_custom_target(typecheck)
-add_custom_command(TARGET typecheck POST_BUILD COMMAND ${PYTHON_EXECUTABLE} run_mypy.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+add_custom_command(TARGET typecheck POST_BUILD COMMAND ${Python_EXECUTABLE} run_mypy.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# # Tests
+# Tests
 include(UraniumTests)
-
-# # Benchmarks
-# add_custom_target(benchmark)
-# file(GLOB bench_files tests/benchmarks/*/profile*.py)
-# foreach(file ${bench_files})
-#     add_custom_command(TARGET benchmark POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" kernprof ARGS -l -v ${file})
-# endforeach()
 
 
 # Documentation
@@ -48,11 +50,8 @@ add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages 
 CREATE_TRANSLATION_TARGETS()
 
 
-if(EXISTS /etc/debian_version)
-    install(DIRECTORY UM DESTINATION lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}/dist-packages)
-else()
-    install(DIRECTORY UM DESTINATION lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
-endif()
+install(DIRECTORY UM DESTINATION ${Python_SITELIB})
+
 install(FILES ${CMAKE_SOURCE_DIR}/cmake/UraniumTranslationTools.cmake
         DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules/ )
 install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
