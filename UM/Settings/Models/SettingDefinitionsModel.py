@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections
@@ -7,12 +7,10 @@ from typing import List, Any, Dict, Set, Optional
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
 
-from UM.Decorators import deprecated
 from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
 from UM.Settings import SettingRelation
-from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
 from UM.i18n import i18nCatalog
