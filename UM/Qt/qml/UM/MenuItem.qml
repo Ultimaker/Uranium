@@ -73,6 +73,13 @@ MenuItem
             Layout.fillWidth: true
         }
 
+        Item
+        {
+            // Right side margin
+            width: UM.Theme.getSize("default_margin").width
+            visible: _shortcut.nativeText != "" || root.subMenu
+        }
+
         UM.Label
         {
             Layout.fillHeight: true
