@@ -332,11 +332,6 @@ class SettingDefinitionsModel(QAbstractListModel):
             self.expandedChanged.emit()
             self._scheduleUpdateVisibleRows()
 
-    #@deprecated("Use collapseRecursive instead.", "4.5")  # Commented out because these two decorators don't work together.
-    @pyqtSlot(str)
-    def collapse(self, key: str) -> None:
-        return self.collapseRecursive(key)
-
     @pyqtSlot(str)
     def collapseRecursive(self, key: str, *, emit_signal: bool = True) -> None:
         """
