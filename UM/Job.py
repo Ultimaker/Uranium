@@ -4,7 +4,6 @@
 import time
 from typing import Any, Optional
 
-from UM.Decorators import deprecated
 from UM.JobQueue import JobQueue
 from UM.Signal import Signal, signalemitter
 
@@ -34,16 +33,6 @@ class Job:
         """
 
         raise NotImplementedError()
-
-    # Get optional message
-    @deprecated("Get message for job is no longer used", "4.5")
-    def getMessage(self):
-        return self._message
-
-    # Set optional message
-    @deprecated("Set message for job is no longer used", "4.5")
-    def setMessage(self, message) -> None:
-        self._message = message
 
     def getResult(self) -> Any:
         """Get the result of the job.
