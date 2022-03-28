@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import functools  # For partial to update files that were changed.
@@ -8,7 +8,6 @@ from typing import Callable, List, Optional, Set, Any, Dict
 
 from PyQt6.QtCore import QFileSystemWatcher  # To watch files for changes.
 
-from UM.Decorators import deprecated
 from UM.Logger import Logger
 from UM.Mesh.ReadMeshJob import ReadMeshJob  # To reload a mesh when its file was changed.
 from UM.Message import Message  # To display a message for reloading files that were changed.
@@ -38,18 +37,20 @@ class Scene:
         self._root = SceneNode(name = "Root")
         self._root.setCalculateBoundingBox(False)
         self._connectSignalsRoot()
-        self._active_camera = None  # type: Optional[Camera]
-        self._ignore_scene_changes = False
+        self._active_camera: Optional[Camera] = None
+        self._ignore_scene_changes: bool = False
         self._lock = threading.Lock()
 
         # Watching file for changes.
         self._file_watcher = QFileSystemWatcher()
         self._file_watcher.fileChanged.connect(self._onFileChanged)
 
-        self._reload_message = None  # type: Optional[Message]
-        self._callbacks = set() # type: Set[Callable] # Need to keep these in memory. This is a memory leak every time you refresh, but a tiny one.
+        self._reload_message: Optional[Message] = None
 
-        self._metadata = {}  # type: Dict[str, Any]
+        # Need to keep these in memory. This is a memory leak every time you refresh, but a tiny one.
+        self._callbacks: Set[Callable] = set()
+
+        self._metadata: Dict[str, Any] = {}
 
     def setMetaDataEntry(self, key: str, entry: Any) -> None:
         self._metadata[key] = entry
@@ -78,16 +79,12 @@ class Scene:
             else:
                 self._connectSignalsRoot()
 
-    @deprecated("Scene lock is no longer used", "4.5")
-    def getSceneLock(self) -> threading.Lock:
-        return self._lock
-
-    def getRoot(self) -> "SceneNode":
+    def getRoot(self) -> SceneNode:
         """Get the root node of the scene."""
 
         return self._root
 
-    def setRoot(self, node: "SceneNode") -> None:
+    def setRoot(self, node: SceneNode) -> None:
         """Change the root node of the scene"""
 
         if self._root != node:
@@ -133,7 +130,7 @@ class Scene:
     :param object: The object that triggered the change.
     """
 
-    def findObject(self, object_id: int) -> Optional["SceneNode"]:
+    def findObject(self, object_id: int) -> Optional[SceneNode]:
         """Find an object by id.
 
         :param object_id: The id of the object to search for, as returned by the python id() method.
@@ -158,7 +155,8 @@ class Scene:
         :param file_path: The path to the file that must be watched.
         """
 
-        # File watcher causes cura to crash on windows if threaded from removable device (usb, ...). Create QEventLoop earlier to fix this.
+        # File watcher causes cura to crash on windows if threaded from removable device (usb, ...).
+        # Create QEventLoop earlier to fix this.
         if Platform.isWindows():
             QEventLoop()
         self._file_watcher.addPath(file_path)
@@ -181,7 +179,7 @@ class Scene:
             return
 
         # Multiple nodes may be loaded from the same file at different stages. Reload them all.
-        from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator  # To find which nodes to reload when files have changed.
+        from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
         modified_nodes = [node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path]  # type: ignore
 
         if modified_nodes:
@@ -189,9 +187,12 @@ class Scene:
             if self._reload_message is not None:
                 self._reload_message.hide()
 
-            self._reload_message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.basename(file_path)),
-                              title = i18n_catalog.i18nc("@info:title", "File has been modified"))
-            self._reload_message.addAction("reload", i18n_catalog.i18nc("@action:button", "Reload"), icon = "", description = i18n_catalog.i18nc("@action:description", "This will trigger the modified files to reload from disk."))
+            self._reload_message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(
+                                                filename = os.path.basename(file_path)),
+                                            title = i18n_catalog.i18nc("@info:title", "File has been modified"))
+            self._reload_message.addAction("reload", i18n_catalog.i18nc("@action:button", "Reload"),
+                                           icon = "",
+                                           description = i18n_catalog.i18nc("@action:description", "This will trigger the modified files to reload from disk."))
             self._reload_callback = functools.partial(self._reloadNodes, modified_nodes)
             self._reload_message.actionTriggered.connect(self._reload_callback)
             self._reload_message.show()
@@ -216,7 +217,11 @@ class Scene:
                     continue
                 job = ReadMeshJob(filename)
                 reload_finished_callback = functools.partial(self._reloadJobFinished, node)
-                self._callbacks.add(reload_finished_callback) #Store it so it won't get garbage collected. This is a memory leak, but just one partial per reload so it's not much.
+
+                # Store it so it won't get garbage collected. This is a memory leak, but just one partial per reload so
+                # it's not much.
+                self._callbacks.add(reload_finished_callback)
+
                 job.finished.connect(reload_finished_callback)
                 job.start()
 

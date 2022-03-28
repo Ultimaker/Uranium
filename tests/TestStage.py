@@ -12,19 +12,6 @@ def test_addGetDisplayComponent():
     assert stage.getDisplayComponent("MEEP!") == QUrl.fromLocalFile("MEEP")
 
 
-def test_iconSource():
-    stage = Stage()
-
-    # Should be empty if we didn't do anything yet
-    assert stage.iconSource == QUrl()
-
-    stage.setIconSource("DERP")
-    assert stage.iconSource == QUrl.fromLocalFile("DERP")
-
-    stage.setIconSource(QUrl.fromLocalFile("FOO"))
-    assert stage.iconSource == QUrl.fromLocalFile("FOO")
-
-
 def test_getUnknownDisplayComponent():
     stage = Stage()
     # Just an empty QUrl
