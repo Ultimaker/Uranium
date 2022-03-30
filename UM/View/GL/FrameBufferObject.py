@@ -14,7 +14,7 @@ class FrameBufferObject:
         super().__init__()
 
         buffer_format = QOpenGLFramebufferObjectFormat()
-        buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
+        buffer_format.setAttachment(QOpenGLFramebufferObject.Attachment.Depth)
         self._fbo = QOpenGLFramebufferObject(width, height, buffer_format)
 
         self._contents = None
