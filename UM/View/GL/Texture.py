@@ -13,7 +13,7 @@ class Texture:
     def __init__(self, open_gl_binding_object: QAbstractOpenGLFunctions) -> None:
         super().__init__()
 
-        self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target2D)
+        self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target.Target2D)
         self._gl = open_gl_binding_object
         self._file_name = None
         self._image = None
@@ -34,7 +34,7 @@ class Texture:
                 self._image = QImage(1, 1, QImage.Format.Format_ARGB32)
                 self._image.fill(0)
             self._qt_texture.setData(self._image)
-            self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
+            self._qt_texture.setMinMagFilters(QOpenGLTexture.Filter.Linear, QOpenGLTexture.Filter.Linear)
 
         self._qt_texture.bind(texture_unit)
     def release(self, texture_unit):
