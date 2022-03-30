@@ -30,8 +30,7 @@ class MainWindow(QQuickWindow):
 
         self._background_color = QColor(204, 204, 204, 255)
 
-        self.setClearBeforeRendering(False)
-        self.beforeRendering.connect(self._render, type = Qt.DirectConnection)
+        self.beforeRendering.connect(self._render, type = Qt.ConnectionType.DirectConnection)
 
         self._mouse_device = QtMouseDevice(self)
         self._mouse_device.setPluginId("qt_mouse")
@@ -56,7 +55,7 @@ class MainWindow(QQuickWindow):
         self._preferences.addPreference("general/window_height", self.DEFAULT_WINDOW_HEIGHT)
         self._preferences.addPreference("general/window_left", self.DEFAULT_WINDOW_LEFT)
         self._preferences.addPreference("general/window_top", self.DEFAULT_WINDOW_TOP)
-        self._preferences.addPreference("general/window_state", Qt.WindowNoState)
+        self._preferences.addPreference("general/window_state", Qt.WindowState.WindowNoState)
         self._preferences.addPreference("general/restore_window_geometry", True)
 
         restored_geometry = QRect(int(self._preferences.getValue("general/window_left")),
@@ -272,13 +271,13 @@ class MainWindow(QQuickWindow):
     def _onWindowGeometryChanged(self):
         # Do not store maximised window geometry, but store state instead
         # Using windowState instead of isMaximized is a workaround for QTBUG-30085
-        if self.windowState() == Qt.WindowNoState:
+        if self.windowState() == Qt.WindowState.WindowNoState:
             self._preferences.setValue("general/window_width", self.width())
             self._preferences.setValue("general/window_height", self.height())
             self._preferences.setValue("general/window_left", self.x())
             self._preferences.setValue("general/window_top", self.y())
 
-        if self.windowState() in (Qt.WindowNoState, Qt.WindowMaximized):
+        if self.windowState() in (Qt.WindowState.WindowNoState, Qt.WindowMaximized):
             self._preferences.setValue("general/window_state", self.windowState())
 
     def _updateViewportGeometry(self, width: int, height: int) -> None:
