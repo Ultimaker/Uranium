@@ -279,7 +279,7 @@ class MainWindow(QQuickWindow):
             self._preferences.setValue("general/window_left", self.x())
             self._preferences.setValue("general/window_top", self.y())
 
-        if self.windowState() in (Qt.WindowState.WindowNoState, Qt.WindowMaximized):
+        if self.windowState() in (Qt.WindowState.WindowNoState, Qt.WindowState.WindowMaximized):
             self._preferences.setValue("general/window_state", self.windowState())
 
     def _updateViewportGeometry(self, width: int, height: int) -> None:
