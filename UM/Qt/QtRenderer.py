@@ -222,7 +222,7 @@ class QtRenderer(Renderer):
         self.addRenderPass(SelectionPass(self._viewport_width, self._viewport_height))
         self.addRenderPass(CompositePass(self._viewport_width, self._viewport_height))
 
-        buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        buffer = QOpenGLBuffer(QOpenGLBuffer.Type.VertexBuffer)
         buffer.create()
         buffer.bind()
         buffer.allocate(120)

@@ -130,7 +130,7 @@ class ShaderProgram:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.Vertex, shader):
+        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.ShaderTypeBit.Vertex, shader):
             Logger.log("e", "Vertex shader failed to compile: %s", self._shader_program.log())
             return False
 
@@ -144,7 +144,7 @@ class ShaderProgram:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.Fragment, shader):
+        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.ShaderTypeBit.Fragment, shader):
             Logger.log("e", "Fragment shader failed to compile: %s", self._shader_program.log())
             return False
 
@@ -154,7 +154,7 @@ class ShaderProgram:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.Geometry, shader):
+        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.ShaderTypeBit.Geometry, shader):
             Logger.log("e", "Geometry shader failed to compile: %s", self._shader_program.log())
             return False
 

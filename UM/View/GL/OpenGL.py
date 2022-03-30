@@ -227,7 +227,7 @@ class OpenGL:
         if not kwargs.get("force_recreate", False) and hasattr(mesh, OpenGL.VertexBufferProperty):
             return getattr(mesh, OpenGL.VertexBufferProperty)
 
-        buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        buffer = QOpenGLBuffer(QOpenGLBuffer.Type.VertexBuffer)
         buffer.create()
         buffer.bind()
 
@@ -309,7 +309,7 @@ class OpenGL:
         if not kwargs.get("force_recreate", False) and hasattr(mesh, OpenGL.IndexBufferProperty):
             return getattr(mesh, OpenGL.IndexBufferProperty)
 
-        buffer = QOpenGLBuffer(QOpenGLBuffer.IndexBuffer)
+        buffer = QOpenGLBuffer(QOpenGLBuffer.Type.IndexBuffer)
         buffer.create()
         buffer.bind()
 
