@@ -4,6 +4,8 @@
 import sys
 import ctypes   # type: ignore
 
+from PyQt6.QtOpenGL import QOpenGLVersionProfile, QOpenGLVersionFunctionsFactory
+
 from PyQt6.QtGui import QOpenGLContext
 from PyQt6.QtOpenGL import QOpenGLVersionProfile, QOpenGLFramebufferObject, QOpenGLBuffer
 from PyQt6.QtWidgets import QMessageBox
@@ -59,7 +61,7 @@ class OpenGL:
             Logger.log("e", "Startup failed due to OpenGL context creation failing")
             QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize an OpenGL context. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
             sys.exit(1)
-        self._gl = context.versionFunctions(profile) # type: Any #It's actually a protected class in PyQt that depends on the implementation of your graphics card.
+        self._gl = QOpenGLVersionFunctionsFactory.get(profile)
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
             QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
