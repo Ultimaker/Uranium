@@ -72,23 +72,25 @@ class MainWindow(QQuickWindow):
                                       self.DEFAULT_WINDOW_HEIGHT)
 
         # Make sure restored geometry is not outside the currently available screens
-        screen_found = False
-        for s in range(0, self._app.desktop().screenCount()):
-            if restored_geometry.intersects(self._app.desktop().availableGeometry(s)):
-                screen_found = True
-                break
+        # screen_found = False
+        # for s in range(0, self._app.desktop().screenCount()):
+        #     if restored_geometry.intersects(self._app.desktop().availableGeometry(s)):
+        #         screen_found = True
+        #         break
+        #
+        # if not screen_found:
+        #     Logger.log("w", "Could not restore to previous location on screen, since the sizes or number of monitors "
+        #                     "have changed since then")
+        #     # Unable to find the screen that this window used to be on, so just use the defaults
+        #     restored_geometry = QRect(self.DEFAULT_WINDOW_LEFT,
+        #                               self.DEFAULT_WINDOW_TOP,
+        #                               self.DEFAULT_WINDOW_WIDTH,
+        #                               self.DEFAULT_WINDOW_HEIGHT)
+        #
+        # self.setGeometry(restored_geometry)
+        # self.setWindowState(int(self._preferences.getValue("general/window_state")))
+        # TODO use qscreen instead https://doc.qt.io/qt-6/widgets-changes-qt6.html
 
-        if not screen_found:
-            Logger.log("w", "Could not restore to previous location on screen, since the sizes or number of monitors "
-                            "have changed since then")
-            # Unable to find the screen that this window used to be on, so just use the defaults
-            restored_geometry = QRect(self.DEFAULT_WINDOW_LEFT,
-                                      self.DEFAULT_WINDOW_TOP,
-                                      self.DEFAULT_WINDOW_WIDTH,
-                                      self.DEFAULT_WINDOW_HEIGHT)
-
-        self.setGeometry(restored_geometry)
-        self.setWindowState(int(self._preferences.getValue("general/window_state")))
 
         self._mouse_x = 0
         self._mouse_y = 0

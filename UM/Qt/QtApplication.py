@@ -76,6 +76,7 @@ class QtApplication(QApplication, Application):
     applicationRunning = Signal()
 
     def __init__(self, tray_icon_name: str = None, **kwargs) -> None:
+        self.setAttribute(Qt.ApplicationAttribute.AA_UseDesktopOpenGL)
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
@@ -158,7 +159,6 @@ class QtApplication(QApplication, Application):
 
         if preferences.getValue("view/force_empty_shader_cache"):
             self.setAttribute(Qt.ApplicationAttribute.AA_DisableShaderDiskCache)
-        self.setAttribute(Qt.ApplicationAttribute.AA_UseDesktopOpenGL)
         if preferences.getValue("view/opengl_version_detect") != OpenGLContext.OpenGlVersionDetect.ForceModern:
             major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion(
                 preferences.getValue("view/opengl_version_detect") == OpenGLContext.OpenGlVersionDetect.ForceLegacy)
@@ -382,7 +382,7 @@ class QtApplication(QApplication, Application):
 
     def _onMainWindowStateChanged(self, window_state: int) -> None:
         if self._tray_icon and self._tray_icon_widget:
-            visible = window_state == Qt.WindowMinimized
+            visible = window_state == Qt.WindowState.WindowMinimized
             self._tray_icon_widget.setVisible(visible)
 
     # Show toast message using System tray widget.
@@ -520,7 +520,7 @@ class QtApplication(QApplication, Application):
         self.quit()
 
     def checkWindowMinimizedState(self) -> bool:
-        if self._main_window is not None and self._main_window.windowState() == Qt.WindowMinimized:
+        if self._main_window is not None and self._main_window.windowState() == Qt.WindowState.WindowMinimized:
             return True
         else:
             return False
