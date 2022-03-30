@@ -94,7 +94,7 @@ class PointingRectangle(QQuickItem):
             paint_node = QSGGeometryNode()
 
         geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 7, 9)
-        geometry.setDrawingMode(QSGGeometry.GL_TRIANGLES)
+        geometry.setDrawingMode(QSGGeometry.DrawingMode.GL_TRIANGLES)
         vertex_data = geometry.vertexDataAsPoint2D()
         vertex_data[0].set(0, 0)
         vertex_data[1].set(0, self.height())
@@ -192,7 +192,7 @@ class PointingRectangle(QQuickItem):
                 border_vertices.append((0, arrow_offset - arrow_size))
 
             border_geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 2 * len(border_vertices), 0)
-            border_geometry.setDrawingMode(QSGGeometry.GL_LINES)
+            border_geometry.setDrawingMode(QSGGeometry.DrawingMode.GL_LINES)
             border_geometry.setLineWidth(self._border_width)
 
             border_vertex_data = border_geometry.vertexDataAsPoint2D()
