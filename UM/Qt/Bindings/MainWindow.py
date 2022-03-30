@@ -188,8 +188,8 @@ class MainWindow(QQuickWindow):
         self._mouse_pressed = True
 
     def mouseMoveEvent(self, event):
-        self._mouse_x = event.x()
-        self._mouse_y = event.y()
+        self._mouse_x = event.pos().x()
+        self._mouse_y = event.pos().y()
 
         if self._mouse_pressed:
             self.mousePositionChanged.emit()
