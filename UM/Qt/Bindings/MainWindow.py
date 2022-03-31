@@ -3,7 +3,8 @@
 
 from PyQt6.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF, QRect
 from PyQt6.QtGui import QColor
-from PyQt6.QtQuick import QQuickWindow
+from PyQt6.QtQuick import QQuickWindow, QSGRendererInterface
+
 
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
@@ -30,7 +31,7 @@ class MainWindow(QQuickWindow):
 
         self._background_color = QColor(204, 204, 204, 255)
 
-        self.beforeRendering.connect(self._render, type = Qt.ConnectionType.DirectConnection)
+        self.beforeRenderPassRecording.connect(self._render, type = Qt.ConnectionType.DirectConnection)
 
         self._mouse_device = QtMouseDevice(self)
         self._mouse_device.setPluginId("qt_mouse")
@@ -248,6 +249,7 @@ class MainWindow(QQuickWindow):
     renderCompleted = Signal(type = Signal.Queued)
 
     def _render(self):
+        self.beginExternalCommands()
         if self._full_render_required:
             renderer = self._app.getRenderer()
             view = self._app.getController().getActiveView()
@@ -260,6 +262,8 @@ class MainWindow(QQuickWindow):
             self.renderCompleted.emit()
         else:
             self._app.getRenderer().reRenderLast()
+        self.endExternalCommands()
+
 
     def _onSceneChanged(self, object = None):
         self._full_render_required = True

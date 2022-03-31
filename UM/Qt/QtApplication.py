@@ -8,6 +8,7 @@ from typing import List
 from typing import Any, cast, Dict, Optional
 
 from PyQt6.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt6.QtQuick import QQuickWindow, QSGRendererInterface
 
 from UM.FileProvider import FileProvider
 from UM.FlameProfiler import pyqtSlot
@@ -77,6 +78,8 @@ class QtApplication(QApplication, Application):
 
     def __init__(self, tray_icon_name: str = None, **kwargs) -> None:
         self.setAttribute(Qt.ApplicationAttribute.AA_UseDesktopOpenGL)
+        QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.OpenGL)
+
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
