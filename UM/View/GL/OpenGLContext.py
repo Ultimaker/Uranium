@@ -146,11 +146,11 @@ class OpenGLContext:
                 if not Platform.isOSX():
                     return major_version, minor_version, QSurfaceFormat.OpenGLContextProfile.CoreProfile
 
-                gl_window = QWindow()
-                gl_window.setSurfaceType(QSurface.SurfaceType.OpenGLSurface)
-                gl_window.showMinimized()
+                cls.gl_window = QWindow()
+                cls.gl_window.setSurfaceType(QSurface.SurfaceType.OpenGLSurface)
+                cls.gl_window.showMinimized()
 
-                cls.detect_ogl_context.makeCurrent(gl_window)
+                cls.detect_ogl_context.makeCurrent(cls.gl_window)
 
                 gl_profile = QOpenGLVersionProfile()
                 gl_profile.setVersion(major_version, minor_version)
@@ -224,6 +224,7 @@ class OpenGLContext:
 
     # Keep already created context in memory, as some drivers (Intel) have trouble deleting OpenGL-contexts:
     detect_ogl_context = None  #type: Optional[QOpenGLContext]
+    gl_window: Any = None
 
     # To be filled by helper functions
     properties = {}  # type: Dict[str, bool]

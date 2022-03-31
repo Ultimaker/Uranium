@@ -59,12 +59,12 @@ class OpenGL:
         context = QOpenGLContext.currentContext()
         if not context:
             Logger.log("e", "Startup failed due to OpenGL context creation failing")
-            QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize an OpenGL context. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
+            QOpenGLContext.currentContext()
             sys.exit(1)
-        self._gl = QOpenGLVersionFunctionsFactory.get(profile)
+        self._gl = QOpenGLVersionFunctionsFactory.get(profile, context)
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
-            QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
+            QMessageBox.critical(QMessageBox.Icon.Critical, "Failed to Initialize OpenGL", i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
             sys.exit(1)
 
         # It would be nice to be able to not necessarily need OpenGL FrameBuffer Object support, but
