@@ -114,8 +114,8 @@ class CameraTool(Tool):
         """
 
         modifiers = QtWidgets.QApplication.keyboardModifiers()
-        self._shift_is_active = (modifiers & QtCore.Qt.ShiftModifier) != QtCore.Qt.NoModifier
-        self._ctrl_is_active = (modifiers & QtCore.Qt.ControlModifier) != QtCore.Qt.NoModifier
+        self._shift_is_active = (modifiers & QtCore.Qt.KeyboardModifier.ShiftModifier) != QtCore.Qt.KeyboardModifier.NoModifier
+        self._ctrl_is_active = (modifiers & QtCore.Qt.KeyboardModifier.ControlModifier) != QtCore.Qt.KeyboardModifier.NoModifier
         # Checks for the press and release event of the space key
         if event.type is Event.KeyPressEvent:
             if event.key == KeyEvent.SpaceKey:

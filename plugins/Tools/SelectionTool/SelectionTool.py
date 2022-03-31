@@ -42,9 +42,9 @@ class SelectionTool(Tool):
         """
 
         modifiers = QtWidgets.QApplication.keyboardModifiers()
-        self._shift_is_active = modifiers & QtCore.Qt.ShiftModifier
-        self._ctrl_is_active = modifiers & QtCore.Qt.ControlModifier
-        self._alt_is_active = modifiers & QtCore.Qt.AltModifier
+        self._shift_is_active = modifiers & QtCore.Qt.KeyboardModifier.ShiftModifier
+        self._ctrl_is_active = modifiers & QtCore.Qt.KeyboardModifier.ControlModifier
+        self._alt_is_active = modifiers & QtCore.Qt.KeyboardModifier.AltModifier
 
     def setSelectionMode(self, mode):
         """Set the selection mode
