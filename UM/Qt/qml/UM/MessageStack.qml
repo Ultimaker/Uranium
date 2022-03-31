@@ -129,7 +129,7 @@ ListView
                 id: closeButton
                 implicitWidth: UM.Theme.getSize("message_close").width
                 implicitHeight: UM.Theme.getSize("message_close").height
-                Layout.alignment: Qt.AlignmentFlag.AlignTop
+                Layout.alignment: Qt.AlignTop
                 onClicked: base.model.hideMessage(model.id)
                 visible: model.dismissable
                 enabled: model.dismissable
