@@ -56,14 +56,14 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         dialog = QFileDialog()
 
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to Disk"))
-        dialog.setFileMode(QFileDialog.AnyFile)
-        dialog.setAcceptMode(QFileDialog.AcceptSave)
+        dialog.setFileMode(QFileDialog.FileMode.AnyFile)
+        dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
 
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
-        dialog.setOption(QFileDialog.DontConfirmOverwrite)
+        dialog.setOption(QFileDialog.Option.DontConfirmOverwrite)
 
         if sys.platform == "linux" and "KDE_FULL_SESSION" in os.environ:
-            dialog.setOption(QFileDialog.DontUseNativeDialog)
+            dialog.setOption(QFileDialog.Option.DontUseNativeDialog)
 
         filters = []
         mime_types = []
