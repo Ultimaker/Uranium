@@ -43,13 +43,12 @@ class QtMouseDevice(InputDevice):
     def _qtButtonsToButtonList(self, qt_buttons):
         buttons = []
 
-        if qt_buttons & Qt.MouseButton.LeftButton:
+        if qt_buttons == Qt.MouseButton.LeftButton.value:
             buttons.append(MouseEvent.LeftButton)
-        if qt_buttons & Qt.MouseButton.RightButton:
+        if qt_buttons == Qt.MouseButton.RightButton.value:
             buttons.append(MouseEvent.RightButton)
-        if qt_buttons & Qt.MouseButton.MiddleButton:
+        if qt_buttons == Qt.MouseButton.MiddleButton.value:
             buttons.append(MouseEvent.MiddleButton)
-
         return buttons
 
     def _normalizeCoordinates(self, x, y):

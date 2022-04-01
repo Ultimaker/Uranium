@@ -12,8 +12,6 @@ i18n_catalog = i18nCatalog("uranium")
 
 class BackendProxy(QObject):
 
-    pyqtEnum(BackendState) # Expose the BackendState enum to QML
-
     def __init__(self, parent = None):
         super().__init__(parent)
         self._backend = Application.getInstance().getBackend()
@@ -28,6 +26,26 @@ class BackendProxy(QObject):
     @pyqtProperty(float, notify = processingProgress)
     def progress(self):
         return self._progress
+
+    @pyqtProperty(int, constant = True)
+    def NotStarted(self):
+        return 1
+
+    @pyqtProperty(int, constant=True)
+    def Processing(self):
+        return 2
+
+    @pyqtProperty(int, constant=True)
+    def Done(self):
+        return 3
+
+    @pyqtProperty(int, constant=True)
+    def Error(self):
+        return 4
+
+    @pyqtProperty(int, constant=True)
+    def Disabled(self):
+        return 5
 
     backendStateChange = pyqtSignal(int, arguments = ["state"])
 
