@@ -4,6 +4,7 @@
 import QtQuick 2.10
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs
 
 import UM 1.0 as UM
 
