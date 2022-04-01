@@ -1,7 +1,8 @@
 # Copyright (c) 2020 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt6.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF, QRect
+from PyQt6.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF, QRect, QObject, \
+    QEvent
 from PyQt6.QtGui import QColor
 from PyQt6.QtQuick import QQuickWindow, QSGRendererInterface
 
@@ -131,14 +132,14 @@ class MainWindow(QQuickWindow):
     @pyqtSlot()
     def toggleFullscreen(self):
         if self._fullscreen:
-            self.setVisibility(QQuickWindow.Windowed)  # Switch back to windowed
+            self.setVisibility(QQuickWindow.Visibility.Windowed)  # Switch back to windowed
         else:
-            self.setVisibility(QQuickWindow.FullScreen)  # Go to fullscreen
+            self.setVisibility(QQuickWindow.Visibility.FullScreen)  # Go to fullscreen
         self._fullscreen = not self._fullscreen
 
     @pyqtSlot()
     def exitFullscreen(self):
-        self.setVisibility(QQuickWindow.Windowed)
+        self.setVisibility(QQuickWindow.Visibility.Windowed)
         self._fullscreen = False
 
     def getBackgroundColor(self):
@@ -176,7 +177,33 @@ class MainWindow(QQuickWindow):
 #   to claim the Python GIL.
 #   def event(self, event):
 
+    @pyqtSlot(QObject)
+    def mousePressed(self, event):
+        wrap_event = MouseEventWrapper(event.property("x"), event.property("y"), event.property("buttons"), event.property("button"), QEvent.Type.MouseButtonPress)
+        self._mouse_pressed = True
+        self._mouse_device.handleEvent(wrap_event)
+
+    @pyqtSlot(QObject)
+    def mouseMoved(self, event):
+        wrap_event = MouseEventWrapper(event.property("x"), event.property("y"), event.property("buttons"),
+                                       event.property("button"), QEvent.Type.MouseMove)
+        self._mouse_device.handleEvent(wrap_event)
+
+    @pyqtSlot(QObject)
+    def wheel(self, event):
+        wrap_event = MouseEventWrapper(event.property("x"), event.property("y"), event.property("buttons"),
+                                       event.property("button"), QEvent.Type.Wheel, event.property("angleDelta"))
+        self._mouse_device.handleEvent(wrap_event)
+
+    @pyqtSlot(QObject)
+    def mouseReleased(self, event):
+        wrap_event = MouseEventWrapper(event.property("x"), event.property("y"), event.property("buttons"),
+                                       event.property("button"), QEvent.Type.MouseButtonRelease)
+        self._mouse_pressed = False
+        self._mouse_device.handleEvent(wrap_event)
+
     def mousePressEvent(self, event):
+        event.setAccepted(False)
         super().mousePressEvent(event)
         if event.isAccepted():
             return
@@ -185,10 +212,9 @@ class MainWindow(QQuickWindow):
             self.activeFocusItem().setFocus(False)
 
         self._previous_focus = self.activeFocusItem()
-        self._mouse_device.handleEvent(event)
-        self._mouse_pressed = True
 
     def mouseMoveEvent(self, event):
+        event.setAccepted(False)
         self._mouse_x = event.pos().x()
         self._mouse_y = event.pos().y()
 
@@ -196,17 +222,12 @@ class MainWindow(QQuickWindow):
             self.mousePositionChanged.emit()
 
         super().mouseMoveEvent(event)
-        if event.isAccepted():
-            return
-
-        self._mouse_device.handleEvent(event)
 
     def mouseReleaseEvent(self, event):
+        event.setAccepted(False)
         super().mouseReleaseEvent(event)
         if event.isAccepted():
             return
-        self._mouse_device.handleEvent(event)
-        self._mouse_pressed = False
 
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
@@ -223,11 +244,8 @@ class MainWindow(QQuickWindow):
         self._key_device.handleEvent(event)
 
     def wheelEvent(self, event):
+        event.setAccepted(False)
         super().wheelEvent(event)
-        if event.isAccepted():
-            return
-
-        self._mouse_device.handleEvent(event)
 
     def moveEvent(self, event):
         QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.ConnectionType.QueuedConnection)
@@ -264,7 +282,6 @@ class MainWindow(QQuickWindow):
             self._app.getRenderer().reRenderLast()
         self.endExternalCommands()
 
-
     def _onSceneChanged(self, object = None):
         self._full_render_required = True
         self.update()
@@ -298,3 +315,40 @@ class MainWindow(QQuickWindow):
 
         self._app.getRenderer().setViewportSize(view_width, view_height)
         self._app.getRenderer().setWindowSize(width, height)
+
+
+class mouseEventPosition:
+    def __init__(self, x, y):
+        self._x = x
+        self._y = y
+
+    def x(self):
+        return self._x
+
+    def y(self):
+        return self._y
+
+
+class MouseEventWrapper:
+    def __init__(self, x, y, buttons, button, event_type, wheel_delta = None):
+        self._pos = mouseEventPosition(x, y)
+        self._buttons = buttons
+        self._button = button
+        self._type = event_type
+        self._wheel_delta = wheel_delta
+
+    def button(self):
+        return self._button
+
+    def buttons(self):
+        return self._buttons
+
+    def type(self):
+        return self._type
+
+    def pos(self):
+        return self._pos
+
+    def angleDelta(self):
+        return self._wheel_delta
+
