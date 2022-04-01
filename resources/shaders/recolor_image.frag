@@ -1,13 +1,14 @@
-#version 420
-layout(location = 0) in highp vec2 coord;
+#version 440
+layout(location = 0) in vec2 coord;
+layout(location = 0) out vec4 fragColor;
 layout(std140, binding = 0) uniform buf {
-    vec4 color;
+    mat4 qt_Matrix;
     float qt_Opacity;
+    vec4 color;
 };
-layout(binding=1) uniform sampler2D src;
-layout(location = 0) out vec4 frag_color;
+layout(binding = 1) uniform sampler2D src;
 void main() {
-    lowp vec4 tex = texture(src, coord);
-    lowp float alpha = tex.a  * qt_Opacity;
-    frag_color = vec4(color.r * alpha, color.g * alpha, color.b * alpha, alpha);
+    vec4 tex = texture(src, coord);
+    float alpha = tex.a  * qt_Opacity;
+    fragColor = vec4(color.r * alpha, color.g * alpha, color.b * alpha, alpha);
 }
