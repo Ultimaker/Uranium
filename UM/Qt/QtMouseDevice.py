@@ -18,19 +18,19 @@ class QtMouseDevice(InputDevice):
 
     def handleEvent(self, event):
         if event.type() == QEvent.Type.MouseButtonPress:
-            ex, ey = self._normalizeCoordinates(event.windowPos().x(), event.windowPos().y())
+            ex, ey = self._normalizeCoordinates(event.pos().x(), event.pos().y())
             e = MouseEvent(MouseEvent.MousePressEvent, ex, ey, self._x, self._y, self._qtButtonsToButtonList(event.buttons()))
             self._x = ex
             self._y = ey
             self.event.emit(e)
         elif event.type() == QEvent.Type.MouseMove:
-            ex, ey = self._normalizeCoordinates(event.windowPos().x(), event.windowPos().y())
+            ex, ey = self._normalizeCoordinates(event.pos().x(), event.pos().y())
             e = MouseEvent(MouseEvent.MouseMoveEvent, ex, ey, self._x, self._y, self._qtButtonsToButtonList(event.buttons()))
             self._x = ex
             self._y = ey
             self.event.emit(e)
         elif event.type() == QEvent.Type.MouseButtonRelease:
-            ex, ey = self._normalizeCoordinates(event.windowPos().x(), event.windowPos().y())
+            ex, ey = self._normalizeCoordinates(event.pos().x(), event.pos().y())
             e = MouseEvent(MouseEvent.MouseReleaseEvent, ex, ey, self._x, self._y, self._qtButtonsToButtonList(event.button()))
             self._x = ex
             self._y = ey
