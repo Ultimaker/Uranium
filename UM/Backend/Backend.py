@@ -60,6 +60,7 @@ class Backend(PluginObject):
     def setState(self, new_state):
         if new_state != self._backend_state:
             self._backend_state = new_state
+
             self.backendStateChange.emit(self._backend_state)
 
     def startEngine(self):
