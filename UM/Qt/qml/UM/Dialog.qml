@@ -29,6 +29,7 @@ Window
 
     property alias loader: contentLoader
 
+    property alias buttonArea: buttonRow
     property alias leftButtons: leftButtonRow.children
     property alias rightButtons: rightButtonRow.children
     property alias backgroundColor: background.color
