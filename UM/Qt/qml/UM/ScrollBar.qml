@@ -10,6 +10,7 @@ ScrollBar
 {
     policy: (size < 1.0) ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
     implicitWidth: (size < 1.0) ? UM.Theme.getSize("scrollbar").width + leftPadding + rightPadding : 0
+    minimumSize: orientation === Qt.Horizontal ? height / width : width / height
 
     background: Rectangle
     {
