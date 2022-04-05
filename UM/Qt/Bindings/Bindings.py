@@ -28,6 +28,7 @@ from . import i18nCatalogProxy
 from . import ExtensionModel
 from . import VisibleMessagesModel
 from . import Utilities
+from . import TableModel
 
 from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
 from UM.Settings.Models.DefinitionContainersModel import DefinitionContainersModel
@@ -115,6 +116,9 @@ class Bindings:
         # Additions after 4.9
         qmlRegisterType(FileProviderModel.FileProviderModel, "UM", 1, 6, "FileProviderModel")
         qmlRegisterType(ProjectOutputDevicesModel.ProjectOutputDevicesModel, "UM", 1, 6, "ProjectOutputDevicesModel")
+
+        # Additions after 5.0
+        qmlRegisterType(TableModel.TableModel, "UM", 1, 6, "TableModel")
 
     @staticmethod
     def addRegisterType(class_type: type, qml_import_name: str, major_version: int, minor_version: int, class_name: str) -> None:
