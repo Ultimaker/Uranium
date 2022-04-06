@@ -29,12 +29,7 @@ class ReadMeshJob(ReadFileJob):
         super().run()
 
         if not self._result:
-            print("net self._result")
             self._result = []
-        for node in self._result:
-            print(node)
-            build_bounds = node.getBoundingBox()
-            print("Build Bounds d w h", build_bounds.depth, ", ", build_bounds.width, ", ", build_bounds.height)
 
         # Scale down to maximum bounds size if that is available
         if hasattr(self._application.getController().getScene(), "_maximum_bounds"):
@@ -45,7 +40,6 @@ class ReadMeshJob(ReadFileJob):
 
                 if build_bounds is None or max_bounds is None:
                     continue
-                print("Build Bounds d w h", build_bounds.depth, ", ", build_bounds.width, ", ", build_bounds.height)
 
                 if self._application.getInstance().getPreferences().getValue("mesh/scale_to_fit") == True or self._application.getInstance().getPreferences().getValue("mesh/scale_tiny_meshes") == True:
                     scale_factor_width = max_bounds.width / build_bounds.width
