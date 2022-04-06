@@ -8,6 +8,7 @@ from typing import Callable, List, Optional, Set, Any, Dict
 
 from PyQt5.QtCore import QFileSystemWatcher  # To watch files for changes.
 
+from UM.Decorators import deprecated
 from UM.Logger import Logger
 from UM.Mesh.ReadMeshJob import ReadMeshJob  # To reload a mesh when its file was changed.
 from UM.Message import Message  # To display a message for reloading files that were changed.
@@ -79,7 +80,11 @@ class Scene:
             else:
                 self._connectSignalsRoot()
 
-    def getRoot(self) -> SceneNode:
+    @deprecated("Scene lock is no longer used", "4.5")
+    def getSceneLock(self) -> threading.Lock:
+        return self._lock
+
+    def getRoot(self) -> "SceneNode":
         """Get the root node of the scene."""
 
         return self._root
@@ -179,7 +184,7 @@ class Scene:
             return
 
         # Multiple nodes may be loaded from the same file at different stages. Reload them all.
-        from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
+        from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator  # To find which nodes to reload when files have changed.
         modified_nodes = [node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path]  # type: ignore
 
         if modified_nodes:
