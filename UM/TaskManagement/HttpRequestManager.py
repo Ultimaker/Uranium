@@ -255,7 +255,6 @@ class HttpRequestManager(TaskManager):
             raise ValueError("Timeout must be a positive number if provided, but [%s] was given" % timeout)
 
         request = QNetworkRequest(QUrl(url))
-        request.setAttribute(QNetworkRequest.Attribute.RedirectPolicyAttribute, QNetworkRequest.RedirectPolicy.ManualRedirectPolicy)
 
         # Set headers
         if headers_dict is not None:
