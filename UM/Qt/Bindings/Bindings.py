@@ -20,6 +20,7 @@ from . import PreferencesProxy
 from . import Theme
 from . import OpenGLContextProxy
 from . import PointingRectangle
+from UM.ColorImage import ColorImage
 from . import ActiveToolProxy
 from . import OutputDevicesModel
 from . import SelectionProxy
@@ -37,6 +38,7 @@ from UM.Settings.Models.ContainerStacksModel import ContainerStacksModel
 from UM.Settings.Models.SettingPropertyProvider import SettingPropertyProvider
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
 from UM.Settings.Models.ContainerPropertyProvider import ContainerPropertyProvider
+
 
 
 class Bindings:
@@ -70,6 +72,7 @@ class Bindings:
         qmlRegisterType(ViewModel.ViewModel, "UM", 1, 0, "ViewModel")
         qmlRegisterType(ToolModel.ToolModel, "UM", 1, 0, "ToolModel")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
+        qmlRegisterType(ColorImage, "UM", 1, 0, "ColorImage")
         qmlRegisterType(ExtensionModel.ExtensionModel, "UM", 1, 0, "ExtensionModel")
         qmlRegisterType(VisibleMessagesModel.VisibleMessagesModel, "UM", 1, 0, "VisibleMessagesModel")
 
