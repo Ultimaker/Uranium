@@ -20,10 +20,11 @@ class ColorImage(QQuickPaintedItem):
     colorChanged = pyqtSignal()
 
     def _updateSVG(self):
-        if self._source:
-            with open(self._source.toLocalFile(), "rb") as f:
-                self._svg_data = f.read()
-        self._svg_data = self._svg_data.replace(b"<path ", b"<path fill=\"%s\" " % self._color.name().encode("utf-8"))
+        if not self._source or self._source.toLocalFile() == "":
+            return
+        with open(self._source.toLocalFile(), "rb") as f:
+            self._svg_data = f.read()
+        self._svg_data = self._svg_data.replace(b"<svg ", b"<svg fill=\"%s\" " % self._color.name().encode("utf-8"))
         self._renderer = QSvgRenderer(self._svg_data)
 
     def setSource(self, source):
