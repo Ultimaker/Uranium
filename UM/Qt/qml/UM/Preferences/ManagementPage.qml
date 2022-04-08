@@ -160,7 +160,7 @@ PreferencesPage
         {
             id: hamburgerButton
             anchors.right: parent.right
-            toolItem: UM.RecolorImage
+            toolItem: UM.ColorImage
             {
                 source: UM.Theme.getIcon("Hamburger")
                 color: UM.Theme.getColor("icon")

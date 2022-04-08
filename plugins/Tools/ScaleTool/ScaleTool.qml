@@ -65,7 +65,7 @@ Item
         //: Reset scale tool button
         text: catalog.i18nc("@action:button","Reset")
 
-        toolItem: UM.RecolorImage
+        toolItem: UM.ColorImage
         {
             source: UM.Theme.getIcon("ArrowReset")
             color: UM.Theme.getColor("icon")
