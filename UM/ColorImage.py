@@ -3,8 +3,9 @@
 
 from PyQt6.QtCore import QUrl, pyqtProperty, pyqtSignal
 from PyQt6.QtGui import QColor
-from PyQt6.QtQuick import  QQuickPaintedItem
+from PyQt6.QtQuick import QQuickPaintedItem
 from PyQt6.QtSvg import QSvgRenderer
+from UM.Application import Application
 
 # This is meant as a potential replacement for RecolorImage.
 # As we had issues with upgrading to qt6 on windows with the shader, this was developed as an alternative
@@ -48,5 +49,7 @@ class ColorImage(QQuickPaintedItem):
         return self._color
 
     def paint(self, painter):
+        pixel_ratio = Application.getInstance().getMainWindow().effectiveDevicePixelRatio()
+        painter.scale(1 / pixel_ratio, 1 / pixel_ratio)
         if self._renderer:
             self._renderer.render(painter)
