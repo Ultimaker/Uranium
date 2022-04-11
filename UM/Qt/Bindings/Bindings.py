@@ -88,8 +88,8 @@ class Bindings:
         qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, ActiveToolProxy.createActiveToolProxy, "ActiveTool")
         qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, SelectionProxy.createSelectionProxy, "Selection")
 
-        qmlRegisterUncreatableType(Duration, "UM", 1, 0, "Duration", "")
-        qmlRegisterUncreatableType(DurationFormat, "UM", 1, 0, "DurationFormat", "")
+        qmlRegisterUncreatableType(Duration, "UM", 1, 0, "", "Duration")
+        qmlRegisterUncreatableType(DurationFormat, "UM", 1, 0, "", "DurationFormat")
 
         # Additions after 15.06. Uses API version 1.1 so should be imported with "import UM 1.1"
         qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")
