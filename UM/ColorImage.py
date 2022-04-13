@@ -38,7 +38,7 @@ class ColorImage(QQuickPaintedItem):
     def source(self) -> QUrl:
         return self._source
 
-    def setColor(self, color):
+    def setColor(self, color: QColor) -> None:
         if self._color != color:
             self._color = color
             self.colorChanged.emit()
