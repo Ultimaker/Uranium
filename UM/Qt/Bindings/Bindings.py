@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt6.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
@@ -38,7 +38,6 @@ from UM.Settings.Models.ContainerStacksModel import ContainerStacksModel
 from UM.Settings.Models.SettingPropertyProvider import SettingPropertyProvider
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
 from UM.Settings.Models.ContainerPropertyProvider import ContainerPropertyProvider
-
 
 
 class Bindings:
@@ -88,8 +87,8 @@ class Bindings:
         qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, ActiveToolProxy.createActiveToolProxy, "ActiveTool")
         qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, SelectionProxy.createSelectionProxy, "Selection")
 
-        qmlRegisterUncreatableType(Duration, "UM", 1, 0, "Duration", "")
-        qmlRegisterUncreatableType(DurationFormat, "UM", 1, 0, "DurationFormat", "")
+        qmlRegisterUncreatableType(Duration, "UM", 1, 0, "", "Duration")
+        qmlRegisterUncreatableType(DurationFormat, "UM", 1, 0, "", "DurationFormat")
 
         # Additions after 15.06. Uses API version 1.1 so should be imported with "import UM 1.1"
         qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")

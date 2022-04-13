@@ -84,7 +84,7 @@ class QtApplication(QApplication, Application):
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
                 plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt6", "plugins")
-                Logger.log("i", "Adding QT5 plugin path: %s", plugin_path)
+                Logger.log("i", "Adding QT6 plugin path: %s", plugin_path)
                 QCoreApplication.addLibraryPath(plugin_path)
             else:
                 import site
@@ -642,7 +642,7 @@ class QtApplication(QApplication, Application):
 
     def getHttpRequestManager(self) -> "HttpRequestManager":
         if not self._http_network_request_manager:
-            self._http_network_request_manager = HttpRequestManager.getInstance(parent=self)
+            self._http_network_request_manager = HttpRequestManager.getInstance(parent = self)
         return self._http_network_request_manager
 
     @classmethod

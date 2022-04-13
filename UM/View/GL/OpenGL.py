@@ -1,10 +1,10 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import sys
 import ctypes   # type: ignore
 
-from PyQt6.QtOpenGL import QOpenGLVersionProfile, QOpenGLVersionFunctionsFactory
+from PyQt6.QtOpenGL import QOpenGLVersionFunctionsFactory
 
 from PyQt6.QtGui import QOpenGLContext
 from PyQt6.QtOpenGL import QOpenGLVersionProfile, QOpenGLFramebufferObject, QOpenGLBuffer

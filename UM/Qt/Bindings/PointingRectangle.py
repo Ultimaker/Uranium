@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt6.QtCore import pyqtProperty, pyqtSignal
@@ -11,7 +11,7 @@ class PointingRectangle(QQuickItem):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        # As of time of writing, you can not reference flags by name in QT6
+        # FIXME: As of time of writing, you can not reference flags by name in QT6
         # You can find the list of flags by value here https://doc.qt.io/qt-6/qquickitem.html#Flag-enum
         # This flag is QQuickItem::ItemHasContents
         self.setFlag(QQuickItem.Flag(8))

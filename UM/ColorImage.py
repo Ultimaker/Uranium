@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt6.QtCore import QUrl, pyqtProperty, pyqtSignal
-from PyQt6.QtGui import QColor
+from PyQt6.QtGui import QColor, QPainter
 from PyQt6.QtQuick import QQuickPaintedItem
 from PyQt6.QtSvg import QSvgRenderer
 from UM.Application import Application
@@ -20,7 +20,7 @@ class ColorImage(QQuickPaintedItem):
     sourceChanged = pyqtSignal()
     colorChanged = pyqtSignal()
 
-    def _updateSVG(self):
+    def _updateSVG(self) -> None:
         if not self._source or self._source.toLocalFile() == "":
             return
         with open(self._source.toLocalFile(), "rb") as f:
@@ -29,7 +29,7 @@ class ColorImage(QQuickPaintedItem):
         self._renderer = QSvgRenderer(self._svg_data)
         self.update()
 
-    def setSource(self, source):
+    def setSource(self, source: QUrl) -> None:
         if self._source != source:
             self._source = source
             self.sourceChanged.emit()
@@ -39,7 +39,7 @@ class ColorImage(QQuickPaintedItem):
     def source(self) -> QUrl:
         return self._source
 
-    def setColor(self, color):
+    def setColor(self, color: QColor) -> None:
         if self._color != color:
             self._color = color
             self.colorChanged.emit()
@@ -49,7 +49,7 @@ class ColorImage(QQuickPaintedItem):
     def color(self) -> QColor:
         return self._color
 
-    def paint(self, painter):
+    def paint(self, painter: QPainter) -> None:
         pixel_ratio = Application.getInstance().getMainWindow().effectiveDevicePixelRatio()
         painter.scale(1 / pixel_ratio, 1 / pixel_ratio)
         if self._renderer:

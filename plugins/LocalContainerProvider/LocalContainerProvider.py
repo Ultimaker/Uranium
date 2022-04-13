@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os  # For getting the IDs from a filename.
@@ -279,8 +279,6 @@ class LocalContainerProvider(ContainerProvider):
 
         :param definition: The definition container to store.
         """
-
-        return None
 
         cache_path = Resources.getStoragePath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition.id)
 
