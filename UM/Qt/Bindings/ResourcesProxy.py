@@ -3,7 +3,7 @@
 
 import enum
 
-from PyQt6.QtCore import QObject, QUrl, pyqtEnum
+from PyQt6.QtCore import QObject, pyqtEnum
 from UM.FlameProfiler import pyqtSlot
 
 import UM.Resources

@@ -8,7 +8,6 @@ from PyQt6.QtQuick import QQuickWindow
 
 
 from UM.Logger import Logger
-from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
