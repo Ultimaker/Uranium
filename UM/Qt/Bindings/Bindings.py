@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt6.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
@@ -38,7 +38,6 @@ from UM.Settings.Models.ContainerStacksModel import ContainerStacksModel
 from UM.Settings.Models.SettingPropertyProvider import SettingPropertyProvider
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
 from UM.Settings.Models.ContainerPropertyProvider import ContainerPropertyProvider
-
 
 
 class Bindings:

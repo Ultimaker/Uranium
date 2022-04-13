@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Qt.ListModel import ListModel
@@ -7,6 +7,7 @@ from PyQt6.QtCore import pyqtProperty, Qt, pyqtSignal
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.ContainerStack import ContainerStack
+
 
 class ContainerStacksModel(ListModel):
     """Model that holds container stacks. By setting the filter property the stacks held by this model can be

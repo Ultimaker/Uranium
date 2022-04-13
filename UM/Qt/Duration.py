@@ -1,5 +1,6 @@
-# Copyright (c) 2017 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 import enum
 from typing import Optional
 

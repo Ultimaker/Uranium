@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt6.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF, QRect, QObject, \
@@ -25,7 +25,6 @@ class MainWindow(QQuickWindow):
     DEFAULT_WINDOW_HEIGHT = 720
     DEFAULT_WINDOW_LEFT = 50
     DEFAULT_WINDOW_TOP = 50
-
 
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
@@ -351,4 +350,3 @@ class MouseEventWrapper:
 
     def angleDelta(self):
         return self._wheel_delta
-

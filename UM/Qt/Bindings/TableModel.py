@@ -1,3 +1,6 @@
+# Copyright (c) 2022 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
+
 from typing import List, Dict, Any
 
 from PyQt6.QtCore import QAbstractTableModel, Qt, QModelIndex, pyqtSlot, pyqtProperty
@@ -66,7 +69,3 @@ class TableModel(QAbstractTableModel):
         self.beginResetModel()
         self._rows.clear()
         self.endResetModel()
-
-
-
-

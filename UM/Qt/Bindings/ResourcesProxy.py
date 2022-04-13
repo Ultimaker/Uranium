@@ -1,5 +1,6 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 import enum
 
 from PyQt6.QtCore import QObject, QUrl, pyqtEnum
@@ -7,6 +8,7 @@ from UM.FlameProfiler import pyqtSlot
 
 import UM.Resources
 from UM.Logger import Logger
+
 
 class ResourcesProxy(QObject):
     class Type(enum.IntEnum):
