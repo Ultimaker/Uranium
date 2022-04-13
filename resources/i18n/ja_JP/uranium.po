@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 4.13\n"
-"Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
-"POT-Creation-Date: 2021-12-10 14:40+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-04-13 10:45+0200\n"
 "PO-Revision-Date: 2021-04-16 15:10+0200\n"
 "Last-Translator: Lionbridge <info@lionbridge.com>\n"
 "Language-Team: Lionbridge <info@lionbridge.com>, Brule <jason@brule.co.jp>, Japanese <info@bothof.nl>\n"
@@ -17,110 +17,315 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 2.4.1\n"
 
-#: /home/clamboo/Desktop/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "前のバージョン {0} のコンフィグレーションが取り込まれました。"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "ローカルファイル"
 
-#: /home/clamboo/Desktop/Uranium/UM/VersionUpgradeManager.py:174
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr "ディスクに保存する"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr "ディスクに保存する"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr "ディスクへ"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr "ディスクに保存する"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "書き出すために利用可能なファイルがありません！"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "すでに存在するファイルです"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "<filename>{0}</filename>に保存する"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "保存中"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "<filename>{0}</filename>保存中に却下されました"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}</message>"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "<filename>{0}</filename>に保存しました"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "ファイル保存"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "フォルダーを開く"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "ファイルが入ったフォルダーを開く"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+msgctxt "@info:title"
+msgid "Error"
+msgstr "エラー"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "<filename>{0}</filename>: <message>{1}</message> への保存でエラーが発生"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "シンプル"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "書き込むメッシュがありません。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "サポートされていない出力モードで STL をストリームに書き込んでいます。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STLファイル（ASCII)"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STLファイル（バイナリー）"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STLファイル"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "OBJWriter は非テキストモードはサポートしていません。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "ウェーブフロントOBJファイル"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "{application_name} {version_number} が利用可能です！"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr "{application_name} {version_number} なら、より優れた信頼性の隊かい印刷体験が得られます。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+msgctxt "@action:button"
+msgid "Download"
+msgstr "ダウンロード"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "詳しく見る"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number}-BETA is available!"
+msgstr "{application_name} {version_number}ベータ版が利用可能です。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr "最新のベータ版をお試しいただき、{application_name}の改善にご協力ください。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr "アップデートチェッカー"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "アップデートがあるか確認する"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "ご使用のバージョンはアップデート更新通知をサポートしていません。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "警告"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "新しいバージョンが見つかりました。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/VersionUpgradeManager.py:174
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "バージョンアップグレード"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:313
-msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr ""
-"プラグインがインストールされました。\n"
-"アプリケーションを再起動して、プラグインをアクティベートしてください。"
-
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:380
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "プラグイン{}は検証できなかったため、読み込まれていません。"
-
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:485
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
-msgid "Dismiss"
-msgstr "無視"
+msgid "Move"
+msgstr "動かす"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:495
-msgctxt "@error"
-msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr "プラグイン{}を読み込むことができませんでした。プラグインを再インストールすると、問題が解決する場合があります"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "モデルを動かす"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:499
-msgctxt "@action:button"
-msgid "Remove plugin"
-msgstr "プラグインを削除"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
+msgstr "反転させる"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:516
-msgctxt "@info:status"
-msgid "Plugin no longer scheduled to be installed."
-msgstr "プラグインのインストールはスケジュールされなくなります。"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "モデルを反転させる"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:522
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "オブジェクトをビルドプレート上に平に並べる..."
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "オブジェクト回転"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "回転させる"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "モデルを回転させる"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "スケールする"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "モデルをスケールする"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:190
 #, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr ""
-"プラグインが外されました。\n"
-"{0} を再起動してアンインストールを終了してください。"
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "{filename}を再ロードしますか？"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:907
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/FileHandler.py:71
-#: /home/clamboo/Desktop/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
-#, python-brace-format
-msgctxt "@item:inlistbox"
-msgid "All Supported Types ({0})"
-msgstr "すべてのサポートのタイプ ({0})"
-
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:908
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/FileHandler.py:72
-#: /home/clamboo/Desktop/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr "全てのファイル"
-
-#: /home/clamboo/Desktop/Uranium/UM/Mesh/ReadMeshJob.py:71
-#, python-format, python-brace-format
-msgctxt "@info:status"
-msgid "Auto scaled model to {0}% of original size"
-msgstr "元のサイズの{0}%まで自動的にスケールされたモデル"
-
-#: /home/clamboo/Desktop/Uranium/UM/Mesh/ReadMeshJob.py:73
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:192
 msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "造形物をスケールする"
+msgid "File has been modified"
+msgstr "ファイルが変更されました"
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:286
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:193
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "再ロード"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:195
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "これにより変更したファイルをディスクから再ロードします。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:59
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:64
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "OpenGLの初期化に失敗しました"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:74
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:294
 #, python-brace-format
 msgctxt "@error:uninstall"
-msgid ""
-"There were some errors uninstalling the following packages:\n"
-"{packages}"
+msgid "There were some errors uninstalling the following packages: {packages}"
 msgstr ""
-"次のパッケージのアンインストールでエラーが発生しました:\n"
-"{packages}"
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:288
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:296
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "アンインストールエラー"
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:299
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:307
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "プラグイン{package_id}をインストール中..."
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:587
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:615
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -132,169 +337,78 @@ msgstr ""
 "{error}.\n"
 "後からアップグレードをやり直してください。"
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:590
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:618
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "アップデートエラー"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
-msgctxt "@info:title"
-msgid "Error"
-msgstr "エラー"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "ディスクから"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:128
-#, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
-msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}日 {1:0>2}時間 {2:0>2}分"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:130
-#, python-brace-format
-msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}時間 {1:0>2}分"
-
-# can’t add japanese text
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is days"
-msgid "{0} day"
-msgid_plural "{0} days"
-msgstr[0] "{0}日"
-
-# can’t add japanese texts
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:135
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is hours"
-msgid "{0} hour"
-msgid_plural "{0} hours"
-msgstr[0] "{0}時間"
-
-# can’t add japanese text
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:135
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:137
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is minutes"
-msgid "{0} minute"
-msgid_plural "{0} minutes"
-msgstr[0] "{0}分"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:192
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:213
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "プラグインをロードする..."
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:194
-#, python-brace-format
-msgctxt "@info:progress"
-msgid "Loading plugin {plugin_id}..."
-msgstr "プラグイン{plugin_id}をロード中..."
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:200
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr "パッケージマネージャーを初期化中..."
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:208
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:331
 msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr "構成が破損している可能性があります。"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+"プラグインがインストールされました。\n"
+"アプリケーションを再起動して、プラグインをアクティベートしてください。"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:210
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr "構成エラー"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:398
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr "プラグイン{}は検証できなかったため、読み込まれていません。"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:222
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "コンフィグレーションをアップデートする..."
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:503
+msgctxt "@action:button"
+msgid "Dismiss"
+msgstr "無視"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:228
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "プレファレンスをロード中..."
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:513
+msgctxt "@error"
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
+msgstr ""
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:318
-msgctxt "@info:progress"
-msgid "Loading UI..."
-msgstr "UIをロード中..."
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:517
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr "プラグインを削除"
 
-#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:59
-#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:64
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "OpenGLの初期化に失敗しました"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:534
+msgctxt "@info:status"
+msgid "Plugin no longer scheduled to be installed."
+msgstr "プラグインのインストールはスケジュールされなくなります。"
 
-#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:74
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
-
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:41
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:540
 #, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>のファイルタイプは開けません"
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr ""
+"プラグインが外されました。\n"
+"{0} を再起動してアンインストールを終了してください。"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:44
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "無効なファイル"
-
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:59
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:925
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/FileHandler.py:71
 #, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできない可能性があります。"
+msgctxt "@item:inlistbox"
+msgid "All Supported Types ({0})"
+msgstr "すべてのサポートのタイプ ({0})"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:62
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:98
-msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr "ファイルを開けません"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:926
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/FileHandler.py:72
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
+msgstr "全てのファイル"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:71
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "読み込み中"
-
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:87
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr "<filename>{0}</filename>にはモデルがありませんでした。"
-
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:90
-msgctxt "@info:title"
-msgid "No Models in File"
-msgstr "ファイルにモデルがありません"
-
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:95
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできないか、モデルが含まれていませんでした。"
-
-#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "リセットする"
 
-#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:46
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -306,414 +420,368 @@ msgstr ""
 "- {profiles}\n"
 "工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
 
-#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:51
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@title:window"
 msgid "Reset to factory"
 msgstr "工場リセット"
 
-#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:53
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:53
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "リセットすると、現在のプリンターおよびプロファイルがすべて削除されます。本当にリセットしてよろしいですか？"
 
-#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:192
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr "{filename}を再ロードしますか？"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Mesh/ReadMeshJob.py:71
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled model to {0}% of original size"
+msgstr "元のサイズの{0}%まで自動的にスケールされたモデル"
 
-#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:193
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
-msgid "File has been modified"
-msgstr "ファイルが変更されました"
+msgid "Scaling Object"
+msgstr "造形物をスケールする"
 
-#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:194
-msgctxt "@action:button"
-msgid "Reload"
-msgstr "再ロード"
-
-#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:194
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr "これにより変更したファイルをディスクから再ロードします。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "書き込むメッシュがありません。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "サポートされていない出力モードで STL をストリームに書き込んでいます。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STLファイル（ASCII)"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STLファイル（バイナリー）"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "ウェーブフロントOBJファイル"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STLファイル"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter は非テキストモードはサポートしていません。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "反転させる"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "モデルを反転させる"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "スケールする"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "モデルをスケールする"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "オブジェクトをビルドプレート上に平に並べる..."
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.py:358
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "オブジェクト回転"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "回転させる"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "モデルを回転させる"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "動かす"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "モデルを動かす"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "ローカルファイル"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
-msgstr "ディスクに保存する"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
-msgstr "ディスクに保存する"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr "ディスクへ"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr "ディスクに保存する"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "書き出すために利用可能なファイルがありません！"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "すでに存在するファイルです"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:128
 #, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2}日 {1:0>2}時間 {2:0>2}分"
 
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:130
 #, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>に保存する"
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2}時間 {1:0>2}分"
 
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+# can’t add japanese text
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0}日"
+
+# can’t add japanese texts
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:135
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0}時間"
+
+# can’t add japanese text
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:135
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:137
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0}分"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:195
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:216
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "プラグインをロードする..."
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:197
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr "プラグイン{plugin_id}をロード中..."
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:203
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr "パッケージマネージャーを初期化中..."
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:211
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr "構成が破損している可能性があります。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:213
 msgctxt "@info:title"
-msgid "Saving"
-msgstr "保存中"
+msgid "Configuration errors"
+msgstr "構成エラー"
 
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:225
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "コンフィグレーションをアップデートする..."
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:231
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "プレファレンスをロード中..."
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:321
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr "UIをロード中..."
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr "ディスクから"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/VersionUpgradeManager.py:173
 #, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>保存中に却下されました"
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "前のバージョン {0} のコンフィグレーションが取り込まれました。"
 
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:41
 #, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}</message>"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "<filename>{0}</filename>のファイルタイプは開けません"
 
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>に保存しました"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:44
 msgctxt "@info:title"
-msgid "File Saved"
-msgstr "ファイル保存"
+msgid "Invalid File"
+msgstr "無効なファイル"
 
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "フォルダーを開く"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "ファイルが入ったフォルダーを開く"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:59
 #, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<filename>{0}</filename>: <message>{1}</message> への保存でエラーが発生"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできない可能性があります。"
 
-#: /home/clamboo/Desktop/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "シンプル"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "{application_name} {version_number} が利用可能です！"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr "{application_name} {version_number} なら、より優れた信頼性の隊かい印刷体験が得られます。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
-msgctxt "@action:button"
-msgid "Download"
-msgstr "ダウンロード"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "詳しく見る"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number}-BETA is available!"
-msgstr "{application_name} {version_number}ベータ版が利用可能です。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "最新のベータ版をお試しいただき、{application_name}の改善にご協力ください。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr "アップデートチェッカー"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "アップデートがあるか確認する"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "ご使用のバージョンはアップデート更新通知をサポートしていません。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:62
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:98
 msgctxt "@info:title"
-msgid "Warning"
-msgstr "警告"
+msgid "Unable to Open File"
+msgstr "ファイルを開けません"
 
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "新しいバージョンが見つかりました。"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:71
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "読み込み中"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "名前を変える"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:87
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr "<filename>{0}</filename>にはモデルがありませんでした。"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr "新しい名前を入力してください。"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:90
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr "ファイルにモデルがありません"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:241
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "キャンセル"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:95
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできないか、モデルが含まれていませんでした。"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
-msgctxt "@action:button"
-msgid "OK"
-msgstr "OK"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "モデルを取り除きました"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "%1を取り外しますか？この作業はやり直しが効きません！"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
-msgctxt "@item:tooltip"
-msgid "This setting has been hidden by the active machine and will not be visible."
-msgstr "この設定がアクティブなプリンターにより非表示になっています、見ることができません。"
-
-# can’t add Japanese texts
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
-msgctxt "@item:tooltip %1 is list of setting names"
-msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
-msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-msgstr[0] "この設定は %1 の値で非表示になっています。その設定値を変更すると設定の非表示が解除されます。"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
-msgctxt "@title:window"
-msgid "Preferences"
-msgstr "プレファレンス"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:112
-msgctxt "@action:button"
-msgid "Defaults"
-msgstr "デフォルト"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:120
-msgctxt "@action:button"
-msgid "Close"
-msgstr "閉める"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
-msgctxt "@title:tab"
-msgid "General"
-msgstr "一般"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:151
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "設定"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "プリンター"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "タイプ"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:215
-msgctxt "@action:button"
-msgid "Back"
-msgstr "戻る"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:231
-msgctxt "@action:button"
-msgid "Finish"
-msgstr "終わる"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:231
-msgctxt "@action:button"
-msgid "Next"
-msgstr "次"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "スナップスケーリング"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "ユニフォームスケーリング"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "平らに置く"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "ビルドプレートに合わせる面を選択します"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "スナップローテーション"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:222
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:209
 msgctxt "@option:check"
 msgid "Lock Model"
 msgstr "モデルのロック"
 
-#: LocalContainerProvider/plugin.json
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "平らに置く"
 
-#: LocalContainerProvider/plugin.json
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "ビルドプレートに合わせる面を選択します"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "スナップローテーション"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "スナップスケーリング"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "ユニフォームスケーリング"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "名前を変える"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr "新しい名前を入力してください。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
+msgctxt "@action:button"
+msgid "OK"
+msgstr "OK"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "プリンター"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "タイプ"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "モデルを取り除きました"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "%1を取り外しますか？この作業はやり直しが効きません！"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "プレファレンス"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:134
+msgctxt "@title:tab"
+msgid "General"
+msgstr "一般"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:135
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "設定"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
+msgctxt "@option"
+msgid "OK"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:100
+msgctxt "@option"
+msgid "Open"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:101
+msgctxt "@option"
+msgid "Save"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:102
+msgctxt "@option"
+msgid "Cancel"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:103
+msgctxt "@option"
+msgid "Close"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:104
+msgctxt "@option"
+msgid "Discard"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:105
+msgctxt "@option"
+msgid "Apply"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:106
+msgctxt "@option"
+msgid "Reset"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:107
+msgctxt "@option"
+msgid "Restore Defaults"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:108
+msgctxt "@option"
+msgid "Help"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:109
+msgctxt "@option"
+msgid "Save All"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:110
+msgctxt "@option"
+msgid "Yes"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:111
+msgctxt "@option"
+msgid "Yes to All"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:112
+msgctxt "@option"
+msgid "No"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:113
+msgctxt "@option"
+msgid "No to All"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:114
+msgctxt "@option"
+msgid "Abort"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:115
+msgctxt "@option"
+msgid "Retry"
+msgstr ""
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:116
+msgctxt "@option"
+msgid "Ignore"
+msgstr ""
+
+#: ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "ログ情報をコンソールにアウトプットする。"
+
+#: ConsoleLogger/plugin.json
 msgctxt "name"
-msgid "Local Container Provider"
-msgstr "ローカルコンテナプロバイダー"
+msgid "Console Logger"
+msgstr "コンソールロガー"
+
+#: LocalFileOutputDevice/plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "ローカルファイルに保存することができます。"
+
+#: LocalFileOutputDevice/plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "ローカルファイルアウトプットデバイス"
+
+#: Views/SimpleView/plugin.json
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "シンプルソリッドメッシュビューを供給する。"
+
+#: Views/SimpleView/plugin.json
+msgctxt "name"
+msgid "Simple View"
+msgstr "シンプルビュー"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
@@ -724,16 +792,6 @@ msgstr "STLファイルを書き出すためのサポートを供給する。"
 msgctxt "name"
 msgid "STL Writer"
 msgstr "STLライター"
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "ウェイブフロントOBJリーダー"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
@@ -755,55 +813,35 @@ msgctxt "name"
 msgid "Wavefront OBJ Writer"
 msgstr "ウェイブフロントOBJライター"
 
-#: Tools/SelectionTool/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "セレクションツールを供給する。"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
 
-#: Tools/SelectionTool/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
-msgid "Selection Tool"
-msgstr "セレクションツール"
+msgid "Wavefront OBJ Reader"
+msgstr "ウェイブフロントOBJリーダー"
 
-#: Tools/MirrorTool/plugin.json
+#: UpdateChecker/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "ミラーツールを供給する。"
+msgid "Checks for updates of the software."
+msgstr "ソフトウェアのアップデートを確認中。"
 
-#: Tools/MirrorTool/plugin.json
+#: UpdateChecker/plugin.json
 msgctxt "name"
-msgid "Mirror Tool"
-msgstr "ミラーツール"
+msgid "Update Checker"
+msgstr "アップデートチェッカー"
 
-#: Tools/ScaleTool/plugin.json
+#: LocalContainerProvider/plugin.json
 msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "スケールツールを供給すｒ。"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
 
-#: Tools/ScaleTool/plugin.json
+#: LocalContainerProvider/plugin.json
 msgctxt "name"
-msgid "Scale Tool"
-msgstr "スケールツール"
-
-#: Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "回転ツールを供給する。"
-
-#: Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "回転ツール"
-
-#: Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "カメラを操作するためのツールを供給する。"
-
-#: Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "カメラツール"
+msgid "Local Container Provider"
+msgstr "ローカルコンテナプロバイダー"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
@@ -815,25 +853,55 @@ msgctxt "name"
 msgid "Move Tool"
 msgstr "ムーブツール"
 
-#: LocalFileOutputDevice/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "ローカルファイルに保存することができます。"
+msgid "Provides the Mirror tool."
+msgstr "ミラーツールを供給する。"
 
-#: LocalFileOutputDevice/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "name"
-msgid "Local File Output Device"
-msgstr "ローカルファイルアウトプットデバイス"
+msgid "Mirror Tool"
+msgstr "ミラーツール"
 
-#: ConsoleLogger/plugin.json
+#: Tools/CameraTool/plugin.json
 msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "ログ情報をコンソールにアウトプットする。"
+msgid "Provides the tool to manipulate the camera."
+msgstr "カメラを操作するためのツールを供給する。"
 
-#: ConsoleLogger/plugin.json
+#: Tools/CameraTool/plugin.json
 msgctxt "name"
-msgid "Console Logger"
-msgstr "コンソールロガー"
+msgid "Camera Tool"
+msgstr "カメラツール"
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "セレクションツールを供給する。"
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "セレクションツール"
+
+#: Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "回転ツールを供給する。"
+
+#: Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "回転ツール"
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "スケールツールを供給すｒ。"
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "スケールツール"
 
 #: FileLogger/plugin.json
 msgctxt "description"
@@ -845,25 +913,48 @@ msgctxt "name"
 msgid "File Logger"
 msgstr "ファイルロガー"
 
-#: Views/SimpleView/plugin.json
-msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "シンプルソリッドメッシュビューを供給する。"
+#~ msgctxt "@error"
+#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+#~ msgstr "プラグイン{}を読み込むことができませんでした。プラグインを再インストールすると、問題が解決する場合があります"
 
-#: Views/SimpleView/plugin.json
-msgctxt "name"
-msgid "Simple View"
-msgstr "シンプルビュー"
+#, python-brace-format
+#~ msgctxt "@error:uninstall"
+#~ msgid ""
+#~ "There were some errors uninstalling the following packages:\n"
+#~ "{packages}"
+#~ msgstr ""
+#~ "次のパッケージのアンインストールでエラーが発生しました:\n"
+#~ "{packages}"
 
-#: UpdateChecker/plugin.json
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "ソフトウェアのアップデートを確認中。"
+#~ msgctxt "@item:tooltip"
+#~ msgid "This setting has been hidden by the active machine and will not be visible."
+#~ msgstr "この設定がアクティブなプリンターにより非表示になっています、見ることができません。"
 
-#: UpdateChecker/plugin.json
-msgctxt "name"
-msgid "Update Checker"
-msgstr "アップデートチェッカー"
+# can’t add Japanese texts
+#~ msgctxt "@item:tooltip %1 is list of setting names"
+#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+#~ msgstr[0] "この設定は %1 の値で非表示になっています。その設定値を変更すると設定の非表示が解除されます。"
+
+#~ msgctxt "@action:button"
+#~ msgid "Defaults"
+#~ msgstr "デフォルト"
+
+#~ msgctxt "@action:button"
+#~ msgid "Close"
+#~ msgstr "閉める"
+
+#~ msgctxt "@action:button"
+#~ msgid "Back"
+#~ msgstr "戻る"
+
+#~ msgctxt "@action:button"
+#~ msgid "Finish"
+#~ msgstr "終わる"
+
+#~ msgctxt "@action:button"
+#~ msgid "Next"
+#~ msgstr "次"
 
 #~ msgctxt "@info:status"
 #~ msgid "{application_name} {version_number} BETA is available!"
