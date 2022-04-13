@@ -20,7 +20,7 @@ class ColorImage(QQuickPaintedItem):
     sourceChanged = pyqtSignal()
     colorChanged = pyqtSignal()
 
-    def _updateSVG(self):
+    def _updateSVG(self) -> None:
         if not self._source or self._source.toLocalFile() == "":
             return
         with open(self._source.toLocalFile(), "rb") as f:
