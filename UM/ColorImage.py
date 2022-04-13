@@ -27,6 +27,7 @@ class ColorImage(QQuickPaintedItem):
             self._svg_data = f.read()
         self._svg_data = self._svg_data.replace(b"<svg ", b"<svg fill=\"%s\" " % self._color.name().encode("utf-8"))
         self._renderer = QSvgRenderer(self._svg_data)
+        self.update()
 
     def setSource(self, source):
         if self._source != source:
