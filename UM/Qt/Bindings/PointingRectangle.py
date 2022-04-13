@@ -11,7 +11,7 @@ class PointingRectangle(QQuickItem):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        # As of time of writing, you can not reference flags by name in QT6
+        # FIXME: As of time of writing, you can not reference flags by name in QT6
         # You can find the list of flags by value here https://doc.qt.io/qt-6/qquickitem.html#Flag-enum
         # This flag is QQuickItem::ItemHasContents
         self.setFlag(QQuickItem.Flag(8))
