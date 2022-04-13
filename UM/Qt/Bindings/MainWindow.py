@@ -4,7 +4,7 @@
 from PyQt6.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF, QRect, QObject, \
     QEvent
 from PyQt6.QtGui import QColor
-from PyQt6.QtQuick import QQuickWindow, QSGRendererInterface
+from PyQt6.QtQuick import QQuickWindow
 
 
 from UM.Logger import Logger
