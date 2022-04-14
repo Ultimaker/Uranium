@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt6.QtCore import QUrl, pyqtProperty, pyqtSignal
-from PyQt6.QtGui import QColor, QPainter
+from PyQt6.QtGui import QColor
 from PyQt6.QtQuick import QQuickPaintedItem
 from PyQt6.QtSvg import QSvgRenderer
 from UM.Application import Application
@@ -29,7 +29,7 @@ class ColorImage(QQuickPaintedItem):
         self._renderer = QSvgRenderer(self._svg_data)
         self.update()
 
-    def setSource(self, source: QUrl) -> None:
+    def setSource(self, source):
         if self._source != source:
             self._source = source
             self.sourceChanged.emit()
@@ -49,7 +49,7 @@ class ColorImage(QQuickPaintedItem):
     def color(self) -> QColor:
         return self._color
 
-    def paint(self, painter: QPainter) -> None:
+    def paint(self, painter):
         pixel_ratio = Application.getInstance().getMainWindow().effectiveDevicePixelRatio()
         painter.scale(1 / pixel_ratio, 1 / pixel_ratio)
         if self._renderer:
