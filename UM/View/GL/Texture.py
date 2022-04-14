@@ -1,7 +1,8 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtGui import QOpenGLTexture, QImage, QAbstractOpenGLFunctions
+from PyQt6.QtGui import QImage
+from PyQt6.QtOpenGL import QOpenGLTexture, QAbstractOpenGLFunctions
 
 
 class Texture:
@@ -13,7 +14,7 @@ class Texture:
     def __init__(self, open_gl_binding_object: QAbstractOpenGLFunctions) -> None:
         super().__init__()
 
-        self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target2D)
+        self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target.Target2D)
         self._gl = open_gl_binding_object
         self._file_name = None
         self._image = None
@@ -31,10 +32,10 @@ class Texture:
             if self._file_name != None:
                 self._image = QImage(self._file_name).mirrored()
             elif self._image is None: # No filename or image set.
-                self._image = QImage(1, 1, QImage.Format_ARGB32)
+                self._image = QImage(1, 1, QImage.Format.Format_ARGB32)
                 self._image.fill(0)
             self._qt_texture.setData(self._image)
-            self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
+            self._qt_texture.setMinMagFilters(QOpenGLTexture.Filter.Linear, QOpenGLTexture.Filter.Linear)
 
         self._qt_texture.bind(texture_unit)
     def release(self, texture_unit):

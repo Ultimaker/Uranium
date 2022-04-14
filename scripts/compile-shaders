@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# This script will compile vertex and fragment shader files into qsb shader files (required by Qt)
+# For more information see https://doc.qt.io/qt-6/qtshadertools-index.html
+#
+# Usage:
+# provide two arguments with the script; dir and des
+#    - dir location of the shader files (with *.vert or *.frag extension)
+#    - dest location where the *.qsb files will be written to
+# note: the script will ignore the folder structure from the dir, the files in the dest folder will be flattened
+#
+# This script requires qsb (part of qtshadertools) to be installed
+#
+dir=$1
+dest=$2
+
+for file in $( find $dir . \( -iname '*.VERT' -o -iname '*.FRAG' \); ); do
+    qsb $file --glsl "100 es,120,150" --hlsl 50 --msl 12 --output $dest/$(basename ${file}).qsb
+done

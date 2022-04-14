@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import multiprocessing
@@ -29,9 +29,9 @@ class JobQueue:
 
         if JobQueue.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        JobQueue.__instance = self
 
         super().__init__()
+        JobQueue.__instance = self
 
         if thread_count == "auto":
             try:

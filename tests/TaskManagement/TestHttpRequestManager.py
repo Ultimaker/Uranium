@@ -2,7 +2,7 @@ import time
 from unittest import mock
 
 import pytest
-from PyQt5.Qt import QCoreApplication, QNetworkReply
+from PyQt6.Qt import QCoreApplication, QNetworkReply
 
 from UM.TaskManagement.HttpRequestManager import HttpRequestManager
 
@@ -61,7 +61,7 @@ def test_getFail404() -> None:
     app.exec()
     http_request_manager.cleanup()  # Remove all unscheduled events
 
-    cbo.error_callback.assert_called_once_with(request_data.reply, QNetworkReply.ContentNotFoundError)
+    cbo.error_callback.assert_called_once_with(request_data.reply, QNetworkReply.NetworkError.ContentNotFoundError)
     cbo.callback.assert_not_called()
 
 
@@ -88,7 +88,7 @@ def test_getTimeout() -> None:
     app.exec()
     http_request_manager.cleanup()  # Remove all unscheduled events
 
-    cbo.error_callback.assert_called_once_with(request_data.reply, QNetworkReply.OperationCanceledError)
+    cbo.error_callback.assert_called_once_with(request_data.reply, QNetworkReply.NetworkError.OperationCanceledError)
     assert request_data.is_aborted_due_to_timeout
 
 

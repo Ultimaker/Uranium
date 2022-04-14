@@ -1,8 +1,7 @@
-// Copyright (c) 2020 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.4
-import QtQuick.Controls.Private 1.0
 
 // TooltipArea.qml
 // This file contains private Qt Quick modules that might change in future versions of Qt

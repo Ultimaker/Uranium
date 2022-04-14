@@ -55,9 +55,9 @@ class Application:
 
         if Application.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        Application.__instance = self
 
         super().__init__()  # Call super to make multiple inheritance work.
+        Application.__instance = self
 
         self._api_version = Version(api_version)  # type: Version
 
@@ -176,6 +176,7 @@ class Application:
 
         app_root = os.path.abspath(os.path.join(os.path.dirname(sys.executable)))
         Resources.addSearchPath(os.path.join(app_root, "share", "uranium", "resources"))
+        Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "share", "uranium", "resources"))
 
         Resources.addSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
         Resources.addSearchPath(os.path.join(self._app_install_dir, "share", "uranium", "resources"))

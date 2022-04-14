@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QObject
+from PyQt6.QtCore import QObject
 from UM.FlameProfiler import pyqtSlot
 from typing import Dict, Any, Optional
 

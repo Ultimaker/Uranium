@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -10,7 +10,7 @@ import zipfile
 from json import JSONDecodeError
 from typing import Any, Dict, List, Optional, Set, Tuple, cast, TYPE_CHECKING, MutableMapping
 
-from PyQt5.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
+from PyQt6.QtCore import pyqtSlot, QObject, pyqtSignal, QUrl, pyqtProperty, QCoreApplication
 
 from UM import i18nCatalog
 from UM.Logger import Logger
