@@ -3,7 +3,6 @@
 
 from PyQt6.QtCore import QObject, pyqtSignal, pyqtProperty, pyqtSlot
 
-from UM.Application import Application
 from UM.Scene.Selection import Selection
 
 

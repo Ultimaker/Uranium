@@ -11,7 +11,7 @@ class PointingRectangle(QQuickItem):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        # As of time of writing, you can not reference flags by name in QT6
+        # FIXME: As of time of writing, you can not reference flags by name in QT6
         # You can find the list of flags by value here https://doc.qt.io/qt-6/qquickitem.html#Flag-enum
         # This flag is QQuickItem::ItemHasContents
         self.setFlag(QQuickItem.Flag(8))
@@ -113,7 +113,7 @@ class PointingRectangle(QQuickItem):
         arrow_offset = 0
 
         if target_offset.x() >= 0 and target_offset.x() <= self.width():
-            arrow_size = min(self._arrow_size, self.width()/2)
+            arrow_size = min(self._arrow_size, self.width() / 2)
             arrow_offset = max(arrow_size, min(self.width() - arrow_size, target_offset.x()))
             if target_offset.y() < 0:
                 # top
@@ -124,11 +124,11 @@ class PointingRectangle(QQuickItem):
             elif target_offset.y() > self.height():
                 # bottom
                 vertex_data[4].set(arrow_offset - arrow_size, self.height())
-                vertex_data[5].set(arrow_offset, self.height() +arrow_size)
+                vertex_data[5].set(arrow_offset, self.height() + arrow_size)
                 vertex_data[6].set(arrow_offset + arrow_size, self.height())
                 arrow_on_side = 2
         elif target_offset.y() >= 0 and target_offset.y() <= self.height():
-            arrow_size = min(self._arrow_size, self.height()/2)
+            arrow_size = min(self._arrow_size, self.height() / 2)
             arrow_offset = max(arrow_size, min(self.height() - arrow_size, target_offset.y()))
             if target_offset.x() < 0:
                 # left

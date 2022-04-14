@@ -4,7 +4,7 @@
 import sys
 import ctypes   # type: ignore
 
-from PyQt6.QtOpenGL import QOpenGLVersionProfile, QOpenGLVersionFunctionsFactory
+from PyQt6.QtOpenGL import QOpenGLVersionFunctionsFactory
 
 from PyQt6.QtGui import QOpenGLContext
 from PyQt6.QtOpenGL import QOpenGLVersionProfile, QOpenGLFramebufferObject, QOpenGLBuffer

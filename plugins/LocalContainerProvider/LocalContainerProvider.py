@@ -280,8 +280,6 @@ class LocalContainerProvider(ContainerProvider):
         :param definition: The definition container to store.
         """
 
-        return None
-
         cache_path = Resources.getStoragePath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition.id)
 
         # Ensure the cache path exists.

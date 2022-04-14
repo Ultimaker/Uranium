@@ -3,7 +3,7 @@
 
 from typing import List, Dict, Any
 
-from PyQt6.QtCore import QAbstractTableModel, Qt, QModelIndex, pyqtSlot, pyqtProperty
+from PyQt6.QtCore import QAbstractTableModel, QModelIndex, pyqtSlot, pyqtProperty
 
 
 class TableModel(QAbstractTableModel):

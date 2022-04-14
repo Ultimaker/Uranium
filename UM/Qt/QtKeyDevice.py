@@ -1,8 +1,7 @@
 # Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt6.QtCore import Qt, QEvent, QObject
-from PyQt6.QtGui import QKeyEvent
+from PyQt6.QtCore import Qt, QEvent
 
 from UM.InputDevice import InputDevice
 from UM.Event import KeyEvent

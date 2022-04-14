@@ -4,7 +4,6 @@
 from PyQt6.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Application import Application
-from UM.Logger import Logger
 
 
 class ApplicationProxy(QObject):
