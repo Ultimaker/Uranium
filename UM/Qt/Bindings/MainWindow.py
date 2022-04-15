@@ -315,7 +315,7 @@ class MainWindow(QQuickWindow):
         self._app.getRenderer().setWindowSize(width, height)
 
 
-class mouseEventPosition:
+class MouseEventPosition:
     def __init__(self, x, y):
         self._x = x
         self._y = y
@@ -329,7 +329,7 @@ class mouseEventPosition:
 
 class MouseEventWrapper:
     def __init__(self, x, y, buttons, button, event_type, wheel_delta = None):
-        self._pos = mouseEventPosition(x, y)
+        self._pos = MouseEventPosition(x, y)
         self._buttons = buttons
         self._button = button
         self._type = event_type
