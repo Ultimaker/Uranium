@@ -62,9 +62,6 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
         dialog.setOption(QFileDialog.Option.DontConfirmOverwrite)
 
-        if sys.platform == "linux" and "KDE_FULL_SESSION" in os.environ:
-            dialog.setOption(QFileDialog.Option.DontUseNativeDialog)
-
         filters = []
         mime_types = []
         selected_filter = None
