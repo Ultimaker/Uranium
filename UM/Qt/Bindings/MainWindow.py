@@ -89,12 +89,16 @@ class MainWindow(QQuickWindow):
 
         self.setGeometry(restored_geometry)
         # Translate window state back to enum.
-        window_state = int(self._preferences.getValue("general/window_state"))
+        try:
+            window_state = int(self._preferences.getValue("general/window_state"))
+        except ValueError:
+            self._preferences.resetPreference("general/window_state")
+            window_state = int(self._preferences.getValue("general/window_state"))
+
         if window_state == Qt.WindowState.WindowNoState.value:
             self.setWindowState(Qt.WindowState.WindowNoState)
         elif window_state == Qt.WindowState.WindowMaximized.value:
             self.setWindowState(Qt.WindowState.WindowMaximized)
-
 
         self._mouse_x = 0
         self._mouse_y = 0
