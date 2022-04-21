@@ -55,7 +55,7 @@ class MainWindow(QQuickWindow):
         self._preferences.addPreference("general/window_height", self.DEFAULT_WINDOW_HEIGHT)
         self._preferences.addPreference("general/window_left", self.DEFAULT_WINDOW_LEFT)
         self._preferences.addPreference("general/window_top", self.DEFAULT_WINDOW_TOP)
-        self._preferences.addPreference("general/window_state", Qt.WindowState.WindowNoState)
+        self._preferences.addPreference("general/window_state", Qt.WindowState.WindowNoState.value)
         self._preferences.addPreference("general/restore_window_geometry", True)
 
         restored_geometry = QRect(int(self._preferences.getValue("general/window_left")),
@@ -88,8 +88,12 @@ class MainWindow(QQuickWindow):
                                       self.DEFAULT_WINDOW_HEIGHT)
 
         self.setGeometry(restored_geometry)
-        # self.setWindowState(int(self._preferences.getValue("general/window_state")))
-        # TODO: setWindowState requires an enum in Qt6.
+        # Translate window state back to enum.
+        window_state = int(self._preferences.getValue("general/window_state"))
+        if window_state == Qt.WindowState.WindowNoState.value:
+            self.setWindowState(Qt.WindowState.WindowNoState)
+        elif window_state == Qt.WindowState.WindowMaximized.value:
+            self.setWindowState(Qt.WindowState.WindowMaximized)
 
 
         self._mouse_x = 0
@@ -299,7 +303,7 @@ class MainWindow(QQuickWindow):
             self._preferences.setValue("general/window_top", self.y())
 
         if self.windowState() in (Qt.WindowState.WindowNoState, Qt.WindowState.WindowMaximized):
-            self._preferences.setValue("general/window_state", self.windowState())
+            self._preferences.setValue("general/window_state", self.windowState().value)
 
     def _updateViewportGeometry(self, width: int, height: int) -> None:
         view_width = round(width * self._viewport_rect.width())
