@@ -176,6 +176,10 @@ class OpenGLContext:
                         Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
 
                 Logger.log("d", "OpenGL renderer type for this OpenGL version: %s", gpu_type)
+
+                # Leaving this assigned to QWindow() causes a second small window to open in the background
+                cls.gl_window = None
+
                 if "software" in gpu_type.lower():
                     Logger.log("w", "Unfortunately OpenGL 4.1 uses software rendering")
                 else:
