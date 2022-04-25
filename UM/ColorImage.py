@@ -6,6 +6,8 @@ from PyQt6.QtGui import QColor, QPainter
 from PyQt6.QtQuick import QQuickPaintedItem
 from PyQt6.QtSvg import QSvgRenderer
 from UM.Application import Application
+from UM.Logger import Logger
+
 
 # This is meant as a potential replacement for RecolorImage.
 # As we had issues with upgrading to qt6 on windows with the shader, this was developed as an alternative
@@ -23,8 +25,12 @@ class ColorImage(QQuickPaintedItem):
     def _updateSVG(self) -> None:
         if not self._source or self._source.toLocalFile() == "":
             return
-        with open(self._source.toLocalFile(), "rb") as f:
-            self._svg_data = f.read()
+        try:
+            with open(self._source.toLocalFile(), "rb") as f:
+                self._svg_data = f.read()
+        except FileNotFoundError:
+            Logger.log("w", f"Unable to find image located at {self._source.toLocalFile()}")
+            return
         self._svg_data = self._svg_data.replace(b"<svg ", b"<svg fill=\"%s\" " % self._color.name().encode("utf-8"))
         self._renderer = QSvgRenderer(self._svg_data)
         self.update()
