@@ -307,7 +307,10 @@ class PackageManager(QObject):
             installing_plugin_msg = catalog.i18nc("@info:progress Don't translate {package_id}", "Installing plugin {package_id}...").format(package_id = package_id)
             self._application.showSplashMessage(installing_plugin_msg)
             self._installPackage(package_info)
-            self._installed_packages[package_id] = self._installed_package_dict[package_id]
+            if package_id in self._installed_package_dict:
+                # Only add the data if it succeeded.
+                self._installed_packages[package_id] = self._installed_package_dict[package_id]
+            # Regardless of success / failure, we should remove the data from the install list.
             del self._to_install_package_dict[package_id]
             self._saveManagementData()
 
