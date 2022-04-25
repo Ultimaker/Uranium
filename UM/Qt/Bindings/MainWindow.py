@@ -185,24 +185,32 @@ class MainWindow(QQuickWindow):
 
     @pyqtSlot(QObject)
     def mousePressed(self, event):
+        if event is None:
+            return
         wrap_event = MouseEventWrapper(event.property("x"), event.property("y"), event.property("buttons"), event.property("button"), QEvent.Type.MouseButtonPress)
         self._mouse_pressed = True
         self._mouse_device.handleEvent(wrap_event)
 
     @pyqtSlot(QObject)
     def mouseMoved(self, event):
+        if event is None:
+            return
         wrap_event = MouseEventWrapper(event.property("x"), event.property("y"), event.property("buttons"),
                                        event.property("button"), QEvent.Type.MouseMove)
         self._mouse_device.handleEvent(wrap_event)
 
     @pyqtSlot(QObject)
     def wheel(self, event):
+        if event is None:
+            return
         wrap_event = MouseEventWrapper(event.property("x"), event.property("y"), event.property("buttons"),
                                        event.property("button"), QEvent.Type.Wheel, event.property("angleDelta"))
         self._mouse_device.handleEvent(wrap_event)
 
     @pyqtSlot(QObject)
     def mouseReleased(self, event):
+        if event is None:
+            return
         wrap_event = MouseEventWrapper(event.property("x"), event.property("y"), event.property("buttons"),
                                        event.property("button"), QEvent.Type.MouseButtonRelease)
         self._mouse_pressed = False
