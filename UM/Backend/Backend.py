@@ -16,7 +16,7 @@ import UM.Application
 from UM.PluginObject import PluginObject
 from UM.Platform import Platform
 
-import Arcus
+import pyArcus as Arcus
 
 
 class BackendState(IntEnum):
@@ -60,6 +60,7 @@ class Backend(PluginObject):
     def setState(self, new_state):
         if new_state != self._backend_state:
             self._backend_state = new_state
+
             self.backendStateChange.emit(self._backend_state)
 
     def startEngine(self):

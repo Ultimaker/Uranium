@@ -86,7 +86,7 @@ Button
             border.color: control.checked ? UM.Theme.getColor("icon") : UM.Theme.getColor("lining")
         }
     }
-    contentItem: UM.RecolorImage
+    contentItem: UM.ColorImage
     {
         id: image
         opacity: control.enabled ? 1.0 : 0.2

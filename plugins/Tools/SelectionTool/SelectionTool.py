@@ -1,7 +1,7 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets
 
 from UM.Application import Application
 from UM.Event import MouseEvent
@@ -42,9 +42,9 @@ class SelectionTool(Tool):
         """
 
         modifiers = QtWidgets.QApplication.keyboardModifiers()
-        self._shift_is_active = modifiers & QtCore.Qt.ShiftModifier
-        self._ctrl_is_active = modifiers & QtCore.Qt.ControlModifier
-        self._alt_is_active = modifiers & QtCore.Qt.AltModifier
+        self._shift_is_active = modifiers & QtCore.Qt.KeyboardModifier.ShiftModifier
+        self._ctrl_is_active = modifiers & QtCore.Qt.KeyboardModifier.ControlModifier
+        self._alt_is_active = modifiers & QtCore.Qt.KeyboardModifier.AltModifier
 
     def setSelectionMode(self, mode):
         """Set the selection mode

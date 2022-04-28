@@ -498,7 +498,7 @@ class Controller:
     # Rotate camera view according defined angle
     def setCameraRotation(self, coordinate: str = "x", angle: int = 0) -> None:
         camera = self._scene.getActiveCamera()
-        if not camera:
+        if not camera or not self._camera_tool:
             return
         camera.setZoomFactor(camera.getDefaultZoomFactor())
         self._camera_tool.setOrigin(Vector(0, 100, 0))  # type: ignore

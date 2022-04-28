@@ -1,17 +1,20 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtProperty, pyqtSignal
-from PyQt5.QtCore import QPoint
-from PyQt5.QtGui import QColor
-from PyQt5.QtQuick import QQuickItem, QSGGeometryNode, QSGGeometry, QSGFlatColorMaterial
+from PyQt6.QtCore import pyqtProperty, pyqtSignal
+from PyQt6.QtCore import QPoint
+from PyQt6.QtGui import QColor
+from PyQt6.QtQuick import QQuickItem, QSGGeometryNode, QSGGeometry, QSGFlatColorMaterial
 
 
 class PointingRectangle(QQuickItem):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self.setFlag(QQuickItem.ItemHasContents)
+        # FIXME: As of time of writing, you can not reference flags by name in QT6
+        # You can find the list of flags by value here https://doc.qt.io/qt-6/qquickitem.html#Flag-enum
+        # This flag is QQuickItem::ItemHasContents
+        self.setFlag(QQuickItem.Flag(8))
 
         self._arrow_size = 0
         self._color = QColor(255, 255, 255, 255)
@@ -91,7 +94,7 @@ class PointingRectangle(QQuickItem):
             paint_node = QSGGeometryNode()
 
         geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 7, 9)
-        geometry.setDrawingMode(QSGGeometry.GL_TRIANGLES)
+        geometry.setDrawingMode(QSGGeometry.DrawingMode.DrawTriangles)
         vertex_data = geometry.vertexDataAsPoint2D()
         vertex_data[0].set(0, 0)
         vertex_data[1].set(0, self.height())
@@ -110,7 +113,7 @@ class PointingRectangle(QQuickItem):
         arrow_offset = 0
 
         if target_offset.x() >= 0 and target_offset.x() <= self.width():
-            arrow_size = min(self._arrow_size, self.width()/2)
+            arrow_size = min(self._arrow_size, self.width() / 2)
             arrow_offset = max(arrow_size, min(self.width() - arrow_size, target_offset.x()))
             if target_offset.y() < 0:
                 # top
@@ -121,11 +124,11 @@ class PointingRectangle(QQuickItem):
             elif target_offset.y() > self.height():
                 # bottom
                 vertex_data[4].set(arrow_offset - arrow_size, self.height())
-                vertex_data[5].set(arrow_offset, self.height() +arrow_size)
+                vertex_data[5].set(arrow_offset, self.height() + arrow_size)
                 vertex_data[6].set(arrow_offset + arrow_size, self.height())
                 arrow_on_side = 2
         elif target_offset.y() >= 0 and target_offset.y() <= self.height():
-            arrow_size = min(self._arrow_size, self.height()/2)
+            arrow_size = min(self._arrow_size, self.height() / 2)
             arrow_offset = max(arrow_size, min(self.height() - arrow_size, target_offset.y()))
             if target_offset.x() < 0:
                 # left
@@ -189,7 +192,7 @@ class PointingRectangle(QQuickItem):
                 border_vertices.append((0, arrow_offset - arrow_size))
 
             border_geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 2 * len(border_vertices), 0)
-            border_geometry.setDrawingMode(QSGGeometry.GL_LINES)
+            border_geometry.setDrawingMode(QSGGeometry.DrawingMode.DrawLines)
             border_geometry.setLineWidth(self._border_width)
 
             border_vertex_data = border_geometry.vertexDataAsPoint2D()

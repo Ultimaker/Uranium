@@ -4,6 +4,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
+import QtQuick.Dialogs
 
 import UM 1.5 as UM
 
@@ -159,7 +160,7 @@ PreferencesPage
         {
             id: hamburgerButton
             anchors.right: parent.right
-            toolItem: UM.RecolorImage
+            toolItem: UM.ColorImage
             {
                 source: UM.Theme.getIcon("Hamburger")
                 color: UM.Theme.getColor("icon")

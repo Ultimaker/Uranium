@@ -26,11 +26,11 @@ fragment =
     {
       if(u_activeColor == v_color)
         {
-            frag_color = v_color * u_enableMultiplier;
+            gl_FragColor = v_color * u_enableMultiplier;
         }
         else
         {
-            frag_color = v_color;
+            gl_FragColor = v_color;
         }
     }
 

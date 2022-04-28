@@ -1,12 +1,12 @@
 from typing import Callable, Optional, Union, TYPE_CHECKING
-from PyQt5.QtCore import QObject, QTimer
+from PyQt6.QtCore import QObject, QTimer
 
 from UM.Logger import Logger
 
 import time
 
 if TYPE_CHECKING:
-    from PyQt5.QtNetwork import QNetworkRequest, QNetworkReply
+    from PyQt6.QtNetwork import QNetworkRequest, QNetworkReply
 
 
 #

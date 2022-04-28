@@ -90,8 +90,6 @@ Dialog
         }
     }
 
-    property int defaultAction: 0;
-
     ListModel
     {
         id: buttonsModel
@@ -124,29 +122,16 @@ Dialog
         {
             clear();
 
-            // reset the default action
-            root.defaultAction = 0;
-
             for (let i = 0; i < buttons.length; i ++)
             {
                 const button = buttons[i];
                 if (root.standardButtons & button.standardButton)
                 {
                     append(button);
-
-                    // if default action is not set, set it
-                    if (root.defaultAction == 0)
-                    {
-                        root.defaultAction = button.standardButton;
-                    }
                 }
             }
         }
     }
-
-    // Key press doens't work as of yet
-    // https://forum.qt.io/topic/114405/messagedialog-responsive-to-keyboard-events/4
-    Keys.onReturnPressed: root.click(root.defaultAction)
 
     // map each standard button type to an action
     // https://doc.qt.io/qt-5/qml-qtquick-controls2-dialogbuttonbox.html#details
@@ -218,12 +203,29 @@ Dialog
 
                 Loader
                 {
-                    sourceComponent: index == 0 ? root.primaryButton : root.secondaryButton
+                    id: button
+                    property bool isPrimary: index == 0
+                    sourceComponent: isPrimary ? root.primaryButton : root.secondaryButton
+
                     onLoaded:
                     {
                         item.text = text;
                     }
+
+                    Connections
+                    {
+                        target: root
+                        function onVisibleChanged()
+                        {
+                            if (root.visible && button.isPrimary)
+                            {
+                                button.forceActiveFocus();
+                            }
+                        }
+                    }
                 }
+
+                Keys.onReturnPressed: root.click(standardButton)
 
                 MouseArea
                 {

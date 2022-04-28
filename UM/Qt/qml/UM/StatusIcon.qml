@@ -17,23 +17,19 @@ Item
     property string status: StatusIcon.Status.NEUTRAL
 
     height: width
-    UM.RecolorImage
+    UM.ColorImage
     {
         id: iconBackground
         height: source != "" ? parent.height : 0
         width: height
-        sourceSize.width: width
-        sourceSize.height: height
         source: ""
         color: "transparent"
     }
-    UM.RecolorImage
+    UM.ColorImage
     {
         id: iconInner
         height: source != "" ? parent.height : 0
         width: height
-        sourceSize.width: width
-        sourceSize.height: height
         source: ""
         color: "transparent"
     }

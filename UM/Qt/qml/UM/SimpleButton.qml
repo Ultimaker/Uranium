@@ -27,13 +27,12 @@ MouseArea
         radius: 0
     }
 
-    RecolorImage
+    ColorImage
     {
         id: image
 
         anchors.fill: parent
         anchors.margins: base.iconMargin
-        sourceSize.height: width
 
         color: base.containsMouse ? base.hoverColor : base.color
 

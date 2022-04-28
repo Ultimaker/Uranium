@@ -1,7 +1,6 @@
 module Uranium
 
 ApplicationMenu         1.0 ApplicationMenu.qml
-RecolorImage            1.0 RecolorImage.qml
 MessageStack            1.0 MessageStack.qml
 Dialog                  1.0 Dialog.qml
 
@@ -30,7 +29,6 @@ CheckBox                1.5 CheckBox.qml
 StatusIcon              1.4 StatusIcon.qml
 
 ImageButton             1.5 ImageButton.qml
-CheckBox                1.5 CheckBox.qml
 TextFieldWithUnit       1.5 TextFieldWithUnit.qml
 Label                   1.5 Label.qml
 MenuItem                1.5 MenuItem.qml

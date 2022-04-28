@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from PyQt5.QtCore import Qt, QModelIndex
+from PyQt6.QtCore import Qt, QModelIndex
 
 from UM.Qt.ListModel import ListModel
 from copy import deepcopy
@@ -10,8 +10,8 @@ class TestListModel(TestCase):
     list_model = None  # type: ListModel
 
     test_data = [{"name": "yay", "data": 12}, {"name": "omg", "data": 13}, {"name":"zomg", "data": 14}]
-    NameRole = Qt.UserRole + 1
-    DataRole = Qt.UserRole + 2
+    NameRole = Qt.ItemDataRole.UserRole + 1
+    DataRole = Qt.ItemDataRole.UserRole + 2
 
     def setUp(self):
         self.list_model = ListModel()

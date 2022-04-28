@@ -22,7 +22,7 @@ Button
 
     contentItem: Item
     {
-        UM.RecolorImage
+        UM.ColorImage
         {
             anchors.centerIn: parent
             implicitWidth: Math.round(UM.Theme.getSize("button").width / 2)

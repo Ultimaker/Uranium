@@ -1,18 +1,16 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections
 import os.path
 from typing import List, Any, Dict, Set, Optional
 
-from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
+from PyQt6.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
 
-from UM.Decorators import deprecated
 from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
 from UM.Settings import SettingRelation
-from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
 from UM.i18n import i18nCatalog
@@ -32,44 +30,44 @@ class SettingDefinitionsModel(QAbstractListModel):
     are applied.
     """
 
-    KeyRole = Qt.UserRole + 1
-    DepthRole = Qt.UserRole + 2
-    VisibleRole = Qt.UserRole + 3
-    ExpandedRole = Qt.UserRole + 4
+    KeyRole = Qt.ItemDataRole.UserRole + 1
+    DepthRole = Qt.ItemDataRole.UserRole + 2
+    VisibleRole = Qt.ItemDataRole.UserRole + 3
+    ExpandedRole = Qt.ItemDataRole.UserRole + 4
 
-    def __init__(self, parent = None, *args, **kwargs):
+    def __init__(self, parent: Optional[QObject] = None, *args, **kwargs):
         super().__init__(parent = parent)
 
-        self._container_id = None  # type: Optional[str]
-        self._container = None  # type: Optional[DefinitionContainerInterface]
+        self._container_id: Optional[str] = None
+        self._container: Optional[DefinitionContainerInterface] = None
         self._i18n_catalog = None
 
-        self._root_key = ""  # type: str
-        self._root = None  # type: Optional[SettingDefinition]
+        self._root_key: str = ""
+        self._root: Optional[SettingDefinition] = None
 
-        self._definition_list = []  # type: List[SettingDefinition]
-        self._index_cache = {} # type: Dict[SettingDefinition, int]
-        self._row_index_list = []  # type: List[int]
+        self._definition_list: List[SettingDefinition] = []
+        self._index_cache: Dict[SettingDefinition, int] = {}
+        self._row_index_list: List[int] = []
 
-        self._expanded = set()  # type: Set[str]
-        self._visible = set()  # type: Set[str]
-        self._exclude = set()  # type: Set[str]
+        self._expanded: Set[str] = set()
+        self._visible: Set[str] = set()
+        self._exclude: Set[str] = set()
 
-        self._show_all = False  # type: bool
-        self._show_ancestors = False  # type: bool
-        self._visibility_handler = None  # type: Optional[SettingPreferenceVisibilityHandler]
+        self._show_all: bool = False
+        self._show_ancestors: bool = False
+        self._visibility_handler: Optional[SettingPreferenceVisibilityHandler] = None
 
-        self._update_visible_row_scheduled = False  # type: bool
-        self._destroyed = False  # type: bool
+        self._update_visible_row_scheduled: bool = False
+        self._destroyed: bool = False
 
-        self._filter_dict = {}  # type: Dict[str, str]
+        self._filter_dict: Dict[str, Any] = {}
 
-        self._role_names = {
+        self._role_names: Dict[int, bytes] = {
             self.KeyRole: b"key",
             self.DepthRole: b"depth",
             self.VisibleRole: b"visible",
             self.ExpandedRole: b"expanded",
-        }  # type: Dict[int, bytes]
+        }
         index = self.ExpandedRole + 1
         for name in SettingDefinition.getPropertyNames():
             self._role_names[index] = name.encode()
@@ -96,8 +94,8 @@ class SettingDefinitionsModel(QAbstractListModel):
             self._scheduleUpdateVisibleRows()
 
     @pyqtProperty(bool, fset=setShowAncestors, notify=showAncestorsChanged)
-    # Should we still show ancestors, even if filter says otherwise?
     def showAncestors(self) -> bool:
+        """Should we still show ancestors, even if filter says otherwise? """
         return self._show_ancestors
 
     def setContainerId(self, container_id: str) -> None:
@@ -188,6 +186,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     visibilityHandlerChanged = pyqtSignal()
     """Emitted whenever the visibilityHandler property changes"""
+
     @pyqtProperty("QVariant", fset = setVisibilityHandler, notify = visibilityHandlerChanged)
     def visibilityHandler(self):
         """An instance of SettingVisibilityHandler to use to determine which settings should be visible."""
@@ -331,11 +330,6 @@ class SettingDefinitionsModel(QAbstractListModel):
         if emit_signal:
             self.expandedChanged.emit()
             self._scheduleUpdateVisibleRows()
-
-    #@deprecated("Use collapseRecursive instead.", "4.5")  # Commented out because these two decorators don't work together.
-    @pyqtSlot(str)
-    def collapse(self, key: str) -> None:
-        return self.collapseRecursive(key)
 
     @pyqtSlot(str)
     def collapseRecursive(self, key: str, *, emit_signal: bool = True) -> None:
