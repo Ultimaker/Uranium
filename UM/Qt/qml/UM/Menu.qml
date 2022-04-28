@@ -17,26 +17,32 @@ Menu
         {
             root.parent.visible = shouldBeVisible
             root.parent.height = shouldBeVisible ? UM.Theme.getSize("menu").height : 0
+            root.width = shouldBeVisible ? Qt.binding(setWidth) : 0
         }
-    }
-
-    // Automatically set the width to fit the widest MenuItem
-    // Based on https://martin.rpdev.net/2018/03/13/qt-quick-controls-2-automatically-set-the-width-of-menus.html
-    width:
-    {
-        var result = 0;
-        var padding = 0;
-        for (var i = 0; i < count; ++i) {
-            var item = itemAt(i);
-            if (item.hasOwnProperty("contentWidth"))
-            {
-                result = Math.max(item.contentWidth, result);
-                padding = Math.max(item.padding, padding);
-            }
-        }
-        return result + padding * 2;
     }
 
     Component.onCompleted: handleVisibility()
     onShouldBeVisibleChanged: handleVisibility()
+
+    // Automatically set the width to fit the widest MenuItem
+    // Based on https://martin.rpdev.net/2018/03/13/qt-quick-controls-2-automatically-set-the-width-of-menus.html
+    function setWidth()
+    {
+        var result = 0;
+        var padding = 0;
+        var result = 0;
+        for (var i = 0; i < count; ++i) {
+            var item = itemAt(i);
+            if (item.hasOwnProperty("contentWidth"))
+            {
+                var itemWidth = item.contentWidth;
+                if (item.hasOwnProperty("shortcut") && item.shortcut != null) {
+                    itemWidth += UM.Theme.getSize("default_margin").width;
+                }
+                result = Math.max(itemWidth, result);
+                padding = Math.max(item.padding, padding);
+            }
+        }
+        root.width = result + padding * 2;
+    }
 }
