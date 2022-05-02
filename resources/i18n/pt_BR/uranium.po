@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Uranium 4.12\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-13 10:45+0200\n"
-"PO-Revision-Date: 2022-01-04 05:38+0100\n"
+"PO-Revision-Date: 2022-04-25 07:03+0200\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
 msgctxt "@item:inmenu"
@@ -312,7 +312,7 @@ msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr ""
+msgstr "Houve alguns erros ao desinstalar os seguintes pacotes: {packages}"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:296
 msgctxt "@info:title"
@@ -364,7 +364,7 @@ msgstr "Dispensar"
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:513
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
-msgstr ""
+msgstr "O complemento {} não pôde ser carregado. Reinstalar o complemento pode resolver o problema."
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:517
 msgctxt "@action:button"
@@ -666,92 +666,92 @@ msgstr "Ajustes"
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
 msgctxt "@option"
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:100
 msgctxt "@option"
 msgid "Open"
-msgstr ""
+msgstr "Abrir"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:101
 msgctxt "@option"
 msgid "Save"
-msgstr ""
+msgstr "Salvar"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:102
 msgctxt "@option"
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:103
 msgctxt "@option"
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:104
 msgctxt "@option"
 msgid "Discard"
-msgstr ""
+msgstr "Descartar"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:105
 msgctxt "@option"
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:106
 msgctxt "@option"
 msgid "Reset"
-msgstr ""
+msgstr "Restabelecer"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:107
 msgctxt "@option"
 msgid "Restore Defaults"
-msgstr ""
+msgstr "Restaurar Defaults"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:108
 msgctxt "@option"
 msgid "Help"
-msgstr ""
+msgstr "Ajuda"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:109
 msgctxt "@option"
 msgid "Save All"
-msgstr ""
+msgstr "Salvar Tudo"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:110
 msgctxt "@option"
 msgid "Yes"
-msgstr ""
+msgstr "Sim"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:111
 msgctxt "@option"
 msgid "Yes to All"
-msgstr ""
+msgstr "Sim a Tudo"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:112
 msgctxt "@option"
 msgid "No"
-msgstr ""
+msgstr "Não"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:113
 msgctxt "@option"
 msgid "No to All"
-msgstr ""
+msgstr "Não a Tudo"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:114
 msgctxt "@option"
 msgid "Abort"
-msgstr ""
+msgstr "Abortar"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:115
 msgctxt "@option"
 msgid "Retry"
-msgstr ""
+msgstr "Tentar Novamente"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:116
 msgctxt "@option"
 msgid "Ignore"
-msgstr ""
+msgstr "Ignorar"
 
 #: ConsoleLogger/plugin.json
 msgctxt "description"
