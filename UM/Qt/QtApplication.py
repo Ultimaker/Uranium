@@ -100,6 +100,9 @@ class QtApplication(QApplication, Application):
         # use Qt Quick Scene Graph "basic" render loop
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
+        # Force using Fusion style for consistency between Windows, mac OS and Linux
+        os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"
+
         super().__init__(sys.argv, **kwargs)
 
         self._qml_import_paths: List[str] = []
@@ -156,9 +159,6 @@ class QtApplication(QApplication, Application):
 
         self._mesh_file_handler = MeshFileHandler(self) #type: MeshFileHandler
         self._workspace_file_handler = WorkspaceFileHandler(self) #type: WorkspaceFileHandler
-
-        # Remove this and you will get Windows 95 style for all widgets if you are using Qt 5.10+
-        self.setStyle("fusion")
 
         if preferences.getValue("view/force_empty_shader_cache"):
             self.setAttribute(Qt.ApplicationAttribute.AA_DisableShaderDiskCache)
