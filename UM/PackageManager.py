@@ -296,9 +296,10 @@ class PackageManager(QObject):
                               title = catalog.i18nc("@info:title", "Uninstalling errors"),
                               message_type = Message.MessageType.ERROR)
             message.show()
+
         if self._to_remove_package_set:  # Only remove packages if something changed.
+            self._to_remove_package_set = set()
             self._saveManagementData()
-        self._to_remove_package_set = remove_failures
 
     # (for initialize) Installs all packages that have been scheduled to be installed.
     def _installAllScheduledPackages(self) -> None:
