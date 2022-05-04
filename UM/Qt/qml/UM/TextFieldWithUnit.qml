@@ -8,6 +8,7 @@ TextField
     property alias unit: unitLabel.text
 
     selectByMouse: true
+    selectedTextColor: UM.Theme.getColor("text_field_text")
     selectionColor: UM.Theme.getColor("text_selection")
     font: UM.Theme.getFont("default")
     color: UM.Theme.getColor("text")
