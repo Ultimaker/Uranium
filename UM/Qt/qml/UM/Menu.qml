@@ -43,6 +43,7 @@ Menu
                 padding = Math.max(item.padding, padding);
             }
         }
-        root.width = result + padding * 2;
+        return result + padding * 2;
     }
+    implicitWidth: setWidth()
 }
