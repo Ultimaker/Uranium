@@ -1,21 +1,22 @@
-# Uranium
-# Copyright (C) 2021 Ultimaker B.V.
-# This file is distributed under the same license as the Uranium package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.13\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-13 10:45+0200\n"
-"PO-Revision-Date: 2021-04-16 15:10+0200\n"
-"Last-Translator: Lionbridge <info@lionbridge.com>\n"
-"Language-Team: Lionbridge <info@lionbridge.com>, Brule <jason@brule.co.jp>, Japanese <info@bothof.nl>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.4.1\n"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
 msgctxt "@item:inmenu"
@@ -55,7 +56,9 @@ msgstr "すでに存在するファイルです"
 #: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgid ""
+"The file <filename>{0}</filename> already exists. Are you sure you want to "
+"overwrite it?"
 msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
@@ -114,7 +117,9 @@ msgstr "エラー"
 #: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
 #, python-brace-format
 msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgid ""
+"Something went wrong saving to <filename>{0}</filename>: <message>{1}</"
+"message>"
 msgstr "<filename>{0}</filename>: <message>{1}</message> への保存でエラーが発生"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/plugins/Views/SimpleView/__init__.py:12
@@ -168,7 +173,9 @@ msgstr "{application_name} {version_number} が利用可能です！"
 #: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
 #, python-brace-format
 msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgid ""
+"{application_name} {version_number} provides a better and more reliable "
+"printing experience."
 msgstr "{application_name} {version_number} なら、より優れた信頼性の隊かい印刷体験が得られます。"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
@@ -305,14 +312,16 @@ msgstr "OpenGLの初期化に失敗しました"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:74
 msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgid ""
+"Critical OpenGL extensions are missing. This program requires support for "
+"Framebuffer Objects. Please check your video card drivers."
 msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:294
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr ""
+msgstr "次のパッケージのアンインストールでエラーが発生しました:\n{packages}"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:296
 msgctxt "@info:title"
@@ -329,13 +338,11 @@ msgstr "プラグイン{package_id}をインストール中..."
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
+"There was an error uninstalling the package {package} before installing new "
+"version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
-"新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n"
-"{error}.\n"
-"後からアップグレードをやり直してください。"
+msgstr "新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n{error}.\n後からアップグレードをやり直してください。"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:618
 msgctxt "@info:title"
@@ -347,9 +354,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"プラグインがインストールされました。\n"
-"アプリケーションを再起動して、プラグインをアクティベートしてください。"
+msgstr "プラグインがインストールされました。\nアプリケーションを再起動して、プラグインをアクティベートしてください。"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:398
 msgctxt "@error:untrusted"
@@ -363,8 +368,10 @@ msgstr "無視"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:513
 msgctxt "@error"
-msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
-msgstr ""
+msgid ""
+"The plugin {} could not be loaded. Re-installing the plugin might solve the "
+"issue."
+msgstr "プラグイン{}を読み込むことができませんでした。プラグインを再インストールすると、問題が解決する場合があります。"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:517
 msgctxt "@action:button"
@@ -382,9 +389,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"プラグインが外されました。\n"
-"{0} を再起動してアンインストールを終了してください。"
+msgstr "プラグインが外されました。\n{0} を再起動してアンインストールを終了してください。"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:925
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
@@ -412,13 +417,12 @@ msgstr "リセットする"
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"Your configuration seems to be corrupt. Something seems to be wrong with the "
+"following profiles:\n"
 "- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
-"- {profiles}\n"
-"工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
+" Would you like to reset to factory defaults? Reset will remove all your "
+"current printers and profiles."
+msgstr "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n- {profiles}\n工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@title:window"
@@ -427,14 +431,16 @@ msgstr "工場リセット"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:53
 msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgid ""
+"Reset will remove all your current printers and profiles! Are you sure you "
+"want to reset?"
 msgstr "リセットすると、現在のプリンターおよびプロファイルがすべて削除されます。本当にリセットしてよろしいですか？"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Mesh/ReadMeshJob.py:71
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr "元のサイズの{0}%まで自動的にスケールされたモデル"
+msgstr "元のサイズの{0}%%まで自動的にスケールされたモデル"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Mesh/ReadMeshJob.py:73
 msgctxt "@info:title"
@@ -443,7 +449,9 @@ msgstr "造形物をスケールする"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:128
 #, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgctxt ""
+"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
+"minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}日 {1:0>2}時間 {2:0>2}分"
 
@@ -453,7 +461,6 @@ msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}時間 {1:0>2}分"
 
-# can’t add japanese text
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
@@ -461,7 +468,6 @@ msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0}日"
 
-# can’t add japanese texts
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:135
 #, python-brace-format
@@ -470,7 +476,6 @@ msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0}時間"
 
-# can’t add japanese text
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:135
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:137
@@ -547,7 +552,9 @@ msgstr "無効なファイル"
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:59
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgid ""
+"Failed to load <filename>{0}</filename>. The file could be corrupt or "
+"inaccessible."
 msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできない可能性があります。"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:62
@@ -575,7 +582,9 @@ msgstr "ファイルにモデルがありません"
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:95
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgid ""
+"Failed to load <filename>{0}</filename>. The file could be corrupt, "
+"inaccessible or it did not contain any models."
 msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできないか、モデルが含まれていませんでした。"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:209
@@ -666,92 +675,92 @@ msgstr "設定"
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
 msgctxt "@option"
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:100
 msgctxt "@option"
 msgid "Open"
-msgstr ""
+msgstr "開く"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:101
 msgctxt "@option"
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:102
 msgctxt "@option"
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:103
 msgctxt "@option"
 msgid "Close"
-msgstr ""
+msgstr "閉める"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:104
 msgctxt "@option"
 msgid "Discard"
-msgstr ""
+msgstr "取り消す"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:105
 msgctxt "@option"
 msgid "Apply"
-msgstr ""
+msgstr "適用"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:106
 msgctxt "@option"
 msgid "Reset"
-msgstr ""
+msgstr "リセットする"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:107
 msgctxt "@option"
 msgid "Restore Defaults"
-msgstr ""
+msgstr "デフォルトに戻す"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:108
 msgctxt "@option"
 msgid "Help"
-msgstr ""
+msgstr "ヘルプ"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:109
 msgctxt "@option"
 msgid "Save All"
-msgstr ""
+msgstr "すべて保存"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:110
 msgctxt "@option"
 msgid "Yes"
-msgstr ""
+msgstr "はい"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:111
 msgctxt "@option"
 msgid "Yes to All"
-msgstr ""
+msgstr "すべてはい"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:112
 msgctxt "@option"
 msgid "No"
-msgstr ""
+msgstr "いいえ"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:113
 msgctxt "@option"
 msgid "No to All"
-msgstr ""
+msgstr "すべていいえ"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:114
 msgctxt "@option"
 msgid "Abort"
-msgstr ""
+msgstr "中止"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:115
 msgctxt "@option"
 msgid "Retry"
-msgstr ""
+msgstr "リトライ"
 
 #: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:116
 msgctxt "@option"
 msgid "Ignore"
-msgstr ""
+msgstr "無視"
 
 #: ConsoleLogger/plugin.json
 msgctxt "description"
@@ -835,7 +844,9 @@ msgstr "アップデートチェッカー"
 
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
+msgid ""
+"Provides built-in setting containers that come with the installation of the "
+"application."
 msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
 
 #: LocalContainerProvider/plugin.json
@@ -912,324 +923,3 @@ msgstr "ログ情報を設定フォルダーのファイルにアウトプット
 msgctxt "name"
 msgid "File Logger"
 msgstr "ファイルロガー"
-
-#~ msgctxt "@error"
-#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-#~ msgstr "プラグイン{}を読み込むことができませんでした。プラグインを再インストールすると、問題が解決する場合があります"
-
-#, python-brace-format
-#~ msgctxt "@error:uninstall"
-#~ msgid ""
-#~ "There were some errors uninstalling the following packages:\n"
-#~ "{packages}"
-#~ msgstr ""
-#~ "次のパッケージのアンインストールでエラーが発生しました:\n"
-#~ "{packages}"
-
-#~ msgctxt "@item:tooltip"
-#~ msgid "This setting has been hidden by the active machine and will not be visible."
-#~ msgstr "この設定がアクティブなプリンターにより非表示になっています、見ることができません。"
-
-# can’t add Japanese texts
-#~ msgctxt "@item:tooltip %1 is list of setting names"
-#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
-#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-#~ msgstr[0] "この設定は %1 の値で非表示になっています。その設定値を変更すると設定の非表示が解除されます。"
-
-#~ msgctxt "@action:button"
-#~ msgid "Defaults"
-#~ msgstr "デフォルト"
-
-#~ msgctxt "@action:button"
-#~ msgid "Close"
-#~ msgstr "閉める"
-
-#~ msgctxt "@action:button"
-#~ msgid "Back"
-#~ msgstr "戻る"
-
-#~ msgctxt "@action:button"
-#~ msgid "Finish"
-#~ msgstr "終わる"
-
-#~ msgctxt "@action:button"
-#~ msgid "Next"
-#~ msgstr "次"
-
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number} BETA is available!"
-#~ msgstr "{application_name} {version_number}ベータ版が利用可能です。"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Uranium拡張子を作成する方法を伝える拡張子の例を示します。"
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "拡張子の例"
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Uraniumファイルリーダーを作成する方法を伝えるファイルリーダーの例を示します。"
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "ファイルリーダーの例"
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Uranium出力デバイスを作成する方法を伝える出力デバイスの例を示します。"
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "出力デバイスの例"
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "Uraniumツールを作成する方法を伝えるツールの例を示します。"
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "ツールの例"
-
-#~ msgctxt "@info:status"
-#~ msgid "Auto scaled object to {0}% of original size"
-#~ msgstr "自動的に造形物をオリジナルサイズの {0}%にスケールする。"
-
-#~ msgctxt "@info"
-#~ msgid "Could not access update information."
-#~ msgstr "必要なアップデートの情報にアクセスできません。"
-
-#~ msgctxt "@info"
-#~ msgid "An error occurred while checking for updates."
-#~ msgstr "アップデート確認中にエラーが起こりました。"
-
-#~ msgctxt "@action:button Preceded by 'Ready to'."
-#~ msgid "Save to File"
-#~ msgstr "ファイルに保存する"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Save to File"
-#~ msgstr "ファイルに保存する"
-
-#~ msgctxt "@title:window"
-#~ msgid "Save to File"
-#~ msgstr "ファイルに保存する"
-
-#~ msgctxt "@error:untrusted"
-#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
-#~ msgstr "信頼できるコンテキスト外でファイルを読み込もうとしたため、プラグイン{}は読み込まれませんでした"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Failed to load <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename>を読み込むのに失敗しました"
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-#~ "- {profiles}\n"
-#~ "Would you like to reset to factory defaults?"
-#~ msgstr ""
-#~ "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
-#~ "- {profiles}\n"
-#~ "工場出荷状態にリセットしますか？"
-
-#~ msgctxt "@info:button"
-#~ msgid "Reset your configuration to factory defaults."
-#~ msgstr "構成を工場出荷状態にリセットします。"
-
-#~ msgctxt "@title:tab"
-#~ msgid "Plugins"
-#~ msgstr "プラグイン"
-
-#~ msgctxt "@action:button"
-#~ msgid "Install new plugin"
-#~ msgstr "新しいプラグインをインストールする"
-
-#~ msgctxt "@label"
-#~ msgid "You will need to restart the application before changes in plugins have effect."
-#~ msgstr "プラグインへの変更を有効にするためにアプリケーション再起動する必要があります。"
-
-#~ msgctxt "@label"
-#~ msgid "This plugin is required for the application to run."
-#~ msgstr "アプリケーションを稼働させるためにプラグインが必要です。"
-
-#~ msgctxt "@label"
-#~ msgid "Info..."
-#~ msgstr "インフォメーション…"
-
-#~ msgctxt "@window:title"
-#~ msgid "Install Plugin"
-#~ msgstr "プラグインをインストール"
-
-#~ msgctxt "@title:window"
-#~ msgid "Open file(s)"
-#~ msgstr "ファイルを開く"
-
-#~ msgctxt "@label"
-#~ msgid "No text available"
-#~ msgstr "利用可能なテキストがありません"
-
-#~ msgctxt "@title:window"
-#~ msgid "About %1"
-#~ msgstr "アバウト%1"
-
-#~ msgctxt "@label"
-#~ msgid "Author:"
-#~ msgstr "著者:"
-
-#~ msgctxt "@label"
-#~ msgid "Version:"
-#~ msgstr "バージョン:"
-
-#~ msgctxt "@action:button"
-#~ msgid "Learn more about the new features"
-#~ msgstr "新機能について詳しく見る"
-
-#~ msgctxt "@info:status"
-#~ msgid "Cura {0} is available!"
-#~ msgstr "Cura {0} は利用可能！"
-
-#~ msgctxt "@info:status"
-#~ msgid "Cura {0} provides better and reliable printing experience."
-#~ msgstr "Cura {0} は、信頼性の高い優れた印刷体験を提供します。"
-
-#~ msgctxt "@action:button"
-#~ msgid "Learn more about new features"
-#~ msgstr "新機能について詳しく見る"
-
-#~ msgctxt "@error:update"
-#~ msgid ""
-#~ "There was an error uninstalling the package {package} before installingnew version:\n"
-#~ "{error}.\n"
-#~ "Please try to upgrade again later."
-#~ msgstr ""
-#~ "新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n"
-#~ "{error}.\n"
-#~ "後からアップグレードをやり直してください"
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-#~ "- {profiles}\n"
-#~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-#~ msgstr ""
-#~ "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
-#~ "- {profiles}\n"
-#~ "工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
-
-#~ msgctxt "@info"
-#~ msgid "A new version is available!"
-#~ msgstr "新しいバージョンが利用可能です。"
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Failed to install plugin from <filename>{0}</filename>:\n"
-#~ "<message>{1}</message>"
-#~ msgstr ""
-#~ "プラグインのインストールに失敗しました。<filename>{0}</filename>:\n"
-#~ "<message>{1}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Failed to install the plugin;\n"
-#~ "<message>{0}</message>"
-#~ msgstr ""
-#~ "プラグインのインストールに失敗しました。\n"
-#~ "<message>{0}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-#~ msgstr "プラグインのアンインストールに失敗しました。プラグインは {0} を再起動すると削除されます。"
-
-#~ msgctxt "@title:tab"
-#~ msgid "Setting Visibility"
-#~ msgstr "視野設定"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Check all"
-#~ msgstr "全てを調べる"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Filter..."
-#~ msgstr "フィルター…"
-
-#~ msgctxt "@title:tab"
-#~ msgid "Profiles"
-#~ msgstr "プロファイル"
-
-#~ msgctxt "@label"
-#~ msgid "Duplicate"
-#~ msgstr "複製"
-
-#~ msgctxt "@label %1 is printer name"
-#~ msgid "Printer: %1"
-#~ msgstr "プリンター:%1"
-
-#~ msgctxt "@action:button"
-#~ msgid "Update \"%1\""
-#~ msgstr "アップデート “%1”"
-
-#~ msgctxt "@action:button"
-#~ msgid "Update profile"
-#~ msgstr "プロファイルをアップデート"
-
-#~ msgctxt "@action:button"
-#~ msgid "Discard current changes"
-#~ msgstr "今の変更を破棄する"
-
-#~ msgctxt "@action:button"
-#~ msgid "Reload profile"
-#~ msgstr "プロファイルをリロードする"
-
-#~ msgctxt "@label"
-#~ msgid "Based on"
-#~ msgstr "ベースにする"
-
-#~ msgctxt "@label"
-#~ msgid "Profile type"
-#~ msgstr "プロファイルタイプ"
-
-#~ msgctxt "@label"
-#~ msgid "Protected profile"
-#~ msgstr "保護されたプロファイル"
-
-#~ msgctxt "@label"
-#~ msgid "Custom profile"
-#~ msgstr "カスタムプロファイル"
-
-#~ msgctxt "@action:button"
-#~ msgid "Import"
-#~ msgstr "取り込む"
-
-#~ msgctxt "@action:button"
-#~ msgid "Export"
-#~ msgstr "書き出す"
-
-#~ msgctxt "@window:title"
-#~ msgid "Import Profile"
-#~ msgstr "プロファイルを取り込む"
-
-#~ msgctxt "@title:window"
-#~ msgid "Import Profile"
-#~ msgstr "プロファイルを取り込む"
-
-#~ msgctxt "@title:window"
-#~ msgid "Export Profile"
-#~ msgstr "プロファイルを書き出す"
-
-#~ msgctxt "@info"
-#~ msgid "An exception occurred while checking for updates."
-#~ msgstr "アップデート確認中にエラーが起こりました。"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Loading <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename>読み込み中"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Cannot open file type <filename>{0}</filename>"
-#~ msgstr "ファイルタイプ <filename>{0}</filename>を開くことができません。"
-
-#~ msgctxt "@action:button"
-#~ msgid "Ok"
-#~ msgstr "Ok"
