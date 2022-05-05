@@ -926,3 +926,315 @@ msgstr "Exporta um relatório de informações para um ficheiro na pasta de defi
 msgctxt "name"
 msgid "File Logger"
 msgstr "File Logger"
+
+#~ msgctxt "@error"
+#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+#~ msgstr "Não foi possível carregar o plug-in {}. A reinstalação do plug-in poderá resolver o problema"
+
+#, python-brace-format
+#~ msgctxt "@error:uninstall"
+#~ msgid ""
+#~ "There were some errors uninstalling the following packages:\n"
+#~ "{packages}"
+#~ msgstr ""
+#~ "Ocorreram alguns erros ao desinstalar os seguintes pacotes:\n"
+#~ "{packages}"
+
+#~ msgctxt "@item:tooltip"
+#~ msgid "This setting has been hidden by the active machine and will not be visible."
+#~ msgstr "Esta definição não é válida para a máquina ativa, e não será visível."
+
+#~ msgctxt "@item:tooltip %1 is list of setting names"
+#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+#~ msgstr[0] "Esta definição não é visível devido ao valor da definição: %1. Altere o valor dessa definição, para que esta definição fique visível."
+#~ msgstr[1] "Esta definição não é visível devido aos valores das seguintes definições: %1. Altere os valores dessas definições, para que esta definição fique visível."
+
+#~ msgctxt "@action:button"
+#~ msgid "Defaults"
+#~ msgstr "Predefinições"
+
+#~ msgctxt "@action:button"
+#~ msgid "Close"
+#~ msgstr "Fechar"
+
+#~ msgctxt "@action:button"
+#~ msgid "Back"
+#~ msgstr "Anterior"
+
+#~ msgctxt "@action:button"
+#~ msgid "Finish"
+#~ msgstr "Concluir"
+
+#~ msgctxt "@action:button"
+#~ msgid "Next"
+#~ msgstr "Seguinte"
+
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number} BETA is available!"
+#~ msgstr "A versão {application_name} {version_number} BETA já está disponível!"
+
+# rever!
+# e substituir strings semelhantes
+# ...criar extensões (...) Uranium
+# com o ?
+# no?
+# para?
+# do?
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "Exemplo de uma extensão para demonstrar às pessoas sobre como criar extensões Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example Extension"
+#~ msgstr "Extensão de Exemplo"
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "Exemplo de um leitor de ficheiros para demonstrar às pessoas sobre como criar leitores de ficheiros Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example File Reader"
+#~ msgstr "Exemplo de um Leitor de Ficheiros"
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "Exemplo de um dispositivo de saída para demonstrar às pessoas sobre como criar dispositivos de saída Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example Output Device"
+#~ msgstr "Exemplo de um Dispositivo de Saída"
+
+#~ msgctxt "description"
+#~ msgid "Example tool to instruct people on how to create Uranium tools."
+#~ msgstr "Exemplo de uma ferramenta para demonstrar às pessoas sobre como criar ferramentas Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "Exemplo de uma Ferramenta"
+
+#~ msgctxt "@info:status"
+#~ msgid "Auto scaled object to {0}% of original size"
+#~ msgstr "Objeto redimensionado automaticamente para {0}% do tamanho original"
+
+#~ msgctxt "@info"
+#~ msgid "Could not access update information."
+#~ msgstr "Não foi possível aceder às informações sobre a atualização."
+
+#~ msgctxt "@info"
+#~ msgid "An error occurred while checking for updates."
+#~ msgstr "Ocorreu um erro ao procurar por atualizações."
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "Guardar Ficheiro"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "Guardar Ficheiro"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "Guardar Ficheiro"
+
+#~ msgctxt "@error:untrusted"
+#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
+#~ msgstr "O plug-in {} não foi carregado porque tentou carregar ficheiros fora do contexto fidedigno"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Não foi possível carregar <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults?"
+#~ msgstr ""
+#~ "A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n"
+#~ "- {profiles}\n"
+#~ "Deseja repor as predefinições de fábrica?"
+
+#~ msgctxt "@info:button"
+#~ msgid "Reset your configuration to factory defaults."
+#~ msgstr "Reponha a sua configuração para as predefinições de fábrica."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Plugins"
+#~ msgstr "Plug-ins"
+
+#~ msgctxt "@action:button"
+#~ msgid "Install new plugin"
+#~ msgstr "Instalar novo plug-in"
+
+#~ msgctxt "@label"
+#~ msgid "You will need to restart the application before changes in plugins have effect."
+#~ msgstr "É necessário reiniciar a aplicação para que as alterações nos plug-ins sejam aplicadas."
+
+#~ msgctxt "@label"
+#~ msgid "This plugin is required for the application to run."
+#~ msgstr "Este plug-in é necessário para executar a aplicação."
+
+#~ msgctxt "@label"
+#~ msgid "Info..."
+#~ msgstr "Informações..."
+
+#~ msgctxt "@window:title"
+#~ msgid "Install Plugin"
+#~ msgstr "Instalar plug-in"
+
+#~ msgctxt "@title:window"
+#~ msgid "Open file(s)"
+#~ msgstr "Abrir ficheiro(s)"
+
+#~ msgctxt "@label"
+#~ msgid "No text available"
+#~ msgstr "Nenhum texto disponível"
+
+#~ msgctxt "@title:window"
+#~ msgid "About %1"
+#~ msgstr "Sobre %1"
+
+#~ msgctxt "@label"
+#~ msgid "Author:"
+#~ msgstr "Autor:"
+
+#~ msgctxt "@label"
+#~ msgid "Version:"
+#~ msgstr "Versão:"
+
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about the new features"
+#~ msgstr "Descubra mais sobre as novas funcionalidades"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} is available!"
+#~ msgstr "Está disponível o Ultimaker Cura {0}!"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} provides better and reliable printing experience."
+#~ msgstr "O Ultimaker Cura {0} oferece uma melhor e mais fiável experiência de impressão 3D."
+
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about new features"
+#~ msgstr "Descubra as novas funcionalidades"
+
+#~ msgctxt "@error:update"
+#~ msgid ""
+#~ "There was an error uninstalling the package {package} before installingnew version:\n"
+#~ "{error}.\n"
+#~ "Please try to upgrade again later."
+#~ msgstr ""
+#~ "Ocorreu um erro ao desinstalar o pacote {package} antes de instalar uma nova versão:\n"
+#~ "{error}.\n"
+#~ "Tente atualizar novamente mais tarde."
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+#~ msgstr ""
+#~ "A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n"
+#~ "- {profiles}\n"
+#~ "Deseja repor as predefinições de fábrica? A reposição removerá todos os perfis e impressoras atuais."
+
+#~ msgctxt "@info"
+#~ msgid "A new version is available!"
+#~ msgstr "Está disponível uma nova versão!"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install plugin from <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+#~ msgstr ""
+#~ "Não foi possível instalar o plug-in em <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install the plugin;\n"
+#~ "<message>{0}</message>"
+#~ msgstr ""
+#~ "Não foi possível instalar o plug-in;\n"
+#~ "<message>{0}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
+#~ msgstr "Não foi possível desinstalar o plug-in. O plug-in será removido após o reinicio do {0}."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Setting Visibility"
+#~ msgstr "Visibilidade das Definições"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Check all"
+#~ msgstr "Selecionar todas"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Filter..."
+#~ msgstr "Filtrar..."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Profiles"
+#~ msgstr "Perfis"
+
+#~ msgctxt "@label"
+#~ msgid "Duplicate"
+#~ msgstr "Duplicar"
+
+#~ msgctxt "@label %1 is printer name"
+#~ msgid "Printer: %1"
+#~ msgstr "Impressora: %1"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update \"%1\""
+#~ msgstr "Atualizar \"%1\""
+
+#~ msgctxt "@action:button"
+#~ msgid "Update profile"
+#~ msgstr "Atualizar perfil"
+
+#~ msgctxt "@action:button"
+#~ msgid "Discard current changes"
+#~ msgstr "Descartar alterações atuais"
+
+#~ msgctxt "@action:button"
+#~ msgid "Reload profile"
+#~ msgstr "Reabrir perfil"
+
+#~ msgctxt "@label"
+#~ msgid "Based on"
+#~ msgstr "Baseado em"
+
+#~ msgctxt "@label"
+#~ msgid "Profile type"
+#~ msgstr "Tipo de perfil"
+
+#~ msgctxt "@label"
+#~ msgid "Protected profile"
+#~ msgstr "Perfil protegido"
+
+#~ msgctxt "@label"
+#~ msgid "Custom profile"
+#~ msgstr "Perfil personalizado"
+
+#~ msgctxt "@action:button"
+#~ msgid "Import"
+#~ msgstr "Importar"
+
+#~ msgctxt "@action:button"
+#~ msgid "Export"
+#~ msgstr "Exportar"
+
+#~ msgctxt "@window:title"
+#~ msgid "Import Profile"
+#~ msgstr "Importar Perfil"
+
+#~ msgctxt "@title:window"
+#~ msgid "Import Profile"
+#~ msgstr "Importar Perfil"
+
+#~ msgctxt "@title:window"
+#~ msgid "Export Profile"
+#~ msgstr "Exportar Perfil"

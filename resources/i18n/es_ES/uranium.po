@@ -925,3 +925,532 @@ msgstr "Proporciona información de registro a un archivo en la carpeta de ajust
 msgctxt "name"
 msgid "File Logger"
 msgstr "Registro de archivos"
+
+#~ msgctxt "@error"
+#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+#~ msgstr "No se pudo cargar el complemento {}. Reinstalar el complemento puede resolver el problema"
+
+#, python-brace-format
+#~ msgctxt "@error:uninstall"
+#~ msgid ""
+#~ "There were some errors uninstalling the following packages:\n"
+#~ "{packages}"
+#~ msgstr ""
+#~ "Se han producido algunos errores al desinstalar los siguientes paquetes:\n"
+#~ "{packages}"
+
+#~ msgctxt "@item:tooltip"
+#~ msgid "This setting has been hidden by the active machine and will not be visible."
+#~ msgstr "La máquina activa ha ocultado este ajuste y no se verá."
+
+#~ msgctxt "@item:tooltip %1 is list of setting names"
+#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+#~ msgstr[0] "El valor de %1 ha ocultado este ajuste. Cambie el valor para que se muestre el ajuste."
+#~ msgstr[1] "Los valores de %1 han ocultado este ajuste. Cambie los valores para que muestre el ajuste."
+
+#~ msgctxt "@action:button"
+#~ msgid "Defaults"
+#~ msgstr "Valores predeterminados"
+
+#~ msgctxt "@action:button"
+#~ msgid "Close"
+#~ msgstr "Cerrar"
+
+#~ msgctxt "@action:button"
+#~ msgid "Back"
+#~ msgstr "Atrás"
+
+#~ msgctxt "@action:button"
+#~ msgid "Finish"
+#~ msgstr "Finalizar"
+
+#~ msgctxt "@action:button"
+#~ msgid "Next"
+#~ msgstr "Siguiente"
+
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number} BETA is available!"
+#~ msgstr "La versión BETA {version_number} de {application_name} ya está disponible."
+
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "Extensión de ejemplo para enseñar a los usuarios a crear extensiones en Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example Extension"
+#~ msgstr "Extensión de ejemplo"
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "Lector de archivos de ejemplo para enseñar a los usuarios a crear lectores de archivos en Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example File Reader"
+#~ msgstr "Lector de archivos de ejemplo"
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "Dispositivo de salida de ejemplo para enseñar a los usuarios a crear dispositivos de salida en Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example Output Device"
+#~ msgstr "Dispositivo de salida de ejemplo"
+
+#~ msgctxt "description"
+#~ msgid "Example tool to instruct people on how to create Uranium tools."
+#~ msgstr "Herramienta de ejemplo para enseñar a los usuarios a crear herramientas en Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "Herramienta de ejemplo"
+
+#~ msgctxt "@info:status"
+#~ msgid "Auto scaled object to {0}% of original size"
+#~ msgstr "Escalado automático del objeto al {0}% del tamaño original"
+
+#~ msgctxt "@info"
+#~ msgid "Could not access update information."
+#~ msgstr "No se pudo acceder a la información de la actualización."
+
+#~ msgctxt "@info"
+#~ msgid "An error occurred while checking for updates."
+#~ msgstr "Se ha producido un error mientras se comprobaban las actualizaciones."
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "Guardar en archivo"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "Guardar en archivo"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "Guardar en archivo"
+
+#~ msgctxt "@error:untrusted"
+#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
+#~ msgstr "El complemento {} no se cargó porque intentó cargar archivos fuera del contexto de confianza"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Error al cargar <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults?"
+#~ msgstr ""
+#~ "Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n"
+#~ "- {profiles}\n"
+#~ "¿Desea restablecer los valores predeterminados de fábrica?"
+
+#~ msgctxt "@info:button"
+#~ msgid "Reset your configuration to factory defaults."
+#~ msgstr "Restablezca la configuración a los valores predeterminados de fábrica."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Plugins"
+#~ msgstr "Complementos"
+
+#~ msgctxt "@action:button"
+#~ msgid "Install new plugin"
+#~ msgstr "Instalar nuevo complemento"
+
+#~ msgctxt "@label"
+#~ msgid "You will need to restart the application before changes in plugins have effect."
+#~ msgstr "Tendrá que reiniciar la aplicación para que los cambios de los complementos tengan efecto."
+
+#~ msgctxt "@label"
+#~ msgid "This plugin is required for the application to run."
+#~ msgstr "Este complemento es necesario para que se ejecute la aplicación."
+
+#~ msgctxt "@label"
+#~ msgid "Info..."
+#~ msgstr "Información..."
+
+#~ msgctxt "@window:title"
+#~ msgid "Install Plugin"
+#~ msgstr "Instalar complemento"
+
+#~ msgctxt "@title:window"
+#~ msgid "Open file(s)"
+#~ msgstr "Abrir archivo(s)"
+
+#~ msgctxt "@label"
+#~ msgid "No text available"
+#~ msgstr "No hay texto disponible"
+
+#~ msgctxt "@title:window"
+#~ msgid "About %1"
+#~ msgstr "Alrededor de %1"
+
+#~ msgctxt "@label"
+#~ msgid "Author:"
+#~ msgstr "Autor:"
+
+#~ msgctxt "@label"
+#~ msgid "Version:"
+#~ msgstr "Versión:"
+
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about the new features"
+#~ msgstr "Obtenga más información sobre las nuevas características"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} is available!"
+#~ msgstr "Cura {0} está disponible."
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} provides better and reliable printing experience."
+#~ msgstr "Cura {0} proporciona una experiencia de impresión mejor y más fiable."
+
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about new features"
+#~ msgstr "Obtenga más información sobre las nuevas características"
+
+#~ msgctxt "@error:update"
+#~ msgid ""
+#~ "There was an error uninstalling the package {package} before installingnew version:\n"
+#~ "{error}.\n"
+#~ "Please try to upgrade again later."
+#~ msgstr ""
+#~ "Se ha producido un error al desinstalar el paquete {package} antes de instalar la nueva versión:\n"
+#~ "{error}.\n"
+#~ "Vuelva a intentar actualizar más tarde."
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+#~ msgstr ""
+#~ "Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n"
+#~ "- {profiles}\n"
+#~ "¿Desea restablecer los valores predeterminados de fábrica? Si los restablece se borrarán sus impresoras y perfiles actuales."
+
+#~ msgctxt "@info"
+#~ msgid "A new version is available!"
+#~ msgstr "¡Nueva versión disponible!"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install plugin from <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+#~ msgstr ""
+#~ "No se ha podido instalar el complemento desde <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install the plugin;\n"
+#~ "<message>{0}</message>"
+#~ msgstr ""
+#~ "Se ha producido un error al instalar el complemento;\n"
+#~ "<message>{0}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
+#~ msgstr "Error al instalar el complemento. El complemento se eliminará tras {0} reintentos."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Setting Visibility"
+#~ msgstr "Visibilidad de los ajustes"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Check all"
+#~ msgstr "Comprobar todo"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Filter..."
+#~ msgstr "Filtrar..."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Profiles"
+#~ msgstr "Perfiles"
+
+#~ msgctxt "@label"
+#~ msgid "Duplicate"
+#~ msgstr "Duplicado"
+
+#~ msgctxt "@label %1 is printer name"
+#~ msgid "Printer: %1"
+#~ msgstr "Impresora: %1"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update \"%1\""
+#~ msgstr "Actualizar \"%1\""
+
+#~ msgctxt "@action:button"
+#~ msgid "Update profile"
+#~ msgstr "Actualizar perfil"
+
+#~ msgctxt "@action:button"
+#~ msgid "Discard current changes"
+#~ msgstr "Descartar cambios actuales"
+
+#~ msgctxt "@action:button"
+#~ msgid "Reload profile"
+#~ msgstr "Volver a cargar perfil"
+
+#~ msgctxt "@label"
+#~ msgid "Based on"
+#~ msgstr "Basado en"
+
+#~ msgctxt "@label"
+#~ msgid "Profile type"
+#~ msgstr "Tipo de perfil"
+
+#~ msgctxt "@label"
+#~ msgid "Protected profile"
+#~ msgstr "Perfil protegido"
+
+#~ msgctxt "@label"
+#~ msgid "Custom profile"
+#~ msgstr "Perfil personalizado"
+
+#~ msgctxt "@action:button"
+#~ msgid "Import"
+#~ msgstr "Importar"
+
+#~ msgctxt "@action:button"
+#~ msgid "Export"
+#~ msgstr "Exportar"
+
+#~ msgctxt "@window:title"
+#~ msgid "Import Profile"
+#~ msgstr "Importar perfil"
+
+#~ msgctxt "@title:window"
+#~ msgid "Import Profile"
+#~ msgstr "Importar perfil"
+
+#~ msgctxt "@title:window"
+#~ msgid "Export Profile"
+#~ msgstr "Exportar perfil"
+
+#~ msgctxt "@info"
+#~ msgid "An exception occurred while checking for updates."
+#~ msgstr "Se ha producido una excepción mientras se comprobaban las actualizaciones."
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Cargando <filename>{0}</filename>"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "Imposible abrir el tipo de archivo <filename>{0}</filename>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Ok"
+#~ msgstr "Aceptar"
+
+#~ msgctxt "@label"
+#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+#~ msgstr "El archivo <filename>{0}</filename> ya existe. ¿Está seguro de que desea sobrescribirlo?"
+
+#~ msgctxt "@info:progress"
+#~ msgid "Saving to <filename>{0}</filename>"
+#~ msgstr "Guardar en <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
+#~ msgstr "Permiso denegado al intentar guardar en <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "No se pudo guardar en <filename>{0}</filename>: <message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Saved to <filename>{0}</filename>"
+#~ msgstr "Guardado en <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "Imposible abrir el tipo de archivo <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Error al cargar <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Cargando <filename>{0}</filename>"
+
+#~ msgctxt "description"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "Proporciona la herramienta Traducir."
+
+#~ msgctxt "name"
+#~ msgid "Translate Tool"
+#~ msgstr "Herramienta Traducir"
+
+#~ msgctxt "@label"
+#~ msgid "Simple View"
+#~ msgstr "Vista básica"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple solid mesh view."
+#~ msgstr "Proporciona una vista básica de malla sólida."
+
+#~ msgctxt "@label"
+#~ msgid "File Logger"
+#~ msgstr "Registro de archivos"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to a file in your settings folder."
+#~ msgstr "Proporciona información de registro a un archivo en la carpeta de ajustes."
+
+#~ msgctxt "@label"
+#~ msgid "STL Reader"
+#~ msgstr "Lector de STL"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for reading STL files."
+#~ msgstr "Permite leer archivos STL."
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Reader"
+#~ msgstr "Lector de Wavefront OBJ"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Makes it possbile to read Wavefront OBJ files."
+#~ msgstr "Permite leer archivos Wavefront OBJ."
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Writer"
+#~ msgstr "Escritor de Wavefront OBJ"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Makes it possbile to write Wavefront OBJ files."
+#~ msgstr "Permite escribir archivos Wavefront OBJ."
+
+#~ msgctxt "@label"
+#~ msgid "STL Writer"
+#~ msgstr "Escritor de STL"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing STL files."
+#~ msgstr "Permite la escritura de archivos STL."
+
+#~ msgctxt "@item:inlistbox"
+#~ msgid "STL File (Ascii)"
+#~ msgstr "Archivo STL (ASCII)"
+
+#~ msgctxt "@label"
+#~ msgid "Console Logger"
+#~ msgstr "Registro de la consola"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to the console."
+#~ msgstr "Proporciona información de registro a la consola."
+
+#~ msgctxt "@label"
+#~ msgid "Update Checker"
+#~ msgstr "Comprobador de actualizaciones"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Checks for updates of the software."
+#~ msgstr "Comprueba si hay actualizaciones de software."
+
+#~ msgctxt "@label"
+#~ msgid "Local File Output Device"
+#~ msgstr "Dispositivo de salida del archivo local"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Enables saving to local files."
+#~ msgstr "Permite guardar en archivos locales."
+
+#~ msgctxt "@label"
+#~ msgid "Scale Tool"
+#~ msgstr "Herramienta Escala"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Scale tool."
+#~ msgstr "Proporciona la herramienta Escala."
+
+#~ msgctxt "@label"
+#~ msgid "Selection Tool"
+#~ msgstr "Herramienta Selección"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Selection tool."
+#~ msgstr "Proporciona la herramienta Selección."
+
+#~ msgctxt "@label"
+#~ msgid "Translate Tool"
+#~ msgstr "Herramienta Traducir"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "Proporciona la herramienta Traducir."
+
+#~ msgctxt "@label"
+#~ msgid "Camera Tool"
+#~ msgstr "Herramienta Cámara"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the tool to manipulate the camera."
+#~ msgstr "Proporciona la herramienta para controlar la cámara."
+
+#~ msgctxt "@label"
+#~ msgid "Rotate Tool"
+#~ msgstr "Herramienta Rotar"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Rotate tool."
+#~ msgstr "Proporciona la herramienta Rotar."
+
+#~ msgctxt "@label"
+#~ msgid "Mirror Tool"
+#~ msgstr "Herramienta Espejo"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Mirror tool."
+#~ msgstr "Proporciona la herramienta Espejo."
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "The plugin has been installed.\n"
+#~ " Please re-start the application to active the plugin."
+#~ msgstr ""
+#~ "El complemento se ha instalado.\n"
+#~ " Reinicie la aplicación para activarlo."
+
+#~ msgctxt "@label"
+#~ msgid "Wireframe View"
+#~ msgstr "Vista de estructura de alambre"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple wireframe view."
+#~ msgstr "Proporciona una vista básica de la estructura de alambre."
+
+#~ msgctxt "@info"
+#~ msgid "An exception occured while parsing the JSON file."
+#~ msgstr "Se ha producido una excepción al analizar el archivo JSON."
+
+#~ msgctxt "@label"
+#~ msgid "3MF Writer"
+#~ msgstr "Escritor de 3MF"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing 3MF files."
+#~ msgstr "Permite la escritura de archivos 3MF."
+
+#~ msgctxt "@item:inlistbox"
+#~ msgid "3MF file"
+#~ msgstr "Archivo 3MF"
+
+#~ msgctxt "@action:button"
+#~ msgid "Scale to Max"
+#~ msgstr "Escalar al máx"
+
+#~ msgctxt "@action:button"
+#~ msgid "Center on Build Plate"
+#~ msgstr "Centrar en placa de impresión"
+
+#~ msgctxt "@action:button"
+#~ msgid "Drop to Build Plate"
+#~ msgstr "Soltar en placa de impresión"

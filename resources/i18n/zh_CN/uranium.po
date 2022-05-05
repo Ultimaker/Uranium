@@ -921,3 +921,496 @@ msgstr "将日志信息输出到设置文件夹中的一个文件。"
 msgctxt "name"
 msgid "File Logger"
 msgstr "文件日志记录"
+
+#~ msgctxt "@error"
+#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+#~ msgstr "无法加载插件 {}。重新安装插件可能会解决该问题"
+
+#, python-brace-format
+#~ msgctxt "@error:uninstall"
+#~ msgid ""
+#~ "There were some errors uninstalling the following packages:\n"
+#~ "{packages}"
+#~ msgstr ""
+#~ "卸载以下程序包时出现了一些错误：\n"
+#~ "{packages}"
+
+#~ msgctxt "@item:tooltip"
+#~ msgid "This setting has been hidden by the active machine and will not be visible."
+#~ msgstr "该设置已被当前机器所隐藏并不可见。"
+
+#~ msgctxt "@item:tooltip %1 is list of setting names"
+#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+#~ msgstr[0] "该设置已被 %1 的值所隐藏，若需显示，更改此值可使设置项重新可见。"
+
+#~ msgctxt "@action:button"
+#~ msgid "Defaults"
+#~ msgstr "默认"
+
+#~ msgctxt "@action:button"
+#~ msgid "Close"
+#~ msgstr "关闭"
+
+#~ msgctxt "@action:button"
+#~ msgid "Back"
+#~ msgstr "返回"
+
+#~ msgctxt "@action:button"
+#~ msgid "Finish"
+#~ msgstr "完成"
+
+#~ msgctxt "@action:button"
+#~ msgid "Next"
+#~ msgstr "下一步"
+
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number} BETA is available!"
+#~ msgstr "{application_name} {version_number} BETA 版可用！"
+
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "扩展示例，指导人们如何创建 Uranium 扩展。"
+
+#~ msgctxt "name"
+#~ msgid "Example Extension"
+#~ msgstr "扩展示例"
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "文件读取器示例，指导人们如何创建 Uranium 文件读取器。"
+
+#~ msgctxt "name"
+#~ msgid "Example File Reader"
+#~ msgstr "文件读取器示例"
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "输出设备示例，指导人们如何创建 Uranium 输出设备。"
+
+#~ msgctxt "name"
+#~ msgid "Example Output Device"
+#~ msgstr "输出设备示例"
+
+#~ msgctxt "description"
+#~ msgid "Example tool to instruct people on how to create Uranium tools."
+#~ msgstr "工具示例，指导人们如何创建 Uranium 工具。"
+
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "工具示例"
+
+#~ msgctxt "@info:status"
+#~ msgid "Auto scaled object to {0}% of original size"
+#~ msgstr "自动缩放模型至原始大小的 {0}%"
+
+#~ msgctxt "@info"
+#~ msgid "Could not access update information."
+#~ msgstr "无法获取更新信息。"
+
+#~ msgctxt "@info"
+#~ msgid "An error occurred while checking for updates."
+#~ msgstr "在检查更新时出现错误。"
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "保存到文件"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "保存到文件"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "保存到文件"
+
+#~ msgctxt "@error:untrusted"
+#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
+#~ msgstr "未加载插件 {}，因为它曾试图在受信任的上下文之外加载文件"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "无法加载 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults?"
+#~ msgstr ""
+#~ "配置似乎已损坏。以下配置文件似乎出现问题：\n"
+#~ "- {profiles}\n"
+#~ "是否要恢复出厂默认设置？"
+
+#~ msgctxt "@info:button"
+#~ msgid "Reset your configuration to factory defaults."
+#~ msgstr "将配置恢复到出厂默认设置。"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Plugins"
+#~ msgstr "插件"
+
+#~ msgctxt "@action:button"
+#~ msgid "Install new plugin"
+#~ msgstr "安装新插件"
+
+#~ msgctxt "@label"
+#~ msgid "You will need to restart the application before changes in plugins have effect."
+#~ msgstr "在插件发生变化之前，您需要重新启动应用程序。"
+
+#~ msgctxt "@label"
+#~ msgid "This plugin is required for the application to run."
+#~ msgstr "该插件为程序运行必备插件。"
+
+#~ msgctxt "@label"
+#~ msgid "Info..."
+#~ msgstr "信息..."
+
+#~ msgctxt "@window:title"
+#~ msgid "Install Plugin"
+#~ msgstr "安装插件"
+
+#~ msgctxt "@title:window"
+#~ msgid "Open file(s)"
+#~ msgstr "打开文件"
+
+#~ msgctxt "@label"
+#~ msgid "No text available"
+#~ msgstr "没有文本可用"
+
+#~ msgctxt "@title:window"
+#~ msgid "About %1"
+#~ msgstr "关于 %1"
+
+#~ msgctxt "@label"
+#~ msgid "Author:"
+#~ msgstr "作者："
+
+#~ msgctxt "@label"
+#~ msgid "Version:"
+#~ msgstr "版本："
+
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about the new features"
+#~ msgstr "进一步了解新功能"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} is available!"
+#~ msgstr "Cura {0} 可用！"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} provides better and reliable printing experience."
+#~ msgstr "Cura {0} 提供更好、更可靠的打印体验。"
+
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about new features"
+#~ msgstr "了解更多新的特点"
+
+#~ msgctxt "@error:update"
+#~ msgid ""
+#~ "There was an error uninstalling the package {package} before installingnew version:\n"
+#~ "{error}.\n"
+#~ "Please try to upgrade again later."
+#~ msgstr ""
+#~ "在安装新版本之前卸载程序包 {package} 时出现了一个错误：\n"
+#~ "{error}。\n"
+#~ "请稍后再次尝试升级。"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+#~ msgstr ""
+#~ "配置似乎已损坏。以下配置文件似乎出现问题：\n"
+#~ "- {profiles}\n"
+#~ "是否要恢复出厂默认设置？重置将移除所有当前的打印机和配置文件。"
+
+#~ msgctxt "@info"
+#~ msgid "A new version is available!"
+#~ msgstr "有新版本可用！"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install plugin from <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+#~ msgstr ""
+#~ "无法从 <filename>{0}</filename> 中安装插件：\n"
+#~ "<message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install the plugin;\n"
+#~ "<message>{0}</message>"
+#~ msgstr ""
+#~ "无法安装插件；\n"
+#~ "<message>{0}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
+#~ msgstr "无法卸载插件。插件将在 {0} 重启后删除。"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Setting Visibility"
+#~ msgstr "设置可见性"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Check all"
+#~ msgstr "全部勾选"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Filter..."
+#~ msgstr "筛选…"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Profiles"
+#~ msgstr "配置文件"
+
+#~ msgctxt "@label"
+#~ msgid "Duplicate"
+#~ msgstr "复制"
+
+#~ msgctxt "@label %1 is printer name"
+#~ msgid "Printer: %1"
+#~ msgstr "打印机：%1"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update \"%1\""
+#~ msgstr "升级 \"%1\""
+
+#~ msgctxt "@action:button"
+#~ msgid "Update profile"
+#~ msgstr "升级配置文件"
+
+#~ msgctxt "@action:button"
+#~ msgid "Discard current changes"
+#~ msgstr "舍弃当前更改"
+
+#~ msgctxt "@action:button"
+#~ msgid "Reload profile"
+#~ msgstr "重新载入配置文件"
+
+#~ msgctxt "@label"
+#~ msgid "Based on"
+#~ msgstr "基于"
+
+#~ msgctxt "@label"
+#~ msgid "Profile type"
+#~ msgstr "配置文件类型"
+
+#~ msgctxt "@label"
+#~ msgid "Protected profile"
+#~ msgstr "受保护的配置文件"
+
+#~ msgctxt "@label"
+#~ msgid "Custom profile"
+#~ msgstr "自定义配置文件"
+
+#~ msgctxt "@action:button"
+#~ msgid "Import"
+#~ msgstr "导入"
+
+#~ msgctxt "@action:button"
+#~ msgid "Export"
+#~ msgstr "导出"
+
+#~ msgctxt "@window:title"
+#~ msgid "Import Profile"
+#~ msgstr "导入配置文件"
+
+#~ msgctxt "@title:window"
+#~ msgid "Import Profile"
+#~ msgstr "导入配置文件"
+
+#~ msgctxt "@title:window"
+#~ msgid "Export Profile"
+#~ msgstr "导出配置文件"
+
+#~ msgctxt "@info"
+#~ msgid "An exception occurred while checking for updates."
+#~ msgstr "在检查更新时出现异常情况。"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "正在载入 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "无法打开文件类型 <filename>{0}</filename>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Ok"
+#~ msgstr "确定"
+
+#~ msgctxt "@label"
+#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+#~ msgstr "文件 <filename>{0}</filename> 已存在。你确定要替换它吗?"
+
+#~ msgctxt "@info:progress"
+#~ msgid "Saving to <filename>{0}</filename>"
+#~ msgstr "正在保存至 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
+#~ msgstr "保存 <filename>{0}</filename> 时发生错误：权限不足"
+
+#~ msgctxt "@info:status"
+#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "无法保存到 <filename>{0}</filename>：<message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Saved to <filename>{0}</filename>"
+#~ msgstr "已保存至 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "无法打开文件类型 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "无法加载 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "正在载入 <filename>{0}</filename>"
+
+#~ msgctxt "description"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "提供翻译工具。"
+
+#~ msgctxt "name"
+#~ msgid "Translate Tool"
+#~ msgstr "翻译工具"
+
+#~ msgctxt "@label"
+#~ msgid "Simple View"
+#~ msgstr "简单视图"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple solid mesh view."
+#~ msgstr "提供简单实体网格视图。"
+
+#~ msgctxt "@label"
+#~ msgid "File Logger"
+#~ msgstr "文件日志记录"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to a file in your settings folder."
+#~ msgstr "将日志信息输出到设置文件夹中的一个文件。"
+
+#~ msgctxt "@label"
+#~ msgid "STL Reader"
+#~ msgstr "STL 文件读取器"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for reading STL files."
+#~ msgstr "提供对读取 STL 文件的支持。"
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Reader"
+#~ msgstr "Wavefront OBJ 文件读取器"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Makes it possbile to read Wavefront OBJ files."
+#~ msgstr "提供对读取 Wavefront OBJ 文件的支持。"
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Writer"
+#~ msgstr "Wavefront OBJ 文件写入器"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Makes it possbile to write Wavefront OBJ files."
+#~ msgstr "提供对写入 Wavefront OBJ 文件的支持。"
+
+#~ msgctxt "@label"
+#~ msgid "STL Writer"
+#~ msgstr "STL 文件写入器"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing STL files."
+#~ msgstr "提供对写入 STL 文件的支持。"
+
+#~ msgctxt "@item:inlistbox"
+#~ msgid "STL File (Ascii)"
+#~ msgstr "STL 文件 (Ascii)"
+
+#~ msgctxt "@label"
+#~ msgid "Console Logger"
+#~ msgstr "控制台日志记录"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to the console."
+#~ msgstr "输出日志信息至控制台。"
+
+#~ msgctxt "@label"
+#~ msgid "Update Checker"
+#~ msgstr "固件更新检查"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Checks for updates of the software."
+#~ msgstr "检查软件更新。"
+
+#~ msgctxt "@label"
+#~ msgid "Local File Output Device"
+#~ msgstr "本地文件输出设备"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Enables saving to local files."
+#~ msgstr "开启保存到本地文件的功能。"
+
+#~ msgctxt "@label"
+#~ msgid "Scale Tool"
+#~ msgstr "缩放工具"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Scale tool."
+#~ msgstr "提供缩放工具。"
+
+#~ msgctxt "@label"
+#~ msgid "Selection Tool"
+#~ msgstr "选择工具"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Selection tool."
+#~ msgstr "提供选择工具。"
+
+#~ msgctxt "@label"
+#~ msgid "Translate Tool"
+#~ msgstr "翻译工具"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "提供翻译工具。"
+
+#~ msgctxt "@label"
+#~ msgid "Camera Tool"
+#~ msgstr "视角工具"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the tool to manipulate the camera."
+#~ msgstr "提供变换视角功能。"
+
+#~ msgctxt "@label"
+#~ msgid "Rotate Tool"
+#~ msgstr "旋转工具"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Rotate tool."
+#~ msgstr "提供旋转工具。"
+
+#~ msgctxt "@label"
+#~ msgid "Mirror Tool"
+#~ msgstr "镜像工具"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Mirror tool."
+#~ msgstr "提供镜像工具。"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "The plugin has been installed.\n"
+#~ " Please re-start the application to active the plugin."
+#~ msgstr ""
+#~ "所选插件已安装。\n"
+#~ "请重启程序以启用该插件。"
+

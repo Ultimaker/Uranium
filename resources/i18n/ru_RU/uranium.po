@@ -928,3 +928,534 @@ msgstr "Выводит содержимое журнала в файл, кото
 msgctxt "name"
 msgid "File Logger"
 msgstr "Запись журнала в файл"
+
+#~ msgctxt "@error"
+#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+#~ msgstr "Невозможно загрузить плагин {}. Переустановка плагина может решить проблему"
+
+#, python-brace-format
+#~ msgctxt "@error:uninstall"
+#~ msgid ""
+#~ "There were some errors uninstalling the following packages:\n"
+#~ "{packages}"
+#~ msgstr ""
+#~ "Возникли некоторые ошибки при удалении этих пакетов: \n"
+#~ "{packages}"
+
+#~ msgctxt "@item:tooltip"
+#~ msgid "This setting has been hidden by the active machine and will not be visible."
+#~ msgstr "Данный параметр был скрыт текущим принтером и не будет отображаться."
+
+#~ msgctxt "@item:tooltip %1 is list of setting names"
+#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+#~ msgstr[0] "Этот параметр был скрыт значением %1. Измените это значение, чтобы параметр стал отображаться."
+#~ msgstr[1] "Эти параметры были скрыты значением %1. Измените это значение, чтобы параметр стал отображаться."
+#~ msgstr[2] "Эти параметры были скрыты значением %1. Измените это значение, чтобы параметр стал отображаться."
+
+#~ msgctxt "@action:button"
+#~ msgid "Defaults"
+#~ msgstr "Стандартные"
+
+#~ msgctxt "@action:button"
+#~ msgid "Close"
+#~ msgstr "Закрыть"
+
+#~ msgctxt "@action:button"
+#~ msgid "Back"
+#~ msgstr "Назад"
+
+#~ msgctxt "@action:button"
+#~ msgid "Finish"
+#~ msgstr "Завершить"
+
+#~ msgctxt "@action:button"
+#~ msgid "Next"
+#~ msgstr "Следующий"
+
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number} BETA is available!"
+#~ msgstr "Доступна бета-версия {application_name} {version_number}!"
+
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "Пример расширения для обучения созданию расширений Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example Extension"
+#~ msgstr "Пример расширения"
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "Пример средства считывания файлов для обучения созданию средств считывания файлов Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example File Reader"
+#~ msgstr "Пример средства считывания файлов"
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "Пример выходного устройства для обучения созданию выходных устройств Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example Output Device"
+#~ msgstr "Пример выходного устройства"
+
+#~ msgctxt "description"
+#~ msgid "Example tool to instruct people on how to create Uranium tools."
+#~ msgstr "Пример инструмента для обучения созданию инструментов Uranium."
+
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "Пример инструмента"
+
+#~ msgctxt "@info:status"
+#~ msgid "Auto scaled object to {0}% of original size"
+#~ msgstr "Автоматическое масштабирование объекта к {0}% от оригинального размера"
+
+#~ msgctxt "@info"
+#~ msgid "Could not access update information."
+#~ msgstr "Не могу получить информацию об обновлениях."
+
+#~ msgctxt "@info"
+#~ msgid "An error occurred while checking for updates."
+#~ msgstr "Во время проверки наличия обновлений возникла ошибка."
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "Сохранить в файл"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "Сохранить в файл"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "Сохранить в файл"
+
+#~ msgctxt "@error:untrusted"
+#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
+#~ msgstr "Подключаемый модуль {} не загружен, потому что он пытался загрузить файлы из-за пределов доверенного контекста"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Невозможно открыть <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults?"
+#~ msgstr ""
+#~ "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n"
+#~ "- {profiles}\n"
+#~ "Выполнить сброс до заводских настроек по умолчанию?"
+
+#~ msgctxt "@info:button"
+#~ msgid "Reset your configuration to factory defaults."
+#~ msgstr "Сбросьте конфигурацию до заводских настроек по умолчанию."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Plugins"
+#~ msgstr "Плагины"
+
+#~ msgctxt "@action:button"
+#~ msgid "Install new plugin"
+#~ msgstr "Установить новый плагин"
+
+#~ msgctxt "@label"
+#~ msgid "You will need to restart the application before changes in plugins have effect."
+#~ msgstr "Вам потребуется перезапустить приложение для активации возможностей плагина."
+
+#~ msgctxt "@label"
+#~ msgid "This plugin is required for the application to run."
+#~ msgstr "Данный плагин необходим для запуска приложения."
+
+#~ msgctxt "@label"
+#~ msgid "Info..."
+#~ msgstr "Инфо..."
+
+#~ msgctxt "@window:title"
+#~ msgid "Install Plugin"
+#~ msgstr "Установка плагина"
+
+#~ msgctxt "@title:window"
+#~ msgid "Open file(s)"
+#~ msgstr "Открыть файл(ы)"
+
+#~ msgctxt "@label"
+#~ msgid "No text available"
+#~ msgstr "Текста нет"
+
+#~ msgctxt "@title:window"
+#~ msgid "About %1"
+#~ msgstr "О %1"
+
+#~ msgctxt "@label"
+#~ msgid "Author:"
+#~ msgstr "Автор:"
+
+#~ msgctxt "@label"
+#~ msgid "Version:"
+#~ msgstr "Версия:"
+
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about the new features"
+#~ msgstr "Узнайте больше о новых функциях"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} is available!"
+#~ msgstr "Доступна версия {0} Cura!"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cura {0} provides better and reliable printing experience."
+#~ msgstr "Cura {0} обеспечивает еще более оптимальную и надежную печать."
+
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about new features"
+#~ msgstr "Узнайте больше о новых функциях"
+
+#~ msgctxt "@error:update"
+#~ msgid ""
+#~ "There was an error uninstalling the package {package} before installingnew version:\n"
+#~ "{error}.\n"
+#~ "Please try to upgrade again later."
+#~ msgstr ""
+#~ "Возникла ошибка при удалении пакета {package} перед установкой новой версии: \n"
+#~ "{error}.\n"
+#~ "Повторите попытку обновления позже."
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+#~ msgstr ""
+#~ "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями: \n"
+#~ "- {profiles}\n"
+#~ "Выполнить сброс до заводских настроек по умолчанию? Сброс приведет к удалению данных всех текущих принтеров и профилей."
+
+#~ msgctxt "@info"
+#~ msgid "A new version is available!"
+#~ msgstr "Доступна новая версия!"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install plugin from <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+#~ msgstr ""
+#~ "Не удалось установить плагин из <filename>{0}</filename>:\n"
+#~ "<message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Failed to install the plugin;\n"
+#~ "<message>{0}</message>"
+#~ msgstr ""
+#~ "Не удалось установить плагин;\n"
+#~ "<message>{0}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
+#~ msgstr "Не удалось удалить плагин. Плагин будет удален через {0} перезапуска (-ов)."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Setting Visibility"
+#~ msgstr "Видимость настроек"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Check all"
+#~ msgstr "Выбрать все"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Filter..."
+#~ msgstr "Фильтр..."
+
+#~ msgctxt "@title:tab"
+#~ msgid "Profiles"
+#~ msgstr "Профили"
+
+#~ msgctxt "@label"
+#~ msgid "Duplicate"
+#~ msgstr "Дублировать"
+
+#~ msgctxt "@label %1 is printer name"
+#~ msgid "Printer: %1"
+#~ msgstr "Принтер: %1"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update \"%1\""
+#~ msgstr "Обновить \"%1\""
+
+#~ msgctxt "@action:button"
+#~ msgid "Update profile"
+#~ msgstr "Обновить профиль"
+
+#~ msgctxt "@action:button"
+#~ msgid "Discard current changes"
+#~ msgstr "Сбросить текущие параметры"
+
+#~ msgctxt "@action:button"
+#~ msgid "Reload profile"
+#~ msgstr "Перезагрузить профиль"
+
+#~ msgctxt "@label"
+#~ msgid "Based on"
+#~ msgstr "Основан на"
+
+#~ msgctxt "@label"
+#~ msgid "Profile type"
+#~ msgstr "Тип профиля"
+
+#~ msgctxt "@label"
+#~ msgid "Protected profile"
+#~ msgstr "Защищённый профиль"
+
+#~ msgctxt "@label"
+#~ msgid "Custom profile"
+#~ msgstr "Собственный профиль"
+
+#~ msgctxt "@action:button"
+#~ msgid "Import"
+#~ msgstr "Импорт"
+
+#~ msgctxt "@action:button"
+#~ msgid "Export"
+#~ msgstr "Экспорт"
+
+#~ msgctxt "@window:title"
+#~ msgid "Import Profile"
+#~ msgstr "Импорт профиля"
+
+#~ msgctxt "@title:window"
+#~ msgid "Import Profile"
+#~ msgstr "Импорт профиля"
+
+#~ msgctxt "@title:window"
+#~ msgid "Export Profile"
+#~ msgstr "Экспорт профиля"
+
+#~ msgctxt "@info"
+#~ msgid "An exception occurred while checking for updates."
+#~ msgstr "Произошло исключение во время проверки наличия обновлений."
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Загрузка <filename>{0}</filename>"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "Не могу открыть файл <filename>{0}</filename>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgctxt "@label"
+#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+#~ msgstr "Файл <filename>{0}</filename> уже существует. Вы уверены, что желаете перезаписать его?"
+
+#~ msgctxt "@info:progress"
+#~ msgid "Saving to <filename>{0}</filename>"
+#~ msgstr "Сохранение в <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
+#~ msgstr "Недостаточно прав при попытке записать <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "Не могу записать в <filename>{0}</filename>: <message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Saved to <filename>{0}</filename>"
+#~ msgstr "Сохранено в <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "Не могу открыть файл типа <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Не могу загрузить <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Загрузка <filename>{0}</filename>"
+
+#~ msgctxt "description"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "Предоставляет инструмент \"Перемещение\"."
+
+#~ msgctxt "name"
+#~ msgid "Translate Tool"
+#~ msgstr "Инструмент \"Перемещение\"."
+
+#~ msgctxt "@label"
+#~ msgid "Simple View"
+#~ msgstr "Обычный вид"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple solid mesh view."
+#~ msgstr "Предоставляет просмотр в виде целого тела."
+
+#~ msgctxt "@label"
+#~ msgid "File Logger"
+#~ msgstr "Запись журнала в файл"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to a file in your settings folder."
+#~ msgstr "Выводит содержимое журнала в файл, который располагается в каталоге с вашими настройками."
+
+#~ msgctxt "@label"
+#~ msgid "STL Reader"
+#~ msgstr "STL Reader"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for reading STL files."
+#~ msgstr "Предоставляет поддержку для чтения STL файлов."
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Reader"
+#~ msgstr "Wavefront OBJ Reader"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Makes it possbile to read Wavefront OBJ files."
+#~ msgstr "Makes it possbile to read Wavefront OBJ files."
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Writer"
+#~ msgstr "Wavefront OBJ Writer"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Makes it possbile to write Wavefront OBJ files."
+#~ msgstr "Makes it possbile to write Wavefront OBJ files."
+
+#~ msgctxt "@label"
+#~ msgid "STL Writer"
+#~ msgstr "Запись STL"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing STL files."
+#~ msgstr "Предоставляет поддержку для записи STL файлов."
+
+#~ msgctxt "@item:inlistbox"
+#~ msgid "STL File (Ascii)"
+#~ msgstr "Файл STL (текстовый)"
+
+#~ msgctxt "@label"
+#~ msgid "Console Logger"
+#~ msgstr "Console Logger"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to the console."
+#~ msgstr "Outputs log information to the console."
+
+#~ msgctxt "@label"
+#~ msgid "Update Checker"
+#~ msgstr "Проверка обновлений"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Checks for updates of the software."
+#~ msgstr "Проверяет наличие обновлений ПО."
+
+#~ msgctxt "@label"
+#~ msgid "Local File Output Device"
+#~ msgstr "Устройство вывода локальных файлов"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Enables saving to local files."
+#~ msgstr "Разрешает сохранение в локальные файлы."
+
+#~ msgctxt "@label"
+#~ msgid "Scale Tool"
+#~ msgstr "Инструмент \"Масштабирование\""
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Scale tool."
+#~ msgstr "Предоставляет инструмент \"Масштабирование\"."
+
+#~ msgctxt "@label"
+#~ msgid "Selection Tool"
+#~ msgstr "Инструмент \"Выбор\""
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Selection tool."
+#~ msgstr "Предоставляет инструмент \"Выбор\"."
+
+#~ msgctxt "@label"
+#~ msgid "Translate Tool"
+#~ msgstr "Инструмент \"Перевод\"."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "Предоставляет инструмент \"Перевод\"."
+
+#~ msgctxt "@label"
+#~ msgid "Camera Tool"
+#~ msgstr "Камера"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the tool to manipulate the camera."
+#~ msgstr "Предоставляет возможность управлять камерой."
+
+#~ msgctxt "@label"
+#~ msgid "Rotate Tool"
+#~ msgstr "Инструмент \"Вращение\""
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Rotate tool."
+#~ msgstr "Предоставляет инструмент \"Вращение\"."
+
+#~ msgctxt "@label"
+#~ msgid "Mirror Tool"
+#~ msgstr "Зеркало"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Mirror tool."
+#~ msgstr "Предоставляет инструмент \"Зеркало\"."
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "The plugin has been installed.\n"
+#~ " Please re-start the application to active the plugin."
+#~ msgstr ""
+#~ "Плагин был установлен.\n"
+#~ "Пожалуйста, перезапустите приложение для активации плагина."
+
+#~ msgctxt "@label"
+#~ msgid "Wireframe View"
+#~ msgstr "Проволочный вид"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple wireframe view."
+#~ msgstr "Предоставляет просмотр в виде целого тела."
+
+#~ msgctxt "@info"
+#~ msgid "An exception occured while parsing the JSON file."
+#~ msgstr "Произошло исключение во время обработки JSON файла."
+
+#~ msgctxt "@label"
+#~ msgid "3MF Writer"
+#~ msgstr "3MF Writer"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing 3MF files."
+#~ msgstr "Provides support for writing 3MF files."
+
+#~ msgctxt "@item:inlistbox"
+#~ msgid "3MF file"
+#~ msgstr "3MF file"
+
+#~ msgctxt "@action:button"
+#~ msgid "Save to File"
+#~ msgstr "Сохранить в файл"
+
+#~ msgctxt "@action:button"
+#~ msgid "Scale to Max"
+#~ msgstr "Масштабировать до максимума"
+
+#~ msgctxt "@action:button"
+#~ msgid "Discard current settings"
+#~ msgstr "Сбросить текущие параметры"
+
