@@ -1,11 +1,12 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
 import configparser
 from typing import Any, cast, Dict, List, Union, Optional
 
-from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
+from PyQt6.QtGui import QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
+from PyQt6.QtOpenGL import QOpenGLShader, QOpenGLShaderProgram
 from UM.Logger import Logger
 
 from UM.Math.Vector import Vector
@@ -129,7 +130,7 @@ class ShaderProgram:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.Vertex, shader):
+        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.ShaderTypeBit.Vertex, shader):
             Logger.log("e", "Vertex shader failed to compile: %s", self._shader_program.log())
             return False
 
@@ -143,7 +144,7 @@ class ShaderProgram:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.Fragment, shader):
+        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.ShaderTypeBit.Fragment, shader):
             Logger.log("e", "Fragment shader failed to compile: %s", self._shader_program.log())
             return False
 
@@ -153,7 +154,7 @@ class ShaderProgram:
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.Geometry, shader):
+        if not cast(QOpenGLShaderProgram, self._shader_program).addShaderFromSourceCode(QOpenGLShader.ShaderTypeBit.Geometry, shader):
             Logger.log("e", "Geometry shader failed to compile: %s", self._shader_program.log())
             return False
 

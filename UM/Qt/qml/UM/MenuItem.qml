@@ -10,6 +10,12 @@ MenuItem
     property alias shortcut: _shortcut.sequence
     property bool indicatorVisible: root.icon.source.length > 0 || root.checkable
     height: visible ? UM.Theme.getSize("context_menu").height : 0
+    property int contentWidth:
+    {
+        // This is the width of all the items in the contentItem except the filler
+        return leftSpacer.width + label.width + middleSpacer.width + shortcutLabel.width + rightSpacer.width
+    }
+
     Shortcut
     {
         id: _shortcut
@@ -55,14 +61,15 @@ MenuItem
 
         Item
         {
-            // Spacer
+            // Left side margin
+            id: leftSpacer
             width: root.indicatorVisible ? root.indicator.width + UM.Theme.getSize("default_margin").width : UM.Theme.getSize("default_margin").width
         }
 
         UM.Label
         {
+            id: label
             text: replaceText(root.text)
-            Layout.fillWidth: true
             Layout.fillHeight:true
             elide: Label.ElideRight
             wrapMode: Text.NoWrap
@@ -73,8 +80,17 @@ MenuItem
             Layout.fillWidth: true
         }
 
+        Item
+        {
+            // Middle margin
+            id: middleSpacer
+            width: visible ? UM.Theme.getSize("default_margin").width : 0
+            visible: _shortcut.nativeText != "" || root.subMenu
+        }
+
         UM.Label
         {
+            id: shortcutLabel
             Layout.fillHeight: true
             text: _shortcut.nativeText
             color: UM.Theme.getColor("text_lighter")
@@ -83,6 +99,7 @@ MenuItem
         Item
         {
             // Right side margin
+            id: rightSpacer
             width: UM.Theme.getSize("default_margin").width
         }
     }

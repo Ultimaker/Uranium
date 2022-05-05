@@ -6,7 +6,7 @@ import os.path  # To watch files for changes.
 import threading
 from typing import Callable, List, Optional, Set, Any, Dict
 
-from PyQt5.QtCore import QFileSystemWatcher  # To watch files for changes.
+from PyQt6.QtCore import QFileSystemWatcher  # To watch files for changes.
 
 from UM.Logger import Logger
 from UM.Mesh.ReadMeshJob import ReadMeshJob  # To reload a mesh when its file was changed.
@@ -18,7 +18,7 @@ from UM.Signal import Signal, signalemitter
 from UM.i18n import i18nCatalog
 from UM.Platform import Platform
 if Platform.isWindows():
-    from PyQt5.QtCore import QEventLoop  # Windows fix for using file watcher on removable devices.
+    from PyQt6.QtCore import QEventLoop  # Windows fix for using file watcher on removable devices.
 
 i18n_catalog = i18nCatalog("uranium")
 

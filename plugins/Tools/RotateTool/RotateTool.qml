@@ -17,7 +17,7 @@ Item
         anchors.left: parent.left;
 
         text: catalog.i18nc("@action:button", "Reset")
-        toolItem: UM.RecolorImage
+        toolItem: UM.ColorImage
         {
             source: UM.Theme.getIcon("ArrowReset")
             color: UM.Theme.getColor("icon")
@@ -39,7 +39,7 @@ Item
         //: Lay Flat tool button
         text: catalog.i18nc("@action:button", "Lay flat")
 
-        toolItem: UM.RecolorImage
+        toolItem: UM.ColorImage
         {
             source: UM.Theme.getIcon("LayFlat")
             color: UM.Theme.getColor("icon")
@@ -62,7 +62,7 @@ Item
 
         text: catalog.i18nc("@action:button", "Select face to align to the build plate")
 
-        toolItem: UM.RecolorImage
+        toolItem: UM.ColorImage
         {
             source: UM.Theme.getIcon("LayFlatOnFace")
             color: UM.Theme.getColor("icon")

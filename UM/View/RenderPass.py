@@ -1,8 +1,8 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Optional, Tuple
-from PyQt5.QtGui import QImage #For typing.
+from PyQt6.QtGui import QImage #For typing.
 
 from UM.Logger import Logger
 from UM.View.GL.OpenGL import OpenGL

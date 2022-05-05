@@ -43,7 +43,7 @@ CheckBox
         Behavior on color { ColorAnimation { duration: 50; } }
         radius: UM.Theme.getSize("checkbox_radius").width
 
-        UM.RecolorImage
+        UM.ColorImage
         {
             id: indicator_item
             height: width
@@ -86,7 +86,6 @@ CheckBox
             ]
 
             anchors.centerIn: parent
-            sourceSize.height: width
 
             Behavior on opacity { NumberAnimation { duration: 100; } }
         }

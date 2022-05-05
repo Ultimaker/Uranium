@@ -1,9 +1,9 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Callable, Optional
 
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 from UM.FlameProfiler import pyqtSlot
 from UM.i18n import i18nCatalog
 from UM.Qt.ListModel import ListModel
@@ -12,10 +12,10 @@ from UM.Logger import Logger
 i18n_catalog = i18nCatalog("uranium")
 
 class FileProviderModel(ListModel):
-    NameRole = Qt.UserRole + 1
-    DisplayTextRole = Qt.UserRole + 2
-    FileProviderRole = Qt.UserRole + 3
-    ShortcutRole = Qt.UserRole + 4
+    NameRole = Qt.ItemDataRole.UserRole + 1
+    DisplayTextRole = Qt.ItemDataRole.UserRole + 2
+    FileProviderRole = Qt.ItemDataRole.UserRole + 3
+    ShortcutRole = Qt.ItemDataRole.UserRole + 4
 
     def __init__(self, application = None, parent = None):
         super().__init__(parent)

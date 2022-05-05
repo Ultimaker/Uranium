@@ -18,7 +18,7 @@ from UM.PluginObject import PluginObject
 from UM.PluginRegistry import PluginRegistry  # To find plug-ins.
 from UM.Resources import Resources  # To load old versions from.
 
-from PyQt5.QtCore import QCoreApplication
+from PyQt6.QtCore import QCoreApplication
 
 from UM.SaveFile import SaveFile
 
@@ -71,9 +71,9 @@ class VersionUpgradeManager:
 
         if VersionUpgradeManager.__instance is not None:
             raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
-        VersionUpgradeManager.__instance = self
 
         super().__init__()
+        VersionUpgradeManager.__instance = self
 
         self._application = application
         self._version_upgrades = {} # type: Dict[Tuple[str, int], Set[Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]]   # For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.

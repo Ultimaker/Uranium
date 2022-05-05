@@ -1,44 +1,38 @@
-// Copyright (c) 2020 Ultimaker B.V.
+// Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.4
-import QtQuick.Controls.Private 1.0
+
+import UM 1.5 as UM
 
 // TooltipArea.qml
-// This file contains private Qt Quick modules that might change in future versions of Qt
-// Tested on: Qt 5.4.1
-// Based on https://www.kullo.net/blog/tooltiparea-the-missing-tooltip-component-of-qt-quick/
 
 MouseArea
 {
     id: _root
-    property string text: ""
+    property alias text: tooltip.text
 
     hoverEnabled: _root.enabled
     acceptedButtons: Qt.NoButton
 
-    onExited: Tooltip.hideText()
-    onCanceled: Tooltip.hideText()
+    onExited: tooltip.hide()
+    onCanceled: tooltip.hide()
+
+    UM.ToolTip
+    {
+        id: tooltip
+        arrowSize: 0
+    }
 
     Timer
     {
         interval: 1000
         running: _root.enabled && _root.containsMouse && _root.text.length
-        onTriggered: Tooltip.showText(_root, Qt.point(_root.mouseX, _root.mouseY), wrapText(_root.text))
-    }
-
-    /**
-     * Wrap a line of text automatically to a readable width.
-     *
-     * This automatically wraps the line around if it is too wide.
-     *
-     * \param text The text to wrap.
-     */
-    function wrapText(text)
-    {
-        /* The divider automatically adapts to 100% of the parent width and
-        wraps properly, so this causes the tooltips to be wrapped to the width
-        of the tooltip as set by the operating system. */
-        return "<div>" + text + "</div>"
+        onTriggered:
+        {
+            tooltip.x = _root.mouseX
+            tooltip.y = _root.height - _root.mouseY
+            tooltip.show()
+        }
     }
 }

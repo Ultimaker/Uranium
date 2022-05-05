@@ -7,7 +7,7 @@ from UM.Settings.SettingRelation import RelationType
 
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
-from PyQt5.QtCore import QVariant, QModelIndex, Qt
+from PyQt6.QtCore import QVariant, QModelIndex, Qt
 
 
 def createModel(definition = "multiple_settings.def.json"):
@@ -339,7 +339,7 @@ def test_dataUnhappy():
     assert model.data(QModelIndex(), model.KeyRole) == QVariant()
 
     # Unknown role
-    assert model.data(model.index(0, 0), Qt.UserRole + 100) == QVariant()
+    assert model.data(model.index(0, 0), Qt.ItemDataRole.UserRole + 100) == QVariant()
 
     empty_model = SettingDefinitionsModel()
     assert empty_model.data(model.index(0, 0), model.KeyRole) == QVariant()

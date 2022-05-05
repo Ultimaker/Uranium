@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import sys
@@ -7,14 +7,15 @@ import signal
 from typing import List
 from typing import Any, cast, Dict, Optional
 
-from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt6.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt6.QtQuick import QQuickWindow, QSGRendererInterface
 
 from UM.FileProvider import FileProvider
 from UM.FlameProfiler import pyqtSlot
-from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
-from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
-from PyQt5.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat
-from PyQt5.QtCore import QTimer
+from PyQt6.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
+from PyQt6.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
+from PyQt6.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat
+from PyQt6.QtCore import QTimer
 
 from UM.Backend.Backend import Backend #For typing.
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
@@ -54,7 +55,7 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
-from PyQt5.QtCore import QObject
+from PyQt6.QtCore import QObject
 
 
 # Raised when we try to use an unsupported version of a dependency.
@@ -76,16 +77,19 @@ class QtApplication(QApplication, Application):
     applicationRunning = Signal()
 
     def __init__(self, tray_icon_name: str = None, **kwargs) -> None:
+        self.setAttribute(Qt.ApplicationAttribute.AA_UseDesktopOpenGL)
+        QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.OpenGL)
+
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
-                plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
-                Logger.log("i", "Adding QT5 plugin path: %s", plugin_path)
+                plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt6", "plugins")
+                Logger.log("i", "Adding QT6 plugin path: %s", plugin_path)
                 QCoreApplication.addLibraryPath(plugin_path)
             else:
                 import site
                 for sitepackage_dir in site.getsitepackages():
-                    QCoreApplication.addLibraryPath(os.path.join(sitepackage_dir, "PyQt5", "plugins"))
+                    QCoreApplication.addLibraryPath(os.path.join(sitepackage_dir, "PyQt6", "plugins"))
         elif sys.platform == "darwin":
             plugin_path = os.path.join(self.getInstallPrefix(), "Resources", "plugins")
 
@@ -96,28 +100,31 @@ class QtApplication(QApplication, Application):
         # use Qt Quick Scene Graph "basic" render loop
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
-        super().__init__(sys.argv, **kwargs) # type: ignore
-        self._qml_engine_initialized = False
-        self._qml_import_paths = [] #type: List[str]
-        self._main_qml = "main.qml" #type: str
-        self._qml_engine = None #type: Optional[QQmlApplicationEngine]
-        self._main_window = None #type: Optional[MainWindow]
-        self._tray_icon_name = tray_icon_name #type: Optional[str]
-        self._tray_icon = None #type: Optional[str]
-        self._tray_icon_widget = None #type: Optional[QSystemTrayIcon]
-        self._theme = None #type: Optional[Theme]
-        self._renderer = None #type: Optional[QtRenderer]
+        # Force using Fusion style for consistency between Windows, mac OS and Linux
+        os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"
 
-        self._job_queue = None #type: Optional[JobQueue]
-        self._version_upgrade_manager = None #type: Optional[VersionUpgradeManager]
+        super().__init__(sys.argv, **kwargs)
 
-        self._is_shutting_down = False #type: bool
+        self._qml_import_paths: List[str] = []
+        self._main_qml: str = "main.qml"
+        self._qml_engine: Optional[QQmlApplicationEngine] = None
+        self._main_window: Optional[MainWindow] = None
+        self._tray_icon_name: Optional[str] = tray_icon_name
+        self._tray_icon: Optional[str] = None
+        self._tray_icon_widget: Optional[QSystemTrayIcon] = None
+        self._theme: Optional[Theme] = None
+        self._renderer: Optional[QtRenderer] = None
 
-        self._recent_files = [] #type: List[QUrl]
+        self._job_queue: Optional[JobQueue] = None
+        self._version_upgrade_manager: Optional[VersionUpgradeManager] = None
 
-        self._configuration_error_message = None #type: Optional[ConfigurationErrorMessage]
+        self._is_shutting_down: bool = False
 
-        self._http_network_request_manager = HttpRequestManager(parent = self)
+        self._recent_files: List[QUrl] = []
+
+        self._configuration_error_message: Optional[ConfigurationErrorMessage] = None
+
+        self._http_network_request_manager: Optional[HttpRequestManager] = None
 
         #Metadata required for the file dialogues.
         self.setOrganizationDomain("https://ultimaker.com/")
@@ -153,18 +160,14 @@ class QtApplication(QApplication, Application):
         self._mesh_file_handler = MeshFileHandler(self) #type: MeshFileHandler
         self._workspace_file_handler = WorkspaceFileHandler(self) #type: WorkspaceFileHandler
 
-        # Remove this and you will get Windows 95 style for all widgets if you are using Qt 5.10+
-        self.setStyle("fusion")
-
         if preferences.getValue("view/force_empty_shader_cache"):
-            self.setAttribute(Qt.AA_DisableShaderDiskCache)
-        self.setAttribute(Qt.AA_UseDesktopOpenGL)
+            self.setAttribute(Qt.ApplicationAttribute.AA_DisableShaderDiskCache)
         if preferences.getValue("view/opengl_version_detect") != OpenGLContext.OpenGlVersionDetect.ForceModern:
             major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion(
                 preferences.getValue("view/opengl_version_detect") == OpenGLContext.OpenGlVersionDetect.ForceLegacy)
         else:
             Logger.info("Force 'modern' OpenGL (4.1 core) -- overrides 'force legacy opengl' preference.")
-            major_version, minor_version, profile = (4, 1, QSurfaceFormat.CoreProfile)
+            major_version, minor_version, profile = (4, 1, QSurfaceFormat.OpenGLContextProfile.CoreProfile)
 
         if major_version is None or minor_version is None or profile is None:
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
@@ -382,7 +385,7 @@ class QtApplication(QApplication, Application):
 
     def _onMainWindowStateChanged(self, window_state: int) -> None:
         if self._tray_icon and self._tray_icon_widget:
-            visible = window_state == Qt.WindowMinimized
+            visible = window_state == Qt.WindowState.WindowMinimized
             self._tray_icon_widget.setVisible(visible)
 
     # Show toast message using System tray widget.
@@ -395,9 +398,9 @@ class QtApplication(QApplication, Application):
     def setMainQml(self, path: str) -> None:
         self._main_qml = path
 
-    def exec_(self, *args: Any, **kwargs: Any) -> None:
+    def exec(self, *args: Any, **kwargs: Any) -> None:
         self.applicationRunning.emit()
-        super().exec_(*args, **kwargs)
+        super().exec(*args, **kwargs)
 
     @pyqtSlot()
     def reloadQML(self) -> None:
@@ -520,7 +523,7 @@ class QtApplication(QApplication, Application):
         self.quit()
 
     def checkWindowMinimizedState(self) -> bool:
-        if self._main_window is not None and self._main_window.windowState() == Qt.WindowMinimized:
+        if self._main_window is not None and self._main_window.windowState() == Qt.WindowState.WindowMinimized:
             return True
         else:
             return False
@@ -545,7 +548,7 @@ class QtApplication(QApplication, Application):
 
         return self.getBackend()
 
-    splash = None  # type: Optional[QSplashScreen]
+    splash: Optional[QSplashScreen] = None
     """Create a class variable so we can manage the splash in the CrashHandler dialog when the Application instance
     is not yet created, e.g. when an error occurs during the initialization
     """
@@ -569,7 +572,7 @@ class QtApplication(QApplication, Application):
 
         if QtApplication.splash:
             self.processEvents()  # Process events from previous loading phase before updating the message
-            QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)  # Now update the message
+            QtApplication.splash.showMessage(message, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)  # Now update the message
             self.processEvents()  # And make sure it is immediately visible
         elif self.getIsHeadLess():
             Logger.log("d", message)
@@ -638,6 +641,8 @@ class QtApplication(QApplication, Application):
         return self._package_manager
 
     def getHttpRequestManager(self) -> "HttpRequestManager":
+        if not self._http_network_request_manager:
+            self._http_network_request_manager = HttpRequestManager.getInstance(parent = self)
         return self._http_network_request_manager
 
     @classmethod
@@ -676,7 +681,7 @@ class _QtFunctionEvent(QEvent):
     Wrapper around a FunctionEvent object to make Qt handle the event properly.
     """
 
-    QtFunctionEvent = QEvent.User + 1
+    QtFunctionEvent = QEvent.Type.User + 1
 
     def __init__(self, fevent: QEvent) -> None:
         super().__init__(self.QtFunctionEvent)

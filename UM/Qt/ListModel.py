@@ -1,10 +1,9 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from operator import itemgetter
+from PyQt6.QtCore import QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, pyqtSignal
 from typing import Any, Callable, Dict, List, Optional
-
-from PyQt5.QtCore import QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, pyqtSignal
 
 
 class ListModel(QAbstractListModel):

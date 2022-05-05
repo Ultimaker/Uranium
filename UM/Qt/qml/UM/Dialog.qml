@@ -4,6 +4,7 @@
 import QtQuick 2.10
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs
 
 import UM 1.0 as UM
 
@@ -28,6 +29,7 @@ Window
 
     property alias loader: contentLoader
 
+    property alias buttonArea: buttonRow
     property alias leftButtons: leftButtonRow.children
     property alias rightButtons: rightButtonRow.children
     property alias backgroundColor: background.color

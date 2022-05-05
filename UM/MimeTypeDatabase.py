@@ -1,8 +1,8 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os.path
-from PyQt5.QtCore import QMimeDatabase, QMimeType
+from PyQt6.QtCore import QMimeDatabase, QMimeType
 from typing import cast, List, Optional
 
 

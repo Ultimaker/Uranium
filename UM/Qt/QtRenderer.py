@@ -1,8 +1,9 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
-from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLVertexArrayObject
+from PyQt6.QtGui import QColor
+from PyQt6.QtOpenGL import QOpenGLBuffer, QOpenGLVertexArrayObject
 from typing import List, Tuple, Dict, Optional
 
 import UM.Qt.QtApplication
@@ -221,7 +222,7 @@ class QtRenderer(Renderer):
         self.addRenderPass(SelectionPass(self._viewport_width, self._viewport_height))
         self.addRenderPass(CompositePass(self._viewport_width, self._viewport_height))
 
-        buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        buffer = QOpenGLBuffer(QOpenGLBuffer.Type.VertexBuffer)
         buffer.create()
         buffer.bind()
         buffer.allocate(120)

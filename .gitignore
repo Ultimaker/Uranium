@@ -13,6 +13,7 @@ LC_MESSAGES
 *.mo
 *.qm
 *.qmlc
+*.qsb
 resources/i18n/en_US
 resources/i18n/x-test
 resources/i18n/en_7S
