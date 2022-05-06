@@ -111,6 +111,14 @@ class Version:
 
         return self._postfix_version
 
+    def getWithoutPostfix(self) -> "Version":
+        """Returns this as _only_ a major.minor.revision, without the postfix type/version.
+
+        The postfix is everything beyond the patch, like '-beta+1' in 5.0.0-beta+1 -- in this example 5.0.0 is returned.
+        """
+
+        return Version([self._major, self._minor, self._revision])
+
     def hasPostFix(self) -> bool:
         """Check if a version has a postfix."""
 

@@ -114,7 +114,7 @@ class UpdateChecker(Extension):
         if download_url is not None:
             self._download_url = download_url
 
-        local_version = Version(app_version)
+        local_version = Version(app_version).getWithoutPostfix()  # Since we can't specify postfix in the latest.json.
         preferences = Application.getInstance().getPreferences()
         if preferences.getValue("info/latest_update_source") == "beta":
             if newest_version >= newest_beta_version:
