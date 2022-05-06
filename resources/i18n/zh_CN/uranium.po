@@ -1,716 +1,794 @@
 # Uranium
-# Copyright (C) 2021 Ultimaker B.V.
+# Copyright (C) 2022 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.13\n"
-"Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
-"POT-Creation-Date: 2021-12-10 14:40+0100\n"
-"PO-Revision-Date: 2021-04-16 15:14+0200\n"
-"Last-Translator: Lionbridge <info@lionbridge.com>\n"
-"Language-Team: Lionbridge <info@lionbridge.com>, PCDotFan <pc@edu.ax>, Chinese <info@bothof.nl>\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-04-13 10:45+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.4.1\n"
-"X-Poedit-SourceCharset: UTF-8\n"
 
-#: /home/clamboo/Desktop/Uranium/UM/VersionUpgradeManager.py:173
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "本地文件"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr "保存到磁盘"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr "保存到磁盘"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr "到磁盘"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr "保存到磁盘"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "没有可进行写入的文件类型！"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "文件已存在"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
 #, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "已导入旧版本 {0} 所使用的配置。"
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid ""
+"The file <filename>{0}</filename> already exists. Are you sure you want to "
+"overwrite it?"
+msgstr "文件 <filename>{0}</filename> 已存在。 您确定要覆盖它吗？"
 
-#: /home/clamboo/Desktop/Uranium/UM/VersionUpgradeManager.py:174
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "正在保存至 <filename>{0}</filename>"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "正在保存"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "保存 <filename>{0}</filename> 时发生错误：权限不足"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "无法保存到 <filename>{0}</filename>： <message>{1}</message>"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "已保存至 <filename>{0}</filename>"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "文件已保存"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "打开文件夹"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "打开包含相应文件的文件夹"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+msgctxt "@info:title"
+msgid "Error"
+msgstr "错误"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"Something went wrong saving to <filename>{0}</filename>: <message>{1}</"
+"message>"
+msgstr "保存至 <filename>{0}</filename> 时出现问题：<message>{1}</message>"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "简单"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "没有要写入的网格。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "将 STL 写入流时的不支持的输出模式。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL 文件 (ASCII)"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL 文件 (二进制)"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STL 文件"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "OBJWriter 不支持非文本模式。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ 文件"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "{application_name} {version_number} 可用！"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"{application_name} {version_number} provides a better and more reliable "
+"printing experience."
+msgstr "{application_name} {version_number} 提供更好、更可靠的打印体验。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+msgctxt "@action:button"
+msgid "Download"
+msgstr "下载"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "详细了解"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number}-BETA is available!"
+msgstr "{application_name} {version_number}-BETA 版可用！"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr "试用最新的 BETA 版，帮助我们改进 {application_name}。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr "固件更新检查"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "检查更新"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "您正在使用的软件版本不支持检查更新。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "警告"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "软件版本已是最新。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/VersionUpgradeManager.py:174
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "版本升级"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:313
-msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr ""
-"插件已安装。\n"
-"请重新启动应用程序以激活插件。"
-
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:380
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "未加载插件{}，因为无法对其进行验证。"
-
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:485
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
-msgid "Dismiss"
-msgstr "解除"
+msgid "Move"
+msgstr "移动"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:495
-msgctxt "@error"
-msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-msgstr "无法加载插件 {}。重新安装插件可能会解决该问题"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "移动模型"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:499
-msgctxt "@action:button"
-msgid "Remove plugin"
-msgstr "移除插件"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
+msgstr "镜像"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:516
-msgctxt "@info:status"
-msgid "Plugin no longer scheduled to be installed."
-msgstr "取消计划安装插件。"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "镜像模型"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:522
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr ""
-"插件已移除。\n"
-"请重启 {0} 完成卸载。"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "正在打印平台上平放模型..."
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:907
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/FileHandler.py:71
-#: /home/clamboo/Desktop/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
-#, python-brace-format
-msgctxt "@item:inlistbox"
-msgid "All Supported Types ({0})"
-msgstr "所有支持的文件类型 ({0})"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "模型旋转"
 
-#: /home/clamboo/Desktop/Uranium/UM/PluginRegistry.py:908
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/FileHandler.py:72
-#: /home/clamboo/Desktop/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr "所有文件 (*)"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "旋转"
 
-#: /home/clamboo/Desktop/Uranium/UM/Mesh/ReadMeshJob.py:71
-#, python-format, python-brace-format
-msgctxt "@info:status"
-msgid "Auto scaled model to {0}% of original size"
-msgstr "已将模型自动缩放为原有大小的 {0}%"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "旋转模型"
 
-#: /home/clamboo/Desktop/Uranium/UM/Mesh/ReadMeshJob.py:73
-msgctxt "@info:title"
-msgid "Scaling Object"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "缩放"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
 msgstr "缩放模型"
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:286
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:190
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "是否要重新加载 {filename}？"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:192
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr "文件已修改"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:193
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "重新加载"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:195
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "这将触发修改后的文件从磁盘重新加载。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:59
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:64
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "无法初始化 OpenGL"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:74
+msgctxt "Critical OpenGL Extensions Missing"
+msgid ""
+"Critical OpenGL extensions are missing. This program requires support for "
+"Framebuffer Objects. Please check your video card drivers."
+msgstr "关键 OpenGL 拓展文件缺失。该程序需要对 Framebuffer Objects 的支持。请检查您的显卡驱动是否正常。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:294
 #, python-brace-format
 msgctxt "@error:uninstall"
-msgid ""
-"There were some errors uninstalling the following packages:\n"
-"{packages}"
-msgstr ""
-"卸载以下程序包时出现了一些错误：\n"
-"{packages}"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr "卸载以下程序包时出现了一些错误：\n{packages}"
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:288
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:296
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "卸载错误"
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:299
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:307
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "正在安装插件 {package_id}..."
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:587
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:615
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
+"There was an error uninstalling the package {package} before installing new "
+"version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
-"在安装新版本之前卸载程序包 {package} 时出现了一个错误：\n"
-"{error}。\n"
-"请稍后再次尝试升级。"
+msgstr "在安装新版本之前卸载程序包 {package} 时出现了一个错误：\n{error}。\n请稍后再次尝试升级。"
 
-#: /home/clamboo/Desktop/Uranium/UM/PackageManager.py:590
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:618
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "正在更新错误"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
-msgctxt "@info:title"
-msgid "Error"
-msgstr "错误"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:331
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr "插件已安装。\n请重新启动应用程序以激活插件。"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "从磁盘"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:398
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr "未加载插件{}，因为无法对其进行验证。"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:128
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:503
+msgctxt "@action:button"
+msgid "Dismiss"
+msgstr "解除"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:513
+msgctxt "@error"
+msgid ""
+"The plugin {} could not be loaded. Re-installing the plugin might solve the "
+"issue."
+msgstr "无法加载插件 {}。重新安装插件可能会解决该问题。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:517
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr "移除插件"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:534
+msgctxt "@info:status"
+msgid "Plugin no longer scheduled to be installed."
+msgstr "取消计划安装插件。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:540
 #, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr "插件已移除。\n请重启 {0} 完成卸载。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:925
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/FileHandler.py:71
+#, python-brace-format
+msgctxt "@item:inlistbox"
+msgid "All Supported Types ({0})"
+msgstr "所有支持的文件类型 ({0})"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:926
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/FileHandler.py:72
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
+msgstr "所有文件 (*)"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
+msgctxt "@action:button"
+msgid "Reset"
+msgstr "重置"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:46
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the "
+"following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your "
+"current printers and profiles."
+msgstr "配置似乎已损坏。以下配置文件似乎出现问题：\n- {profiles}\n 是否要恢复出厂默认设置？重置将移除当前所有的打印机和配置文件。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:51
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr "恢复出厂设置"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:53
+msgctxt "@label"
+msgid ""
+"Reset will remove all your current printers and profiles! Are you sure you "
+"want to reset?"
+msgstr "重置将移除当前所有的打印机和配置文件！您确定要重置吗？"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Mesh/ReadMeshJob.py:71
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled model to {0}% of original size"
+msgstr "已将模型自动缩放为原有大小的 {0}%%"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Mesh/ReadMeshJob.py:73
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "缩放模型"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:128
+#, python-brace-format
+msgctxt ""
+"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
+"minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}天 {1:0>2}小时 {2:0>2}分钟"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:130
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:130
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}小时 {1:0>2}分钟"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0} 天"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:135
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:135
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0} 小时"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:133
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:135
-#: /home/clamboo/Desktop/Uranium/UM/Qt/Duration.py:137
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:135
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:137
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0} 分钟"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:192
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:213
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:195
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:216
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "正在载入插件..."
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:194
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:197
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
 msgstr "正在加载插件 {plugin_id}..."
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:200
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:203
 msgctxt "@info:progress"
 msgid "Initializing package manager..."
 msgstr "正在初始化程序包管理器..."
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:208
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:211
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "配置似乎已损坏。"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:210
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:213
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr "配置错误"
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:222
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:225
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "正在更新配置..."
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:228
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:231
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "正在加载偏好设置..."
 
-#: /home/clamboo/Desktop/Uranium/UM/Qt/QtApplication.py:318
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:321
 msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "正在加载用户界面..."
 
-#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:59
-#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:64
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "无法初始化 OpenGL"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr "从磁盘"
 
-#: /home/clamboo/Desktop/Uranium/UM/View/GL/OpenGL.py:74
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "关键 OpenGL 拓展文件缺失。该程序需要对 Framebuffer Objects 的支持。请检查您的显卡驱动是否正常。"
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "已导入旧版本 {0} 所使用的配置。"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:41
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:41
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "无法打开文件类型 <filename>{0}</filename>"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:44
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:44
 msgctxt "@info:title"
 msgid "Invalid File"
 msgstr "无效文件"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:59
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:59
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgid ""
+"Failed to load <filename>{0}</filename>. The file could be corrupt or "
+"inaccessible."
 msgstr "无法加载 <filename>{0}</filename>。文件可能已损坏或无法访问。"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:62
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:98
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:62
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:98
 msgctxt "@info:title"
 msgid "Unable to Open File"
 msgstr "无法打开文件"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:71
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:71
 msgctxt "@info:title"
 msgid "Loading"
 msgstr "加载"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:87
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:87
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
 msgstr "<filename>{0}</filename> 中没有模型。"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:90
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:90
 msgctxt "@info:title"
 msgid "No Models in File"
 msgstr "文件中没有模型"
 
-#: /home/clamboo/Desktop/Uranium/UM/FileHandler/ReadFileJob.py:95
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:95
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgid ""
+"Failed to load <filename>{0}</filename>. The file could be corrupt, "
+"inaccessible or it did not contain any models."
 msgstr "无法加载 <filename>{0}</filename>。文件可能已损坏或无法访问，或者它未包含任何模型。"
 
-#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "重置"
-
-#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:46
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"配置似乎已损坏。以下配置文件似乎出现问题：\n"
-"- {profiles}\n"
-" 是否要恢复出厂默认设置？重置将移除当前所有的打印机和配置文件。"
-
-#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:51
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr "恢复出厂设置"
-
-#: /home/clamboo/Desktop/Uranium/UM/ConfigurationErrorMessage.py:53
-msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr "重置将移除当前所有的打印机和配置文件！您确定要重置吗？"
-
-#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:192
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr "是否要重新加载 {filename}？"
-
-#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:193
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr "文件已修改"
-
-#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:194
-msgctxt "@action:button"
-msgid "Reload"
-msgstr "重新加载"
-
-#: /home/clamboo/Desktop/Uranium/UM/Scene/Scene.py:194
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr "这将触发修改后的文件从磁盘重新加载。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "没有要写入的网格。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "将 STL 写入流时的不支持的输出模式。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL 文件 (ASCII)"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL 文件 (二进制)"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ 文件"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL 文件"
-
-#: /home/clamboo/Desktop/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter 不支持非文本模式。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "镜像"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "镜像模型"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "缩放"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "缩放模型"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.py:355
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "正在打印平台上平放模型..."
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.py:358
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "模型旋转"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "旋转"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "旋转模型"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "移动"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "移动模型"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "本地文件"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
-msgstr "保存到磁盘"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
-msgstr "保存到磁盘"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr "到磁盘"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr "保存到磁盘"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "没有可进行写入的文件类型！"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "文件已存在"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
-#, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "文件 <filename>{0}</filename> 已存在。 您确定要覆盖它吗？"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "正在保存至 <filename>{0}</filename>"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "正在保存"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "保存 <filename>{0}</filename> 时发生错误：权限不足"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "无法保存到 <filename>{0}</filename>： <message>{1}</message>"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "已保存至 <filename>{0}</filename>"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "文件已保存"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "打开文件夹"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "打开包含相应文件的文件夹"
-
-#: /home/clamboo/Desktop/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "保存至 <filename>{0}</filename> 时出现问题：<message>{1}</message>"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "简单"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "{application_name} {version_number} 可用！"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr "{application_name} {version_number} 提供更好、更可靠的打印体验。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
-msgctxt "@action:button"
-msgid "Download"
-msgstr "下载"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "详细了解"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number}-BETA is available!"
-msgstr "{application_name} {version_number}-BETA 版可用！"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "试用最新的 BETA 版，帮助我们改进 {application_name}。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr "固件更新检查"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "检查更新"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "您正在使用的软件版本不支持检查更新。"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "警告"
-
-#: /home/clamboo/Desktop/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "软件版本已是最新。"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "重命名"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr "请提供新名称。"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:70
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:241
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "取消"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:75
-msgctxt "@action:button"
-msgid "OK"
-msgstr "确定"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "确认删除"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "您确认要删除 %1？该操作无法恢复！"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:32
-msgctxt "@item:tooltip"
-msgid "This setting has been hidden by the active machine and will not be visible."
-msgstr "该设置已被当前机器所隐藏并不可见。"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:49
-msgctxt "@item:tooltip %1 is list of setting names"
-msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
-msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-msgstr[0] "该设置已被 %1 的值所隐藏，若需显示，更改此值可使设置项重新可见。"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
-msgctxt "@title:window"
-msgid "Preferences"
-msgstr "偏好设置"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:112
-msgctxt "@action:button"
-msgid "Defaults"
-msgstr "默认"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:120
-msgctxt "@action:button"
-msgid "Close"
-msgstr "关闭"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:150
-msgctxt "@title:tab"
-msgid "General"
-msgstr "基本"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:151
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "设置"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "打印机"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "类型"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:215
-msgctxt "@action:button"
-msgid "Back"
-msgstr "返回"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:231
-msgctxt "@action:button"
-msgid "Finish"
-msgstr "完成"
-
-#: /home/clamboo/Desktop/Uranium/UM/Qt/qml/UM/Wizard.qml:231
-msgctxt "@action:button"
-msgid "Next"
-msgstr "下一步"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:93
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "等距缩放（Snap Scaling）"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:121
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "等比例缩放"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "放平"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:60
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "选择要与构建板对齐的面"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/RotateTool/RotateTool.qml:81
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "等距旋转（Snap Rotation）"
-
-#: /home/clamboo/Desktop/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:222
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:209
 msgctxt "@option:check"
 msgid "Lock Model"
 msgstr "锁定模型"
 
-#: LocalContainerProvider/plugin.json
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "提供安装应用程序附带的内置设置容器。"
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "放平"
 
-#: LocalContainerProvider/plugin.json
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "选择要与构建板对齐的面"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "等距旋转（Snap Rotation）"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "等距缩放（Snap Scaling）"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "等比例缩放"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "重命名"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr "请提供新名称。"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "取消"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
+msgctxt "@action:button"
+msgid "OK"
+msgstr "确定"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "打印机"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "类型"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "确认删除"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "您确认要删除 %1？该操作无法恢复！"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "偏好设置"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:134
+msgctxt "@title:tab"
+msgid "General"
+msgstr "基本"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:135
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "设置"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
+msgctxt "@option"
+msgid "OK"
+msgstr "确定"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:100
+msgctxt "@option"
+msgid "Open"
+msgstr "打开"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:101
+msgctxt "@option"
+msgid "Save"
+msgstr "保存"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:102
+msgctxt "@option"
+msgid "Cancel"
+msgstr "取消"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:103
+msgctxt "@option"
+msgid "Close"
+msgstr "关闭"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:104
+msgctxt "@option"
+msgid "Discard"
+msgstr "舍弃"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:105
+msgctxt "@option"
+msgid "Apply"
+msgstr "应用"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:106
+msgctxt "@option"
+msgid "Reset"
+msgstr "重置"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:107
+msgctxt "@option"
+msgid "Restore Defaults"
+msgstr "恢复默认值"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:108
+msgctxt "@option"
+msgid "Help"
+msgstr "帮助"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:109
+msgctxt "@option"
+msgid "Save All"
+msgstr "全部保存"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:110
+msgctxt "@option"
+msgid "Yes"
+msgstr "是"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:111
+msgctxt "@option"
+msgid "Yes to All"
+msgstr "全部是"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:112
+msgctxt "@option"
+msgid "No"
+msgstr "否"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:113
+msgctxt "@option"
+msgid "No to All"
+msgstr "全部否"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:114
+msgctxt "@option"
+msgid "Abort"
+msgstr "中止"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:115
+msgctxt "@option"
+msgid "Retry"
+msgstr "重试"
+
+#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:116
+msgctxt "@option"
+msgid "Ignore"
+msgstr "忽略"
+
+#: ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "输出日志信息至控制台。"
+
+#: ConsoleLogger/plugin.json
 msgctxt "name"
-msgid "Local Container Provider"
-msgstr "本地容器供应商"
+msgid "Console Logger"
+msgstr "控制台日志记录"
+
+#: LocalFileOutputDevice/plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "开启保存到本地文件的功能。"
+
+#: LocalFileOutputDevice/plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "本地文件输出设备"
+
+#: Views/SimpleView/plugin.json
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "提供简单实体网格视图。"
+
+#: Views/SimpleView/plugin.json
+msgctxt "name"
+msgid "Simple View"
+msgstr "简单视图"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
@@ -721,16 +799,6 @@ msgstr "提供对写入 STL 文件的支持。"
 msgctxt "name"
 msgid "STL Writer"
 msgstr "STL 文件写入器"
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "提供对读取 Wavefront OBJ 文件的支持。"
-
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ 文件读取器"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
@@ -752,55 +820,37 @@ msgctxt "name"
 msgid "Wavefront OBJ Writer"
 msgstr "Wavefront OBJ 文件写入器"
 
-#: Tools/SelectionTool/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "提供选择工具。"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "提供对读取 Wavefront OBJ 文件的支持。"
 
-#: Tools/SelectionTool/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
-msgid "Selection Tool"
-msgstr "选择工具"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ 文件读取器"
 
-#: Tools/MirrorTool/plugin.json
+#: UpdateChecker/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "提供镜像工具。"
+msgid "Checks for updates of the software."
+msgstr "检查软件更新。"
 
-#: Tools/MirrorTool/plugin.json
+#: UpdateChecker/plugin.json
 msgctxt "name"
-msgid "Mirror Tool"
-msgstr "镜像工具"
+msgid "Update Checker"
+msgstr "固件更新检查"
 
-#: Tools/ScaleTool/plugin.json
+#: LocalContainerProvider/plugin.json
 msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "提供缩放工具。"
+msgid ""
+"Provides built-in setting containers that come with the installation of the "
+"application."
+msgstr "提供安装应用程序附带的内置设置容器。"
 
-#: Tools/ScaleTool/plugin.json
+#: LocalContainerProvider/plugin.json
 msgctxt "name"
-msgid "Scale Tool"
-msgstr "缩放工具"
-
-#: Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "提供旋转工具。"
-
-#: Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "旋转工具"
-
-#: Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "提供变换视角功能。"
-
-#: Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "视角工具"
+msgid "Local Container Provider"
+msgstr "本地容器供应商"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
@@ -812,25 +862,55 @@ msgctxt "name"
 msgid "Move Tool"
 msgstr "移动工具"
 
-#: LocalFileOutputDevice/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "开启保存到本地文件的功能。"
+msgid "Provides the Mirror tool."
+msgstr "提供镜像工具。"
 
-#: LocalFileOutputDevice/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "name"
-msgid "Local File Output Device"
-msgstr "本地文件输出设备"
+msgid "Mirror Tool"
+msgstr "镜像工具"
 
-#: ConsoleLogger/plugin.json
+#: Tools/CameraTool/plugin.json
 msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "输出日志信息至控制台。"
+msgid "Provides the tool to manipulate the camera."
+msgstr "提供变换视角功能。"
 
-#: ConsoleLogger/plugin.json
+#: Tools/CameraTool/plugin.json
 msgctxt "name"
-msgid "Console Logger"
-msgstr "控制台日志记录"
+msgid "Camera Tool"
+msgstr "视角工具"
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "提供选择工具。"
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "选择工具"
+
+#: Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "提供旋转工具。"
+
+#: Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "旋转工具"
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "提供缩放工具。"
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "缩放工具"
 
 #: FileLogger/plugin.json
 msgctxt "description"
@@ -842,25 +922,47 @@ msgctxt "name"
 msgid "File Logger"
 msgstr "文件日志记录"
 
-#: Views/SimpleView/plugin.json
-msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "提供简单实体网格视图。"
+#~ msgctxt "@error"
+#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+#~ msgstr "无法加载插件 {}。重新安装插件可能会解决该问题"
 
-#: Views/SimpleView/plugin.json
-msgctxt "name"
-msgid "Simple View"
-msgstr "简单视图"
+#, python-brace-format
+#~ msgctxt "@error:uninstall"
+#~ msgid ""
+#~ "There were some errors uninstalling the following packages:\n"
+#~ "{packages}"
+#~ msgstr ""
+#~ "卸载以下程序包时出现了一些错误：\n"
+#~ "{packages}"
 
-#: UpdateChecker/plugin.json
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "检查软件更新。"
+#~ msgctxt "@item:tooltip"
+#~ msgid "This setting has been hidden by the active machine and will not be visible."
+#~ msgstr "该设置已被当前机器所隐藏并不可见。"
 
-#: UpdateChecker/plugin.json
-msgctxt "name"
-msgid "Update Checker"
-msgstr "固件更新检查"
+#~ msgctxt "@item:tooltip %1 is list of setting names"
+#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+#~ msgstr[0] "该设置已被 %1 的值所隐藏，若需显示，更改此值可使设置项重新可见。"
+
+#~ msgctxt "@action:button"
+#~ msgid "Defaults"
+#~ msgstr "默认"
+
+#~ msgctxt "@action:button"
+#~ msgid "Close"
+#~ msgstr "关闭"
+
+#~ msgctxt "@action:button"
+#~ msgid "Back"
+#~ msgstr "返回"
+
+#~ msgctxt "@action:button"
+#~ msgid "Finish"
+#~ msgstr "完成"
+
+#~ msgctxt "@action:button"
+#~ msgid "Next"
+#~ msgstr "下一步"
 
 #~ msgctxt "@info:status"
 #~ msgid "{application_name} {version_number} BETA is available!"
@@ -1311,3 +1413,4 @@ msgstr "固件更新检查"
 #~ msgstr ""
 #~ "所选插件已安装。\n"
 #~ "请重启程序以启用该插件。"
+
