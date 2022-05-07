@@ -288,14 +288,12 @@ class CameraTool(Tool):
             move_vector = Vector(0.0, 0.0, 1.0)
 
             if event is not None and self._zoom_to_mouse:
-                viewport_center_x = QtApplication.getInstance().getRenderer().getViewportWidth() / 2
-                viewport_center_y = QtApplication.getInstance().getRenderer().getViewportHeight() / 2
+                viewport_width = QtApplication.getInstance().getRenderer().getViewportWidth()
+                viewport_height = QtApplication.getInstance().getRenderer().getViewportHeight()
+                
                 main_window = cast(MainWindow, QtApplication.getInstance().getMainWindow())
-                mouse_diff_center_x = viewport_center_x - main_window.mouseX
-                mouse_diff_center_y = viewport_center_y - main_window.mouseY
-
-                x_component = mouse_diff_center_x / QtApplication.getInstance().getRenderer().getViewportWidth()
-                y_component = mouse_diff_center_y / QtApplication.getInstance().getRenderer().getViewportHeight()
+                x_component = main_window.mouseX / viewport_width
+                y_component = main_window.mouseY / viewport_height
 
                 move_vector = Vector(x_component, -y_component, 1)
                 move_vector = move_vector.normalized()
