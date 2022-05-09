@@ -8,8 +8,11 @@ import UM 1.5 as UM
 Rectangle
 {
     property alias liningColor: lining.color
+    property var borderColor: "transparent"
 
     color:  UM.Theme.getColor("detail_background")
+    border.width: UM.Theme.getSize("default_lining").width
+    border.color: borderColor
     anchors.fill: parent;
 
     Rectangle
