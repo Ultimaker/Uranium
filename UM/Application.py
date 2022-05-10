@@ -176,7 +176,6 @@ class Application:
 
         app_root = os.path.abspath(os.path.join(os.path.dirname(sys.executable)))
         Resources.addSearchPath(os.path.join(app_root, "share", "uranium", "resources"))
-        Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "share", "uranium", "resources"))
 
         Resources.addSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
         Resources.addSearchPath(os.path.join(self._app_install_dir, "share", "uranium", "resources"))
