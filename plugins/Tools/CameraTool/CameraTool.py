@@ -294,14 +294,12 @@ class CameraTool(Tool):
                 viewport_center_y = viewport_height / 2
                 
                 main_window = cast(MainWindow, QtApplication.getInstance().getMainWindow())
-                mouse_diff_center_x = viewport_center_x - main_window.mouseX
-                mouse_diff_center_y = viewport_center_y - main_window.mouseY
-                if sys.platform.startswith("linux"):
-                    x_component = mouse_diff_center_x / viewport_width
-                    y_component = mouse_diff_center_y / viewport_height
-                else:    
-                    x_component = main_window.mouseX / viewport_width
-                    y_component = main_window.mouseY / viewport_height
+                window_PixelRatio = main_window.devicePixelRatio()
+                mouse_diff_center_x = viewport_center_x - (main_window.mouseX * window_PixelRatio)
+                mouse_diff_center_y = viewport_center_y - (main_window.mouseY * window_PixelRatio)
+                
+                x_component = mouse_diff_center_x / viewport_width
+                y_component = mouse_diff_center_y / viewport_height
 
                 move_vector = Vector(x_component, -y_component, 1)
                 move_vector = move_vector.normalized()
