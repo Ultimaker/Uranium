@@ -3,7 +3,7 @@
 
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import UM 1.3 as UM
+import UM 1.5 as UM
 
 Button
 {
@@ -40,7 +40,7 @@ Button
             Behavior on width { NumberAnimation { duration: 100; } }
             Behavior on opacity { NumberAnimation { duration: 100; } }
 
-            Label
+            UM.Label
             {
                 id: button_tip
 
@@ -48,7 +48,6 @@ Button
                 anchors.verticalCenter: parent.verticalCenter
 
                 text: control.text
-                font: UM.Theme.getFont("default")
                 color: UM.Theme.getColor("tooltip_text")
             }
         }

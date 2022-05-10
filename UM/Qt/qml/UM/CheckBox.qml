@@ -96,7 +96,6 @@ CheckBox
         height: contentHeight
         color: control.enabled ? UM.Theme.getColor("checkbox_text"): UM.Theme.getColor("checkbox_text_disabled")
         elide: Text.ElideRight
-        renderType: Text.NativeRendering
         verticalAlignment: Text.AlignVCenter
         leftPadding: control.indicator.width
     }
