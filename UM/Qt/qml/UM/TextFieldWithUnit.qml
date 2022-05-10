@@ -14,7 +14,19 @@ TextField
     color: UM.Theme.getColor("text")
     background: UM.UnderlineBackground
     {
-        liningColor: control.hovered ? UM.Theme.getColor("border_main") : UM.Theme.getColor("border_field_light")
+        borderColor: control.activeFocus ? UM.Theme.getColor("text_field_border_active") : "transparent"
+        liningColor:
+        {
+            if(control.activeFocus)
+            {
+                return UM.Theme.getColor("text_field_border_active");
+            }
+            if(control.hovered)
+            {
+                return UM.Theme.getColor("text_field_border_hovered");
+            }
+            return UM.Theme.getColor("border_field_light")
+        }
 
         UM.Label
         {
