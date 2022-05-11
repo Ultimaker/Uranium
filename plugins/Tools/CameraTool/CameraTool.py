@@ -294,9 +294,9 @@ class CameraTool(Tool):
                 viewport_center_y = viewport_height / 2
                 
                 main_window = cast(MainWindow, QtApplication.getInstance().getMainWindow())
-                window_PixelRatio = main_window.devicePixelRatio()
-                mouse_diff_center_x = viewport_center_x - (main_window.mouseX * window_PixelRatio)
-                mouse_diff_center_y = viewport_center_y - (main_window.mouseY * window_PixelRatio)
+                window_pixel_ratio = main_window.devicePixelRatio()
+                mouse_diff_center_x = viewport_center_x - (main_window.mouseX * window_pixel_ratio)
+                mouse_diff_center_y = viewport_center_y - (main_window.mouseY * window_pixel_ratio)
                 
                 x_component = mouse_diff_center_x / viewport_width
                 y_component = mouse_diff_center_y / viewport_height
