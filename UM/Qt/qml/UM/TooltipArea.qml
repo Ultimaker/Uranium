@@ -6,33 +6,40 @@ import QtQuick 2.4
 import UM 1.5 as UM
 
 // TooltipArea.qml
-
-MouseArea
-{
+Item {
     id: _root
+
     property alias text: tooltip.text
+    property alias acceptedButtons: mouse_area.acceptedButtons
 
-    hoverEnabled: _root.enabled
-    acceptedButtons: Qt.NoButton
-
-    onExited: tooltip.hide()
-    onCanceled: tooltip.hide()
-
-    UM.ToolTip
+    MouseArea
     {
-        id: tooltip
-        arrowSize: 0
-    }
+        id: mouse_area
+        anchors.fill: _root
+        z: 1000
+        propagateComposedEvents: true
+        hoverEnabled: _root.enabled
+        acceptedButtons: Qt.NoButton
 
-    Timer
-    {
-        interval: 1000
-        running: _root.enabled && _root.containsMouse && _root.text.length
-        onTriggered:
+        onExited: tooltip.hide()
+        onCanceled: tooltip.hide()
+
+        UM.ToolTip
         {
-            tooltip.x = _root.mouseX
-            tooltip.y = _root.height - _root.mouseY
-            tooltip.show()
+            id: tooltip
+            arrowSize: 0
+        }
+
+        Timer
+        {
+            interval: 1000
+            running: _root.enabled && mouse_area.containsMouse && _root.text.length
+            onTriggered:
+            {
+                tooltip.x = mouse_area.mouseX
+                tooltip.y = mouse_area.height - mouse_area.mouseY
+                tooltip.show()
+            }
         }
     }
 }
