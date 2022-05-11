@@ -121,6 +121,12 @@ Same here for a specific language:
 make i18n-update-po-<code>
 ```
 
+Updating the PO files (After translations are complete)
+---------------------
+After downloading the completed translations from smartling as .pot files, they should be imported back into both Cura and Uranium using <cura>/scripts/lionbridge_import.py
+
+This will merge the files for you, keeping a history of translations.
+
 Creating the MO files & testing
 -------------------------------
 The mo files must be created and put inside the cura-binary-data project. Cura mo files should be put inside cura/resources/i18n and Uranium resources should go inside uranium/resources/i18n. To test all languages, you can symlink the i18n folders in cura-binary-data inside both the Cura and Uranium resources folders.
