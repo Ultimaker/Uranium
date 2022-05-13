@@ -6,11 +6,17 @@ import QtQuick 2.4
 import UM 1.5 as UM
 
 // TooltipArea.qml
-Item {
+Item
+{
     id: _root
 
     property alias text: tooltip.text
     property alias acceptedButtons: mouse_area.acceptedButtons
+    property alias hoverEnabled: mouse_area.hoverEnabled
+    signal exited()
+    signal canceled()
+    signal entered()
+    signal clicked()
 
     MouseArea
     {
@@ -21,8 +27,19 @@ Item {
         hoverEnabled: _root.enabled
         acceptedButtons: Qt.NoButton
 
-        onExited: tooltip.hide()
-        onCanceled: tooltip.hide()
+        onExited:
+        {
+            tooltip.hide()
+            _root.exited()
+        }
+        
+        onCanceled:
+        {
+            tooltip.hide()
+            _root.canceled()
+        }
+        onEntered: _root.entered()
+        onClicked: _root.clicked()
 
         UM.ToolTip
         {
