@@ -334,15 +334,14 @@ class PluginRegistry(QObject):
                 if self._check_if_trusted:
                     result = self._locatePlugin(plugin_id, plugin_dir)
                     if result:
-                        is_bundled = False
+                        is_bundled &= False
                         break
                 else:
                     continue
 
             result = self._locatePlugin(plugin_id, plugin_dir)
             if result:
-                is_bundled = True
-                break
+                is_bundled &= True
         self._bundled_plugin_cache[plugin_id] = is_bundled
         return is_bundled
 
