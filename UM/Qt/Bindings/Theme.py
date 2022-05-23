@@ -15,6 +15,7 @@ import UM.Application
 from UM.FlameProfiler import pyqtSlot
 from UM.Logger import Logger
 from UM.Resources import Resources
+from UM.Trust import TrustBasics
 
 
 class Theme(QObject):
@@ -46,6 +47,7 @@ class Theme(QObject):
 
         self._initializeDefaults()
 
+        self._check_if_trusted = False
         self.reload()
 
     themeLoaded = pyqtSignal()
@@ -68,10 +70,21 @@ class Theme(QObject):
             theme_path = Resources.getPath(Resources.Themes, application.getPreferences().getValue("general/theme"))
             self.load(theme_path)
 
+    def setCheckIfTrusted(self, check_if_trusted: bool):
+        """Set: Can themes from unbundled locations be selected, or only the ones packaged with the app?"""
+        self._check_if_trusted = check_if_trusted
+
     @pyqtSlot(result = "QVariantList")
     def getThemes(self) -> List[Dict[str, str]]:
+        install_prefix = os.path.abspath(UM.Application.Application.getInstance().getInstallPrefix())
+
         themes = []
         for path in Resources.getAllPathsForType(Resources.Themes):
+            if self._check_if_trusted and not TrustBasics.isPathInLocation(install_prefix, path):
+                # This will prevent themes to load from outside 'bundled' folders, when `check_if_trusted` is True.
+                # Note that this will be a lot less useful in newer versions supporting Qt 6, due to lack of QML Styles.
+                Logger.warning("Skipped indexing Theme from outside bundled folders: ", path)
+                continue
             try:
                 for file in os.listdir(path):
                     folder = os.path.join(path, file)
