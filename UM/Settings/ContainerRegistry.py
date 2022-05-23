@@ -379,7 +379,12 @@ class ContainerRegistry(ContainerRegistryInterface):
         return self._db_connection
 
     def _getProfileType(self, container_id: str, db_cursor: db.Cursor) -> Optional[str]:
-        db_cursor.execute("select id, container_type from containers where id = ?", (container_id, ))
+        try:
+            db_cursor.execute("select id, container_type from containers where id = ?", (container_id, ))
+        except db.DatabaseError as e:
+            Logger.error(f"Could not access database: {e}. Is it corrupt? Recreating it.")
+            self._recreateCorruptDataBase(db_cursor)
+            return None
         row = db_cursor.fetchone()
         if row:
             return row[1]
