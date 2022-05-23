@@ -1,8 +1,9 @@
 # Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import sys
 import ctypes   # type: ignore
+import re
+import sys
 
 from PyQt6.QtOpenGL import QOpenGLVersionFunctionsFactory
 
@@ -102,6 +103,11 @@ class OpenGL:
             Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
 
         self._opengl_version = self._gl.glGetString(self._gl.GL_VERSION) #type: str
+        short_versions = re.findall(r"(\d+.\d+(.\d+)?)", self._opengl_version)  # Find version numbers, either 2-component or 3-component.
+        if short_versions:
+            self._opengl_version_short = short_versions[0][0]  # First whole match (second [0] is to grab the first group which is the whole version number).
+        else:
+            self._opengl_version_short = "unknown"
 
         self._opengl_shading_language_version = Version("0.0")  # type: Version
         try:
@@ -131,6 +137,14 @@ class OpenGL:
         :return: Version of OpenGL
         """
         return self._opengl_version
+
+    def getOpenGLVersionShort(self) -> str:
+        """
+        Get a short version of the OpenGL version, which is just the version
+        number, not any build number or anything.
+        :return: Version number of OpenGL.
+        """
+        return self._opengl_version_short
 
     def getOpenGLShadingLanguageVersion(self) -> "Version":
         """Get the current OpenGL shading language version.
