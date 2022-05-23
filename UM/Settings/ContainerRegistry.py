@@ -462,7 +462,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         for provider in self._providers:  # Automatically sorted by the priority queue.
             # Make copy of all IDs since it might change during iteration.
             provider_container_ids = set(provider.getAllIds())
-            # Keep a list of all the ID's that we know off
+            # Keep a list of all the ID's that we know of
             all_container_ids.update(provider_container_ids)
             for container_id in provider_container_ids:
                 try:
