@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
-from typing import Any, Dict, IO, Optional, Tuple, Union
+from typing import Any, Callable, Dict, IO, Optional, Tuple, Union
 
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To register the MIME type of the preference file.
@@ -34,6 +34,11 @@ class Preferences:
 
         self._parser = None  # type: Optional[configparser.ConfigParser]
         self._preferences = {}  # type: Dict[str, Dict[str, _Preference]]
+        self._untrusted_settings: Dict[(str, str), Callable] = {}
+
+    def indicateUntrustedSetting(self, group: str, key: str, eval_func: Callable) -> None:
+        """Indicates that the value of this setting should be evaluated before acceptance, and otherwise not loaded."""
+        self._untrusted_settings[(group, key)] = eval_func
 
     def addPreference(self, key: str, default_value: Any) -> None:
         """Add a new preference to the list.
@@ -134,6 +139,9 @@ class Preferences:
             for key, value in group_entries.items():
                 if key not in self._preferences[group]:
                     self._preferences[group][key] = _Preference(key)
+
+                if (group, key) in self._untrusted_settings and not self._untrusted_settings[(group, key)](value):
+                    continue
 
                 self._preferences[group][key].setValue(value)
                 self.preferenceChanged.emit("{0}/{1}".format(group, key))
