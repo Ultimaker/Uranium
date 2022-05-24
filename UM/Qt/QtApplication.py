@@ -130,10 +130,9 @@ class QtApplication(QApplication, Application):
         self._cli_parser.add_argument("-qmljsdebugger",
                                       help = "For Qt's QML debugger compatibility")
 
-    def _evaluatePathOfTheme(self, theme_id: str) -> bool:
+    def _isPathSecure(self, path: str) -> bool:
         install_prefix = os.path.abspath(self.getInstallPrefix())
-        theme_path = Resources.getPath(Resources.Themes, theme_id)
-        return TrustBasics.isPathInLocation(install_prefix, theme_path)
+        return TrustBasics.isPathInLocation(install_prefix, path)
 
     def initialize(self, check_if_trusted: bool = False) -> None:
         super().initialize()
@@ -141,7 +140,10 @@ class QtApplication(QApplication, Application):
         preferences = Application.getInstance().getPreferences()
         if check_if_trusted:
             # Need to do this before the preferences are read for the first time, but after obj-creation, which is here.
-            preferences.indicateUntrustedSetting("general", "theme", lambda value: self._evaluatePathOfTheme(value))
+            preferences.indicateUntrustedSetting("general", "theme",
+                lambda value: self._isPathSecure(Resources.getPath(Resources.Themes, value)))
+            preferences.indicateUntrustedSetting("backend", "location",
+                lambda value: self._isPathSecure(os.path.abspath(value)))
         preferences.addPreference("view/force_empty_shader_cache", False)
         preferences.addPreference("view/opengl_version_detect", OpenGLContext.OpenGlVersionDetect.Autodetect)
 
