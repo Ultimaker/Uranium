@@ -10,7 +10,6 @@ import tempfile
 import time  # To reduce chance of concurrency issues when deleting files if the OS is slow to register whether a file exists or not.
 from typing import Dict, Generator, List, Optional, Union, cast
 
-from UM.Application import Application
 from UM.Logger import Logger
 from UM.Platform import Platform
 from UM.Version import Version
@@ -219,6 +218,8 @@ class Resources:
 
         :param path: The path to add.
         """
+        #  If we import at the top of this file we get circular import errors due to Trust and CentralStorage on startup
+        from UM.Application import Application
 
         #  Remove ../ from path so paths in unsecure locations can't be sneaked in here
         abs_path = os.path.abspath(path)
