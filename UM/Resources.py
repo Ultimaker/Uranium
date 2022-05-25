@@ -10,6 +10,7 @@ import tempfile
 import time  # To reduce chance of concurrency issues when deleting files if the OS is slow to register whether a file exists or not.
 from typing import Dict, Generator, List, Optional, Union, cast
 
+from UM.Application import Application
 from UM.Logger import Logger
 from UM.Platform import Platform
 from UM.Version import Version
@@ -219,7 +220,10 @@ class Resources:
         :param path: The path to add.
         """
 
-        if os.path.isdir(path) and path not in cls.__secure_paths:
+        #  Remove ../ from path so paths in unsecure locations can't be sneaked in here
+        abs_path = os.path.abspath(path)
+
+        if os.path.isdir(abs_path) and abs_path not in cls.__secure_paths and abs_path.startswith(Application.getInstallPrefix()):
             cls.__paths.append(path)
             cls.__secure_paths.append(path)
 
