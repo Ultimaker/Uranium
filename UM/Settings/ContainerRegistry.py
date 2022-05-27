@@ -502,7 +502,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         modified_time = provider.getLastModifiedTime(container_id)
                     except OSError:
                         Logger.warning(f"Could not get last modified time of {container_id}.")
-                        cursor.execute("DELETE FROM containers WHERE id = ?", (container_id,))  # Remove metadata where the backing file was removed/corrupt.
+                        # Record is purged below.
                         continue
                     if modified_time > db_last_modified_time:
                         # Metadata is outdated, so load from file and update the database
@@ -539,7 +539,11 @@ class ContainerRegistry(ContainerRegistryInterface):
             self._removeContainerFromDatabase(container_id)
 
         if ids_to_remove:  # We only can (and need to) commit again if we removed containers
-            cursor.execute("commit")
+            try:
+                cursor.execute("commit")
+            except db.DatabaseError as e:  # E.g. read-only database, concurrent access, corrupt database.
+                Logger.error(f"Could not complete purging of removed containers: {str(e)}")
+                # Don't purge database. It's only for removing extra data, not critical, and it might just be a temporary problem.
 
         Logger.log("d", "Loading metadata into container registry took %s seconds", time.time() - resource_start_time)
         gc.enable()
