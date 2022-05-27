@@ -257,7 +257,7 @@ class Theme(QObject):
                 if font.get("bold"):
                     q_font.setBold(font.get("bold", False))
                 else:
-                    q_font.setWeight(font.get("weight", 50))
+                    q_font.setWeight(font.get("weight", 500))
 
                 q_font.setLetterSpacing(QFont.SpacingType.AbsoluteSpacing, font.get("letterSpacing", 0))
                 q_font.setItalic(font.get("italic", False))

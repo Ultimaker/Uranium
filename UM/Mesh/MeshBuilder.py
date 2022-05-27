@@ -402,7 +402,7 @@ class MeshBuilder:
             self._colors = numpy.concatenate((self._colors[0:self._vertex_count], colors))
 
     def addFacesWithColor(self, vertices, indices, colors):
-        """Add faces defined by indices into vertices with vetex colors defined by colors
+        """Add faces defined by indices into vertices with vertex colors defined by colors
         Assumes vertices and colors have the same length.
 
         :param vertices: is a numpy array where each row corresponds to a 3D point used to define the faces.
