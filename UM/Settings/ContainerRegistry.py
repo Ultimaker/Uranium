@@ -498,7 +498,12 @@ class ContainerRegistry(ContainerRegistryInterface):
 
                 else:
                     # Metadata already exists in database.
-                    modified_time = provider.getLastModifiedTime(container_id)
+                    try:
+                        modified_time = provider.getLastModifiedTime(container_id)
+                    except OSError:
+                        Logger.warning(f"Could not get last modified time of {container_id}.")
+                        cursor.execute("DELETE FROM containers WHERE id = ?", (container_id,))  # Remove metadata where the backing file was removed/corrupt.
+                        continue
                     if modified_time > db_last_modified_time:
                         # Metadata is outdated, so load from file and update the database
                         metadata = provider.loadMetadata(container_id)
