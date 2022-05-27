@@ -222,10 +222,7 @@ class Resources:
         from UM.Application import Application
         from UM.Trust import TrustBasics
 
-        #  Remove ../ from path so paths in unsecure locations can't be sneaked in here
-        abs_path = os.path.abspath(path)
-
-        if os.path.isdir(abs_path) and abs_path not in cls.__secure_paths and TrustBasics.isPathInLocation(Application.getInstallPrefix(), abs_path):
+        if os.path.isdir(path) and path not in cls.__secure_paths and TrustBasics.isPathInLocation(Application.getInstallPrefix(), path):
             cls.__paths.append(path)
             cls.__secure_paths.append(path)
 
