@@ -6,8 +6,7 @@ import QtQuick.Window 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs
 
-import UM 1.0 as UM
-
+import UM 1.5 as UM
 
 Window
 {
@@ -35,6 +34,9 @@ Window
     property alias backgroundColor: background.color
 
     property real buttonSpacing: 0
+
+    property bool buttonWarning: false
+    property alias buttonWarningText: warningText.text
 
     signal accepted();
     signal rejected();
@@ -84,7 +86,7 @@ Window
                 rightMargin: base.margin;
                 top: parent.top;
                 topMargin: base.margin;
-                bottom: buttonRow.top;
+                bottom: footer.top;
                 bottomMargin: base.margin;
             }
 
@@ -96,29 +98,66 @@ Window
             }
         }
 
-        RowLayout {
-            id: buttonRow
+        Rectangle
+        {
+            id: footer
+            visible: buttonWarning || rightButtons.length > 0 || leftButtons.length > 0
+            color: buttonWarning ? UM.Theme.getColor("warning") : "transparent"
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: childrenRect.height + 2 * base.margin
 
-            anchors {
-                bottom: parent.bottom
-                bottomMargin: base.margin
-                left: parent.left
-                leftMargin: base.margin
-                right: parent.right
-                rightMargin: base.margin
-            }
-            height: childrenRect.height
+            Column
+            {
+                height: childrenRect.height
+                spacing: base.margin
 
-            RowLayout {
-                id: leftButtonRow
-                Layout.alignment: Qt.AlignLeft
-                spacing: base.buttonSpacing
-            }
+                anchors.margins: base.margin
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
 
-            RowLayout {
-                id: rightButtonRow
-                Layout.alignment: Qt.AlignRight
-                spacing: base.buttonSpacing
+                RowLayout
+                {
+                    id: warningRow
+                    height: childrenRect.height
+                    visible: buttonWarning
+                    spacing: base.margin
+                    UM.ColorImage
+                    {
+                        width: UM.Theme.getSize("extruder_icon").width
+                        height: UM.Theme.getSize("extruder_icon").height
+                        source: UM.Theme.getIcon("Warning")
+                    }
+
+                    UM.Label
+                    {
+                        id: warningText
+                    }
+                }
+
+                RowLayout
+                {
+                    id: buttonRow
+                    height: childrenRect.height
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    RowLayout
+                    {
+                        id: leftButtonRow
+                        Layout.alignment: Qt.AlignLeft
+                        spacing: base.buttonSpacing
+                    }
+
+                    RowLayout
+                    {
+                        id: rightButtonRow
+                        Layout.alignment: Qt.AlignRight
+                        spacing: base.buttonSpacing
+                    }
+                }
             }
         }
     }
