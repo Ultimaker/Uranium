@@ -36,7 +36,7 @@ class Preferences:
         self._preferences = {}  # type: Dict[str, Dict[str, _Preference]]
         self._untrusted_preferences: Dict[(str, str), Callable] = {}
 
-    def indicateUntrustedPreference(self, group: str, key: str, eval_func: Callable) -> None:
+    def indicateUntrustedPreference(self, group: str, key: str, eval_func: Callable[[str], bool]) -> None:
         """Indicates that the value of this setting should be evaluated before acceptance, and otherwise not loaded."""
         self._untrusted_preferences[(group, key)] = eval_func
 
