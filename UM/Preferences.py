@@ -34,11 +34,17 @@ class Preferences:
 
         self._parser = None  # type: Optional[configparser.ConfigParser]
         self._preferences = {}  # type: Dict[str, Dict[str, _Preference]]
-        self._untrusted_settings: Dict[(str, str), Callable] = {}
+        self._untrusted_preferences: Dict[(str, str), Callable] = {}
 
-    def indicateUntrustedSetting(self, group: str, key: str, eval_func: Callable) -> None:
+    def indicateUntrustedPreference(self, group: str, key: str, eval_func: Callable[[str], bool]) -> None:
         """Indicates that the value of this setting should be evaluated before acceptance, and otherwise not loaded."""
-        self._untrusted_settings[(group, key)] = eval_func
+        self._untrusted_preferences[(group, key)] = eval_func
+
+        # While this method should preferably have run before any load from file, also handle a call afterwards.
+        if group in self._preferences and key in self._preferences[group]:
+            if not eval_func(self._preferences[group][key]):
+                self._preferences[group][key].setValue(self._preferences[group][key].getDefault())
+                self.preferenceChanged.emit(group + "/" + key)
 
     def addPreference(self, key: str, default_value: Any) -> None:
         """Add a new preference to the list.
@@ -140,7 +146,7 @@ class Preferences:
                 if key not in self._preferences[group]:
                     self._preferences[group][key] = _Preference(key)
 
-                if (group, key) in self._untrusted_settings and not self._untrusted_settings[(group, key)](value):
+                if (group, key) in self._untrusted_preferences and not self._untrusted_preferences[(group, key)](value):
                     continue
 
                 self._preferences[group][key].setValue(value)
