@@ -140,10 +140,10 @@ class QtApplication(QApplication, Application):
         preferences = Application.getInstance().getPreferences()
         if check_if_trusted:
             # Need to do this before the preferences are read for the first time, but after obj-creation, which is here.
-            preferences.indicateUntrustedSetting("general", "theme",
-                lambda value: self._isPathSecure(Resources.getPath(Resources.Themes, value)))
-            preferences.indicateUntrustedSetting("backend", "location",
-                lambda value: self._isPathSecure(os.path.abspath(value)))
+            preferences.indicateUntrustedPreference("general", "theme",
+                                                    lambda value: self._isPathSecure(Resources.getPath(Resources.Themes, value)))
+            preferences.indicateUntrustedPreference("backend", "location",
+                                                    lambda value: self._isPathSecure(os.path.abspath(value)))
         preferences.addPreference("view/force_empty_shader_cache", False)
         preferences.addPreference("view/opengl_version_detect", OpenGLContext.OpenGlVersionDetect.Autodetect)
 
