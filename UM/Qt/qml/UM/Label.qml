@@ -7,7 +7,7 @@ Label
     color: UM.Theme.getColor("text")
     font: UM.Theme.getFont("default")
     wrapMode: Text.Wrap
-    renderType: Text.NativeRendering
+    renderType: Qt.platform.os == "osx" ? Text.QtRendering : Text.NativeRendering
     linkColor: UM.Theme.getColor("text_link")
     verticalAlignment: Text.AlignVCenter
 }

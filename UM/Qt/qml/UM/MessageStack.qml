@@ -175,7 +175,7 @@ ListView
                 mipmap: true
             }
 
-            Label
+            UM.Label
             {
                 id: imageCaption
                 anchors
@@ -186,7 +186,6 @@ ListView
                 text: model.image_caption
                 horizontalAlignment: Text.AlignHCenter
                 elide: Text.ElideRight
-                color: UM.Theme.getColor("text")
                 font: UM.Theme.getFont("large_bold")
                 height: text != "" ? contentHeight : 0
                 linkColor: UM.Theme.getColor("text_link")

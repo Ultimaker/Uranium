@@ -175,16 +175,15 @@ class Application:
         Resources.ApplicationVersion = self._version
 
         app_root = os.path.abspath(os.path.join(os.path.dirname(sys.executable)))
-        Resources.addSearchPath(os.path.join(app_root, "share", "uranium", "resources"))
-        Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "share", "uranium", "resources"))
+        Resources.addSecureSearchPath(os.path.join(app_root, "share", "uranium", "resources"))
 
-        Resources.addSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
-        Resources.addSearchPath(os.path.join(self._app_install_dir, "share", "uranium", "resources"))
-        Resources.addSearchPath(os.path.join(self._app_install_dir, "Resources", "uranium", "resources"))
-        Resources.addSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
+        Resources.addSecureSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
+        Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "share", "uranium", "resources"))
+        Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", "uranium", "resources"))
+        Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
 
         if not hasattr(sys, "frozen"):
-            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
+            Resources.addSecureSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
 
         i18nCatalog.setApplication(self)
 

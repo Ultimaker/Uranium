@@ -62,7 +62,6 @@ ToolTip
         id: label
         text: tooltip.text
         font: tooltip.font
-        wrapMode: Text.Wrap
         textFormat: Text.RichText
         color: UM.Theme.getColor("tooltip_text")
     }

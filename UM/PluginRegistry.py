@@ -361,7 +361,6 @@ class PluginRegistry(QObject):
             result = self._locatePlugin(plugin_id, plugin_dir)
             if result:
                 is_bundled = True
-                break
         self._bundled_plugin_cache[plugin_id] = is_bundled
         return is_bundled
 
