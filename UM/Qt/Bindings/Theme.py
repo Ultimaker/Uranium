@@ -311,9 +311,12 @@ class Theme(QObject):
 
         imagesdir = os.path.join(path, "images")
         if os.path.isdir(imagesdir):
-            for image in os.listdir(imagesdir):
-                name = os.path.splitext(image)[0]
-                self._images[name] = QUrl.fromLocalFile(os.path.join(imagesdir, image))
+            try:
+                for image in os.listdir(imagesdir):
+                    name = os.path.splitext(image)[0]
+                    self._images[name] = QUrl.fromLocalFile(os.path.join(imagesdir, image))
+            except EnvironmentError:  # Exception when calling os.listdir, e.g. no access rights.
+                pass  # Won't get any images then. They will show as black squares.
 
         Logger.log("d", "Loaded theme %s", path)
         Logger.info(f"System's em size is {self._em_height}px.")
