@@ -296,8 +296,9 @@ class Theme(QObject):
                     for icon in icons:
                         name = os.path.splitext(icon)[0]
                         self._icons[detail_level][name] = QUrl.fromLocalFile(os.path.join(base_path, icon))
-            except EnvironmentError:  # Exception when calling os.walk, e.g. no access rights.
-                pass  # Won't get any icons then. Images will show as black squares.
+            except EnvironmentError as err:  # Exception when calling os.walk, e.g. no access rights.
+                Logger.error(f"Can't access icons of theme ({iconsdir}): {err}")
+                # Won't get any icons then. Images will show as black squares.
 
             deprecated_icons_file = os.path.join(iconsdir, "deprecated_icons.json")
             if os.path.isfile(deprecated_icons_file):
@@ -315,8 +316,9 @@ class Theme(QObject):
                 for image in os.listdir(imagesdir):
                     name = os.path.splitext(image)[0]
                     self._images[name] = QUrl.fromLocalFile(os.path.join(imagesdir, image))
-            except EnvironmentError:  # Exception when calling os.listdir, e.g. no access rights.
-                pass  # Won't get any images then. They will show as black squares.
+            except EnvironmentError as err:  # Exception when calling os.listdir, e.g. no access rights.
+                Logger.error(f"Can't access image of theme ({imagesdir}): {err}")
+                # Won't get any images then. They will show as black squares.
 
         Logger.log("d", "Loaded theme %s", path)
         Logger.info(f"System's em size is {self._em_height}px.")
