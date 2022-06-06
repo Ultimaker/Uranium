@@ -28,15 +28,50 @@ Window
 
     property alias loader: contentLoader
 
-    property alias buttonArea: buttonRow
-    property alias leftButtons: leftButtonRow.children
-    property alias rightButtons: rightButtonRow.children
+    property list<Item> leftButtons
+    property list<Item> rightButtons
     property alias backgroundColor: background.color
 
     property real buttonSpacing: 0
 
-    property bool buttonWarning: false
-    property alias buttonWarningText: warningText.text
+    property Component buttonRow: RowLayout
+    {
+        height: childrenRect.height
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        RowLayout
+        {
+            Layout.alignment: Qt.AlignLeft
+            spacing: base.buttonSpacing
+            children: leftButtons
+        }
+
+        RowLayout
+        {
+            Layout.alignment: Qt.AlignRight
+            spacing: base.buttonSpacing
+            children: rightButtons
+        }
+    }
+
+    property Component footerComponent: Item
+    {
+        anchors.leftMargin: base.margin
+        anchors.rightMargin: base.margin
+        anchors.bottomMargin: base.margin
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: childrenRect.height + base.margin
+        Loader
+        {
+            sourceComponent: buttonRow
+            width: parent.width
+            height: childrenRect.height
+        }
+    }
+
+    property alias headerComponent: header.sourceComponent
 
     signal accepted();
     signal rejected();
@@ -61,14 +96,18 @@ Window
         base.visible = true;
     }
 
-    Rectangle {
+    Rectangle
+    {
         id: background
-        color: UM.Theme.getColor("detail_background")
-        anchors.fill: parent;
+        anchors.fill: parent
+    }
 
-        focus: base.visible;
+    ColumnLayout {
+        spacing: parent.margin
+        focus: base.visible
+        anchors.fill: background
 
-        Keys.onEscapePressed:{
+        Keys.onEscapePressed: {
             base.reject();
         }
 
@@ -76,89 +115,43 @@ Window
             base.accept();
         }
 
-        Item {
-            id: contentItem;
+        Loader
+        {
+            id: header
+            visible: status != Loader.Null
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: childrenRect.height
+        }
 
-            anchors {
-                left: parent.left;
-                leftMargin: base.margin;
-                right: parent.right;
-                rightMargin: base.margin;
-                top: parent.top;
-                topMargin: base.margin;
-                bottom: footer.top;
-                bottomMargin: base.margin;
-            }
+        Item
+        {
+            Layout.fillHeight: true
+            Layout.preferredWidth: parent.width
 
-            Loader
+            Item
             {
-                id: contentLoader
+                id: contentItem
+
                 anchors.fill: parent
-                property var manager: null
+                anchors.margins: base.margin
+
+                Loader
+                {
+                    id: contentLoader
+                    visible: status != Loader.Null
+                    anchors.fill: parent
+                    property var manager: null
+                }
             }
         }
 
-        Rectangle
+        Loader
         {
             id: footer
-            visible: buttonWarning || rightButtons.length > 0 || leftButtons.length > 0
-            color: buttonWarning ? UM.Theme.getColor("warning") : "transparent"
-            anchors.bottom: parent.bottom
-            width: parent.width
-            height: childrenRect.height + 2 * base.margin
-
-            Column
-            {
-                height: childrenRect.height
-                spacing: base.margin
-
-                anchors.margins: base.margin
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-
-                RowLayout
-                {
-                    id: warningRow
-                    height: childrenRect.height
-                    visible: buttonWarning
-                    spacing: base.margin
-                    UM.ColorImage
-                    {
-                        width: UM.Theme.getSize("extruder_icon").width
-                        height: UM.Theme.getSize("extruder_icon").height
-                        source: UM.Theme.getIcon("Warning")
-                    }
-
-                    UM.Label
-                    {
-                        id: warningText
-                    }
-                }
-
-                RowLayout
-                {
-                    id: buttonRow
-                    height: childrenRect.height
-
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    RowLayout
-                    {
-                        id: leftButtonRow
-                        Layout.alignment: Qt.AlignLeft
-                        spacing: base.buttonSpacing
-                    }
-
-                    RowLayout
-                    {
-                        id: rightButtonRow
-                        Layout.alignment: Qt.AlignRight
-                        spacing: base.buttonSpacing
-                    }
-                }
-            }
+            visible: status != Loader.Null
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: childrenRect.height
+            sourceComponent: footerComponent
         }
     }
 }
