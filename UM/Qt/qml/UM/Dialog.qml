@@ -6,8 +6,7 @@ import QtQuick.Window 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs
 
-import UM 1.0 as UM
-
+import UM 1.5 as UM
 
 Window
 {
@@ -29,12 +28,50 @@ Window
 
     property alias loader: contentLoader
 
-    property alias buttonArea: buttonRow
-    property alias leftButtons: leftButtonRow.children
-    property alias rightButtons: rightButtonRow.children
+    property list<Item> leftButtons
+    property list<Item> rightButtons
     property alias backgroundColor: background.color
 
     property real buttonSpacing: 0
+
+    property Component buttonRow: RowLayout
+    {
+        height: childrenRect.height
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        RowLayout
+        {
+            Layout.alignment: Qt.AlignLeft
+            spacing: base.buttonSpacing
+            children: leftButtons
+        }
+
+        RowLayout
+        {
+            Layout.alignment: Qt.AlignRight
+            spacing: base.buttonSpacing
+            children: rightButtons
+        }
+    }
+
+    property Component footerComponent: Item
+    {
+        anchors.leftMargin: base.margin
+        anchors.rightMargin: base.margin
+        anchors.bottomMargin: base.margin
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: childrenRect.height + base.margin
+        Loader
+        {
+            sourceComponent: buttonRow
+            width: parent.width
+            height: childrenRect.height
+        }
+    }
+
+    property alias headerComponent: header.sourceComponent
 
     signal accepted();
     signal rejected();
@@ -59,14 +96,18 @@ Window
         base.visible = true;
     }
 
-    Rectangle {
+    Rectangle
+    {
         id: background
-        color: UM.Theme.getColor("detail_background")
-        anchors.fill: parent;
+        anchors.fill: parent
+    }
 
-        focus: base.visible;
+    ColumnLayout {
+        spacing: parent.margin
+        focus: base.visible
+        anchors.fill: background
 
-        Keys.onEscapePressed:{
+        Keys.onEscapePressed: {
             base.reject();
         }
 
@@ -74,52 +115,43 @@ Window
             base.accept();
         }
 
-        Item {
-            id: contentItem;
+        Loader
+        {
+            id: header
+            visible: status != Loader.Null
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: childrenRect.height
+        }
 
-            anchors {
-                left: parent.left;
-                leftMargin: base.margin;
-                right: parent.right;
-                rightMargin: base.margin;
-                top: parent.top;
-                topMargin: base.margin;
-                bottom: buttonRow.top;
-                bottomMargin: base.margin;
-            }
+        Item
+        {
+            Layout.fillHeight: true
+            Layout.preferredWidth: parent.width
 
-            Loader
+            Item
             {
-                id: contentLoader
+                id: contentItem
+
                 anchors.fill: parent
-                property var manager: null
+                anchors.margins: base.margin
+
+                Loader
+                {
+                    id: contentLoader
+                    visible: status != Loader.Null
+                    anchors.fill: parent
+                    property var manager: null
+                }
             }
         }
 
-        RowLayout {
-            id: buttonRow
-
-            anchors {
-                bottom: parent.bottom
-                bottomMargin: base.margin
-                left: parent.left
-                leftMargin: base.margin
-                right: parent.right
-                rightMargin: base.margin
-            }
-            height: childrenRect.height
-
-            RowLayout {
-                id: leftButtonRow
-                Layout.alignment: Qt.AlignLeft
-                spacing: base.buttonSpacing
-            }
-
-            RowLayout {
-                id: rightButtonRow
-                Layout.alignment: Qt.AlignRight
-                spacing: base.buttonSpacing
-            }
+        Loader
+        {
+            id: footer
+            visible: status != Loader.Null
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: childrenRect.height
+            sourceComponent: footerComponent
         }
     }
 }
