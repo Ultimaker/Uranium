@@ -307,6 +307,15 @@ class Resources:
         yield from cls.__paths
 
     @classmethod
+    def getSecureSearchPaths(cls) -> Generator[str, None, None]:
+        """Gets the secure search paths for resources.
+
+        :return: A sequence of paths where resources might be.
+        """
+
+        yield from cls.__secure_paths
+
+    @classmethod
     def removeType(cls, resource_type: int) -> None:
         """Remove a custom resource type."""
 
