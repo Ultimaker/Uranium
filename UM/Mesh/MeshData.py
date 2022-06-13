@@ -520,6 +520,9 @@ def createConvexHull(vertex_data: numpy.ndarray) -> scipy.spatial.ConvexHull:
             # See https://github.com/scipy/scipy/issues/8850 for more info.
             Logger.logException("e", "Couldn't construct convex hull around mesh (using faux hull instead)")
             hull_result = scipy.spatial.ConvexHull(numpy.array([[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]))  # Cube, known to always succeed.
+    except ValueError:  # Can happen if there are NaN points in there.
+        Logger.error("Model contains NaN coordinates. Using faux convex hull.")
+        hull_result = scipy.spatial.ConvexHull(numpy.array([[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]))  # Cube, known to always succeed.
     return hull_result
 
 
