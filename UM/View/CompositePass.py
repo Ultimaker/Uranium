@@ -36,6 +36,7 @@ class CompositePass(RenderPass):
         self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "composite.shader"))
         theme = Application.getInstance().getTheme()
         self._shader.setUniformValue("u_background_color", Color(*theme.getColor("viewport_background").getRgb()))
+        self._shader.setUniformValue("u_background_color_alt", Color(*theme.getColor("viewport_background").getRgb()))
         self._shader.setUniformValue("u_outline_color", Color(*theme.getColor("model_selection_outline").getRgb()))
 
         self._gl = OpenGL.getInstance().getBindingsObject()
