@@ -471,7 +471,7 @@ class Resources:
     def __initializeStoragePaths(cls) -> None:
         Logger.log("d", "Initializing storage paths")
         # use nested structure: <app-name>/<version>/...
-        if cls.ApplicationVersion == "master" or cls.ApplicationVersion == "unknown":
+        if cls.ApplicationVersion in ["master", "main", "dev"] or cls.ApplicationVersion == "unknown":
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
         else:
             version = Version(cls.ApplicationVersion)
