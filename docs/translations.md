@@ -80,6 +80,8 @@ cmake ..
 cd ..
 ```
 `make` commands can now be executed from the project root. Now build the build-target [extract-messages] (with the terminal; when your still in the build directory). (If it starts wining that it can't find some directory; fix it, throw away the build folder and create the build-files again.)
+
+Note: Before running this, make sure there aren't any 3rd party plugins or virtual environments inside your project folder. All i18n strings inside these will be added to cura.pot.
 ```
 make extract-messages
 ```
@@ -119,9 +121,17 @@ Same here for a specific language:
 make i18n-update-po-<code>
 ```
 
+Updating the PO files (After translations are complete)
+---------------------
+After downloading the completed translations from smartling as .pot files, they should be imported back into both Cura and Uranium using <cura>/scripts/lionbridge_import.py
+
+This will merge the files for you, keeping a history of translations.
+
 Creating the MO files & testing
 -------------------------------
-In the building process; the MO files are automatically created. So you only manually create the MO files that you want to test. A great example is x-test. The PO files for x-test are automatically created by [extract-messages]. It is basically an English translation with two X's before and after each string. You use it to test whether all strings are being properly translated.  
+The mo files must be created and put inside the cura-binary-data project. Cura mo files should be put inside cura/resources/i18n and Uranium resources should go inside uranium/resources/i18n. To test all languages, you can symlink the i18n folders in cura-binary-data inside both the Cura and Uranium resources folders.
+
+The PO files for x-test are automatically created by [extract-messages]. It is basically an English translation with two X's before and after each string. You use it to test whether all strings are being properly translated.
 
 The directory of the language (x-test is this example) must contain a special directory called `LC_MESSAGES`. This directory is created automatically. Create the MO file with the terminal (project root): 
 ```
