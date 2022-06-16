@@ -1,5 +1,5 @@
 requirements:
-    "5.1.0-alpha":
-        - "arcus/latest@ultimaker/stable"
-    "5.1.0-CURA-9365":
+    "5.1.0-beta":
+        - "arcus/5.1.0-beta@ultimaker/stable"
+    "5.1.0-cura_9365":
         - "arcus/cura_9365@ultimaker/stable"
