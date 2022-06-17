@@ -183,8 +183,8 @@ class Application:
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
 
         if not hasattr(sys, "frozen"):
-            Resources.addSecureSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
-            Resources.addSecureSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "res", "resources"))
+            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
+            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "res", "resources"))
 
         i18nCatalog.setApplication(self)
 
