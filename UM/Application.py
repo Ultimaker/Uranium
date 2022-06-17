@@ -184,6 +184,7 @@ class Application:
 
         if not hasattr(sys, "frozen"):
             Resources.addSecureSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
+            Resources.addSecureSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "res", "resources"))
 
         i18nCatalog.setApplication(self)
 

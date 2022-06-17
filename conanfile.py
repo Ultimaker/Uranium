@@ -76,7 +76,6 @@ class UraniumConan(ConanFile):
     def package_info(self):
         if self.in_local_cache:
             self.runenv_info.append_path("PYTHONPATH", self.cpp_info.libdirs[0])
-            self.runenv_info.append_path("PYTHONPATH", self.cpp_info.resdirs[0])
         else:
             self.runenv_info.append_path("PYTHONPATH", self.source_folder)
 
