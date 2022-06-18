@@ -25,11 +25,9 @@ class UraniumConan(ConanFile):
     python_requires_extend = "umbase.UMBaseConanfile"
 
     options = {
-        "python_version": "ANY",
         "devtools": [True, False]
     }
     default_options = {
-        "python_version": "system",
         "devtools": False,
     }
     scm = {
@@ -39,13 +37,8 @@ class UraniumConan(ConanFile):
         "revision": "auto"
     }
 
-    def config_options(self):
-        if self.options.python_version == "system":
-            self.options.python_version = python_version()
-
     def configure(self):
         self.options["*"].shared = True
-        self.options["*"].python_version = self.options.python_version
 
     def validate(self):
         if self.version:
