@@ -1,5 +1,9 @@
 requirements:
+    "None":
+        - "arcus/(latest)@ultimaker/stable"
+    "5.1.0":
+        - "arcus/5.1.0"
     "5.1.0-beta":
-        - "arcus/[~5.1.0-beta]@ultimaker/stable"
+        - "arcus/[5.1.0-beta]@ultimaker/stable"
     "5.1.0-cura_9365":
-        - "arcus/[~cura_9365]@ultimaker/stable"
+        - "arcus/[5.1.0-cura_9365]@ultimaker/testing"

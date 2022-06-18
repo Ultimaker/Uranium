@@ -18,8 +18,12 @@ class UraniumConan(ConanFile):
     topics = ("conan", "python", "pyqt5", "qt", "3d-graphics", "3d-models", "python-framework")
     build_policy = "missing"
     exports = "LICENSE*"
-    no_copy_source = True
     settings = "os", "compiler", "build_type", "arch"
+    no_copy_source = True
+
+    python_requires = "umbase/0.1@ultimaker/testing"
+    python_requires_extend = "umbase.UMBaseConanfile"
+
     options = {
         "python_version": "ANY",
         "devtools": [True, False]
@@ -35,11 +39,6 @@ class UraniumConan(ConanFile):
         "revision": "auto"
     }
 
-    @property
-    def _conan_data_version(self):
-        version = tools.Version(self.version)
-        return f"{version.major}.{version.minor}.{version.patch}-{version.prerelease}"
-
     def config_options(self):
         if self.options.python_version == "system":
             self.options.python_version = python_version()
@@ -54,7 +53,7 @@ class UraniumConan(ConanFile):
                 raise ConanInvalidConfiguration("Only versions 5+ are support")
 
     def requirements(self):
-        for req in self.conan_data["requirements"][self._conan_data_version]:
+        for req in self._um_data(self.version)["requirements"]:
             self.requires(req)
 
     def generate(self):
@@ -62,7 +61,6 @@ class UraniumConan(ConanFile):
 
     def layout(self):
         self.folders.source = "."
-        self.folders.build = "build"
         self.folders.venv = "venv"
         self.folders.generators = os.path.join(self.folders.build, "conan")
 
