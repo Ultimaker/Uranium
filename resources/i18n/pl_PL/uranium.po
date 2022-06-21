@@ -1,11 +1,11 @@
 # Uranium
-# Copyright (C) 2021 Ultimaker B.V.
+# Copyright (C) 2022 Ultimaker B.V.
 # This file is distributed under the same license as the Uranium package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 4.13\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: Uranium 5.1\n"
+"Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
 "POT-Creation-Date: 2022-06-21 12:58+0200\n"
 "PO-Revision-Date: 2019-11-15 15:35+0100\n"
 "Last-Translator: Mariusz 'Virgin71' Matłosz <matliks@gmail.com>\n"
