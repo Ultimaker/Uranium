@@ -73,10 +73,11 @@ Window
 
     property alias headerComponent: header.sourceComponent
 
-    signal accepted();
-    signal rejected();
+    signal accepted()
+    signal rejected()
 
-    function accept() {
+    function accept()
+    {
         if (base.closeOnAccept) {
             base.visible = false;
         }
@@ -92,7 +93,8 @@ Window
         }
     }
 
-    function open() {
+    function open()
+    {
         base.visible = true;
     }
 
@@ -102,18 +104,15 @@ Window
         anchors.fill: parent
     }
 
-    ColumnLayout {
-        spacing: parent.margin
+    ColumnLayout
+    {
+        spacing: base.margin
         focus: base.visible
         anchors.fill: background
 
-        Keys.onEscapePressed: {
-            base.reject();
-        }
+        Keys.onEscapePressed: base.reject()
 
-        Keys.onReturnPressed: {
-            base.accept();
-        }
+        Keys.onReturnPressed: base.accept()
 
         Loader
         {

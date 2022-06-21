@@ -508,6 +508,9 @@ class PluginRegistry(QObject):
         message.show()
 
     def removeCorruptedPluginMessage(self, plugin_id: str) -> None:
+        if self.isBundledPlugin(plugin_id):
+            # Don't show a message if the plugin is bundled. You can't uninstall that...
+            return
         """Shows a message to the user remove the corrupted plugin"""
         message_text = i18n_catalog.i18nc("@error",
                                           "The plugin {} could not be loaded. Re-installing the plugin might solve "
