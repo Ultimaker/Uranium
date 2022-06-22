@@ -36,6 +36,8 @@ on:
             - 'plugins/**'
             - 'resources/**'
             - 'UM/**'
+            - 'conanfile.py'
+            - 'GitVersion.yml'
             - '.github/workflows/conan-package.yml'
             - '.github/workflows/requirements-conan-package.txt'
         branches:
