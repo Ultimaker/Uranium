@@ -21,6 +21,7 @@ on:
             - 'plugins/**'
             - 'resources/**'
             - 'UM/**'
+            - 'conanfile.py'
             - '.github/workflows/conan-package.yml'
             - '.github/workflows/requirements-conan-package.txt'
         branches:
