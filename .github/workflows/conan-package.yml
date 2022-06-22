@@ -22,6 +22,7 @@ on:
             - 'resources/**'
             - 'UM/**'
             - 'conanfile.py'
+            - 'conandata.yml'
             - 'GitVersion.yml'
             - '.github/workflows/conan-package.yml'
             - '.github/workflows/requirements-conan-package.txt'
@@ -38,6 +39,7 @@ on:
             - 'UM/**'
             - 'conanfile.py'
             - 'GitVersion.yml'
+            - 'conandata.yml'
             - '.github/workflows/conan-package.yml'
             - '.github/workflows/requirements-conan-package.txt'
         branches:
