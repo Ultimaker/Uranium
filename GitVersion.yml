@@ -16,7 +16,7 @@ branches:
   develop:
     regex: ^CURA-.*$
     mode: ContinuousDelivery
-    tag: useBranchName
+    tag: alpha
     increment: None
     prevent-increment-of-merged-branch-version: false
     track-merge-target: true
