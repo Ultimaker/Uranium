@@ -24,7 +24,7 @@
         - "tk/8.6.10"
 "5.1.0-alpha":
     requirements:
-        - "arcus/[5.1.0-alpha.1]@ultimaker/cura_9365"
+        - "arcus/[5.1.0-alpha]@ultimaker/cura_9365"
         - "cpython/3.10.4"
         - "libffi/3.2.1"
         - "mpdecimal/2.5.1"
