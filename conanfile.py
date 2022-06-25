@@ -38,7 +38,7 @@ class UraniumConan(ConanFile):
     }
 
     def configure(self):
-        self.options["*"].shared = True
+        self.options["shared"].shared = True
 
     def validate(self):
         if self.version:

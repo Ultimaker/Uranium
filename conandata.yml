@@ -2,31 +2,15 @@
     requirements:
         - "arcus/(latest)@ultimaker/cura_9365"
         - "cpython/3.10.4"
-        - "libffi/3.2.1"
-        - "mpdecimal/2.5.0"
-        - "tcl/8.6.10"
-        - "tk/8.6.10"
 "5.1.0":
     requirements:
         - "arcus/5.1.0"
         - "cpython/3.10.4"
-        - "libffi/3.2.1"
-        - "mpdecimal/2.5.0"
-        - "tcl/8.6.10"
-        - "tk/8.6.10"
 "5.1.0-beta":
     requirements:
         - "arcus/(latest)@ultimaker/stable"
         - "cpython/3.10.4"
-        - "libffi/3.2.1"
-        - "mpdecimal/2.5.0"
-        - "tcl/8.6.10"
-        - "tk/8.6.10"
 "5.1.0-alpha":
     requirements:
         - "arcus/(latest)@ultimaker/cura_9365"
         - "cpython/3.10.4"
-        - "libffi/3.2.1"
-        - "mpdecimal/2.5.0"
-        - "tcl/8.6.10"
-        - "tk/8.6.10"
