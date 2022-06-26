@@ -1,7 +1,5 @@
 import os
 
-from platform import python_version
-
 from conan import ConanFile
 from conans import tools
 from conan.errors import ConanInvalidConfiguration
@@ -38,7 +36,8 @@ class UraniumConan(ConanFile):
     }
 
     def configure(self):
-        self.options["shared"].shared = True
+        self.options["arcus"].shared = True
+        self.options["cpython"].shared = True
 
     def validate(self):
         if self.version:
