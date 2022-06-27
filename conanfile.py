@@ -57,6 +57,7 @@ class UraniumConan(ConanFile):
         self.folders.generators = os.path.join(self.folders.build, "conan")
 
         self.cpp.package.libdirs = ["site-packages"]
+        self.cpp.package.resdirs = ["res"]
 
     def package(self):
         self.copy("*", src = "UM", dst = os.path.join(self.cpp.package.libdirs[0], "UM"))
