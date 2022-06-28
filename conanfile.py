@@ -1,5 +1,7 @@
 import os
 
+from pathlib import Path
+
 from conan import ConanFile
 from conans import tools
 from conan.errors import ConanInvalidConfiguration
@@ -53,22 +55,25 @@ class UraniumConan(ConanFile):
 
     def layout(self):
         self.folders.source = "."
-        self.folders.venv = "venv"
+        self.folders.build = "venv"
         self.folders.generators = os.path.join(self.folders.build, "conan")
 
-        self.cpp.package.libdirs = ["site-packages"]
-        self.cpp.package.resdirs = ["res"]
+        self.cpp.package.libdirs = [os.path.join("site-packages", "UM")]
+        self.cpp.package.resdirs = ["resources", "plugins", "pip_requirements"]  # Note: pip_requirements should be the last item in the list
 
     def package(self):
-        self.copy("*", src = "UM", dst = os.path.join(self.cpp.package.libdirs[0], "UM"))
-        self.copy("*", src = "plugins", dst = os.path.join(self.cpp.package.libdirs[0], "plugins"))
-        self.copy("*", src = "resources", dst = os.path.join(self.cpp.package.resdirs[0], "resources"))
+        self.copy("*", src = "UM", dst = self.cpp.package.libdirs[0])
+        self.copy("*", src = "resources", dst = self.cpp.package.resdirs[0])
+        self.copy("*", src = "plugins", dst = self.cpp.package.resdirs[1])
 
     def package_info(self):
+        #  TODO: Add Uranium specific requirements.txt's and add these to the user_info
         if self.in_local_cache:
-            self.runenv_info.append_path("PYTHONPATH", self.cpp_info.libdirs[0])
+            self.runenv_info.append_path("PYTHONPATH", str(Path(self.cpp_info.libdirs[0]).parent))
+            self.runenv_info.append_path("PYTHONPATH", self.cpp_info.resdirs[1])
         else:
             self.runenv_info.append_path("PYTHONPATH", self.source_folder)
+            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.source_folder, "plugins"))
 
     def package_id(self):
         del self.info.settings.os
