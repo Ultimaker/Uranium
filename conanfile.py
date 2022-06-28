@@ -21,7 +21,7 @@ class UraniumConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     no_copy_source = True
 
-    python_requires = "umbase/0.1.1@ultimaker/testing"
+    python_requires = "umbase/0.1.2@ultimaker/testing"
     python_requires_extend = "umbase.UMBaseConanfile"
 
     options = {
