@@ -69,8 +69,8 @@ class UraniumConan(ConanFile):
     def package_info(self):
         #  TODO: Add Uranium specific requirements.txt's and add these to the user_info
         if self.in_local_cache:
-            self.runenv_info.append_path("PYTHONPATH", str(Path(self.cpp_info.libdirs[0]).parent))
-            self.runenv_info.append_path("PYTHONPATH", self.cpp_info.resdirs[1])
+            self.runenv_info.append_path("PYTHONPATH", str(Path(self.cpp_info.lib_paths[0]).parent))
+            self.runenv_info.append_path("PYTHONPATH", self.cpp_info.res_paths[1])
         else:
             self.runenv_info.append_path("PYTHONPATH", self.source_folder)
             self.runenv_info.append_path("PYTHONPATH", os.path.join(self.source_folder, "plugins"))
