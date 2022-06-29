@@ -190,7 +190,11 @@ class LocalContainerProvider(ContainerProvider):
         if container_id in self._is_read_only_cache:
             return self._is_read_only_cache[container_id]
         if self._storage_path == "":
-            self._storage_path = os.path.realpath(Resources.getDataStoragePath())
+            try:
+                self._storage_path = os.path.realpath(Resources.getDataStoragePath())
+            except OSError:  # Directory can't be accessed.
+                self._is_read_only_cache[container_id] = True
+                return True
         storage_path = self._storage_path
 
         file_path = self._id_to_path[container_id]  # If KeyError: We don't know this ID.
