@@ -34,7 +34,7 @@ class OBJReader(MeshReader):
             mesh_builder = MeshBuilder()
             mesh_builder.setFileName(file_name)
             previous_line_parts = []
-            f = open(file_name, "rt", encoding = "utf-8")
+            f = open(file_name, "rt", encoding = "utf-8", errors='ignore')
             for line in f:
                 parts = previous_line_parts + line.split()
                 previous_line_parts = []
