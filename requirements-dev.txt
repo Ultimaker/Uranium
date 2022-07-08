@@ -1,4 +1,2 @@
 pytest
-pyinstaller
-pyinstaller-hooks-contrib
 sip==6.5.1
