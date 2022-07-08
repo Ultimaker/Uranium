@@ -53,6 +53,39 @@ class UraniumConan(ConanFile):
     def generate(self):
         pass
 
+    @property
+    def _base_dir(self):
+        if self.install_folder is None:
+            if self.build_folder is not None:
+                return Path(self.build_folder)
+            return Path(os.getcwd(), "venv")
+
+        return Path(self.install_folder)  # TODO: add base dir for running from source
+
+    @property
+    def _share_dir(self):
+        return self._base_dir.joinpath("share")
+
+    @property
+    def _script_dir(self):
+        if self.settings.os == "Windows":
+            return self._base_dir.joinpath("Scripts")
+        return self._base_dir.joinpath("bin")
+
+    @property
+    def _site_packages(self):
+        if self.settings.os == "Windows":
+            return self._base_dir.joinpath("Lib", "site-packages")
+        py_version = tools.Version(self.deps_cpp_info["cpython"].version)
+        return self._base_dir.joinpath("lib", f"python{py_version.major}.{py_version.minor}", "site-packages")
+
+    @property
+    def _py_interp(self):
+        py_interp = self._script_dir.joinpath(Path(self.deps_user_info["cpython"].python).name)
+        if self.settings.os == "Windows":
+            py_interp = Path(*[f'"{p}"' if " " in p else p for p in py_interp.parts])
+        return py_interp
+
     def layout(self):
         self.folders.source = "."
         self.folders.build = "venv"
@@ -65,9 +98,13 @@ class UraniumConan(ConanFile):
         self.copy("*", src = "UM", dst = self.cpp.package.libdirs[0])
         self.copy("*", src = "resources", dst = self.cpp.package.resdirs[0])
         self.copy("*", src = "plugins", dst = self.cpp.package.resdirs[1])
+        self.copy("requirement*.txt", src=".", dst=self.cpp.package.resdirs[-1])
 
     def package_info(self):
-        #  TODO: Add Uranium specific requirements.txt's and add these to the user_info
+        self.user_info.pip_requirements = "requirements.txt"
+        self.user_info.pip_requirements_git = "requirements-ultimaker.txt"
+        self.user_info.pip_requirements_build = "requirements-dev.txt"
+
         if self.in_local_cache:
             self.runenv_info.append_path("PYTHONPATH", str(Path(self.cpp_info.lib_paths[0]).parent))
             self.runenv_info.append_path("PYTHONPATH", self.cpp_info.res_paths[1])
@@ -80,3 +117,5 @@ class UraniumConan(ConanFile):
         del self.info.settings.compiler
         del self.info.settings.build_type
         del self.info.settings.arch
+
+        del self.info.options.devtools
