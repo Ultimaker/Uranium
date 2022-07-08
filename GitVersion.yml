@@ -37,7 +37,7 @@ branches:
         is-release-branch: true
         is-mainline: false
         pre-release-weight: 30000
-    pull-request:
+    pull-request-main:
         regex: ^(pull|pull\-requests|pr)[/-]
         mode: ContinuousDelivery
         tag: alpha+
@@ -48,6 +48,19 @@ branches:
         source-branches: [ 'main' ]
         tracks-release-branches: false
         is-release-branch: false
+        is-mainline: false
+        pre-release-weight: 30000
+    pull-request-release:
+        regex: ^(pull|pull\-requests|pr)[/-]
+        mode: ContinuousDelivery
+        tag: beta+
+        increment: Inherit
+        prevent-increment-of-merged-branch-version: true
+        tag-number-pattern: '[/-](?<number>\d+)[-/]'
+        track-merge-target: true
+        source-branches: [ '^[\d].[\d]$' ]
+        tracks-release-branches: false
+        is-release-branch: true
         is-mainline: false
         pre-release-weight: 30000
 ignore:
