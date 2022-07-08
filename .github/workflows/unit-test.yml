@@ -108,7 +108,7 @@ jobs:
                 run: conan install . ${{ needs.conan-recipe-version.outputs.recipe_id_full }} --build=missing --update -o uranium:devtools=True  -g VirtualPythonEnv -if venv
 
             -   name: Upload the Dependency package(s)
-                run: conan upload "*" -r uranium --all -c
+                run: conan upload "*" -r cura --all -c
 
             -   name: Set Environment variables for Uranium (bash)
                 if: ${{ runner.os != 'Windows' }}
