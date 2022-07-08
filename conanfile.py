@@ -102,7 +102,6 @@ class UraniumConan(ConanFile):
 
     def package_info(self):
         self.user_info.pip_requirements = "requirements.txt"
-        self.user_info.pip_requirements_git = "requirements-ultimaker.txt"
         self.user_info.pip_requirements_build = "requirements-dev.txt"
 
         if self.in_local_cache:
