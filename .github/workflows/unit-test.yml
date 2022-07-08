@@ -61,7 +61,7 @@ env:
 
 jobs:
     conan-recipe-version:
-        uses: ultimaker/uranium/.github/workflows/conan-recipe-version.yml@5.1
+        uses: ultimaker/cura/.github/workflows/conan-recipe-version.yml@5.1
         with:
             project_name: uranium
 
