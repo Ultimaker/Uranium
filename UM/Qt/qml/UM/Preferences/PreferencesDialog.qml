@@ -10,7 +10,7 @@ import ".."
 
 import UM 1.5 as UM
 
-Dialog
+UM.Dialog
 {
     id: base
 
@@ -19,6 +19,7 @@ Dialog
     minimumHeight: UM.Theme.getSize("modal_window_minimum").height
     width: minimumWidth
     height: minimumHeight
+    backgroundColor: UM.Theme.getColor("main_background")
 
     property alias currentPage: pagesList.currentIndex
 

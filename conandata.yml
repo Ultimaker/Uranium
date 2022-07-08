@@ -1,0 +1,16 @@
+"None":
+    requirements:
+        - "arcus/(latest)@ultimaker/cura_9365"
+        - "cpython/3.10.4"
+"5.1.0":
+    requirements:
+        - "arcus/5.1.0"
+        - "cpython/3.10.4"
+"5.1.0-beta":
+    requirements:
+        - "arcus/(latest)@ultimaker/stable"
+        - "cpython/3.10.4"
+"5.1.0-alpha":
+    requirements:
+        - "arcus/(latest)@ultimaker/cura_9365"
+        - "cpython/3.10.4"

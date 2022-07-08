@@ -183,7 +183,14 @@ class Application:
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
 
         if not hasattr(sys, "frozen"):
-            Resources.addSecureSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
+            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
+
+            # local Conan cache
+            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "resources"))
+            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "plugins"))
+
+            # venv site-packages
+            Resources.addSearchPath(os.path.join(os.path.dirname(sys.executable), "..", "share", "uranium", "resources"))
 
         i18nCatalog.setApplication(self)
 
