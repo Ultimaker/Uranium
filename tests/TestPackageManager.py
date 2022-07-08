@@ -222,4 +222,4 @@ def test_removeAllScheduledPackagesWithException():
     manager._to_remove_package_set = {"beep"}
 
     manager._removeAllScheduledPackages()
-    assert manager._to_remove_package_set == {"beep"}
+    assert manager._to_remove_package_set == set()
