@@ -40,11 +40,11 @@ branches:
     pull-request:
         regex: ^(pull|pull\-requests|pr)[/-]
         mode: ContinuousDelivery
-        tag: alpha
+        tag: alpha+
         increment: Inherit
         prevent-increment-of-merged-branch-version: true
         tag-number-pattern: '[/-](?<number>\d+)[-/]'
-        track-merge-target: false
+        track-merge-target: true
         source-branches: [ 'main' ]
         tracks-release-branches: false
         is-release-branch: false
