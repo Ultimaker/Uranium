@@ -63,6 +63,12 @@ class UraniumConan(ConanFile):
         return Path(self.install_folder)  # TODO: add base dir for running from source
 
     @property
+    def requirements_txts(self):
+        if self.options.devtools:
+            return ["requirements.txt", "requirements-dev.txt"]
+        return ["requirements.txt"]
+
+    @property
     def _share_dir(self):
         return self._base_dir.joinpath("share")
 
