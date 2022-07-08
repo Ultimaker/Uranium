@@ -43,7 +43,7 @@ def test_getUnknownIcon(theme):
 def test_knownFont(theme):
     font = theme.getFont("test_font")
     assert font.family() == "Felidae"
-    assert font.weight() == 40
+    assert font.weight() == 350
 
 
 def test_unknownFont(theme):
