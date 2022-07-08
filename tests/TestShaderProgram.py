@@ -25,6 +25,7 @@ def test_loadInvalid():
     with pytest.raises(InvalidShaderProgramError):
         shader.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "Shaders", "invalid2.shader"))
 
+
 def test_load():
     shader = ShaderProgram()
 
@@ -35,9 +36,9 @@ def test_load():
 
     # It should be called 3 times, once for vertex, once for fragment and once for geometry
     call_arg_list = mocked_shader_program.addShaderFromSourceCode.call_args_list
-    assert call(QOpenGLShader.Vertex, "vertex_code") in call_arg_list
-    assert call(QOpenGLShader.Fragment, "fragment_code") in call_arg_list
-    assert call(QOpenGLShader.Geometry, "geometry_code") in call_arg_list
+    assert call(QOpenGLShader.ShaderTypeBit.Vertex, "vertex_code") in call_arg_list
+    assert call(QOpenGLShader.ShaderTypeBit.Fragment, "fragment_code") in call_arg_list
+    assert call(QOpenGLShader.ShaderTypeBit.Geometry, "geometry_code") in call_arg_list
 
 
 def test_bindAndRelease():
