@@ -58,7 +58,7 @@ branches:
         prevent-increment-of-merged-branch-version: true
         tag-number-pattern: '[/-](?<number>\d+)[-/]'
         track-merge-target: true
-        source-branches: [ '^[\d].[\d]$' ]
+        source-branches: [ '5.1', '5.2' ] # fixme: hardcoded
         tracks-release-branches: false
         is-release-branch: true
         is-mainline: false
