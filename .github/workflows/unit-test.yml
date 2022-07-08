@@ -70,6 +70,9 @@ jobs:
         needs: [ conan-recipe-version ]
 
         steps:
+            -  name: Checkout repo
+               uses: actions/checkout@v3
+
             -   name: Setup Python and pip
                 uses: actions/setup-python@v4
                 with:
