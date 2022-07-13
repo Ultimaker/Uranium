@@ -401,6 +401,8 @@ class SettingDefinitionsModel(QAbstractListModel):
                 self._visibility_handler.setVisible(new_visible | self._visible)
             else:
                 self._visibility_handler.setVisible(self._visible - new_visible)
+        else:
+            self._visible = new_visible
 
     @pyqtSlot(str, bool)
     def setVisible(self, key: str, visible: bool) -> None:
