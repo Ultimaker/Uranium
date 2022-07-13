@@ -32,7 +32,7 @@ jobs:
 
     conan-package-export-macos:
         needs: [ conan-recipe-version ]
-        uses: ultimaker/cura/.github/workflows/conan-recipe-export.yml@5.1
+        uses: ultimaker/cura/.github/workflows/conan-recipe-export.yml@main
         with:
             recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
             recipe_id_latest: ${{ needs.conan-recipe-version.outputs.recipe_id_latest }}
@@ -46,7 +46,7 @@ jobs:
 
     conan-package-export-linux:
         needs: [ conan-recipe-version ]
-        uses: ultimaker/cura/.github/workflows/conan-recipe-export.yml@5.1
+        uses: ultimaker/cura/.github/workflows/conan-recipe-export.yml@main
         with:
             recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
             recipe_id_latest: ${{ needs.conan-recipe-version.outputs.recipe_id_latest }}
@@ -60,7 +60,7 @@ jobs:
 
     conan-package-export-windows:
         needs: [ conan-recipe-version ]
-        uses: ultimaker/cura/.github/workflows/conan-recipe-export.yml@5.1
+        uses: ultimaker/cura/.github/workflows/conan-recipe-export.yml@main
         with:
             recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
             recipe_id_latest: ${{ needs.conan-recipe-version.outputs.recipe_id_latest }}
@@ -76,7 +76,7 @@ jobs:
         if: ${{ always() }}
         needs: [ conan-package-export-linux, conan-package-export-macos, conan-package-export-windows ]
 
-        uses: ultimaker/cura/.github/workflows/notify.yml@5.1
+        uses: ultimaker/cura/.github/workflows/notify.yml@main
         with:
             success: ${{ contains(join(needs.*.result, ','), 'success') }}
             success_title: "New Conan recipe exported in ${{ github.repository }}"
