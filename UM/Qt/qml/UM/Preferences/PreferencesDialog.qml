@@ -8,9 +8,9 @@ import QtQuick.Window 2.1
 
 import ".."
 
-import UM 1.5 as UM
+import UM 1.6 as UM
 
-UM.Dialog
+UM.Window
 {
     id: base
 
@@ -19,9 +19,14 @@ UM.Dialog
     minimumHeight: UM.Theme.getSize("modal_window_minimum").height
     width: minimumWidth
     height: minimumHeight
-    backgroundColor: UM.Theme.getColor("main_background")
 
     property alias currentPage: pagesList.currentIndex
+
+    Rectangle
+    {
+        anchors.fill: parent
+        color: UM.Theme.getColor("main_background")
+    }
 
     Item
     {
