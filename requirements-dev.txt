@@ -1,2 +1,2 @@
-conan
+pytest
 sip==6.5.1

@@ -21,7 +21,7 @@ Window
     width: minimumWidth
     height: minimumHeight
 
-    property int margin: screenScaleFactor * 8;
+    property int margin: UM.Theme.getSize("default_margin").width
     property bool closeOnAccept: true;  // Automatically close the window when the window is "accepted" (eg using the return key)
 
     default property alias contents: contentItem.children;
@@ -102,6 +102,7 @@ Window
     {
         id: background
         anchors.fill: parent
+        color: UM.Theme.getColor("main_background")
     }
 
     ColumnLayout
