@@ -19,14 +19,13 @@ UM.Window
     minimumHeight: UM.Theme.getSize("modal_window_minimum").height
     width: minimumWidth
     height: minimumHeight
-    backgroundColor: UM.Theme.getColor("background_2")
 
     property alias currentPage: pagesList.currentIndex
 
     Rectangle
     {
         anchors.fill: parent
-        color: UM.Theme.getColor("main_background")
+        color: UM.Theme.getColor("background_2")
     }
 
     Item
