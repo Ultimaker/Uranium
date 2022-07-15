@@ -14,6 +14,7 @@ from . import ControllerProxy
 from . import BackendProxy
 from . import ResourcesProxy
 from . import OperationStackProxy
+from . import Window
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 from . import PreferencesProxy
@@ -121,6 +122,7 @@ class Bindings:
 
         # Additions after 5.0
         qmlRegisterType(TableModel.TableModel, "UM", 1, 6, "TableModel")
+        qmlRegisterType(Window.Window, "UM", 1, 6, "Window")
 
     @staticmethod
     def addRegisterType(class_type: type, qml_import_name: str, major_version: int, minor_version: int, class_name: str) -> None:
