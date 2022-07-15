@@ -32,6 +32,7 @@ UM.Window
     {
         id: test
         anchors.fill: parent
+        anchors.margins: UM.Theme.getSize("default_margin").width
 
         ListView
         {
