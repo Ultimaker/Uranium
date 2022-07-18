@@ -21,6 +21,10 @@ class Window(QQuickWindow):
         self.update()
         return super(Window, self).moveEvent(event)
 
+    def showEvent(self, event):
+        self.update()
+        return super(Window, self).showEvent(event)
+
     def resizeEvent(self, event):
         self.update()
         return super(Window, self).resizeEvent(event)
