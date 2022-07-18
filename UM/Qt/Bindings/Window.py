@@ -15,12 +15,12 @@ class Window(QQuickWindow):
         super(Window, self).__init__(parent=parent)
         self.update()
 
-    def moveEvent(self, event) -> None:
+    def moveEvent(self, event):
         # When dragging a window between screens with different scaling settings we see some rendering artifacts. By
         # intercepting the window move event, and triggering an update on this move event we circumvent this issue.
         self.update()
         return super(Window, self).moveEvent(event)
 
-    def resizeEvent(self, event) -> None:
+    def resizeEvent(self, event):
         self.update()
         return super(Window, self).resizeEvent(event)
