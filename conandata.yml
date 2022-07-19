@@ -1,8 +1,12 @@
 "None":
     requirements:
-        - "arcus/(latest)@ultimaker/testing"
+        - "arcus/5.1.0"
         - "cpython/3.10.4"
 "5.1.0":
+    requirements:
+        - "arcus/5.1.0"
+        - "cpython/3.10.4"
+"5.1.0-beta":
     requirements:
         - "arcus/5.1.0"
         - "cpython/3.10.4"
