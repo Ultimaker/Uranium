@@ -21,7 +21,7 @@ class UraniumConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     no_copy_source = True
 
-    python_requires = "umbase/0.1.4@ultimaker/testing"
+    python_requires = "umbase/0.1.5@ultimaker/testing"
     python_requires_extend = "umbase.UMBaseConanfile"
 
     options = {
@@ -47,8 +47,7 @@ class UraniumConan(ConanFile):
                 raise ConanInvalidConfiguration("Only versions 5+ are support")
 
     def requirements(self):
-        channel = "" if not self.channel else self.channel
-        for req in self._um_data(self.version, channel)["requirements"]:
+        for req in self._um_data()["requirements"]:
             self.requires(req)
 
     def generate(self):
