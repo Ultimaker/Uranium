@@ -50,17 +50,16 @@ class UraniumConan(ConanFile):
         for req in self._um_data()["requirements"]:
             self.requires(req)
 
-    def generate(self):
-        pass
-
     @property
     def _base_dir(self):
         if self.install_folder is None:
             if self.build_folder is not None:
                 return Path(self.build_folder)
             return Path(os.getcwd(), "venv")
-
-        return Path(self.install_folder)  # TODO: add base dir for running from source
+        if self.in_local_cache:
+            return Path(self.install_folder)
+        else:
+            return Path(self.source_folder, "venv")
 
     @property
     def requirements_txts(self):
