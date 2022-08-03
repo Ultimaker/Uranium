@@ -43,7 +43,7 @@ jobs:
 
     notify-export:
         if: ${{ always() }}
-        needs: [ conan-recipe-version, conan-package-export-linux, conan-package-export-macos, conan-package-export-windows ]
+        needs: [ conan-recipe-version, conan-package-export-linux ]
 
         uses: ultimaker/cura/.github/workflows/notify.yml@main
         with:
