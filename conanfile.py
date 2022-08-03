@@ -91,6 +91,12 @@ class UraniumConan(ConanFile):
             py_interp = Path(*[f'"{p}"' if " " in p else p for p in py_interp.parts])
         return py_interp
 
+    def build(self):
+        pass
+
+    def generate(self):
+        pass
+
     def layout(self):
         self.folders.source = "."
         self.folders.build = "venv"
@@ -103,7 +109,7 @@ class UraniumConan(ConanFile):
         self.copy("*", src = "UM", dst = self.cpp.package.libdirs[0])
         self.copy("*", src = "resources", dst = self.cpp.package.resdirs[0])
         self.copy("*", src = "plugins", dst = self.cpp.package.resdirs[1])
-        self.copy("requirement*.txt", src=".", dst=self.cpp.package.resdirs[-1])
+        self.copy("requirement*.txt", src=".", dst = self.cpp.package.resdirs[-1])
 
     def package_info(self):
         self.user_info.pip_requirements = "requirements.txt"
