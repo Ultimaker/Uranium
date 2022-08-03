@@ -38,7 +38,7 @@ class UraniumConan(ConanFile):
     }
 
     def configure(self):
-        self.options["arcus"].shared = True
+        self.options["pyarcus"].shared = True
         self.options["cpython"].shared = True
 
     def validate(self):
