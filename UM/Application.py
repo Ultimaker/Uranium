@@ -1,6 +1,7 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from pathlib import Path
 import argparse
 import os
 import sys
@@ -183,14 +184,15 @@ class Application:
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
 
         if not hasattr(sys, "frozen"):
-            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
+            Resources.addSearchPath(str(Path(__file__).parent.parent.joinpath("resources")))
+            Resources.addSearchPath(str(Path(__file__).parent.parent.joinpath("plugins")))
 
             # local Conan cache
-            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "resources"))
-            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "plugins"))
+            Resources.addSearchPath(str(Path(__file__).parent.parent.parent.joinpath("resources")))
+            Resources.addSearchPath(str(Path(__file__).parent.parent.parent.joinpath("plugins")))
 
             # venv site-packages
-            Resources.addSearchPath(os.path.join(os.path.dirname(sys.executable), "..", "share", "uranium", "resources"))
+            Resources.addSearchPath(str(Path(sys.executable).parent.parent.joinpath("share", "uranium", "resources")))
 
         i18nCatalog.setApplication(self)
 
@@ -231,7 +233,8 @@ class Application:
         self._plugin_registry.addPluginLocation(local_path)
 
         if not hasattr(sys, "frozen"):
-            self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "plugins"))
+            self._plugin_registry.addPluginLocation(str(Path(__file__).parent.parent.joinpath("plugins")))
+            self._plugin_registry.addPluginLocation(str(Path(__file__).parent.parent.parent.joinpath("plugins")))
 
         self._container_registry = self._container_registry_class(self)
 
