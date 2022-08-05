@@ -47,8 +47,9 @@ class ToolModel(ListModel):
             tool_meta_data = tools[name].getMetaData()
             location = PluginRegistry.getInstance().getMetaData(plugin_id).get("location", "")
 
-            # Skip tools that are marked as not visible
-            if "visible" in tool_meta_data and not tool_meta_data["visible"]:
+            # Skip tools that are marked as not visible, or are not there
+            tool = self._controller.getTool(name)
+            if ("visible" in tool_meta_data and not tool_meta_data["visible"]) or tool is None:
                 continue
 
             # Optional metadata elements
@@ -56,7 +57,7 @@ class ToolModel(ListModel):
             icon_name = tool_meta_data.get("icon", "default.png")
 
             #Get the shortcut and translate it to a string.
-            shortcut = self._controller.getTool(name).getShortcutKey()
+            shortcut = tool.getShortcutKey()
             if shortcut:
                 shortcut = QKeySequence(shortcut).toString()
             else:
@@ -64,7 +65,7 @@ class ToolModel(ListModel):
 
             weight = tool_meta_data.get("weight", 0)
 
-            enabled = self._controller.getTool(name).getEnabled()
+            enabled = tool.getEnabled()
 
             items.append({
                 "id": name,
