@@ -1,0 +1,48 @@
+{
+    "cura": {
+        "Windows": {
+            "major": 5,
+            "minor": 1,
+            "revision": 0,
+            "url": "https://ultimaker.com/software/ultimaker-cura?utm_source=cura&utm_medium=software&utm_campaign=cura-update-download"
+        },
+        "Linux": {
+            "major": 5,
+            "minor": 1,
+            "revision": 0,
+            "url": "https://ultimaker.com/software/ultimaker-cura?utm_source=cura&utm_medium=software&utm_campaign=cura-update-download"
+        },
+        "Darwin": {
+            "major": 5,
+            "minor": 1,
+            "revision": 0,
+            "url": "https://ultimaker.com/software/ultimaker-cura?utm_source=cura&utm_medium=software&utm_campaign=cura-update-download"
+        }
+    },
+	"cura-beta": {
+        "Windows": {
+            "major": 5,
+            "minor": 2,
+            "revision": 0,
+            "postfix_type": "beta",
+            "postfix_version": "2",
+            "url": "https://github.com/Ultimaker/Cura/releases/tag/5.1-beta"
+        },
+        "Linux": {
+            "major": 5,
+            "minor": 1,
+            "revision": 0,
+            "postfix_type": "beta",
+            "postfix_version": "2",
+            "url": "https://github.com/Ultimaker/Cura/releases/tag/5.1-beta"
+        },
+        "Darwin": {
+            "major": 5,
+            "minor": 1,
+            "revision": 0,
+            "postfix_type": "beta",
+            "postfix_version": "2",
+            "url": "https://github.com/Ultimaker/Cura/releases/tag/5.1-beta"
+        }
+    }
+}
