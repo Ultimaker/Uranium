@@ -65,6 +65,20 @@ def test_versionPostfix():
     assert version <= Version("1.2.3-alpha.5")
     assert version < Version("1.2.3-alpha.5")
 
+def test_postfix_lastest_json_format():
+    beta_1 = Version([1, 2, 3, "beta", 1])
+    beta_2 = Version([1, 2, 3, "beta", 2])
+    assert beta_2 > beta_1
+    assert beta_2 != beta_1
+
+    release = Version([5, 1, 0])
+    beta = Version([5, 1, 0, "beta", 2])
+    assert release > beta
+
+    release_old = Version([5, 1, 0])
+    beta_new = Version([5, 2, 0, "beta", 2])
+    assert release_old < beta_new
+
 
 def test_versionWeirdCompares():
     version = Version("1.2.3-alpha.4")
