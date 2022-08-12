@@ -78,8 +78,8 @@ class UpdateChecker(Extension):
         if os not in data[application_name]:
             return None, None
 
-        # Make this the default return after we update latest.json
         if "postfix_type" in data[application_name][os] and "postfix_version" in data[application_name][os]:
+            # Prerelease versions include the extra postfix_type and postfix_version keys
             return Version([int(data[application_name][os]["major"]),
                             int(data[application_name][os]["minor"]),
                             int(data[application_name][os]["revision"]),
