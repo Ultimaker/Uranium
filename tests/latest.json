@@ -30,7 +30,7 @@
         },
         "Linux": {
             "major": 5,
-            "minor": 1,
+            "minor": 2,
             "revision": 0,
             "postfix_type": "beta",
             "postfix_version": "2",
@@ -38,7 +38,7 @@
         },
         "Darwin": {
             "major": 5,
-            "minor": 1,
+            "minor": 2,
             "revision": 0,
             "postfix_type": "beta",
             "postfix_version": "2",
