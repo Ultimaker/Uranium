@@ -34,6 +34,7 @@ class Version:
             version = version.replace("-", ".")
             version = version.replace("_", ".")
             version = version.replace("\"", "")
+            version = version.replace("+", ".")
             version_list = version.split(".")  # type: ignore
             # Only the third element (the postfix_type) is allowed to be a string. In other cases all non numeric
             # characters need to be filtered out
@@ -42,7 +43,8 @@ class Version:
                 version_list[1] = re.sub(r"[A-Z]+", "", version_list[1])
                 version_list[2] = re.sub(r"[A-Z]+", "", version_list[2])
                 version_list[4] = re.sub(r"[A-Z]+", "", version_list[4])
-            except IndexError:
+            except IndexError as err:
+                Logger.error(f"Failed to parse version number from string: {err}")
                 pass
         elif isinstance(version, list):
             version_list = version  # type: ignore
