@@ -78,17 +78,24 @@ class UpdateChecker(Extension):
         if os not in data[application_name]:
             return None, None
 
-        if "postfix_type" in data[application_name][os] and "postfix_version" in data[application_name][os]:
-            # Prerelease versions include the extra postfix_type and postfix_version keys
-            return Version([int(data[application_name][os]["major"]),
-                            int(data[application_name][os]["minor"]),
-                            int(data[application_name][os]["revision"]),
-                            str(data[application_name][os]["postfix_type"]),
-                            int(data[application_name][os]["postfix_version"])]), data[application_name][os]["url"]
-
-        return Version([int(data[application_name][os]["major"]),
-                        int(data[application_name][os]["minor"]),
-                        int(data[application_name][os]["revision"])]), data[application_name][os]["url"]
+        try:
+            if "postfix_type" in data[application_name][os] and "postfix_version" in data[application_name][os]:
+                # Prerelease versions include the extra postfix_type and postfix_version keys
+                return Version([int(data[application_name][os]["major"]),
+                                int(data[application_name][os]["minor"]),
+                                int(data[application_name][os]["revision"]),
+                                str(data[application_name][os]["postfix_type"]),
+                                int(data[application_name][os]["postfix_version"])]), data[application_name][os]["url"]
+            else:
+                return Version([int(data[application_name][os]["major"]),
+                                int(data[application_name][os]["minor"]),
+                                int(data[application_name][os]["revision"])]), data[application_name][os]["url"]
+        except KeyError as err:
+            Logger.error(f"Failed to find key in version data from latest.json: {err}")
+            return None, None
+        except Exception as err:
+            Logger.error(f"Failed to extract version data from latest.json: {err}")
+            return None, None
 
     def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool) -> None:
         if reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute) != 200:
