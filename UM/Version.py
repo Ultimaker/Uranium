@@ -21,6 +21,8 @@ class Version:
         :param version: A string or bytes representing a version number.
         """
 
+        # FIXME: We should probably swap this whole class out for the semver python package. That is what is used by conan.
+
         super().__init__()
 
         if type(version) == bytes:

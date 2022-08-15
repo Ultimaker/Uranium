@@ -45,7 +45,7 @@ class Application:
     used to access objects required for those plugins.
     """
 
-    def __init__(self, name: str, version: str, api_version: str, app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
+    def __init__(self, name: str, version: str, latest_url: str, api_version: str, app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
         """Init method
 
         :param name: :type{string} The name of the application.
@@ -84,6 +84,7 @@ class Application:
 
         self.change_log_url: str = "https://github.com/Ultimaker/Uranium"  # Where to find a more detailed description of the recent updates.
         self.beta_change_log_url: str = "https://github.com/Ultimaker/Uranium"  # Where to find a more detailed description of proposed updates.
+        self.latest_url: str = latest_url  # Where to find the json file specifying the latest versions.
 
         self._preferences_filename = None  # type: str
         self._preferences = None  # type: Preferences

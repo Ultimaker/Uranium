@@ -32,18 +32,19 @@ class UpdateChecker(Extension):
     The plugin is currently only usable for applications maintained by Ultimaker. But it should be relatively easy
     to change it to work for other applications.
     """
-    url = "https://raw.githubusercontent.com/Ultimaker/Uranium/CURA-9272_semver_postfix/tests/latest.json"
 
     def __init__(self) -> None:
         super().__init__()
+
+        self.latest_url = Application.getInstance().latest_url
+        self._download_url: Optional[str] = None
+
         self.setMenuName(i18n_catalog.i18nc("@item:inmenu", "Update Checker"))
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
         preferences = Application.getInstance().getPreferences()
         preferences.addPreference("info/automatic_update_check", True)
         if preferences.getValue("info/automatic_update_check"):
             self.checkNewVersion(silent = True, display_same_version = False)
-
-        self._download_url: Optional[str] = None
 
         # Which version was the latest shown in the version upgrade dialog. Don't show these updates twice.
         preferences.addPreference("info/latest_update_version_shown", Application.getInstance().getVersion())
@@ -66,7 +67,7 @@ class UpdateChecker(Extension):
         """
         http_manager = HttpRequestManager.getInstance()
         Logger.log("i", "Checking for new version")
-        http_manager.get(self.url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
+        http_manager.get(self.latest_url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
         self._download_url = None
 
     @classmethod
