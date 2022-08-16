@@ -15,7 +15,7 @@ class NewBetaVersionMessage(AnnotatedUpdateMessage):
     def __init__(self, application_display_name: str, newest_version: Version) -> None:
         super().__init__(
                 title = I18N_CATALOG.i18nc("@info:status",
-                                          "{application_name} {version_number}-BETA is available!").format(
+                                          "{application_name} {version_number} is available!").format(
                                                 application_name = application_display_name, 
                                                 version_number = newest_version),
                 text = I18N_CATALOG.i18nc("@info:status",
