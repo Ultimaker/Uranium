@@ -32,18 +32,19 @@ class UpdateChecker(Extension):
     The plugin is currently only usable for applications maintained by Ultimaker. But it should be relatively easy
     to change it to work for other applications.
     """
-    url = "https://software.ultimaker.com/latest.json"
 
     def __init__(self) -> None:
         super().__init__()
+
+        self.latest_url = Application.getInstance().latest_url
+        self._download_url: Optional[str] = None
+
         self.setMenuName(i18n_catalog.i18nc("@item:inmenu", "Update Checker"))
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
         preferences = Application.getInstance().getPreferences()
         preferences.addPreference("info/automatic_update_check", True)
         if preferences.getValue("info/automatic_update_check"):
             self.checkNewVersion(silent = True, display_same_version = False)
-
-        self._download_url: Optional[str] = None
 
         # Which version was the latest shown in the version upgrade dialog. Don't show these updates twice.
         preferences.addPreference("info/latest_update_version_shown", Application.getInstance().getVersion())
@@ -66,7 +67,7 @@ class UpdateChecker(Extension):
         """
         http_manager = HttpRequestManager.getInstance()
         Logger.log("i", "Checking for new version")
-        http_manager.get(self.url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
+        http_manager.get(self.latest_url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
         self._download_url = None
 
     @classmethod
@@ -78,9 +79,24 @@ class UpdateChecker(Extension):
         if os not in data[application_name]:
             return None, None
 
-        return Version([int(data[application_name][os]["major"]),
-                        int(data[application_name][os]["minor"]),
-                        int(data[application_name][os]["revision"])]), data[application_name][os]["url"]
+        try:
+            if "postfix_type" in data[application_name][os] and "postfix_version" in data[application_name][os]:
+                # Prerelease versions include the extra postfix_type and postfix_version keys
+                return Version([int(data[application_name][os]["major"]),
+                                int(data[application_name][os]["minor"]),
+                                int(data[application_name][os]["revision"]),
+                                str(data[application_name][os]["postfix_type"]),
+                                int(data[application_name][os]["postfix_version"])]), data[application_name][os]["url"]
+            else:
+                return Version([int(data[application_name][os]["major"]),
+                                int(data[application_name][os]["minor"]),
+                                int(data[application_name][os]["revision"])]), data[application_name][os]["url"]
+        except KeyError as err:
+            Logger.error(f"Failed to find key in version data from latest.json: {err}")
+            return None, None
+        except Exception as err:
+            Logger.error(f"Failed to extract version data from latest.json: {err}")
+            return None, None
 
     def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool) -> None:
         if reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute) != 200:
@@ -123,7 +139,6 @@ class UpdateChecker(Extension):
                                          "info/latest_update_version_shown")
             else:
                 # Beta version is the highest, check for that
-                local_version = local_version.getWithoutPostfix()  # Since we can't specify postfix in the latest.json.
                 if download_url is not None:
                     self._download_url = beta_download_url
                 self._handleLatestUpdate(local_version, newest_beta_version, silent, display_same_version,

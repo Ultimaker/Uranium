@@ -65,6 +65,31 @@ def test_versionPostfix():
     assert version <= Version("1.2.3-alpha.5")
     assert version < Version("1.2.3-alpha.5")
 
+def test_postfix_format():
+    beta_1 = Version([1, 2, 3, "beta", 1])
+    beta_2 = Version([1, 2, 3, "beta", 2])
+    assert beta_2 > beta_1
+    assert beta_2 != beta_1
+
+def test_old_beta():
+    release = Version([5, 1, 0])
+    beta = Version([5, 1, 0, "beta", 2])
+    assert release > beta
+
+def test_new_beta():
+    release_old = Version([5, 1, 0])
+    beta_new = Version([5, 2, 0, "beta", 2])
+    assert release_old < beta_new
+
+def test_missing_prerelease_number():
+    beta_missing_version_number = Version("1.2.3-beta.")
+    beta_version_number = Version("1.2.3-beta.1")
+    assert beta_version_number > beta_missing_version_number
+
+def test_ignores_build_metadata():
+    beta_old_metadata = Version("1.2.3-beta.1+500")
+    beta_new_metadata = Version("1.2.3-beta.2+50")
+    assert beta_new_metadata > beta_old_metadata
 
 def test_versionWeirdCompares():
     version = Version("1.2.3-alpha.4")
