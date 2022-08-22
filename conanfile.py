@@ -6,7 +6,7 @@ from conan import ConanFile
 from conans import tools
 from conan.errors import ConanInvalidConfiguration
 
-required_conan_version = ">=1.47.0"
+required_conan_version = ">=1.48.0"
 
 
 class UraniumConan(ConanFile):
