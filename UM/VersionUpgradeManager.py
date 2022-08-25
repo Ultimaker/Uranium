@@ -76,25 +76,25 @@ class VersionUpgradeManager:
         VersionUpgradeManager.__instance = self
 
         self._application = application
-        self._version_upgrades = {} # type: Dict[Tuple[str, int], Set[Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]]   # For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
+        self._version_upgrades: Dict[Tuple[str, int], Set[Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]] = {} # For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
 
         # For each config type, gives a function with which to get the version number from those files.
-        self._get_version_functions = {}  # type: Dict[str, Callable[[str], int]]
+        self._get_version_functions: Dict[str, Callable[[str], int]] = {}
 
         # For each config type, a set of storage paths to search for old config files.
-        self._storage_paths = {}  # type: Dict[str, Dict[int, Set[str]]]
+        self._storage_paths: Dict[str, Dict[int, Set[str]]] = {}
 
         # To know which preference versions and types to upgrade to.
-        self._current_versions = {} # type: Dict[Tuple[str, int], Any]
+        self._current_versions: Dict[Tuple[str, int], Any] = {}
 
-        self._upgrade_tasks = collections.deque()  # type: collections.deque  # The files that we still have to upgrade.
-        self._upgrade_routes = {}  # type: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]] #How to upgrade from one version to another. Needs to be pre-computed after all version upgrade plug-ins are registered.
+        self._upgrade_tasks: collections.deque = collections.deque()  # The files that we still have to upgrade.
+        self._upgrade_routes: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]] = {} #How to upgrade from one version to another. Needs to be pre-computed after all version upgrade plug-ins are registered.
 
-        self._registry = PluginRegistry.getInstance()   # type: PluginRegistry
+        self._registry: PluginRegistry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
         #Regular expressions of the files that should not be checked, such as log files.
-        self._ignored_files = [
+        self._ignored_files: List[str] = [
             ".*\\.lock",       # Don't upgrade the configuration file lock. It's not persistent.
             "plugins\\.json",  # plugins.json and packages.json need to remain the same for the version upgrade plug-ins.
             "packages\\.json",
@@ -110,7 +110,7 @@ class VersionUpgradeManager:
             "plugins/.*",
             "./*packages\\.json",
             "./*plugins\\.json"
-        ]  # type: List[str]
+        ]
 
     def registerIgnoredFile(self, file_name: str) -> None:
         """Registers a file to be ignored by version upgrade checks (eg log files).
@@ -254,13 +254,13 @@ class VersionUpgradeManager:
         """
 
         # For each (type, version) tuple, which upgrade function to use to upgrade it towards the newest versions.
-        result = {}  # type: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]]
+        result: Dict[Tuple[str, int], Tuple[str, int, Callable[[str, str], Optional[Tuple[List[str], List[str]]]]]] = {}
 
         # Perform a many-to-many shortest path search with Dijkstra's algorithm.
-        front = collections.deque()  # type: collections.deque #Use as a queue for breadth-first iteration: Append right, pop left.
+        front: collections.deque = collections.deque() #Use as a queue for breadth-first iteration: Append right, pop left.
         for configuration_type, version in self._current_versions:
             front.append((configuration_type, version))
-        explored_versions = set()  # type: Set[Tuple[str, int]]
+        explored_versions: Set[Tuple[str, int]] = set()
         while len(front) > 0:
             destination_type, destination_version = front.popleft()  # To make it a queue, pop on the opposite side of where you append!
             if (destination_type, destination_version) in self._version_upgrades:  # We can upgrade to this version.
@@ -434,8 +434,8 @@ class VersionUpgradeManager:
                 # No version upgrade plug-in claims to be able to upgrade this file.
                 return None
             new_type, new_version, upgrade_step = self._upgrade_routes[(configuration_type, version)]
-            new_file_names_without_extension = []  # type: List[str]
-            new_files_data = []  # type: List[str]
+            new_file_names_without_extension: List[str] = []
+            new_files_data: List[str] = []
             for file_idx, file_data in enumerate(files_data):
                 try:
                     upgrade_step_result = upgrade_step(file_data, file_names_without_extension[file_idx])
@@ -471,7 +471,7 @@ class VersionUpgradeManager:
 
         return file_name
 
-    __instance = None   # type: VersionUpgradeManager
+    __instance: "VersionUpgradeManager" = None
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "VersionUpgradeManager":
