@@ -40,6 +40,7 @@ class UraniumConan(ConanFile):
     def configure(self):
         self.options["pyarcus"].shared = True
         self.options["cpython"].shared = True
+        self.options["pyqt6"].shared = True
 
     def validate(self):
         if self.version:
