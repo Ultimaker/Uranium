@@ -43,7 +43,7 @@
 [Conan]: https://github.com/Ultimaker/Uranium/actions/workflows/conan-package.yml
 [Test]: https://github.com/Ultimaker/Uranium/actions/workflows/unit-test.yml
 
-[Requirements]: docs/Requirements.md
+[Requirements]: docs/System%20Requirements.md
 [Developing]: docs/Developing.md
 [Packaging]: docs/Packaging.md
 [Building]: docs/Building.md

@@ -1,40 +1,65 @@
-## System Requirements
+
+# System Requirements
+
+<br>
+
+-   CMake 3.20+
+-   Conan 1.48+
+-   Python 3.6+
+-   Ninja 1.10+
+-   venv
 
 
-### Windows
+<br>
+<br>
 
-- Windows 10+
-- Visual Studio with MSVC 2019+
-- Python 3.6+
-- venv 
-- CMake 3.20+
-- Ninja 1.10+
-- Conan 1.48+
+## ![Badge Windows]
 
-_Executing from the Powershell is preferred._
+*Execution from the **Powershell** is preferred.*
 
-### macOS
-**For M1 Mac users you must follow the build instructions using a Rossetta terminal**
+<br>
 
-We recommend using brew to install these dependencies.
-- macOS 10.15 or higher
-- xcode 11.4 or higher
-- apple-clang-9.0 or higher
-- Python 3.6 or higher
-- venv
-- altool
-- automake
-- CMake 3.20 or higher
-- Ninja 1.10 or higher
-- Conan 1.48 or higher
+-   Visual Studio with MSVC 2019+
 
-### Linux
 
-- Ubuntu/Debian/Arch/Manjaro (glibc 2.28 or higher)
-- gcc-9 or higher
-- Python 3.6 or higher 
-- venv
-- CMake 3.20 or higher
-- Ninja 1.10 or higher
-- Conan 1.48 or higher
-- autoreconf
+<br>
+<br>
+
+### ![Badge MacOS]
+
+**M1 Mac** *users have to follow the build* <br>
+*instructions using a **Rossetta** terminal.*
+
+*It is recommended to install* <br>
+*the dependencies with **brew**.*
+
+<br>
+
+-   apple-clang-9.0+
+-   xcode 11.4+
+-   automake
+-   altool
+
+<br>
+<br>
+
+### ![Badge Ubuntu]   ![Badge Debian]   ![Badge Arch]   ![Badge Manjaro]
+
+<br>
+
+-   autoreconf
+-   glibc 2.28+
+-   gcc-9+
+
+<br>
+
+
+<!---------------------------------[ Badges ]---------------------------------->
+
+[Badge Windows]: https://img.shields.io/badge/Windows-10+-0062ad.svg?style=for-the-badge&labelColor=0078D6&logoColor=white&logo=Windows
+[Badge Manjaro]: https://img.shields.io/badge/Manjaro-289044.svg?style=for-the-badge&labelColor=35BF5C&logoColor=white&logo=Manjaro
+[Badge Debian]: https://img.shields.io/badge/Debian-7d1627.svg?style=for-the-badge&labelColor=A81D33&logoColor=white&logo=Debian
+[Badge Ubuntu]: https://img.shields.io/badge/Ubuntu-b44019.svg?style=for-the-badge&labelColor=E95420&logoColor=white&logo=Ubuntu
+[Badge Arch]: https://img.shields.io/badge/Arch-116b98.svg?style=for-the-badge&labelColor=1793D1&logoColor=white&logo=ArchLinux
+[Badge MacOS]: https://img.shields.io/badge/MacOS-10.15+-666666.svg?style=for-the-badge&labelColor=7d7d7d&logoColor=white&logo=Apple
+
