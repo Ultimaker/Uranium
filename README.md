@@ -68,4 +68,4 @@
 [Button Requirements]: https://img.shields.io/badge/System_Requirements-c34360?style=for-the-badge&logoColor=white&logo=BookStack
 [Button Developing]: https://img.shields.io/badge/Developing-715a97?style=for-the-badge&logoColor=white&logo=VisualStudioCode
 [Button Packaging]: https://img.shields.io/badge/Packaging-458cb5?style=for-the-badge&logoColor=white&logo=GitLFS
-[Button Building]: https://img.shields.io/badge/Building-629944?style=for-the-badge&logoColor=white&logo=GoogleTranslate
+[Button Building]: https://img.shields.io/badge/Building-629944?style=for-the-badge&logoColor=white&logo=CurseForge

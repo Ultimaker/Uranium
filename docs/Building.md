@@ -1,6 +1,8 @@
 
 # Building
 
+<br>
+
 > We are currently in the process of switch our builds <br>
 > and pipelines to an approach which uses **[Conan]** and <br>
 > pip to manage our dependencies, which are stored <br>
@@ -10,6 +12,9 @@
 
 
 <br>
+<br>
+
+## Related
 
 If you want to develop Cura with Uranium see the **[Cura Wiki][Cura From Source]**.
 
@@ -21,6 +26,8 @@ If you have never used it read their **[Documentation][Conan Docs]** which <br>i
 <br>
 
 ## Configuring Conan
+
+<br>
 
 ```shell
 pip install conan --upgrade
@@ -45,6 +52,8 @@ conan remote remove cura
 
 ## Clone Uranium
 
+<br>
+
 ```shell
 git clone https://github.com/Ultimaker/Uranium.git
 cd Uranium
@@ -56,6 +65,8 @@ cd Uranium
 ## Environment Initialization
 
 *Initializing the Virtual Python Development Environment.*
+
+<br>
 
 Install the dependencies for the development environment and initialize <br>
 a virtual Python environment. Execute the following command in the root <br>
@@ -72,6 +83,8 @@ conan install .             \
 <br>
 
 ## Running Tests
+
+<br>
 
 ### Linux / MacOS
 

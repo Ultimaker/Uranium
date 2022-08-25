@@ -16,7 +16,7 @@ conan editable add . \
 
 <br>
 
-Then in your downsteam project's (Cura) root directory <br>
+Then in your downsteam project's ( Cura ) root directory <br>
 override the package with your editable mode package.  
 
 ```shell

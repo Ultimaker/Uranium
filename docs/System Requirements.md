@@ -25,6 +25,17 @@
 <br>
 <br>
 
+### ![Badge Ubuntu]   ![Badge Debian]   ![Badge Arch]   ![Badge Manjaro]
+
+<br>
+
+-   autoreconf
+-   glibc 2.28+
+-   gcc-9+
+
+<br>
+<br>
+
 ### ![Badge MacOS]
 
 **M1 Mac** *users have to follow the build* <br>
@@ -41,17 +52,7 @@
 -   altool
 
 <br>
-<br>
 
-### ![Badge Ubuntu]   ![Badge Debian]   ![Badge Arch]   ![Badge Manjaro]
-
-<br>
-
--   autoreconf
--   glibc 2.28+
--   gcc-9+
-
-<br>
 
 
 <!---------------------------------[ Badges ]---------------------------------->
