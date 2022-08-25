@@ -3,16 +3,12 @@
 
 <div align = center>
 
-[![Badge Issues]][Issues]   
-[![Badge PullRequests]][PullRequests]   
-[![Badge Closed]][Closed]
-
-[![Badge Size]][#]   
 [![Badge License]][License]   
-[![Badge Contributors]][Contributors]
+[![Badge Contributors]][Contributors]   
+[![Badge Size]][#]
 
-[![Badge Test]][Test]   
 [![Badge Conan]][Conan]   
+[![Badge Test]][Test]
 
 <br>
 <br>
@@ -59,8 +55,8 @@
 [Badge Closed]: https://img.shields.io/github/issues-closed/ultimaker/Uranium?style=for-the-badge&logoColor=white&labelColor=629944&color=446a30&logo=AddThis
 [Badge Issues]: https://img.shields.io/github/issues/ultimaker/Uranium?style=for-the-badge&logoColor=white&labelColor=c34360&color=933349&logo=AdBlock
 [Badge Conan]: https://img.shields.io/github/workflow/status/Ultimaker/Uranium/conan-package?style=for-the-badge&logoColor=white&labelColor=6185aa&color=4c6987&logo=Conan&label=Conan%20Package
-[Badge Test]: https://img.shields.io/github/workflow/status/Ultimaker/Uranium/unit-test?style=for-the-badge&logoColor=white&labelColor=4a999d&color=346c6e&logo=Codacy&label=Unit%20Test
-[Badge Size]: https://img.shields.io/github/repo-size/ultimaker/Uranium?style=for-the-badge&logoColor=white&labelColor=715a97&color=584674&logo=GoogleAnalytics
+[Badge Test]: https://img.shields.io/github/workflow/status/Ultimaker/Uranium/unit-test?style=for-the-badge&logoColor=white&labelColor=715a97&color=584674&logo=Codacy&label=Unit%20Test
+[Badge Size]: https://img.shields.io/github/repo-size/ultimaker/Uranium?style=for-the-badge&logoColor=white&labelColor=629944&color=446a30&logo=GoogleAnalytics
 
 
 <!---------------------------------[ Buttons ]--------------------------------->
