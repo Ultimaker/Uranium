@@ -46,7 +46,6 @@ class Version:
                 version_list[2] = re.sub(r"[A-Z]+", "", version_list[2])
                 version_list[4] = re.sub(r"[A-Z]+", "", version_list[4])
             except IndexError as err:
-                Logger.error(f"Failed to parse version number from string: {err}")
                 pass
         elif isinstance(version, list):
             version_list = version  # type: ignore
