@@ -6,6 +6,7 @@ from typing import cast, List, Optional, Union
 
 from PyQt6.QtCore import Qt, QTimer
 
+from UM.Application import Application
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Math.Float import Float
 from UM.Math.Plane import Plane
@@ -49,7 +50,8 @@ class TranslateTool(Tool):
 
         self.setExposedProperties("ToolHint",
                                   "X", "Y", "Z",
-                                  SceneNodeSettings.LockPosition)
+                                  SceneNodeSettings.LockPosition,
+                                  SceneNodeSettings.AutoDropDown)
 
         self._update_selection_center_timer = QTimer()
         self._update_selection_center_timer.setInterval(50)
@@ -202,7 +204,6 @@ class TranslateTool(Tool):
 
     def setLockPosition(self, value: bool) -> None:
         """Set lock setting to the object. This setting will be used to prevent
-
         model movement on the build plate.
         :param value: The setting state.
         """
@@ -211,7 +212,16 @@ class TranslateTool(Tool):
     def getLockPosition(self) -> Union[str, bool]:
         return self.getBoolSettingFromSelection(SceneNodeSettings.LockPosition, "False")
 
+    def setAutoDropDown(self, value: bool) -> None:
+        """Set auto drop down setting to the object. This setting will be used
+        to make the model flush with the build plate.
+        :param value: The setting state.
+        """
+        self.setSettingToSelection(SceneNodeSettings.AutoDropDown, str(value))
 
+    def getAutoDropDown(self) -> Union[str, bool]:
+        default = Application.getInstance().getPreferences().getValue("physics/automatic_drop_down")
+        return self.getBoolSettingFromSelection(SceneNodeSettings.AutoDropDown, str(default))
 
     def event(self, event: Event) -> bool:
         """Handle mouse and keyboard events.
