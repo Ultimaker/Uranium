@@ -206,28 +206,12 @@ class TranslateTool(Tool):
         model movement on the build plate.
         :param value: The setting state.
         """
-        for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
-            selected_node.setSetting(SceneNodeSettings.LockPosition, str(value))
+        self.setSettingToSelection(SceneNodeSettings.LockPosition, str(value))
 
     def getLockPosition(self) -> Union[str, bool]:
-        total_size = Selection.getCount()
-        false_state_counter = 0
-        true_state_counter = 0
-        if not Selection.hasSelection():
-            return False
+        return self.getBoolSettingFromSelection(SceneNodeSettings.LockPosition, "False")
 
-        for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
-            if selected_node.getSetting(SceneNodeSettings.LockPosition, "False") != "False":
-                true_state_counter += 1
-            else:
-                false_state_counter += 1
 
-        if total_size == false_state_counter:  # No locked positions
-            return False
-        elif total_size == true_state_counter:  # All selected objects are locked
-            return True
-        else:
-            return "partially"  # At least one, but not all are locked
 
     def event(self, event: Event) -> bool:
         """Handle mouse and keyboard events.
