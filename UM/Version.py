@@ -2,6 +2,8 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 import re  # To replace parts of version strings with regex.
 from typing import cast, Union, List
+
+from UM.Decorators import deprecated
 from UM.Logger import Logger
 
 
@@ -19,6 +21,8 @@ class Version:
         :param version: A string or bytes representing a version number.
         """
 
+        # FIXME: We should probably swap this whole class out for the semver python package. That is what is used by conan.
+
         super().__init__()
 
         if type(version) == bytes:
@@ -32,6 +36,7 @@ class Version:
             version = version.replace("-", ".")
             version = version.replace("_", ".")
             version = version.replace("\"", "")
+            version = version.replace("+", ".")
             version_list = version.split(".")  # type: ignore
             # Only the third element (the postfix_type) is allowed to be a string. In other cases all non numeric
             # characters need to be filtered out
@@ -40,7 +45,7 @@ class Version:
                 version_list[1] = re.sub(r"[A-Z]+", "", version_list[1])
                 version_list[2] = re.sub(r"[A-Z]+", "", version_list[2])
                 version_list[4] = re.sub(r"[A-Z]+", "", version_list[4])
-            except IndexError:
+            except IndexError as err:
                 pass
         elif isinstance(version, list):
             version_list = version  # type: ignore
@@ -111,6 +116,7 @@ class Version:
 
         return self._postfix_version
 
+    @deprecated
     def getWithoutPostfix(self) -> "Version":
         """Returns this as _only_ a major.minor.revision, without the postfix type/version.
 

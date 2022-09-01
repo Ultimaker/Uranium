@@ -8,9 +8,9 @@ import QtQuick.Window 2.1
 
 import ".."
 
-import UM 1.5 as UM
+import UM 1.6 as UM
 
-Dialog
+UM.Window
 {
     id: base
 
@@ -22,10 +22,17 @@ Dialog
 
     property alias currentPage: pagesList.currentIndex
 
+    Rectangle
+    {
+        anchors.fill: parent
+        color: UM.Theme.getColor("background_2")
+    }
+
     Item
     {
         id: test
         anchors.fill: parent
+        anchors.margins: UM.Theme.getSize("default_margin").width
 
         ListView
         {

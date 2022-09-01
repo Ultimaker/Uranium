@@ -53,21 +53,19 @@ the scene.
 Backend
 -------
 
-The %Backend module provides classes relating to the communication with
-external applications with the intent of processing data. The prime example
-of this functionality is the communication with the CuraEngine slicing
-engine.
+The %Backend module provides classes for communication with external applications in order to process data.  
+For example communicating with CuraEngine for slicing.
 
-The primary class to facilitate this functionality is the [Backend] class.
-It provides an abstract base that should be subclassed by plugins that want
-to provide backend functionality. The backend class provides a list of the
-commands that are supported by that backend. The [Command] class encapsulates
-these commands and provides the actual implementation of the command in its
+The [Backend] class  is the primary class to facilitate this functionality.
+It provides an abstract base that should be subclassed by plugins that want to provide backend functionality. 
+The backend class provides a list of the commands that are supported by that backend. 
+
+The [Command] class encapsulates these commands and provides the actual implementation of the command in its
 `send()` and `receive()` methods. The commands talk to the actual backend
-application over a local TCP socket as provided by the [Socket] class. This
-class creates a system socket that is used for the communication with the
-backend. The Command objects are responsible for serialising and deserialising
-the actual data sent over this socket.
+application over a local TCP socket that is provided by the [Socket] class. 
+
+The [Socket] class creates a system socket that is used for the communication with the backend. 
+The Command objects are responsible for serialising and deserialising the actual data sent over this socket.
 
 [Backend]: \ref Cura#Backend#Backend#Backend
 [Command]: \ref Cura#Backend#Command#Command

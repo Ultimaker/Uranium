@@ -1,6 +1,7 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from pathlib import Path
 import argparse
 import os
 import sys
@@ -44,7 +45,7 @@ class Application:
     used to access objects required for those plugins.
     """
 
-    def __init__(self, name: str, version: str, api_version: str, app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
+    def __init__(self, name: str, version: str, latest_url: str, api_version: str, app_display_name: str = "", build_type: str = "", is_debug_mode: bool = False, **kwargs) -> None:
         """Init method
 
         :param name: :type{string} The name of the application.
@@ -83,6 +84,7 @@ class Application:
 
         self.change_log_url: str = "https://github.com/Ultimaker/Uranium"  # Where to find a more detailed description of the recent updates.
         self.beta_change_log_url: str = "https://github.com/Ultimaker/Uranium"  # Where to find a more detailed description of proposed updates.
+        self.latest_url: str = latest_url  # Where to find the json file specifying the latest versions.
 
         self._preferences_filename = None  # type: str
         self._preferences = None  # type: Preferences
@@ -183,7 +185,15 @@ class Application:
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
 
         if not hasattr(sys, "frozen"):
-            Resources.addSecureSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
+            Resources.addSearchPath(str(Path(__file__).parent.parent.joinpath("resources")))
+            Resources.addSearchPath(str(Path(__file__).parent.parent.joinpath("plugins")))
+
+            # local Conan cache
+            Resources.addSearchPath(str(Path(__file__).parent.parent.parent.joinpath("resources")))
+            Resources.addSearchPath(str(Path(__file__).parent.parent.parent.joinpath("plugins")))
+
+            # venv site-packages
+            Resources.addSearchPath(str(Path(sys.executable).parent.parent.joinpath("share", "uranium", "resources")))
 
         i18nCatalog.setApplication(self)
 
@@ -224,7 +234,8 @@ class Application:
         self._plugin_registry.addPluginLocation(local_path)
 
         if not hasattr(sys, "frozen"):
-            self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "plugins"))
+            self._plugin_registry.addPluginLocation(str(Path(__file__).parent.parent.joinpath("plugins")))
+            self._plugin_registry.addPluginLocation(str(Path(__file__).parent.parent.parent.joinpath("plugins")))
 
         self._container_registry = self._container_registry_class(self)
 

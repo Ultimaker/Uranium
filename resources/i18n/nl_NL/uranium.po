@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-13 10:45+0200\n"
+"Project-Id-Version: Uranium 5.1\n"
+"Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
+"POT-Creation-Date: 2022-06-21 12:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,453 +16,463 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ-bestand"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "OBJWriter ondersteunt geen non-tekstmodus."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "Er is geen raster om te schrijven."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STL-bestand"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "Niet-ondersteunde uitvoermodus bij het schrijven van STL naar stream."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL-bestand (ASCII)"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL-bestand (binair)"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Lokaal Bestand"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
 msgstr "Opslaan op schijf"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
 msgstr "Opslaan op schijf"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
 msgstr "Naar schijf"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
 msgstr "Opslaan op schijf"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:91
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "Er zijn geen bestandstypen beschikbaar om te schrijven!"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Het Bestand Bestaat Al"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:139
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
-msgid ""
-"The file <filename>{0}</filename> already exists. Are you sure you want to "
-"overwrite it?"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Het bestand <filename>{0}</filename> bestaat al. Weet u zeker dat u dit bestand wilt overschrijven?"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Opslaan als <filename>{0}</filename>"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "Opslaan"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Toegang geweigerd tijdens opslaan als <filename>{0}</filename>"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:184
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Kan niet opslaan als <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Opgeslagen als <filename>{0}</filename>"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:196
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "Bestand opgeslagen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Map Openen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:198
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "De map met het bestand openen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:206
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:216
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Fout"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
 #, python-brace-format
 msgctxt "@info:status"
-msgid ""
-"Something went wrong saving to <filename>{0}</filename>: <message>{1}</"
-"message>"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Er is een fout opgetreden tijdens het opslaan naar <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "Eenvoudig"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
+msgstr "Spiegelen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "Er is geen raster om te schrijven."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Model Spiegelen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "Niet-ondersteunde uitvoermodus bij het schrijven van STL naar stream."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "Object plat op platform plaatsen..."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL-bestand (ASCII)"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "Objectrotatie"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL-bestand (binair)"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Roteren"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL-bestand"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Model Roteren"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter ondersteunt geen non-tekstmodus."
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "Schalen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ-bestand"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Model Schalen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "{application_name} {version_number} is beschikbaar!"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"{application_name} {version_number} provides a better and more reliable "
-"printing experience."
-msgstr "{application_name} {version_number} biedt een betere en betrouwbaardere printervaring."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
-msgid "Download"
-msgstr "Downloaden"
+msgid "Move"
+msgstr "Verplaatsen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "Meer informatie"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Model Verplaatsen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number}-BETA is available!"
 msgstr "{application_name} {version_number}-BÈTA is beschikbaar!"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
 msgstr "Probeer de nieuwste BÈTA-versie uit en help ons {application_name} te verbeteren."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Downloaden"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "Meer informatie"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "{application_name} {version_number} is beschikbaar!"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr "{application_name} {version_number} biedt een betere en betrouwbaardere printervaring."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
 msgctxt "@item:inmenu"
 msgid "Update Checker"
 msgstr "Updatecontrole"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Controleren op Updates"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "Het controleren op updates wordt in de door u gebruikte versie niet ondersteund."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:154
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Er is geen nieuwe versie gevonden."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/VersionUpgradeManager.py:174
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:156
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:174
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Versie-upgrade"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "Eenvoudig"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
 msgctxt "@action:button"
-msgid "Move"
-msgstr "Verplaatsen"
+msgid "Reset"
+msgstr "Herstellen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Model Verplaatsen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Spiegelen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Model Spiegelen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "Object plat op platform plaatsen..."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "Objectrotatie"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Roteren"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Model Roteren"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Schalen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Model Schalen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:190
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr "Wilt u {filename} opnieuw laden?"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:192
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr "Het bestand is gewijzigd"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:193
-msgctxt "@action:button"
-msgid "Reload"
-msgstr "Opnieuw laden"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Scene/Scene.py:195
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr "Hiermee wordt het opnieuw laden van de bestanden vanaf de schijf geactiveerd."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:59
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:64
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "Kan OpenGL niet initialiseren"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/View/GL/OpenGL.py:74
-msgctxt "Critical OpenGL Extensions Missing"
-msgid ""
-"Critical OpenGL extensions are missing. This program requires support for "
-"Framebuffer Objects. Please check your video card drivers."
-msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is ondersteuning voor Framebuffer-objecten vereist. Controleer het stuurprogramma voor uw"
-" videokaart."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:294
-#, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Er zijn fouten opgetreden bij het deïnstalleren van de volgende packages:\n{packages}"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:296
-msgctxt "@info:title"
-msgid "Uninstalling errors"
-msgstr "Fouten bij het de-installeren"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:307
-#, python-brace-format
-msgctxt "@info:progress Don't translate {package_id}"
-msgid "Installing plugin {package_id}..."
-msgstr "Plugin {package_id} installeren..."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:615
-#, python-brace-format
-msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new "
-"version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr "Er is een fout opgetreden bij het deïnstalleren van de package {package} vóór installatie van de nieuwe versie:\n{error}.\nProbeer de upgrade later opnieuw"
-" uit te voeren."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PackageManager.py:618
-msgctxt "@info:title"
-msgid "Updating error"
-msgstr "Fout bij het bijwerken"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:331
-msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr "De invoegtoepassing is geïnstalleerd.\nStart de toepassing opnieuw om de invoegtoepassing te activeren."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:398
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "Plug-in {} is niet geladen omdat deze niet kon worden geverifieerd."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:503
-msgctxt "@action:button"
-msgid "Dismiss"
-msgstr "Verwijderen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:513
-msgctxt "@error"
-msgid ""
-"The plugin {} could not be loaded. Re-installing the plugin might solve the "
-"issue."
-msgstr "De plug-in {} kon niet worden geladen. Opnieuw installeren van de plug-in kan het probleem mogelijk oplossen."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:517
-msgctxt "@action:button"
-msgid "Remove plugin"
-msgstr "Plug-in verwijderen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:534
-msgctxt "@info:status"
-msgid "Plugin no longer scheduled to be installed."
-msgstr "Installatie plugin niet langer ingepland."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:540
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr "De invoegtoepassing is verwijderd.\nStart {0} opnieuw om het verwijderen te voltooien."
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr ""
+"Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n"
+"- {profiles}\n"
+" Wilt u de standaardinstellingen herstellen? Hiermee worden al uw huidige printers en profielen gewist."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:925
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr "Herstellen naar fabrieksinstellingen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:53
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr "Als u de instellingen herstelt, worden alle huidige printers en profielen verwijderd. Weet u zeker dat u de instellingen wilt herstellen?"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:929
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Alle Ondersteunde Typen ({0})"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/PluginRegistry.py:926
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/FileHandler.py:72
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:72
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:930
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Alle Bestanden (*)"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Herstellen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:46
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:41
 #, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the "
-"following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your "
-"current printers and profiles."
-msgstr "Uw configuratie is mogelijk beschadigd. Er lijkt een probleem te zijn met de volgende profielen:\n- {profiles}\n Wilt u de standaardinstellingen herstellen?"
-" Hiermee worden al uw huidige printers en profielen gewist."
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "Kan geen bestanden openen van het type <filename>{0}</filename>"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:51
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr "Herstellen naar fabrieksinstellingen"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:44
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr "Ongeldig bestand"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/ConfigurationErrorMessage.py:53
-msgctxt "@label"
-msgid ""
-"Reset will remove all your current printers and profiles! Are you sure you "
-"want to reset?"
-msgstr "Als u de instellingen herstelt, worden alle huidige printers en profielen verwijderd. Weet u zeker dat u de instellingen wilt herstellen?"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk beschadigd of ontoegankelijk."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Mesh/ReadMeshJob.py:71
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:98
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr "Kan bestand niet openen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "Laden"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:87
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr "Er waren geen modellen in <filename>{0}</filename>."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:90
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr "Geen modellen in bestand"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk corrupt of ontoegankelijk, of het bevat geen modellen."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:72
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "Het model is automatisch geschaald naar {0}%% van de oorspronkelijke grootte"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Mesh/ReadMeshJob.py:73
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:74
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "Object schalen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:128
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:294
 #, python-brace-format
-msgctxt ""
-"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
-"minutes"
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr ""
+"Er zijn fouten opgetreden bij het deïnstalleren van de volgende packages:\n"
+"{packages}"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:296
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr "Fouten bij het de-installeren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:308
+#, python-brace-format
+msgctxt "@info:progress Don't translate {package_id}"
+msgid "Installing plugin {package_id}..."
+msgstr "Plugin {package_id} installeren..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:619
+#, python-brace-format
+msgctxt "@error:update"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr ""
+"Er is een fout opgetreden bij het deïnstalleren van de package {package} vóór installatie van de nieuwe versie:\n"
+"{error}.\n"
+"Probeer de upgrade later opnieuw uit te voeren."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:622
+msgctxt "@info:title"
+msgid "Updating error"
+msgstr "Fout bij het bijwerken"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:332
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+"De invoegtoepassing is geïnstalleerd.\n"
+"Start de toepassing opnieuw om de invoegtoepassing te activeren."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:398
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr "Plug-in {} is niet geladen omdat deze niet kon worden geverifieerd."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:503
+msgctxt "@action:button"
+msgid "Dismiss"
+msgstr "Verwijderen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:516
+msgctxt "@error"
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
+msgstr "De plug-in {} kon niet worden geladen. Opnieuw installeren van de plug-in kan het probleem mogelijk oplossen."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:520
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr "Plug-in verwijderen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:538
+msgctxt "@info:status"
+msgid "Plugin no longer scheduled to be installed."
+msgstr "Installatie plugin niet langer ingepland."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:544
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr ""
+"De invoegtoepassing is verwijderd.\n"
+"Start {0} opnieuw om het verwijderen te voltooien."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr "Vanaf schijf"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:130
+#, python-brace-format
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}d {1:0>2}u {2:0>2}min"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:130
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:132
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}u {1:0>2}min"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -470,8 +480,8 @@ msgid_plural "{0} days"
 msgstr[0] "{0} dag"
 msgstr[1] "{0} dagen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:135
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:137
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -479,9 +489,9 @@ msgid_plural "{0} hours"
 msgstr[0] "{0} uur"
 msgstr[1] "{0} uur"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:133
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:135
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Duration.py:137
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:137
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:139
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -489,282 +499,259 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuut"
 msgstr[1] "{0} minuten"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:195
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:216
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:209
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:230
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Invoegtoepassingen laden..."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:197
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:211
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
 msgstr "Plugin {plugin_id} laden..."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:217
 msgctxt "@info:progress"
 msgid "Initializing package manager..."
 msgstr "Pakketbeheer initialiseren..."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:211
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:225
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "Uw configuratie is mogelijk beschadigd."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:213
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:227
 msgctxt "@info:title"
 msgid "Configuration errors"
 msgstr "Configuratiefouten"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:225
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:239
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Configuratie bijwerken..."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:231
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:245
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Voorkeuren laden..."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/QtApplication.py:321
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:335
 msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "UI laden ..."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "Vanaf schijf"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:190
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "Wilt u {filename} opnieuw laden?"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/VersionUpgradeManager.py:173
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr "Het bestand is gewijzigd"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:193
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "Opnieuw laden"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:195
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "Hiermee wordt het opnieuw laden van de bestanden vanaf de schijf geactiveerd."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "Er is een configuratie van een oudere versie van {0} geïmporteerd."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:41
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "Kan geen bestanden openen van het type <filename>{0}</filename>"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:68
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "Kan OpenGL niet initialiseren"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:44
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "Ongeldig bestand"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:78
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is ondersteuning voor Framebuffer-objecten vereist. Controleer het stuurprogramma voor uw videokaart."
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:59
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid ""
-"Failed to load <filename>{0}</filename>. The file could be corrupt or "
-"inaccessible."
-msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk beschadigd of ontoegankelijk."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:62
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:98
-msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr "Kan bestand niet openen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:71
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "Laden"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:87
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr "Er waren geen modellen in <filename>{0}</filename>."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:90
-msgctxt "@info:title"
-msgid "No Models in File"
-msgstr "Geen modellen in bestand"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/FileHandler/ReadFileJob.py:95
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid ""
-"Failed to load <filename>{0}</filename>. The file could be corrupt, "
-"inaccessible or it did not contain any models."
-msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk corrupt of ontoegankelijk, of het bevat geen modellen."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:209
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr "Model vergrendelen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
 msgctxt "@action:button"
 msgid "Lay flat"
 msgstr "Plat neerleggen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr "Selecteer de kant die u wilt uitlijnen met het platform"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Roteren in Stappen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Schalen in Stappen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Uniform Schalen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "Hernoemen"
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:209
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "Model vergrendelen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr "Geef een nieuwe naam op."
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
-msgctxt "@action:button"
-msgid "OK"
-msgstr "OK"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Printers"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Type"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "Verwijderen Bevestigen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Weet u zeker dat u %1 wilt verwijderen? Deze bewerking kan niet ongedaan worden gemaakt!"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
-msgctxt "@title:window"
-msgid "Preferences"
-msgstr "Voorkeuren"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:134
-msgctxt "@title:tab"
-msgid "General"
-msgstr "Algemeen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:135
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Instellingen"
-
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
 msgctxt "@option"
 msgid "OK"
 msgstr "OK"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:100
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:100
 msgctxt "@option"
 msgid "Open"
 msgstr "Openen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:101
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:101
 msgctxt "@option"
 msgid "Save"
 msgstr "Opslaan"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:102
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:102
 msgctxt "@option"
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:103
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:103
 msgctxt "@option"
 msgid "Close"
 msgstr "Sluiten"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:104
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:104
 msgctxt "@option"
 msgid "Discard"
 msgstr "Verwijderen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:105
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:105
 msgctxt "@option"
 msgid "Apply"
 msgstr "Toepassen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:106
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:106
 msgctxt "@option"
 msgid "Reset"
 msgstr "Herstellen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:107
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:107
 msgctxt "@option"
 msgid "Restore Defaults"
 msgstr "Standaardinstellingen herstellen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:108
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:108
 msgctxt "@option"
 msgid "Help"
 msgstr "Help"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:109
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:109
 msgctxt "@option"
 msgid "Save All"
 msgstr "Alles opslaan"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:110
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:110
 msgctxt "@option"
 msgid "Yes"
 msgstr "Ja"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:111
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:111
 msgctxt "@option"
 msgid "Yes to All"
 msgstr "Ja op alles"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:112
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:112
 msgctxt "@option"
 msgid "No"
 msgstr "Nee"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:113
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:113
 msgctxt "@option"
 msgid "No to All"
 msgstr "Nee op alles"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:114
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:114
 msgctxt "@option"
 msgid "Abort"
 msgstr "Afbreken"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:115
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:115
 msgctxt "@option"
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
-#: /home/remco/dev/code/ulti/trans/Uranium/UM/Qt/qml/UM/MessageDialog.qml:116
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:116
 msgctxt "@option"
 msgid "Ignore"
 msgstr "Negeren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "Verwijderen Bevestigen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Weet u zeker dat u %1 wilt verwijderen? Deze bewerking kan niet ongedaan worden gemaakt!"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Printers"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Type"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "Voorkeuren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:134
+msgctxt "@title:tab"
+msgid "General"
+msgstr "Algemeen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:135
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Instellingen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "Hernoemen"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr "Geef een nieuwe naam op."
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
+msgctxt "@action:button"
+msgid "OK"
+msgstr "OK"
 
 #: ConsoleLogger/plugin.json
 msgctxt "description"
@@ -776,45 +763,15 @@ msgctxt "name"
 msgid "Console Logger"
 msgstr "Consolelogger"
 
-#: LocalFileOutputDevice/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Maakt opslaan als lokaal bestand mogelijk."
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Maakt het mogelijk Wavefront OBJ-bestanden te lezen."
 
-#: LocalFileOutputDevice/plugin.json
+#: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Uitvoerapparaat voor lokaal bestand"
-
-#: Views/SimpleView/plugin.json
-msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "Biedt een eenvoudige, solide rasterweergave."
-
-#: Views/SimpleView/plugin.json
-msgctxt "name"
-msgid "Simple View"
-msgstr "Eenvoudige Weergave"
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Biedt ondersteuning voor het schrijven van STL-bestanden."
-
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL-schrijver"
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Biedt ondersteuning voor het lezen van STL-bestanden."
-
-#: FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL-lezer"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ-lezer"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
@@ -826,31 +783,39 @@ msgctxt "name"
 msgid "Wavefront OBJ Writer"
 msgstr "Wavefront OBJ-schrijver"
 
-#: FileHandlers/OBJReader/plugin.json
+#: FileHandlers/STLReader/plugin.json
 msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Maakt het mogelijk Wavefront OBJ-bestanden te lezen."
+msgid "Provides support for reading STL files."
+msgstr "Biedt ondersteuning voor het lezen van STL-bestanden."
 
-#: FileHandlers/OBJReader/plugin.json
+#: FileHandlers/STLReader/plugin.json
 msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ-lezer"
+msgid "STL Reader"
+msgstr "STL-lezer"
 
-#: UpdateChecker/plugin.json
+#: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Controleert of er updates zijn voor de software."
+msgid "Provides support for writing STL files."
+msgstr "Biedt ondersteuning voor het schrijven van STL-bestanden."
 
-#: UpdateChecker/plugin.json
+#: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
-msgid "Update Checker"
-msgstr "Updatecontrole"
+msgid "STL Writer"
+msgstr "STL-schrijver"
+
+#: FileLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Voert logboekinformatie uit naar een bestand in de instellingenmap."
+
+#: FileLogger/plugin.json
+msgctxt "name"
+msgid "File Logger"
+msgstr "Bestandenlogger"
 
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
-msgid ""
-"Provides built-in setting containers that come with the installation of the "
-"application."
+msgid "Provides built-in setting containers that come with the installation of the application."
 msgstr "Deze optie biedt geïntegreerde instellingscontainers die samen met de toepassing worden geïnstalleerd."
 
 #: LocalContainerProvider/plugin.json
@@ -858,25 +823,15 @@ msgctxt "name"
 msgid "Local Container Provider"
 msgstr "Lokale containerprovider"
 
-#: Tools/TranslateTool/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "description"
-msgid "Provides the Move tool."
-msgstr "Biedt het Verplaatsgereedschap."
+msgid "Enables saving to local files."
+msgstr "Maakt opslaan als lokaal bestand mogelijk."
 
-#: Tools/TranslateTool/plugin.json
+#: LocalFileOutputDevice/plugin.json
 msgctxt "name"
-msgid "Move Tool"
-msgstr "Verplaatsgereedschap"
-
-#: Tools/MirrorTool/plugin.json
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Biedt het Spiegelgereedschap."
-
-#: Tools/MirrorTool/plugin.json
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Spiegelgereedschap"
+msgid "Local File Output Device"
+msgstr "Uitvoerapparaat voor lokaal bestand"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
@@ -888,15 +843,15 @@ msgctxt "name"
 msgid "Camera Tool"
 msgstr "Cameragereedschap"
 
-#: Tools/SelectionTool/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Biedt het Selectiegereedschap."
+msgid "Provides the Mirror tool."
+msgstr "Biedt het Spiegelgereedschap."
 
-#: Tools/SelectionTool/plugin.json
+#: Tools/MirrorTool/plugin.json
 msgctxt "name"
-msgid "Selection Tool"
-msgstr "Selectiegereedschap"
+msgid "Mirror Tool"
+msgstr "Spiegelgereedschap"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
@@ -918,15 +873,85 @@ msgctxt "name"
 msgid "Scale Tool"
 msgstr "Schaalgereedschap"
 
-#: FileLogger/plugin.json
+#: Tools/SelectionTool/plugin.json
 msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Voert logboekinformatie uit naar een bestand in de instellingenmap."
+msgid "Provides the Selection tool."
+msgstr "Biedt het Selectiegereedschap."
 
-#: FileLogger/plugin.json
+#: Tools/SelectionTool/plugin.json
 msgctxt "name"
-msgid "File Logger"
-msgstr "Bestandenlogger"
+msgid "Selection Tool"
+msgstr "Selectiegereedschap"
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr "Biedt het Verplaatsgereedschap."
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "name"
+msgid "Move Tool"
+msgstr "Verplaatsgereedschap"
+
+#: UpdateChecker/plugin.json
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Controleert of er updates zijn voor de software."
+
+#: UpdateChecker/plugin.json
+msgctxt "name"
+msgid "Update Checker"
+msgstr "Updatecontrole"
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "description"
+msgid "Example extension to instruct people on how to create Uranium extensions."
+msgstr "Voorbeeldextensie om gebruikers te tonen hoe Uranium-extensies worden gemaakt."
+
+#: UraniumExampleExtensionPlugin/plugin.json
+msgctxt "name"
+msgid "Example Extension"
+msgstr "Voorbeeldextensie"
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "description"
+msgid "Example file reader to instruct people on how to create Uranium file readers."
+msgstr "Voorbeeldbestandslezer om gebruikers te tonen hoe Uranium-bestandslezers worden gemaakt."
+
+#: UraniumExampleFileReaderPlugin/plugin.json
+msgctxt "name"
+msgid "Example File Reader"
+msgstr "Voorbeeldbestandslezer"
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "description"
+msgid "Example output device to instruct people on how to create Uranium output devices."
+msgstr "Voorbeelduitvoerapparaat om gebruikers te tonen hoe Uranium-uitvoerapparaten worden gemaakt."
+
+#: UraniumExampleOutputDevicePlugin/plugin.json
+msgctxt "name"
+msgid "Example Output Device"
+msgstr "Voorbeelduitvoerapparaat"
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "description"
+msgid "Example tool to instruct people on how to create Uranium tools."
+msgstr "Voorbeeldgereedschap om gebruikers te tonen hoe Uranium-gereedschap wordt gemaakt."
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "name"
+msgid "Example Tool"
+msgstr "Voorbeeldgereedschap"
+
+#: Views/SimpleView/plugin.json
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "Biedt een eenvoudige, solide rasterweergave."
+
+#: Views/SimpleView/plugin.json
+msgctxt "name"
+msgid "Simple View"
+msgstr "Eenvoudige Weergave"
 
 #~ msgctxt "@error"
 #~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
@@ -974,38 +999,6 @@ msgstr "Bestandenlogger"
 #~ msgctxt "@info:status"
 #~ msgid "{application_name} {version_number} BETA is available!"
 #~ msgstr "{application_name} {version_number} BÈTA is beschikbaar!"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Voorbeeldextensie om gebruikers te tonen hoe Uranium-extensies worden gemaakt."
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "Voorbeeldextensie"
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Voorbeeldbestandslezer om gebruikers te tonen hoe Uranium-bestandslezers worden gemaakt."
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "Voorbeeldbestandslezer"
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Voorbeelduitvoerapparaat om gebruikers te tonen hoe Uranium-uitvoerapparaten worden gemaakt."
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "Voorbeelduitvoerapparaat"
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "Voorbeeldgereedschap om gebruikers te tonen hoe Uranium-gereedschap wordt gemaakt."
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "Voorbeeldgereedschap"
 
 #~ msgctxt "@info:status"
 #~ msgid "Auto scaled object to {0}% of original size"

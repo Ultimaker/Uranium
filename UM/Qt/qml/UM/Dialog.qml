@@ -21,7 +21,7 @@ Window
     width: minimumWidth
     height: minimumHeight
 
-    property int margin: screenScaleFactor * 8;
+    property int margin: UM.Theme.getSize("default_margin").width
     property bool closeOnAccept: true;  // Automatically close the window when the window is "accepted" (eg using the return key)
 
     default property alias contents: contentItem.children;
@@ -73,10 +73,11 @@ Window
 
     property alias headerComponent: header.sourceComponent
 
-    signal accepted();
-    signal rejected();
+    signal accepted()
+    signal rejected()
 
-    function accept() {
+    function accept()
+    {
         if (base.closeOnAccept) {
             base.visible = false;
         }
@@ -92,7 +93,8 @@ Window
         }
     }
 
-    function open() {
+    function open()
+    {
         base.visible = true;
     }
 
@@ -100,20 +102,18 @@ Window
     {
         id: background
         anchors.fill: parent
+        color: UM.Theme.getColor("main_background")
     }
 
-    ColumnLayout {
-        spacing: parent.margin
+    ColumnLayout
+    {
+        spacing: base.margin
         focus: base.visible
         anchors.fill: background
 
-        Keys.onEscapePressed: {
-            base.reject();
-        }
+        Keys.onEscapePressed: base.reject()
 
-        Keys.onReturnPressed: {
-            base.accept();
-        }
+        Keys.onReturnPressed: base.accept()
 
         Loader
         {
