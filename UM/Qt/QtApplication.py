@@ -391,9 +391,6 @@ class QtApplication(QApplication, Application):
                 message.setInactivityTimer(QTimer())
                 self.visibleMessageAdded.emit(message)
 
-        # also show toast message when the main window is minimized
-        self.showToastMessage(self._app_name, message.getText())
-
     def _onMainWindowStateChanged(self, window_state: int) -> None:
         if self._tray_icon and self._tray_icon_widget:
             visible = window_state == Qt.WindowState.WindowMinimized
