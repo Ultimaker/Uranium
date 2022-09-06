@@ -15,8 +15,6 @@ Item
     property string xText
     property string yText
     property string zText
-    property string lockPosition
-    property string autoDropDown
 
     //Rounds a floating point number to 4 decimals. This prevents floating
     //point rounding errors.
@@ -182,108 +180,60 @@ Item
 
         UM.CheckBox
         {
-            property var checkbox_state: 0; // if the state number is 2 then the checkbox has "partially" state
-
-            // temporary property, which is used to recalculate checkbox state and keeps reference of the
-            // binging object. If the binding object changes then checkBox state will be updated.
-            property var temp_checkBox_value:{
-
-                checkbox_state = getCheckBoxState()
-
-                // returning the lockPosition the propery will keep reference, for updating
-                return base.lockPosition
-            }
-
-            function getCheckBoxState(){
-
-                if (base.lockPosition == "true"){
-                    lockPositionCheckbox.checked = true
-                    return 1
-                }
-                else if (base.lockPosition == "partially"){
-                    lockPositionCheckbox.checked = true
-                    return 2
-                }
-                else{
-                    lockPositionCheckbox.checked = false
-                    return 0
-                }
-            }
-
-
             id: lockPositionCheckbox
-            width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
-
             text: catalog.i18nc("@option:check", "Lock Model")
 
-            onClicked: {
-
-                // If state is partially, then set Checked
-                if (checkbox_state == 2){
-                    lockPositionCheckbox.checked = true
-                    UM.ActiveTool.setProperty("LockPosition", true)
-                }
-                else{
-                    UM.ActiveTool.setProperty("LockPosition", lockPositionCheckbox.checked)
-                }
-
-                // After clicking the base.lockPosition is not refreshed, fot this reason manually update the state
-                // Set zero because only 2 will show partially icon in checkbox
-                checkbox_state = 0
+            property string binded_state
+            tristate: true
+            nextCheckState: function() {
+                const new_state = checkState !== Qt.Checked;
+                UM.ActiveTool.setProperty("LockPosition", new_state)
+                return new_state ? Qt.Checked : Qt.Unchecked
             }
+
+            width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
         }
 
         UM.CheckBox
         {
-            property var checkbox_state: 0; // if the state number is 2 then the checkbox has "partially" state
-
-            // temporary property, which is used to recalculate checkbox state and keeps reference of the
-            // binging object. If the binding object changes then checkBox state will be updated.
-            property var temp_checkBox_value:{
-
-                checkbox_state = getCheckBoxState()
-
-                // returning the autoDropDown the propery will keep reference, for updating
-                return base.autoDropDown
-            }
-
-            function getCheckBoxState(){
-
-                if (base.autoDropDown == "true"){
-                    autoDropDownCheckbox.checked = true
-                    return 1
-                }
-                else if (base.autoDropDown == "partially"){
-                    autoDropDownCheckbox.checked = true
-                    return 2
-                }
-                else{
-                    autoDropDownCheckbox.checked = false
-                    return 0
-                }
-            }
-
-
             id: autoDropDownCheckbox
-            width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
-
             text: catalog.i18nc("@option:check", "Drop Down Model")
 
-            onClicked: {
-
-                // If state is partially, then set Checked
-                if (checkbox_state == 2){
-                    autoDropDownCheckbox.checked = true
-                    UM.ActiveTool.setProperty("AutoDropDown", true)
-                }
-                else{
-                    UM.ActiveTool.setProperty("AutoDropDown", autoDropDownCheckbox.checked)
-                }
-
-                // After clicking the base.autoDropDown is not refreshed, fot this reason manually update the state
-                // Set zero because only 2 will show partially icon in checkbox
-                checkbox_state = 0
+            tristate: true
+            nextCheckState: function() {
+                const new_state = checkState !== Qt.Checked;
+                UM.ActiveTool.setProperty("AutoDropDown", new_state)
+                return new_state ? Qt.Checked : Qt.Unchecked
             }
+
+            width: parent.width //Use a width instead of anchors to allow the flow layout to resolve positioning.
+        }
+
+        function getCheckBoxState(property) {
+            const value = UM.ActiveTool.properties.getValue(property)
+            if (value) {
+                return Qt.Checked
+            }
+            else if (value === "partially"){
+                return Qt.PartiallyChecked
+            }
+            else {
+                return Qt.Unchecked
+            }
+        }
+
+        Binding
+        {
+            target: lockPositionCheckbox
+            property: "checkState"
+            value: checkboxes.getCheckBoxState("LockPosition")
+        }
+
+        Binding
+        {
+            target: autoDropDownCheckbox
+            property: "checkState"
+            value: checkboxes.getCheckBoxState("AutoDropDown")
         }
     }
 
@@ -309,19 +259,5 @@ Item
         target: base
         property: "zText"
         value:base.roundFloat(UM.ActiveTool.properties.getValue("Z"), 4)
-    }
-
-    Binding
-    {
-        target: base
-        property: "lockPosition"
-        value: UM.ActiveTool.properties.getValue("LockPosition")
-    }
-
-    Binding
-    {
-        target: base
-        property: "autoDropDown"
-        value: UM.ActiveTool.properties.getValue("AutoDropDown")
     }
 }
