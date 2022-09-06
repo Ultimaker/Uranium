@@ -3,10 +3,10 @@ import os
 from pathlib import Path
 
 from conan import ConanFile
-from conans import tools
+from conan.tools.scm import Version
 from conan.errors import ConanInvalidConfiguration
 
-required_conan_version = ">=1.48.0"
+required_conan_version = ">=1.50.0"
 
 
 class UraniumConan(ConanFile):
@@ -21,7 +21,7 @@ class UraniumConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     no_copy_source = True
 
-    python_requires = "umbase/0.1.5@ultimaker/testing"
+    python_requires = "umbase/[>=0.1.7]@ultimaker/testing"
     python_requires_extend = "umbase.UMBaseConanfile"
 
     options = {
@@ -37,13 +37,17 @@ class UraniumConan(ConanFile):
         "revision": "auto"
     }
 
+    def set_version(self):
+        if self.version is None:
+            self.version = self._umdefault_version()
+
     def configure(self):
         self.options["pyarcus"].shared = True
         self.options["cpython"].shared = True
 
     def validate(self):
         if self.version:
-            if tools.Version(self.version) <= tools.Version("4"):
+            if Version(self.version) <= Version("4"):
                 raise ConanInvalidConfiguration("Only versions 5+ are support")
 
     def requirements(self):
@@ -81,7 +85,7 @@ class UraniumConan(ConanFile):
     def _site_packages(self):
         if self.settings.os == "Windows":
             return self._base_dir.joinpath("Lib", "site-packages")
-        py_version = tools.Version(self.deps_cpp_info["cpython"].version)
+        py_version = Version(self.deps_cpp_info["cpython"].version)
         return self._base_dir.joinpath("lib", f"python{py_version.major}.{py_version.minor}", "site-packages")
 
     @property
