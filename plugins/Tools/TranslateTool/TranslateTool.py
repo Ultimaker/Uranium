@@ -207,21 +207,21 @@ class TranslateTool(Tool):
         model movement on the build plate.
         :param value: The setting state.
         """
-        self.setSettingToSelection(SceneNodeSettings.LockPosition, str(value))
+        self.setSettingToSelection(SceneNodeSettings.LockPosition, value)
 
-    def getLockPosition(self) -> Union[str, bool]:
-        return self.getBoolSettingFromSelection(SceneNodeSettings.LockPosition, "False")
+    def getLockPosition(self) -> Optional[bool]:
+        return self.getBoolSettingFromSelection(SceneNodeSettings.LockPosition, False)
 
     def setAutoDropDown(self, value: bool) -> None:
         """Set auto drop down setting to the object. This setting will be used
         to make the model flush with the build plate.
         :param value: The setting state.
         """
-        self.setSettingToSelection(SceneNodeSettings.AutoDropDown, str(value))
+        self.setSettingToSelection(SceneNodeSettings.AutoDropDown, value)
 
-    def getAutoDropDown(self) -> Union[str, bool]:
+    def getAutoDropDown(self) -> Optional[bool]:
         default = Application.getInstance().getPreferences().getValue("physics/automatic_drop_down")
-        return self.getBoolSettingFromSelection(SceneNodeSettings.AutoDropDown, str(default))
+        return self.getBoolSettingFromSelection(SceneNodeSettings.AutoDropDown, default)
 
     def event(self, event: Event) -> bool:
         """Handle mouse and keyboard events.
@@ -325,12 +325,12 @@ class TranslateTool(Tool):
                 if len(selected_nodes) > 1:
                     op = GroupedOperation()
                     for node in selected_nodes:
-                        if node.getSetting(SceneNodeSettings.LockPosition, "False") == "False":
+                        if node.getSetting(SceneNodeSettings.LockPosition, False) == False:
                             op.addOperation(TranslateOperation(node, drag))
                     op.push()
                 else:
                     for node in selected_nodes:
-                        if node.getSetting(SceneNodeSettings.LockPosition, "False") == "False":
+                        if node.getSetting(SceneNodeSettings.LockPosition, False) == False:
                             TranslateOperation(node, drag).push()
 
                 if not self._distance:

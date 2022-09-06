@@ -214,7 +214,7 @@ Item
             if (value) {
                 return Qt.Checked
             }
-            else if (value === "partially"){
+            else if (value === undefined){
                 return Qt.PartiallyChecked
             }
             else {
