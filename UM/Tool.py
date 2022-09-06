@@ -176,8 +176,10 @@ class Tool(PluginObject):
         :param key: The name of the setting.
         :param value: The setting state.
         """
+        sceneChanged = self._controller.getScene().sceneChanged
         for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
             selected_node.setSetting(key, value)
+            sceneChanged.emit(selected_node)
 
     def getBoolSettingFromSelection(self, key: str, default: str="False") -> Union[str, bool]:
         """Get a boolean setting on selection.
