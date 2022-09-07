@@ -1,12 +1,8 @@
-"None":
+"5.2.0-alpha":
     requirements:
         - "pyarcus/(latest)@ultimaker/testing"
         - "cpython/3.10.4"
 "5.1.0":
     requirements:
         - "arcus/5.1.0"
-        - "cpython/3.10.4"
-"5.2.0-alpha":
-    requirements:
-        - "pyarcus/(latest)@ultimaker/testing"
         - "cpython/3.10.4"

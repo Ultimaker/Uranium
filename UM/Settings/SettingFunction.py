@@ -54,6 +54,9 @@ class SettingFunction:
         self._compiled = None  # type: Optional[CodeType] #Actually an Optional['code'] object, but Python doesn't properly expose this 'code' object via any library.
         self._valid = False  # type: bool
 
+        self._safeCompile()
+
+    def _safeCompile(self):
         try:
             tree = ast.parse(self._code, "eval")
 
@@ -154,7 +157,8 @@ class SettingFunction:
 
     def __setstate__(self, state: Dict[str, Any]) -> None:
         self.__dict__.update(state)
-        self._compiled = compile(self._code, repr(self), "eval")
+        self._compiled = None  # Just to be sure.
+        self._safeCompile()
 
     @classmethod
     def registerOperator(cls, name: str, operator: Callable) -> None:
