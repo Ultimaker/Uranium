@@ -289,10 +289,13 @@ class QtApplication(QApplication, Application):
                 continue
             self._recent_files.append(QUrl.fromLocalFile(file_name))
 
+        self._preferences.addPreference("general/use_tray_icon", True)
+        use_tray_icon = self._preferences.getValue("general/use_tray_icon")
+
         if not self.getIsHeadLess():
             # Initialize System tray icon and make it invisible because it is used only to show pop up messages
             self._tray_icon = None
-            if self._tray_icon_name:
+            if use_tray_icon and self._tray_icon_name:
                 try:
                     self._tray_icon = QIcon(Resources.getPath(Resources.Images, self._tray_icon_name))
                     self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
@@ -527,9 +530,6 @@ class QtApplication(QApplication, Application):
 
         if self._qml_engine:
             self._qml_engine.deleteLater()
-
-        if self._tray_icon_widget:
-            self._tray_icon_widget.deleteLater()
 
         self.quit()
 
