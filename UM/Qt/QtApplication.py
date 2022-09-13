@@ -10,6 +10,7 @@ from typing import Any, cast, Dict, Optional
 from PyQt6.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt6.QtQuick import QQuickWindow, QSGRendererInterface
 
+from UM.Decorators import deprecated
 from UM.FileProvider import FileProvider
 from UM.FlameProfiler import pyqtSlot
 from PyQt6.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
@@ -394,15 +395,13 @@ class QtApplication(QApplication, Application):
                 message.setInactivityTimer(QTimer())
                 self.visibleMessageAdded.emit(message)
 
-        # also show toast message when the main window is minimized
-        self.showToastMessage(self._app_name, message.getText())
-
     def _onMainWindowStateChanged(self, window_state: int) -> None:
         if self._tray_icon and self._tray_icon_widget:
             visible = window_state == Qt.WindowState.WindowMinimized
             self._tray_icon_widget.setVisible(visible)
 
     # Show toast message using System tray widget.
+    @deprecated("Showing toast messages is no longer supported", since = "5.2.0")
     def showToastMessage(self, title: str, message: str) -> None:
         if self.checkWindowMinimizedState() and self._tray_icon_widget:
             # NOTE: Qt 5.8 don't support custom icon for the system tray messages, but Qt 5.9 does.
