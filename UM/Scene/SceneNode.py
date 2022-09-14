@@ -812,10 +812,10 @@ class SceneNode:
     def getShear(self) -> Vector:
         return self._shear
 
-    def getSetting(self, key: str, default_value: str = "") -> str:
+    def getSetting(self, key: str, default_value: Any = None) -> Any:
         return self._settings.get(key, default_value)
 
-    def setSetting(self, key: str, value: str) -> None:
+    def setSetting(self, key: str, value: Any) -> None:
         self._settings[key] = value
 
     def invertNormals(self) -> None:

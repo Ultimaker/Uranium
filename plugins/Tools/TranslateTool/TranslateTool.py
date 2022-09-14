@@ -6,6 +6,7 @@ from typing import cast, List, Optional, Union
 
 from PyQt6.QtCore import Qt, QTimer
 
+from UM.Application import Application
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Math.Float import Float
 from UM.Math.Plane import Plane
@@ -49,7 +50,8 @@ class TranslateTool(Tool):
 
         self.setExposedProperties("ToolHint",
                                   "X", "Y", "Z",
-                                  SceneNodeSettings.LockPosition)
+                                  SceneNodeSettings.LockPosition,
+                                  SceneNodeSettings.AutoDropDown)
 
         self._update_selection_center_timer = QTimer()
         self._update_selection_center_timer.setInterval(50)
@@ -202,32 +204,24 @@ class TranslateTool(Tool):
 
     def setLockPosition(self, value: bool) -> None:
         """Set lock setting to the object. This setting will be used to prevent
-
         model movement on the build plate.
         :param value: The setting state.
         """
-        for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
-            selected_node.setSetting(SceneNodeSettings.LockPosition, str(value))
+        self.setSettingToSelection(SceneNodeSettings.LockPosition, value)
 
-    def getLockPosition(self) -> Union[str, bool]:
-        total_size = Selection.getCount()
-        false_state_counter = 0
-        true_state_counter = 0
-        if not Selection.hasSelection():
-            return False
+    def getLockPosition(self) -> Optional[bool]:
+        return self.getBoolSettingFromSelection(SceneNodeSettings.LockPosition, False)
 
-        for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
-            if selected_node.getSetting(SceneNodeSettings.LockPosition, "False") != "False":
-                true_state_counter += 1
-            else:
-                false_state_counter += 1
+    def setAutoDropDown(self, value: bool) -> None:
+        """Set auto drop down setting to the object. This setting will be used
+        to make the model flush with the build plate.
+        :param value: The setting state.
+        """
+        self.setSettingToSelection(SceneNodeSettings.AutoDropDown, value)
 
-        if total_size == false_state_counter:  # No locked positions
-            return False
-        elif total_size == true_state_counter:  # All selected objects are locked
-            return True
-        else:
-            return "partially"  # At least one, but not all are locked
+    def getAutoDropDown(self) -> Optional[bool]:
+        default = Application.getInstance().getPreferences().getValue("physics/automatic_drop_down")
+        return self.getBoolSettingFromSelection(SceneNodeSettings.AutoDropDown, default)
 
     def event(self, event: Event) -> bool:
         """Handle mouse and keyboard events.
@@ -331,12 +325,12 @@ class TranslateTool(Tool):
                 if len(selected_nodes) > 1:
                     op = GroupedOperation()
                     for node in selected_nodes:
-                        if node.getSetting(SceneNodeSettings.LockPosition, "False") == "False":
+                        if node.getSetting(SceneNodeSettings.LockPosition, False) == False:
                             op.addOperation(TranslateOperation(node, drag))
                     op.push()
                 else:
                     for node in selected_nodes:
-                        if node.getSetting(SceneNodeSettings.LockPosition, "False") == "False":
+                        if node.getSetting(SceneNodeSettings.LockPosition, False) == False:
                             TranslateOperation(node, drag).push()
 
                 if not self._distance:

@@ -1,6 +1,8 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from typing import List, Optional, Union, cast
+
 import UM.Application  # Circular dependency blah
 from UM.Controller import Controller
 from UM.Event import Event, MouseEvent
@@ -13,7 +15,6 @@ from UM.Scene.ToolHandle import ToolHandle
 from UM.Signal import Signal, signalemitter
 from UM.View.SelectionPass import SelectionPass
 
-from typing import cast, List, Optional
 
 @signalemitter
 class Tool(PluginObject):
@@ -167,6 +168,43 @@ class Tool(PluginObject):
             return drag_end - self._drag_start
 
         return None
+
+    def setSettingToSelection(self, key: str, value: bool) -> None:
+        """Set a setting on all selected objects without ancestors
+
+        :param key: The name of the setting.
+        :param value: The setting state.
+        """
+        sceneChanged = self._controller.getScene().sceneChanged
+        for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
+            selected_node.setSetting(key, value)
+            sceneChanged.emit(selected_node)
+
+    def getBoolSettingFromSelection(self, key: str, default: bool) -> Optional[bool]:
+        """Get a boolean setting on selection.
+        Return True or False if all the selected object agree, None otherwise.
+
+        :param key: The name of the setting.
+        :param default: The default value when the setting is not set on the object.
+        """
+        total_size = Selection.getCount()
+        false_state_counter = 0
+        true_state_counter = 0
+        if not Selection.hasSelection():
+            return default
+
+        for selected_node in self._getSelectedObjectsWithoutSelectedAncestors():
+            if selected_node.getSetting(key, default):
+                true_state_counter += 1
+            else:
+                false_state_counter += 1
+
+        if total_size == false_state_counter:  # All settings values are False
+            return False
+        elif total_size == true_state_counter:  # All settings values are Frue
+            return True
+        else:
+            return None # At least one is True, but not all
 
     def _onToolEnabledChanged(self, tool_id: str, enabled: bool) -> None:
         if tool_id == self._plugin_id:
