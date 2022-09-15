@@ -21,7 +21,7 @@ if Platform.isWindows():
     from PyQt6.QtCore import QEventLoop  # Windows fix for using file watcher on removable devices.
 
 i18n_catalog = i18nCatalog("uranium")
-
+from time import time
 
 @signalemitter
 class Scene:
@@ -175,10 +175,14 @@ class Scene:
         try:
             if os.path.getsize(file_path) == 0:  # File is empty.
                 return
-        except EnvironmentError:  # Or it doesn't exist any more, or we have no access any more.
+        except EnvironmentError:  # Or it doesn't exist anymore, or we have no access anymore.
             return
 
-        # Multiple nodes may be loaded from the same file at different stages. Reload them all.
+        # On Mac the reload file dialog would pop up for recently downloaded files, even if the file did not change
+        # prevent such unwanted updates by checking if the modified time is recent enough, otherwise don't show a popup
+        if Platform.isOSX() and time() - os.path.getmtime(file_path) > 10000:
+            return
+
         from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
         modified_nodes = [node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path]  # type: ignore
 
