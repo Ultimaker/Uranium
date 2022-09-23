@@ -56,12 +56,16 @@ class Backend(PluginObject):
     backendStateChange = Signal()
     backendConnected = Signal()
     backendQuit = Signal()
+    backendDone = Signal()
 
     def setState(self, new_state):
         if new_state != self._backend_state:
             self._backend_state = new_state
-
             self.backendStateChange.emit(self._backend_state)
+
+            if self._backend_state == BackendState.Done:
+                self.backendDone.emit()
+
 
     def startEngine(self):
         """:brief Start the backend / engine.
