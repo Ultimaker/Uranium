@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.1\n"
-"Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
-"POT-Creation-Date: 2022-06-21 12:58+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-27 15:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,366 +16,465 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "ウェーブフロントOBJファイル"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter は非テキストモードはサポートしていません。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "書き込むメッシュがありません。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STLファイル"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "サポートされていない出力モードで STL をストリームに書き込んでいます。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STLファイル（ASCII)"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STLファイル（バイナリー）"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "ローカルファイル"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to Disk"
 msgstr "ディスクに保存する"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
 msgctxt "@info:tooltip"
 msgid "Save to Disk"
 msgstr "ディスクに保存する"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
 msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
 msgstr "ディスクへ"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
 msgctxt "@title:window"
 msgid "Save to Disk"
 msgstr "ディスクに保存する"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
 msgstr "書き出すために利用可能なファイルがありません！"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "すでに存在するファイルです"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "<filename>{0}</filename>に保存する"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
 msgctxt "@info:title"
 msgid "Saving"
 msgstr "保存中"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "<filename>{0}</filename>保存中に却下されました"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}</message>"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "<filename>{0}</filename>に保存しました"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
 msgctxt "@info:title"
 msgid "File Saved"
 msgstr "ファイル保存"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "フォルダーを開く"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "ファイルが入ったフォルダーを開く"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
 msgctxt "@info:title"
 msgid "Error"
 msgstr "エラー"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "<filename>{0}</filename>: <message>{1}</message> への保存でエラーが発生"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror"
 msgstr "反転させる"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "モデルを反転させる"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "オブジェクトをビルドプレート上に平に並べる..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "オブジェクト回転"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "回転させる"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "モデルを回転させる"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
 msgid "Scale"
 msgstr "スケールする"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Scale Model"
 msgstr "モデルをスケールする"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
 msgid "Move"
 msgstr "動かす"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Move Model"
 msgstr "モデルを動かす"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number}-BETA is available!"
-msgstr "{application_name} {version_number}ベータ版が利用可能です。"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "オブジェクトをビルドプレート上に平に並べる..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "最新のベータ版をお試しいただき、{application_name}の改善にご協力ください。"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "オブジェクト回転"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
-msgctxt "@action:button"
-msgid "Download"
-msgstr "ダウンロード"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "回転させる"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "詳しく見る"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "モデルを回転させる"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STLファイル"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "ウェーブフロントOBJファイル"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "書き込むメッシュがありません。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "サポートされていない出力モードで STL をストリームに書き込んでいます。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STLファイル（ASCII)"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STLファイル（バイナリー）"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "OBJWriter は非テキストモードはサポートしていません。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:42
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr "アップデートチェッカー"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:43
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "アップデートがあるか確認する"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:115
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "ご使用のバージョンはアップデート更新通知をサポートしていません。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:116
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "警告"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:170
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "新しいバージョンが見つかりました。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:171
+#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:174
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "バージョンアップグレード"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "{application_name} {version_number} が利用可能です！"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} なら、より優れた信頼性の隊かい印刷体験が得られます。"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr "アップデートチェッカー"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+msgctxt "@action:button"
+msgid "Download"
+msgstr "ダウンロード"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "アップデートがあるか確認する"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "詳しく見る"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "ご使用のバージョンはアップデート更新通知をサポートしていません。"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr "最新のベータ版をお試しいただき、{application_name}の改善にご協力ください。"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "警告"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "新しいバージョンが見つかりました。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:156
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:174
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "バージョンアップグレード"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "シンプル"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "リセットする"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:46
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
-"- {profiles}\n"
-"工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr "工場リセット"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:53
-msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr "リセットすると、現在のプリンターおよびプロファイルがすべて削除されます。本当にリセットしてよろしいですか？"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:929
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
-#, python-brace-format
-msgctxt "@item:inlistbox"
-msgid "All Supported Types ({0})"
-msgstr "すべてのサポートのタイプ ({0})"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:72
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:930
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr "全てのファイル"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:41
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>のファイルタイプは開けません"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:44
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "無効なファイル"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできない可能性があります。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:98
-msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr "ファイルを開けません"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:71
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "読み込み中"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:87
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr "<filename>{0}</filename>にはモデルがありませんでした。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:90
-msgctxt "@info:title"
-msgid "No Models in File"
-msgstr "ファイルにモデルがありません"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできないか、モデルが含まれていませんでした。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:72
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:72
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "元のサイズの{0}%%まで自動的にスケールされたモデル"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:74
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:74
 msgctxt "@info:title"
 msgid "Scaling Object"
 msgstr "造形物をスケールする"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:294
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/FileHandler.py:71
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:929
+#, python-brace-format
+msgctxt "@item:inlistbox"
+msgid "All Supported Types ({0})"
+msgstr "すべてのサポートのタイプ ({0})"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/FileHandler.py:72
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:930
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
+msgstr "全てのファイル"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:41
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "<filename>{0}</filename>のファイルタイプは開けません"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:44
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr "無効なファイル"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:59
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできない可能性があります。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:62
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:98
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr "ファイルを開けません"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:71
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "読み込み中"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:87
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr "<filename>{0}</filename>にはモデルがありませんでした。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:90
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr "ファイルにモデルがありません"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:95
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできないか、モデルが含まれていませんでした。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:332
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+"プラグインがインストールされました。\n"
+"アプリケーションを再起動して、プラグインをアクティベートしてください。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:398
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr "プラグイン{}は検証できなかったため、読み込まれていません。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:503
+msgctxt "@action:button"
+msgid "Dismiss"
+msgstr "無視"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:516
+msgctxt "@error"
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
+msgstr "プラグイン{}を読み込むことができませんでした。プラグインを再インストールすると、問題が解決する場合があります。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:520
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr "プラグインを削除"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:538
+msgctxt "@info:status"
+msgid "Plugin no longer scheduled to be installed."
+msgstr "プラグインのインストールはスケジュールされなくなります。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:544
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr ""
+"プラグインが外されました。\n"
+"{0} を再起動してアンインストールを終了してください。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:210
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:231
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "プラグインをロードする..."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:212
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr "プラグイン{plugin_id}をロード中..."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:218
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr "パッケージマネージャーを初期化中..."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:226
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr "構成が破損している可能性があります。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:228
+msgctxt "@info:title"
+msgid "Configuration errors"
+msgstr "構成エラー"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:240
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "コンフィグレーションをアップデートする..."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:246
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "プレファレンスをロード中..."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:339
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr "UIをロード中..."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:130
+#, python-brace-format
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2}日 {1:0>2}時間 {2:0>2}分"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:132
+#, python-brace-format
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2}時間 {1:0>2}分"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0}日"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0}時間"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:139
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0}分"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr "ディスクから"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "前のバージョン {0} のコンフィグレーションが取り込まれました。"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:294
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
@@ -383,18 +482,18 @@ msgstr ""
 "次のパッケージのアンインストールでエラーが発生しました:\n"
 "{packages}"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:296
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:296
 msgctxt "@info:title"
 msgid "Uninstalling errors"
 msgstr "アンインストールエラー"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:308
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:308
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "プラグイン{package_id}をインストール中..."
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:619
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:619
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -406,549 +505,447 @@ msgstr ""
 "{error}.\n"
 "後からアップグレードをやり直してください。"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:622
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:622
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "アップデートエラー"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:332
-msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr ""
-"プラグインがインストールされました。\n"
-"アプリケーションを再起動して、プラグインをアクティベートしてください。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:398
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "プラグイン{}は検証できなかったため、読み込まれていません。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:503
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
 msgctxt "@action:button"
-msgid "Dismiss"
-msgstr "無視"
+msgid "Reset"
+msgstr "リセットする"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:516
-msgctxt "@error"
-msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
-msgstr "プラグイン{}を読み込むことができませんでした。プラグインを再インストールすると、問題が解決する場合があります。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:520
-msgctxt "@action:button"
-msgid "Remove plugin"
-msgstr "プラグインを削除"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:538
-msgctxt "@info:status"
-msgid "Plugin no longer scheduled to be installed."
-msgstr "プラグインのインストールはスケジュールされなくなります。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:544
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
-"プラグインが外されました。\n"
-"{0} を再起動してアンインストールを終了してください。"
+"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
+"- {profiles}\n"
+"工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "ディスクから"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:51
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr "工場リセット"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:130
-#, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
-msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}日 {1:0>2}時間 {2:0>2}分"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:53
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr "リセットすると、現在のプリンターおよびプロファイルがすべて削除されます。本当にリセットしてよろしいですか？"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:132
-#, python-brace-format
-msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}時間 {1:0>2}分"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:68
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "OpenGLの初期化に失敗しました"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is days"
-msgid "{0} day"
-msgid_plural "{0} days"
-msgstr[0] "{0}日"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:78
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:137
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is hours"
-msgid "{0} hour"
-msgid_plural "{0} hours"
-msgstr[0] "{0}時間"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:135
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:137
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:139
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is minutes"
-msgid "{0} minute"
-msgid_plural "{0} minutes"
-msgstr[0] "{0}分"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:209
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:230
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "プラグインをロードする..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:211
-#, python-brace-format
-msgctxt "@info:progress"
-msgid "Loading plugin {plugin_id}..."
-msgstr "プラグイン{plugin_id}をロード中..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:217
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr "パッケージマネージャーを初期化中..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:225
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr "構成が破損している可能性があります。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:227
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr "構成エラー"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:239
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "コンフィグレーションをアップデートする..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:245
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "プレファレンスをロード中..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/QtApplication.py:335
-msgctxt "@info:progress"
-msgid "Loading UI..."
-msgstr "UIをロード中..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:190
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:190
 #, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "{filename}を再ロードしますか？"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:192
 msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "ファイルが変更されました"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:193
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:193
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "再ロード"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:195
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:195
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "これにより変更したファイルをディスクから再ロードします。"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "前のバージョン {0} のコンフィグレーションが取り込まれました。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:68
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "OpenGLの初期化に失敗しました"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:78
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "平らに置く"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "ビルドプレートに合わせる面を選択します"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "スナップローテーション"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "スナップスケーリング"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "ユニフォームスケーリング"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:209
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:184
 msgctxt "@option:check"
 msgid "Lock Model"
 msgstr "モデルのロック"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
-msgctxt "@option"
-msgid "OK"
-msgstr "OK"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:200
+msgctxt "@option:check"
+msgid "Drop Down Model"
+msgstr ""
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:100
-msgctxt "@option"
-msgid "Open"
-msgstr "開く"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "平らに置く"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:101
-msgctxt "@option"
-msgid "Save"
-msgstr "保存"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "ビルドプレートに合わせる面を選択します"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:102
-msgctxt "@option"
-msgid "Cancel"
-msgstr "キャンセル"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "スナップローテーション"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:103
-msgctxt "@option"
-msgid "Close"
-msgstr "閉める"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:104
-msgctxt "@option"
-msgid "Discard"
-msgstr "取り消す"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:105
-msgctxt "@option"
-msgid "Apply"
-msgstr "適用"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:106
-msgctxt "@option"
-msgid "Reset"
-msgstr "リセットする"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:107
-msgctxt "@option"
-msgid "Restore Defaults"
-msgstr "デフォルトに戻す"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:108
-msgctxt "@option"
-msgid "Help"
-msgstr "ヘルプ"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:109
-msgctxt "@option"
-msgid "Save All"
-msgstr "すべて保存"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:110
-msgctxt "@option"
-msgid "Yes"
-msgstr "はい"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:111
-msgctxt "@option"
-msgid "Yes to All"
-msgstr "すべてはい"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:112
-msgctxt "@option"
-msgid "No"
-msgstr "いいえ"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:113
-msgctxt "@option"
-msgid "No to All"
-msgstr "すべていいえ"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:114
-msgctxt "@option"
-msgid "Abort"
-msgstr "中止"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:115
-msgctxt "@option"
-msgid "Retry"
-msgstr "リトライ"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:116
-msgctxt "@option"
-msgid "Ignore"
-msgstr "無視"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "モデルを取り除きました"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "%1を取り外しますか？この作業はやり直しが効きません！"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "プリンター"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "タイプ"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
 msgctxt "@title:window"
 msgid "Preferences"
 msgstr "プレファレンス"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:134
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
 msgctxt "@title:tab"
 msgid "General"
 msgstr "一般"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:135
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
 msgctxt "@title:tab"
 msgid "Settings"
 msgstr "設定"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
 msgctxt "@title:window"
 msgid "Rename"
 msgstr "名前を変える"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
 msgctxt "@info"
 msgid "Please provide a new name."
 msgstr "新しい名前を入力してください。"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
 msgctxt "@action:button"
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
 msgctxt "@action:button"
 msgid "OK"
 msgstr "OK"
 
-#: ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "ログ情報をコンソールにアウトプットする。"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "プリンター"
 
-#: ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "コンソールロガー"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "タイプ"
 
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "モデルを取り除きました"
 
-#: FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "ウェイブフロントOBJリーダー"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "%1を取り外しますか？この作業はやり直しが効きません！"
 
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
+msgctxt "@option"
+msgid "OK"
+msgstr "OK"
 
-#: FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "ウェイブフロントOBJライター"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:100
+msgctxt "@option"
+msgid "Open"
+msgstr "開く"
 
-#: FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "STLファイルを読み込むためのサポートを供給する。"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:101
+msgctxt "@option"
+msgid "Save"
+msgstr "保存"
 
-#: FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STLリーダー"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:102
+msgctxt "@option"
+msgid "Cancel"
+msgstr "キャンセル"
 
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "STLファイルを書き出すためのサポートを供給する。"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:103
+msgctxt "@option"
+msgid "Close"
+msgstr "閉める"
 
-#: FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STLライター"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:104
+msgctxt "@option"
+msgid "Discard"
+msgstr "取り消す"
 
-#: FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "ログ情報を設定フォルダーのファイルにアウトプットする。"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:105
+msgctxt "@option"
+msgid "Apply"
+msgstr "適用"
 
-#: FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
-msgstr "ファイルロガー"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:106
+msgctxt "@option"
+msgid "Reset"
+msgstr "リセットする"
 
-#: LocalContainerProvider/plugin.json
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:107
+msgctxt "@option"
+msgid "Restore Defaults"
+msgstr "デフォルトに戻す"
 
-#: LocalContainerProvider/plugin.json
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr "ローカルコンテナプロバイダー"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:108
+msgctxt "@option"
+msgid "Help"
+msgstr "ヘルプ"
 
-#: LocalFileOutputDevice/plugin.json
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:109
+msgctxt "@option"
+msgid "Save All"
+msgstr "すべて保存"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:110
+msgctxt "@option"
+msgid "Yes"
+msgstr "はい"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:111
+msgctxt "@option"
+msgid "Yes to All"
+msgstr "すべてはい"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:112
+msgctxt "@option"
+msgid "No"
+msgstr "いいえ"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:113
+msgctxt "@option"
+msgid "No to All"
+msgstr "すべていいえ"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:114
+msgctxt "@option"
+msgid "Abort"
+msgstr "中止"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:115
+msgctxt "@option"
+msgid "Retry"
+msgstr "リトライ"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:116
+msgctxt "@option"
+msgid "Ignore"
+msgstr "無視"
+
+#: /LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
 msgstr "ローカルファイルに保存することができます。"
 
-#: LocalFileOutputDevice/plugin.json
+#: /LocalFileOutputDevice/plugin.json
 msgctxt "name"
 msgid "Local File Output Device"
 msgstr "ローカルファイルアウトプットデバイス"
 
-#: Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "カメラを操作するためのツールを供給する。"
-
-#: Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "カメラツール"
-
-#: Tools/MirrorTool/plugin.json
+#: /Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
 msgstr "ミラーツールを供給する。"
 
-#: Tools/MirrorTool/plugin.json
+#: /Tools/MirrorTool/plugin.json
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "ミラーツール"
 
-#: Tools/RotateTool/plugin.json
+#: /Tools/CameraTool/plugin.json
 msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "回転ツールを供給する。"
+msgid "Provides the tool to manipulate the camera."
+msgstr "カメラを操作するためのツールを供給する。"
 
-#: Tools/RotateTool/plugin.json
+#: /Tools/CameraTool/plugin.json
 msgctxt "name"
-msgid "Rotate Tool"
-msgstr "回転ツール"
+msgid "Camera Tool"
+msgstr "カメラツール"
 
-#: Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "スケールツールを供給すｒ。"
-
-#: Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "スケールツール"
-
-#: Tools/SelectionTool/plugin.json
+#: /Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
 msgstr "セレクションツールを供給する。"
 
-#: Tools/SelectionTool/plugin.json
+#: /Tools/SelectionTool/plugin.json
 msgctxt "name"
 msgid "Selection Tool"
 msgstr "セレクションツール"
 
-#: Tools/TranslateTool/plugin.json
+#: /Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "スケールツールを供給すｒ。"
+
+#: /Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "スケールツール"
+
+#: /Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
 msgstr "ムーブツールを供給する。"
 
-#: Tools/TranslateTool/plugin.json
+#: /Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Move Tool"
 msgstr "ムーブツール"
 
-#: UpdateChecker/plugin.json
+#: /Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "回転ツールを供給する。"
+
+#: /Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "回転ツール"
+
+#: /ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "ログ情報をコンソールにアウトプットする。"
+
+#: /ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr "コンソールロガー"
+
+#: /FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "STLファイルを読み込むためのサポートを供給する。"
+
+#: /FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STLリーダー"
+
+#: /FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
+
+#: /FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "ウェイブフロントOBJリーダー"
+
+#: /FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "STLファイルを書き出すためのサポートを供給する。"
+
+#: /FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr "STLライター"
+
+#: /FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
+
+#: /FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "ウェイブフロントOBJライター"
+
+#: /UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
 msgstr "ソフトウェアのアップデートを確認中。"
 
-#: UpdateChecker/plugin.json
+#: /UpdateChecker/plugin.json
 msgctxt "name"
 msgid "Update Checker"
 msgstr "アップデートチェッカー"
 
-#: UraniumExampleExtensionPlugin/plugin.json
+#: /LocalContainerProvider/plugin.json
 msgctxt "description"
-msgid "Example extension to instruct people on how to create Uranium extensions."
-msgstr "Uranium拡張子を作成する方法を伝える拡張子の例を示します。"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
 
-#: UraniumExampleExtensionPlugin/plugin.json
+#: /LocalContainerProvider/plugin.json
 msgctxt "name"
-msgid "Example Extension"
-msgstr "拡張子の例"
+msgid "Local Container Provider"
+msgstr "ローカルコンテナプロバイダー"
 
-#: UraniumExampleFileReaderPlugin/plugin.json
+#: /FileLogger/plugin.json
 msgctxt "description"
-msgid "Example file reader to instruct people on how to create Uranium file readers."
-msgstr "Uraniumファイルリーダーを作成する方法を伝えるファイルリーダーの例を示します。"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "ログ情報を設定フォルダーのファイルにアウトプットする。"
 
-#: UraniumExampleFileReaderPlugin/plugin.json
+#: /FileLogger/plugin.json
 msgctxt "name"
-msgid "Example File Reader"
-msgstr "ファイルリーダーの例"
+msgid "File Logger"
+msgstr "ファイルロガー"
 
-#: UraniumExampleOutputDevicePlugin/plugin.json
-msgctxt "description"
-msgid "Example output device to instruct people on how to create Uranium output devices."
-msgstr "Uranium出力デバイスを作成する方法を伝える出力デバイスの例を示します。"
-
-#: UraniumExampleOutputDevicePlugin/plugin.json
-msgctxt "name"
-msgid "Example Output Device"
-msgstr "出力デバイスの例"
-
-#: UraniumExampleToolPlugin/plugin.json
-msgctxt "description"
-msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr "Uraniumツールを作成する方法を伝えるツールの例を示します。"
-
-#: UraniumExampleToolPlugin/plugin.json
-msgctxt "name"
-msgid "Example Tool"
-msgstr "ツールの例"
-
-#: Views/SimpleView/plugin.json
+#: /Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
 msgstr "シンプルソリッドメッシュビューを供給する。"
 
-#: Views/SimpleView/plugin.json
+#: /Views/SimpleView/plugin.json
 msgctxt "name"
 msgid "Simple View"
 msgstr "シンプルビュー"
+
+#, python-brace-format
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number}-BETA is available!"
+#~ msgstr "{application_name} {version_number}ベータ版が利用可能です。"
+
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "Uranium拡張子を作成する方法を伝える拡張子の例を示します。"
+
+#~ msgctxt "name"
+#~ msgid "Example Extension"
+#~ msgstr "拡張子の例"
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "Uraniumファイルリーダーを作成する方法を伝えるファイルリーダーの例を示します。"
+
+#~ msgctxt "name"
+#~ msgid "Example File Reader"
+#~ msgstr "ファイルリーダーの例"
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "Uranium出力デバイスを作成する方法を伝える出力デバイスの例を示します。"
+
+#~ msgctxt "name"
+#~ msgid "Example Output Device"
+#~ msgstr "出力デバイスの例"
+
+#~ msgctxt "description"
+#~ msgid "Example tool to instruct people on how to create Uranium tools."
+#~ msgstr "Uraniumツールを作成する方法を伝えるツールの例を示します。"
+
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "ツールの例"
 
 #~ msgctxt "@error"
 #~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
