@@ -334,7 +334,7 @@ class SceneNodeTest(unittest.TestCase):
         node = SceneNode()
         node.setSetting("ZOMG", "BEEP")
         assert node.getSetting("ZOMG") == "BEEP"
-        assert node.getSetting("unknown") == ""
+        assert node.getSetting("unknown") == None
         assert node.getSetting("unknown", "zomg") == "zomg"
 
     def test_getSetSelectable(self):
