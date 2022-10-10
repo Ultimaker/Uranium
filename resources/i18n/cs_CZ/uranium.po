@@ -593,7 +593,7 @@ msgstr "Uzamknout model"
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:200
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr ""
+msgstr "Položit model dolů"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
 msgctxt "@action:button"
