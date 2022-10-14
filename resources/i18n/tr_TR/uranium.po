@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 5.1\n"
-"Report-Msgid-Bugs-To: plugins@ultimaker.com\n"
+"Project-Id-Version: Uranium 5.2\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-21 12:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -91,7 +91,9 @@ msgstr "Dosya Zaten Mevcut"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgid ""
+"The file <filename>{0}</filename> already exists. Are you sure you want to "
+"overwrite it?"
 msgstr "Dosya <filename>{0}</filename> zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
@@ -150,7 +152,9 @@ msgstr "Hata"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
 #, python-brace-format
 msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgid ""
+"Something went wrong saving to <filename>{0}</filename>: <message>{1}</"
+"message>"
 msgstr "<filename>{0}</filename> dosyasına kaydedilirken bir şeyler ters gitti: <message>{1}</message>"
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
@@ -236,7 +240,9 @@ msgstr "{application_name} {version_number} yayınlandı!"
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
 #, python-brace-format
 msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgid ""
+"{application_name} {version_number} provides a better and more reliable "
+"printing experience."
 msgstr "{application_name} {version_number}, daha iyi ve daha güvenilir bir yazdırma deneyimi sunar."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
@@ -286,13 +292,13 @@ msgstr "Sıfırla"
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"Your configuration seems to be corrupt. Something seems to be wrong with the "
+"following profiles:\n"
 "- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"Yapılandırmanız bozuk görünüyor. Şu profillerde bir sorun var gibi görünüyor:\n"
-"- {profiles}\n"
-" Fabrika varsayılanlarına sıfırlamak ister misiniz? Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır."
+" Would you like to reset to factory defaults? Reset will remove all your "
+"current printers and profiles."
+msgstr "Yapılandırmanız bozuk görünüyor. Şu profillerde bir sorun var gibi görünüyor:\n- {profiles}\n Fabrika varsayılanlarına sıfırlamak ister misiniz? Sıfırlama"
+" işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@title:window"
@@ -301,7 +307,9 @@ msgstr "Fabrika ayarlarına sıfırla"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:53
 msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgid ""
+"Reset will remove all your current printers and profiles! Are you sure you "
+"want to reset?"
 msgstr "Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır! Sıfırlamak istediğinizden emin misiniz?"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
@@ -333,7 +341,9 @@ msgstr "Geçersiz Dosya"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgid ""
+"Failed to load <filename>{0}</filename>. The file could be corrupt or "
+"inaccessible."
 msgstr "<filename>{0}</filename> yüklenemedi. Dosya çökmüş veya erişilemiyor olabilir."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
@@ -361,7 +371,9 @@ msgstr "Dosyada Model Yok"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgid ""
+"Failed to load <filename>{0}</filename>. The file could be corrupt, "
+"inaccessible or it did not contain any models."
 msgstr "<filename>{0}</filename> dosyası yüklenemedi. Dosya bozuk veya erişilemez olabilir ya da içinde model yoktur."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:72
@@ -379,9 +391,7 @@ msgstr "Nesne Ölçeklendiriliyor"
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr ""
-"Şu paketler kaldırılırken bazı hatalar meydana geldi:\n"
-"{packages}"
+msgstr "Şu paketler kaldırılırken bazı hatalar meydana geldi:\n{packages}"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:296
 msgctxt "@info:title"
@@ -398,13 +408,11 @@ msgstr "Eklenti yükleniyor {package_id}..."
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
+"There was an error uninstalling the package {package} before installing new "
+"version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr ""
-"Yeni sürüm yüklenmeden önce {package} paketi kaldırılırken hata meydana geldi:\n"
-"{error}.\n"
-"Lütfen daha sonra tekrar yükseltmeyi deneyin."
+msgstr "Yeni sürüm yüklenmeden önce {package} paketi kaldırılırken hata meydana geldi:\n{error}.\nLütfen daha sonra tekrar yükseltmeyi deneyin."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:622
 msgctxt "@info:title"
@@ -416,9 +424,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Eklenti kurulumu yapıldı.\n"
-"Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
+msgstr "Eklenti kurulumu yapıldı.\nEklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:398
 msgctxt "@error:untrusted"
@@ -432,7 +438,9 @@ msgstr "Kapat"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:516
 msgctxt "@error"
-msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
+msgid ""
+"The plugin {} could not be loaded. Re-installing the plugin might solve the "
+"issue."
 msgstr "{} eklentisi yüklenemedi. Eklentiyi yeniden yüklemek sorunu çözebilir."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:520
@@ -451,9 +459,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr ""
-"Eklenti kaldırıldı.\n"
-"Kaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
+msgstr "Eklenti kaldırıldı.\nKaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
@@ -462,7 +468,9 @@ msgstr "Diskten"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:130
 #, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgctxt ""
+"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
+"minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}g {1:0>2}sa {2:0>2}dk"
 
@@ -575,7 +583,9 @@ msgstr "OpenGL Başlatılamadı"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:78
 msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgid ""
+"Critical OpenGL extensions are missing. This program requires support for "
+"Framebuffer Objects. Please check your video card drivers."
 msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteği gerektirir. Lütfen ekran kartı sürücülerinizi kontrol edin."
 
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
@@ -815,7 +825,9 @@ msgstr "Dosya Günlükçüsü"
 
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
+msgid ""
+"Provides built-in setting containers that come with the installation of the "
+"application."
 msgstr "Uygulamanın kurulumuyla birlikte gelen yerleşik ayar kapsayıcılarını sunar."
 
 #: LocalContainerProvider/plugin.json
@@ -905,7 +917,8 @@ msgstr "Güncelleme Denetleyicisi"
 
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "description"
-msgid "Example extension to instruct people on how to create Uranium extensions."
+msgid ""
+"Example extension to instruct people on how to create Uranium extensions."
 msgstr "Uranium uzantıları oluşturma konusunda bilgilendirme amaçlı örnek uzantı."
 
 #: UraniumExampleExtensionPlugin/plugin.json
@@ -915,7 +928,8 @@ msgstr "Örnek Uzantı"
 
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "description"
-msgid "Example file reader to instruct people on how to create Uranium file readers."
+msgid ""
+"Example file reader to instruct people on how to create Uranium file readers."
 msgstr "Uranium dosya okuyucular oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek dosya okuyucu."
 
 #: UraniumExampleFileReaderPlugin/plugin.json
@@ -925,7 +939,9 @@ msgstr "Örnek Dosya Okuyucu"
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "description"
-msgid "Example output device to instruct people on how to create Uranium output devices."
+msgid ""
+"Example output device to instruct people on how to create Uranium output "
+"devices."
 msgstr "Uranium çıktı cihazları oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek çıktı cihazı."
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
@@ -952,500 +968,3 @@ msgstr "Basit gerçek bir ağ görünümü sağlar."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Basit Görünüm"
-
-#~ msgctxt "@error"
-#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-#~ msgstr "{} eklentisi yüklenemedi. Eklentiyi yeniden yüklemek sorunu çözebilir"
-
-#, python-brace-format
-#~ msgctxt "@error:uninstall"
-#~ msgid ""
-#~ "There were some errors uninstalling the following packages:\n"
-#~ "{packages}"
-#~ msgstr ""
-#~ "Şu paketler kaldırılırken bazı hatalar meydana geldi:\n"
-#~ "{packages}"
-
-#~ msgctxt "@item:tooltip"
-#~ msgid "This setting has been hidden by the active machine and will not be visible."
-#~ msgstr "Bu ayar etkin makine tarafından saklanmış ve görünür olmayacak."
-
-#~ msgctxt "@item:tooltip %1 is list of setting names"
-#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
-#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-#~ msgstr[0] "Bu ayar %1 değerle saklanmış. Ayarı görünür yapmak için ayar değerini değiştirin."
-#~ msgstr[1] "Bu ayar %1 değerle saklanmış. Ayarı görünür yapmak için bu ayarların değerini değiştirin."
-
-#~ msgctxt "@action:button"
-#~ msgid "Defaults"
-#~ msgstr "Varsayılanlar"
-
-#~ msgctxt "@action:button"
-#~ msgid "Close"
-#~ msgstr "Kapat"
-
-#~ msgctxt "@action:button"
-#~ msgid "Back"
-#~ msgstr "Geri"
-
-#~ msgctxt "@action:button"
-#~ msgid "Finish"
-#~ msgstr "Bitir"
-
-#~ msgctxt "@action:button"
-#~ msgid "Next"
-#~ msgstr "İleri"
-
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number} BETA is available!"
-#~ msgstr "{application_name} {version_number} BETA yayınlandı!"
-
-#~ msgctxt "@info:status"
-#~ msgid "Auto scaled object to {0}% of original size"
-#~ msgstr "Nesne özgün boyutun %{0}’sine kadar otomatik ölçeklendirildi"
-
-#~ msgctxt "@info"
-#~ msgid "Could not access update information."
-#~ msgstr "Güncelleme bilgilerine erişilemedi."
-
-#~ msgctxt "@info"
-#~ msgid "An error occurred while checking for updates."
-#~ msgstr "Güncellemelerin kontrolü sırasında bir hata oluştu."
-
-#~ msgctxt "@action:button Preceded by 'Ready to'."
-#~ msgid "Save to File"
-#~ msgstr "Dosyaya Kaydet"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Save to File"
-#~ msgstr "Dosyaya Kaydet"
-
-#~ msgctxt "@title:window"
-#~ msgid "Save to File"
-#~ msgstr "Dosyaya Kaydet"
-
-#~ msgctxt "@error:untrusted"
-#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
-#~ msgstr "{} eklentisi güvenilir bağlam dışında dosya yüklemeyi denediğinden yüklenmedi"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Failed to load <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> yüklemesi başarısız oldu"
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-#~ "- {profiles}\n"
-#~ "Would you like to reset to factory defaults?"
-#~ msgstr ""
-#~ "Yapılandırmanız bozuk görünüyor. Aşağıdaki profillerde bir sorun var gibi görünüyor:\n"
-#~ "- {profiles}\n"
-#~ "Fabrika varsayılanlarına sıfırlamak ister misiniz?"
-
-#~ msgctxt "@info:button"
-#~ msgid "Reset your configuration to factory defaults."
-#~ msgstr "Yapılandırmanızı fabrika varsayılanlarına sıfırlayın."
-
-#~ msgctxt "@title:tab"
-#~ msgid "Plugins"
-#~ msgstr "Eklentiler"
-
-#~ msgctxt "@action:button"
-#~ msgid "Install new plugin"
-#~ msgstr "Yeni eklenti kur"
-
-#~ msgctxt "@label"
-#~ msgid "You will need to restart the application before changes in plugins have effect."
-#~ msgstr "Eklentilerde yapılan değişikliklerin geçerli olması için uygulamayı yeniden başlatmanız gerekecektir."
-
-#~ msgctxt "@label"
-#~ msgid "This plugin is required for the application to run."
-#~ msgstr "Bu eklenti uygulamanın çalışması için gereklidir."
-
-#~ msgctxt "@label"
-#~ msgid "Info..."
-#~ msgstr "Bilgi..."
-
-#~ msgctxt "@window:title"
-#~ msgid "Install Plugin"
-#~ msgstr "Eklenti Kur"
-
-#~ msgctxt "@title:window"
-#~ msgid "Open file(s)"
-#~ msgstr "Dosya aç"
-
-#~ msgctxt "@label"
-#~ msgid "No text available"
-#~ msgstr "Metin yok"
-
-#~ msgctxt "@title:window"
-#~ msgid "About %1"
-#~ msgstr "Yaklaşık %1"
-
-#~ msgctxt "@label"
-#~ msgid "Author:"
-#~ msgstr "Yazar:"
-
-#~ msgctxt "@label"
-#~ msgid "Version:"
-#~ msgstr "Sürüm:"
-
-#~ msgctxt "@action:button"
-#~ msgid "Learn more about the new features"
-#~ msgstr "Yeni özellikler hakkında daha fazla bilgi alın"
-
-#~ msgctxt "@info:status"
-#~ msgid "Cura {0} is available!"
-#~ msgstr "Cura {0} yayınlandı!"
-
-#~ msgctxt "@info:status"
-#~ msgid "Cura {0} provides better and reliable printing experience."
-#~ msgstr "Cura {0} daha iyi ve daha güvenilir bir yazdırma deneyimi sunar."
-
-#~ msgctxt "@action:button"
-#~ msgid "Learn more about new features"
-#~ msgstr "Yeni özellikler hakkında daha fazla bilgi alın"
-
-#~ msgctxt "@error:update"
-#~ msgid ""
-#~ "There was an error uninstalling the package {package} before installingnew version:\n"
-#~ "{error}.\n"
-#~ "Please try to upgrade again later."
-#~ msgstr ""
-#~ "Yeni sürüm yüklenmeden önce {package} paketi kaldırılırken hata meydana geldi:\n"
-#~ "{error}.\n"
-#~ "Lütfen daha sonra tekrar güncellemeyi deneyin."
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-#~ "- {profiles}\n"
-#~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-#~ msgstr ""
-#~ "Yapılandırmanız bozuk görünüyor. Şu profillerde bir sorun var gibi görünüyor:\n"
-#~ "- {profiles}\n"
-#~ "Fabrika varsayılanlarına sıfırlamak ister misiniz? Sıfırlama işlemi mevcut tüm yazıcılarınızı ve profillerinizi kaldıracaktır."
-
-#~ msgctxt "@info"
-#~ msgid "A new version is available!"
-#~ msgstr "Yeni bir sürüm mevcut!"
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Failed to install plugin from <filename>{0}</filename>:\n"
-#~ "<message>{1}</message>"
-#~ msgstr ""
-#~ "<filename>{0}</filename> üzerinden eklenti kurulumu başarısız oldu:\n"
-#~ "<message>{1}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Failed to install the plugin;\n"
-#~ "<message>{0}</message>"
-#~ msgstr ""
-#~ "Eklenti kurulumu başarısız oldu;\n"
-#~ "<message>{0}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-#~ msgstr "Eklenti kaldırılamadı. Eklenti {0} yeniden başlatmadan sonra kaldırılacaktır."
-
-#~ msgctxt "@title:tab"
-#~ msgid "Setting Visibility"
-#~ msgstr "Görünürlüğü Ayarlama"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Check all"
-#~ msgstr "Tümünü denetle"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Filter..."
-#~ msgstr "Filtrele..."
-
-#~ msgctxt "@title:tab"
-#~ msgid "Profiles"
-#~ msgstr "Profiller"
-
-#~ msgctxt "@label"
-#~ msgid "Duplicate"
-#~ msgstr "Çoğalt"
-
-#~ msgctxt "@label %1 is printer name"
-#~ msgid "Printer: %1"
-#~ msgstr "Yazıcı: %1"
-
-#~ msgctxt "@action:button"
-#~ msgid "Update \"%1\""
-#~ msgstr "“%1” güncelleme"
-
-#~ msgctxt "@action:button"
-#~ msgid "Update profile"
-#~ msgstr "Profili güncelle"
-
-#~ msgctxt "@action:button"
-#~ msgid "Discard current changes"
-#~ msgstr "Geçerli değişiklikleri iptal et"
-
-#~ msgctxt "@action:button"
-#~ msgid "Reload profile"
-#~ msgstr "Profili yeniden yükle"
-
-#~ msgctxt "@label"
-#~ msgid "Based on"
-#~ msgstr "Başvuru stili"
-
-#~ msgctxt "@label"
-#~ msgid "Profile type"
-#~ msgstr "Profil türü"
-
-#~ msgctxt "@label"
-#~ msgid "Protected profile"
-#~ msgstr "Korumalı profil"
-
-#~ msgctxt "@label"
-#~ msgid "Custom profile"
-#~ msgstr "Özel profil"
-
-#~ msgctxt "@action:button"
-#~ msgid "Import"
-#~ msgstr "İçe Aktar"
-
-#~ msgctxt "@action:button"
-#~ msgid "Export"
-#~ msgstr "Dışa Aktar"
-
-#~ msgctxt "@window:title"
-#~ msgid "Import Profile"
-#~ msgstr "Profili İçe Aktar"
-
-#~ msgctxt "@title:window"
-#~ msgid "Import Profile"
-#~ msgstr "Profili İçe Aktar"
-
-#~ msgctxt "@title:window"
-#~ msgid "Export Profile"
-#~ msgstr "Profili Dışa Aktar"
-
-#~ msgctxt "@info"
-#~ msgid "An exception occurred while checking for updates."
-#~ msgstr "Güncellemelerin kontrolü sırasında olağanüstü bir durum oluştu."
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Loading <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> yükleniyor"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Cannot open file type <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> dosya türü açılamıyor"
-
-#~ msgctxt "@action:button"
-#~ msgid "Ok"
-#~ msgstr "Tamam"
-
-#~ msgctxt "@label"
-#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-#~ msgstr "Dosya <filename>{0}</filename> zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
-
-#~ msgctxt "@info:progress"
-#~ msgid "Saving to <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename>na kaydediliyor"
-
-#~ msgctxt "@info:status"
-#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> dosyasını kaydetmeye çalışırken izin reddedildi"
-
-#~ msgctxt "@info:status"
-#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-#~ msgstr "<filename>{0}</filename>na kaydedilemedi: <message>{1}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Saved to <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename>na kaydedildi"
-
-#~ msgctxt "@info:status"
-#~ msgid "Cannot open file type <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> dosya türünü açılamıyor"
-
-#~ msgctxt "@info:status"
-#~ msgid "Failed to load <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> yüklemesi başarısız oldu"
-
-#~ msgctxt "@info:status"
-#~ msgid "Loading <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> yükleniyor"
-
-#~ msgctxt "description"
-#~ msgid "Provides the Translate tool."
-#~ msgstr "Çeviri aracı sağlar."
-
-#~ msgctxt "name"
-#~ msgid "Translate Tool"
-#~ msgstr "Çeviri Aracı"
-
-#~ msgctxt "@label"
-#~ msgid "Simple View"
-#~ msgstr "Basit Görünüm"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides a simple solid mesh view."
-#~ msgstr "Basit gerçek bir ağ görünümü sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "File Logger"
-#~ msgstr "Dosya Günlükçüsü"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Outputs log information to a file in your settings folder."
-#~ msgstr "Ayarlar klasörünüzde bulunan bir dosyaya oturum açma bilgilerini gönderir."
-
-#~ msgctxt "@label"
-#~ msgid "STL Reader"
-#~ msgstr "STL Okuyucu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for reading STL files."
-#~ msgstr "STL dosyalarının okunması için destek sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Wavefront OBJ Reader"
-#~ msgstr "Wavefront OBJ Okuyucu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Makes it possbile to read Wavefront OBJ files."
-#~ msgstr "Wavefront OBJ dosyalarının okunmasına olanak sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Wavefront OBJ Writer"
-#~ msgstr "Wavefront OBJ Yazıcı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Makes it possbile to write Wavefront OBJ files."
-#~ msgstr "Wavefront OBJ dosyalarının yazılmasına olanak sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "STL Writer"
-#~ msgstr "STL Yazıcı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for writing STL files."
-#~ msgstr "STL dosyalarının yazılması için destek sağlar."
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "STL File (Ascii)"
-#~ msgstr "STL Dosyası (Ascii)"
-
-#~ msgctxt "@label"
-#~ msgid "Console Logger"
-#~ msgstr "Konsol Günlükçüsü"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Outputs log information to the console."
-#~ msgstr "Günlük bilgilerinin çıktısını konsola verir."
-
-#~ msgctxt "@label"
-#~ msgid "Update Checker"
-#~ msgstr "Güncelleme Denetleyicisi"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Checks for updates of the software."
-#~ msgstr "Yazılım güncellemelerini denetler."
-
-#~ msgctxt "@label"
-#~ msgid "Local File Output Device"
-#~ msgstr "Yerel Dosya Çıkış Cihazı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Enables saving to local files."
-#~ msgstr "Yerel dosyalara kaydetmeyi sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Scale Tool"
-#~ msgstr "Ölçek Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Scale tool."
-#~ msgstr "Ölçek aracı sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Selection Tool"
-#~ msgstr "Seçim Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Selection tool."
-#~ msgstr "Seçim aracı sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Translate Tool"
-#~ msgstr "Çeviri Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Translate tool."
-#~ msgstr "Çeviri aracı sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Camera Tool"
-#~ msgstr "Kamera Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the tool to manipulate the camera."
-#~ msgstr "Aracın kamerayı yönlendirmesini sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Rotate Tool"
-#~ msgstr "Döndürme Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Rotate tool."
-#~ msgstr "Döndürme aracı sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Mirror Tool"
-#~ msgstr "Ayna Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Mirror tool."
-#~ msgstr "Ayna aracı sağlar."
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "The plugin has been installed.\n"
-#~ " Please re-start the application to active the plugin."
-#~ msgstr ""
-#~ "Eklenti kurulumu yapıldı.\n"
-#~ " Eklentiyi aktif hale getirmek uygulamayı yeniden başlatınız."
-
-#~ msgctxt "@label"
-#~ msgid "Wireframe View"
-#~ msgstr "Tel Çerçeve Görünümü"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides a simple wireframe view."
-#~ msgstr "Basit bit tel çerçeve görünümü sunar."
-
-#~ msgctxt "@info"
-#~ msgid "An exception occured while parsing the JSON file."
-#~ msgstr "JSON dosyası ayrıştırılırken özel bir durum oluştu."
-
-#~ msgctxt "@label"
-#~ msgid "3MF Writer"
-#~ msgstr "3MF Yazıcı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for writing 3MF files."
-#~ msgstr "3MF dosyalarının yazılması için destek sağlar."
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "3MF file"
-#~ msgstr "3MF dosyası"
-
-#~ msgctxt "@action:button"
-#~ msgid "Scale to Max"
-#~ msgstr "En Yükseğe ölçeklendir"
-
-#~ msgctxt "@action:button"
-#~ msgid "Center on Build Plate"
-#~ msgstr "Yapı Levhasında Ortala"
-
-#~ msgctxt "@action:button"
-#~ msgid "Drop to Build Plate"
-#~ msgstr "Yapı Levhasına Bırak"
