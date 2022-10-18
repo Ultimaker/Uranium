@@ -3,10 +3,12 @@ import os
 from pathlib import Path
 
 from conan import ConanFile
+from conan.tools.files import copy, mkdir
+from conan.tools.microsoft import unix_path
 from conan.tools.scm import Version
 from conan.errors import ConanInvalidConfiguration
 
-required_conan_version = ">=1.50.0"
+required_conan_version = ">=1.52.0"
 
 
 class UraniumConan(ConanFile):
@@ -54,6 +56,11 @@ class UraniumConan(ConanFile):
         for req in self._um_data()["requirements"]:
             self.requires(req)
 
+    def build_requirements(self):
+        if self.settings_build.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", default=False, check_type=bool):
+            self.tool_requires("msys2/cci.latest")
+        self.tool_requires("gettext/0.21")
+
     @property
     def _base_dir(self):
         if self.install_folder is None:
@@ -96,7 +103,15 @@ class UraniumConan(ConanFile):
         return py_interp
 
     def build(self):
-        pass
+        if self.settings.os == "Windows":
+            self.win_bash = True  # We need gettext, which requires the bash environment
+
+        for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
+            mo_file = self.build_path.joinpath(po_file.with_suffix('.mo').relative_to(self.source_path))
+            mkdir(self, str(unix_path(self, mo_file.parent)))
+            self.run(f"msgfmt {po_file} -o {mo_file} -f", env="conanbuild")
+
+        self.win_bash = None
 
     def generate(self):
         pass
@@ -110,10 +125,11 @@ class UraniumConan(ConanFile):
         self.cpp.package.resdirs = ["resources", "plugins", "pip_requirements"]  # Note: pip_requirements should be the last item in the list
 
     def package(self):
-        self.copy("*", src = "UM", dst = self.cpp.package.libdirs[0])
-        self.copy("*", src = "resources", dst = self.cpp.package.resdirs[0])
-        self.copy("*", src = "plugins", dst = self.cpp.package.resdirs[1])
-        self.copy("requirement*.txt", src=".", dst = self.cpp.package.resdirs[-1])
+        copy(self, "*", src = self.source_path.joinpath("UM"), dst = self.package_path.joinpath(self.cpp.package.libdirs[0]))
+        copy(self, "*", src = self.source_path.joinpath("resources"), dst = self.package_path.joinpath(self.cpp.package.resdirs[0]), excludes="*.po")
+        copy(self, "*.mo", src = self.build_path.joinpath("resources"), dst = self.package_path.joinpath(self.cpp.package.resdirs[0]))
+        copy(self, "*", src = self.source_path.joinpath("plugins"), dst = self.package_path.joinpath(self.cpp.package.resdirs[1]))
+        copy(self, "requirement*.txt", src = self.source_path, dst = self.package_path.joinpath(self.cpp.package.resdirs[-1]))
 
     def package_info(self):
         self.user_info.pip_requirements = "requirements.txt"
