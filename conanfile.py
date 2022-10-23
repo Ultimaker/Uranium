@@ -57,9 +57,8 @@ class UraniumConan(ConanFile):
             self.requires(req)
 
     def build_requirements(self):
-        if self.settings_build.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", default=False, check_type=bool):
-            self.tool_requires("msys2/cci.latest")
-        self.tool_requires("gettext/0.21")
+        if self.settings_build.os != "Windows" or self.conf.get("tools.microsoft.bash:path", default=False, check_type=bool):
+            self.tool_requires("gettext/0.21")
 
     @property
     def _base_dir(self):
@@ -103,7 +102,7 @@ class UraniumConan(ConanFile):
         return py_interp
 
     def build(self):
-        if self.settings.os == "Windows":
+        if self.settings_build.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", default=False, check_type=bool):
             return
             # FIXME: once m4, autoconf, automake are Conan V2 ready self.win_bash = True  # We need gettext, which requires the bash environment
 
