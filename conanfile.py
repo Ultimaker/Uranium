@@ -114,7 +114,12 @@ class UraniumConan(ConanFile):
         # FIXME: once m4, autoconf, automake are Conan V2 ready self.win_bash = None
 
     def generate(self):
-        pass
+        # Update the po files
+        if self.settings_build.os != "Windows" or self.conf.get("tools.microsoft.bash:path", default = False, check_type = bool):
+            for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
+                pot_file = self.source_path.joinpath("resources", "i18n", po_file.with_suffix('.pot').name)
+                mkdir(self, str(unix_path(self, pot_file.parent)))
+                self.run(f"msgmerge --no-wrap --no-fuzzy-matching -width=140 -o {po_file} {po_file} {pot_file}", env = "conanbuild")
 
     def layout(self):
         self.folders.source = "."
