@@ -21,9 +21,6 @@
 <br>
 
 [![Button Requirements]][Requirements]   
-[![Button Building]][Building]
-
-[![Button Packaging]][Packaging]   
 [![Button Developing]][Developing]
 
 <br>
@@ -38,8 +35,6 @@
 
 [Requirements]: docs/System%20Requirements.md
 [Developing]: docs/Developing.md
-[Packaging]: docs/Packaging.md
-[Building]: docs/Building.md
 [License]: LICENSE
 [#]: #
 
@@ -57,5 +52,3 @@
 
 [Button Requirements]: https://img.shields.io/badge/System_Requirements-c34360?style=for-the-badge&logoColor=white&logo=BookStack
 [Button Developing]: https://img.shields.io/badge/Developing-715a97?style=for-the-badge&logoColor=white&logo=VisualStudioCode
-[Button Packaging]: https://img.shields.io/badge/Packaging-458cb5?style=for-the-badge&logoColor=white&logo=GitLFS
-[Button Building]: https://img.shields.io/badge/Building-629944?style=for-the-badge&logoColor=white&logo=CurseForge
