@@ -76,17 +76,14 @@ msgstr "Enregistrement"
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr ""
-"Permission refusée lors de la tentative d'enregistrement de <filename>{0}</"
-"filename>"
+msgstr "Permission refusée lors de la tentative d'enregistrement de <filename>{0}</filename>"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
-"Impossible d'enregistrer <filename>{0}</filename> : <message>{1}</message>"
+msgstr "Impossible d'enregistrer <filename>{0}</filename>: <message>{1}</message>"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
 #, python-brace-format
@@ -125,7 +122,7 @@ msgid ""
 "message>"
 msgstr ""
 "Une erreur est survenue lors de l'enregistrement sur <filename>{0}</"
-"filename> : <message>{1}</message>"
+"filename>: <message>{1}</message>"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -227,8 +224,7 @@ msgstr "Vérifier les mises à jour"
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:115
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr ""
-"La version que vous utilisez ne prend pas en charge la vérification des "
+msgstr "La version que vous utilisez ne prend pas en charge la vérification des "
 "mises à jour."
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:116
@@ -280,8 +276,7 @@ msgstr "En savoir plus"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
-"Essayez la dernière version BÊTA et aidez-nous à l'améliorer. "
+msgstr "Essayez la dernière version BÊTA et aidez-nous à l'améliorer. "
 "{application_name}."
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/Views/SimpleView/__init__.py:12
@@ -514,9 +509,7 @@ msgstr "Une configuration d'une ancienne version de {0} a été importée."
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr ""
-"Des erreurs se sont produites lors de la désinstallation des paquets "
-"suivants :\n"
+msgstr "Des erreurs se sont produites lors de la désinstallation des paquets suivants:\n"
 "{packages}"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:296
@@ -540,7 +533,7 @@ msgid ""
 "Please try to upgrade again later."
 msgstr ""
 "Il y a eu une erreur lors de la désinstallation du paquet {package} avant "
-"d'installer la nouvelle version :\n"
+"d'installer la nouvelle version:\n"
 "{error}.\n"
 "Veuillez réessayer la mise à jour plus tard."
 
@@ -620,8 +613,7 @@ msgstr "Recharger"
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:195
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
-msgstr ""
-"Cela déclenchera le rechargement des fichiers modifiés à partir du disque."
+msgstr "Cela déclenchera le rechargement des fichiers modifiés à partir du disque."
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
 msgctxt "@option:check"
@@ -952,8 +944,7 @@ msgstr "Fournisseur de conteneur local"
 #: /FileLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr ""
-"Affiche les informations de journaux d'évènements (log) dans un fichier "
+msgstr "Affiche les informations de journaux d'évènements (log) dans un fichier "
 "situé dans votre dossier paramètres."
 
 #: /FileLogger/plugin.json
