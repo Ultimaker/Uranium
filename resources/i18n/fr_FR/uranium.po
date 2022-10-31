@@ -52,6 +52,7 @@ msgid "File Already Exists"
 msgstr "Le fichier existe déjà"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid ""
 "The file <filename>{0}</filename> already exists. Are you sure you want to "
@@ -61,6 +62,7 @@ msgstr ""
 "remplacer ?"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Enregistrement vers <filename>{0}</filename>"
@@ -71,17 +73,23 @@ msgid "Saving"
 msgstr "Enregistrement"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Permission refusée lors de la tentative d'enregistrement de <filename>{0}</filename>"
+msgstr ""
+"Permission refusée lors de la tentative d'enregistrement de <filename>{0}</"
+"filename>"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
+#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Impossible d'enregistrer <filename>{0}</filename> : <message>{1}</message>"
+msgstr ""
+"Impossible d'enregistrer <filename>{0}</filename> : <message>{1}</message>"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
+#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Enregistré vers <filename>{0}</filename>"
@@ -110,13 +118,14 @@ msgid "Error"
 msgstr "Erreur"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
+#, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Something went wrong saving to <filename>{0}</filename>: <message>{1}</"
 "message>"
 msgstr ""
 "Une erreur est survenue lors de l'enregistrement sur <filename>{0}</"
-"filename>: <message>{1}</message>"
+"filename> : <message>{1}</message>"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -218,7 +227,9 @@ msgstr "Vérifier les mises à jour"
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:115
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr "La version que vous utilisez ne prend pas en charge la vérification des mises à jour."
+msgstr ""
+"La version que vous utilisez ne prend pas en charge la vérification des "
+"mises à jour."
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:116
 msgctxt "@info:title"
@@ -238,11 +249,13 @@ msgstr "Mise à niveau de version"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "{application_name} {version_number} est disponible !"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "{application_name} {version_number} provides a better and more reliable "
@@ -264,9 +277,12 @@ msgid "Learn more"
 msgstr "En savoir plus"
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "Essayez la dernière version BÊTA et aidez-nous à l'améliorer. {application_name}."
+msgstr ""
+"Essayez la dernière version BÊTA et aidez-nous à l'améliorer. "
+"{application_name}."
 
 #: /Users/c.lamboo/ultimaker/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
@@ -287,6 +303,7 @@ msgstr "Mise à l'échelle de l'objet"
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/FileHandler.py:71
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:929
+#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Tous les types supportés ({0})"
@@ -299,6 +316,7 @@ msgid "All Files (*)"
 msgstr "Tous les fichiers (*)"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:41
+#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "Impossible d'ouvrir les fichiers de type <filename>{0}</filename>"
@@ -309,6 +327,7 @@ msgid "Invalid File"
 msgstr "Fichier non valide"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:59
+#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid ""
 "Failed to load <filename>{0}</filename>. The file could be corrupt or "
@@ -329,6 +348,7 @@ msgid "Loading"
 msgstr "Chargement"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:87
+#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
 msgstr "Aucun modèle trouvé dans <filename>{0}</filename>."
@@ -339,6 +359,7 @@ msgid "No Models in File"
 msgstr "Aucun modèle dans le fichier"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/ReadFileJob.py:95
+#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid ""
 "Failed to load <filename>{0}</filename>. The file could be corrupt, "
@@ -386,6 +407,7 @@ msgid "Plugin no longer scheduled to be installed."
 msgstr "L'installation du plug-in n'est plus prévue."
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:544
+#, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
@@ -401,6 +423,7 @@ msgid "Loading plugins..."
 msgstr "Chargement des plug-ins..."
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:212
+#, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
 msgstr "Chargement du plug-in {plugin_id}..."
@@ -436,16 +459,21 @@ msgid "Loading UI..."
 msgstr "Chargement de l'interface utilisateur..."
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:130
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+#, python-brace-format
+msgctxt ""
+"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
+"minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}j {1:0>2}h {2:0>2}min"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:132
+#, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}h {1:0>2}min"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
@@ -454,6 +482,7 @@ msgstr[1] "{0} jours"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
+#, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
@@ -463,6 +492,7 @@ msgstr[1] "{0} heures"
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:139
+#, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
@@ -475,14 +505,17 @@ msgid "From Disk"
 msgstr "À partir du disque"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "Une configuration d'une ancienne version de {0} a été importée."
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:294
+#, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Des erreurs se sont produites lors de la désinstallation des paquets "
+msgstr ""
+"Des erreurs se sont produites lors de la désinstallation des paquets "
 "suivants :\n"
 "{packages}"
 
@@ -492,11 +525,13 @@ msgid "Uninstalling errors"
 msgstr "Erreurs de désinstallation"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:308
+#, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "Installation du plug-in {package_id}..."
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:619
+#, python-brace-format
 msgctxt "@error:update"
 msgid ""
 "There was an error uninstalling the package {package} before installing new "
@@ -505,7 +540,7 @@ msgid ""
 "Please try to upgrade again later."
 msgstr ""
 "Il y a eu une erreur lors de la désinstallation du paquet {package} avant "
-"d'installer la nouvelle version:\n"
+"d'installer la nouvelle version :\n"
 "{error}.\n"
 "Veuillez réessayer la mise à jour plus tard."
 
@@ -522,6 +557,7 @@ msgid "Reset"
 msgstr "Réinitialiser"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:46
+#, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the "
@@ -531,9 +567,9 @@ msgid ""
 "current printers and profiles."
 msgstr ""
 "Votre configuration semble corrompue. Un problème est survenu avec les "
-"profils suivants:\n"
+"profils suivants :\n"
 "- {profiles}\n"
-" Souhaitez-vous restaurer les paramètres d'usine par défaut? Cette "
+" Souhaitez-vous restaurer les paramètres d'usine par défaut ? Cette "
 "réinitialisation supprimera toutes vos imprimantes et profils actuels."
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:51
@@ -566,6 +602,7 @@ msgstr ""
 "carte vidéo."
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:190
+#, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Voulez-vous recharger {filename} ?"
@@ -674,7 +711,9 @@ msgstr "Confirmer la suppression"
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Êtes-vous sûr de vouloir supprimer l'objet %1 ? Vous ne pourrez pas revenir en arrière !"
+msgstr ""
+"Êtes-vous sûr de vouloir supprimer l'objet %1 ? Vous ne pourrez pas revenir "
+"en arrière !"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
 msgctxt "@option"
@@ -902,7 +941,8 @@ msgid ""
 "Provides built-in setting containers that come with the installation of the "
 "application."
 msgstr ""
-"Accès aux conteneurs de réglage intégrés fournis avec l'installation de l'application."
+"Accès aux conteneurs de réglage intégrés fournis avec l'installation de "
+"l'application."
 
 #: /LocalContainerProvider/plugin.json
 msgctxt "name"
@@ -912,7 +952,8 @@ msgstr "Fournisseur de conteneur local"
 #: /FileLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr "Affiche les informations de journaux d'évènements (log) dans un fichier "
+msgstr ""
+"Affiche les informations de journaux d'évènements (log) dans un fichier "
 "situé dans votre dossier paramètres."
 
 #: /FileLogger/plugin.json
