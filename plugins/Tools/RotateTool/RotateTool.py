@@ -278,7 +278,7 @@ class RotateTool(Tool):
         :return: type(String) fully formatted string showing the angle by which the mesh(es) are rotated
         """
 
-        return "%d°" % round(math.degrees(self._angle)) if self._angle else None
+        return ("%f" % round(math.degrees(self._angle), 2)).rstrip('0').rstrip('.') + "°" if self._angle else None
 
     def getSelectFaceSupported(self) -> bool:
         """Get whether the select face feature is supported.
