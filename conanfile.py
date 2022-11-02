@@ -106,17 +106,18 @@ class UraniumConan(ConanFile):
             for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
                 mo_file = self.build_path.joinpath(po_file.with_suffix('.mo').relative_to(self.source_path))
                 mkdir(self, str(unix_path(self, mo_file.parent)))
-                self.run(f"msgfmt {po_file} -o {mo_file} -f", env="conanbuild", run_environment=True)
+                self.run(f"msgfmt {po_file} -o {mo_file} -f", env="conanbuild")
 
             # FIXME: once m4, autoconf, automake are Conan V2 ready self.win_bash = None
 
     def generate(self):
         # Update the po files
         if self.settings_build.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
+            self.run(f"which msgmerge")
             for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
                 pot_file = self.source_path.joinpath("resources", "i18n", po_file.with_suffix('.pot').name)
                 mkdir(self, str(unix_path(self, pot_file.parent)))
-                self.run(f"msgmerge --no-wrap --no-fuzzy-matching -width=140 -o {po_file} {po_file} {pot_file}", env = "conanbuild", run_environment=True)
+                self.run(f"msgmerge --no-wrap --no-fuzzy-matching -width=140 -o {po_file} {po_file} {pot_file}", env = "conanbuild")
 
     def layout(self):
         self.folders.source = "."
