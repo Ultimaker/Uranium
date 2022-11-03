@@ -57,8 +57,10 @@ class UraniumConan(ConanFile):
             self.requires(req)
 
     def build_requirements(self):
-        if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
-            self.tool_requires("gettext/0.21@_/_", force_host_context=True)
+        if self.options.devtools:
+            if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
+                # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
+                self.tool_requires("gettext/0.21", force_host_context=True)
 
     @property
     def _base_dir(self):
@@ -102,23 +104,24 @@ class UraniumConan(ConanFile):
         return py_interp
 
     def build(self):
-        if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
-            for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
-                mo_file = self.build_path.joinpath(po_file.with_suffix('.mo').relative_to(self.source_path))
-                mkdir(self, str(unix_path(self, mo_file.parent)))
-                cpp_info = self.dependencies["gettext"].cpp_info
-                self.run(f"{cpp_info.bindirs[0]}/msgfmt {po_file} -o {mo_file} -f", env="conanbuild", ignore_errors=True)
-
-            # FIXME: once m4, autoconf, automake are Conan V2 ready self.win_bash = None
+        if self.options.devtools:
+            if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
+                # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
+                for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
+                    mo_file = self.build_path.joinpath(po_file.with_suffix('.mo').relative_to(self.source_path))
+                    mkdir(self, str(unix_path(self, mo_file.parent)))
+                    cpp_info = self.dependencies["gettext"].cpp_info
+                    self.run(f"{cpp_info.bindirs[0]}/msgfmt {po_file} -o {mo_file} -f", env="conanbuild", ignore_errors=True)
 
     def generate(self):
-        # Update the po files
-        if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
-            cpp_info = self.dependencies["gettext"].cpp_info
-            for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
-                pot_file = self.source_path.joinpath("resources", "i18n", po_file.with_suffix('.pot').name)
-                mkdir(self, str(unix_path(self, pot_file.parent)))
-                self.run(f"{cpp_info.bindirs[0]}/msgmerge --no-wrap --no-fuzzy-matching -width=140 -o {po_file} {po_file} {pot_file}", env = "conanbuild", ignore_errors=True)
+        if self.options.devtools:
+            if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
+                # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
+                cpp_info = self.dependencies["gettext"].cpp_info
+                for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
+                    pot_file = self.source_path.joinpath("resources", "i18n", po_file.with_suffix('.pot').name)
+                    mkdir(self, str(unix_path(self, pot_file.parent)))
+                    self.run(f"{cpp_info.bindirs[0]}/msgmerge --no-wrap --no-fuzzy-matching -width=140 -o {po_file} {po_file} {pot_file}", env = "conanbuild", ignore_errors=True)
 
     def layout(self):
         self.folders.source = "."
