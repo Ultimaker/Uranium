@@ -136,6 +136,18 @@ class LocalFileOutputDevice(ProjectOutputDevice):
             result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label Don't translate the XML tag <filename>!", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(file_name))
             if result == QMessageBox.StandardButton.No:
                 raise OutputDeviceError.UserCanceledError()
+        self._performWrite(file_name, selected_type, file_handler, nodes)
+
+    def _performWrite(self, file_name, selected_type, file_handler, nodes):
+        """Writes the specified nodes to a file. This is split from requestWrite to allow interception
+        in other plugins. See Ultimaker/Cura#10917.
+
+        :param file_name: File path to write to.
+        :param selected_type: Selected file type to write.
+        :param file_handler: File handler for writing to the file.
+        :param nodes: A collection of scene nodes that should be written to the
+        file.
+        """
 
         # Actually writing file
         if file_handler:
