@@ -107,7 +107,7 @@ Window
 
     ColumnLayout
     {
-        spacing: base.margin
+        spacing: 0
         focus: base.visible
         anchors.fill: background
 
