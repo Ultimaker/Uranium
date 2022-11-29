@@ -448,7 +448,6 @@ class SettingPropertyProvider(QObject):
             # Return QQmlProperty map instead of str(OrderedDict) so that the values can be queried in qml
             options_map = QQmlPropertyMap(self)
             for key, value in property_value.items():
-                print(key, value)
                 options_map.insert(key, value)
             return options_map
 
