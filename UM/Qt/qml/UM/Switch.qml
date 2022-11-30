@@ -6,28 +6,45 @@ import QtQuick.Controls 2.12
 
 import UM 1.5 as UM
 
-Switch {
+Switch
+{
     id: control
-    property string checkedColor: UM.Theme.getColor("switch_state_checked")
-    property string uncheckedColor: UM.Theme.getColor("switch_state_unchecked")
-    property string indicatorColor: UM.Theme.getColor("switch")
     property double indicatorMargin: 2
 
-    indicator: Rectangle {
+    indicator: Rectangle
+    {
+        id: switchBackground
         implicitWidth: 32
         implicitHeight: 16
         x: control.leftPadding
         y: (parent.height - height) / 2
         radius: height / 2
-        color: control.checked ? control.checkedColor : control.uncheckedColor
+        color: UM.Theme.getColor("switch_state_unchecked")
 
-        Rectangle {
+        Rectangle
+        {
             x: control.checked ? parent.width - width - control.indicatorMargin : control.indicatorMargin
             y: control.indicatorMargin
             width: parent.height - 2 * control.indicatorMargin
             height: width
             radius: width / 2
-            color: control.indicatorColor
+            color: UM.Theme.getColor("switch")
         }
     }
+
+    states:
+    [
+        State
+        {
+            name: "checked"
+            when: control.checked
+            PropertyChanges { target: switchBackground; color: UM.Theme.getColor("switch_state_checked") }
+        },
+        State
+        {
+            name: "disabled"
+            when: !control.enabled
+            PropertyChanges { target: switchBackground; color: UM.Theme.getColor("background_2") }
+        }
+    ]
 }
