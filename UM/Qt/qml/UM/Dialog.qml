@@ -37,19 +37,19 @@ Window
     property Component buttonRow: RowLayout
     {
         height: childrenRect.height
-        anchors.left: parent.left
-        anchors.right: parent.right
+        Layout.fillWidth: true
+        Layout.alignment: Qt.AlignRight
 
         RowLayout
         {
-            Layout.alignment: Qt.AlignLeft
+            anchors.left: parent.left
             spacing: base.buttonSpacing
             children: leftButtons
         }
 
         RowLayout
         {
-            Layout.alignment: Qt.AlignRight
+            anchors.right: parent.right
             spacing: base.buttonSpacing
             children: rightButtons
         }
