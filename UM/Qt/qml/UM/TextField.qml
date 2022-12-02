@@ -6,6 +6,8 @@ import QtQuick 2.15
 
 import UM 1.5 as UM
 
+
+// Base styles UM TextField. When creating new TextFields use this as the base.
 TextField
 {
     id: control
@@ -13,6 +15,10 @@ TextField
     property alias liningColor: background.liningColor
     property alias borderColor: background.borderColor
     property alias unitText: unitLabel.text
+
+    // States added in this component take precedence over states defined in children. You can force use child states
+    // over these states by setting this value to true. Look at SingleSettingTextField states for an example.
+    property bool overrideState: false
 
     renderType: Qt.platform.os == "osx" ? Text.QtRendering : Text.NativeRendering
 
@@ -44,20 +50,32 @@ TextField
         State
         {
             name: "disabled"
-            when: !control.enabled
-            PropertyChanges { target: control; color: UM.Theme.getColor("text_field_text_disabled")}
-            PropertyChanges { target: background; liningColor: UM.Theme.getColor("text_field_border_disabled")}
+            when: !control.enabled && !overrideState
+            PropertyChanges
+            {
+                target: control
+                color: UM.Theme.getColor("text_field_text_disabled")
+            }
+            PropertyChanges
+            {
+                target: background
+                liningColor: UM.Theme.getColor("text_field_border_disabled")
+            }
         },
         State
         {
             name: "invalid"
-            when: !control.acceptableInput
-            PropertyChanges { target: background; color: UM.Theme.getColor("setting_validation_error_background")}
+            when: !control.acceptableInput && !overrideState
+            PropertyChanges
+            {
+                target: background
+                color: UM.Theme.getColor("setting_validation_error_background")
+            }
         },
         State
         {
             name: "active"
-            when: control.activeFocus
+            when: control.activeFocus && !overrideState
             PropertyChanges
             {
                 target: background
@@ -68,7 +86,7 @@ TextField
         State
         {
             name: "hovered"
-            when: control.hovered && !control.activeFocus
+            when: (control.hovered && !control.activeFocus) && !overrideState
             PropertyChanges
             {
                 target: background
