@@ -10,8 +10,8 @@ Slider
     background: Rectangle
     {
         id: backgroundLine
-        height: UM.Theme.getSize("print_setup_slider_groove").height
-        width: parent.width - UM.Theme.getSize("print_setup_slider_handle").width
+        height: UM.Theme.getSize("slider_groove").height
+        width: parent.width - UM.Theme.getSize("slider_handle").width
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         color: UM.Theme.getColor("lining")
@@ -25,8 +25,8 @@ Slider
             Rectangle
             {
                 color: UM.Theme.getColor("lining")
-                implicitWidth: UM.Theme.getSize("print_setup_slider_tickmarks").width
-                implicitHeight: UM.Theme.getSize("print_setup_slider_tickmarks").height
+                implicitWidth: UM.Theme.getSize("slider_tickmarks").width
+                implicitHeight: UM.Theme.getSize("slider_tickmarks").height
                 anchors.verticalCenter: parent.verticalCenter
 
                 x: Math.round(backgroundLine.width / (repeater.count - 1) * index - width / 2)
@@ -41,8 +41,8 @@ Slider
         id: handleButton
         x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
         anchors.verticalCenter: parent.verticalCenter
-        implicitWidth: UM.Theme.getSize("print_setup_slider_handle").width
-        implicitHeight: UM.Theme.getSize("print_setup_slider_handle").height
+        implicitWidth: UM.Theme.getSize("slider_handle").width
+        implicitHeight: UM.Theme.getSize("slider_handle").height
         radius: Math.round(width / 2)
         color: UM.Theme.getColor("main_background")
         border.color: UM.Theme.getColor("primary")
