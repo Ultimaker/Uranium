@@ -1,5 +1,5 @@
-//Copyright (c) 2022 UltiMaker B.V.
-//Cura is released under the terms of the LGPLv3 or higher.
+// Copyright (c) 2022 UltiMaker
+// Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick.Controls 2.15
 import QtQuick 2.15
