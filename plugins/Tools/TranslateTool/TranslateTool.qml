@@ -3,7 +3,7 @@
 
 import QtQuick 2.2
 
-import UM 1.5 as UM
+import UM 1.7 as UM
 
 Item
 {
