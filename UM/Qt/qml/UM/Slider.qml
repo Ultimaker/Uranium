@@ -27,11 +27,25 @@ RowLayout
     property alias visualPosition: slider.visualPosition
 
     property var onPressedChanged
-    property alias backgroundTickCount: repeater.model
+    property alias backgroundTickCount: ticks.model
 
     spacing: UM.Theme.getSize("default_margin").width
 
-    UM.Label { Layout.fillWidth: false; text: slider.from }
+    states: [
+        State {
+            name: "disabled"
+            when: !enabled
+            PropertyChanges { target: fromLabel; color: UM.Theme.getColor("text_disabled") }
+            PropertyChanges { target: toLabel; color: UM.Theme.getColor("text_disabled") }
+            PropertyChanges { target: handleButton; border.color: UM.Theme.getColor("background_2") }
+            PropertyChanges { target: percentageBackground; color: UM.Theme.getColor("background_2") }
+            PropertyChanges { target: percentageLabel; color: UM.Theme.getColor("text_disabled") }
+            PropertyChanges { target: backgroundLine; color: UM.Theme.getColor("background_2") }
+            PropertyChanges { target: ticks; color: UM.Theme.getColor("background_2") }
+        }
+    ]
+
+    UM.Label { id: fromLabel; Layout.fillWidth: false; text: slider.from }
 
     Slider
     {
@@ -58,18 +72,20 @@ RowLayout
 
             Repeater
             {
-                id: repeater
+                id: ticks
                 anchors.fill: parent
+                property var color: UM.Theme.getColor("lining")
                 model: 11
 
                 Rectangle
                 {
-                    color: UM.Theme.getColor("lining")
+                    id: tick
+                    color: ticks.color
                     implicitWidth: UM.Theme.getSize("slider_widget_tickmarks").width
                     implicitHeight: UM.Theme.getSize("slider_widget_tickmarks").height
                     anchors.verticalCenter: parent.verticalCenter
 
-                    x: Math.round(backgroundLine.width / (repeater.count - 1) * index - width / 2)
+                    x: Math.round(backgroundLine.width / (ticks.count - 1) * index - width / 2)
 
                     radius: Math.round(width / 2)
                 }
@@ -91,6 +107,7 @@ RowLayout
 
         UM.PointingRectangle
         {
+            id: percentageBackground
             arrowSize: UM.Theme.getSize("button_tooltip_arrow").width
             width: childrenRect.width
             height: childrenRect.height
@@ -101,6 +118,7 @@ RowLayout
 
             UM.Label
             {
+                id: percentageLabel
                 text: `${slider.value}%`
                 horizontalAlignment: TextInput.AlignHCenter
                 leftPadding: UM.Theme.getSize("narrow_margin").width
@@ -110,5 +128,5 @@ RowLayout
         }
     }
 
-    UM.Label { Layout.fillWidth: false; text: slider.to }
+    UM.Label { id: toLabel; Layout.fillWidth: false; text: slider.to }
 }
