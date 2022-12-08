@@ -54,7 +54,7 @@ RowLayout
         Layout.fillWidth: true
 
         onPressedChanged: {
-            if (typeof(root.onPressedChanged === "function"))
+            if (typeof(root.onPressedChanged) === "function")
             {
                 root.onPressedChanged(pressed);
             }
