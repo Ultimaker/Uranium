@@ -1,6 +1,7 @@
 # Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import sys # For setrecursionlimit
 import os  # For getting the IDs from a filename.
 import pickle  # For caching definitions.
 import re  # To detect back-up files in the ".../old/#/..." folders.
@@ -297,6 +298,8 @@ class LocalContainerProvider(ContainerProvider):
             Logger.log("w", "The definition cache for definition {definition_id} failed to save because you don't have permissions to write in the cache directory.".format(definition_id = definition.getId()))
             return  # No rights to save it. Better give up.
 
+        recursionlimit = sys.getrecursionlimit()
+        sys.setrecursionlimit(3000)
         try:
             with open(cache_path, "wb") as f:
                 pickle.dump(definition, f, pickle.HIGHEST_PROTOCOL)
@@ -314,6 +317,8 @@ class LocalContainerProvider(ContainerProvider):
                     Logger.log("w", "Unable to remove picked file as another process has access to it %s", cache_path)
         except PermissionError:
             Logger.log("w", "Cura didn't get permission to save the definition {definition_id}".format(definition_id = definition.getId()))
+        finally:
+            sys.setrecursionlimit(recursionlimit)
 
     def _updatePathCache(self) -> None:
         """Updates the cache of paths to containers.
