@@ -1,9 +1,10 @@
-// Copyright (c) 2021 Ultimaker B.V.
+// Copyright (c) 2022 UltiMaker
 // Uranium is released under the terms of the LGPLv3 or higher.
 
-import QtQuick 2.2
+import QtQuick 2.15
 import QtQuick.Controls 2.2
-import UM 1.5 as UM
+
+import UM 1.7 as UM
 
 Item
 {
@@ -171,11 +172,10 @@ Item
             unit: "mm"
 
             text: widthText
-            validator: DoubleValidator
+            validator: UM.FloatValidator
             {
-                bottom: 0.1
-                decimals: 4
-                locale: "en_US"
+                maxBeforeDecimal: 8
+                maxAfterDecimal: 4
             }
 
             onEditingFinished:
@@ -194,11 +194,10 @@ Item
             height: UM.Theme.getSize("setting_control").height
             unit: "mm"
             text: depthText
-            validator: DoubleValidator
+            validator: UM.FloatValidator
             {
-                bottom: 0.1
-                decimals: 4
-                locale: "en_US"
+                maxBeforeDecimal: 8
+                maxAfterDecimal: 4
             }
 
             onEditingFinished:
@@ -217,11 +216,10 @@ Item
             unit: "mm"
 
             text: heightText
-            validator: DoubleValidator
+            validator: UM.FloatValidator
             {
-                bottom: 0.1
-                decimals: 4
-                locale: "en_US"
+                maxBeforeDecimal: 8
+                maxAfterDecimal: 4
             }
 
             onEditingFinished:
@@ -288,10 +286,10 @@ Item
             height: UM.Theme.getSize("setting_control").height
             unit: "%"
             text: xPercentageText
-            validator: DoubleValidator
+            validator: UM.FloatValidator
             {
-                decimals: 4
-                locale: "en_US"
+                maxBeforeDecimal: 8
+                maxAfterDecimal: 4
             }
             property var lastEnteredValue: parseFloat(xPercentageText)
             onEditingFinished:
@@ -306,10 +304,10 @@ Item
             height: UM.Theme.getSize("setting_control").height
             unit: "%"
             text: zPercentageText
-            validator: DoubleValidator
+            validator: UM.FloatValidator
             {
-                decimals: 4
-                locale: "en_US"
+                maxBeforeDecimal: 8
+                maxAfterDecimal: 4
             }
             property var lastEnteredValue: parseFloat(zPercentageText)
             onEditingFinished:
@@ -326,10 +324,10 @@ Item
 
 
             text: yPercentageText
-            validator: DoubleValidator
+            validator: UM.FloatValidator
             {
-                decimals: 4
-                locale: "en_US"
+                maxBeforeDecimal: 8
+                maxAfterDecimal: 4
             }
             property var lastEnteredValue: parseFloat(yPercentageText)
             onEditingFinished:

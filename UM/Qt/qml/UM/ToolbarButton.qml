@@ -17,14 +17,16 @@ Button
     // both properties have to be set to true. This is used to create a rounded corner.
     property bool isTopElement: false
     property bool isBottomElement: false
+    property int buttonSize: UM.Theme.getSize("button").width
+    property double iconScale: 0.5
 
     hoverEnabled: true
 
     background: Rectangle
     {
-        implicitWidth: UM.Theme.getSize("button").width
-        implicitHeight: UM.Theme.getSize("button").height
-        color: UM.Theme.getColor("toolbar_background")
+        implicitWidth: buttonSize
+        implicitHeight: buttonSize
+        color: "transparent"
         radius: UM.Theme.getSize("default_radius").width
 
         Rectangle
@@ -71,8 +73,8 @@ Button
     contentItem: Rectangle
     {
         opacity: parent.enabled ? 1.0 : 0.2
-        implicitWidth: Math.round(UM.Theme.getSize("button").width * 0.75)
-        implicitHeight: Math.round(UM.Theme.getSize("button").height * 0.75)
+        implicitWidth: Math.round(buttonSize * 0.75)
+        implicitHeight: Math.round(buttonSize * 0.75)
         radius: Math.round(width * 0.5)
 
         color:
@@ -95,8 +97,8 @@ Button
         {
             id: contentItemLoader
             anchors.centerIn: parent
-            width: Math.round(UM.Theme.getSize("button").width / 2)
-            height: Math.round(UM.Theme.getSize("button").height / 2)
+            width: Math.round(buttonSize * iconScale)
+            height: Math.round(buttonSize * iconScale)
         }
     }
 

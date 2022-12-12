@@ -29,7 +29,8 @@ CheckBox                1.5 CheckBox.qml
 StatusIcon              1.4 StatusIcon.qml
 
 ImageButton             1.5 ImageButton.qml
-TextFieldWithUnit       1.5 TextFieldWithUnit.qml
+TextFieldWithUnit       1.5 TextField.qml
+TextField               1.7 TextField.qml
 Label                   1.5 Label.qml
 MenuItem                1.5 MenuItem.qml
 Menu                    1.5 Menu.qml
@@ -39,4 +40,13 @@ ToolTip                 1.5 ToolTip.qml
 ToolbarButton           1.5 ToolbarButton.qml
 Enums                   1.5 Enums.qml
 BurgerButton            1.5 BurgerButton.qml
-CategoryButton      1.5 CategoryButton.qml
+CategoryButton          1.5 CategoryButton.qml
+Switch                  1.7 Switch.qml
+Slider                  1.7 Slider.qml
+ComponentWithIcon       1.7 ComponentWithIcon.qml
+
+# Validators
+FloatValidator              1.7 Validators/FloatValidator.qml
+IntValidator                1.7 Validators/IntValidator.qml
+IntListValidator            1.7 Validators/IntListValidator.qml
+HexColorValidator           1.7 Validators/HexColorValidator.qml

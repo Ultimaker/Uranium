@@ -3,7 +3,7 @@
 
 import QtQuick 2.2
 
-import UM 1.5 as UM
+import UM 1.7 as UM
 
 Item
 {
@@ -85,10 +85,10 @@ Item
             height: UM.Theme.getSize("setting_control").height
             unit: "mm"
             text: xText
-            validator: DoubleValidator
+            validator: UM.FloatValidator
             {
-                decimals: 4
-                locale: "en_US"
+                maxBeforeDecimal: 8
+                maxAfterDecimal: 4
             }
 
             onEditingFinished:
@@ -114,10 +114,10 @@ Item
             height: UM.Theme.getSize("setting_control").height
             unit: "mm"
             text: yText
-            validator: DoubleValidator
+            validator: UM.FloatValidator
             {
-                decimals: 4
-                locale: "en_US"
+                maxBeforeDecimal: 8
+                maxAfterDecimal: 4
             }
 
             onEditingFinished:
@@ -144,10 +144,10 @@ Item
             height: UM.Theme.getSize("setting_control").height
             unit: "mm"
             text: zText
-            validator: DoubleValidator
+            validator: UM.FloatValidator
             {
-                decimals: 4
-                locale: "en_US"
+                maxBeforeDecimal: 8
+                maxAfterDecimal: 4
             }
             onEditingFinished:
             {
