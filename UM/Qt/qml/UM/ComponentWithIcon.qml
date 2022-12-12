@@ -14,7 +14,7 @@ Item
     property alias iconSize: icon.width
     property alias iconColor: icon.color
     property real spacing: UM.Theme.getSize("narrow_margin").width
-    property alias displayComponent: displayComponentLoader.sourceComponent
+    default property alias contents: displayComponentContainer.children
 
     property string tooltipText: ""
 
@@ -22,7 +22,7 @@ Item
     {
         id: icon
         // Icon will always match loaded component height
-        width: displayComponentLoader.item.height
+        width: displayComponentContainer.height
         height: width
         color: UM.Theme.getColor("icon")
 
@@ -34,9 +34,10 @@ Item
     }
 
 
-    Loader
+    Item
     {
-        id: displayComponentLoader
+        id: displayComponentContainer
+        height: childrenRect.height
 
         anchors
         {
