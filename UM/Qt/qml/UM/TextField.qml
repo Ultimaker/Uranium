@@ -20,7 +20,7 @@ TextField
     // over these states by setting this value to true. Look at SingleSettingTextField states for an example.
     property bool overrideState: false
 
-    renderType: Qt.platform.os == "osx" ? Text.QtRendering : Text.NativeRendering
+    renderType: Qt.platform.os === "osx" ? Text.QtRendering : Text.NativeRendering
 
     selectByMouse: true
     hoverEnabled: true
@@ -40,7 +40,7 @@ TextField
             anchors.right: parent.right
             anchors.rightMargin: Math.round(UM.Theme.getSize("setting_unit_margin").width)
             anchors.verticalCenter: parent.verticalCenter
-            visible: text != ""
+            visible: text !== ""
             textFormat: Text.PlainText
             color: UM.Theme.getColor("setting_unit")
         }
@@ -86,7 +86,7 @@ TextField
         State
         {
             name: "hovered"
-            when: (control.hovered && !control.activeFocus) && !overrideState
+            when: control.hovered && !control.activeFocus && !overrideState
             PropertyChanges
             {
                 target: background
