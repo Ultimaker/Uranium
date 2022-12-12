@@ -6,6 +6,7 @@ import QtQuick 2.15
 RegularExpressionValidator
 {
     property int maxNumbers: 12
+    readonly property string regexString: "^-?[0-9]{0,%0}$".arg(maxNumbers)
 
-    regularExpression: new RegExp("^-?[0-9]{0,%0}$".arg(maxNumbers))
+    regularExpression: new RegExp(regexString)
 }

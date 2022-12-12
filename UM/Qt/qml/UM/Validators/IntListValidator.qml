@@ -5,5 +5,7 @@ import QtQuick 2.15
 
 RegularExpressionValidator
 {
-    regularExpression: new RegExp("^\[?(\s*-?[0-9]{0,11}\s*,)*(\s*-?[0-9]{0,11})\s*\]?$")
+    property string regexString: "^\\[?(\\s*-?[0-9]{0,11}\\s*,)*(\\s*-?[0-9]{0,11})\\s*\\]?$"
+
+    regularExpression: new RegExp(regexString)
 }

@@ -8,5 +8,7 @@ RegularExpressionValidator
     property int maxBeforeDecimal: 11
     property int maxAfterDecimal: 3
 
-    regularExpression: new RegExp("^-?[0-9]{0,%0}[.,]?[0-9]{0,%1}$".arg(maxBeforeDecimal).arg(maxAfterDecimal))
+    readonly property string regexString: "^-?[0-9]{0,%0}[.,]?[0-9]{0,%1}$".arg(maxBeforeDecimal).arg(maxAfterDecimal)
+
+    regularExpression: new RegExp(regexString)
 }
