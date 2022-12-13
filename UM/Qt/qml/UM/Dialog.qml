@@ -38,18 +38,17 @@ Window
     {
         height: childrenRect.height
         Layout.fillWidth: true
-        Layout.alignment: Qt.AlignRight
 
         RowLayout
         {
-            anchors.left: parent.left
+            Layout.alignment: Qt.AlignLeft
             spacing: base.buttonSpacing
             children: leftButtons
         }
 
         RowLayout
         {
-            anchors.right: parent.right
+            Layout.alignment: Qt.AlignRight
             spacing: base.buttonSpacing
             children: rightButtons
         }
