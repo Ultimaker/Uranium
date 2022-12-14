@@ -85,11 +85,10 @@ Button
     }
     contentItem: Rectangle
     {
-        opacity: parent.enabled ? 1.0 : 0.2
-
-        property int contentSize: resizeCenter(buttonSize, 0.75);
         implicitWidth: contentSize
         implicitHeight: contentSize
+        opacity: parent.enabled ? 1.0 : 0.2
+        property int contentSize: resizeCenter(buttonSize, 0.75);
         radius: Math.round(width * 0.5)
 
         color:
@@ -111,10 +110,10 @@ Button
         Loader
         {
             id: contentItemLoader
-            anchors.centerIn: parent
-            property int iconSize: resizeCenter(buttonSize, iconScale);
             width: iconSize
             height: iconSize
+            anchors.centerIn: parent
+            property int iconSize: resizeCenter(buttonSize, iconScale);
         }
     }
 
