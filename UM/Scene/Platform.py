@@ -73,6 +73,9 @@ class Platform(SceneNode.SceneNode):
 
                 offset = container.getMetaDataEntry("platform_offset")
                 if offset:
+                    if isinstance(offset, str):
+                        offset = list(map(float,offset.split(',')))
+
                     if len(offset) == 3:
                         self.setPosition(Vector(offset[0], offset[1], offset[2]))
                     else:
