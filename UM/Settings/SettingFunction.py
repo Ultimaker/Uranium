@@ -23,6 +23,11 @@ if TYPE_CHECKING:
     from typing import FrozenSet
 
 
+
+import traceback
+
+
+
 class IllegalMethodError(Exception):
     pass
 
@@ -110,7 +115,8 @@ class SettingFunction:
             Logger.log("e", "An error occurred evaluating the function {0}.".format(self))
             return 0
         except Exception as e:
-            Logger.logException("d", "An exception occurred in inherit function {0}: {1}".format(self, str(e)))
+            stack_str = traceback.format_stack()
+            Logger.logException("w", f"An exception occurred in inherit function {self}: {str(e)}\nTrace: {stack_str}")
             return 0  # Settings may be used in calculations and they need a value
 
     def __eq__(self, other: object) -> bool:
