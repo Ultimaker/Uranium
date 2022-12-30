@@ -1,18 +1,6 @@
-"5.2.0-beta.2":
+"5.2.2":
     requirements:
-        - "pyarcus/(latest)@ultimaker/stable"
-        - "cpython/3.10.4"
-"5.2.0-beta.1":
-    requirements:
-        - "pyarcus/5.2.0-beta.1"
-        - "cpython/3.10.4"
-"5.2.0":
-    requirements:
-        - "pyarcus/5.2.0"
-        - "cpython/3.10.4"
-"5.2.0-alpha":
-    requirements:
-        - "pyarcus/(latest)@ultimaker/testing"
+        - "pyarcus/5.2.2"
         - "cpython/3.10.4"
 "5.1.0":
     requirements:
