@@ -12,6 +12,10 @@ class UraniumTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "VirtualRunEnv"
 
+    options = {
+        "devtools": [True, False]
+    }
+
     def generate(self):
         venv = VirtualRunEnv(self)
         venv.generate()
