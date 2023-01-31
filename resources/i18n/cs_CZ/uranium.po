@@ -17,282 +17,196 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "Lokální soubor"
+#: /ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Console Logger"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
-msgstr "Uložit na disk"
+#: /ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Výstup logu informací do konzole."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
-msgstr "Uložit na disk"
+#: /FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Umožňuje číst Wavefront OBJ soubory."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr "Na disk"
+#: /FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Čtečka Wavefront OBJ"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr "Uložit na disk"
+#: /FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Umožňuje zapisovat do Wavefront OBJ souborů."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "Neexistují žádné soubory, do kterých mohu zapisovat!"
+#: /FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Zapisovač Wavefront OBJ"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "Soubor již existuje"
+#: /FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "Poskytuje podporu pro čtení STL souborů."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-#, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "Soubor <filename>{0}</filename> již existuje. Doopravdy ho chcete přepsat?"
+#: /FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr "Čtečka STL"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "Ukládám do <filename>{0}</filename>"
+#: /FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "Poskytuje podporu pro zápis do STL souborů."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "Ukládám"
+#: /FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr "Zapisovač STL"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Nemám oprávnění zapisovat do <filename>{0}</filename>"
+#: /FileLogger/plugin.json
+msgctxt "name"
+msgid "File Logger"
+msgstr "File Logger"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Chyba při ukládání do <filename>{0}</filename>: <message>{1}</message>"
+#: /FileLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Zapíše log informace do souboru ve složce nastavení."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "Uloženo do <filename>{0}</filename>"
+#: /LocalContainerProvider/plugin.json
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "Lokální kontajner"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Soubor uložen"
+#: /LocalContainerProvider/plugin.json
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "Poskytuje zabudované nastavení kontajnerů, které se nainstalovali spolu s aplikací."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "Otevřít složku"
+#: /LocalFileOutputDevice/plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "Povolí ukládání do místních souborů."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "Otevřít složku obsahující soubor"
+#: /LocalFileOutputDevice/plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "Zařízení pro výstup do místních souborů"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Chyba"
+#: /Tools/CameraTool/plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Kamera"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Nastala chyba při ukládání do <filename>{0}</filename>: <message>{1}</message>"
+#: /Tools/CameraTool/plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Poskytuje nástroj manipulace s kamerou."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
+#: /Tools/MirrorTool/plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
 msgstr "Zrcadlení"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Zrcadlit model"
+#: /Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr "Poskytuje nástroj zrcadlení."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
+#: /Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Poskytuje nástroj otáčení."
+
+#: /Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Rotace"
+
+#: /Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Poskytuje nástroj škálování."
+
+#: /Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
 msgstr "Škálování"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Škálovat model"
+#: /Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Poskytuje nástroj selekce."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Posun"
+#: /Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Výběr"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Posunout model"
+#: /Tools/TranslateTool/plugin.json
+msgctxt "name"
+msgid "Move Tool"
+msgstr "Přesun"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "Pokládám objekt na plocho na podložku..."
+#: /Tools/TranslateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr "Poskytuje nástroj posunu."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "Otáčení objektu"
+#: /UpdateChecker/plugin.json
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Zkontroluje aktualizace softwaru."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Otáčet"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Otáčet model"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "Soubor STL"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Soubor Wavefront OBJ"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "Žádná zapisovatelná síť nenalezena."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "Nepodporovaný mód výstupu STL do streamu."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "Soubor STL (ASCII)"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "Soubor STL (Binary)"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter nepodporuje netextový mód."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:42
-msgctxt "@item:inmenu"
+#: /UpdateChecker/plugin.json
+msgctxt "name"
 msgid "Update Checker"
 msgstr "Kontrola aktualizací"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:43
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Zkontrolovat pro aktualizace"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:115
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "Používaná verze nepodporuje kontrolu aktualizací."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:116
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Varování"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:170
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Žádná nová verze nebyla nalezena."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:171
-#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:174
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "Aktualizace verze"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "{application_name} {version_number} je dostupná!"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr "{application_name} {version_number} přináší lepší a spolehlivější tisk."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
 msgctxt "@action:button"
-msgid "Download"
-msgstr "Stáhnout"
+msgid "Reset"
+msgstr "Reset"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "Více"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
 msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "Vyzkoušejte poslední BETA verzi a pomozte nám zlepšovat {application_name}."
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr ""
+"Zdá se, že vaše konfigurace je poškozená. Něco se zdá být v nepořádku s následujícími profily:\n"
+"- {profiles}\n"
+" Chcete obnovit výchozí nastavení továrního nastavení? Reset odebere všechny aktuální tiskárny a profily."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "Jednoduchý"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:51
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr "Obnovit do továrního nastavení"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:72
-#, python-format, python-brace-format
-msgctxt "@info:status"
-msgid "Auto scaled model to {0}% of original size"
-msgstr "Model automaticky naškálován na {0} % původní velikosti"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:53
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr "Reset odstraní všechny vaše aktuální tiskárny a profily! Opravdu chcete resetovat?"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:74
-msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "Škáluji objekt"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/FileHandler.py:71
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:929
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Všechny podporované typy ({0})"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/FileHandler.py:72
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:930
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Všechny soubory (*)"
@@ -342,6 +256,51 @@ msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
 msgstr "Nepodařilo se načíst <filename>{0}</filename>. Soubor může být poškozený, nedostupný nebo neobsahuje žádné modely."
 
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:72
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled model to {0}% of original size"
+msgstr "Model automaticky naškálován na {0} % původní velikosti"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:74
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "Škáluji objekt"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:294
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr "Nastaly chyby při odinstalaci následujících balíčků: {packages}"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:296
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr "Chyby při odinstalaci"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:308
+#, python-brace-format
+msgctxt "@info:progress Don't translate {package_id}"
+msgid "Installing plugin {package_id}..."
+msgstr "Instalace zásuvného balíčku {package_id}..."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:619
+#, python-brace-format
+msgctxt "@error:update"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr ""
+"Nastala chyba při odinstalování balíčku {package} před instalací nové verze:\n"
+"{error}.\n"
+"Prosím zkuste aktualizovat později."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:622
+msgctxt "@info:title"
+msgid "Updating error"
+msgstr "Chyba při aktualizaci"
+
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:332
 msgctxt "@info:status"
 msgid ""
@@ -386,47 +345,18 @@ msgstr ""
 "Zásuvný balíček byl odstraněn.\n"
 "Prosím restartujte {0} pro dokončení odinstalace."
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:210
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:231
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "Nahrávám zásuvné balíčky..."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr "Z disku"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:212
-#, python-brace-format
-msgctxt "@info:progress"
-msgid "Loading plugin {plugin_id}..."
-msgstr "Nahrávám zásuvný balíček {plugin_id}..."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:218
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr "Inicializuji správce zásuvných balíčků..."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:226
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr "Zdá se, že vaše konfigurace je poškozená."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:228
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
 msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr "Chyby v konfiguraci"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:240
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "Aktualizuji konfiguraci..."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:246
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "Nahrávám preference..."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:339
-msgctxt "@info:progress"
-msgid "Loading UI..."
-msgstr "Nahrávám UI..."
+msgid "Error"
+msgstr "Chyba"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:130
 #, python-brace-format
@@ -470,200 +400,47 @@ msgstr[0] "{0} min"
 msgstr[1] "{0} min"
 msgstr[2] "{0} min"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "Z disku"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:210
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:231
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "Nahrávám zásuvné balíčky..."
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:173
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:212
 #, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "Konfigurace ze starší verze {0} byla nahrána."
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr "Nahrávám zásuvný balíček {plugin_id}..."
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:294
-#, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Nastaly chyby při odinstalaci následujících balíčků: {packages}"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:218
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr "Inicializuji správce zásuvných balíčků..."
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:296
-msgctxt "@info:title"
-msgid "Uninstalling errors"
-msgstr "Chyby při odinstalaci"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:308
-#, python-brace-format
-msgctxt "@info:progress Don't translate {package_id}"
-msgid "Installing plugin {package_id}..."
-msgstr "Instalace zásuvného balíčku {package_id}..."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:619
-#, python-brace-format
-msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr ""
-"Nastala chyba při odinstalování balíčku {package} před instalací nové verze:\n"
-"{error}.\n"
-"Prosím zkuste aktualizovat později."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:622
-msgctxt "@info:title"
-msgid "Updating error"
-msgstr "Chyba při aktualizaci"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Reset"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:46
-#, python-brace-format
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:226
 msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"Zdá se, že vaše konfigurace je poškozená. Něco se zdá být v nepořádku s následujícími profily:\n"
-"- {profiles}\n"
-" Chcete obnovit výchozí nastavení továrního nastavení? Reset odebere všechny aktuální tiskárny a profily."
+msgid "Your configuration seems to be corrupt."
+msgstr "Zdá se, že vaše konfigurace je poškozená."
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:51
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr "Obnovit do továrního nastavení"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:53
-msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr "Reset odstraní všechny vaše aktuální tiskárny a profily! Opravdu chcete resetovat?"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:68
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "Selhání při inicializaci OpenGL"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:78
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Kritické rozšíření OpenGL chybí. Tento program vyžaduje podporu pro Framebuffer objekty. Prosím zkontrolujte ovladače Vaší grafické karty."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:190
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr "Chcete znovu načíst {filename}?"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:192
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:228
 msgctxt "@info:title"
-msgid "File has been modified"
-msgstr "Soubor byl upraven"
+msgid "Configuration errors"
+msgstr "Chyby v konfiguraci"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:193
-msgctxt "@action:button"
-msgid "Reload"
-msgstr "Znovu načíst"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:240
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "Aktualizuji konfiguraci..."
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:195
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr "Toto zapřičíní, že upravené soubory se znovu načtou z disku."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:246
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "Nahrávám preference..."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "Škálování po mřížce"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "Konstantní škálování"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:184
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr "Uzamknout model"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:200
-msgctxt "@option:check"
-msgid "Drop Down Model"
-msgstr "Položit model dolů"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "Položit na plocho"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "Vyberte stranu, aby byla položena na podložku"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "Otáčení po mřížce"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
-msgctxt "@title:window"
-msgid "Preferences"
-msgstr "Preference"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
-msgctxt "@title:tab"
-msgid "General"
-msgstr "Obecné"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Nastavení"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "Přejmenovat"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr "Prosím uveďte nové jméno."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Zrušit"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
-msgctxt "@action:button"
-msgid "OK"
-msgstr "OK"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Tiskárny"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Typ"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "Potvrdit odstranění"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Doopravdy chcete odstranit %1? Toto nelze vrátit zpět!"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:339
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr "Nahrávám UI..."
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
 msgctxt "@option"
@@ -755,155 +532,378 @@ msgctxt "@option"
 msgid "Ignore"
 msgstr "Ignorovat"
 
-#: /LocalFileOutputDevice/plugin.json
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Povolí ukládání do místních souborů."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "Potvrdit odstranění"
 
-#: /LocalFileOutputDevice/plugin.json
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Zařízení pro výstup do místních souborů"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Doopravdy chcete odstranit %1? Toto nelze vrátit zpět!"
 
-#: /Tools/MirrorTool/plugin.json
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Poskytuje nástroj zrcadlení."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Tiskárny"
 
-#: /Tools/MirrorTool/plugin.json
-msgctxt "name"
-msgid "Mirror Tool"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Typ"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "Preference"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
+msgctxt "@title:tab"
+msgid "General"
+msgstr "Obecné"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Nastavení"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "Přejmenovat"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr "Prosím uveďte nové jméno."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
+msgctxt "@action:button"
+msgid "OK"
+msgstr "OK"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:190
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "Chcete znovu načíst {filename}?"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:192
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr "Soubor byl upraven"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:193
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "Znovu načíst"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:195
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "Toto zapřičíní, že upravené soubory se znovu načtou z disku."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "Konfigurace ze starší verze {0} byla nahrána."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:174
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:171
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "Aktualizace verze"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:68
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "Selhání při inicializaci OpenGL"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:78
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Kritické rozšíření OpenGL chybí. Tento program vyžaduje podporu pro Framebuffer objekty. Prosím zkontrolujte ovladače Vaší grafické karty."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Soubor Wavefront OBJ"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "OBJWriter nepodporuje netextový mód."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "Žádná zapisovatelná síť nenalezena."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "Soubor STL"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "Nepodporovaný mód výstupu STL do streamu."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "Soubor STL (ASCII)"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "Soubor STL (Binary)"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "Lokální soubor"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr "Uložit na disk"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr "Uložit na disk"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr "Na disk"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr "Uložit na disk"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "Neexistují žádné soubory, do kterých mohu zapisovat!"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "Soubor již existuje"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "Soubor <filename>{0}</filename> již existuje. Doopravdy ho chcete přepsat?"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "Ukládám do <filename>{0}</filename>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "Ukládám"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "Nemám oprávnění zapisovat do <filename>{0}</filename>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Chyba při ukládání do <filename>{0}</filename>: <message>{1}</message>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "Uloženo do <filename>{0}</filename>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Soubor uložen"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "Otevřít složku"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "Otevřít složku obsahující soubor"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Nastala chyba při ukládání do <filename>{0}</filename>: <message>{1}</message>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
 msgstr "Zrcadlení"
 
-#: /Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Poskytuje nástroj manipulace s kamerou."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Zrcadlit model"
 
-#: /Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Kamera"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "Pokládám objekt na plocho na podložku..."
 
-#: /Tools/SelectionTool/plugin.json
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Poskytuje nástroj selekce."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "Otáčení objektu"
 
-#: /Tools/SelectionTool/plugin.json
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "Výběr"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "Položit na plocho"
 
-#: /Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Poskytuje nástroj škálování."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "Vyberte stranu, aby byla položena na podložku"
 
-#: /Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "Otáčení po mřížce"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Otáčet"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Otáčet model"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "Škálování po mřížce"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "Konstantní škálování"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
 msgstr "Škálování"
 
-#: /Tools/TranslateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Move tool."
-msgstr "Poskytuje nástroj posunu."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Škálovat model"
 
-#: /Tools/TranslateTool/plugin.json
-msgctxt "name"
-msgid "Move Tool"
-msgstr "Přesun"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:184
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "Uzamknout model"
 
-#: /Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Poskytuje nástroj otáčení."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:200
+msgctxt "@option:check"
+msgid "Drop Down Model"
+msgstr "Položit model dolů"
 
-#: /Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Rotace"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Posun"
 
-#: /ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Výstup logu informací do konzole."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Posunout model"
 
-#: /ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Console Logger"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "{application_name} {version_number} je dostupná!"
 
-#: /FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Poskytuje podporu pro čtení STL souborů."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr "Vyzkoušejte poslední BETA verzi a pomozte nám zlepšovat {application_name}."
 
-#: /FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "Čtečka STL"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Stáhnout"
 
-#: /FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Umožňuje číst Wavefront OBJ soubory."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "Více"
 
-#: /FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Čtečka Wavefront OBJ"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr "{application_name} {version_number} přináší lepší a spolehlivější tisk."
 
-#: /FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Poskytuje podporu pro zápis do STL souborů."
-
-#: /FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "Zapisovač STL"
-
-#: /FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Umožňuje zapisovat do Wavefront OBJ souborů."
-
-#: /FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Zapisovač Wavefront OBJ"
-
-#: /UpdateChecker/plugin.json
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Zkontroluje aktualizace softwaru."
-
-#: /UpdateChecker/plugin.json
-msgctxt "name"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:42
+msgctxt "@item:inmenu"
 msgid "Update Checker"
 msgstr "Kontrola aktualizací"
 
-#: /LocalContainerProvider/plugin.json
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "Poskytuje zabudované nastavení kontajnerů, které se nainstalovali spolu s aplikací."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:43
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Zkontrolovat pro aktualizace"
 
-#: /LocalContainerProvider/plugin.json
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr "Lokální kontajner"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:115
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "Používaná verze nepodporuje kontrolu aktualizací."
 
-#: /FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Zapíše log informace do souboru ve složce nastavení."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:116
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Varování"
 
-#: /FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
-msgstr "File Logger"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:170
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Žádná nová verze nebyla nalezena."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "Jednoduchý"
 
 #: /Views/SimpleView/plugin.json
 msgctxt "description"
@@ -915,42 +915,89 @@ msgctxt "name"
 msgid "Simple View"
 msgstr "Jednoduchý pohled"
 
-#, python-brace-format
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number}-BETA is available!"
-#~ msgstr "{application_name} {version_number}-BETA je dostupná!"
+#~ msgctxt "@info"
+#~ msgid "An error occurred while checking for updates."
+#~ msgstr "Při kontrole aktualizací nastala chyba."
 
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Příklad přípony, jak vytvářet přípony pro Uranium."
+#~ msgctxt "@info:status"
+#~ msgid "Auto scaled object to {0}% of original size"
+#~ msgstr "Automaticky naškálováno na {0}% originální velikosti"
+
+#~ msgctxt "@action:button"
+#~ msgid "Back"
+#~ msgstr "Zpět"
+
+#~ msgctxt "@action:button"
+#~ msgid "Close"
+#~ msgstr "Zavřít"
+
+#~ msgctxt "@info"
+#~ msgid "Could not access update information."
+#~ msgstr "Selhalo nahrávání informací o aktualizacích."
+
+#~ msgctxt "@action:button"
+#~ msgid "Defaults"
+#~ msgstr "Výchozí"
 
 #~ msgctxt "name"
 #~ msgid "Example Extension"
 #~ msgstr "Příklad přípony"
 
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Příkladná čtečka souborů, aby lidem ukázala, jak se pracuje s čtečkami souborů Urania."
-
 #~ msgctxt "name"
 #~ msgid "Example File Reader"
 #~ msgstr "Příklad čtečky souborů"
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Příklad výstupného zařízení jako návod jak vytvářet nová výstupná zařízení Urania."
 
 #~ msgctxt "name"
 #~ msgid "Example Output Device"
 #~ msgstr "Příklad výstupného zařízení"
 
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "Příkladný nástroj"
+
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "Příklad přípony, jak vytvářet přípony pro Uranium."
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "Příkladná čtečka souborů, aby lidem ukázala, jak se pracuje s čtečkami souborů Urania."
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "Příklad výstupného zařízení jako návod jak vytvářet nová výstupná zařízení Urania."
+
 #~ msgctxt "description"
 #~ msgid "Example tool to instruct people on how to create Uranium tools."
 #~ msgstr "Příkladný nástroj pro ukázku, jak vytvářet Uranium soubory."
 
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "Příkladný nástroj"
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Chyba při nahrávání <filename>{0}</filename>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Finish"
+#~ msgstr "Dokončit"
+
+#~ msgctxt "@action:button"
+#~ msgid "Next"
+#~ msgstr "Další"
+
+#~ msgctxt "@info:button"
+#~ msgid "Reset your configuration to factory defaults."
+#~ msgstr "Resetovat vaší konfiguraci do továrního nastavení."
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "Uložit do souboru"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "Uložit do souboru"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "Uložit do souboru"
 
 #~ msgctxt "@error"
 #~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
@@ -976,58 +1023,6 @@ msgstr "Jednoduchý pohled"
 #~ msgstr[1] "Toto nastavení bylo schování hodnotou %1. Změňte hodnoty těchto nastavení, aby bylo toto znovu viditelné."
 #~ msgstr[2] "Toto nastavení bylo schování hodnotou %1. Změňte hodnoty těchto nastavení, aby bylo toto znovu viditelné."
 
-#~ msgctxt "@action:button"
-#~ msgid "Defaults"
-#~ msgstr "Výchozí"
-
-#~ msgctxt "@action:button"
-#~ msgid "Close"
-#~ msgstr "Zavřít"
-
-#~ msgctxt "@action:button"
-#~ msgid "Back"
-#~ msgstr "Zpět"
-
-#~ msgctxt "@action:button"
-#~ msgid "Finish"
-#~ msgstr "Dokončit"
-
-#~ msgctxt "@action:button"
-#~ msgid "Next"
-#~ msgstr "Další"
-
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number} BETA is available!"
-#~ msgstr "{application_name} {version_number} BETA je k dispozici!"
-
-#~ msgctxt "@info:status"
-#~ msgid "Auto scaled object to {0}% of original size"
-#~ msgstr "Automaticky naškálováno na {0}% originální velikosti"
-
-#~ msgctxt "@info"
-#~ msgid "Could not access update information."
-#~ msgstr "Selhalo nahrávání informací o aktualizacích."
-
-#~ msgctxt "@info"
-#~ msgid "An error occurred while checking for updates."
-#~ msgstr "Při kontrole aktualizací nastala chyba."
-
-#~ msgctxt "@action:button Preceded by 'Ready to'."
-#~ msgid "Save to File"
-#~ msgstr "Uložit do souboru"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Save to File"
-#~ msgstr "Uložit do souboru"
-
-#~ msgctxt "@title:window"
-#~ msgid "Save to File"
-#~ msgstr "Uložit do souboru"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Failed to load <filename>{0}</filename>"
-#~ msgstr "Chyba při nahrávání <filename>{0}</filename>"
-
 #~ msgctxt "@info:status"
 #~ msgid ""
 #~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
@@ -1038,6 +1033,11 @@ msgstr "Jednoduchý pohled"
 #~ "- {profiles}\n"
 #~ "Chcete obnovit výchozí nastavení továrního nastavení?"
 
-#~ msgctxt "@info:button"
-#~ msgid "Reset your configuration to factory defaults."
-#~ msgstr "Resetovat vaší konfiguraci do továrního nastavení."
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number} BETA is available!"
+#~ msgstr "{application_name} {version_number} BETA je k dispozici!"
+
+#, python-brace-format
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number}-BETA is available!"
+#~ msgstr "{application_name} {version_number}-BETA je dostupná!"
