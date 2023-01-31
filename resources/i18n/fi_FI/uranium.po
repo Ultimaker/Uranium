@@ -16,282 +16,193 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "Paikallinen tiedosto"
+#: /ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Konsolin tiedonkeruu"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
+#: /ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Lähettää lokitiedot konsoliin."
+
+#: /FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
+
+#: /FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ -lukija"
+
+#: /FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
+
+#: /FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ -kirjoitin"
+
+#: /FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "Tukee STL-tiedostojen lukemista."
+
+#: /FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STL-lukija"
+
+#: /FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "Tukee STL-tiedostojen kirjoittamista."
+
+#: /FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr "STL-kirjoitin"
+
+#: /FileLogger/plugin.json
+msgctxt "name"
+msgid "File Logger"
+msgstr "Tiedonkeruuohjelma"
+
+#: /FileLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Lähettää lokitiedot asetuskansion tiedostoon."
+
+#: /LocalContainerProvider/plugin.json
+msgctxt "name"
+msgid "Local Container Provider"
 msgstr ""
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
+#: /LocalContainerProvider/plugin.json
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
 msgstr ""
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr ""
+#: /LocalFileOutputDevice/plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr ""
+#: /LocalFileOutputDevice/plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "Paikallisen tiedoston tulostusväline"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "Käytettävissä ei ole tiedostotyyppejä, joilla voidaan kirjoittaa!"
+#: /Tools/CameraTool/plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Kameratyökalu"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "Tiedosto on jo olemassa"
+#: /Tools/CameraTool/plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Työkalu kameran käsittelyyn."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-#, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti kirjoittaa sen päälle?"
+#: /Tools/MirrorTool/plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Peilaustyökalu"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "Tallennetaan tiedostoon <filename>{0}</filename>"
+#: /Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr "Näyttää peilaustyökalun."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "Tallennetaan"
+#: /Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Näyttää pyöritystyökalun."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Lupa evätty yritettäessä tallentaa tiedostoon <filename>{0}</filename>"
+#: /Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Pyöritystyökalu"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</message>"
+#: /Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Näyttää skaalaustyökalun."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "Tallennettu tiedostoon <filename>{0}</filename>"
+#: /Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Skaalaustyökalu"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Tiedosto tallennettu"
+#: /Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Näyttää valintatyökalun."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "Avaa kansio"
+#: /Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Valintatyökalu"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "Avaa tiedoston sisältävän kansion"
+#: /Tools/TranslateTool/plugin.json
+msgctxt "name"
+msgid "Move Tool"
+msgstr "Siirtotyökalu"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Virhe"
+#: /Tools/TranslateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr "Näyttää siirtotyökalun."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+#: /UpdateChecker/plugin.json
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Tarkistaa, onko ohjelmistopäivityksiä saatavilla."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Peilaus"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Peilaa mallia"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Skaalaus"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Skaalaa mallia"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Siirrä"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Siirrä mallia"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Pyöritys"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Pyöritä mallia"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL-tiedosto"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ -tiedosto"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL-tiedosto (ASCII)"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL-tiedosto (binaari)"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:42
-msgctxt "@item:inmenu"
+#: /UpdateChecker/plugin.json
+msgctxt "name"
 msgid "Update Checker"
-msgstr ""
+msgstr "Päivitysten tarkistin"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:43
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Tarkista päivitykset"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:115
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "Käyttämäsi versio ei tue päivitysten tarkistusta."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:116
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Varoitus"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:170
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Uutta versiota ei löytynyt."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:171
-#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:174
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "Versiopäivitys"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
 msgctxt "@action:button"
-msgid "Download"
-msgstr "Lataa"
+msgid "Reset"
+msgstr "Palauta"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
 msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "Yksinkertainen"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:72
-#, python-format, python-brace-format
-msgctxt "@info:status"
-msgid "Auto scaled model to {0}% of original size"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:51
+msgctxt "@title:window"
+msgid "Reset to factory"
 msgstr ""
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:74
-msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "Skaalataan kappaletta"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:53
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr ""
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/FileHandler.py:71
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:929
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Kaikki tuetut tyypit ({0})"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/FileHandler.py:72
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:930
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Kaikki tiedostot (*)"
@@ -341,6 +252,48 @@ msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
 msgstr ""
 
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:72
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled model to {0}% of original size"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:74
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "Skaalataan kappaletta"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:294
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:296
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:308
+#, python-brace-format
+msgctxt "@info:progress Don't translate {package_id}"
+msgid "Installing plugin {package_id}..."
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:619
+#, python-brace-format
+msgctxt "@error:update"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:622
+msgctxt "@info:title"
+msgid "Updating error"
+msgstr ""
+
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:332
 msgctxt "@info:status"
 msgid ""
@@ -383,6 +336,58 @@ msgid ""
 "Please restart {0} to finish uninstall."
 msgstr ""
 
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Virhe"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:130
+#, python-brace-format
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2} p {1:0>2} h {2:0>2} min"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:132
+#, python-brace-format
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2} h {1:0>2} min"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} päivä"
+msgstr[1] "{0} päivää"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} tunti"
+msgstr[1] "{0} tuntia"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:139
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} minuutti"
+msgstr[1] "{0} minuuttia"
+
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:210
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:231
 msgctxt "@info:progress"
@@ -424,234 +429,6 @@ msgstr "Ladataan lisäasetuksia..."
 msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:130
-#, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
-msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2} p {1:0>2} h {2:0>2} min"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:132
-#, python-brace-format
-msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2} h {1:0>2} min"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is days"
-msgid "{0} day"
-msgid_plural "{0} days"
-msgstr[0] "{0} päivä"
-msgstr[1] "{0} päivää"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is hours"
-msgid "{0} hour"
-msgid_plural "{0} hours"
-msgstr[0] "{0} tunti"
-msgstr[1] "{0} tuntia"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:139
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is minutes"
-msgid "{0} minute"
-msgid_plural "{0} minutes"
-msgstr[0] "{0} minuutti"
-msgstr[1] "{0} minuuttia"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "Aikaisemman {0} -version määritykset tuotiin."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:294
-#, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:296
-msgctxt "@info:title"
-msgid "Uninstalling errors"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:308
-#, python-brace-format
-msgctxt "@info:progress Don't translate {package_id}"
-msgid "Installing plugin {package_id}..."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:619
-#, python-brace-format
-msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:622
-msgctxt "@info:title"
-msgid "Updating error"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Palauta"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:46
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:51
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:53
-msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:68
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "OpenGL:n alustus epäonnistui"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:78
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Kriittisiä OpenGL-lisäosia puuttuu. Tämä ohjelma vaatii tuen Framebuffer-objekteille. Tarkista näytönohjaimen ajurit."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:190
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:192
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:193
-msgctxt "@action:button"
-msgid "Reload"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:195
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "Kohdista skaalaus"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "Tasainen skaalaus"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:184
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:200
-msgctxt "@option:check"
-msgid "Drop Down Model"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "Aseta latteaksi"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "Kohdista pyöritys"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
-msgctxt "@title:window"
-msgid "Preferences"
-msgstr "Lisäasetukset"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
-msgctxt "@title:tab"
-msgid "General"
-msgstr "Yleiset"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Asetukset"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "Nimeä uudelleen"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Peruuta"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
-msgctxt "@action:button"
-msgid "OK"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Tulostimet"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Tyyppi"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "Vahvista poisto"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Haluatko varmasti poistaa kappaleen %1? Tätä ei voida kumota!"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
 msgctxt "@option"
@@ -743,155 +520,378 @@ msgctxt "@option"
 msgid "Ignore"
 msgstr ""
 
-#: /LocalFileOutputDevice/plugin.json
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "Vahvista poisto"
 
-#: /LocalFileOutputDevice/plugin.json
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Paikallisen tiedoston tulostusväline"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Haluatko varmasti poistaa kappaleen %1? Tätä ei voida kumota!"
 
-#: /Tools/MirrorTool/plugin.json
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Näyttää peilaustyökalun."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Tulostimet"
 
-#: /Tools/MirrorTool/plugin.json
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Peilaustyökalu"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Tyyppi"
 
-#: /Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Työkalu kameran käsittelyyn."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "Lisäasetukset"
 
-#: /Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Kameratyökalu"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
+msgctxt "@title:tab"
+msgid "General"
+msgstr "Yleiset"
 
-#: /Tools/SelectionTool/plugin.json
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Näyttää valintatyökalun."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Asetukset"
 
-#: /Tools/SelectionTool/plugin.json
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "Valintatyökalu"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "Nimeä uudelleen"
 
-#: /Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Näyttää skaalaustyökalun."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr ""
 
-#: /Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Skaalaustyökalu"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Peruuta"
 
-#: /Tools/TranslateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Move tool."
-msgstr "Näyttää siirtotyökalun."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
+msgctxt "@action:button"
+msgid "OK"
+msgstr ""
 
-#: /Tools/TranslateTool/plugin.json
-msgctxt "name"
-msgid "Move Tool"
-msgstr "Siirtotyökalu"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:190
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr ""
 
-#: /Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Näyttää pyöritystyökalun."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:192
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr ""
 
-#: /Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Pyöritystyökalu"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:193
+msgctxt "@action:button"
+msgid "Reload"
+msgstr ""
 
-#: /ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Lähettää lokitiedot konsoliin."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:195
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr ""
 
-#: /ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Konsolin tiedonkeruu"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "Aikaisemman {0} -version määritykset tuotiin."
 
-#: /FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Tukee STL-tiedostojen lukemista."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:174
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:171
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "Versiopäivitys"
 
-#: /FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL-lukija"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:68
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "OpenGL:n alustus epäonnistui"
 
-#: /FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:78
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Kriittisiä OpenGL-lisäosia puuttuu. Tämä ohjelma vaatii tuen Framebuffer-objekteille. Tarkista näytönohjaimen ajurit."
 
-#: /FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ -lukija"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ -tiedosto"
 
-#: /FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Tukee STL-tiedostojen kirjoittamista."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr ""
 
-#: /FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL-kirjoitin"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr ""
 
-#: /FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STL-tiedosto"
 
-#: /FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ -kirjoitin"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr ""
 
-#: /UpdateChecker/plugin.json
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Tarkistaa, onko ohjelmistopäivityksiä saatavilla."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL-tiedosto (ASCII)"
 
-#: /UpdateChecker/plugin.json
-msgctxt "name"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL-tiedosto (binaari)"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "Paikallinen tiedosto"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "Käytettävissä ei ole tiedostotyyppejä, joilla voidaan kirjoittaa!"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "Tiedosto on jo olemassa"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti kirjoittaa sen päälle?"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "Tallennetaan tiedostoon <filename>{0}</filename>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "Tallennetaan"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "Lupa evätty yritettäessä tallentaa tiedostoon <filename>{0}</filename>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</message>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "Tallennettu tiedostoon <filename>{0}</filename>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Tiedosto tallennettu"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "Avaa kansio"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "Avaa tiedoston sisältävän kansion"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
+msgstr "Peilaus"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Peilaa mallia"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "Aseta latteaksi"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "Kohdista pyöritys"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Pyöritys"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Pyöritä mallia"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "Kohdista skaalaus"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "Tasainen skaalaus"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "Skaalaus"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Skaalaa mallia"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:184
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:200
+msgctxt "@option:check"
+msgid "Drop Down Model"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Siirrä"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Siirrä mallia"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Lataa"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:42
+msgctxt "@item:inmenu"
 msgid "Update Checker"
-msgstr "Päivitysten tarkistin"
-
-#: /LocalContainerProvider/plugin.json
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
 msgstr ""
 
-#: /LocalContainerProvider/plugin.json
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr ""
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:43
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Tarkista päivitykset"
 
-#: /FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Lähettää lokitiedot asetuskansion tiedostoon."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:115
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "Käyttämäsi versio ei tue päivitysten tarkistusta."
 
-#: /FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
-msgstr "Tiedonkeruuohjelma"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:116
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Varoitus"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:170
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Uutta versiota ei löytynyt."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "Yksinkertainen"
 
 #: /Views/SimpleView/plugin.json
 msgctxt "description"
@@ -903,107 +903,117 @@ msgctxt "name"
 msgid "Simple View"
 msgstr "Yksinkertainen näkymä"
 
-#~ msgctxt "@item:tooltip"
-#~ msgid "This setting has been hidden by the active machine and will not be visible."
-#~ msgstr "Tämä asetus ei ole näkyvissä, koska aktiivinen laite on piilottanut sen."
+#~ msgctxt "@label"
+#~ msgid "3MF Writer"
+#~ msgstr "3MF-kirjoitin"
 
-#~ msgctxt "@item:tooltip %1 is list of setting names"
-#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
-#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-#~ msgstr[0] "Tämä asetus on piilotettu asetuksella %1. Tuo asetus näkyviin muuttamalla kyseisen asetuksen arvoa."
-#~ msgstr[1] "Tämä asetus on piilotettu asetuksilla %1. Tuo asetus näkyviin muuttamalla kyseisten asetusten arvoja."
+#~ msgctxt "@item:inlistbox"
+#~ msgid "3MF file"
+#~ msgstr "3MF-tiedosto"
+
+#~ msgctxt "@info"
+#~ msgid "A new version is available!"
+#~ msgstr "Uusi versio on saatavilla!"
+
+#~ msgctxt "@title:window"
+#~ msgid "About %1"
+#~ msgstr "Tietoja: %1"
+
+#~ msgctxt "@info"
+#~ msgid "An exception occured while parsing the JSON file."
+#~ msgstr "JSON-tiedostoa jäsennettäessä tapahtui poikkeus."
+
+#~ msgctxt "@info"
+#~ msgid "An exception occurred while checking for updates."
+#~ msgstr "Päivitysten tarkistuksen yhteydessä tapahtui poikkeus."
+
+#~ msgctxt "@label"
+#~ msgid "Author:"
+#~ msgstr "Tekijä:"
+
+#~ msgctxt "@info:status"
+#~ msgid "Auto scaled object to {0}% of original size"
+#~ msgstr "Kappale skaalattu automaattisesti {0} %:iin alkuperäisestä koosta"
+
+#~ msgctxt "@action:button"
+#~ msgid "Back"
+#~ msgstr "Takaisin"
+
+#~ msgctxt "@label"
+#~ msgid "Based on"
+#~ msgstr "Peruste:"
+
+#~ msgctxt "@label"
+#~ msgid "Camera Tool"
+#~ msgstr "Kameratyökalu"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "Ei voida avata tiedostotyyppiä <filename>{0}</filename>"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "Ei voida avata tiedostotyyppiä <filename>{0}</filename>"
+
+#~ msgctxt "@action:button"
+#~ msgid "Center on Build Plate"
+#~ msgstr "Keskitä alustalle"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Check all"
+#~ msgstr "Tarkista kaikki"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Checks for updates of the software."
+#~ msgstr "Tarkistaa, onko ohjelmistopäivityksiä saatavilla."
+
+#~ msgctxt "@action:button"
+#~ msgid "Close"
+#~ msgstr "Sulje"
+
+#~ msgctxt "@label"
+#~ msgid "Console Logger"
+#~ msgstr "Konsolin tiedonkeruu"
+
+#~ msgctxt "@info"
+#~ msgid "Could not access update information."
+#~ msgstr "Päivitystietoja ei löytynyt."
+
+#~ msgctxt "@info:status"
+#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</message>"
+
+#~ msgctxt "@label"
+#~ msgid "Custom profile"
+#~ msgstr "Mukautettu profiili"
 
 #~ msgctxt "@action:button"
 #~ msgid "Defaults"
 #~ msgstr "Oletusarvot"
 
 #~ msgctxt "@action:button"
-#~ msgid "Close"
-#~ msgstr "Sulje"
+#~ msgid "Discard current changes"
+#~ msgstr "Hylkää tehdyt muutokset"
 
 #~ msgctxt "@action:button"
-#~ msgid "Back"
-#~ msgstr "Takaisin"
+#~ msgid "Drop to Build Plate"
+#~ msgstr "Pudota alustalle"
+
+#~ msgctxt "@label"
+#~ msgid "Duplicate"
+#~ msgstr "Monista"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Enables saving to local files."
+#~ msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
 
 #~ msgctxt "@action:button"
-#~ msgid "Finish"
-#~ msgstr "Lopeta"
-
-#~ msgctxt "@action:button"
-#~ msgid "Next"
-#~ msgstr "Seuraava"
-
-#~ msgctxt "@info:status"
-#~ msgid "Auto scaled object to {0}% of original size"
-#~ msgstr "Kappale skaalattu automaattisesti {0} %:iin alkuperäisestä koosta"
-
-#~ msgctxt "@info"
-#~ msgid "Could not access update information."
-#~ msgstr "Päivitystietoja ei löytynyt."
-
-#~ msgctxt "@action:button Preceded by 'Ready to'."
-#~ msgid "Save to File"
-#~ msgstr "Tallenna tiedostoon"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Save to File"
-#~ msgstr "Tallenna tiedostoon"
+#~ msgid "Export"
+#~ msgstr "Vie"
 
 #~ msgctxt "@title:window"
-#~ msgid "Save to File"
-#~ msgstr "Tallenna tiedostoon"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Failed to load <filename>{0}</filename>"
-#~ msgstr "Tiedoston <filename>{0}</filename> lataaminen epäonnistui"
-
-#~ msgctxt "@title:tab"
-#~ msgid "Plugins"
-#~ msgstr "Lisäosat"
-
-#~ msgctxt "@action:button"
-#~ msgid "Install new plugin"
-#~ msgstr "Asenna uusi laajennus"
-
-#~ msgctxt "@label"
-#~ msgid "You will need to restart the application before changes in plugins have effect."
-#~ msgstr "Laajennusten muutokset eivät tule käyttöön ennen kuin olet käynnistänyt sovelluksen uudelleen."
-
-#~ msgctxt "@label"
-#~ msgid "This plugin is required for the application to run."
-#~ msgstr "Sovellus ei toimi ilman tätä laajennusta."
-
-#~ msgctxt "@label"
-#~ msgid "Info..."
-#~ msgstr "Tietoja..."
-
-#~ msgctxt "@window:title"
-#~ msgid "Install Plugin"
-#~ msgstr "Asenna laajennus"
-
-#~ msgctxt "@title:window"
-#~ msgid "Open file(s)"
-#~ msgstr "Avaa tiedosto(t)"
-
-#~ msgctxt "@label"
-#~ msgid "No text available"
-#~ msgstr "Ei tekstiä saatavilla"
-
-#~ msgctxt "@title:window"
-#~ msgid "About %1"
-#~ msgstr "Tietoja: %1"
-
-#~ msgctxt "@label"
-#~ msgid "Author:"
-#~ msgstr "Tekijä:"
-
-#~ msgctxt "@label"
-#~ msgid "Version:"
-#~ msgstr "Versio:"
-
-#~ msgctxt "@info"
-#~ msgid "A new version is available!"
-#~ msgstr "Uusi versio on saatavilla!"
+#~ msgid "Export Profile"
+#~ msgstr "Profiilin vienti"
 
 #~ msgctxt "@info:status"
 #~ msgid ""
@@ -1021,261 +1031,233 @@ msgstr "Yksinkertainen näkymä"
 #~ "Laajennuksen asennus epäonnistui;\n"
 #~ "<message>{0}</message>"
 
-#~ msgctxt "@title:tab"
-#~ msgid "Setting Visibility"
-#~ msgstr "Näkyvyyden asettaminen"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Check all"
-#~ msgstr "Tarkista kaikki"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Filter..."
-#~ msgstr "Suodatin..."
-
-#~ msgctxt "@title:tab"
-#~ msgid "Profiles"
-#~ msgstr "Profiilit"
-
-#~ msgctxt "@label"
-#~ msgid "Duplicate"
-#~ msgstr "Monista"
-
-#~ msgctxt "@label %1 is printer name"
-#~ msgid "Printer: %1"
-#~ msgstr "Tulostin: %1"
-
-#~ msgctxt "@action:button"
-#~ msgid "Update \"%1\""
-#~ msgstr "Päivitä \"%1\""
-
-#~ msgctxt "@action:button"
-#~ msgid "Update profile"
-#~ msgstr "Päivitä profiili"
-
-#~ msgctxt "@action:button"
-#~ msgid "Discard current changes"
-#~ msgstr "Hylkää tehdyt muutokset"
-
-#~ msgctxt "@action:button"
-#~ msgid "Reload profile"
-#~ msgstr "Lataa profiili uudelleen"
-
-#~ msgctxt "@label"
-#~ msgid "Based on"
-#~ msgstr "Peruste:"
-
-#~ msgctxt "@label"
-#~ msgid "Profile type"
-#~ msgstr "Profiilin tyyppi"
-
-#~ msgctxt "@label"
-#~ msgid "Protected profile"
-#~ msgstr "Suojattu profiili"
-
-#~ msgctxt "@label"
-#~ msgid "Custom profile"
-#~ msgstr "Mukautettu profiili"
-
-#~ msgctxt "@action:button"
-#~ msgid "Import"
-#~ msgstr "Tuo"
-
-#~ msgctxt "@action:button"
-#~ msgid "Export"
-#~ msgstr "Vie"
-
-#~ msgctxt "@window:title"
-#~ msgid "Import Profile"
-#~ msgstr "Profiilin tuonti"
-
-#~ msgctxt "@title:window"
-#~ msgid "Import Profile"
-#~ msgstr "Profiilin tuonti"
-
-#~ msgctxt "@title:window"
-#~ msgid "Export Profile"
-#~ msgstr "Profiilin vienti"
-
-#~ msgctxt "@info"
-#~ msgid "An exception occurred while checking for updates."
-#~ msgstr "Päivitysten tarkistuksen yhteydessä tapahtui poikkeus."
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Loading <filename>{0}</filename>"
-#~ msgstr "Ladataan <filename>{0}</filename>"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Cannot open file type <filename>{0}</filename>"
-#~ msgstr "Ei voida avata tiedostotyyppiä <filename>{0}</filename>"
-
-#~ msgctxt "@action:button"
-#~ msgid "Ok"
-#~ msgstr "OK"
-
-#~ msgctxt "@label"
-#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-#~ msgstr "Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti kirjoittaa sen päälle?"
-
-#~ msgctxt "@info:progress"
-#~ msgid "Saving to <filename>{0}</filename>"
-#~ msgstr "Tallennetaan tiedostoon <filename>{0}</filename>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
-#~ msgstr "Lupa evätty yritettäessä tallentaa tiedostoon <filename>{0}</filename>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-#~ msgstr "Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Saved to <filename>{0}</filename>"
-#~ msgstr "Tallennettu tiedostoon <filename>{0}</filename>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Cannot open file type <filename>{0}</filename>"
-#~ msgstr "Ei voida avata tiedostotyyppiä <filename>{0}</filename>"
-
 #~ msgctxt "@info:status"
 #~ msgid "Failed to load <filename>{0}</filename>"
 #~ msgstr "Tiedoston <filename>{0}</filename> lataaminen epäonnistui"
 
-#~ msgctxt "@info:status"
-#~ msgid "Loading <filename>{0}</filename>"
-#~ msgstr "Ladataan <filename>{0}</filename>"
-
-#~ msgctxt "description"
-#~ msgid "Provides the Translate tool."
-#~ msgstr "Näyttää käännöstyökalun."
-
-#~ msgctxt "name"
-#~ msgid "Translate Tool"
-#~ msgstr "Käännöstyökalu"
-
-#~ msgctxt "@label"
-#~ msgid "Simple View"
-#~ msgstr "Yksinkertainen näkymä"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides a simple solid mesh view."
-#~ msgstr "Näyttää yksinkertaisen kiinteän verkkonäkymän."
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Tiedoston <filename>{0}</filename> lataaminen epäonnistui"
 
 #~ msgctxt "@label"
 #~ msgid "File Logger"
 #~ msgstr "Tiedonkeruuohjelma"
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Outputs log information to a file in your settings folder."
-#~ msgstr "Lähettää lokitiedot asetuskansion tiedostoon."
+#~ msgctxt "@label:textbox"
+#~ msgid "Filter..."
+#~ msgstr "Suodatin..."
+
+#~ msgctxt "@action:button"
+#~ msgid "Finish"
+#~ msgstr "Lopeta"
+
+#~ msgctxt "@action:button"
+#~ msgid "Import"
+#~ msgstr "Tuo"
+
+#~ msgctxt "@title:window"
+#~ msgid "Import Profile"
+#~ msgstr "Profiilin tuonti"
+
+#~ msgctxt "@window:title"
+#~ msgid "Import Profile"
+#~ msgstr "Profiilin tuonti"
 
 #~ msgctxt "@label"
-#~ msgid "STL Reader"
-#~ msgstr "STL-lukija"
+#~ msgid "Info..."
+#~ msgstr "Tietoja..."
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for reading STL files."
-#~ msgstr "Tukee STL-tiedostojen lukemista."
+#~ msgctxt "@window:title"
+#~ msgid "Install Plugin"
+#~ msgstr "Asenna laajennus"
 
-#~ msgctxt "@label"
-#~ msgid "Wavefront OBJ Reader"
-#~ msgstr "Wavefront OBJ -lukija"
+#~ msgctxt "@action:button"
+#~ msgid "Install new plugin"
+#~ msgstr "Asenna uusi laajennus"
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Makes it possbile to read Wavefront OBJ files."
-#~ msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
+#~ msgctxt "@info:status"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Ladataan <filename>{0}</filename>"
 
-#~ msgctxt "@label"
-#~ msgid "Wavefront OBJ Writer"
-#~ msgstr "Wavefront OBJ -kirjoitin"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Makes it possbile to write Wavefront OBJ files."
-#~ msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
-
-#~ msgctxt "@label"
-#~ msgid "STL Writer"
-#~ msgstr "STL-kirjoitin"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for writing STL files."
-#~ msgstr "Tukee STL-tiedostojen kirjoittamista."
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "STL File (Ascii)"
-#~ msgstr "STL-tiedosto (ascii)"
-
-#~ msgctxt "@label"
-#~ msgid "Console Logger"
-#~ msgstr "Konsolin tiedonkeruu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Outputs log information to the console."
-#~ msgstr "Lähettää lokitiedot konsoliin."
-
-#~ msgctxt "@label"
-#~ msgid "Update Checker"
-#~ msgstr "Päivitysten tarkistin"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Checks for updates of the software."
-#~ msgstr "Tarkistaa, onko ohjelmistopäivityksiä saatavilla."
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Ladataan <filename>{0}</filename>"
 
 #~ msgctxt "@label"
 #~ msgid "Local File Output Device"
 #~ msgstr "Paikallisen tiedoston tulostusväline"
 
 #~ msgctxt "@info:whatsthis"
-#~ msgid "Enables saving to local files."
-#~ msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
-
-#~ msgctxt "@label"
-#~ msgid "Scale Tool"
-#~ msgstr "Skaalaustyökalu"
+#~ msgid "Makes it possbile to read Wavefront OBJ files."
+#~ msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
 
 #~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Scale tool."
-#~ msgstr "Näyttää skaalaustyökalun."
-
-#~ msgctxt "@label"
-#~ msgid "Selection Tool"
-#~ msgstr "Valintatyökalu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Selection tool."
-#~ msgstr "Näyttää valintatyökalun."
-
-#~ msgctxt "@label"
-#~ msgid "Translate Tool"
-#~ msgstr "Käännöstyökalu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Translate tool."
-#~ msgstr "Näyttää käännöstyökalun."
-
-#~ msgctxt "@label"
-#~ msgid "Camera Tool"
-#~ msgstr "Kameratyökalu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the tool to manipulate the camera."
-#~ msgstr "Työkalu kameran käsittelyyn."
-
-#~ msgctxt "@label"
-#~ msgid "Rotate Tool"
-#~ msgstr "Pyöritystyökalu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Rotate tool."
-#~ msgstr "Näyttää pyöritystyökalun."
+#~ msgid "Makes it possbile to write Wavefront OBJ files."
+#~ msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
 
 #~ msgctxt "@label"
 #~ msgid "Mirror Tool"
 #~ msgstr "Peilityökalu"
 
+#~ msgctxt "@action:button"
+#~ msgid "Next"
+#~ msgstr "Seuraava"
+
+#~ msgctxt "@label"
+#~ msgid "No text available"
+#~ msgstr "Ei tekstiä saatavilla"
+
+#~ msgctxt "@action:button"
+#~ msgid "Ok"
+#~ msgstr "OK"
+
+#~ msgctxt "@title:window"
+#~ msgid "Open file(s)"
+#~ msgstr "Avaa tiedosto(t)"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to a file in your settings folder."
+#~ msgstr "Lähettää lokitiedot asetuskansion tiedostoon."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to the console."
+#~ msgstr "Lähettää lokitiedot konsoliin."
+
+#~ msgctxt "@info:status"
+#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
+#~ msgstr "Lupa evätty yritettäessä tallentaa tiedostoon <filename>{0}</filename>"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Plugins"
+#~ msgstr "Lisäosat"
+
+#~ msgctxt "@label %1 is printer name"
+#~ msgid "Printer: %1"
+#~ msgstr "Tulostin: %1"
+
+#~ msgctxt "@label"
+#~ msgid "Profile type"
+#~ msgstr "Profiilin tyyppi"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Profiles"
+#~ msgstr "Profiilit"
+
+#~ msgctxt "@label"
+#~ msgid "Protected profile"
+#~ msgstr "Suojattu profiili"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple solid mesh view."
+#~ msgstr "Näyttää yksinkertaisen kiinteän verkkonäkymän."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple wireframe view."
+#~ msgstr "Näyttää yksinkertaisen rautalankanäkymän."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for reading STL files."
+#~ msgstr "Tukee STL-tiedostojen lukemista."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing 3MF files."
+#~ msgstr "Tukee 3MF-tiedostojen kirjoittamista."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing STL files."
+#~ msgstr "Tukee STL-tiedostojen kirjoittamista."
+
 #~ msgctxt "@info:whatsthis"
 #~ msgid "Provides the Mirror tool."
 #~ msgstr "Näyttää peilaustyökalun."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Rotate tool."
+#~ msgstr "Näyttää pyöritystyökalun."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Scale tool."
+#~ msgstr "Näyttää skaalaustyökalun."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Selection tool."
+#~ msgstr "Näyttää valintatyökalun."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "Näyttää käännöstyökalun."
+
+#~ msgctxt "description"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "Näyttää käännöstyökalun."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the tool to manipulate the camera."
+#~ msgstr "Työkalu kameran käsittelyyn."
+
+#~ msgctxt "@action:button"
+#~ msgid "Reload profile"
+#~ msgstr "Lataa profiili uudelleen"
+
+#~ msgctxt "@label"
+#~ msgid "Rotate Tool"
+#~ msgstr "Pyöritystyökalu"
+
+#~ msgctxt "@item:inlistbox"
+#~ msgid "STL File (Ascii)"
+#~ msgstr "STL-tiedosto (ascii)"
+
+#~ msgctxt "@label"
+#~ msgid "STL Reader"
+#~ msgstr "STL-lukija"
+
+#~ msgctxt "@label"
+#~ msgid "STL Writer"
+#~ msgstr "STL-kirjoitin"
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "Tallenna tiedostoon"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "Tallenna tiedostoon"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "Tallenna tiedostoon"
+
+#~ msgctxt "@info:status"
+#~ msgid "Saved to <filename>{0}</filename>"
+#~ msgstr "Tallennettu tiedostoon <filename>{0}</filename>"
+
+#~ msgctxt "@info:progress"
+#~ msgid "Saving to <filename>{0}</filename>"
+#~ msgstr "Tallennetaan tiedostoon <filename>{0}</filename>"
+
+#~ msgctxt "@label"
+#~ msgid "Scale Tool"
+#~ msgstr "Skaalaustyökalu"
+
+#~ msgctxt "@action:button"
+#~ msgid "Scale to Max"
+#~ msgstr "Skaalaa maksimiin"
+
+#~ msgctxt "@label"
+#~ msgid "Selection Tool"
+#~ msgstr "Valintatyökalu"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Setting Visibility"
+#~ msgstr "Näkyvyyden asettaminen"
+
+#~ msgctxt "@label"
+#~ msgid "Simple View"
+#~ msgstr "Yksinkertainen näkymä"
+
+#~ msgctxt "@label"
+#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+#~ msgstr "Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti kirjoittaa sen päälle?"
 
 #~ msgctxt "@info:status"
 #~ msgid ""
@@ -1286,37 +1268,55 @@ msgstr "Yksinkertainen näkymä"
 #~ " Ota laajennus käyttöön käynnistämällä sovellus uudelleen."
 
 #~ msgctxt "@label"
+#~ msgid "This plugin is required for the application to run."
+#~ msgstr "Sovellus ei toimi ilman tätä laajennusta."
+
+#~ msgctxt "@item:tooltip"
+#~ msgid "This setting has been hidden by the active machine and will not be visible."
+#~ msgstr "Tämä asetus ei ole näkyvissä, koska aktiivinen laite on piilottanut sen."
+
+#~ msgctxt "@item:tooltip %1 is list of setting names"
+#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+#~ msgstr[0] "Tämä asetus on piilotettu asetuksella %1. Tuo asetus näkyviin muuttamalla kyseisen asetuksen arvoa."
+#~ msgstr[1] "Tämä asetus on piilotettu asetuksilla %1. Tuo asetus näkyviin muuttamalla kyseisten asetusten arvoja."
+
+#~ msgctxt "@label"
+#~ msgid "Translate Tool"
+#~ msgstr "Käännöstyökalu"
+
+#~ msgctxt "name"
+#~ msgid "Translate Tool"
+#~ msgstr "Käännöstyökalu"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update \"%1\""
+#~ msgstr "Päivitä \"%1\""
+
+#~ msgctxt "@label"
+#~ msgid "Update Checker"
+#~ msgstr "Päivitysten tarkistin"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update profile"
+#~ msgstr "Päivitä profiili"
+
+#~ msgctxt "@label"
+#~ msgid "Version:"
+#~ msgstr "Versio:"
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Reader"
+#~ msgstr "Wavefront OBJ -lukija"
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Writer"
+#~ msgstr "Wavefront OBJ -kirjoitin"
+
+#~ msgctxt "@label"
 #~ msgid "Wireframe View"
 #~ msgstr "Rautalankanäkymä"
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides a simple wireframe view."
-#~ msgstr "Näyttää yksinkertaisen rautalankanäkymän."
-
-#~ msgctxt "@info"
-#~ msgid "An exception occured while parsing the JSON file."
-#~ msgstr "JSON-tiedostoa jäsennettäessä tapahtui poikkeus."
-
 #~ msgctxt "@label"
-#~ msgid "3MF Writer"
-#~ msgstr "3MF-kirjoitin"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for writing 3MF files."
-#~ msgstr "Tukee 3MF-tiedostojen kirjoittamista."
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "3MF file"
-#~ msgstr "3MF-tiedosto"
-
-#~ msgctxt "@action:button"
-#~ msgid "Scale to Max"
-#~ msgstr "Skaalaa maksimiin"
-
-#~ msgctxt "@action:button"
-#~ msgid "Center on Build Plate"
-#~ msgstr "Keskitä alustalle"
-
-#~ msgctxt "@action:button"
-#~ msgid "Drop to Build Plate"
-#~ msgstr "Pudota alustalle"
+#~ msgid "You will need to restart the application before changes in plugins have effect."
+#~ msgstr "Laajennusten muutokset eivät tule käyttöön ennen kuin olet käynnistänyt sovelluksen uudelleen."

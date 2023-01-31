@@ -16,271 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "ウェーブフロントOBJファイル"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter は非テキストモードはサポートしていません。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "書き込むメッシュがありません。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STLファイル"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "サポートされていない出力モードで STL をストリームに書き込んでいます。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STLファイル（ASCII)"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STLファイル（バイナリー）"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "ローカルファイル"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
-msgstr "ディスクに保存する"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
-msgstr "ディスクに保存する"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr "ディスクへ"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr "ディスクに保存する"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "書き出すために利用可能なファイルがありません！"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "すでに存在するファイルです"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-#, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid ""
-"The file <filename>{0}</filename> already exists. Are you sure you want to "
-"overwrite it?"
-msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>に保存する"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "保存中"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>保存中に却下されました"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}</message>"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>に保存しました"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "ファイル保存"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "フォルダーを開く"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "ファイルが入ったフォルダーを開く"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-msgctxt "@info:title"
-msgid "Error"
-msgstr "エラー"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Something went wrong saving to <filename>{0}</filename>: <message>{1}</"
-"message>"
-msgstr "<filename>{0}</filename>: <message>{1}</message> への保存でエラーが発生"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "反転させる"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "モデルを反転させる"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "オブジェクトをビルドプレート上に平に並べる..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "オブジェクト回転"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "回転させる"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "モデルを回転させる"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "スケールする"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "モデルをスケールする"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "動かす"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "モデルを動かす"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number}-BETA is available!"
-msgstr "{application_name} {version_number}ベータ版が利用可能です。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "最新のベータ版をお試しいただき、{application_name}の改善にご協力ください。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
-msgctxt "@action:button"
-msgid "Download"
-msgstr "ダウンロード"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "詳しく見る"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "{application_name} {version_number} が利用可能です！"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"{application_name} {version_number} provides a better and more reliable "
-"printing experience."
-msgstr "{application_name} {version_number} なら、より優れた信頼性の隊かい印刷体験が得られます。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr "アップデートチェッカー"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "アップデートがあるか確認する"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "ご使用のバージョンはアップデート更新通知をサポートしていません。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "警告"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "新しいバージョンが見つかりました。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:156
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:174
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "バージョンアップグレード"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "シンプル"
-
 #: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:32
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
 #: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
@@ -292,12 +27,13 @@ msgstr "リセットする"
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the "
-"following profiles:\n"
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your "
-"current printers and profiles."
-msgstr "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n- {profiles}\n工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr ""
+"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
+"- {profiles}\n"
+"工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:51
 msgctxt "@title:window"
@@ -306,9 +42,7 @@ msgstr "工場リセット"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/ConfigurationErrorMessage.py:53
 msgctxt "@label"
-msgid ""
-"Reset will remove all your current printers and profiles! Are you sure you "
-"want to reset?"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
 msgstr "リセットすると、現在のプリンターおよびプロファイルがすべて削除されます。本当にリセットしてよろしいですか？"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/FileHandler.py:71
@@ -340,9 +74,7 @@ msgstr "無効なファイル"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:59
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid ""
-"Failed to load <filename>{0}</filename>. The file could be corrupt or "
-"inaccessible."
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
 msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできない可能性があります。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:62
@@ -370,9 +102,7 @@ msgstr "ファイルにモデルがありません"
 #: /home/trin/Gedeeld/Projects/Uranium/UM/FileHandler/ReadFileJob.py:95
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid ""
-"Failed to load <filename>{0}</filename>. The file could be corrupt, "
-"inaccessible or it did not contain any models."
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
 msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできないか、モデルが含まれていませんでした。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Mesh/ReadMeshJob.py:72
@@ -390,7 +120,9 @@ msgstr "造形物をスケールする"
 #, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "次のパッケージのアンインストールでエラーが発生しました:\n{packages}"
+msgstr ""
+"次のパッケージのアンインストールでエラーが発生しました:\n"
+"{packages}"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:296
 msgctxt "@info:title"
@@ -407,11 +139,13 @@ msgstr "プラグイン{package_id}をインストール中..."
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
-"There was an error uninstalling the package {package} before installing new "
-"version:\n"
+"There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr "新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n{error}.\n後からアップグレードをやり直してください。"
+msgstr ""
+"新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n"
+"{error}.\n"
+"後からアップグレードをやり直してください。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PackageManager.py:622
 msgctxt "@info:title"
@@ -423,7 +157,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "プラグインがインストールされました。\nアプリケーションを再起動して、プラグインをアクティベートしてください。"
+msgstr ""
+"プラグインがインストールされました。\n"
+"アプリケーションを再起動して、プラグインをアクティベートしてください。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:398
 msgctxt "@error:untrusted"
@@ -437,9 +173,7 @@ msgstr "無視"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:516
 msgctxt "@error"
-msgid ""
-"The plugin {} could not be loaded. Re-installing the plugin might solve the "
-"issue."
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
 msgstr "プラグイン{}を読み込むことができませんでした。プラグインを再インストールすると、問題が解決する場合があります。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/PluginRegistry.py:520
@@ -458,18 +192,26 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "プラグインが外されました。\n{0} を再起動してアンインストールを終了してください。"
+msgstr ""
+"プラグインが外されました。\n"
+"{0} を再起動してアンインストールを終了してください。"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
 msgctxt "@menu"
 msgid "From Disk"
 msgstr "ディスクから"
 
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+msgctxt "@info:title"
+msgid "Error"
+msgstr "エラー"
+
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/Duration.py:130
 #, python-brace-format
-msgctxt ""
-"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
-"minutes"
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}日 {1:0>2}時間 {2:0>2}分"
 
@@ -544,75 +286,6 @@ msgstr "プレファレンスをロード中..."
 msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "UIをロード中..."
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:190
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr "{filename}を再ロードしますか？"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr "ファイルが変更されました"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:193
-msgctxt "@action:button"
-msgid "Reload"
-msgstr "再ロード"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:195
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr "これにより変更したファイルをディスクから再ロードします。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "前のバージョン {0} のコンフィグレーションが取り込まれました。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:68
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "OpenGLの初期化に失敗しました"
-
-#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:78
-msgctxt "Critical OpenGL Extensions Missing"
-msgid ""
-"Critical OpenGL extensions are missing. This program requires support for "
-"Framebuffer Objects. Please check your video card drivers."
-msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "平らに置く"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "ビルドプレートに合わせる面を選択します"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "スナップローテーション"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "スナップスケーリング"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "ユニフォームスケーリング"
-
-#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:209
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr "モデルのロック"
 
 #: /home/trin/Gedeeld/Projects/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
 msgctxt "@option"
@@ -759,15 +432,333 @@ msgctxt "@action:button"
 msgid "OK"
 msgstr "OK"
 
-#: ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "ログ情報をコンソールにアウトプットする。"
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:190
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "{filename}を再ロードしますか？"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:192
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr "ファイルが変更されました"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:193
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "再ロード"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/Scene/Scene.py:195
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "これにより変更したファイルをディスクから再ロードします。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "前のバージョン {0} のコンフィグレーションが取り込まれました。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/VersionUpgradeManager.py:174
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:156
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "バージョンアップグレード"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:68
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "OpenGLの初期化に失敗しました"
+
+#: /home/trin/Gedeeld/Projects/Uranium/UM/View/GL/OpenGL.py:78
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "ウェーブフロントOBJファイル"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "OBJWriter は非テキストモードはサポートしていません。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "書き込むメッシュがありません。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STLファイル"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "サポートされていない出力モードで STL をストリームに書き込んでいます。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STLファイル（ASCII)"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STLファイル（バイナリー）"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "ローカルファイル"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr "ディスクに保存する"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr "ディスクに保存する"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr "ディスクへ"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr "ディスクに保存する"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "書き出すために利用可能なファイルがありません！"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "すでに存在するファイルです"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "<filename>{0}</filename>に保存する"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "保存中"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "<filename>{0}</filename>保存中に却下されました"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}</message>"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "<filename>{0}</filename>に保存しました"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "ファイル保存"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "フォルダーを開く"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "ファイルが入ったフォルダーを開く"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "<filename>{0}</filename>: <message>{1}</message> への保存でエラーが発生"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
+msgstr "反転させる"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "モデルを反転させる"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "オブジェクトをビルドプレート上に平に並べる..."
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "オブジェクト回転"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "平らに置く"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "ビルドプレートに合わせる面を選択します"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "スナップローテーション"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "回転させる"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "モデルを回転させる"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "スナップスケーリング"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "ユニフォームスケーリング"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "スケールする"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "モデルをスケールする"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:209
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "モデルのロック"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr "動かす"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "モデルを動かす"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number}-BETA is available!"
+msgstr "{application_name} {version_number}ベータ版が利用可能です。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr "最新のベータ版をお試しいただき、{application_name}の改善にご協力ください。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+msgctxt "@action:button"
+msgid "Download"
+msgstr "ダウンロード"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "詳しく見る"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "{application_name} {version_number} が利用可能です！"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr "{application_name} {version_number} なら、より優れた信頼性の隊かい印刷体験が得られます。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:39
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr "アップデートチェッカー"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:40
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "アップデートがあるか確認する"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:99
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "ご使用のバージョンはアップデート更新通知をサポートしていません。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:100
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "警告"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:155
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "新しいバージョンが見つかりました。"
+
+#: /home/trin/Gedeeld/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "シンプル"
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
 msgstr "コンソールロガー"
+
+#: ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "ログ情報をコンソールにアウトプットする。"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
@@ -810,26 +801,24 @@ msgid "STL Writer"
 msgstr "STLライター"
 
 #: FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "ログ情報を設定フォルダーのファイルにアウトプットする。"
-
-#: FileLogger/plugin.json
 msgctxt "name"
 msgid "File Logger"
 msgstr "ファイルロガー"
 
-#: LocalContainerProvider/plugin.json
+#: FileLogger/plugin.json
 msgctxt "description"
-msgid ""
-"Provides built-in setting containers that come with the installation of the "
-"application."
-msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "ログ情報を設定フォルダーのファイルにアウトプットする。"
 
 #: LocalContainerProvider/plugin.json
 msgctxt "name"
 msgid "Local Container Provider"
 msgstr "ローカルコンテナプロバイダー"
+
+#: LocalContainerProvider/plugin.json
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
@@ -842,24 +831,24 @@ msgid "Local File Output Device"
 msgstr "ローカルファイルアウトプットデバイス"
 
 #: Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "カメラを操作するためのツールを供給する。"
-
-#: Tools/CameraTool/plugin.json
 msgctxt "name"
 msgid "Camera Tool"
 msgstr "カメラツール"
 
-#: Tools/MirrorTool/plugin.json
+#: Tools/CameraTool/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "ミラーツールを供給する。"
+msgid "Provides the tool to manipulate the camera."
+msgstr "カメラを操作するためのツールを供給する。"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "ミラーツール"
+
+#: Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr "ミラーツールを供給する。"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
@@ -892,14 +881,14 @@ msgid "Selection Tool"
 msgstr "セレクションツール"
 
 #: Tools/TranslateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Move tool."
-msgstr "ムーブツールを供給する。"
-
-#: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Move Tool"
 msgstr "ムーブツール"
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr "ムーブツールを供給する。"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
@@ -912,48 +901,44 @@ msgid "Update Checker"
 msgstr "アップデートチェッカー"
 
 #: UraniumExampleExtensionPlugin/plugin.json
-msgctxt "description"
-msgid ""
-"Example extension to instruct people on how to create Uranium extensions."
-msgstr "Uranium拡張子を作成する方法を伝える拡張子の例を示します。"
-
-#: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "name"
 msgid "Example Extension"
 msgstr "拡張子の例"
 
-#: UraniumExampleFileReaderPlugin/plugin.json
+#: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "description"
-msgid ""
-"Example file reader to instruct people on how to create Uranium file readers."
-msgstr "Uraniumファイルリーダーを作成する方法を伝えるファイルリーダーの例を示します。"
+msgid "Example extension to instruct people on how to create Uranium extensions."
+msgstr "Uranium拡張子を作成する方法を伝える拡張子の例を示します。"
 
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "name"
 msgid "Example File Reader"
 msgstr "ファイルリーダーの例"
 
-#: UraniumExampleOutputDevicePlugin/plugin.json
+#: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "description"
-msgid ""
-"Example output device to instruct people on how to create Uranium output "
-"devices."
-msgstr "Uranium出力デバイスを作成する方法を伝える出力デバイスの例を示します。"
+msgid "Example file reader to instruct people on how to create Uranium file readers."
+msgstr "Uraniumファイルリーダーを作成する方法を伝えるファイルリーダーの例を示します。"
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "name"
 msgid "Example Output Device"
 msgstr "出力デバイスの例"
 
-#: UraniumExampleToolPlugin/plugin.json
+#: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "description"
-msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr "Uraniumツールを作成する方法を伝えるツールの例を示します。"
+msgid "Example output device to instruct people on how to create Uranium output devices."
+msgstr "Uranium出力デバイスを作成する方法を伝える出力デバイスの例を示します。"
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "name"
 msgid "Example Tool"
 msgstr "ツールの例"
+
+#: UraniumExampleToolPlugin/plugin.json
+msgctxt "description"
+msgid "Example tool to instruct people on how to create Uranium tools."
+msgstr "Uraniumツールを作成する方法を伝えるツールの例を示します。"
 
 #: Views/SimpleView/plugin.json
 msgctxt "description"
