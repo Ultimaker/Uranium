@@ -1,0 +1,917 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-31 17:40+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: UM/ConfigurationErrorMessage.py:32
+#: plugins/Tools/RotateTool/RotateTool.qml:19
+#: plugins/Tools/ScaleTool/ScaleTool.qml:67
+msgctxt "@action:button"
+msgid "Reset"
+msgstr ""
+
+#: UM/ConfigurationErrorMessage.py:46
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the "
+"following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your "
+"current printers and profiles."
+msgstr ""
+
+#: UM/ConfigurationErrorMessage.py:51
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr ""
+
+#: UM/ConfigurationErrorMessage.py:53
+msgctxt "@label"
+msgid ""
+"Reset will remove all your current printers and profiles! Are you sure you "
+"want to reset?"
+msgstr ""
+
+#: UM/FileHandler/FileHandler.py:71 UM/PluginRegistry.py:929
+#: UM/Settings/Models/InstanceContainersModel.py:193
+#, python-brace-format
+msgctxt "@item:inlistbox"
+msgid "All Supported Types ({0})"
+msgstr ""
+
+#: UM/FileHandler/FileHandler.py:72 UM/PluginRegistry.py:930
+#: UM/Settings/Models/InstanceContainersModel.py:196
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
+msgstr ""
+
+#: UM/FileHandler/ReadFileJob.py:41
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr ""
+
+#: UM/FileHandler/ReadFileJob.py:44
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr ""
+
+#: UM/FileHandler/ReadFileJob.py:59
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid ""
+"Failed to load <filename>{0}</filename>. The file could be corrupt or "
+"inaccessible."
+msgstr ""
+
+#: UM/FileHandler/ReadFileJob.py:62 UM/FileHandler/ReadFileJob.py:98
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr ""
+
+#: UM/FileHandler/ReadFileJob.py:71
+msgctxt "@info:title"
+msgid "Loading"
+msgstr ""
+
+#: UM/FileHandler/ReadFileJob.py:87
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr ""
+
+#: UM/FileHandler/ReadFileJob.py:90
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr ""
+
+#: UM/FileHandler/ReadFileJob.py:95
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid ""
+"Failed to load <filename>{0}</filename>. The file could be corrupt, "
+"inaccessible or it did not contain any models."
+msgstr ""
+
+#: UM/Mesh/ReadMeshJob.py:72
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled model to {0}% of original size"
+msgstr ""
+
+#: UM/Mesh/ReadMeshJob.py:74
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr ""
+
+#: UM/PackageManager.py:294
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr ""
+
+#: UM/PackageManager.py:296
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr ""
+
+#: UM/PackageManager.py:308
+#, python-brace-format
+msgctxt "@info:progress Don't translate {package_id}"
+msgid "Installing plugin {package_id}..."
+msgstr ""
+
+#: UM/PackageManager.py:619
+#, python-brace-format
+msgctxt "@error:update"
+msgid ""
+"There was an error uninstalling the package {package} before installing new "
+"version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr ""
+
+#: UM/PackageManager.py:622
+msgctxt "@info:title"
+msgid "Updating error"
+msgstr ""
+
+#: UM/PluginRegistry.py:332
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+
+#: UM/PluginRegistry.py:398
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr ""
+
+#: UM/PluginRegistry.py:503
+msgctxt "@action:button"
+msgid "Dismiss"
+msgstr ""
+
+#: UM/PluginRegistry.py:516
+msgctxt "@error"
+msgid ""
+"The plugin {} could not be loaded. Re-installing the plugin might solve the "
+"issue."
+msgstr ""
+
+#: UM/PluginRegistry.py:520
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr ""
+
+#: UM/PluginRegistry.py:538
+msgctxt "@info:status"
+msgid "Plugin no longer scheduled to be installed."
+msgstr ""
+
+#: UM/PluginRegistry.py:544
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr ""
+
+#: UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr ""
+
+#: UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:225
+msgctxt "@info:title"
+msgid "Error"
+msgstr ""
+
+#: UM/Qt/Duration.py:130
+#, python-brace-format
+msgctxt ""
+"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
+"minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr ""
+
+#: UM/Qt/Duration.py:132
+#, python-brace-format
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr ""
+
+#: UM/Qt/Duration.py:135
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: UM/Qt/Duration.py:135 UM/Qt/Duration.py:137
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: UM/Qt/Duration.py:135 UM/Qt/Duration.py:137 UM/Qt/Duration.py:139
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: UM/Qt/QtApplication.py:210 UM/Qt/QtApplication.py:231
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr ""
+
+#: UM/Qt/QtApplication.py:212
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr ""
+
+#: UM/Qt/QtApplication.py:218
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr ""
+
+#: UM/Qt/QtApplication.py:226
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr ""
+
+#: UM/Qt/QtApplication.py:228
+msgctxt "@info:title"
+msgid "Configuration errors"
+msgstr ""
+
+#: UM/Qt/QtApplication.py:240
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr ""
+
+#: UM/Qt/QtApplication.py:246
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr ""
+
+#: UM/Qt/QtApplication.py:339
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:99
+msgctxt "@option"
+msgid "OK"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:100
+msgctxt "@option"
+msgid "Open"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:101
+msgctxt "@option"
+msgid "Save"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:102
+msgctxt "@option"
+msgid "Cancel"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:103
+msgctxt "@option"
+msgid "Close"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:104
+msgctxt "@option"
+msgid "Discard"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:105
+msgctxt "@option"
+msgid "Apply"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:106
+msgctxt "@option"
+msgid "Reset"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:107
+msgctxt "@option"
+msgid "Restore Defaults"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:108
+msgctxt "@option"
+msgid "Help"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:109
+msgctxt "@option"
+msgid "Save All"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:110
+msgctxt "@option"
+msgid "Yes"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:111
+msgctxt "@option"
+msgid "Yes to All"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:112
+msgctxt "@option"
+msgid "No"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:113
+msgctxt "@option"
+msgid "No to All"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:114
+msgctxt "@option"
+msgid "Abort"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:115
+msgctxt "@option"
+msgid "Retry"
+msgstr ""
+
+#: UM/Qt/qml/UM/MessageDialog.qml:116
+msgctxt "@option"
+msgid "Ignore"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
+msgctxt "@title:tab"
+msgid "General"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
+msgctxt "@title:window"
+msgid "Rename"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr ""
+
+#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
+msgctxt "@action:button"
+msgid "OK"
+msgstr ""
+
+#: UM/Scene/Scene.py:194
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr ""
+
+#: UM/Scene/Scene.py:196
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr ""
+
+#: UM/Scene/Scene.py:197
+msgctxt "@action:button"
+msgid "Reload"
+msgstr ""
+
+#: UM/Scene/Scene.py:199
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr ""
+
+#: UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr ""
+
+#: UM/VersionUpgradeManager.py:174 plugins/UpdateChecker/UpdateChecker.py:171
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr ""
+
+#: UM/View/GL/OpenGL.py:68
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr ""
+
+#: UM/View/GL/OpenGL.py:78
+msgctxt "Critical OpenGL Extensions Missing"
+msgid ""
+"Critical OpenGL extensions are missing. This program requires support for "
+"Framebuffer Objects. Please check your video card drivers."
+msgstr ""
+
+#: plugins/FileHandlers/OBJReader/__init__.py:15
+#: plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr ""
+
+#: plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr ""
+
+#: plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+#: plugins/FileHandlers/STLWriter/STLWriter.py:29
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr ""
+
+#: plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr ""
+
+#: plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr ""
+
+#: plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr ""
+
+#: plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid ""
+"The file <filename>{0}</filename> already exists. Are you sure you want to "
+"overwrite it?"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
+msgctxt "@info:title"
+msgid "Saving"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:205
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:207
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:207
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:224
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"Something went wrong saving to <filename>{0}</filename>: <message>{1}</"
+"message>"
+msgstr ""
+
+#: plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
+msgstr ""
+
+#: plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr ""
+
+#: plugins/Tools/RotateTool/RotateTool.py:353
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr ""
+
+#: plugins/Tools/RotateTool/RotateTool.py:356
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr ""
+
+#: plugins/Tools/RotateTool/RotateTool.qml:40
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr ""
+
+#: plugins/Tools/RotateTool/RotateTool.qml:63
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr ""
+
+#: plugins/Tools/RotateTool/RotateTool.qml:87
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr ""
+
+#: plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr ""
+
+#: plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr ""
+
+#: plugins/Tools/ScaleTool/ScaleTool.qml:93
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr ""
+
+#: plugins/Tools/ScaleTool/ScaleTool.qml:120
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr ""
+
+#: plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr ""
+
+#: plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr ""
+
+#: plugins/Tools/TranslateTool/TranslateTool.qml:184
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr ""
+
+#: plugins/Tools/TranslateTool/TranslateTool.qml:200
+msgctxt "@option:check"
+msgid "Drop Down Model"
+msgstr ""
+
+#: plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr ""
+
+#: plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr ""
+
+#: plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#: plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr ""
+
+#: plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr ""
+
+#: plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: plugins/UpdateChecker/NewVersionMessage.py:28
+msgctxt "@action:button"
+msgid "Download"
+msgstr ""
+
+#: plugins/UpdateChecker/NewBetaVersionMessage.py:31
+#: plugins/UpdateChecker/NewVersionMessage.py:30
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr ""
+
+#: plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"{application_name} {version_number} provides a better and more reliable "
+"printing experience."
+msgstr ""
+
+#: plugins/UpdateChecker/UpdateChecker.py:42
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr ""
+
+#: plugins/UpdateChecker/UpdateChecker.py:43
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr ""
+
+#: plugins/UpdateChecker/UpdateChecker.py:115
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr ""
+
+#: plugins/UpdateChecker/UpdateChecker.py:116
+msgctxt "@info:title"
+msgid "Warning"
+msgstr ""
+
+#: plugins/UpdateChecker/UpdateChecker.py:170
+msgctxt "@info"
+msgid "No new version was found."
+msgstr ""
+
+#: plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr ""
+#: plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Move Tool"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Update Checker"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "File Logger"
+msgstr ""
+
+#: plugin.json
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr ""
+
+#: plugin.json
+msgctxt "name"
+msgid "Simple View"
+msgstr ""
+
