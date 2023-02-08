@@ -17,282 +17,196 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "Arquivo Local"
+#: /ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Registrador de Console"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
-msgstr "Salvar no Disco"
+#: /ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Envia informação de registro para o console."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
-msgstr "Salva no Disco"
+#: /FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Permite ler arquivos Wavefront OBJ."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr "Para o Disco"
+#: /FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Leitor de Wavefront OBJ"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr "Salvar no Disco"
+#: /FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Torna possível escrever arquivos Wavefront OBJ."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "Não há tipos de arquivos de escrita disponíveis!"
+#: /FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Gerador de Wavefront OBJ"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "O Arquivo Já Existe"
+#: /FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "Provê suporte à leitura de arquivos STL."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-#, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "O arquivo <filename>{0}</filename> já existe. Tem certeza que deseja sobrescrevê-lo?"
+#: /FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr "Leitor de STL"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "Salvando para <filename>{0}</filename>"
+#: /FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "Provê suporte à escrita de arquivos STL."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "Salvando"
+#: /FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr "Gerador de STL"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Permissão negada ao tentar salvar <filename>{0}</filename>"
+#: /FileLogger/plugin.json
+msgctxt "name"
+msgid "File Logger"
+msgstr "Registrador em Arquivo"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Não foi possível salvar para <filename>{0}</filename>: <message>{1}</message>"
+#: /FileLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Grava informação de registro em arquivo na sua pasta de configurações."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "Salvo em <filename>{0}</filename>"
+#: /LocalContainerProvider/plugin.json
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "Provedor de Contêiner Local"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Arquivo Salvo"
+#: /LocalContainerProvider/plugin.json
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "Provê contêineres de ajustes integrados que vêm com a instalação da aplicação."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "Abrir Pasta"
+#: /LocalFileOutputDevice/plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "Permite salvar em arquivos locais."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "Abre a pasta contendo o arquivo"
+#: /LocalFileOutputDevice/plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "Dispositivo de Saída para Arquivo Local"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Erro"
+#: /Tools/CameraTool/plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Ferramenta de Câmera"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Algo deu errado ao salvar <filename>{0}</filename>: <message>{1}</message>"
+#: /Tools/CameraTool/plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Provê a ferramenta para manipular a câmera."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Espelho"
+#: /Tools/MirrorTool/plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Ferramenta de Espelhamento"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Espelhar Modelo"
+#: /Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr "Provê a ferramenta de Espelhamento."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Escala"
+#: /Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Provê a ferramenta de Rotação."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Redimensiona Modelo"
+#: /Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Ferramenta de Rotação"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Mover"
+#: /Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Provê a ferramenta de Escala."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Move Modelo"
+#: /Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Ferramenta de Escala"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "Deitar o objeto na plataforma de impressão..."
+#: /Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Provê a ferramenta de Seleção."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "Rotação de Objeto"
+#: /Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Ferramenta de Seleção"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Rotacionar"
+#: /Tools/TranslateTool/plugin.json
+msgctxt "name"
+msgid "Move Tool"
+msgstr "Ferramenta de Movimentação"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Rotaciona Modelo"
+#: /Tools/TranslateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr "Provê a ferramenta de Movimentação."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "Arquivo STL"
+#: /UpdateChecker/plugin.json
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Verifica por atualizações do software."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Arquivo Wavefront OBJ"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "Não há malha para salvar."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "Modo de saída não-suportado ao escrever STL."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "Arquivo STL (ASCII)"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "Arquivo STL (Binário)"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "O OBJWriter não suporta modo binário."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:42
-msgctxt "@item:inmenu"
+#: /UpdateChecker/plugin.json
+msgctxt "name"
 msgid "Update Checker"
 msgstr "Verificador de Atualizações"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:43
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Verificar Novas Atualizações"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:115
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "A versão atual não suporta a verificação de atualizações."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:116
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Aviso"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:170
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Nenhuma nova versão foi encontrada."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:171
-#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:174
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "Atualização de Versão"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} is available!"
-msgstr "{application_name} {version_number} está disponível!"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr "{application_name} {version_number} provê uma experiência melhor e mais confiável de impressão."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:32
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
 msgctxt "@action:button"
-msgid "Download"
-msgstr "Baixar"
+msgid "Reset"
+msgstr "Restabelecer"
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "Saiba mais"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
 msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "Tente a última versão BETA e nos ajude a melhorar {application_name}."
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr ""
+"Sua configuração parece estar corrompida. Algo parece estar errado com os seguintes perfis:\n"
+"- {profiles}\n"
+" Você gostaria de restaurar os ajustes de fábrica? A restauração removerá todos os seus perfis e impressoras atuais."
 
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "Simples"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:51
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr "Restaurar de fábrica"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:72
-#, python-format, python-brace-format
-msgctxt "@info:status"
-msgid "Auto scaled model to {0}% of original size"
-msgstr "Modelo auto-redimensionado para {0}% do tamanho original"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:53
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr "Restaurar removerá todas as suas impressoras e perfis atuais! Tem certeza que quer restaurar?"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:74
-msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "Redimensionando Objeto"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/FileHandler.py:71
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:929
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Todos os Tipos Suportados ({0})"
 
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 #: /Users/c.lamboo/ultimaker/Uranium/UM/FileHandler/FileHandler.py:72
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:930
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Settings/Models/InstanceContainersModel.py:196
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Todos os Arquivos (*)"
@@ -342,6 +256,51 @@ msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
 msgstr "Falha em carregar <filename>{0}</filename>. O arquivo pode estar corrompido, inacessível ou não conter nenhum modelo."
 
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:72
+#, python-format, python-brace-format
+msgctxt "@info:status"
+msgid "Auto scaled model to {0}% of original size"
+msgstr "Modelo auto-redimensionado para {0}% do tamanho original"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Mesh/ReadMeshJob.py:74
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "Redimensionando Objeto"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:294
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr "Houve alguns erros ao desinstalar os seguintes pacotes: {packages}"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:296
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr "Erros ao desinstalar"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:308
+#, python-brace-format
+msgctxt "@info:progress Don't translate {package_id}"
+msgid "Installing plugin {package_id}..."
+msgstr "Installando complemento {package_id}..."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:619
+#, python-brace-format
+msgctxt "@error:update"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr ""
+"Houve um erro ao desinstalar o pacote {package} antes de instalar a nova versão:\n"
+"{error}.\n"
+"Por favor tente atualizar novamente mais tarde."
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:622
+msgctxt "@info:title"
+msgid "Updating error"
+msgstr "Erro ao atualizar"
+
 #: /Users/c.lamboo/ultimaker/Uranium/UM/PluginRegistry.py:332
 msgctxt "@info:status"
 msgid ""
@@ -386,6 +345,58 @@ msgstr ""
 "O complemento foi removido.\n"
 "Por favor reinicie {0} para finalizar a desinstalação."
 
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
+msgctxt "@menu"
+msgid "From Disk"
+msgstr "Do Disco"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:203
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Erro"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:130
+#, python-brace-format
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2}d {1:0>2}h {2:0>2}min"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:132
+#, python-brace-format
+msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
+msgid "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2}h {1:0>2}min"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is days"
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} dia"
+msgstr[1] "{0} dias"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is hours"
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} hora"
+msgstr[1] "{0} horas"
+
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:139
+#, python-brace-format
+msgctxt "@label Long duration format. {0} is minutes"
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} minuto"
+msgstr[1] "{0} minutos"
+
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:210
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/QtApplication.py:231
 msgctxt "@info:progress"
@@ -427,240 +438,6 @@ msgstr "Carregando preferências..."
 msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "Carregando UI..."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:130
-#, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
-msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}d {1:0>2}h {2:0>2}min"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:132
-#, python-brace-format
-msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}h {1:0>2}min"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is days"
-msgid "{0} day"
-msgid_plural "{0} days"
-msgstr[0] "{0} dia"
-msgstr[1] "{0} dias"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is hours"
-msgid "{0} hour"
-msgid_plural "{0} hours"
-msgstr[0] "{0} hora"
-msgstr[1] "{0} horas"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:135
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:137
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Duration.py:139
-#, python-brace-format
-msgctxt "@label Long duration format. {0} is minutes"
-msgid "{0} minute"
-msgid_plural "{0} minutes"
-msgstr[0] "{0} minuto"
-msgstr[1] "{0} minutos"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "Do Disco"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "A configuração da versão antiga de {0} foi importada."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:294
-#, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Houve alguns erros ao desinstalar os seguintes pacotes: {packages}"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:296
-msgctxt "@info:title"
-msgid "Uninstalling errors"
-msgstr "Erros ao desinstalar"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:308
-#, python-brace-format
-msgctxt "@info:progress Don't translate {package_id}"
-msgid "Installing plugin {package_id}..."
-msgstr "Installando complemento {package_id}..."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:619
-#, python-brace-format
-msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr ""
-"Houve um erro ao desinstalar o pacote {package} antes de instalar a nova versão:\n"
-"{error}.\n"
-"Por favor tente atualizar novamente mais tarde."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/PackageManager.py:622
-msgctxt "@info:title"
-msgid "Updating error"
-msgstr "Erro ao atualizar"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:32
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:19
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Restabelecer"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:46
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"Sua configuração parece estar corrompida. Algo parece estar errado com os seguintes perfis:\n"
-"- {profiles}\n"
-" Você gostaria de restaurar os ajustes de fábrica? A restauração removerá todos os seus perfis e impressoras atuais."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:51
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr "Restaurar de fábrica"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/ConfigurationErrorMessage.py:53
-msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr "Restaurar removerá todas as suas impressoras e perfis atuais! Tem certeza que quer restaurar?"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:68
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "Falha em inicializar OpenGL"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:78
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte a Objetos de Framebuffer. Por favor verifique os drivers de sua placa de vídeo."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:190
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr "Gostaria de recarregar {filename}?"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:192
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr "Arquivo foi modificado"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:193
-msgctxt "@action:button"
-msgid "Reload"
-msgstr "Recarregar"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:195
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr "Isto irá fazer com que arquivos modificados sejam recarregados do disco."
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "Alinhar Redimensionamento"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "Redimensionamento Uniforme"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:184
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr "Travar Modelo"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:200
-msgctxt "@option:check"
-msgid "Drop Down Model"
-msgstr ""
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "Assentar no plano"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "Selecione a face a alinhar com a plataforma de impressão"
-
-#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "Alinhar Rotação"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
-msgctxt "@title:window"
-msgid "Preferences"
-msgstr "Preferências"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
-msgctxt "@title:tab"
-msgid "General"
-msgstr "Geral"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Ajustes"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "Renomear"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr "Por favor providencie um novo nome."
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
-msgctxt "@action:button"
-msgid "OK"
-msgstr "OK"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Impressoras"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Tipo"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "Confirme Remoção"
-
-#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Tem certeza que deseja remover %1? Isto não pode ser desfeito!"
 
 #: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/MessageDialog.qml:99
 msgctxt "@option"
@@ -752,155 +529,378 @@ msgctxt "@option"
 msgid "Ignore"
 msgstr "Ignorar"
 
-#: /LocalFileOutputDevice/plugin.json
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Permite salvar em arquivos locais."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "Confirme Remoção"
 
-#: /LocalFileOutputDevice/plugin.json
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Dispositivo de Saída para Arquivo Local"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Tem certeza que deseja remover %1? Isto não pode ser desfeito!"
 
-#: /Tools/MirrorTool/plugin.json
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Provê a ferramenta de Espelhamento."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Impressoras"
 
-#: /Tools/MirrorTool/plugin.json
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Ferramenta de Espelhamento"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
+msgctxt "@label"
+msgid "Type"
+msgstr "Tipo"
 
-#: /Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Provê a ferramenta para manipular a câmera."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "Preferências"
 
-#: /Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Ferramenta de Câmera"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
+msgctxt "@title:tab"
+msgid "General"
+msgstr "Geral"
 
-#: /Tools/SelectionTool/plugin.json
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Provê a ferramenta de Seleção."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Ajustes"
 
-#: /Tools/SelectionTool/plugin.json
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "Ferramenta de Seleção"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "Renomear"
 
-#: /Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Provê a ferramenta de Escala."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr "Por favor providencie um novo nome."
 
-#: /Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Ferramenta de Escala"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Cancelar"
 
-#: /Tools/TranslateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Move tool."
-msgstr "Provê a ferramenta de Movimentação."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
+msgctxt "@action:button"
+msgid "OK"
+msgstr "OK"
 
-#: /Tools/TranslateTool/plugin.json
-msgctxt "name"
-msgid "Move Tool"
-msgstr "Ferramenta de Movimentação"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:190
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "Gostaria de recarregar {filename}?"
 
-#: /Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Provê a ferramenta de Rotação."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:192
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr "Arquivo foi modificado"
 
-#: /Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Ferramenta de Rotação"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:193
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "Recarregar"
 
-#: /ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Envia informação de registro para o console."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/Scene/Scene.py:195
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "Isto irá fazer com que arquivos modificados sejam recarregados do disco."
 
-#: /ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Registrador de Console"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:173
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "A configuração da versão antiga de {0} foi importada."
 
-#: /FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Provê suporte à leitura de arquivos STL."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/VersionUpgradeManager.py:174
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:171
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "Atualização de Versão"
 
-#: /FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "Leitor de STL"
+#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:68
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "Falha em inicializar OpenGL"
 
-#: /FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Permite ler arquivos Wavefront OBJ."
+#: /Users/c.lamboo/ultimaker/Uranium/UM/View/GL/OpenGL.py:78
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte a Objetos de Framebuffer. Por favor verifique os drivers de sua placa de vídeo."
 
-#: /FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Leitor de Wavefront OBJ"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Arquivo Wavefront OBJ"
 
-#: /FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Provê suporte à escrita de arquivos STL."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:25
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "O OBJWriter não suporta modo binário."
 
-#: /FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "Gerador de STL"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/OBJWriter/OBJWriter.py:32
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:29
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "Não há malha para salvar."
 
-#: /FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Torna possível escrever arquivos Wavefront OBJ."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "Arquivo STL"
 
-#: /FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Gerador de Wavefront OBJ"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/STLWriter.py:38
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "Modo de saída não-suportado ao escrever STL."
 
-#: /UpdateChecker/plugin.json
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Verifica por atualizações do software."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "Arquivo STL (ASCII)"
 
-#: /UpdateChecker/plugin.json
-msgctxt "name"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "Arquivo STL (Binário)"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "Arquivo Local"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr "Salvar no Disco"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr "Salva no Disco"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr "Para o Disco"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr "Salvar no Disco"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "Não há tipos de arquivos de escrita disponíveis!"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "O Arquivo Já Existe"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "O arquivo <filename>{0}</filename> já existe. Tem certeza que deseja sobrescrevê-lo?"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "Salvando para <filename>{0}</filename>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:170
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "Salvando"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "Permissão negada ao tentar salvar <filename>{0}</filename>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:201
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Não foi possível salvar para <filename>{0}</filename>: <message>{1}</message>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:192
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "Salvo em <filename>{0}</filename>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Arquivo Salvo"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "Abrir Pasta"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:195
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "Abre a pasta contendo o arquivo"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:212
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Algo deu errado ao salvar <filename>{0}</filename>: <message>{1}</message>"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:12
+msgctxt "@label"
+msgid "Mirror"
+msgstr "Espelho"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/MirrorTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Espelhar Modelo"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:353
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "Deitar o objeto na plataforma de impressão..."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.py:356
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "Rotação de Objeto"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:40
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "Assentar no plano"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:63
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "Selecione a face a alinhar com a plataforma de impressão"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/RotateTool.qml:87
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "Alinhar Rotação"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:12
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Rotacionar"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/RotateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Rotaciona Modelo"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:92
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "Alinhar Redimensionamento"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:119
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "Redimensionamento Uniforme"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:12
+msgctxt "@label"
+msgid "Scale"
+msgstr "Escala"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/ScaleTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Redimensiona Modelo"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:184
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "Travar Modelo"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:200
+msgctxt "@option:check"
+msgid "Drop Down Model"
+msgstr ""
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:12
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Mover"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Tools/TranslateTool/__init__.py:13
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Move Modelo"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:18
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:18
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} is available!"
+msgstr "{application_name} {version_number} está disponível!"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr "Tente a última versão BETA e nos ajude a melhorar {application_name}."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:28
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:28
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Baixar"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewBetaVersionMessage.py:31
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:30
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "Saiba mais"
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/NewVersionMessage.py:22
+#, python-brace-format
+msgctxt "@info:status"
+msgid "{application_name} {version_number} provides a better and more reliable printing experience."
+msgstr "{application_name} {version_number} provê uma experiência melhor e mais confiável de impressão."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:42
+msgctxt "@item:inmenu"
 msgid "Update Checker"
 msgstr "Verificador de Atualizações"
 
-#: /LocalContainerProvider/plugin.json
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "Provê contêineres de ajustes integrados que vêm com a instalação da aplicação."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:43
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Verificar Novas Atualizações"
 
-#: /LocalContainerProvider/plugin.json
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr "Provedor de Contêiner Local"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:115
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "A versão atual não suporta a verificação de atualizações."
 
-#: /FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Grava informação de registro em arquivo na sua pasta de configurações."
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:116
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Aviso"
 
-#: /FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
-msgstr "Registrador em Arquivo"
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/UpdateChecker/UpdateChecker.py:170
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Nenhuma nova versão foi encontrada."
+
+#: /Users/c.lamboo/ultimaker/Uranium/plugins/Views/SimpleView/__init__.py:12
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "Simples"
 
 #: /Views/SimpleView/plugin.json
 msgctxt "description"
@@ -912,183 +912,77 @@ msgctxt "name"
 msgid "Simple View"
 msgstr "Visão Simples"
 
-#, python-brace-format
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number}-BETA is available!"
-#~ msgstr "{application_name} {version_number} BETA está disponível!"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Extensão de exemplo para instruir as pessoas em como criar extensões Uranium."
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "Extensão de Exemplo"
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Leitor de arquivo exemplo para instur as pessoas em como criar leitores de arquivo Uranium."
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "Leitor de Arquivo Exemplo"
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Dispositivo de saída exemplo para instruir as pessoas em como criar dispositivos de saída Uranium."
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "Dispositivo de Saída Exemplo"
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "Ferramenta de exemplo para instruir as pessoas a criarem ferramentas Uranium."
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "Ferramenta de Exemplo"
-
-#~ msgctxt "@error"
-#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
-#~ msgstr "O complemento {} não pôde ser carregado. Reinstalar o complemento pode resolver o problema"
-
-#, python-brace-format
-#~ msgctxt "@error:uninstall"
-#~ msgid ""
-#~ "There were some errors uninstalling the following packages:\n"
-#~ "{packages}"
-#~ msgstr ""
-#~ "Houve alguns erros ao desinstalar os seguintes pacotes:\n"
-#~ "{packages}"
-
-#~ msgctxt "@item:tooltip"
-#~ msgid "This setting has been hidden by the active machine and will not be visible."
-#~ msgstr "Este ajuste foi omitido para a máquina ativa e não será visível."
-
-#~ msgctxt "@item:tooltip %1 is list of setting names"
-#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
-#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-#~ msgstr[0] "Este ajuste foi mantido invisível pelo valor de %1. Altere os valores desse ajuste para tornar este ajuste visível."
-#~ msgstr[1] "Este ajuste foi mantido invisível pelos valores de %1. Altere os valores desses ajustes para tornar este ajuste visível."
-
-#~ msgctxt "@action:button"
-#~ msgid "Defaults"
-#~ msgstr "Defaults"
-
-#~ msgctxt "@action:button"
-#~ msgid "Close"
-#~ msgstr "Fechar"
-
-#~ msgctxt "@action:button"
-#~ msgid "Back"
-#~ msgstr "Voltar"
-
-#~ msgctxt "@action:button"
-#~ msgid "Finish"
-#~ msgstr "Finalizar"
-
-#~ msgctxt "@action:button"
-#~ msgid "Next"
-#~ msgstr "Próximo"
-
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number} BETA is available!"
-#~ msgstr "{application_name} {version_number} BETA está disponível!"
-
-#~ msgctxt "@info:status"
-#~ msgid "Auto scaled object to {0}% of original size"
-#~ msgstr "Objeto autorredimensionado para {0}% do tamanho original"
-
 #~ msgctxt "@info"
-#~ msgid "Could not access update information."
-#~ msgstr "Não foi possível acessar informação sobre atualizações."
-
-#~ msgctxt "@info"
-#~ msgid "An error occurred while checking for updates."
-#~ msgstr "Um erro ocorreu ao verificar por atualizações."
-
-#~ msgctxt "@action:button Preceded by 'Ready to'."
-#~ msgid "Save to File"
-#~ msgstr "Salvar em Arquivo"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Save to File"
-#~ msgstr "Salvar em Arquivo"
-
-#~ msgctxt "@title:window"
-#~ msgid "Save to File"
-#~ msgstr "Salvar em Arquivo"
-
-#~ msgctxt "@error:untrusted"
-#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
-#~ msgstr "O complemento {} não foi carregado por tentar carregar arquivos fora do contexto confiável"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Failed to load <filename>{0}</filename>"
-#~ msgstr "Falha em carregar <filename>{0}</filename>"
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-#~ "- {profiles}\n"
-#~ "Would you like to reset to factory defaults?"
-#~ msgstr ""
-#~ "Sua configuração parece estar corrompida. Algo parece estar errado com os seguintes perfis:\n"
-#~ "- {profiles}\n"
-#~ "Você gostaria de restaurar o padrão de fábrica?"
-
-#~ msgctxt "@info:button"
-#~ msgid "Reset your configuration to factory defaults."
-#~ msgstr "Restaurar sua configuração para o padrão de fábrica."
-
-#~ msgctxt "@title:tab"
-#~ msgid "Plugins"
-#~ msgstr "Complementos"
-
-#~ msgctxt "@action:button"
-#~ msgid "Install new plugin"
-#~ msgstr "Instalar novo complemento"
-
-#~ msgctxt "@label"
-#~ msgid "You will need to restart the application before changes in plugins have effect."
-#~ msgstr "Você precisará reiniciar a aplicação para que mudanças nos complementos tenham efeito."
-
-#~ msgctxt "@label"
-#~ msgid "This plugin is required for the application to run."
-#~ msgstr "Este complemento é necessário para que a aplicação rode."
-
-#~ msgctxt "@label"
-#~ msgid "Info..."
-#~ msgstr "Informação..."
-
-#~ msgctxt "@window:title"
-#~ msgid "Install Plugin"
-#~ msgstr "Instalar Complemento"
-
-#~ msgctxt "@title:window"
-#~ msgid "Open file(s)"
-#~ msgstr "Abrir arquivo(s)"
-
-#~ msgctxt "@label"
-#~ msgid "No text available"
-#~ msgstr "Nenhum texto disponível"
+#~ msgid "A new version is available!"
+#~ msgstr "Uma nova versão está disponível!"
 
 #~ msgctxt "@title:window"
 #~ msgid "About %1"
 #~ msgstr "Sobre %1"
 
+#~ msgctxt "@info"
+#~ msgid "An error occurred while checking for updates."
+#~ msgstr "Um erro ocorreu ao verificar por atualizações."
+
+#~ msgctxt "@info"
+#~ msgid "An exception occured while parsing the JSON file."
+#~ msgstr "Uma exceção ocorreu enquanto se interpretava o arquivo JSON."
+
+#~ msgctxt "@info"
+#~ msgid "An exception occurred while checking for updates."
+#~ msgstr "Uma exceção ocorreu enquanto se verificava por novas atualizações."
+
 #~ msgctxt "@label"
 #~ msgid "Author:"
 #~ msgstr "Autor:"
 
-#~ msgctxt "@label"
-#~ msgid "Version:"
-#~ msgstr "Versão:"
+#~ msgctxt "@info:status"
+#~ msgid "Auto scaled object to {0}% of original size"
+#~ msgstr "Objeto autorredimensionado para {0}% do tamanho original"
 
 #~ msgctxt "@action:button"
-#~ msgid "Learn more about the new features"
-#~ msgstr "Aprenda mais sobre os novos recursos"
+#~ msgid "Back"
+#~ msgstr "Voltar"
+
+#~ msgctxt "@label"
+#~ msgid "Based on"
+#~ msgstr "Baseado em"
+
+#~ msgctxt "@label"
+#~ msgid "Camera Tool"
+#~ msgstr "Ferramenta de Câmera"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "Impossível abrir tipo de arquivo <filename>{0}</filename>"
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "Não foi possível abrir tipo <filename>{0}</filename>"
+
+#~ msgctxt "@label:textbox"
+#~ msgid "Check all"
+#~ msgstr "Selecionar todos"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Checks for updates of the software."
+#~ msgstr "Verifica novas atualizações para o software."
+
+#~ msgctxt "@action:button"
+#~ msgid "Close"
+#~ msgstr "Fechar"
+
+#~ msgctxt "@label"
+#~ msgid "Console Logger"
+#~ msgstr "Registrador para o Console"
+
+#~ msgctxt "@info"
+#~ msgid "Could not access update information."
+#~ msgstr "Não foi possível acessar informação sobre atualizações."
+
+#~ msgctxt "@info:status"
+#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "Não foi possível salvar <filename>{0}</filename>: <message>{1}</message>"
 
 #~ msgctxt "@info:status"
 #~ msgid "Cura {0} is available!"
@@ -1098,33 +992,65 @@ msgstr "Visão Simples"
 #~ msgid "Cura {0} provides better and reliable printing experience."
 #~ msgstr "O Cura {0} proporciona experiência de impressão melhor e mais confiável."
 
+#~ msgctxt "@label"
+#~ msgid "Custom profile"
+#~ msgstr "Perfil personalizado"
+
 #~ msgctxt "@action:button"
-#~ msgid "Learn more about new features"
-#~ msgstr "Aprenda mais sobre os novos recursos"
+#~ msgid "Defaults"
+#~ msgstr "Defaults"
 
-#~ msgctxt "@error:update"
-#~ msgid ""
-#~ "There was an error uninstalling the package {package} before installingnew version:\n"
-#~ "{error}.\n"
-#~ "Please try to upgrade again later."
-#~ msgstr ""
-#~ "Houve um erro ao desinstalar o pacote {package} antes de instalar a nova version:\n"
-#~ "{error}.\n"
-#~ "Por favor tente atualizar novamente mais tarde."
+#~ msgctxt "@action:button"
+#~ msgid "Discard current changes"
+#~ msgstr "Descartar alterações atuais"
 
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-#~ "- {profiles}\n"
-#~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-#~ msgstr ""
-#~ "Sua configuração parece estar corrompida. Algo parece estar errado com os seguintes perfis:\n"
-#~ "- {profiles}\n"
-#~ "Você gostaria de restaurar as configurações de fábrica? A restauração removerá todos os seus perfis e impressoras atuais."
+#~ msgctxt "@label"
+#~ msgid "Duplicate"
+#~ msgstr "Duplicar"
 
-#~ msgctxt "@info"
-#~ msgid "A new version is available!"
-#~ msgstr "Uma nova versão está disponível!"
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Enables saving to local files."
+#~ msgstr "Habilita salvar em arquivos locais."
+
+#~ msgctxt "name"
+#~ msgid "Example Extension"
+#~ msgstr "Extensão de Exemplo"
+
+#~ msgctxt "name"
+#~ msgid "Example File Reader"
+#~ msgstr "Leitor de Arquivo Exemplo"
+
+#~ msgctxt "name"
+#~ msgid "Example Output Device"
+#~ msgstr "Dispositivo de Saída Exemplo"
+
+#~ msgctxt "name"
+#~ msgid "Example Tool"
+#~ msgstr "Ferramenta de Exemplo"
+
+#~ msgctxt "description"
+#~ msgid "Example extension to instruct people on how to create Uranium extensions."
+#~ msgstr "Extensão de exemplo para instruir as pessoas em como criar extensões Uranium."
+
+#~ msgctxt "description"
+#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
+#~ msgstr "Leitor de arquivo exemplo para instur as pessoas em como criar leitores de arquivo Uranium."
+
+#~ msgctxt "description"
+#~ msgid "Example output device to instruct people on how to create Uranium output devices."
+#~ msgstr "Dispositivo de saída exemplo para instruir as pessoas em como criar dispositivos de saída Uranium."
+
+#~ msgctxt "description"
+#~ msgid "Example tool to instruct people on how to create Uranium tools."
+#~ msgstr "Ferramenta de exemplo para instruir as pessoas a criarem ferramentas Uranium."
+
+#~ msgctxt "@action:button"
+#~ msgid "Export"
+#~ msgstr "Exportar"
+
+#~ msgctxt "@title:window"
+#~ msgid "Export Profile"
+#~ msgstr "Exportar Perfil"
 
 #~ msgctxt "@info:status"
 #~ msgid ""
@@ -1143,264 +1069,244 @@ msgstr "Visão Simples"
 #~ "<message>{0}</message>"
 
 #~ msgctxt "@info:status"
-#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
-#~ msgstr "Falha em desinstalar plugin. O plugin será removido após {0} reiniciar."
-
-#~ msgctxt "@title:tab"
-#~ msgid "Setting Visibility"
-#~ msgstr "Visibilidade de Ajustes"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Check all"
-#~ msgstr "Selecionar todos"
-
-#~ msgctxt "@label:textbox"
-#~ msgid "Filter..."
-#~ msgstr "Filtrar..."
-
-#~ msgctxt "@title:tab"
-#~ msgid "Profiles"
-#~ msgstr "Perfis"
-
-#~ msgctxt "@label"
-#~ msgid "Duplicate"
-#~ msgstr "Duplicar"
-
-#~ msgctxt "@label %1 is printer name"
-#~ msgid "Printer: %1"
-#~ msgstr "Impressora: %1"
-
-#~ msgctxt "@action:button"
-#~ msgid "Update \"%1\""
-#~ msgstr "Atualizar \"%1\""
-
-#~ msgctxt "@action:button"
-#~ msgid "Update profile"
-#~ msgstr "Atualizar perfil"
-
-#~ msgctxt "@action:button"
-#~ msgid "Discard current changes"
-#~ msgstr "Descartar alterações atuais"
-
-#~ msgctxt "@action:button"
-#~ msgid "Reload profile"
-#~ msgstr "Recarregar perfil"
-
-#~ msgctxt "@label"
-#~ msgid "Based on"
-#~ msgstr "Baseado em"
-
-#~ msgctxt "@label"
-#~ msgid "Profile type"
-#~ msgstr "Tipo de perfil"
-
-#~ msgctxt "@label"
-#~ msgid "Protected profile"
-#~ msgstr "Perfil protegido"
-
-#~ msgctxt "@label"
-#~ msgid "Custom profile"
-#~ msgstr "Perfil personalizado"
-
-#~ msgctxt "@action:button"
-#~ msgid "Import"
-#~ msgstr "Importar"
-
-#~ msgctxt "@action:button"
-#~ msgid "Export"
-#~ msgstr "Exportar"
-
-#~ msgctxt "@window:title"
-#~ msgid "Import Profile"
-#~ msgstr "Importar Perfil"
-
-#~ msgctxt "@title:window"
-#~ msgid "Import Profile"
-#~ msgstr "Importar Perfil"
-
-#~ msgctxt "@title:window"
-#~ msgid "Export Profile"
-#~ msgstr "Exportar Perfil"
-
-#~ msgctxt "@info"
-#~ msgid "An exception occurred while checking for updates."
-#~ msgstr "Uma exceção ocorreu enquanto se verificava por novas atualizações."
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "Falha em carregar <filename>{0}</filename>"
 
 #~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Loading <filename>{0}</filename>"
-#~ msgstr "Carregando <filename>{0}</filename>"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Cannot open file type <filename>{0}</filename>"
-#~ msgstr "Não foi possível abrir tipo <filename>{0}</filename>"
-
-#~ msgctxt "@action:button"
-#~ msgid "Ok"
-#~ msgstr "Ok"
-
-#~ msgctxt "@label"
-#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-#~ msgstr "O arquivo <filename>{0}</filename> já existe. Tem certeza que deseja sobrescrevê-lo?"
-
-#~ msgctxt "@info:progress"
-#~ msgid "Saving to <filename>{0}</filename>"
-#~ msgstr "Salvando em <filename>{0}</filename>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
-#~ msgstr "Permissão negada ao tentar salvar <filename>{0}</filename>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-#~ msgstr "Não foi possível salvar <filename>{0}</filename>: <message>{1}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Saved to <filename>{0}</filename>"
-#~ msgstr "Salvo em <filename>{0}</filename>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Cannot open file type <filename>{0}</filename>"
-#~ msgstr "Impossível abrir tipo de arquivo <filename>{0}</filename>"
-
-#~ msgctxt "@info:status"
 #~ msgid "Failed to load <filename>{0}</filename>"
 #~ msgstr "Falha em carregar <filename>{0}</filename>"
 
 #~ msgctxt "@info:status"
-#~ msgid "Loading <filename>{0}</filename>"
-#~ msgstr "Carregando <filename>{0}</filename>"
-
-#~ msgctxt "description"
-#~ msgid "Provides the Translate tool."
-#~ msgstr "Provê a ferramenta de Deslocamento."
-
-#~ msgctxt "name"
-#~ msgid "Translate Tool"
-#~ msgstr "Ferramenta de Deslocamento"
-
-#~ msgctxt "@label"
-#~ msgid "Simple View"
-#~ msgstr "Visão Simples"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides a simple solid mesh view."
-#~ msgstr "Provê a visualização sólida simples de malhas."
+#~ msgid "Failed to uninstall plugin. Plugin will be removed after {0} restarts."
+#~ msgstr "Falha em desinstalar plugin. O plugin será removido após {0} reiniciar."
 
 #~ msgctxt "@label"
 #~ msgid "File Logger"
 #~ msgstr "Registrador em Arquivo"
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Outputs log information to a file in your settings folder."
-#~ msgstr "Direciona informações de registro para um arquivo na sua pasta de configurações."
+#~ msgctxt "@label:textbox"
+#~ msgid "Filter..."
+#~ msgstr "Filtrar..."
+
+#~ msgctxt "@action:button"
+#~ msgid "Finish"
+#~ msgstr "Finalizar"
+
+#~ msgctxt "@action:button"
+#~ msgid "Import"
+#~ msgstr "Importar"
+
+#~ msgctxt "@title:window"
+#~ msgid "Import Profile"
+#~ msgstr "Importar Perfil"
+
+#~ msgctxt "@window:title"
+#~ msgid "Import Profile"
+#~ msgstr "Importar Perfil"
 
 #~ msgctxt "@label"
-#~ msgid "STL Reader"
-#~ msgstr "Leitor de STL"
+#~ msgid "Info..."
+#~ msgstr "Informação..."
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for reading STL files."
-#~ msgstr "Provê suporte à leitura de arquivos STL."
+#~ msgctxt "@window:title"
+#~ msgid "Install Plugin"
+#~ msgstr "Instalar Complemento"
 
-#~ msgctxt "@label"
-#~ msgid "Wavefront OBJ Reader"
-#~ msgstr "Leitor de Wavefront OBJ"
+#~ msgctxt "@action:button"
+#~ msgid "Install new plugin"
+#~ msgstr "Instalar novo complemento"
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Makes it possbile to read Wavefront OBJ files."
-#~ msgstr "Faz com que seja possível ler arquivos no formato OBJ da Wavefront."
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about new features"
+#~ msgstr "Aprenda mais sobre os novos recursos"
 
-#~ msgctxt "@label"
-#~ msgid "Wavefront OBJ Writer"
-#~ msgstr "Gerador de Wavefront OBJ"
+#~ msgctxt "@action:button"
+#~ msgid "Learn more about the new features"
+#~ msgstr "Aprenda mais sobre os novos recursos"
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Makes it possbile to write Wavefront OBJ files."
-#~ msgstr "Faz com que seja possível salvar arquivos no formato OBJ da Wavefront."
+#~ msgctxt "@info:status"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Carregando <filename>{0}</filename>"
 
-#~ msgctxt "@label"
-#~ msgid "STL Writer"
-#~ msgstr "Gerador STL"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for writing STL files."
-#~ msgstr "Provê suporte a salvamento de arquivos STL."
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "STL File (Ascii)"
-#~ msgstr "Arquivo STL ASCII"
-
-#~ msgctxt "@label"
-#~ msgid "Console Logger"
-#~ msgstr "Registrador para o Console"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Outputs log information to the console."
-#~ msgstr "Envia informação de registro de ocorrências ao console."
-
-#~ msgctxt "@label"
-#~ msgid "Update Checker"
-#~ msgstr "Verificador de Atualizações"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Checks for updates of the software."
-#~ msgstr "Verifica novas atualizações para o software."
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Carregando <filename>{0}</filename>"
 
 #~ msgctxt "@label"
 #~ msgid "Local File Output Device"
 #~ msgstr "Dispositivo de Saída do Arquivo Local"
 
 #~ msgctxt "@info:whatsthis"
-#~ msgid "Enables saving to local files."
-#~ msgstr "Habilita salvar em arquivos locais."
-
-#~ msgctxt "@label"
-#~ msgid "Scale Tool"
-#~ msgstr "Ferramenta de Escala"
+#~ msgid "Makes it possbile to read Wavefront OBJ files."
+#~ msgstr "Faz com que seja possível ler arquivos no formato OBJ da Wavefront."
 
 #~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Scale tool."
-#~ msgstr "Provê a Ferramenta de Escala / Redimensionamento."
-
-#~ msgctxt "@label"
-#~ msgid "Selection Tool"
-#~ msgstr "Ferramenta de Seleção"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Selection tool."
-#~ msgstr "Provê a Ferramenta de Seleção."
-
-#~ msgctxt "@label"
-#~ msgid "Translate Tool"
-#~ msgstr "Ferramenta de Deslocamento"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Translate tool."
-#~ msgstr "Provê a Ferramenta de Deslocamento."
-
-#~ msgctxt "@label"
-#~ msgid "Camera Tool"
-#~ msgstr "Ferramenta de Câmera"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the tool to manipulate the camera."
-#~ msgstr "Provê a ferramenta de manipulação da câmera."
-
-#~ msgctxt "@label"
-#~ msgid "Rotate Tool"
-#~ msgstr "Ferramenta de Rotação"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Rotate tool."
-#~ msgstr "Provê a Ferramenta de Rotação."
+#~ msgid "Makes it possbile to write Wavefront OBJ files."
+#~ msgstr "Faz com que seja possível salvar arquivos no formato OBJ da Wavefront."
 
 #~ msgctxt "@label"
 #~ msgid "Mirror Tool"
 #~ msgstr "Ferramenta de Espelho"
 
+#~ msgctxt "@action:button"
+#~ msgid "Next"
+#~ msgstr "Próximo"
+
+#~ msgctxt "@label"
+#~ msgid "No text available"
+#~ msgstr "Nenhum texto disponível"
+
+#~ msgctxt "@action:button"
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgctxt "@title:window"
+#~ msgid "Open file(s)"
+#~ msgstr "Abrir arquivo(s)"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to a file in your settings folder."
+#~ msgstr "Direciona informações de registro para um arquivo na sua pasta de configurações."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to the console."
+#~ msgstr "Envia informação de registro de ocorrências ao console."
+
+#~ msgctxt "@info:status"
+#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
+#~ msgstr "Permissão negada ao tentar salvar <filename>{0}</filename>"
+
+#~ msgctxt "@error:untrusted"
+#~ msgid "Plugin {} was not loaded because it tried to load files outside of the trusted context"
+#~ msgstr "O complemento {} não foi carregado por tentar carregar arquivos fora do contexto confiável"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Plugins"
+#~ msgstr "Complementos"
+
+#~ msgctxt "@label %1 is printer name"
+#~ msgid "Printer: %1"
+#~ msgstr "Impressora: %1"
+
+#~ msgctxt "@label"
+#~ msgid "Profile type"
+#~ msgstr "Tipo de perfil"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Profiles"
+#~ msgstr "Perfis"
+
+#~ msgctxt "@label"
+#~ msgid "Protected profile"
+#~ msgstr "Perfil protegido"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple solid mesh view."
+#~ msgstr "Provê a visualização sólida simples de malhas."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple wireframe view."
+#~ msgstr "Provê uma visualização simples em arame (arestas das formas)."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for reading STL files."
+#~ msgstr "Provê suporte à leitura de arquivos STL."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing STL files."
+#~ msgstr "Provê suporte a salvamento de arquivos STL."
+
 #~ msgctxt "@info:whatsthis"
 #~ msgid "Provides the Mirror tool."
 #~ msgstr "Provê a Ferramenta de Espelho"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Rotate tool."
+#~ msgstr "Provê a Ferramenta de Rotação."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Scale tool."
+#~ msgstr "Provê a Ferramenta de Escala / Redimensionamento."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Selection tool."
+#~ msgstr "Provê a Ferramenta de Seleção."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "Provê a Ferramenta de Deslocamento."
+
+#~ msgctxt "description"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "Provê a ferramenta de Deslocamento."
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the tool to manipulate the camera."
+#~ msgstr "Provê a ferramenta de manipulação da câmera."
+
+#~ msgctxt "@action:button"
+#~ msgid "Reload profile"
+#~ msgstr "Recarregar perfil"
+
+#~ msgctxt "@info:button"
+#~ msgid "Reset your configuration to factory defaults."
+#~ msgstr "Restaurar sua configuração para o padrão de fábrica."
+
+#~ msgctxt "@label"
+#~ msgid "Rotate Tool"
+#~ msgstr "Ferramenta de Rotação"
+
+#~ msgctxt "@item:inlistbox"
+#~ msgid "STL File (Ascii)"
+#~ msgstr "Arquivo STL ASCII"
+
+#~ msgctxt "@label"
+#~ msgid "STL Reader"
+#~ msgstr "Leitor de STL"
+
+#~ msgctxt "@label"
+#~ msgid "STL Writer"
+#~ msgstr "Gerador STL"
+
+#~ msgctxt "@action:button Preceded by 'Ready to'."
+#~ msgid "Save to File"
+#~ msgstr "Salvar em Arquivo"
+
+#~ msgctxt "@info:tooltip"
+#~ msgid "Save to File"
+#~ msgstr "Salvar em Arquivo"
+
+#~ msgctxt "@title:window"
+#~ msgid "Save to File"
+#~ msgstr "Salvar em Arquivo"
+
+#~ msgctxt "@info:status"
+#~ msgid "Saved to <filename>{0}</filename>"
+#~ msgstr "Salvo em <filename>{0}</filename>"
+
+#~ msgctxt "@info:progress"
+#~ msgid "Saving to <filename>{0}</filename>"
+#~ msgstr "Salvando em <filename>{0}</filename>"
+
+#~ msgctxt "@label"
+#~ msgid "Scale Tool"
+#~ msgstr "Ferramenta de Escala"
+
+#~ msgctxt "@label"
+#~ msgid "Selection Tool"
+#~ msgstr "Ferramenta de Seleção"
+
+#~ msgctxt "@title:tab"
+#~ msgid "Setting Visibility"
+#~ msgstr "Visibilidade de Ajustes"
+
+#~ msgctxt "@label"
+#~ msgid "Simple View"
+#~ msgstr "Visão Simples"
+
+#~ msgctxt "@label"
+#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+#~ msgstr "O arquivo <filename>{0}</filename> já existe. Tem certeza que deseja sobrescrevê-lo?"
 
 #~ msgctxt "@info:status"
 #~ msgid ""
@@ -1410,14 +1316,108 @@ msgstr "Visão Simples"
 #~ "O complemento foi instalado.\n"
 #~ " Por favor reinicie a aplicação para ativar o complemento."
 
+#~ msgctxt "@error"
+#~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"
+#~ msgstr "O complemento {} não pôde ser carregado. Reinstalar o complemento pode resolver o problema"
+
+#~ msgctxt "@error:update"
+#~ msgid ""
+#~ "There was an error uninstalling the package {package} before installingnew version:\n"
+#~ "{error}.\n"
+#~ "Please try to upgrade again later."
+#~ msgstr ""
+#~ "Houve um erro ao desinstalar o pacote {package} antes de instalar a nova version:\n"
+#~ "{error}.\n"
+#~ "Por favor tente atualizar novamente mais tarde."
+
+#, python-brace-format
+#~ msgctxt "@error:uninstall"
+#~ msgid ""
+#~ "There were some errors uninstalling the following packages:\n"
+#~ "{packages}"
+#~ msgstr ""
+#~ "Houve alguns erros ao desinstalar os seguintes pacotes:\n"
+#~ "{packages}"
+
+#~ msgctxt "@label"
+#~ msgid "This plugin is required for the application to run."
+#~ msgstr "Este complemento é necessário para que a aplicação rode."
+
+#~ msgctxt "@item:tooltip"
+#~ msgid "This setting has been hidden by the active machine and will not be visible."
+#~ msgstr "Este ajuste foi omitido para a máquina ativa e não será visível."
+
+#~ msgctxt "@item:tooltip %1 is list of setting names"
+#~ msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+#~ msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+#~ msgstr[0] "Este ajuste foi mantido invisível pelo valor de %1. Altere os valores desse ajuste para tornar este ajuste visível."
+#~ msgstr[1] "Este ajuste foi mantido invisível pelos valores de %1. Altere os valores desses ajustes para tornar este ajuste visível."
+
+#~ msgctxt "@label"
+#~ msgid "Translate Tool"
+#~ msgstr "Ferramenta de Deslocamento"
+
+#~ msgctxt "name"
+#~ msgid "Translate Tool"
+#~ msgstr "Ferramenta de Deslocamento"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update \"%1\""
+#~ msgstr "Atualizar \"%1\""
+
+#~ msgctxt "@label"
+#~ msgid "Update Checker"
+#~ msgstr "Verificador de Atualizações"
+
+#~ msgctxt "@action:button"
+#~ msgid "Update profile"
+#~ msgstr "Atualizar perfil"
+
+#~ msgctxt "@label"
+#~ msgid "Version:"
+#~ msgstr "Versão:"
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Reader"
+#~ msgstr "Leitor de Wavefront OBJ"
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Writer"
+#~ msgstr "Gerador de Wavefront OBJ"
+
 #~ msgctxt "@label"
 #~ msgid "Wireframe View"
 #~ msgstr "Visão em Arame"
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides a simple wireframe view."
-#~ msgstr "Provê uma visualização simples em arame (arestas das formas)."
+#~ msgctxt "@label"
+#~ msgid "You will need to restart the application before changes in plugins have effect."
+#~ msgstr "Você precisará reiniciar a aplicação para que mudanças nos complementos tenham efeito."
 
-#~ msgctxt "@info"
-#~ msgid "An exception occured while parsing the JSON file."
-#~ msgstr "Uma exceção ocorreu enquanto se interpretava o arquivo JSON."
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults?"
+#~ msgstr ""
+#~ "Sua configuração parece estar corrompida. Algo parece estar errado com os seguintes perfis:\n"
+#~ "- {profiles}\n"
+#~ "Você gostaria de restaurar o padrão de fábrica?"
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+#~ "- {profiles}\n"
+#~ "Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+#~ msgstr ""
+#~ "Sua configuração parece estar corrompida. Algo parece estar errado com os seguintes perfis:\n"
+#~ "- {profiles}\n"
+#~ "Você gostaria de restaurar as configurações de fábrica? A restauração removerá todos os seus perfis e impressoras atuais."
+
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number} BETA is available!"
+#~ msgstr "{application_name} {version_number} BETA está disponível!"
+
+#, python-brace-format
+#~ msgctxt "@info:status"
+#~ msgid "{application_name} {version_number}-BETA is available!"
+#~ msgstr "{application_name} {version_number} BETA está disponível!"
