@@ -20,7 +20,6 @@
 <br>
 <br>
 
-[![Button Requirements]][Requirements]   
 [![Button Developing]][Developing]
 
 <br>
@@ -29,12 +28,11 @@
 <!----------------------------------------------------------------------------->
 
 [Contributors]: https://github.com/Ultimaker/Uranium/graphs/contributors
-[Plugins]: https://github.com/Ultimaker/Uranium/wiki/Plugin-Directory
+[Plugins]: https://github.com/Ultimaker/Uranium/wiki/Plugins
 [Conan]: https://github.com/Ultimaker/Uranium/actions/workflows/conan-package.yml
 [Test]: https://github.com/Ultimaker/Uranium/actions/workflows/unit-test.yml
 
-[Requirements]: docs/System%20Requirements.md
-[Developing]: docs/Developing.md
+[Developing]: https://github.com/Ultimaker/Uranium/wiki/Building-And-Developing
 [License]: LICENSE
 [#]: #
 
@@ -50,5 +48,4 @@
 
 <!---------------------------------[ Buttons ]--------------------------------->
 
-[Button Requirements]: https://img.shields.io/badge/System_Requirements-c34360?style=for-the-badge&logoColor=white&logo=BookStack
 [Button Developing]: https://img.shields.io/badge/Developing-715a97?style=for-the-badge&logoColor=white&logo=VisualStudioCode
