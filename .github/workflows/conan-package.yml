@@ -131,7 +131,7 @@ jobs:
                     retention-days: 1
 
     notify-create:
-        if: ${{ always() && ((github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'master' || needs.conan-recipe-version.outputs.is_release_branch == 'true')) }}
+        if: ${{ always() && (github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'master' || needs.conan-recipe-version.outputs.is_release_branch == 'true')) }}
         needs: [ conan-recipe-version, conan-package-create-linux ]
 
         uses: ultimaker/cura/.github/workflows/notify.yml@main
