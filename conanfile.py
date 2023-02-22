@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 from conan import ConanFile
+from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy, mkdir
 from conan.tools.microsoft import unix_path
 from conan.tools.scm import Version
@@ -114,6 +115,9 @@ class UraniumConan(ConanFile):
                     self.run(f"{cpp_info.bindirs[0]}/msgfmt {po_file} -o {mo_file} -f", env="conanbuild", ignore_errors=True)
 
     def generate(self):
+        vb = VirtualBuildEnv(self)
+        vb.generate()
+
         if self.options.devtools:
             if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
                 # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement

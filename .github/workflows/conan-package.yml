@@ -44,7 +44,7 @@ jobs:
         secrets: inherit
 
     conan-package-create-linux:
-        if: ${{ (github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'master' || needs.conan-recipe-version.outputs.is_release_branch == 'true')) || (github.event_name == 'workflow_dispatch' && inputs.create_binaries_linux) }}
+#        if: ${{ (github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'master' || needs.conan-recipe-version.outputs.is_release_branch == 'true')) || (github.event_name == 'workflow_dispatch' && inputs.create_binaries_linux) }}
         needs: [ conan-recipe-version, conan-package-export ]
 
         uses: ultimaker/cura/.github/workflows/conan-package-create.yml@main
