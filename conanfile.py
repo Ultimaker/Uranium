@@ -33,12 +33,14 @@ class UraniumConan(ConanFile):
     default_options = {
         "devtools": False,
     }
-    scm = {
-        "type": "git",
-        "subfolder": ".",
-        "url": "auto",
-        "revision": "auto"
-    }
+
+    def export_sources(self):
+        copy(self, "plugins", self.recipe_folder, self.export_sources_folder)
+        copy(self, "resources", self.recipe_folder, self.export_sources_folder)
+        copy(self, "tests", self.recipe_folder, self.export_sources_folder)
+        copy(self, "UM", self.recipe_folder, self.export_sources_folder)
+        copy(self, "requirements.txt", self.recipe_folder, self.export_sources_folder)
+        copy(self, "requirements-dev.txt", self.recipe_folder, self.export_sources_folder)
 
     def set_version(self):
         if self.version is None:
