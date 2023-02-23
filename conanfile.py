@@ -157,9 +157,6 @@ class UraniumConan(ConanFile):
             self.runenv_info.append_path("PYTHONPATH", os.path.join(self.source_folder, "plugins"))
 
     def package_id(self):
-        del self.info.settings.os
-        del self.info.settings.compiler
-        del self.info.settings.build_type
-        del self.info.settings.arch
+        self.info.clear()
 
         del self.info.options.devtools
