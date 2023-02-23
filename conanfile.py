@@ -141,7 +141,7 @@ class UraniumConan(ConanFile):
     def package(self):
         copy(self, "*", src = os.path.join(self.source_folder, "UM"), dst = os.path.join(self.package_folder, self.cpp.package.libdirs[0]))
         copy(self, "*", src = os.path.join(self.source_folder, "resources"), dst = os.path.join(self.package_folder, self.cpp.package.resdirs[0]))
-        copy(self, "*.mo", src = os.path.join(self.source_folder, "resources"), dst = os.path.join(self.package_folder, self.cpp.package.resdirs[0]))
+        copy(self, "*.mo", src = os.path.join(self.build_folder, "resources"), dst = os.path.join(self.package_folder, self.cpp.package.resdirs[0]))
         copy(self, "*", src = os.path.join(self.source_folder, "plugins"), dst = os.path.join(self.package_folder, self.cpp.package.resdirs[1]))
         copy(self, "requirement*.txt", src = self.source_folder, dst = os.path.join(self.package_folder, self.cpp.package.resdirs[-1]))
 
