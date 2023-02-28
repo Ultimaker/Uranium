@@ -96,19 +96,19 @@ jobs:
             - name: Get Conan configuration
               run: conan config install https://github.com/Ultimaker/conan-config.git
 
-            - name: Create the Packages using lockfile
+            - name: Create the Packages
               run: conan create . ${{ needs.conan-recipe-version.outputs.recipe_id_full }} --build=missing --update -o ${{ needs.conan-recipe-version.outputs.project_name }}:devtools=True
 
             - name: Remove the latest alias
-              if: always() && ${{ needs.conan-recipe-version.outputs.recipe_id_latest != '' }}
+              if: always()
               run: conan remove ${{ needs.conan-recipe-version.outputs.recipe_id_latest }} -r cura -f
 
             - name: Remove the latest alias from cura-ce
-              if: always() && ${{ needs.conan-recipe-version.outputs.recipe_id_latest != '' }}
+              if: always()
               run: conan remove ${{ needs.conan-recipe-version.outputs.recipe_id_latest }} -r cura-ce -f
 
             - name: Create the latest alias
-              if: always() && ${{ needs.conan-recipe-version.outputs.recipe_id_latest != '' }}
+              if: always()
               run: conan alias ${{ needs.conan-recipe-version.outputs.recipe_id_latest }} ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
 
             - name: Upload the Package(s)
@@ -116,20 +116,6 @@ jobs:
               run: |
                   conan upload "*" -r cura --all -c
                   conan upload "*" -r cura-ce -c
-
-            - name: Upload the log and build artifacts
-              if: always()
-              uses: actions/upload-artifact@v3
-              with:
-                  name: log-ubuntu-${{ runner.arch }}
-                  path: |
-                      buildinfo.json
-                      conan.lock
-                      conanbuildinfo.txt
-                      conaninfo.txt
-                      graph_info.json
-                      build/**
-                  retention-days: 1
 
     notify-create:
         if: ${{ always() && (github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'master' || needs.conan-recipe-version.outputs.is_release_branch == 'true')) }}
