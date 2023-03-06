@@ -81,10 +81,6 @@ class UraniumConan(ConanFile):
         copy(self, "requirements.txt", self.recipe_folder, self.export_sources_folder)
         copy(self, "requirements-dev.txt", self.recipe_folder, self.export_sources_folder)
 
-    def set_version(self):
-        if self.version is None:
-            self.version = self._umdefault_version()
-
     def configure(self):
         self.options["pyarcus"].shared = True
         self.options["cpython"].shared = True
@@ -111,7 +107,7 @@ class UraniumConan(ConanFile):
                 vb.generate()
 
                 # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
-                pot = self.python_requires["translationextractor"].module.ExtractTranslations(self, os.path.join(self.source_folder, "resources", "i18n"), "cura.pot")
+                pot = self.python_requires["translationextractor"].module.ExtractTranslations(self, os.path.join(self.source_folder, "resources", "i18n"), "uranium.pot")
                 pot.generate()
 
     def build(self):
