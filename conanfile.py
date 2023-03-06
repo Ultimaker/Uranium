@@ -22,7 +22,7 @@ class UraniumConan(ConanFile):
     exports = "LICENSE*"
     settings = "os", "compiler", "build_type", "arch"
 
-    python_requires = "umbase/[>=0.1.7]@ultimaker/stable"
+    python_requires = "umbase/[>=0.1.7]@ultimaker/stable", "translationextractor/[>=1.1.0]@ultimaker/stable"
     python_requires_extend = "umbase.UMBaseConanfile"
 
     options = {
@@ -111,13 +111,8 @@ class UraniumConan(ConanFile):
                 vb.generate()
 
                 # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
-                cpp_info = self.dependencies["gettext"].cpp_info
-                for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
-                    pot_file = self.source_path.joinpath("resources", "i18n", po_file.with_suffix('.pot').name)
-                    mkdir(self, str(unix_path(self, pot_file.parent)))
-                    self.run(
-                        f"{cpp_info.bindirs[0]}/msgmerge --no-wrap --no-fuzzy-matching -width=140 -o {po_file} {po_file} {pot_file}",
-                        env="conanbuild", ignore_errors=True)
+                pot = self.python_requires["translationextractor"].module.ExtractTranslations(self, os.path.join(self.source_folder, "resources", "i18n"), "cura.pot")
+                pot.generate()
 
     def build(self):
         if self.options.devtools:
