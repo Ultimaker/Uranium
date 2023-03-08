@@ -22,7 +22,7 @@ class UraniumConan(ConanFile):
     exports = "LICENSE*"
     settings = "os", "compiler", "build_type", "arch"
 
-    python_requires = "umbase/[>=0.1.7]@ultimaker/stable", "translationextractor/[>=2.1.1]@ultimaker/stable"
+    python_requires = "umbase/[>=0.1.7]@ultimaker/stable", "translationextractor/[>=2.1.2]@ultimaker/stable"
     python_requires_extend = "umbase.UMBaseConanfile"
 
     options = {
@@ -110,7 +110,8 @@ class UraniumConan(ConanFile):
                 vb.generate()
 
                 # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
-                pot = self.python_requires["translationextractor"].module.ExtractTranslations(self)
+                cpp_info = self.dependencies["gettext"].cpp_info
+                pot = self.python_requires["translationextractor"].module.ExtractTranslations(self, cpp_info.bindirs[0])
                 pot.generate()
 
     def build(self):
@@ -121,7 +122,8 @@ class UraniumConan(ConanFile):
                     mo_file = Path(self.build_folder, po_file.with_suffix('.mo').relative_to(self.source_path))
                     mo_file = mo_file.parent.joinpath("LC_MESSAGES", mo_file.name)
                     mkdir(self, str(unix_path(self, Path(mo_file).parent)))
-                    self.run(f"msgfmt {po_file} -o {mo_file} -f", env = "conanbuild", run_environment = True)
+                    cpp_info = self.dependencies["gettext"].cpp_info
+                    self.run(f"{cpp_info.bindirs[0]}/msgfmt {po_file} -o {mo_file} -f", env="conanbuild", ignore_errors=True)
 
     def layout(self):
         self.folders.source = "."
