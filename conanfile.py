@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 from conan import ConanFile
-from conan.tools.env import VirtualBuildEnv
+from conan.tools.env import VirtualBuildEnv, VirtualRunEnv
 from conan.tools.files import copy, mkdir
 from conan.tools.microsoft import unix_path
 from conan.tools.scm import Version
@@ -22,7 +22,7 @@ class UraniumConan(ConanFile):
     exports = "LICENSE*"
     settings = "os", "compiler", "build_type", "arch"
 
-    python_requires = "umbase/[>=0.1.7]@ultimaker/stable", "translationextractor/[>=2.0.0]@ultimaker/stable"
+    python_requires = "umbase/[>=0.1.7]@ultimaker/stable", "translationextractor/[>=2.1.2]@ultimaker/stable"
     python_requires_extend = "umbase.UMBaseConanfile"
 
     options = {
@@ -101,13 +101,17 @@ class UraniumConan(ConanFile):
                 self.tool_requires("gettext/0.21@ultimaker/testing", force_host_context = True)
 
     def generate(self):
+        vr = VirtualRunEnv(self)
+        vr.generate()
+
         if self.options.devtools:
             if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type=str):
                 vb = VirtualBuildEnv(self)
                 vb.generate()
 
                 # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
-                pot = self.python_requires["translationextractor"].module.ExtractTranslations(self)
+                cpp_info = self.dependencies["gettext"].cpp_info
+                pot = self.python_requires["translationextractor"].module.ExtractTranslations(self, cpp_info.bindirs[0])
                 pot.generate()
 
     def build(self):
