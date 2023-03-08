@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 from conan import ConanFile
-from conan.tools.env import VirtualBuildEnv
+from conan.tools.env import VirtualBuildEnv, VirtualRunEnv
 from conan.tools.files import copy, mkdir
 from conan.tools.microsoft import unix_path
 from conan.tools.scm import Version
@@ -101,6 +101,9 @@ class UraniumConan(ConanFile):
                 self.tool_requires("gettext/0.21@ultimaker/testing", force_host_context = True)
 
     def generate(self):
+        vr = VirtualRunEnv(self)
+        vr.generate()
+
         if self.options.devtools:
             if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type=str):
                 vb = VirtualBuildEnv(self)
