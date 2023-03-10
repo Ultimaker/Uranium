@@ -64,7 +64,7 @@ Item
         z: 1
 
         //: Reset scale tool button
-        text: catalog.i18nc("@action:button","Reset")
+        text: catalog.i18nc("@action:button", "TRANSLATE ME")
 
         toolItem: UM.ColorImage
         {
