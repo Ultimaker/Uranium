@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-06 21:48+0100\n"
+"POT-Creation-Date: 2023-03-13 10:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,6 @@ msgstr ""
 
 #: UM/ConfigurationErrorMessage.py:32
 #: plugins/Tools/RotateTool/RotateTool.qml:19
-#: plugins/Tools/ScaleTool/ScaleTool.qml:67
 msgctxt "@action:button"
 msgid "Reset"
 msgstr ""
@@ -642,6 +641,11 @@ msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr ""
 
+#: plugins/Tools/ScaleTool/ScaleTool.qml:67
+msgctxt "@action:button"
+msgid "TRANSLATE ME III"
+msgstr ""
+
 #: plugins/Tools/ScaleTool/ScaleTool.qml:93
 msgctxt "@option:check"
 msgid "Snap Scaling"
@@ -742,16 +746,6 @@ msgstr ""
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr ""
-#: plugins/Views/SimpleView/plugin.json
-msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr ""
-
-#: plugins/Views/SimpleView/plugin.json
-msgctxt "name"
-msgid "Simple View"
-msgstr ""
-
 #: plugins/UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
@@ -762,14 +756,14 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr ""
 
-#: plugins/ConsoleLogger/plugin.json
+#: plugins/FileLogger/plugin.json
 msgctxt "description"
-msgid "Outputs log information to the console."
+msgid "Outputs log information to a file in your settings folder."
 msgstr ""
 
-#: plugins/ConsoleLogger/plugin.json
+#: plugins/FileLogger/plugin.json
 msgctxt "name"
-msgid "Console Logger"
+msgid "File Logger"
 msgstr ""
 
 #: plugins/LocalFileOutputDevice/plugin.json
@@ -792,14 +786,14 @@ msgctxt "name"
 msgid "Local Container Provider"
 msgstr ""
 
-#: plugins/FileLogger/plugin.json
+#: plugins/FileHandlers/STLReader/plugin.json
 msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
+msgid "Provides support for reading STL files."
 msgstr ""
 
-#: plugins/FileLogger/plugin.json
+#: plugins/FileHandlers/STLReader/plugin.json
 msgctxt "name"
-msgid "File Logger"
+msgid "STL Reader"
 msgstr ""
 
 #: plugins/FileHandlers/STLWriter/plugin.json
@@ -832,34 +826,24 @@ msgctxt "name"
 msgid "Wavefront OBJ Reader"
 msgstr ""
 
-#: plugins/FileHandlers/STLReader/plugin.json
+#: plugins/ConsoleLogger/plugin.json
 msgctxt "description"
-msgid "Provides support for reading STL files."
+msgid "Outputs log information to the console."
 msgstr ""
 
-#: plugins/FileHandlers/STLReader/plugin.json
+#: plugins/ConsoleLogger/plugin.json
 msgctxt "name"
-msgid "STL Reader"
+msgid "Console Logger"
 msgstr ""
 
-#: plugins/Tools/SelectionTool/plugin.json
+#: plugins/Tools/RotateTool/plugin.json
 msgctxt "description"
-msgid "Provides the Selection tool."
+msgid "Provides the Rotate tool."
 msgstr ""
 
-#: plugins/Tools/SelectionTool/plugin.json
+#: plugins/Tools/RotateTool/plugin.json
 msgctxt "name"
-msgid "Selection Tool"
-msgstr ""
-
-#: plugins/Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr ""
-
-#: plugins/Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
+msgid "Rotate Tool"
 msgstr ""
 
 #: plugins/Tools/MirrorTool/plugin.json
@@ -872,14 +856,14 @@ msgctxt "name"
 msgid "Mirror Tool"
 msgstr ""
 
-#: plugins/Tools/CameraTool/plugin.json
+#: plugins/Tools/ScaleTool/plugin.json
 msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
+msgid "Provides the Scale tool."
 msgstr ""
 
-#: plugins/Tools/CameraTool/plugin.json
+#: plugins/Tools/ScaleTool/plugin.json
 msgctxt "name"
-msgid "Camera Tool"
+msgid "Scale Tool"
 msgstr ""
 
 #: plugins/Tools/TranslateTool/plugin.json
@@ -892,13 +876,33 @@ msgctxt "name"
 msgid "Move Tool"
 msgstr ""
 
-#: plugins/Tools/RotateTool/plugin.json
+#: plugins/Tools/CameraTool/plugin.json
 msgctxt "description"
-msgid "Provides the Rotate tool."
+msgid "Provides the tool to manipulate the camera."
 msgstr ""
 
-#: plugins/Tools/RotateTool/plugin.json
+#: plugins/Tools/CameraTool/plugin.json
 msgctxt "name"
-msgid "Rotate Tool"
+msgid "Camera Tool"
+msgstr ""
+
+#: plugins/Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr ""
+
+#: plugins/Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr ""
+
+#: plugins/Views/SimpleView/plugin.json
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr ""
+
+#: plugins/Views/SimpleView/plugin.json
+msgctxt "name"
+msgid "Simple View"
 msgstr ""
 

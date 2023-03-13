@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-06 21:48+0100\n"
+"POT-Creation-Date: 2023-03-13 10:26+0000\n"
 "PO-Revision-Date: 2022-04-26 00:14+0200\n"
 "Last-Translator: Miroslav Šustek <sustmidown@centrum.cz>\n"
 "Language-Team: DenyCZ <www.github.com/DenyCZ>\n"
@@ -19,7 +19,6 @@ msgstr ""
 
 #: UM/ConfigurationErrorMessage.py:32
 #: plugins/Tools/RotateTool/RotateTool.qml:19
-#: plugins/Tools/ScaleTool/ScaleTool.qml:67
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Reset"
@@ -755,6 +754,11 @@ msgstr "Poskytuje nástroj otáčení."
 msgctxt "name"
 msgid "Rotate Tool"
 msgstr "Rotace"
+
+#: plugins/Tools/ScaleTool/ScaleTool.qml:67
+msgctxt "@action:button"
+msgid "TRANSLATE ME III"
+msgstr ""
 
 #: plugins/Tools/ScaleTool/ScaleTool.qml:93
 msgctxt "@option:check"
