@@ -58,7 +58,7 @@ jobs:
                 run: conan config install https://github.com/Ultimaker/conan-config.git
 
             -   name: generate the files using Conan install
-                run: conan install . --build=missing --update -o cura:devtools=True
+                run: conan install . --build=missing --update -o uranium:devtools=True
 
             -   uses: stefanzweifel/git-auto-commit-action@v4
                 with:
