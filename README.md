@@ -24,6 +24,9 @@
 
 <br>
 
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Ultimaker/Uranium/badge)](https://api.securityscorecards.dev/projects/github.com/Ultimaker/Uranium)
+
+<br>
 
 <!----------------------------------------------------------------------------->
 
