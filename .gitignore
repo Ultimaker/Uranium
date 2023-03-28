@@ -38,6 +38,7 @@ _eric6project/Uranium.e4q
 _eric6project/Uranium.e4t
 .cache
 *.kate-swp
+*.bak
 
 ## Eclipse+PyDev incl. Mylyn
 .project
