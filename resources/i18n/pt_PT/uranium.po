@@ -108,7 +108,7 @@ msgstr "Não foi possível carregar <filename>{0}</filename>. O ficheiro pode es
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr "Modelo redimensionado automaticamente para {0}%% do tamanho original"
+msgstr "Modelo redimensionado automaticamente para {0}% do tamanho original"
 
 #: UM/Mesh/ReadMeshJob.py:74
 msgctxt "@info:title"
@@ -804,7 +804,7 @@ msgstr "Bloquear Modelo"
 #: plugins/Tools/TranslateTool/TranslateTool.qml:200
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr ""
+msgstr "Modelo pendente"
 
 #: plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -906,40 +906,3 @@ msgstr "Permite uma visualização sólida simples dos objectos."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Visualização simples"
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "Extensão de Exemplo"
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "Exemplo de um Leitor de Ficheiros"
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "Exemplo de um Dispositivo de Saída"
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "Exemplo de uma Ferramenta"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Exemplo de uma extensão para demonstrar às pessoas sobre como criar extensões Uranium."
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Exemplo de um leitor de ficheiros para demonstrar às pessoas sobre como criar leitores de ficheiros Uranium."
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Exemplo de um dispositivo de saída para demonstrar às pessoas sobre como criar dispositivos de saída Uranium."
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "Exemplo de uma ferramenta para demonstrar às pessoas sobre como criar ferramentas Uranium."
-
-#, python-brace-format
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number}-BETA is available!"
-#~ msgstr "A versão BETA {version_number} do {application_name} já está disponível!"

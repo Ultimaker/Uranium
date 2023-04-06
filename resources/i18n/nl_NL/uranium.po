@@ -108,7 +108,7 @@ msgstr "Kan <filename>{0}</filename> niet laden. Het bestand is mogelijk corrupt
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr "Het model is automatisch geschaald naar {0}%% van de oorspronkelijke grootte"
+msgstr "Het model is automatisch geschaald naar {0}% van de oorspronkelijke grootte"
 
 #: UM/Mesh/ReadMeshJob.py:74
 msgctxt "@info:title"
@@ -804,7 +804,7 @@ msgstr "Model vergrendelen"
 #: plugins/Tools/TranslateTool/TranslateTool.qml:200
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr ""
+msgstr "Model verlagen"
 
 #: plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -906,40 +906,3 @@ msgstr "Biedt een eenvoudige, solide rasterweergave."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Eenvoudige Weergave"
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "Voorbeeldextensie"
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "Voorbeeldbestandslezer"
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "Voorbeelduitvoerapparaat"
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "Voorbeeldgereedschap"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Voorbeeldextensie om gebruikers te tonen hoe Uranium-extensies worden gemaakt."
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Voorbeeldbestandslezer om gebruikers te tonen hoe Uranium-bestandslezers worden gemaakt."
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Voorbeelduitvoerapparaat om gebruikers te tonen hoe Uranium-uitvoerapparaten worden gemaakt."
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "Voorbeeldgereedschap om gebruikers te tonen hoe Uranium-gereedschap wordt gemaakt."
-
-#, python-brace-format
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number}-BETA is available!"
-#~ msgstr "{application_name} {version_number}-BÈTA is beschikbaar!"

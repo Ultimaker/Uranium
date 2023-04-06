@@ -108,7 +108,7 @@ msgstr "无法加载 <filename>{0}</filename>。文件可能已损坏或无法�
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr "已将模型自动缩放为原有大小的 {0}%%"
+msgstr "已将模型自动缩放为原有大小的 {0}%"
 
 #: UM/Mesh/ReadMeshJob.py:74
 msgctxt "@info:title"
@@ -801,7 +801,7 @@ msgstr "锁定模型"
 #: plugins/Tools/TranslateTool/TranslateTool.qml:200
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr ""
+msgstr "下拉式模型"
 
 #: plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -903,40 +903,3 @@ msgstr "提供简单实体网格视图。"
 msgctxt "name"
 msgid "Simple View"
 msgstr "简单视图"
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "扩展示例"
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "文件读取器示例"
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "输出设备示例"
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "工具示例"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "扩展示例，指导人们如何创建 Uranium 扩展。"
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "文件读取器示例，指导人们如何创建 Uranium 文件读取器。"
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "输出设备示例，指导人们如何创建 Uranium 输出设备。"
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "工具示例，指导人们如何创建 Uranium 工具。"
-
-#, python-brace-format
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number}-BETA is available!"
-#~ msgstr "{application_name} {version_number}-BETA 版可用！"

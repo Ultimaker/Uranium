@@ -108,7 +108,7 @@ msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファ
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr "元のサイズの{0}%%まで自動的にスケールされたモデル"
+msgstr "元のサイズの{0}%まで自動的にスケールされたモデル"
 
 #: UM/Mesh/ReadMeshJob.py:74
 msgctxt "@info:title"
@@ -801,7 +801,7 @@ msgstr "モデルのロック"
 #: plugins/Tools/TranslateTool/TranslateTool.qml:200
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr ""
+msgstr "ドロップダウンモデル"
 
 #: plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -903,40 +903,3 @@ msgstr "シンプルソリッドメッシュビューを供給する。"
 msgctxt "name"
 msgid "Simple View"
 msgstr "シンプルビュー"
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "拡張子の例"
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "ファイルリーダーの例"
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "出力デバイスの例"
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "ツールの例"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Uranium拡張子を作成する方法を伝える拡張子の例を示します。"
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Uraniumファイルリーダーを作成する方法を伝えるファイルリーダーの例を示します。"
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Uranium出力デバイスを作成する方法を伝える出力デバイスの例を示します。"
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "Uraniumツールを作成する方法を伝えるツールの例を示します。"
-
-#, python-brace-format
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number}-BETA is available!"
-#~ msgstr "{application_name} {version_number}ベータ版が利用可能です。"

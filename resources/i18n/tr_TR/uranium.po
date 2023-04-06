@@ -108,7 +108,7 @@ msgstr "<filename>{0}</filename> dosyası yüklenemedi. Dosya bozuk veya erişil
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr "Model orijinal boyutun %%{0} kadarına otomatik ölçeklendirilir"
+msgstr "Model orijinal boyutun %{0} kadarına otomatik ölçeklendirilir"
 
 #: UM/Mesh/ReadMeshJob.py:74
 msgctxt "@info:title"
@@ -804,7 +804,7 @@ msgstr "Kilit Modeli"
 #: plugins/Tools/TranslateTool/TranslateTool.qml:200
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr ""
+msgstr "Alçalan Model"
 
 #: plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -906,40 +906,3 @@ msgstr "Basit gerçek bir ağ görünümü sağlar."
 msgctxt "name"
 msgid "Simple View"
 msgstr "Basit Görünüm"
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "Örnek Uzantı"
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "Örnek Dosya Okuyucu"
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "Örnek Çıktı Cihazı"
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "Örnek Araç"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Uranium uzantıları oluşturma konusunda bilgilendirme amaçlı örnek uzantı."
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Uranium dosya okuyucular oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek dosya okuyucu."
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Uranium çıktı cihazları oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek çıktı cihazı."
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "Uranium araçları oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek araç."
-
-#, python-brace-format
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number}-BETA is available!"
-#~ msgstr "{application_name} {version_number}-BETA yayınlandı!"
