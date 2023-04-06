@@ -108,7 +108,7 @@ msgstr "Не удалось загрузить <filename>{0}</filename>. Воз�
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr "Автоматическое масштабирование модели к {0}%% от оригинального размера"
+msgstr "Автоматическое масштабирование модели к {0}% от оригинального размера"
 
 #: UM/Mesh/ReadMeshJob.py:74
 msgctxt "@info:title"
@@ -807,7 +807,7 @@ msgstr "Блокировка модели"
 #: plugins/Tools/TranslateTool/TranslateTool.qml:200
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr ""
+msgstr "Модель нависаний"
 
 #: plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -909,40 +909,3 @@ msgstr "Предоставляет просмотр в виде целого т�
 msgctxt "name"
 msgid "Simple View"
 msgstr "Обычный вид"
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "Пример расширения"
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "Пример средства считывания файлов"
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "Пример выходного устройства"
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "Пример инструмента"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "Пример расширения для обучения созданию расширений Uranium."
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "Пример средства считывания файлов для обучения созданию средств считывания файлов Uranium."
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "Пример выходного устройства для обучения созданию выходных устройств Uranium."
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "Пример инструмента для обучения созданию инструментов Uranium."
-
-#, python-brace-format
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number}-BETA is available!"
-#~ msgstr "Доступна бета-версия {application_name} {version_number}!"

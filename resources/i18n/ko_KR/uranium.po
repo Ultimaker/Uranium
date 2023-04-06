@@ -108,7 +108,7 @@ msgstr "<filename>{0}</filename>을(를) 로드하지 못했습니다. 파일이
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
-msgstr "원본크기의 {0}%%로 모델 크기 자동조절"
+msgstr "원본크기의 {0}%로 모델 크기 자동조절"
 
 #: UM/Mesh/ReadMeshJob.py:74
 msgctxt "@info:title"
@@ -801,7 +801,7 @@ msgstr "모델 잠금"
 #: plugins/Tools/TranslateTool/TranslateTool.qml:200
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr ""
+msgstr "드롭 다운 모델"
 
 #: plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -903,40 +903,3 @@ msgstr "간단한 솔리드 메쉬보기를 제공합니다."
 msgctxt "name"
 msgid "Simple View"
 msgstr "단순보기"
-
-#~ msgctxt "name"
-#~ msgid "Example Extension"
-#~ msgstr "확장 예"
-
-#~ msgctxt "name"
-#~ msgid "Example File Reader"
-#~ msgstr "파일 리더 예"
-
-#~ msgctxt "name"
-#~ msgid "Example Output Device"
-#~ msgstr "출력 장치 예"
-
-#~ msgctxt "name"
-#~ msgid "Example Tool"
-#~ msgstr "도구 예"
-
-#~ msgctxt "description"
-#~ msgid "Example extension to instruct people on how to create Uranium extensions."
-#~ msgstr "우라늄 확장을 만드는 방법을 보여주는 예입니다."
-
-#~ msgctxt "description"
-#~ msgid "Example file reader to instruct people on how to create Uranium file readers."
-#~ msgstr "우라늄 파일 리더를 만드는 방법을 보여주는 파일 리더 예입니다."
-
-#~ msgctxt "description"
-#~ msgid "Example output device to instruct people on how to create Uranium output devices."
-#~ msgstr "우라늄 출력 장치를 만드는 방법을 보여주는 출력 장치 예입니다."
-
-#~ msgctxt "description"
-#~ msgid "Example tool to instruct people on how to create Uranium tools."
-#~ msgstr "우라늄 도구를 만드는 방법을 보여주는 도구 예입니다."
-
-#, python-brace-format
-#~ msgctxt "@info:status"
-#~ msgid "{application_name} {version_number}-BETA is available!"
-#~ msgstr "{application_name} {version_number} 베타를 사용할 수 있습니다!"
