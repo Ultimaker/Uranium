@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Ultimaker B.V.
+// Copyright (c) 2023 Ultimaker
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
