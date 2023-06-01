@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-20 19:24+0000\n"
+"POT-Creation-Date: 2023-06-01 07:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -752,34 +752,24 @@ msgctxt "name"
 msgid "Console Logger"
 msgstr ""
 
-#: plugins/LocalFileOutputDevice/plugin.json
+#: plugins/FileHandlers/OBJReader/plugin.json
 msgctxt "description"
-msgid "Enables saving to local files."
+msgid "Makes it possible to read Wavefront OBJ files."
 msgstr ""
 
-#: plugins/LocalFileOutputDevice/plugin.json
+#: plugins/FileHandlers/OBJReader/plugin.json
 msgctxt "name"
-msgid "Local File Output Device"
+msgid "Wavefront OBJ Reader"
 msgstr ""
 
-#: plugins/Views/SimpleView/plugin.json
+#: plugins/FileHandlers/STLWriter/plugin.json
 msgctxt "description"
-msgid "Provides a simple solid mesh view."
+msgid "Provides support for writing STL files."
 msgstr ""
 
-#: plugins/Views/SimpleView/plugin.json
+#: plugins/FileHandlers/STLWriter/plugin.json
 msgctxt "name"
-msgid "Simple View"
-msgstr ""
-
-#: plugins/LocalContainerProvider/plugin.json
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr ""
-
-#: plugins/LocalContainerProvider/plugin.json
-msgctxt "name"
-msgid "Local Container Provider"
+msgid "STL Writer"
 msgstr ""
 
 #: plugins/FileHandlers/OBJWriter/plugin.json
@@ -802,24 +792,14 @@ msgctxt "name"
 msgid "STL Reader"
 msgstr ""
 
-#: plugins/FileHandlers/STLWriter/plugin.json
+#: plugins/LocalContainerProvider/plugin.json
 msgctxt "description"
-msgid "Provides support for writing STL files."
+msgid "Provides built-in setting containers that come with the installation of the application."
 msgstr ""
 
-#: plugins/FileHandlers/STLWriter/plugin.json
+#: plugins/LocalContainerProvider/plugin.json
 msgctxt "name"
-msgid "STL Writer"
-msgstr ""
-
-#: plugins/FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr ""
-
-#: plugins/FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
+msgid "Local Container Provider"
 msgstr ""
 
 #: plugins/FileLogger/plugin.json
@@ -832,6 +812,26 @@ msgctxt "name"
 msgid "File Logger"
 msgstr ""
 
+#: plugins/Views/SimpleView/plugin.json
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr ""
+
+#: plugins/Views/SimpleView/plugin.json
+msgctxt "name"
+msgid "Simple View"
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr ""
+
+#: plugins/LocalFileOutputDevice/plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr ""
+
 #: plugins/UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
@@ -842,14 +842,14 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr ""
 
-#: plugins/Tools/TranslateTool/plugin.json
+#: plugins/Tools/MirrorTool/plugin.json
 msgctxt "description"
-msgid "Provides the Move tool."
+msgid "Provides the Mirror tool."
 msgstr ""
 
-#: plugins/Tools/TranslateTool/plugin.json
+#: plugins/Tools/MirrorTool/plugin.json
 msgctxt "name"
-msgid "Move Tool"
+msgid "Mirror Tool"
 msgstr ""
 
 #: plugins/Tools/ScaleTool/plugin.json
@@ -860,16 +860,6 @@ msgstr ""
 #: plugins/Tools/ScaleTool/plugin.json
 msgctxt "name"
 msgid "Scale Tool"
-msgstr ""
-
-#: plugins/Tools/SelectionTool/plugin.json
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr ""
-
-#: plugins/Tools/SelectionTool/plugin.json
-msgctxt "name"
-msgid "Selection Tool"
 msgstr ""
 
 #: plugins/Tools/RotateTool/plugin.json
@@ -892,13 +882,23 @@ msgctxt "name"
 msgid "Camera Tool"
 msgstr ""
 
-#: plugins/Tools/MirrorTool/plugin.json
+#: plugins/Tools/TranslateTool/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
+msgid "Provides the Move tool."
 msgstr ""
 
-#: plugins/Tools/MirrorTool/plugin.json
+#: plugins/Tools/TranslateTool/plugin.json
 msgctxt "name"
-msgid "Mirror Tool"
+msgid "Move Tool"
+msgstr ""
+
+#: plugins/Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr ""
+
+#: plugins/Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
 msgstr ""
 
