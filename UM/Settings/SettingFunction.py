@@ -311,7 +311,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "startswith",
         "endswith",
         "capitalize",
-        "index"
+        "index",
     }  # type: Set[str]
 
     _blacklist = {
