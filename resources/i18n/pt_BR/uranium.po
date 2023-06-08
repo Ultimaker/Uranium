@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-08 13:21+0000\n"
+"POT-Creation-Date: 2023-06-08 16:37+0200\n"
 "PO-Revision-Date: 2022-04-25 07:03+0200\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
@@ -17,121 +17,557 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: UM/ConfigurationErrorMessage.py:32
-#: plugins/Tools/RotateTool/RotateTool.qml:19
-#: plugins/Tools/ScaleTool/ScaleTool.qml:67
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Restabelecer"
-
-#: UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr ""
-"Sua configuração parece estar corrompida. Algo parece estar errado com os seguintes perfis:\n"
-"- {profiles}\n"
-" Você gostaria de restaurar os ajustes de fábrica? A restauração removerá todos os seus perfis e impressoras atuais."
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "A configuração da versão antiga de {0} foi importada."
 
-#: UM/ConfigurationErrorMessage.py:51
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr "Restaurar de fábrica"
+msgctxt "@option"
+msgid "Abort"
+msgstr "Abortar"
 
-#: UM/ConfigurationErrorMessage.py:53
-msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr "Restaurar removerá todas as suas impressoras e perfis atuais! Tem certeza que quer restaurar?"
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
+msgstr "Todos os Arquivos (*)"
 
-#: UM/FileHandler/FileHandler.py:71 UM/PluginRegistry.py:929
-#: UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Todos os Tipos Suportados ({0})"
 
-#: UM/FileHandler/FileHandler.py:72 UM/PluginRegistry.py:930
-#: UM/Settings/Models/InstanceContainersModel.py:196
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr "Todos os Arquivos (*)"
+msgctxt "@option"
+msgid "Apply"
+msgstr "Aplicar"
 
-#: UM/FileHandler/ReadFileJob.py:41
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "Não é possível abrir arquivos do tipo <filename>{0}</filename>"
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Tem certeza que deseja remover %1? Isto não pode ser desfeito!"
 
-#: UM/FileHandler/ReadFileJob.py:44
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "Arquivo Inválido"
-
-#: UM/FileHandler/ReadFileJob.py:59
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr "Falha em carregar <filename>{0}</filename>. O arquivo pode estar corrompido ou inacessível."
-
-#: UM/FileHandler/ReadFileJob.py:62 UM/FileHandler/ReadFileJob.py:98
-msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr "Não Foi Possível Abrir Arquivo"
-
-#: UM/FileHandler/ReadFileJob.py:71
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "Carregando"
-
-#: UM/FileHandler/ReadFileJob.py:87
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr "Não há modelos em <filename>{0}</filename>."
-
-#: UM/FileHandler/ReadFileJob.py:90
-msgctxt "@info:title"
-msgid "No Models in File"
-msgstr "Sem Modelos no Arquivo"
-
-#: UM/FileHandler/ReadFileJob.py:95
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr "Falha em carregar <filename>{0}</filename>. O arquivo pode estar corrompido, inacessível ou não conter nenhum modelo."
-
-#: UM/Mesh/ReadMeshJob.py:72
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "Modelo auto-redimensionado para {0}% do tamanho original"
 
-#: UM/Mesh/ReadMeshJob.py:74
-msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "Redimensionando Objeto"
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Ferramenta de Câmera"
 
-#: UM/PackageManager.py:294
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "@option"
+msgid "Cancel"
+msgstr "Cancelar"
+
 #, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Houve alguns erros ao desinstalar os seguintes pacotes: {packages}"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgstr "Não é possível abrir arquivos do tipo <filename>{0}</filename>"
 
-#: UM/PackageManager.py:296
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Verificar Novas Atualizações"
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Verifica por atualizações do software."
+
+msgctxt "@option"
+msgid "Close"
+msgstr "Fechar"
+
 msgctxt "@info:title"
-msgid "Uninstalling errors"
-msgstr "Erros ao desinstalar"
+msgid "Configuration errors"
+msgstr "Erros de configuração"
 
-#: UM/PackageManager.py:308
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "Confirme Remoção"
+
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Registrador de Console"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Não foi possível salvar para <filename>{0}</filename>: <message>{1}</message>"
+
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte a Objetos de Framebuffer. Por favor verifique os drivers de sua placa de vídeo."
+
+msgctxt "@option"
+msgid "Discard"
+msgstr "Descartar"
+
+msgctxt "@action:button"
+msgid "Dismiss"
+msgstr "Dispensar"
+
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Baixar"
+
+msgctxt "@option:check"
+msgid "Drop Down Model"
+msgstr ""
+
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "Permite salvar em arquivos locais."
+
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Erro"
+
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "Falha em inicializar OpenGL"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr "Falha em carregar <filename>{0}</filename>. O arquivo pode estar corrompido ou inacessível."
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr "Falha em carregar <filename>{0}</filename>. O arquivo pode estar corrompido, inacessível ou não conter nenhum modelo."
+
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "O Arquivo Já Existe"
+
+msgctxt "name"
+msgid "File Logger"
+msgstr "Registrador em Arquivo"
+
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Arquivo Salvo"
+
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr "Arquivo foi modificado"
+
+msgctxt "@menu"
+msgid "From Disk"
+msgstr "Do Disco"
+
+msgctxt "@title:tab"
+msgid "General"
+msgstr "Geral"
+
+msgctxt "@option"
+msgid "Help"
+msgstr "Ajuda"
+
+msgctxt "@option"
+msgid "Ignore"
+msgstr "Ignorar"
+
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr "Inicializando gestor de pacotes..."
+
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "Installando complemento {package_id}..."
 
-#: UM/PackageManager.py:619
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr "Arquivo Inválido"
+
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "Assentar no plano"
+
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
+msgstr "Deitar o objeto na plataforma de impressão..."
+
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr "Saiba mais"
+
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "Carregando"
+
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr "Carregando UI..."
+
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr "Carregando complemento {plugin_id}..."
+
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "Carregando complementos..."
+
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "Carregando preferências..."
+
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "Provedor de Contêiner Local"
+
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "Arquivo Local"
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "Dispositivo de Saída para Arquivo Local"
+
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr "Travar Modelo"
+
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Permite ler arquivos Wavefront OBJ."
+
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Torna possível escrever arquivos Wavefront OBJ."
+
+msgctxt "@label"
+msgid "Mirror"
+msgstr "Espelho"
+
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Espelhar Modelo"
+
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Ferramenta de Espelhamento"
+
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Mover"
+
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Move Modelo"
+
+msgctxt "name"
+msgid "Move Tool"
+msgstr "Ferramenta de Movimentação"
+
+msgctxt "@option"
+msgid "No"
+msgstr "Não"
+
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr "Sem Modelos no Arquivo"
+
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Nenhuma nova versão foi encontrada."
+
+msgctxt "@option"
+msgid "No to All"
+msgstr "Não a Tudo"
+
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr "O OBJWriter não suporta modo binário."
+
+msgctxt "@action:button"
+msgid "OK"
+msgstr "OK"
+
+msgctxt "@option"
+msgid "OK"
+msgstr "OK"
+
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr "Rotação de Objeto"
+
+msgctxt "@option"
+msgid "Open"
+msgstr "Abrir"
+
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "Abrir Pasta"
+
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "Abre a pasta contendo o arquivo"
+
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Grava informação de registro em arquivo na sua pasta de configurações."
+
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Envia informação de registro para o console."
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "Permissão negada ao tentar salvar <filename>{0}</filename>"
+
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr "Por favor providencie um novo nome."
+
+msgctxt "@info:status"
+msgid "Plugin no longer scheduled to be installed."
+msgstr "Complemento não mais programado pra ser instalado."
+
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr "Complemento {} não foi carregado porque não pôde ser verificado."
+
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "Preferências"
+
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Impressoras"
+
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "Provê uma visão simples de malha sólida."
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "Provê contêineres de ajustes integrados que vêm com a instalação da aplicação."
+
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "Provê suporte à leitura de arquivos STL."
+
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "Provê suporte à escrita de arquivos STL."
+
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr "Provê a ferramenta de Espelhamento."
+
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr "Provê a ferramenta de Movimentação."
+
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Provê a ferramenta de Rotação."
+
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Provê a ferramenta de Escala."
+
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Provê a ferramenta de Seleção."
+
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Provê a ferramenta para manipular a câmera."
+
+msgctxt "@action:button"
+msgid "Reload"
+msgstr "Recarregar"
+
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr "Remover complemento"
+
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "Renomear"
+
+msgctxt "@action:button"
+msgid "Reset"
+msgstr "Restabelecer"
+
+msgctxt "@option"
+msgid "Reset"
+msgstr "Restabelecer"
+
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr "Restaurar de fábrica"
+
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr "Restaurar removerá todas as suas impressoras e perfis atuais! Tem certeza que quer restaurar?"
+
+msgctxt "@option"
+msgid "Restore Defaults"
+msgstr "Restaurar Defaults"
+
+msgctxt "@option"
+msgid "Retry"
+msgstr "Tentar Novamente"
+
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Rotacionar"
+
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Rotaciona Modelo"
+
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Ferramenta de Rotação"
+
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "Arquivo STL"
+
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "Arquivo STL (ASCII)"
+
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "Arquivo STL (Binário)"
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr "Leitor de STL"
+
+msgctxt "name"
+msgid "STL Writer"
+msgstr "Gerador de STL"
+
+msgctxt "@option"
+msgid "Save"
+msgstr "Salvar"
+
+msgctxt "@option"
+msgid "Save All"
+msgstr "Salvar Tudo"
+
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr "Salvar no Disco"
+
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr "Salva no Disco"
+
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr "Salvar no Disco"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "Salvo em <filename>{0}</filename>"
+
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "Salvando"
+
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "Salvando para <filename>{0}</filename>"
+
+msgctxt "@label"
+msgid "Scale"
+msgstr "Escala"
+
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Redimensiona Modelo"
+
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Ferramenta de Escala"
+
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "Redimensionando Objeto"
+
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr "Selecione a face a alinhar com a plataforma de impressão"
+
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Ferramenta de Seleção"
+
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Ajustes"
+
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "Simples"
+
+msgctxt "name"
+msgid "Simple View"
+msgstr "Visão Simples"
+
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "Alinhar Rotação"
+
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "Alinhar Redimensionamento"
+
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Algo deu errado ao salvar <filename>{0}</filename>: <message>{1}</message>"
+
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "O arquivo <filename>{0}</filename> já existe. Tem certeza que deseja sobrescrevê-lo?"
+
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+"O complemento foi instalado.\n"
+"Por favor reinicie a aplicação para ativar o complemento."
+
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr ""
+"O complemento foi removido.\n"
+"Por favor reinicie {0} para finalizar a desinstalação."
+
+msgctxt "@error"
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
+msgstr "O complemento {} não pôde ser carregado. Reinstalar o complemento pode resolver o problema."
+
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "A versão atual não suporta a verificação de atualizações."
+
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "Não há tipos de arquivos de escrita disponíveis!"
+
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr "Não há malha para salvar."
+
 #, python-brace-format
 msgctxt "@error:update"
 msgid ""
@@ -143,81 +579,123 @@ msgstr ""
 "{error}.\n"
 "Por favor tente atualizar novamente mais tarde."
 
-#: UM/PackageManager.py:622
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr "Houve alguns erros ao desinstalar os seguintes pacotes: {packages}"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr "Não há modelos em <filename>{0}</filename>."
+
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr "Isto irá fazer com que arquivos modificados sejam recarregados do disco."
+
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr "Para o Disco"
+
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr "Tente a última versão BETA e nos ajude a melhorar {application_name}."
+
+msgctxt "@label"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr "Não Foi Possível Abrir Arquivo"
+
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "Redimensionamento Uniforme"
+
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr "Erros ao desinstalar"
+
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr "Modo de saída não-suportado ao escrever STL."
+
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr "Verificador de Atualizações"
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr "Verificador de Atualizações"
+
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "Atualizando configuração..."
+
 msgctxt "@info:title"
 msgid "Updating error"
 msgstr "Erro ao atualizar"
 
-#: UM/PluginRegistry.py:332
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "Atualização de Versão"
+
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Aviso"
+
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Arquivo Wavefront OBJ"
+
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Leitor de Wavefront OBJ"
+
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Gerador de Wavefront OBJ"
+
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr "Gostaria de recarregar {filename}?"
+
+msgctxt "@option"
+msgid "Yes"
+msgstr "Sim"
+
+msgctxt "@option"
+msgid "Yes to All"
+msgstr "Sim a Tudo"
+
 msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr ""
-"O complemento foi instalado.\n"
-"Por favor reinicie a aplicação para ativar o complemento."
+msgid "Your configuration seems to be corrupt."
+msgstr "Sua configuração parece estar corrompida."
 
-#: UM/PluginRegistry.py:398
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr "Complemento {} não foi carregado porque não pôde ser verificado."
-
-#: UM/PluginRegistry.py:503
-msgctxt "@action:button"
-msgid "Dismiss"
-msgstr "Dispensar"
-
-#: UM/PluginRegistry.py:516
-msgctxt "@error"
-msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
-msgstr "O complemento {} não pôde ser carregado. Reinstalar o complemento pode resolver o problema."
-
-#: UM/PluginRegistry.py:520
-msgctxt "@action:button"
-msgid "Remove plugin"
-msgstr "Remover complemento"
-
-#: UM/PluginRegistry.py:538
-msgctxt "@info:status"
-msgid "Plugin no longer scheduled to be installed."
-msgstr "Complemento não mais programado pra ser instalado."
-
-#: UM/PluginRegistry.py:544
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
 msgstr ""
-"O complemento foi removido.\n"
-"Por favor reinicie {0} para finalizar a desinstalação."
+"Sua configuração parece estar corrompida. Algo parece estar errado com os seguintes perfis:\n"
+"- {profiles}\n"
+" Você gostaria de restaurar os ajustes de fábrica? A restauração removerá todos os seus perfis e impressoras atuais."
 
-#: UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "Do Disco"
-
-#: UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:225
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Erro"
-
-#: UM/Qt/Duration.py:130
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}d {1:0>2}h {2:0>2}min"
 
-#: UM/Qt/Duration.py:132
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}h {1:0>2}min"
 
-#: UM/Qt/Duration.py:135
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -225,7 +703,6 @@ msgid_plural "{0} days"
 msgstr[0] "{0} dia"
 msgstr[1] "{0} dias"
 
-#: UM/Qt/Duration.py:135 UM/Qt/Duration.py:137
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -233,7 +710,6 @@ msgid_plural "{0} hours"
 msgstr[0] "{0} hora"
 msgstr[1] "{0} horas"
 
-#: UM/Qt/Duration.py:135 UM/Qt/Duration.py:137 UM/Qt/Duration.py:139
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -241,668 +717,15 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuto"
 msgstr[1] "{0} minutos"
 
-#: UM/Qt/QtApplication.py:210 UM/Qt/QtApplication.py:231
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "Carregando complementos..."
-
-#: UM/Qt/QtApplication.py:212
-#, python-brace-format
-msgctxt "@info:progress"
-msgid "Loading plugin {plugin_id}..."
-msgstr "Carregando complemento {plugin_id}..."
-
-#: UM/Qt/QtApplication.py:218
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr "Inicializando gestor de pacotes..."
-
-#: UM/Qt/QtApplication.py:226
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr "Sua configuração parece estar corrompida."
-
-#: UM/Qt/QtApplication.py:228
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr "Erros de configuração"
-
-#: UM/Qt/QtApplication.py:240
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "Atualizando configuração..."
-
-#: UM/Qt/QtApplication.py:246
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "Carregando preferências..."
-
-#: UM/Qt/QtApplication.py:339
-msgctxt "@info:progress"
-msgid "Loading UI..."
-msgstr "Carregando UI..."
-
-#: UM/Qt/qml/UM/MessageDialog.qml:99
-msgctxt "@option"
-msgid "OK"
-msgstr "OK"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:100
-msgctxt "@option"
-msgid "Open"
-msgstr "Abrir"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:101
-msgctxt "@option"
-msgid "Save"
-msgstr "Salvar"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:102
-msgctxt "@option"
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:103
-msgctxt "@option"
-msgid "Close"
-msgstr "Fechar"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:104
-msgctxt "@option"
-msgid "Discard"
-msgstr "Descartar"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:105
-msgctxt "@option"
-msgid "Apply"
-msgstr "Aplicar"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:106
-msgctxt "@option"
-msgid "Reset"
-msgstr "Restabelecer"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:107
-msgctxt "@option"
-msgid "Restore Defaults"
-msgstr "Restaurar Defaults"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:108
-msgctxt "@option"
-msgid "Help"
-msgstr "Ajuda"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:109
-msgctxt "@option"
-msgid "Save All"
-msgstr "Salvar Tudo"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:110
-msgctxt "@option"
-msgid "Yes"
-msgstr "Sim"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:111
-msgctxt "@option"
-msgid "Yes to All"
-msgstr "Sim a Tudo"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:112
-msgctxt "@option"
-msgid "No"
-msgstr "Não"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:113
-msgctxt "@option"
-msgid "No to All"
-msgstr "Não a Tudo"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:114
-msgctxt "@option"
-msgid "Abort"
-msgstr "Abortar"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:115
-msgctxt "@option"
-msgid "Retry"
-msgstr "Tentar Novamente"
-
-#: UM/Qt/qml/UM/MessageDialog.qml:116
-msgctxt "@option"
-msgid "Ignore"
-msgstr "Ignorar"
-
-#: UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "Confirme Remoção"
-
-#: UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Tem certeza que deseja remover %1? Isto não pode ser desfeito!"
-
-#: UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Impressoras"
-
-#: UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Tipo"
-
-#: UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
-msgctxt "@title:window"
-msgid "Preferences"
-msgstr "Preferências"
-
-#: UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
-msgctxt "@title:tab"
-msgid "General"
-msgstr "Geral"
-
-#: UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Ajustes"
-
-#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "Renomear"
-
-#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr "Por favor providencie um novo nome."
-
-#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
-msgctxt "@action:button"
-msgid "OK"
-msgstr "OK"
-
-#: UM/Scene/Scene.py:194
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr "Gostaria de recarregar {filename}?"
-
-#: UM/Scene/Scene.py:196
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr "Arquivo foi modificado"
-
-#: UM/Scene/Scene.py:197
-msgctxt "@action:button"
-msgid "Reload"
-msgstr "Recarregar"
-
-#: UM/Scene/Scene.py:199
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr "Isto irá fazer com que arquivos modificados sejam recarregados do disco."
-
-#: UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "A configuração da versão antiga de {0} foi importada."
-
-#: UM/VersionUpgradeManager.py:174 plugins/UpdateChecker/UpdateChecker.py:171
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "Atualização de Versão"
-
-#: UM/View/GL/OpenGL.py:68
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "Falha em inicializar OpenGL"
-
-#: UM/View/GL/OpenGL.py:78
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte a Objetos de Framebuffer. Por favor verifique os drivers de sua placa de vídeo."
-
-#: plugins/ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Registrador de Console"
-
-#: plugins/ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Envia informação de registro para o console."
-
-#: plugins/FileHandlers/OBJReader/__init__.py:15
-#: plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Arquivo Wavefront OBJ"
-
-#: plugins/FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Permite ler arquivos Wavefront OBJ."
-
-#: plugins/FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Leitor de Wavefront OBJ"
-
-#: plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr "O OBJWriter não suporta modo binário."
-
-#: plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-#: plugins/FileHandlers/STLWriter/STLWriter.py:29
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr "Não há malha para salvar."
-
-#: plugins/FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Torna possível escrever arquivos Wavefront OBJ."
-
-#: plugins/FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Gerador de Wavefront OBJ"
-
-#: plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "Arquivo STL"
-
-#: plugins/FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Provê suporte à leitura de arquivos STL."
-
-#: plugins/FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "Leitor de STL"
-
-#: plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr "Modo de saída não-suportado ao escrever STL."
-
-#: plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "Arquivo STL (ASCII)"
-
-#: plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "Arquivo STL (Binário)"
-
-#: plugins/FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Provê suporte à escrita de arquivos STL."
-
-#: plugins/FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "Gerador de STL"
-
-#: plugins/FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
-msgstr "Registrador em Arquivo"
-
-#: plugins/FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Grava informação de registro em arquivo na sua pasta de configurações."
-
-#: plugins/LocalContainerProvider/plugin.json
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr "Provedor de Contêiner Local"
-
-#: plugins/LocalContainerProvider/plugin.json
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "Provê contêineres de ajustes integrados que vêm com a instalação da aplicação."
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "Arquivo Local"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
-msgstr "Salvar no Disco"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
-msgstr "Salva no Disco"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr "Para o Disco"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr "Salvar no Disco"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "Não há tipos de arquivos de escrita disponíveis!"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "O Arquivo Já Existe"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-#, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "O arquivo <filename>{0}</filename> já existe. Tem certeza que deseja sobrescrevê-lo?"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "Salvando para <filename>{0}</filename>"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "Salvando"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Permissão negada ao tentar salvar <filename>{0}</filename>"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Não foi possível salvar para <filename>{0}</filename>: <message>{1}</message>"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "Salvo em <filename>{0}</filename>"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:205
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Arquivo Salvo"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:207
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "Abrir Pasta"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:207
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "Abre a pasta contendo o arquivo"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:224
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Algo deu errado ao salvar <filename>{0}</filename>: <message>{1}</message>"
-
-#: plugins/LocalFileOutputDevice/plugin.json
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Permite salvar em arquivos locais."
-
-#: plugins/LocalFileOutputDevice/plugin.json
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Dispositivo de Saída para Arquivo Local"
-
-#: plugins/Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Ferramenta de Câmera"
-
-#: plugins/Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Provê a ferramenta para manipular a câmera."
-
-#: plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Espelho"
-
-#: plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Espelhar Modelo"
-
-#: plugins/Tools/MirrorTool/plugin.json
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Ferramenta de Espelhamento"
-
-#: plugins/Tools/MirrorTool/plugin.json
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Provê a ferramenta de Espelhamento."
-
-#: plugins/Tools/RotateTool/RotateTool.py:353
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr "Deitar o objeto na plataforma de impressão..."
-
-#: plugins/Tools/RotateTool/RotateTool.py:356
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr "Rotação de Objeto"
-
-#: plugins/Tools/RotateTool/RotateTool.qml:40
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "Assentar no plano"
-
-#: plugins/Tools/RotateTool/RotateTool.qml:63
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr "Selecione a face a alinhar com a plataforma de impressão"
-
-#: plugins/Tools/RotateTool/RotateTool.qml:87
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "Alinhar Rotação"
-
-#: plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Rotacionar"
-
-#: plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Rotaciona Modelo"
-
-#: plugins/Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Provê a ferramenta de Rotação."
-
-#: plugins/Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Ferramenta de Rotação"
-
-#: plugins/Tools/ScaleTool/ScaleTool.qml:93
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "Alinhar Redimensionamento"
-
-#: plugins/Tools/ScaleTool/ScaleTool.qml:120
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "Redimensionamento Uniforme"
-
-#: plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Escala"
-
-#: plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Redimensiona Modelo"
-
-#: plugins/Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Provê a ferramenta de Escala."
-
-#: plugins/Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Ferramenta de Escala"
-
-#: plugins/Tools/SelectionTool/plugin.json
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Provê a ferramenta de Seleção."
-
-#: plugins/Tools/SelectionTool/plugin.json
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "Ferramenta de Seleção"
-
-#: plugins/Tools/TranslateTool/TranslateTool.qml:184
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr "Travar Modelo"
-
-#: plugins/Tools/TranslateTool/TranslateTool.qml:200
-msgctxt "@option:check"
-msgid "Drop Down Model"
-msgstr ""
-
-#: plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Mover"
-
-#: plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Move Modelo"
-
-#: plugins/Tools/TranslateTool/plugin.json
-msgctxt "name"
-msgid "Move Tool"
-msgstr "Ferramenta de Movimentação"
-
-#: plugins/Tools/TranslateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Move tool."
-msgstr "Provê a ferramenta de Movimentação."
-
-#: plugins/UpdateChecker/NewBetaVersionMessage.py:18
-#: plugins/UpdateChecker/NewVersionMessage.py:18
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "{application_name} {version_number} está disponível!"
 
-#: plugins/UpdateChecker/NewBetaVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr "Tente a última versão BETA e nos ajude a melhorar {application_name}."
-
-#: plugins/UpdateChecker/NewBetaVersionMessage.py:28
-#: plugins/UpdateChecker/NewVersionMessage.py:28
-msgctxt "@action:button"
-msgid "Download"
-msgstr "Baixar"
-
-#: plugins/UpdateChecker/NewBetaVersionMessage.py:31
-#: plugins/UpdateChecker/NewVersionMessage.py:30
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr "Saiba mais"
-
-#: plugins/UpdateChecker/NewVersionMessage.py:22
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} provê uma experiência melhor e mais confiável de impressão."
-
-#: plugins/UpdateChecker/UpdateChecker.py:42
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr "Verificador de Atualizações"
-
-#: plugins/UpdateChecker/UpdateChecker.py:43
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Verificar Novas Atualizações"
-
-#: plugins/UpdateChecker/UpdateChecker.py:115
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "A versão atual não suporta a verificação de atualizações."
-
-#: plugins/UpdateChecker/UpdateChecker.py:116
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Aviso"
-
-#: plugins/UpdateChecker/UpdateChecker.py:170
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Nenhuma nova versão foi encontrada."
-
-#: plugins/UpdateChecker/plugin.json
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Verifica por atualizações do software."
-
-#: plugins/UpdateChecker/plugin.json
-msgctxt "name"
-msgid "Update Checker"
-msgstr "Verificador de Atualizações"
-
-#: plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "Simples"
-
-#: plugins/Views/SimpleView/plugin.json
-msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "Provê uma visão simples de malha sólida."
-
-#: plugins/Views/SimpleView/plugin.json
-msgctxt "name"
-msgid "Simple View"
-msgstr "Visão Simples"
 
 #~ msgctxt "@info"
 #~ msgid "A new version is available!"
