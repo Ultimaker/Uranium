@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-02 14:18+0000\n"
+"POT-Creation-Date: 2023-06-08 16:40+0200\n"
 "PO-Revision-Date: 2017-09-27 12:27+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Finnish <info@bothof.nl>\n"
@@ -16,132 +16,524 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: UM/ConfigurationErrorMessage.py:32
-#: plugins/Tools/RotateTool/RotateTool.qml:19
-#: plugins/Tools/ScaleTool/ScaleTool.qml:67
-msgctxt "@action:button"
-msgid "Reset"
-msgstr "Palauta"
-
-#: UM/ConfigurationErrorMessage.py:46
 #, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr "Aikaisemman {0} -version määritykset tuotiin."
+
+msgctxt "@option"
+msgid "Abort"
 msgstr ""
 
-#: UM/ConfigurationErrorMessage.py:51
-msgctxt "@title:window"
-msgid "Reset to factory"
-msgstr ""
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
+msgstr "Kaikki tiedostot (*)"
 
-#: UM/ConfigurationErrorMessage.py:53
-msgctxt "@label"
-msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
-msgstr ""
-
-#: UM/FileHandler/FileHandler.py:71 UM/PluginRegistry.py:929
-#: UM/Settings/Models/InstanceContainersModel.py:193
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Kaikki tuetut tyypit ({0})"
 
-#: UM/FileHandler/FileHandler.py:72 UM/PluginRegistry.py:930
-#: UM/Settings/Models/InstanceContainersModel.py:196
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr "Kaikki tiedostot (*)"
-
-#: UM/FileHandler/ReadFileJob.py:41
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Cannot open files of the type of <filename>{0}</filename>"
+msgctxt "@option"
+msgid "Apply"
 msgstr ""
 
-#: UM/FileHandler/ReadFileJob.py:44
-msgctxt "@info:title"
-msgid "Invalid File"
-msgstr "Virheellinen tiedosto"
+msgctxt "@label (%1 is object name)"
+msgid "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Haluatko varmasti poistaa kappaleen %1? Tätä ei voida kumota!"
 
-#: UM/FileHandler/ReadFileJob.py:59
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr ""
-
-#: UM/FileHandler/ReadFileJob.py:62 UM/FileHandler/ReadFileJob.py:98
-msgctxt "@info:title"
-msgid "Unable to Open File"
-msgstr ""
-
-#: UM/FileHandler/ReadFileJob.py:71
-msgctxt "@info:title"
-msgid "Loading"
-msgstr "Ladataan"
-
-#: UM/FileHandler/ReadFileJob.py:87
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr ""
-
-#: UM/FileHandler/ReadFileJob.py:90
-msgctxt "@info:title"
-msgid "No Models in File"
-msgstr ""
-
-#: UM/FileHandler/ReadFileJob.py:95
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr ""
-
-#: UM/Mesh/ReadMeshJob.py:72
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr ""
 
-#: UM/Mesh/ReadMeshJob.py:74
-msgctxt "@info:title"
-msgid "Scaling Object"
-msgstr "Skaalataan kappaletta"
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Kameratyökalu"
 
-#: UM/PackageManager.py:294
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Peruuta"
+
+msgctxt "@option"
+msgid "Cancel"
+msgstr ""
+
 #, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr ""
 
-#: UM/PackageManager.py:296
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
+msgstr "Tarkista päivitykset"
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Tarkistaa, onko ohjelmistopäivityksiä saatavilla."
+
+msgctxt "@option"
+msgid "Close"
+msgstr ""
+
 msgctxt "@info:title"
-msgid "Uninstalling errors"
+msgid "Configuration errors"
 msgstr ""
 
-#: UM/PackageManager.py:308
+msgctxt "@title:window"
+msgid "Confirm Remove"
+msgstr "Vahvista poisto"
+
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Konsolin tiedonkeruu"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</message>"
+
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Kriittisiä OpenGL-lisäosia puuttuu. Tämä ohjelma vaatii tuen Framebuffer-objekteille. Tarkista näytönohjaimen ajurit."
+
+msgctxt "@option"
+msgid "Discard"
+msgstr ""
+
+msgctxt "@action:button"
+msgid "Dismiss"
+msgstr ""
+
+msgctxt "@action:button"
+msgid "Download"
+msgstr "Lataa"
+
+msgctxt "@option:check"
+msgid "Drop Down Model"
+msgstr ""
+
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
+
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Virhe"
+
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "OpenGL:n alustus epäonnistui"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
+msgstr ""
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
+msgstr ""
+
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "Tiedosto on jo olemassa"
+
+msgctxt "name"
+msgid "File Logger"
+msgstr "Tiedonkeruuohjelma"
+
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Tiedosto tallennettu"
+
+msgctxt "@info:title"
+msgid "File has been modified"
+msgstr ""
+
+msgctxt "@menu"
+msgid "From Disk"
+msgstr ""
+
+msgctxt "@title:tab"
+msgid "General"
+msgstr "Yleiset"
+
+msgctxt "@option"
+msgid "Help"
+msgstr ""
+
+msgctxt "@option"
+msgid "Ignore"
+msgstr ""
+
+msgctxt "@info:progress"
+msgid "Initializing package manager..."
+msgstr ""
+
 #, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr ""
 
-#: UM/PackageManager.py:619
-#, python-brace-format
-msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr ""
-
-#: UM/PackageManager.py:622
 msgctxt "@info:title"
-msgid "Updating error"
+msgid "Invalid File"
+msgstr "Virheellinen tiedosto"
+
+msgctxt "@action:button"
+msgid "Lay flat"
+msgstr "Aseta latteaksi"
+
+msgctxt "@label"
+msgid "Laying object flat on buildplate..."
 msgstr ""
 
-#: UM/PluginRegistry.py:332
+msgctxt "@action:button"
+msgid "Learn more"
+msgstr ""
+
+msgctxt "@info:title"
+msgid "Loading"
+msgstr "Ladataan"
+
+msgctxt "@info:progress"
+msgid "Loading UI..."
+msgstr ""
+
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Loading plugin {plugin_id}..."
+msgstr ""
+
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr "Ladataan lisäosia..."
+
+msgctxt "@info:progress"
+msgid "Loading preferences..."
+msgstr "Ladataan lisäasetuksia..."
+
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr ""
+
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "Paikallinen tiedosto"
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "Paikallisen tiedoston tulostusväline"
+
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr ""
+
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
+
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
+
+msgctxt "@label"
+msgid "Mirror"
+msgstr "Peilaus"
+
+msgctxt "@info:tooltip"
+msgid "Mirror Model"
+msgstr "Peilaa mallia"
+
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Peilaustyökalu"
+
+msgctxt "@action:button"
+msgid "Move"
+msgstr "Siirrä"
+
+msgctxt "@info:tooltip"
+msgid "Move Model"
+msgstr "Siirrä mallia"
+
+msgctxt "name"
+msgid "Move Tool"
+msgstr "Siirtotyökalu"
+
+msgctxt "@option"
+msgid "No"
+msgstr ""
+
+msgctxt "@info:title"
+msgid "No Models in File"
+msgstr ""
+
+msgctxt "@info"
+msgid "No new version was found."
+msgstr "Uutta versiota ei löytynyt."
+
+msgctxt "@option"
+msgid "No to All"
+msgstr ""
+
+msgctxt "@error:not supported"
+msgid "OBJWriter does not support non-text mode."
+msgstr ""
+
+msgctxt "@action:button"
+msgid "OK"
+msgstr ""
+
+msgctxt "@option"
+msgid "OK"
+msgstr ""
+
+msgctxt "@title"
+msgid "Object Rotation"
+msgstr ""
+
+msgctxt "@option"
+msgid "Open"
+msgstr ""
+
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "Avaa kansio"
+
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "Avaa tiedoston sisältävän kansion"
+
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Lähettää lokitiedot asetuskansion tiedostoon."
+
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Lähettää lokitiedot konsoliin."
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "Lupa evätty yritettäessä tallentaa tiedostoon <filename>{0}</filename>"
+
+msgctxt "@info"
+msgid "Please provide a new name."
+msgstr ""
+
+msgctxt "@info:status"
+msgid "Plugin no longer scheduled to be installed."
+msgstr ""
+
+msgctxt "@error:untrusted"
+msgid "Plugin {} was not loaded because it could not be verified."
+msgstr ""
+
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "Lisäasetukset"
+
+msgctxt "@title:tab"
+msgid "Printers"
+msgstr "Tulostimet"
+
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "Näyttää yksinkertaisen kiinteän verkkonäkymän."
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr ""
+
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "Tukee STL-tiedostojen lukemista."
+
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "Tukee STL-tiedostojen kirjoittamista."
+
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr "Näyttää peilaustyökalun."
+
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr "Näyttää siirtotyökalun."
+
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr "Näyttää pyöritystyökalun."
+
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Näyttää skaalaustyökalun."
+
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Näyttää valintatyökalun."
+
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Työkalu kameran käsittelyyn."
+
+msgctxt "@action:button"
+msgid "Reload"
+msgstr ""
+
+msgctxt "@action:button"
+msgid "Remove plugin"
+msgstr ""
+
+msgctxt "@title:window"
+msgid "Rename"
+msgstr "Nimeä uudelleen"
+
+msgctxt "@action:button"
+msgid "Reset"
+msgstr "Palauta"
+
+msgctxt "@option"
+msgid "Reset"
+msgstr ""
+
+msgctxt "@title:window"
+msgid "Reset to factory"
+msgstr ""
+
+msgctxt "@label"
+msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
+msgstr ""
+
+msgctxt "@option"
+msgid "Restore Defaults"
+msgstr ""
+
+msgctxt "@option"
+msgid "Retry"
+msgstr ""
+
+msgctxt "@label"
+msgid "Rotate"
+msgstr "Pyöritys"
+
+msgctxt "@info:tooltip"
+msgid "Rotate Model"
+msgstr "Pyöritä mallia"
+
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr "Pyöritystyökalu"
+
+msgctxt "@item:inlistbox"
+msgid "STL File"
+msgstr "STL-tiedosto"
+
+msgctxt "@item:inlistbox"
+msgid "STL File (ASCII)"
+msgstr "STL-tiedosto (ASCII)"
+
+msgctxt "@item:inlistbox"
+msgid "STL File (Binary)"
+msgstr "STL-tiedosto (binaari)"
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STL-lukija"
+
+msgctxt "name"
+msgid "STL Writer"
+msgstr "STL-kirjoitin"
+
+msgctxt "@option"
+msgid "Save"
+msgstr ""
+
+msgctxt "@option"
+msgid "Save All"
+msgstr ""
+
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to Disk"
+msgstr ""
+
+msgctxt "@info:tooltip"
+msgid "Save to Disk"
+msgstr ""
+
+msgctxt "@title:window"
+msgid "Save to Disk"
+msgstr ""
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "Tallennettu tiedostoon <filename>{0}</filename>"
+
+msgctxt "@info:title"
+msgid "Saving"
+msgstr "Tallennetaan"
+
+#, python-brace-format
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "Tallennetaan tiedostoon <filename>{0}</filename>"
+
+msgctxt "@label"
+msgid "Scale"
+msgstr "Skaalaus"
+
+msgctxt "@info:tooltip"
+msgid "Scale Model"
+msgstr "Skaalaa mallia"
+
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Skaalaustyökalu"
+
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr "Skaalataan kappaletta"
+
+msgctxt "@action:button"
+msgid "Select face to align to the build plate"
+msgstr ""
+
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Valintatyökalu"
+
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Asetukset"
+
+msgctxt "@item:inmenu"
+msgid "Simple"
+msgstr "Yksinkertainen"
+
+msgctxt "name"
+msgid "Simple View"
+msgstr "Yksinkertainen näkymä"
+
+msgctxt "@action:checkbox"
+msgid "Snap Rotation"
+msgstr "Kohdista pyöritys"
+
+msgctxt "@option:check"
+msgid "Snap Scaling"
+msgstr "Kohdista skaalaus"
+
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+msgstr ""
+
+#, python-brace-format
+msgctxt "@label Don't translate the XML tag <filename>!"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti kirjoittaa sen päälle?"
+
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
@@ -150,32 +542,6 @@ msgstr ""
 "Laajennus on asennettu.\n"
 "Ota laajennus käyttöön käynnistämällä sovellus uudelleen."
 
-#: UM/PluginRegistry.py:398
-msgctxt "@error:untrusted"
-msgid "Plugin {} was not loaded because it could not be verified."
-msgstr ""
-
-#: UM/PluginRegistry.py:503
-msgctxt "@action:button"
-msgid "Dismiss"
-msgstr ""
-
-#: UM/PluginRegistry.py:516
-msgctxt "@error"
-msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
-msgstr ""
-
-#: UM/PluginRegistry.py:520
-msgctxt "@action:button"
-msgid "Remove plugin"
-msgstr ""
-
-#: UM/PluginRegistry.py:538
-msgctxt "@info:status"
-msgid "Plugin no longer scheduled to be installed."
-msgstr ""
-
-#: UM/PluginRegistry.py:544
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
@@ -183,32 +549,144 @@ msgid ""
 "Please restart {0} to finish uninstall."
 msgstr ""
 
-#: UM/Qt/Bindings/FileProviderModel.py:50
-msgctxt "@menu"
-msgid "From Disk"
+msgctxt "@error"
+msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
 msgstr ""
 
-#: UM/Qt/Bindings/OutputDeviceManagerProxy.py:156
-#: UM/Qt/Bindings/OutputDeviceManagerProxy.py:160
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:215
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:225
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Virhe"
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr "Käyttämäsi versio ei tue päivitysten tarkistusta."
 
-#: UM/Qt/Duration.py:130
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr "Käytettävissä ei ole tiedostotyyppejä, joilla voidaan kirjoittaa!"
+
+msgctxt "@error:no mesh"
+msgid "There is no mesh to write."
+msgstr ""
+
+#, python-brace-format
+msgctxt "@error:update"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr ""
+
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr ""
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There where no models in <filename>{0}</filename>."
+msgstr ""
+
+msgctxt "@action:description"
+msgid "This will trigger the modified files to reload from disk."
+msgstr ""
+
+msgctxt "@item:inmenu About saving files to the hard drive"
+msgid "To Disk"
+msgstr ""
+
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Try out the latest BETA version and help us improve {application_name}."
+msgstr ""
+
+msgctxt "@label"
+msgid "Type"
+msgstr "Tyyppi"
+
+msgctxt "@info:title"
+msgid "Unable to Open File"
+msgstr ""
+
+msgctxt "@option:check"
+msgid "Uniform Scaling"
+msgstr "Tasainen skaalaus"
+
+msgctxt "@info:title"
+msgid "Uninstalling errors"
+msgstr ""
+
+msgctxt "@error:not supported"
+msgid "Unsupported output mode writing STL to stream."
+msgstr ""
+
+msgctxt "@item:inmenu"
+msgid "Update Checker"
+msgstr ""
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr "Päivitysten tarkistin"
+
+msgctxt "@info:progress"
+msgid "Updating configuration..."
+msgstr "Päivitetään määrityksiä..."
+
+msgctxt "@info:title"
+msgid "Updating error"
+msgstr ""
+
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr "Versiopäivitys"
+
+msgctxt "@info:title"
+msgid "Warning"
+msgstr "Varoitus"
+
+msgctxt "@item:inlistbox"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ -tiedosto"
+
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ -lukija"
+
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ -kirjoitin"
+
+#, python-brace-format
+msgctxt "@info"
+msgid "Would you like to reload {filename}?"
+msgstr ""
+
+msgctxt "@option"
+msgid "Yes"
+msgstr ""
+
+msgctxt "@option"
+msgid "Yes to All"
+msgstr ""
+
+msgctxt "@info:status"
+msgid "Your configuration seems to be corrupt."
+msgstr ""
+
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr ""
+
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2} p {1:0>2} h {2:0>2} min"
 
-#: UM/Qt/Duration.py:132
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2} h {1:0>2} min"
 
-#: UM/Qt/Duration.py:135
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -216,7 +694,6 @@ msgid_plural "{0} days"
 msgstr[0] "{0} päivä"
 msgstr[1] "{0} päivää"
 
-#: UM/Qt/Duration.py:135 UM/Qt/Duration.py:137
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -224,7 +701,6 @@ msgid_plural "{0} hours"
 msgstr[0] "{0} tunti"
 msgstr[1] "{0} tuntia"
 
-#: UM/Qt/Duration.py:135 UM/Qt/Duration.py:137 UM/Qt/Duration.py:139
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -232,668 +708,15 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuutti"
 msgstr[1] "{0} minuuttia"
 
-#: UM/Qt/QtApplication.py:210 UM/Qt/QtApplication.py:231
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr "Ladataan lisäosia..."
-
-#: UM/Qt/QtApplication.py:212
-#, python-brace-format
-msgctxt "@info:progress"
-msgid "Loading plugin {plugin_id}..."
-msgstr ""
-
-#: UM/Qt/QtApplication.py:218
-msgctxt "@info:progress"
-msgid "Initializing package manager..."
-msgstr ""
-
-#: UM/Qt/QtApplication.py:226
-msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt."
-msgstr ""
-
-#: UM/Qt/QtApplication.py:228
-msgctxt "@info:title"
-msgid "Configuration errors"
-msgstr ""
-
-#: UM/Qt/QtApplication.py:240
-msgctxt "@info:progress"
-msgid "Updating configuration..."
-msgstr "Päivitetään määrityksiä..."
-
-#: UM/Qt/QtApplication.py:246
-msgctxt "@info:progress"
-msgid "Loading preferences..."
-msgstr "Ladataan lisäasetuksia..."
-
-#: UM/Qt/QtApplication.py:339
-msgctxt "@info:progress"
-msgid "Loading UI..."
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:99
-msgctxt "@option"
-msgid "OK"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:100
-msgctxt "@option"
-msgid "Open"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:101
-msgctxt "@option"
-msgid "Save"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:102
-msgctxt "@option"
-msgid "Cancel"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:103
-msgctxt "@option"
-msgid "Close"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:104
-msgctxt "@option"
-msgid "Discard"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:105
-msgctxt "@option"
-msgid "Apply"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:106
-msgctxt "@option"
-msgid "Reset"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:107
-msgctxt "@option"
-msgid "Restore Defaults"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:108
-msgctxt "@option"
-msgid "Help"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:109
-msgctxt "@option"
-msgid "Save All"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:110
-msgctxt "@option"
-msgid "Yes"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:111
-msgctxt "@option"
-msgid "Yes to All"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:112
-msgctxt "@option"
-msgid "No"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:113
-msgctxt "@option"
-msgid "No to All"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:114
-msgctxt "@option"
-msgid "Abort"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:115
-msgctxt "@option"
-msgid "Retry"
-msgstr ""
-
-#: UM/Qt/qml/UM/MessageDialog.qml:116
-msgctxt "@option"
-msgid "Ignore"
-msgstr ""
-
-#: UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:15
-msgctxt "@title:window"
-msgid "Confirm Remove"
-msgstr "Vahvista poisto"
-
-#: UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
-msgctxt "@label (%1 is object name)"
-msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Haluatko varmasti poistaa kappaleen %1? Tätä ei voida kumota!"
-
-#: UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr "Tulostimet"
-
-#: UM/Qt/qml/UM/Preferences/MachinesPage.qml:40
-msgctxt "@label"
-msgid "Type"
-msgstr "Tyyppi"
-
-#: UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:17
-msgctxt "@title:window"
-msgid "Preferences"
-msgstr "Lisäasetukset"
-
-#: UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:141
-msgctxt "@title:tab"
-msgid "General"
-msgstr "Yleiset"
-
-#: UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:142
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Asetukset"
-
-#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
-msgctxt "@title:window"
-msgid "Rename"
-msgstr "Nimeä uudelleen"
-
-#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
-msgctxt "@info"
-msgid "Please provide a new name."
-msgstr ""
-
-#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:78
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Peruuta"
-
-#: UM/Qt/qml/UM/Preferences/RenameDialog.qml:84
-msgctxt "@action:button"
-msgid "OK"
-msgstr ""
-
-#: UM/Scene/Scene.py:194
-#, python-brace-format
-msgctxt "@info"
-msgid "Would you like to reload {filename}?"
-msgstr ""
-
-#: UM/Scene/Scene.py:196
-msgctxt "@info:title"
-msgid "File has been modified"
-msgstr ""
-
-#: UM/Scene/Scene.py:197
-msgctxt "@action:button"
-msgid "Reload"
-msgstr ""
-
-#: UM/Scene/Scene.py:199
-msgctxt "@action:description"
-msgid "This will trigger the modified files to reload from disk."
-msgstr ""
-
-#: UM/VersionUpgradeManager.py:173
-#, python-brace-format
-msgctxt "@info:version-upgrade"
-msgid "A configuration from an older version of {0} was imported."
-msgstr "Aikaisemman {0} -version määritykset tuotiin."
-
-#: UM/VersionUpgradeManager.py:174 plugins/UpdateChecker/UpdateChecker.py:171
-msgctxt "@info:title"
-msgid "Version Upgrade"
-msgstr "Versiopäivitys"
-
-#: UM/View/GL/OpenGL.py:68
-msgctxt "@message"
-msgid "Failed to Initialize OpenGL"
-msgstr "OpenGL:n alustus epäonnistui"
-
-#: UM/View/GL/OpenGL.py:78
-msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Kriittisiä OpenGL-lisäosia puuttuu. Tämä ohjelma vaatii tuen Framebuffer-objekteille. Tarkista näytönohjaimen ajurit."
-
-#: plugins/ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Konsolin tiedonkeruu"
-
-#: plugins/ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Lähettää lokitiedot konsoliin."
-
-#: plugins/FileHandlers/OBJReader/__init__.py:15
-#: plugins/FileHandlers/OBJWriter/__init__.py:15
-msgctxt "@item:inlistbox"
-msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ -tiedosto"
-
-#: plugins/FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
-
-#: plugins/FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ -lukija"
-
-#: plugins/FileHandlers/OBJWriter/OBJWriter.py:25
-msgctxt "@error:not supported"
-msgid "OBJWriter does not support non-text mode."
-msgstr ""
-
-#: plugins/FileHandlers/OBJWriter/OBJWriter.py:32
-#: plugins/FileHandlers/STLWriter/STLWriter.py:29
-msgctxt "@error:no mesh"
-msgid "There is no mesh to write."
-msgstr ""
-
-#: plugins/FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
-
-#: plugins/FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ -kirjoitin"
-
-#: plugins/FileHandlers/STLReader/__init__.py:14
-msgctxt "@item:inlistbox"
-msgid "STL File"
-msgstr "STL-tiedosto"
-
-#: plugins/FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Tukee STL-tiedostojen lukemista."
-
-#: plugins/FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL-lukija"
-
-#: plugins/FileHandlers/STLWriter/STLWriter.py:38
-msgctxt "@error:not supported"
-msgid "Unsupported output mode writing STL to stream."
-msgstr ""
-
-#: plugins/FileHandlers/STLWriter/__init__.py:17
-msgctxt "@item:inlistbox"
-msgid "STL File (ASCII)"
-msgstr "STL-tiedosto (ASCII)"
-
-#: plugins/FileHandlers/STLWriter/__init__.py:23
-msgctxt "@item:inlistbox"
-msgid "STL File (Binary)"
-msgstr "STL-tiedosto (binaari)"
-
-#: plugins/FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Tukee STL-tiedostojen kirjoittamista."
-
-#: plugins/FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL-kirjoitin"
-
-#: plugins/FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
-msgstr "Tiedonkeruuohjelma"
-
-#: plugins/FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Lähettää lokitiedot asetuskansion tiedostoon."
-
-#: plugins/LocalContainerProvider/plugin.json
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr ""
-
-#: plugins/LocalContainerProvider/plugin.json
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr ""
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:30
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "Paikallinen tiedosto"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:31
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to Disk"
-msgstr ""
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:32
-msgctxt "@info:tooltip"
-msgid "Save to Disk"
-msgstr ""
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:36
-msgctxt "@item:inmenu About saving files to the hard drive"
-msgid "To Disk"
-msgstr ""
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:58
-msgctxt "@title:window"
-msgid "Save to Disk"
-msgstr ""
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:88
-msgctxt "@info:warning"
-msgid "There are no file types available to write with!"
-msgstr "Käytettävissä ei ole tiedostotyyppejä, joilla voidaan kirjoittaa!"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "Tiedosto on jo olemassa"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:136
-#, python-brace-format
-msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti kirjoittaa sen päälle?"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:181
-#, python-brace-format
-msgctxt "@info:progress Don't translate the XML tags <filename>!"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "Tallennetaan tiedostoon <filename>{0}</filename>"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:182
-msgctxt "@info:title"
-msgid "Saving"
-msgstr "Tallennetaan"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:190
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Lupa evätty yritettäessä tallentaa tiedostoon <filename>{0}</filename>"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:193
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:213
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</message>"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:204
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tags <filename>!"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "Tallennettu tiedostoon <filename>{0}</filename>"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:205
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Tiedosto tallennettu"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:207
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "Avaa kansio"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:207
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "Avaa tiedoston sisältävän kansion"
-
-#: plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:224
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
-
-#: plugins/LocalFileOutputDevice/plugin.json
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
-
-#: plugins/LocalFileOutputDevice/plugin.json
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Paikallisen tiedoston tulostusväline"
-
-#: plugins/Tools/CameraTool/plugin.json
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Kameratyökalu"
-
-#: plugins/Tools/CameraTool/plugin.json
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Työkalu kameran käsittelyyn."
-
-#: plugins/Tools/MirrorTool/__init__.py:12
-msgctxt "@label"
-msgid "Mirror"
-msgstr "Peilaus"
-
-#: plugins/Tools/MirrorTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Mirror Model"
-msgstr "Peilaa mallia"
-
-#: plugins/Tools/MirrorTool/plugin.json
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Peilaustyökalu"
-
-#: plugins/Tools/MirrorTool/plugin.json
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Näyttää peilaustyökalun."
-
-#: plugins/Tools/RotateTool/RotateTool.py:353
-msgctxt "@label"
-msgid "Laying object flat on buildplate..."
-msgstr ""
-
-#: plugins/Tools/RotateTool/RotateTool.py:356
-msgctxt "@title"
-msgid "Object Rotation"
-msgstr ""
-
-#: plugins/Tools/RotateTool/RotateTool.qml:40
-msgctxt "@action:button"
-msgid "Lay flat"
-msgstr "Aseta latteaksi"
-
-#: plugins/Tools/RotateTool/RotateTool.qml:63
-msgctxt "@action:button"
-msgid "Select face to align to the build plate"
-msgstr ""
-
-#: plugins/Tools/RotateTool/RotateTool.qml:87
-msgctxt "@action:checkbox"
-msgid "Snap Rotation"
-msgstr "Kohdista pyöritys"
-
-#: plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate"
-msgstr "Pyöritys"
-
-#: plugins/Tools/RotateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Rotate Model"
-msgstr "Pyöritä mallia"
-
-#: plugins/Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr "Näyttää pyöritystyökalun."
-
-#: plugins/Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
-msgstr "Pyöritystyökalu"
-
-#: plugins/Tools/ScaleTool/ScaleTool.qml:93
-msgctxt "@option:check"
-msgid "Snap Scaling"
-msgstr "Kohdista skaalaus"
-
-#: plugins/Tools/ScaleTool/ScaleTool.qml:120
-msgctxt "@option:check"
-msgid "Uniform Scaling"
-msgstr "Tasainen skaalaus"
-
-#: plugins/Tools/ScaleTool/__init__.py:12
-msgctxt "@label"
-msgid "Scale"
-msgstr "Skaalaus"
-
-#: plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Scale Model"
-msgstr "Skaalaa mallia"
-
-#: plugins/Tools/ScaleTool/plugin.json
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Näyttää skaalaustyökalun."
-
-#: plugins/Tools/ScaleTool/plugin.json
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Skaalaustyökalu"
-
-#: plugins/Tools/SelectionTool/plugin.json
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Näyttää valintatyökalun."
-
-#: plugins/Tools/SelectionTool/plugin.json
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "Valintatyökalu"
-
-#: plugins/Tools/TranslateTool/TranslateTool.qml:184
-msgctxt "@option:check"
-msgid "Lock Model"
-msgstr ""
-
-#: plugins/Tools/TranslateTool/TranslateTool.qml:200
-msgctxt "@option:check"
-msgid "Drop Down Model"
-msgstr ""
-
-#: plugins/Tools/TranslateTool/__init__.py:12
-msgctxt "@action:button"
-msgid "Move"
-msgstr "Siirrä"
-
-#: plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@info:tooltip"
-msgid "Move Model"
-msgstr "Siirrä mallia"
-
-#: plugins/Tools/TranslateTool/plugin.json
-msgctxt "name"
-msgid "Move Tool"
-msgstr "Siirtotyökalu"
-
-#: plugins/Tools/TranslateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Move tool."
-msgstr "Näyttää siirtotyökalun."
-
-#: plugins/UpdateChecker/NewBetaVersionMessage.py:18
-#: plugins/UpdateChecker/NewVersionMessage.py:18
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr ""
 
-#: plugins/UpdateChecker/NewBetaVersionMessage.py:22
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Try out the latest BETA version and help us improve {application_name}."
-msgstr ""
-
-#: plugins/UpdateChecker/NewBetaVersionMessage.py:28
-#: plugins/UpdateChecker/NewVersionMessage.py:28
-msgctxt "@action:button"
-msgid "Download"
-msgstr "Lataa"
-
-#: plugins/UpdateChecker/NewBetaVersionMessage.py:31
-#: plugins/UpdateChecker/NewVersionMessage.py:30
-msgctxt "@action:button"
-msgid "Learn more"
-msgstr ""
-
-#: plugins/UpdateChecker/NewVersionMessage.py:22
 #, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr ""
-
-#: plugins/UpdateChecker/UpdateChecker.py:42
-msgctxt "@item:inmenu"
-msgid "Update Checker"
-msgstr ""
-
-#: plugins/UpdateChecker/UpdateChecker.py:43
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
-msgstr "Tarkista päivitykset"
-
-#: plugins/UpdateChecker/UpdateChecker.py:115
-msgctxt "@info"
-msgid "The version you are using does not support checking for updates."
-msgstr "Käyttämäsi versio ei tue päivitysten tarkistusta."
-
-#: plugins/UpdateChecker/UpdateChecker.py:116
-msgctxt "@info:title"
-msgid "Warning"
-msgstr "Varoitus"
-
-#: plugins/UpdateChecker/UpdateChecker.py:170
-msgctxt "@info"
-msgid "No new version was found."
-msgstr "Uutta versiota ei löytynyt."
-
-#: plugins/UpdateChecker/plugin.json
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Tarkistaa, onko ohjelmistopäivityksiä saatavilla."
-
-#: plugins/UpdateChecker/plugin.json
-msgctxt "name"
-msgid "Update Checker"
-msgstr "Päivitysten tarkistin"
-
-#: plugins/Views/SimpleView/__init__.py:12
-msgctxt "@item:inmenu"
-msgid "Simple"
-msgstr "Yksinkertainen"
-
-#: plugins/Views/SimpleView/plugin.json
-msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "Näyttää yksinkertaisen kiinteän verkkonäkymän."
-
-#: plugins/Views/SimpleView/plugin.json
-msgctxt "name"
-msgid "Simple View"
-msgstr "Yksinkertainen näkymä"
 
 #~ msgctxt "@label"
 #~ msgid "3MF Writer"
