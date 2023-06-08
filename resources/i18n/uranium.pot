@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-02 14:18+0000\n"
+"POT-Creation-Date: 2023-06-08 13:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -742,56 +742,6 @@ msgstr ""
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr ""
-#: plugins/ConsoleLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr ""
-
-#: plugins/ConsoleLogger/plugin.json
-msgctxt "name"
-msgid "Console Logger"
-msgstr ""
-
-#: plugins/FileHandlers/OBJReader/plugin.json
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr ""
-
-#: plugins/FileHandlers/OBJReader/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr ""
-
-#: plugins/FileHandlers/STLWriter/plugin.json
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr ""
-
-#: plugins/FileHandlers/STLWriter/plugin.json
-msgctxt "name"
-msgid "STL Writer"
-msgstr ""
-
-#: plugins/FileHandlers/OBJWriter/plugin.json
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr ""
-
-#: plugins/FileHandlers/OBJWriter/plugin.json
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr ""
-
-#: plugins/FileHandlers/STLReader/plugin.json
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr ""
-
-#: plugins/FileHandlers/STLReader/plugin.json
-msgctxt "name"
-msgid "STL Reader"
-msgstr ""
-
 #: plugins/LocalContainerProvider/plugin.json
 msgctxt "description"
 msgid "Provides built-in setting containers that come with the installation of the application."
@@ -800,16 +750,6 @@ msgstr ""
 #: plugins/LocalContainerProvider/plugin.json
 msgctxt "name"
 msgid "Local Container Provider"
-msgstr ""
-
-#: plugins/FileLogger/plugin.json
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr ""
-
-#: plugins/FileLogger/plugin.json
-msgctxt "name"
-msgid "File Logger"
 msgstr ""
 
 #: plugins/Views/SimpleView/plugin.json
@@ -842,14 +782,54 @@ msgctxt "name"
 msgid "Update Checker"
 msgstr ""
 
-#: plugins/Tools/MirrorTool/plugin.json
+#: plugins/FileLogger/plugin.json
 msgctxt "description"
-msgid "Provides the Mirror tool."
+msgid "Outputs log information to a file in your settings folder."
 msgstr ""
 
-#: plugins/Tools/MirrorTool/plugin.json
+#: plugins/FileLogger/plugin.json
 msgctxt "name"
-msgid "Mirror Tool"
+msgid "File Logger"
+msgstr ""
+
+#: plugins/FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr ""
+
+#: plugins/FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr ""
+
+#: plugins/FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr ""
+
+#: plugins/FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr ""
+
+#: plugins/FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr ""
+
+#: plugins/FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr ""
+
+#: plugins/FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr ""
+
+#: plugins/FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
 msgstr ""
 
 #: plugins/Tools/ScaleTool/plugin.json
@@ -860,16 +840,6 @@ msgstr ""
 #: plugins/Tools/ScaleTool/plugin.json
 msgctxt "name"
 msgid "Scale Tool"
-msgstr ""
-
-#: plugins/Tools/RotateTool/plugin.json
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr ""
-
-#: plugins/Tools/RotateTool/plugin.json
-msgctxt "name"
-msgid "Rotate Tool"
 msgstr ""
 
 #: plugins/Tools/CameraTool/plugin.json
@@ -900,5 +870,35 @@ msgstr ""
 #: plugins/Tools/SelectionTool/plugin.json
 msgctxt "name"
 msgid "Selection Tool"
+msgstr ""
+
+#: plugins/Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr ""
+
+#: plugins/Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr ""
+
+#: plugins/Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr ""
+
+#: plugins/Tools/MirrorTool/plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr ""
+
+#: plugins/ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr ""
+
+#: plugins/ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
 msgstr ""
 
