@@ -381,7 +381,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def _getProfileType(self, container_id: str, db_cursor: db.Cursor) -> Optional[str]:
         try:
             db_cursor.execute("select id, container_type from containers where id = ?", (container_id, ))
-        except db.DatabaseError as e:
+        except (db.DatabaseError, db.OperationalError) as e:
             Logger.error(f"Could not access database: {e}. Is it corrupt? Recreating it.")
             self._recreateCorruptDataBase(db_cursor)
             return None
@@ -424,7 +424,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_type in self._database_handlers:
             try:
                 self._database_handlers[container_type].insert(metadata)
-            except db.DatabaseError as e:
+            except (db.DatabaseError, db.OperationalError) as e:
                 Logger.warning(f"Removing corrupt database and recreating database. {e}")
                 self._recreateCorruptDataBase(self._database_handlers[container_type].cursor)
 
@@ -433,7 +433,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_type in self._database_handlers:
             try:
                 self._database_handlers[container_type].update(metadata)
-            except db.DatabaseError as e:
+            except (db.DatabaseError, db.OperationalError) as e:
                 Logger.warning(f"Removing corrupt database and recreating database. {e}")
                 self._recreateCorruptDataBase(self._database_handlers[container_type].cursor)
 
@@ -467,7 +467,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             for container_id in provider_container_ids:
                 try:
                     db_last_modified_time = self._getProfileModificationTime(container_id, cursor)
-                except db.DatabaseError as e:
+                except (db.DatabaseError, db.OperationalError) as e:
                     Logger.warning(f"Removing corrupt database and recreating database. {e}")
                     self._recreateCorruptDataBase(cursor)
                     cursor = self._getDatabaseConnection().cursor()  # After recreating the database, all the cursors have changed.
@@ -486,7 +486,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                             cursor.execute(
                                 "INSERT INTO containers (id, name, last_modified, container_type) VALUES (?, ?, ?, ?)",
                                 (container_id, metadata["name"], modified_time, metadata["type"]))
-                        except db.DatabaseError as e:
+                        except (db.DatabaseError, db.OperationalError) as e:
                             Logger.warning(f"Unable to edit database to insert new cache records for containers, recreating database: {str(e)}")
                             self._recreateCorruptDataBase(self._database_handlers[metadata["type"]].cursor)
                             cursor = self._getDatabaseConnection().cursor()  # After recreating the database, all the cursors have changed.
@@ -509,7 +509,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         metadata = provider.loadMetadata(container_id)
                         try:
                             cursor.execute("UPDATE containers SET name = ?, last_modified = ?, container_type = ? WHERE id = ?", (metadata["name"], modified_time, metadata["type"], metadata["id"]))
-                        except db.DatabaseError as e:
+                        except (db.DatabaseError, db.OperationalError) as e:
                             Logger.warning(f"Unable to update timestamp of container cache in database, recreating database: {str(e)}")
                             self._recreateCorruptDataBase(self._database_handlers[metadata["type"]].cursor)
                             cursor = self._getDatabaseConnection().cursor()  # After recreating the database, all the cursors have changed.
@@ -541,7 +541,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         if ids_to_remove:  # We only can (and need to) commit again if we removed containers
             try:
                 cursor.execute("commit")
-            except db.DatabaseError as e:  # E.g. read-only database, concurrent access, corrupt database.
+            except (db.DatabaseError, db.OperationalError) as e:  # E.g. read-only database, concurrent access, corrupt database.
                 Logger.error(f"Could not complete purging of removed containers: {str(e)}")
                 # Don't purge database. It's only for removing extra data, not critical, and it might just be a temporary problem.
 
