@@ -45,11 +45,11 @@ TextField
             color: UM.Theme.getColor("setting_unit")
         }
     }
-
+    // Change the name of the states based on if it's overriden. This is to prevent the spam of "duplicate state"
     states: [
         State
         {
-            name: "disabled"
+            name: overrideState? "__disabled":" disabled"
             when: !control.enabled && !overrideState
             PropertyChanges
             {
@@ -64,7 +64,7 @@ TextField
         },
         State
         {
-            name: "invalid"
+            name: overrideState? "__invalid":" invalid"
             when: !control.acceptableInput && !overrideState
             PropertyChanges
             {
@@ -74,7 +74,7 @@ TextField
         },
         State
         {
-            name: "active"
+            name: overrideState? "__active": "active"
             when: control.activeFocus && !overrideState
             PropertyChanges
             {
@@ -85,7 +85,7 @@ TextField
         },
         State
         {
-            name: "hovered"
+            name: overrideState? "__hovered": "hovered"
             when: control.hovered && !control.activeFocus && !overrideState
             PropertyChanges
             {
