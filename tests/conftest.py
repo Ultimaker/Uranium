@@ -19,7 +19,7 @@ class FixtureApplication(Application):
     engineCreatedSignal = Signal()
 
     def __init__(self):
-        super().__init__(name="test", version="1.0", latest_url="", api_version="8.2.0")
+        super().__init__(name="test", version="1.0", latest_url="", api_version="8.4.0")
         super().initialize()
         Signal._signalQueue = self
 

@@ -31,6 +31,10 @@ class UraniumConan(ConanFile):
     default_options = {
         "devtools": False,
     }
+    
+    def set_version(self):
+        if not self.version:
+            self.version = "5.4.0-beta.1"
 
     @property
     def _base_dir(self):
