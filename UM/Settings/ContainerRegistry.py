@@ -400,9 +400,17 @@ class ContainerRegistry(ContainerRegistryInterface):
         except:
             # Could be that the cursor is already closed
             pass
-        cursor.close()
 
-        self._db_connection = None
+        try:
+            cursor.close()
+        except db.ProgrammingError:
+            # Database was already closed
+            pass
+
+        if self._db_connection is not None:
+            self._db_connection.close()
+            self._db_connection = None
+
         db_path = os.path.join(Resources.getCacheStoragePath(), "containers.db")
         try:
             os.remove(db_path)
