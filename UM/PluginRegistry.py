@@ -89,6 +89,7 @@ class PluginRegistry(QObject):
         self._distrusted_plugin_ids: List[str] = []
         self._trust_checker: Optional[Trust] = None
         self._changed_activated_plugins_current_session: Set[str] = set()
+        self._plugin_config_filename: str = ""
 
     pluginRemoved = pyqtSignal(str)
 
@@ -109,7 +110,7 @@ class PluginRegistry(QObject):
 
         # File to store plugin info, such as which ones to install/remove and which ones are disabled.
         # At this point we can load this here because we already know the actual Application name, so the directory name
-        self._plugin_config_filename: str = os.path.join(os.path.abspath(config_path), "plugins.json")
+        self._plugin_config_filename = os.path.join(os.path.abspath(config_path), "plugins.json")
 
         from UM.Settings.ContainerRegistry import ContainerRegistry
         container_registry = ContainerRegistry.getInstance()
