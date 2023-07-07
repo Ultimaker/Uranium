@@ -6,7 +6,7 @@ import subprocess
 import sys
 import threading
 from time import sleep
-from typing import Any, Dict, Optional, List
+from typing import Any, Dict, Optional, List, Callable
 
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Logger import Logger
@@ -36,10 +36,9 @@ class Backend(PluginObject):
     """
 
     def __init__(self) -> None:
-        super().__init__()  # Call super to make multiple inheritance work.
-        self._supported_commands = {}
+        super().__init__()
 
-        self._message_handlers = {}
+        self._message_handlers: Dict[str, Callable[Arcus.PythonMessage]] = {}
 
         self._socket = None
         self._port = 49674
@@ -47,7 +46,7 @@ class Backend(PluginObject):
         self._backend_log: List[bytes] = []
         self._backend_log_max_lines = None
 
-        self._backend_state = BackendState.NotStarted
+        self._backend_state: BackendState = BackendState.NotStarted
 
         UM.Application.Application.getInstance().callLater(self._createSocket)
 
