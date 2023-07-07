@@ -2,30 +2,28 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
-# noinspection PyUnresolvedReferences
-import base64  # Imported here so it can be used easily by the setting functions.
+import traceback
 import builtins  # To check against functions that are built-in in Python.
+
+# Imported here, so it can be used easily by the setting functions.
 # noinspection PyUnresolvedReferences
-import hashlib  # Imported here so it can be used easily by the setting functions.
+import math
 # noinspection PyUnresolvedReferences
-import uuid  # Imported here so it can be used easily by the setting functions.
+import base64
+# noinspection PyUnresolvedReferences
+import hashlib
+# noinspection PyUnresolvedReferences
+import uuid
+
 from types import CodeType
 from typing import Any, Callable, Dict, FrozenSet, NamedTuple, Optional, Set, TYPE_CHECKING
 
-# noinspection PyUnresolvedReferences
-import math  # Imported here so it can be used easily by the setting functions.
 
 from UM.Logger import Logger
-from UM.Settings.Interfaces import ContainerInterface
-from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 
 if TYPE_CHECKING:
-    from typing import FrozenSet
-
-
-
-import traceback
-
+    from UM.Settings.Interfaces import ContainerInterface
+    from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 
 
 class IllegalMethodError(Exception):
@@ -78,7 +76,7 @@ class SettingFunction:
         except Exception as e:
             Logger.log("e", "Exception in function ({0}) for setting: {1}".format(str(e), self._code))
 
-    def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Any:
+    def __call__(self, value_provider: "ContainerInterface", context: Optional["PropertyEvaluationContext"] = None) -> Any:
         """Call the actual function to calculate the value.
 
         :param value_provider: The container from which to get setting values in the formula.
