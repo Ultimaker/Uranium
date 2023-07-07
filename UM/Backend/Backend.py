@@ -75,10 +75,28 @@ class Backend(PluginObject):
             self._createSocket()
             return
 
-        if not self._backend_log_max_lines:
-            self._backend_log = []
+        self._flushBackendLog()
+        self._ensureOldProcessIsTerminated()
 
-        # Double check that the old process is indeed killed.
+        self._process = self._runEngineProcess(command)
+        if self._process is None:  # Failed to start engine.
+            return
+        Logger.log("i", "Started engine process: %s", self.getEngineCommand()[0])
+
+        self._beginThreads()
+
+    def _beginThreads(self) -> None:
+        self._backendLog(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
+        t = threading.Thread(target=self._storeOutputToLogThread, args=(self._process.stdout,),
+                             name="EngineOutputThread")
+        t.daemon = True
+        t.start()
+        t = threading.Thread(target=self._storeStderrToLogThread, args=(self._process.stderr,),
+                             name="EngineErrorThread")
+        t.daemon = True
+        t.start()
+
+    def _ensureOldProcessIsTerminated(self) -> None:
         if self._process is not None:
             try:
                 self._process.terminate()
@@ -87,17 +105,9 @@ class Backend(PluginObject):
                 return
             Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
 
-        self._process = self._runEngineProcess(command)
-        if self._process is None:  # Failed to start engine.
-            return
-        Logger.log("i", "Started engine process: %s", self.getEngineCommand()[0])
-        self._backendLog(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
-        t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stdout,), name = "EngineOutputThread")
-        t.daemon = True
-        t.start()
-        t = threading.Thread(target = self._storeStderrToLogThread, args = (self._process.stderr,), name = "EngineErrorThread")
-        t.daemon = True
-        t.start()
+    def _flushBackendLog(self) -> None:
+        if not self._backend_log_max_lines:
+            self._backend_log = []
 
     def close(self) -> None:
         if self._socket:
@@ -235,6 +245,17 @@ class Backend(PluginObject):
 
         self._createSocket()
 
+    def _cleanupExistingSocket(self) -> None:
+        self._socket.stateChanged.disconnect(self._onSocketStateChanged)
+        self._socket.messageReceived.disconnect(self._onMessageReceived)
+        self._socket.error.disconnect(self._onSocketError)
+        # Hack for (at least) Linux. If the socket is connecting, the close will deadlock.
+        while self._socket.getState() == Arcus.SocketState.Opening:
+            sleep(0.1)
+        # If the error occurred due to parsing, both connections believe that connection is okay.
+        # So we need to force a close.
+        self._socket.close()
+
     def _createSocket(self, protocol_file: Optional[str] = None) -> None:
         """Creates a socket and attaches listeners."""
 
@@ -244,15 +265,7 @@ class Backend(PluginObject):
 
         if self._socket:
             Logger.log("d", "Previous socket existed. Closing that first.") # temp debug logging
-            self._socket.stateChanged.disconnect(self._onSocketStateChanged)
-            self._socket.messageReceived.disconnect(self._onMessageReceived)
-            self._socket.error.disconnect(self._onSocketError)
-            # Hack for (at least) Linux. If the socket is connecting, the close will deadlock.
-            while self._socket.getState() == Arcus.SocketState.Opening:
-                sleep(0.1)
-            # If the error occurred due to parsing, both connections believe that connection is okay.
-            # So we need to force a close.
-            self._socket.close()
+            self._cleanupExistingSocket()
 
         self._socket = SignalSocket()
         self._socket.stateChanged.connect(self._onSocketStateChanged)
