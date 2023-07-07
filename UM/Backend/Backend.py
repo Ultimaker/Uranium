@@ -105,12 +105,16 @@ class Backend(PluginObject):
                 sleep(0.1)
             self._socket.close()
 
-    def _backendLog(self, line: bytes) -> None:
+    @staticmethod
+    def _decodeLine(line: bytes) -> str:
         try:
-            line_str = line.decode("utf-8")
+            return line.decode("utf-8")
         except UnicodeDecodeError:
-            # We use Latin-1 as a fallback since it can never give decoding errors. All characters are 1 byte.
-            line_str = line.decode("latin1")
+            # We use Latin-1 as a fallback since it can never give decoding errors. All characters are 1 byte
+            return line.decode("latin1")
+
+    def _backendLog(self, line: bytes) -> None:
+        line_str = self._decodeLine(line)
         Logger.log("d", "[Backend] " + line_str.strip())
         self._backend_log.append(line)
 
