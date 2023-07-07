@@ -667,7 +667,7 @@ class PluginRegistry(QObject):
             return None  # Signals that loading this failed.
         return plugin_id
 
-    def _findInstalledPlugins(self, paths = None) -> List[str]:
+    def _findInstalledPlugins(self, paths: Optional[List[str]] = None) -> List[str]:
         """
         Returns a list of all possible plugin ids in the plugin locations
         :param paths:
@@ -721,7 +721,7 @@ class PluginRegistry(QObject):
             highest_version = Version(0)
 
             for loc in locations:
-                meta_data: Dict[str, Any]  = {}
+                meta_data: Dict[str, Any] = {}
                 plugin_location = os.path.join(loc, plugin_id)
                 metadata_file = os.path.join(plugin_location, "plugin.json")
                 try:
