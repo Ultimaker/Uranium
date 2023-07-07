@@ -2,12 +2,11 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from enum import IntEnum
-import struct
 import subprocess
 import sys
 import threading
 from time import sleep
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Logger import Logger
@@ -36,7 +35,7 @@ class Backend(PluginObject):
     The message_handlers dict should be filled with string (full name of proto message), function pairs.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()  # Call super to make multiple inheritance work.
         self._supported_commands = {}
 
@@ -44,8 +43,8 @@ class Backend(PluginObject):
 
         self._socket = None
         self._port = 49674
-        self._process = None # type: Optional[subprocess.Popen]
-        self._backend_log = []
+        self._process: Optional[subprocess.Popen] = None
+        self._backend_log: List[bytes] = []
         self._backend_log_max_lines = None
 
         self._backend_state = BackendState.NotStarted
@@ -58,7 +57,7 @@ class Backend(PluginObject):
     backendQuit = Signal()
     backendDone = Signal()
 
-    def setState(self, new_state):
+    def setState(self, new_state: BackendState) -> None:
         if new_state != self._backend_state:
             self._backend_state = new_state
             self.backendStateChange.emit(self._backend_state)
@@ -66,9 +65,9 @@ class Backend(PluginObject):
             if self._backend_state == BackendState.Done:
                 self.backendDone.emit()
 
-
-    def startEngine(self):
-        """:brief Start the backend / engine.
+    def startEngine(self) -> None:
+        """
+        Start the backend / engine.
         Runs the engine, this is only called when the socket is fully opened & ready to accept connections
         """
 
@@ -101,21 +100,22 @@ class Backend(PluginObject):
         t.daemon = True
         t.start()
 
-    def close(self):
+    def close(self) -> None:
         if self._socket:
             while self._socket.getState() == Arcus.SocketState.Opening:
                 sleep(0.1)
             self._socket.close()
 
-    def _backendLog(self, line):
+    def _backendLog(self, line: bytes) -> None:
         try:
             line_str = line.decode("utf-8")
         except UnicodeDecodeError:
-            line_str = line.decode("latin1") #Latin-1 as a fallback since it can never give decoding errors. All characters are 1 byte.
+            # We use Latin-1 as a fallback since it can never give decoding errors. All characters are 1 byte.
+            line_str = line.decode("latin1")
         Logger.log("d", "[Backend] " + line_str.strip())
         self._backend_log.append(line)
 
-    def getLog(self):
+    def getLog(self) -> List[bytes]:
         """Get the logging messages of the backend connection."""
 
         if self._backend_log_max_lines and type(self._backend_log_max_lines) == int:
@@ -123,15 +123,19 @@ class Backend(PluginObject):
                 del(self._backend_log[0])
         return self._backend_log
 
-    def getEngineCommand(self):
+    def getEngineCommand(self) -> List[str]:
         """Get the command used to start the backend executable """
 
         return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
 
-    def _runEngineProcess(self, command_list) -> Optional[subprocess.Popen]:
-        """Start the (external) backend process."""
+    def _runEngineProcess(self, command_list: List[str]) -> Optional[subprocess.Popen]:
+        """
+        Start the (external) backend process.
+        :param command_list:
+        :return:
+        """
 
-        kwargs = {} #type: Dict[str, Any]
+        kwargs: Dict[str, Any] = {}
         if sys.platform == "win32":
             su = subprocess.STARTUPINFO()
             su.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -174,7 +178,7 @@ class Backend(PluginObject):
                 break
             self._backendLog(line)
 
-    def _onSocketStateChanged(self, state):
+    def _onSocketStateChanged(self, state: Arcus.SocketState) -> None:
         """Private socket state changed handler."""
 
         self._logSocketState(state)
@@ -185,7 +189,7 @@ class Backend(PluginObject):
             Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()
 
-    def _logSocketState(self, state):
+    def _logSocketState(self, state: Arcus.SocketState) -> None:
         """Debug function created to provide more info for CURA-2127"""
 
         if state == Arcus.SocketState.Listening:
@@ -201,8 +205,8 @@ class Backend(PluginObject):
         elif state == Arcus.SocketState.Closed:
             Logger.log("d", "Socket state changed to Closed")
 
-    def _onMessageReceived(self):
-        """Private message handler"""
+    def _onMessageReceived(self) -> None:
+        """Protected message handler"""
 
         message = self._socket.takeNextMessage()
 
@@ -212,7 +216,7 @@ class Backend(PluginObject):
 
         self._message_handlers[message.getTypeName()](message)
 
-    def _onSocketError(self, error):
+    def _onSocketError(self, error: Arcus.ErrorCode) -> None:
         """Private socket error handler"""
 
         if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
@@ -228,8 +232,12 @@ class Backend(PluginObject):
 
         self._createSocket()
 
-    def _createSocket(self, protocol_file):
+    def _createSocket(self, protocol_file: Optional[str] = None) -> None:
         """Creates a socket and attaches listeners."""
+
+        if not protocol_file:
+            Logger.log("w", "Unable to create socket without protocol file!")
+            return
 
         if self._socket:
             Logger.log("d", "Previous socket existed. Closing that first.") # temp debug logging
