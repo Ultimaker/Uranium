@@ -650,7 +650,8 @@ class PluginRegistry(QObject):
         except EnvironmentError as e:
             Logger.error("Unable to remove plug-in {plugin_id}: {err}".format(plugin_id = plugin_id, err = str(e)))
 
-    def _getPluginIdFromFile(self, filename: str) -> Optional[str]:
+    @staticmethod
+    def _getPluginIdFromFile(filename: str) -> Optional[str]:
         plugin_id = None
         try:
             with zipfile.ZipFile(filename, "r") as zip_ref:
@@ -806,7 +807,8 @@ class PluginRegistry(QObject):
 
         return None
 
-    def _handleCentralStorage(self, file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> bool:
+    @staticmethod
+    def _handleCentralStorage(file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> bool:
         """
         Plugins can indicate that they want certain things to be stored in a central location.
         In the case of a signed plugin you *must* do this by means of the central_storage.json file.
@@ -828,7 +830,8 @@ class PluginRegistry(QObject):
                 Logger.logException("w", f"Can't move file {file_to_move[0]} to central storage for '{plugin_path}'.")
         return True
 
-    def _parsePluginInfo(self, plugin_id: str, file_data: str, meta_data: Dict[str, Any]) -> None:
+    @staticmethod
+    def _parsePluginInfo(plugin_id: str, file_data: str, meta_data: Dict[str, Any]) -> None:
         """
         Load the plugin data from the stream and in-place update the metadata.
         :param plugin_id: Id of the plugin
@@ -926,7 +929,8 @@ class PluginRegistry(QObject):
         self._metadata[plugin_id] = meta_data
         return True
 
-    def _subsetInDict(self, dictionary: Dict[Any, Any], subset: Dict[Any, Any]) -> bool:
+    @staticmethod
+    def _subsetInDict(dictionary: Dict[Any, Any], subset: Dict[Any, Any]) -> bool:
         """
         Check if a certain dictionary contains a certain subset of key/value pairs
         :param dictionary: Target dictionary to search in
