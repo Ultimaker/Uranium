@@ -898,20 +898,20 @@ class PluginRegistry(QObject):
                 with open(metadata_file, "r", encoding = "utf-8") as file_stream:
                     self._parsePluginInfo(plugin_id, file_stream.read(), meta_data)
             except FileNotFoundError:
-                Logger.logException("e", "Unable to find the required plugin.json file for plugin %s", plugin_id)
+                Logger.logException("e", f"Unable to find the required plugin.json file for plugin {plugin_id}")
                 raise InvalidMetaDataError(plugin_id)
             except UnicodeDecodeError:
-                Logger.logException("e", f"The plug-in metadata file for plug-in {plugin_id} is corrupt.".format(plugin_id = plugin_id))
+                Logger.logException("e", f"The plug-in metadata file for plug-in {plugin_id} is corrupt.")
                 raise InvalidMetaDataError(plugin_id)
             except EnvironmentError as e:
-                Logger.logException("e", "Can't open the metadata file for plug-in {plugin_id}: {err}".format(plugin_id = plugin_id, err = str(e)))
+                Logger.logException("e", "Can't open the metadata file for plug-in {plugin_id}")
                 raise InvalidMetaDataError(plugin_id)
 
         except AttributeError as e:
-            Logger.log("e", "Plug-in {plugin_id} has no getMetaData function to get metadata of the plug-in: {err}".format(plugin_id = plugin_id, err = str(e)))
+            Logger.logException("e", f"Plug-in {plugin_id} has no getMetaData function to get metadata of the plug-in")
             raise InvalidMetaDataError(plugin_id)
         except TypeError as e:
-            Logger.log("e", "Plug-in {plugin_id} has a getMetaData function with the wrong signature: {err}".format(plugin_id = plugin_id, err = str(e)))
+            Logger.logException("e", f"Plug-in {plugin_id} has a getMetaData function with the wrong signature")
             raise InvalidMetaDataError(plugin_id)
 
         if not meta_data:
