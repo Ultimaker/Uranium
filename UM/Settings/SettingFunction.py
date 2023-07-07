@@ -16,11 +16,11 @@ from typing import Any, Callable, Dict, FrozenSet, NamedTuple, Optional, Set, TY
 import math  # Imported here so it can be used easily by the setting functions.
 
 from UM.Logger import Logger
-from UM.Settings.Interfaces import ContainerInterface
-from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 
 if TYPE_CHECKING:
     from typing import FrozenSet
+    from UM.Settings.Interfaces import ContainerInterface
+    from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 
 
 
@@ -78,7 +78,7 @@ class SettingFunction:
         except Exception as e:
             Logger.log("e", "Exception in function ({0}) for setting: {1}".format(str(e), self._code))
 
-    def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Any:
+    def __call__(self, value_provider: "ContainerInterface", context: Optional["PropertyEvaluationContext"] = None) -> Any:
         """Call the actual function to calculate the value.
 
         :param value_provider: The container from which to get setting values in the formula.
