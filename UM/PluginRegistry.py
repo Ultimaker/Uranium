@@ -48,12 +48,14 @@ class PluginRegistry(QObject):
 
     def __init__(self, application: "Application", parent: QObject = None) -> None:
         if PluginRegistry.__instance is not None:
-            raise RuntimeError("Try to create singleton '%s' more than once" % self.__class__.__name__)
+            raise RuntimeError(f"Try to create singleton '{self.__class__.__name__}' more than once")
 
         super().__init__(parent)
         PluginRegistry.__instance = self
 
-        self.preloaded_plugins: List[str] = []  # List of plug-in names that must be loaded before the rest, if the plug-ins are available. They are loaded in this order too.
+        # List of plug-in names that must be loaded before the rest, if the plug-ins are available.
+        # They are loaded in this order too.
+        self.preloaded_plugins: List[str] = []
 
         self._application: Application = application
         self._api_version: Version = application.getAPIVersion()
@@ -72,11 +74,11 @@ class PluginRegistry(QObject):
         self._plugins_to_remove: List[str] = []
 
         self._plugins: Dict[str, types.ModuleType] = {}
-        self._found_plugins: Dict[str, types.ModuleType] = {}       # Cache to speed up _findPlugin
+        self._found_plugins: Dict[str, types.ModuleType] = {}  # Cache to speed up _findPlugin
         self._plugin_objects: Dict[str, PluginObject] = {}
 
         self._plugin_locations: List[str] = []
-        self._plugin_folder_cache: Dict[str, List[Tuple[str, str]]] = {}   # Cache to speed up _locatePlugin
+        self._plugin_folder_cache: Dict[str, List[Tuple[str, str]]] = {}  # Cache to speed up _locatePlugin
 
         self._bundled_plugin_cache: Dict[str, bool] = {}
 
@@ -125,7 +127,7 @@ class PluginRegistry(QObject):
                         self._disabled_plugins = data["disabled"]
                         self._plugins_to_install = data["to_install"]
                         self._plugins_to_remove = data["to_remove"]
-        except:
+        except Exception:
             Logger.logException("e", "Failed to load plugin configuration file '%s'", self._plugin_config_filename)
 
         # Also load data from preferences, where the plugin info used to be saved
@@ -175,7 +177,7 @@ class PluginRegistry(QObject):
                                        "to_remove": self._plugins_to_remove,
                                        })
                     f.write(data)
-        except:
+        except Exception:
             # Since we're writing to file (and waiting for a lock), there are a few things that can go wrong.
             # There is no need to crash the application for this, but it is a failure that we want to log.
             Logger.logException("e", "Unable to save the plugin data.")
@@ -192,10 +194,6 @@ class PluginRegistry(QObject):
     # Disabled: A plugin which is installed but not currently enabled.
     # Available: A plugin which is not installed but could be.
     # Installed: A plugin which is installed locally in Cura.
-
-    #===============================================================================
-    # PUBLIC METHODS
-    #===============================================================================
 
     #   Add a plugin location to the list of locations to search:
     def addPluginLocation(self, location: str) -> None:
@@ -605,10 +603,6 @@ class PluginRegistry(QObject):
         except EnvironmentError as e:
             Logger.error("Unable to remove plug-in {plugin_id}: {err}".format(plugin_id = plugin_id, err = str(e)))
 
-#===============================================================================
-# PRIVATE METHODS
-#===============================================================================
-
     def _getPluginIdFromFile(self, filename: str) -> Optional[str]:
         plugin_id = None
         try:
@@ -704,7 +698,7 @@ class PluginRegistry(QObject):
                 with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
                     if not self._handleCentralStorage(file_stream.read(), plugin_final_path, is_bundled_plugin = self.isBundledPlugin(plugin_id)):
                         return None
-            except:
+            except Exception:
                 pass
         try:
             file, path, desc = imp.find_module(plugin_id, [final_location])
