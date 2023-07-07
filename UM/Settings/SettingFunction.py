@@ -2,30 +2,28 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
-# noinspection PyUnresolvedReferences
-import base64  # Imported here so it can be used easily by the setting functions.
+import traceback
 import builtins  # To check against functions that are built-in in Python.
+
+# Imported here, so it can be used easily by the setting functions.
 # noinspection PyUnresolvedReferences
-import hashlib  # Imported here so it can be used easily by the setting functions.
+import math
 # noinspection PyUnresolvedReferences
-import uuid  # Imported here so it can be used easily by the setting functions.
+import base64
+# noinspection PyUnresolvedReferences
+import hashlib
+# noinspection PyUnresolvedReferences
+import uuid
+
 from types import CodeType
 from typing import Any, Callable, Dict, FrozenSet, NamedTuple, Optional, Set, TYPE_CHECKING
 
-# noinspection PyUnresolvedReferences
-import math  # Imported here so it can be used easily by the setting functions.
 
 from UM.Logger import Logger
 
 if TYPE_CHECKING:
-    from typing import FrozenSet
     from UM.Settings.Interfaces import ContainerInterface
     from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
-
-
-
-import traceback
-
 
 
 class IllegalMethodError(Exception):
