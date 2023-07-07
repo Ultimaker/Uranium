@@ -19,7 +19,18 @@ import pyArcus as Arcus
 
 
 class BackendState(IntEnum):
-    """The current processing state of the backend."""
+    """
+    The current processing state of the backend.
+
+    :class:`BackendState` is an enumeration class that represents the different states that the backend can be in.
+
+    Attributes:
+        - NotStarted (int): The backend has not started processing.
+        - Processing (int): The backend is currently processing data.
+        - Done (int): The backend has finished processing successfully.
+        - Error (int): The backend encountered an error during processing.
+        - Disabled (int): The backend is disabled and cannot process data.
+    """
 
     NotStarted = 1
     Processing = 2
@@ -30,7 +41,8 @@ class BackendState(IntEnum):
 
 @signalemitter
 class Backend(PluginObject):
-    """Base class for any backend communication (separate piece of software).
+    """
+    Base class for any backend communication (separate piece of software).
     It makes use of the Socket class from libArcus for the actual communication bits.
     The message_handlers dict should be filled with string (full name of proto message), function pairs.
     """
@@ -129,8 +141,11 @@ class Backend(PluginObject):
         self._backend_log.append(line)
 
     def getLog(self) -> List[bytes]:
-        """Get the logging messages of the backend connection."""
+        """
+        Returns the backend log.
 
+        :return: A list of bytes representing the backend log.
+        """
         if self._backend_log_max_lines and type(self._backend_log_max_lines) == int:
             while len(self._backend_log) >= self._backend_log_max_lines:
                 del(self._backend_log[0])
@@ -181,6 +196,14 @@ class Backend(PluginObject):
             self._backendLog(line)
 
     def _storeStderrToLogThread(self, handle):
+        """
+        Stores the standard error output from the backend process to the log.
+
+        :param handle: The handle to the standard error output stream.
+        :type handle: file-like object
+
+        :return: None
+        """
         while True:
             try:
                 line = handle.readline()
@@ -257,8 +280,12 @@ class Backend(PluginObject):
         self._socket.close()
 
     def _createSocket(self, protocol_file: Optional[str] = None) -> None:
-        """Creates a socket and attaches listeners."""
+        """
+        Create a socket for communication with an external backend.
 
+        :param protocol_file: Optional. The path to the protocol file. Default is None.
+        :return: None
+        """
         if not protocol_file:
             Logger.log("w", "Unable to create socket without protocol file!")
             return
