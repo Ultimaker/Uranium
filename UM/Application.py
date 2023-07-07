@@ -34,6 +34,7 @@ if TYPE_CHECKING:
     from UM.Backend.Backend import Backend
     from UM.Settings.ContainerStack import ContainerStack
     from UM.Extension import Extension
+    from UM.BackendPlugin import BackendPlugin
 
 
 @signalemitter
@@ -198,6 +199,7 @@ class Application:
         i18nCatalog.setApplication(self)
 
         PluginRegistry.addType("backend", self.setBackend)
+        PluginRegistry.addType("backend_plugin", self.addBackendPlugin)
         PluginRegistry.addType("logger", Logger.addLogger)
         PluginRegistry.addType("extension", self.addExtension)
         PluginRegistry.addType("file_provider", self.addFileProvider)
@@ -478,6 +480,12 @@ class Application:
 
     def getExtensions(self) -> List["Extension"]:
         return self._extensions
+
+    def addBackendPlugin(self, backend_plugin: "BackendPlugin") -> None:
+        self._backend_plugins.append(backend_plugin)
+
+    def getBackendPlugins(self) -> List["BackendPlugin"]:
+        return self._backend_plugins
 
     def addFileProvider(self, file_provider: "FileProvider") -> None:
         self._file_providers.append(file_provider)
