@@ -60,13 +60,13 @@ def test__onSocketStateChanged_listening(backend):
     backend.startEngine = MagicMock()
     with patch("UM.Application.Application.getInstance"):
         backend._onSocketStateChanged(Arcus.SocketState.Listening)
-    assert backend.startEngine.called_once_with()
+    backend.startEngine.assert_called_once_with()
 
 
 def test_onSocketStateChanged_connected(backend):
     backend.backendConnected = MagicMock()
     backend._onSocketStateChanged(Arcus.SocketState.Connected)
-    assert backend.backendConnected.emit.called_once_with()
+    backend.backendConnected.emit.assert_called_once_with()
 
 
 def test_handleKnownMessage(backend):
