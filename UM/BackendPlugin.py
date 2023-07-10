@@ -14,6 +14,10 @@ class BackendPlugin(PluginObject):
         self._plugin_address: str = "127.0.0.1"
         self._plugin_command: Optional[List[str]] = None
         self._process = None
+        self._is_running = False
+
+    def isRunning(self):
+        return self._is_running
 
     def setPort(self, port: int) -> None:
         self.__port = port
@@ -42,6 +46,7 @@ class BackendPlugin(PluginObject):
             # STDIN needs to be None because we provide no input, but communicate via a local socket instead.
             # The NUL device sometimes doesn't exist on some computers.
             self._process = subprocess.Popen(self._validatePluginCommand(), stdin = None)
+            self._is_running = True
             return True
         except PermissionError:
             Logger.log("e", f"Couldn't start backend_plugin [{self._plugin_id}]: No permission to execute process.")
@@ -55,11 +60,13 @@ class BackendPlugin(PluginObject):
 
     def stop(self) -> bool:
         if not self._process:
+            self._is_running = False
             return True  # Nothing to stop
 
         try:
             self._process.terminate()
             return_code = self._process.wait()
+            self._is_running = False
             Logger.log("d", f"Backend_plugin [{self._plugin_id}] was killed. Received return code {return_code}")
             return True
         except PermissionError:
