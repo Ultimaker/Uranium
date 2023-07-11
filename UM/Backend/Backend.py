@@ -54,7 +54,6 @@ class Backend(PluginObject):
 
         self._socket = None
         self._port = 49674
-        self._last_backend_plugin_port = self._port + 1000
         self._process: Optional[subprocess.Popen] = None
         self._backend_log: List[bytes] = []
         self._backend_log_max_lines = None
@@ -76,20 +75,6 @@ class Backend(PluginObject):
 
             if self._backend_state == BackendState.Done:
                 self.backendDone.emit()
-
-    def startPlugins(self) -> None:
-        """
-        Ensure that all backend plugins are started
-        :return:
-        """
-        backend_plugins = UM.Application.Application.getInstance().getBackendPlugins()
-        for backend_plugin in backend_plugins:
-            if backend_plugin.isRunning():
-                continue
-            # Set the port to prevent plugins from using the same one.
-            backend_plugin.setPort(self._last_backend_plugin_port)
-            self.__last_backend_plugin_port += 1
-            backend_plugin.start()
 
     def startEngine(self) -> None:
         """
