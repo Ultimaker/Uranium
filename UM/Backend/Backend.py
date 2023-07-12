@@ -6,7 +6,7 @@ import subprocess
 import sys
 import threading
 from time import sleep
-from typing import Any, Dict, Optional, List, Callable
+from typing import Any, Dict, Optional, List, Callable, TextIO
 
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Logger import Logger
@@ -195,7 +195,7 @@ class Backend(PluginObject):
                 break
             self._backendLog(line)
 
-    def _storeStderrToLogThread(self, handle):
+    def _storeStderrToLogThread(self, handle: TextIO) -> None:
         """
         Stores the standard error output from the backend process to the log.
 
