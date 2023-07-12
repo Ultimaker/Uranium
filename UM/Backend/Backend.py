@@ -113,7 +113,7 @@ class Backend(PluginObject):
             try:
                 self._process.terminate()
             except PermissionError:
-                Logger.log("e", "Unable to kill running engine. Access is denied.")
+                Logger.error("Unable to kill running engine. Access is denied.")
                 return
             Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
 
@@ -287,7 +287,7 @@ class Backend(PluginObject):
         :return: None
         """
         if not protocol_file:
-            Logger.log("w", "Unable to create socket without protocol file!")
+            Logger.warn("Unable to create socket without protocol file!")
             return
 
         if self._socket:
