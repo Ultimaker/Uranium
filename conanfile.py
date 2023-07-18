@@ -95,7 +95,7 @@ class UraniumConan(ConanFile):
                 raise ConanInvalidConfiguration("Only versions 5+ are support")
 
     def requirements(self):
-        self.requires("pyarcus/latest@ultimaker/cura_10475")
+        self.requires("pyarcus/(latest)@ultimaker/cura_10475")
         self.requires("cpython/3.10.4")
 
     def build_requirements(self):
