@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-07 08:39+0000\n"
+"POT-Creation-Date: 2023-07-18 10:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -590,19 +590,11 @@ msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr ""
 msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
+msgid "Outputs log information to the console."
 msgstr ""
 
 msgctxt "name"
-msgid "Local Container Provider"
-msgstr ""
-
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr ""
-
-msgctxt "name"
-msgid "Local File Output Device"
+msgid "Console Logger"
 msgstr ""
 
 msgctxt "description"
@@ -622,14 +614,6 @@ msgid "STL Writer"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr ""
-
-msgctxt "name"
-msgid "STL Reader"
-msgstr ""
-
-msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
 msgstr ""
 
@@ -638,11 +622,19 @@ msgid "Wavefront OBJ Writer"
 msgstr ""
 
 msgctxt "description"
-msgid "Outputs log information to the console."
+msgid "Provides support for reading STL files."
 msgstr ""
 
 msgctxt "name"
-msgid "Console Logger"
+msgid "STL Reader"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr ""
+
+msgctxt "name"
+msgid "Local Container Provider"
 msgstr ""
 
 msgctxt "description"
@@ -662,6 +654,14 @@ msgid "Simple View"
 msgstr ""
 
 msgctxt "description"
+msgid "Enables saving to local files."
+msgstr ""
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr ""
+
+msgctxt "description"
 msgid "Checks for updates of the software."
 msgstr ""
 
@@ -678,11 +678,11 @@ msgid "Mirror Tool"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides the Move tool."
+msgid "Provides the Scale tool."
 msgstr ""
 
 msgctxt "name"
-msgid "Move Tool"
+msgid "Scale Tool"
 msgstr ""
 
 msgctxt "description"
@@ -702,11 +702,11 @@ msgid "Camera Tool"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides the Scale tool."
+msgid "Provides the Move tool."
 msgstr ""
 
 msgctxt "name"
-msgid "Scale Tool"
+msgid "Move Tool"
 msgstr ""
 
 msgctxt "description"
