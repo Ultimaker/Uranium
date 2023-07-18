@@ -159,3 +159,4 @@ class UraniumConan(ConanFile):
         self.info.clear()
 
         del self.info.options.devtools
+
