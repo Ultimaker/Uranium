@@ -105,8 +105,8 @@ class SettingDefinition:
 
         self._i18n_catalog = i18n_catalog  # type: Optional[i18nCatalog]
 
-        self._children = []  # type: List[SettingDefinition]
-        self._relations = []  # type: List[SettingRelation]
+        self._children: List[SettingDefinition] = [] 
+        self._relations: List[SettingRelation] = []
 
         # Cached set of keys of ancestors. Used for fast lookups of ancestors.
         self.__ancestors = set()  # type: Set[str]
