@@ -116,15 +116,19 @@ class SettingDefinition:
 
         self.__property_values = {}  # type: Dict[str, Any]
 
-    def extend_category(self, value_id: str, value_display: str, plugin_id: Optional[str] = None) -> None:
+    def extend_category(self, value_id: str, value_display: str, plugin_id: Optional[str] = None,
+                        plugin_version: Optional[str] = None) -> None:
         """Append a category to the setting.
 
         :param value_id: :type{str} The id of the category.
         :param value_display: :type{str} The display name of the category. If the display string needs to be translated, provide the translated string.
         :param plugin_id: :type{Optional[str]} The id of the plugin that owns the category. Defaults to None.
+        :param plugin_version: :type{Optional[str]} The version of the plugin that owns the category. Defaults to None.
         """
-
-        value_id = f"{plugin_id}::{value_id}" if plugin_id else value_id
+        if plugin_id is not None and plugin_version is not None:
+            value_id = f"PLUGIN::{plugin_id}@{plugin_version}::{value_id}"
+        elif plugin_id is not None or plugin_version is not None:
+            raise ValueError("Both plugin_id and plugin_version must be provided if one of them is provided.")
         self.options[value_id] = value_display
 
     def __getattr__(self, name: str) -> Any:
