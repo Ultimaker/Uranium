@@ -3,16 +3,66 @@
 
 from typing import Any, Dict
 from UM.PluginObject import PluginObject
+from UM.Settings.SettingDefinition import DefinitionPropertyType, SettingDefinition
 
 
-def prependIdToSettings(id: str, settings: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
-    result = {}
-    for key, value in settings.items():
-        if isinstance(value, dict):
-            key = f"{id}:{key}" if ("type" in value and "category" not in value) else key
-            value = prependIdToSettings(id, value)
-        result[key] = value
-    return result
+def prependIdToSettings(tag_type: str, tag_id: str, tag_version: str, settings: Dict[str, Any]) -> Dict[str, Any]:
+    """ This takes the whole (extra) settings-map as defined by the provider, and returns a tag-renamed version.
+
+    Additional (appended) settings will need to be prepended with (an) extra identifier(s)/namespaces to not collide.
+    This is done for when there are multiple additional settings appenders that might not know about each other.
+    This includes any formulas, which will also be included in the renaming process.
+
+    Appended settings may not be the same as 'baseline' (so any 'non-appended' settings) settings.
+    (But may of course clash between different providers and versions, that's the whole point of this function...)
+    Furthermore, it's assumed that formulas within the appended settings will only use settings either;
+     - as defined within the baseline, or;
+     - any other settings defined _by the provider itself_.
+
+    For each key that is renamed, this results in a mapping <key> -> _<provider_type>__<id*>__<version>__<key>
+     where '<id*>' is the version of the provider, but converted from using points to using underscores.
+    Example: 'tapdance_factor' might become '_PLUGIN__DancingPrinter__1_2_99__tapdance_factor'
+
+    :param tag_type: Type of the additional settings appender, for example; "PLUGIN".
+    :param tag_id: ID of the provider. Should be unique.
+    :param tag_version: Version of the provider. Points will be replaced by underscores.
+    :param settings: The settings as originally provided.
+
+    :returns: Remapped settings, where each settings-name is properly tagged/'namespaced'.
+    """
+    tag_version = tag_version.replace(".", "_")
+
+    # First get the mapping, so that both the 'headings' and formula's can be renamed at the same time later.
+    def _getMapping(values: Dict[str, Any]) -> Dict[str, str]:
+        result = {}
+        for key, value in values.items():
+            mapped_key = key
+            if isinstance(value, dict):
+                if "type" in value and value["type"] != "category":
+                    mapped_key = f"_{tag_type}__{tag_id}__{tag_version}__{key}"
+                result.update(_getMapping(value))
+            result[key] = mapped_key
+        return result
+    key_map = _getMapping(settings)
+
+    # Get all values that can be functions, so it's known where to replace.
+    function_type_names = set(SettingDefinition.getPropertyNames(DefinitionPropertyType.Function))
+
+    # Replace all, both as key-names and their use in formulas.
+    def _doReplace(values: Dict[str, Any]) -> Dict[str, str]:
+        result = {}
+        for key, value in values.items():
+            if key in function_type_names and isinstance(value, str):
+                # Replace key-names in the specified settings-function.
+                for original, mapped in key_map.items():
+                    value = value.replace(original, mapped)
+            elif isinstance(value, dict):
+                # Replace key-name 'heading'.
+                key = key_map.get(key, key)
+                value = _doReplace(value)
+            result[key] = value
+        return result
+    return _doReplace(settings)
 
 
 class AdditionalSettingDefinitionsAppender(PluginObject):

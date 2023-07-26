@@ -344,8 +344,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             category_parent = category_parent[0] if len(category_parent) > 0 else None
 
         for key, value in settings_dict.items():
-            if key in self._definition_cache:
-                continue
             definition = SettingDefinition(key, self, category_parent, self._i18n_catalog)
             self._definition_cache[key] = definition
             definition.deserialize(value)
