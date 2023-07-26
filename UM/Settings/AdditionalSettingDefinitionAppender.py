@@ -21,7 +21,8 @@ def prependIdToSettings(tag_type: str, tag_id: str, tag_version: str, settings: 
 
     For each key that is renamed, this results in a mapping <key> -> _<provider_type>__<id*>__<version>__<key>
      where '<id*>' is the version of the provider, but converted from using points to using underscores.
-    Example: 'tapdance_factor' might become '_PLUGIN__DancingPrinter__1_2_99__tapdance_factor'
+    Example: 'tapdance_factor' might become '_plugin__dancingprinter__1_2_99__tapdance_factor'
+    Also note that all the tag_... parameters will be forced to lower-case.
 
     :param tag_type: Type of the additional settings appender, for example; "PLUGIN".
     :param tag_id: ID of the provider. Should be unique.
@@ -30,7 +31,9 @@ def prependIdToSettings(tag_type: str, tag_id: str, tag_version: str, settings: 
 
     :returns: Remapped settings, where each settings-name is properly tagged/'namespaced'.
     """
-    tag_version = tag_version.replace(".", "_")
+    tag_type = tag_type.lower()
+    tag_id = tag_id.lower()
+    tag_version = tag_version.lower().replace(".", "_")
 
     # First get the mapping, so that both the 'headings' and formula's can be renamed at the same time later.
     def _getMapping(values: Dict[str, Any]) -> Dict[str, str]:
