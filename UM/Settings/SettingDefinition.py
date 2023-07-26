@@ -105,8 +105,8 @@ class SettingDefinition:
 
         self._i18n_catalog = i18n_catalog  # type: Optional[i18nCatalog]
 
-        self._children = []     # type: List[SettingDefinition]
-        self._relations = []    # type: List[SettingRelation]
+        self._children: List[SettingDefinition] = [] 
+        self._relations: List[SettingRelation] = []
 
         # Cached set of keys of ancestors. Used for fast lookups of ancestors.
         self.__ancestors = set()  # type: Set[str]
@@ -115,6 +115,21 @@ class SettingDefinition:
         self.__descendants = {}  # type: Dict[str, "SettingDefinition"]
 
         self.__property_values = {}  # type: Dict[str, Any]
+
+    def extend_category(self, value_id: str, value_display: str, plugin_id: Optional[str] = None,
+                        plugin_version: Optional[str] = None) -> None:
+        """Append a category to the setting.
+
+        :param value_id: :type{str} The id of the category.
+        :param value_display: :type{str} The display name of the category. If the display string needs to be translated, provide the translated string.
+        :param plugin_id: :type{Optional[str]} The id of the plugin that owns the category. Defaults to None.
+        :param plugin_version: :type{Optional[str]} The version of the plugin that owns the category. Defaults to None.
+        """
+        if plugin_id is not None and plugin_version is not None:
+            value_id = f"PLUGIN::{plugin_id}@{plugin_version}::{value_id}"
+        elif plugin_id is not None or plugin_version is not None:
+            raise ValueError("Both plugin_id and plugin_version must be provided if one of them is provided.")
+        self.options[value_id] = value_display
 
     def __getattr__(self, name: str) -> Any:
         """Override __getattr__ to provide access to definition properties."""
