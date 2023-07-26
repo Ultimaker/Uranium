@@ -5,6 +5,16 @@ from typing import Any, Dict
 from UM.PluginObject import PluginObject
 
 
+def prependIdToSettings(id: str, settings: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    result = {}
+    for key, value in settings.items():
+        if isinstance(value, dict):
+            key = f"{id}:{key}" if ("type" in value and "category" not in value) else key
+            value = prependIdToSettings(id, value)
+        result[key] = value
+    return result
+
+
 class AdditionalSettingDefinitionsAppender(PluginObject):
 
     def __init__(self) -> None:
