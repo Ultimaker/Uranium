@@ -206,11 +206,12 @@ class PluginRegistry(QObject):
 
     #   Check if all required plugins are loaded:
     def checkRequiredPlugins(self, required_plugins: List[str]) -> bool:
-        plugins = self._findInstalledPlugins()
-        for plugin_id in required_plugins:
-            if plugin_id not in plugins:
-                Logger.log("e", "Plugin %s is required, but not added or loaded", plugin_id)
-                return False
+        installed_plugins = self._findInstalledPlugins()
+        required_but_not_installed_plugins = list(set(required_plugins).difference(installed_plugins))
+
+        if required_but_not_installed_plugins:
+            Logger.error(f"A number of plugins that are required are not added or loaded: {required_but_not_installed_plugins}")
+            return False
         return True
 
     pluginsEnabledOrDisabledChanged = pyqtSignal()
