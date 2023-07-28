@@ -219,6 +219,9 @@ class PluginRegistry(QObject):
 
         if required_but_not_installed_plugins:
             Logger.error(f"A number of plugins that are required are not added or loaded: {required_but_not_installed_plugins}")
+            message_text = i18n_catalog.i18nc("@error:Required plugins not found",
+                                              "A number of plugins are required, but could not be loaded: {plugins}").format(plugins = "\n- ".join(required_but_not_installed_plugins))
+            Message(text=message_text, message_type=Message.MessageType.ERROR).show()
             return False
         return True
 
