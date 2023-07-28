@@ -77,7 +77,11 @@ class AdditionalSettingDefinitionsAppender(PluginObject):
 
     def __init__(self) -> None:
         super().__init__()
+        self.appender_type = "EXTRA"
         self.definition_file_paths: List[Path] = []
+
+    def getAppenderType(self) -> str:
+        return self.appender_type
 
     def getAdditionalSettingDefinitions(self) -> Dict[str, Dict[str, Any]]:
         """
