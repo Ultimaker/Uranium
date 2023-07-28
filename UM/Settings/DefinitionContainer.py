@@ -340,7 +340,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         # When there is a forced category (= parent) present, find the category parent, create it if it doesn't exist.
         category_parent = None
         if force_category:
-            category_parent = self.findDefinitions(key=force_category)
+            category_parent = self.findDefinitions(key = force_category)
             category_parent = category_parent[0] if len(category_parent) > 0 else None
 
         for key, value in settings_dict.items():
@@ -362,7 +362,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             create_new_categories = {}
 
             for category, values in additional_settings.items():
-                if len(self.findDefinitions(key=category)) > 0:
+                if len(self.findDefinitions(key = category)) > 0:
                     merge_with_existing_categories[category] = values
                 else:
                     create_new_categories[category] = values
