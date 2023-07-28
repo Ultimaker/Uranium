@@ -1,7 +1,12 @@
 # Copyright (c) 2023 UltiMaker.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict
+import json
+from pathlib import Path
+import os.path
+from typing import Any, Dict, List
+
+from UM.Logger import Logger
 from UM.PluginObject import PluginObject
 from UM.Settings.SettingDefinition import DefinitionPropertyType, SettingDefinition
 
@@ -72,11 +77,28 @@ class AdditionalSettingDefinitionsAppender(PluginObject):
 
     def __init__(self) -> None:
         super().__init__()
+        self.definition_file_paths: List[Path] = []
 
     def getAdditionalSettingDefinitions(self) -> Dict[str, Dict[str, Any]]:
         """
-        Should return the settings added by this plugin in json format.
+        Return the settings added by this plugin in json format.
+        Put values in self.definition_file_paths if you wish to load from files, or override this function otherwise.
+
         The settings should be divided by category (either existing or new ones).
         Settings in existing categories will be appended, new categories will be created.
         """
-        raise NotImplementedError("A setting_definitions_appender needs to implement getAdditionalSettingDefinitions.")
+        result = {}
+        for path in self.definition_file_paths:
+            if not os.path.exists(path):
+                Logger.error(f"File {path} with additional settings for '{self.getId()}' doesn't exist.")
+                continue
+            try:
+                with open(path, "r", encoding = "utf-8") as definitions_file:
+                    result.update(json.load(definitions_file))
+            except OSError as oex:
+                Logger.error(f"Could not read additional settings file for '{self.getId()}' because: {str(oex)}")
+                continue
+            except json.JSONDecodeError as jex:
+                Logger.error(f"Could not parse additional settings provided by '{self.getId()}' because: {str(jex)}")
+                continue
+        return result
