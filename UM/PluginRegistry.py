@@ -206,6 +206,14 @@ class PluginRegistry(QObject):
 
     #   Check if all required plugins are loaded:
     def checkRequiredPlugins(self, required_plugins: List[str]) -> bool:
+        disabled_plugins_that_should_be_enabled = list(set(required_plugins).intersection(set(self._disabled_plugins)))
+        for disabled_plugin in disabled_plugins_that_should_be_enabled:
+            # Yeah, this does mean that this run the plugin won't be there. But this can only happen with a corrupted
+            # list that was caused by bugs / manual fuckery. Enabling it here will ensure that the data is correct
+            # in the next run
+            Logger.info(f"The plugin {disabled_plugin} is required but it was disabled. Automatically re-enabling it")
+            self.enablePlugin(disabled_plugin)
+
         installed_plugins = self._findInstalledPlugins()
         required_but_not_installed_plugins = list(set(required_plugins).difference(installed_plugins))
 
