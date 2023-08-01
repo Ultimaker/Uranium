@@ -17,7 +17,7 @@ from UM.Resources import Resources
 from UM.Settings.EmptyInstanceContainer import EmptyInstanceContainer
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
-from UM.Settings.AdditionalSettingDefinitionAppender import AdditionalSettingDefinitionsAppender, prependIdToSettings
+from UM.Settings.AdditionalSettingDefinitionAppender import AdditionalSettingDefinitionsAppender
 from UM.Settings.constant_instance_containers import empty_container
 from . import ContainerQuery
 from UM.Settings.ContainerStack import ContainerStack
@@ -123,7 +123,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         """Adds a provider for additional setting definitions to append to each definition-container."""
 
         additional_settings = appender.getAdditionalSettingDefinitions()
-        plugin_id_settings = prependIdToSettings(appender.getAppenderType(), appender.getId(), appender.getVersion(), additional_settings)
+        plugin_id_settings = AdditionalSettingDefinitionsAppender.prependIdToSettings(appender.getAppenderType(), appender.getId(), appender.getVersion(), additional_settings)
         self._additional_setting_definitions_list.append(plugin_id_settings)
 
     def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]:

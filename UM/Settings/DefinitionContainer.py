@@ -357,6 +357,11 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             self._updateRelations(definition)
 
     def appendAdditionalSettingDefinitions(self, additional_settings: Dict[str, Dict[str, Any]]) -> None:
+        """
+        Appends setting-definitions not defined for/by the main program (for example, a plugin) to this container.
+        See also the Settings.AdditionalSettingDefinitionAppender class.
+        :param additional_settings: A dictionary of category-name to categories, each containing setting-definitions.
+        """
         try:
             merge_with_existing_categories = {}
             create_new_categories = {}
