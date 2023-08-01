@@ -122,9 +122,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def addAdditionalSettingDefinitionsAppender(self, appender: AdditionalSettingDefinitionsAppender) -> None:
         """Adds a provider for additional setting definitions to append to each definition-container."""
 
-        additional_settings = appender.getAdditionalSettingDefinitions()
-        plugin_id_settings = AdditionalSettingDefinitionsAppender.prependIdToSettings(appender.getAppenderType(), appender.getId(), appender.getVersion(), additional_settings)
-        self._additional_setting_definitions_list.append(plugin_id_settings)
+        self._additional_setting_definitions_list.append(appender.getAdditionalSettingDefinitions())
 
     def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]:
         """Find all DefinitionContainer objects matching certain criteria.

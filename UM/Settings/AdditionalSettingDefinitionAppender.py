@@ -47,7 +47,11 @@ class AdditionalSettingDefinitionsAppender(PluginObject):
         The settings should be divided by category (either existing or new ones).
         Settings in existing categories will be appended, new categories will be created.
 
-        :return:
+        Setting names (not labels) will be post-processed ('mangled') internally to prevent name-clashes.
+        NOTE: The 'mangled' names are also the ones send out to any backend!
+        (See the _prependIdToSettings function below for a more precise explanation.)
+
+        :return: Dictionary of settings-categories, containing settings-definitions (with post-processed names).
         """
         result = {}
         for path in self.definition_file_paths:
@@ -63,10 +67,9 @@ class AdditionalSettingDefinitionsAppender(PluginObject):
             except json.JSONDecodeError as jex:
                 Logger.error(f"Could not parse additional settings provided by '{self.getId()}' because: {str(jex)}")
                 continue
-        return result
+        return self._prependIdToSettings(result)
 
-    @classmethod
-    def prependIdToSettings(cls, tag_type: str, tag_id: str, tag_version: str, settings: Dict[str, Any]) -> Dict[str, Any]:
+    def _prependIdToSettings(self, settings: Dict[str, Any]) -> Dict[str, Any]:
         """ This takes the whole (extra) settings-map as defined by the provider, and returns a tag-renamed version.
 
         Additional (appended) settings will need to be prepended with (an) extra identifier(s)/namespaces to not collide.
@@ -91,9 +94,9 @@ class AdditionalSettingDefinitionsAppender(PluginObject):
 
         :returns: Remapped settings, where each settings-name is properly tagged/'namespaced'.
         """
-        tag_type = tag_type.lower()
-        tag_id = tag_id.lower()
-        tag_version = tag_version.lower().replace(".", "_")
+        tag_type = self.getAppenderType().lower()
+        tag_id = self.getId().lower()
+        tag_version = self.getVersion().lower().replace(".", "_")
 
         # First get the mapping, so that both the 'headings' and formula's can be renamed at the same time later.
         def _getMapping(values: Dict[str, Any]) -> Dict[str, str]:
