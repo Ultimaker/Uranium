@@ -16,7 +16,7 @@ class PluginTestClass(AdditionalSettingDefinitionsAppender):
         self._plugin_id = "RealityPerforator"
         self._version = "7.8.9"
         self.appender_type = "CLOWNS"
-        self.definition_file_paths = [os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", "append_extra_settings.def.json")]
+        self.definition_file_paths = [os.path.join(os.path.dirname(os.path.abspath(__file__)), "additional_settings", "append_extra_settings.def.json")]
 
 
 def test_AdditionalSettingNames():
