@@ -62,3 +62,4 @@ resources/.DS_Store
 plugins/UraniumExample*Plugin
 /conanbuildinfo.txt
 /graph_info.json
+/venv/
