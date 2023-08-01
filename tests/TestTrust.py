@@ -1,3 +1,6 @@
+# Copyright (c) 2023 UltiMaker
+# Uranium is released under the terms of the LGPLv3 or higher.
+
 import copy
 import json
 from unittest.mock import MagicMock, patch
