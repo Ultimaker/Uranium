@@ -17,6 +17,7 @@ from UM.Resources import Resources
 from UM.Settings.EmptyInstanceContainer import EmptyInstanceContainer
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
+from UM.Settings.AdditionalSettingDefinitionAppender import AdditionalSettingDefinitionsAppender
 from UM.Settings.constant_instance_containers import empty_container
 from . import ContainerQuery
 from UM.Settings.ContainerStack import ContainerStack
@@ -58,6 +59,9 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Sorted list of container providers (keep it sorted by sorting each time you add one!).
         self._providers = []  # type: List[ContainerProvider]
         PluginRegistry.addType("container_provider", self.addProvider)
+
+        self._additional_setting_definitions_list: List[Dict[str, Dict[str, Any]]] = []
+        PluginRegistry.addType("setting_definitions_appender", self.addAdditionalSettingDefinitionsAppender)
 
         self.metadata = {}  # type: Dict[str, metadata_type]
         self._containers = {}  # type: Dict[str, ContainerInterface]
@@ -114,6 +118,11 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._providers.append(provider)
         # Re-sort every time. It's quadratic, but there shouldn't be that many providers anyway...
         self._providers.sort(key = lambda provider: PluginRegistry.getInstance().getMetaData(provider.getPluginId())["container_provider"].get("priority", 0))
+
+    def addAdditionalSettingDefinitionsAppender(self, appender: AdditionalSettingDefinitionsAppender) -> None:
+        """Adds a provider for additional setting definitions to append to each definition-container."""
+
+        self._additional_setting_definitions_list.append(appender.getAdditionalSettingDefinitions())
 
     def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]:
         """Find all DefinitionContainer objects matching certain criteria.
@@ -606,6 +615,12 @@ class ContainerRegistry(ContainerRegistryInterface):
         if container_id not in self.source_provider:
             self.source_provider[container_id] = None  # Added during runtime.
         self._clearQueryCacheByContainer(container)
+
+        for additional_setting_definitions in self._additional_setting_definitions_list:
+            if container.getMetaDataEntry("type") == "extruder" or not isinstance(container, DefinitionContainer):
+                continue
+            container = cast(DefinitionContainer, container)
+            container.appendAdditionalSettingDefinitions(additional_setting_definitions)
 
         # containerAdded is a custom signal and can trigger direct calls to its subscribers. This should be avoided
         # because with the direct calls, the subscribers need to know everything about what it tries to do to avoid
