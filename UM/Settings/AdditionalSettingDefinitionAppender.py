@@ -30,7 +30,7 @@ class AdditionalSettingDefinitionsAppender(PluginObject):
 
     def __init__(self) -> None:
         super().__init__()
-        self.appender_type = "EXTRA"
+        self.appender_type = "PLUGIN"
         self.definition_file_paths: List[Path] = []
 
     def getAppenderType(self) -> str:
