@@ -672,6 +672,11 @@ class SettingDefinition:
                 if value not in self.__type_definitions:
                     raise ValueError("Type {0} is not a correct setting type".format(value))
 
+            if key == "options" and not isinstance(value, collections.OrderedDict):
+                if not isinstance(value, dict):
+                    raise ValueError(f"Type {value} is not a correct value for an enum-definition.")
+                value = collections.OrderedDict(value)
+
             if self.__property_definitions[key]["type"] == DefinitionPropertyType.Any:
                 self.__property_values[key] = value
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.String:
