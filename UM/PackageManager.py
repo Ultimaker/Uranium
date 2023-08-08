@@ -453,6 +453,16 @@ class PackageManager(QObject):
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
 
+    # Checks if the given package is installed and enabled.
+    @pyqtProperty("QList<QString>", notify=installedPackagesChanged)
+    def allEnabledPackages(self) -> List[str]:
+        enabled_packages = []
+        for package_id in self.getAllInstalledPackageIDs():
+            package_info = self.getInstalledPackageInfo(package_id)
+            if package_info is not None and package_info["is_active"]:
+                enabled_packages.append(package_id)
+        return enabled_packages
+
     @pyqtSlot(QUrl)
     def installPackageViaDragAndDrop(self, file_url: str) -> None:
         """This is called by drag-and-dropping curapackage files."""
