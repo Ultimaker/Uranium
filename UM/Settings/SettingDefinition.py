@@ -665,12 +665,17 @@ class SettingDefinition:
                 continue
 
             if key not in self.__property_definitions:
-                Logger.log("w", "Unrecognised property %s in setting %s", key, self._key)
+                Logger.log("w", f"Unrecognised property {key} in setting {self._key}")
                 continue
 
             if key == "type":
                 if value not in self.__type_definitions:
-                    raise ValueError("Type {0} is not a correct setting type".format(value))
+                    raise ValueError(f"Type {value} is not a correct setting type.")
+
+            if key == "options" and not isinstance(value, collections.OrderedDict):
+                if not isinstance(value, dict):
+                    raise ValueError(f"Type {value} is not a correct value for an enum-definition.")
+                value = collections.OrderedDict(value)
 
             if self.__property_definitions[key]["type"] == DefinitionPropertyType.Any:
                 self.__property_values[key] = value
@@ -681,11 +686,11 @@ class SettingDefinition:
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.Function:
                 self.__property_values[key] = SettingFunction.SettingFunction(str(value))
             else:
-                Logger.log("w", "Unknown DefinitionPropertyType (%s) for key %s", key, self.__property_definitions[key]["type"])
+                Logger.log("w", f"Unknown DefinitionPropertyType ({key}) for key {self.__property_definitions[key]['type']}")
 
         for key in filter(lambda i: self.__property_definitions[i]["required"], self.__property_definitions):
             if key not in self.__property_values:
-                raise AttributeError("Setting {0} is missing required property {1}".format(self._key, key))
+                raise AttributeError(f"Setting {self._key} is missing required property {key}")
 
         self.__ancestors = self._updateAncestors()
         self.__descendants = self._updateDescendants()
