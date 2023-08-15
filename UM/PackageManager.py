@@ -453,7 +453,7 @@ class PackageManager(QObject):
     def isPackageInstalled(self, package_id: str) -> bool:
         return self.getInstalledPackageInfo(package_id) is not None
 
-    # Checks if the given package is installed and enabled.
+    # Returns a list of all packages that are both installed and enabled.
     @pyqtProperty("QList<QString>", notify=installedPackagesChanged)
     def allEnabledPackages(self) -> List[str]:
         enabled_packages = []
