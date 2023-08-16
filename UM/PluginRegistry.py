@@ -206,16 +206,23 @@ class PluginRegistry(QObject):
         self._plugin_locations.append(location)
 
     def checkRequiredPlugins(self, required_plugins: List[str]) -> bool:
-        """
-        Check if all required plugins are loaded
-        :param required_plugins: List of all the plugin id's that must be loaded.
-        :return: True if all plugins in the list are loaded, false if not.
-        """
-        plugins = self._findInstalledPlugins()
-        for plugin_id in required_plugins:
-            if plugin_id not in plugins:
-                Logger.log("e", "Plugin %s is required, but not added or loaded", plugin_id)
-                return False
+        disabled_plugins_that_should_be_enabled = list(set(required_plugins).intersection(set(self._disabled_plugins)))
+        for disabled_plugin in disabled_plugins_that_should_be_enabled:
+            # Yeah, this does mean that this run the plugin won't be there. But this can only happen with a corrupted
+            # list that was caused by bugs / manual fuckery. Enabling it here will ensure that the data is correct
+            # in the next run
+            Logger.info(f"The plugin {disabled_plugin} is required but it was disabled. Automatically re-enabling it")
+            self.enablePlugin(disabled_plugin)
+
+        installed_plugins = self._findInstalledPlugins()
+        required_but_not_installed_plugins = list(set(required_plugins).difference(installed_plugins))
+
+        if required_but_not_installed_plugins:
+            Logger.error(f"A number of plugins that are required are not added or loaded: {required_but_not_installed_plugins}")
+            message_text = i18n_catalog.i18nc("@error:Required plugins not found",
+                                              "A number of plugins are required, but could not be loaded: {plugins}").format(plugins = "\n- ".join(required_but_not_installed_plugins))
+            Message(text=message_text, message_type=Message.MessageType.ERROR).show()
+            return False
         return True
 
     def disablePlugin(self, plugin_id: str) -> None:
