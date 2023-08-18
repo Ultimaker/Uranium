@@ -5,7 +5,7 @@ import QtQuick 2.3
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
 
-import UM 1.5 as UM
+import UM 1.7 as UM
 
 ListView
 {
@@ -192,9 +192,10 @@ ListView
             }
         }
 
-        UM.Label
+        UM.ScrollableTextArea
         {
-            id: messageLabel
+            id: scrollableMessageLabel
+
             anchors
             {
                 left: parent.left
@@ -207,15 +208,17 @@ ListView
                 topMargin: UM.Theme.getSize("default_margin").height
             }
 
-            height: text == "" ? 0 : contentHeight
+            height: textArea.text == "" ? 0 : Math.min(200, contentHeight)
 
             function getProgressText()
             {
                 return "%1 %2%".arg(model.text).arg(Math.floor(model.progress))
             }
 
-            text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? "" : model.text
-            onLinkActivated: Qt.openUrlExternally(link)
+            textArea.text: model.progress > 0 ? getProgressText() : (model.text == undefined ? "" : model.text)
+            textArea.textFormat: Text.RichText
+            textArea.readOnly: true
+            textArea.onLinkActivated: Qt.openUrlExternally(link)
         }
 
         UM.CheckBox
@@ -223,7 +226,7 @@ ListView
             id: optionToggle
             anchors
             {
-                top: messageLabel.bottom
+                top: scrollableMessage.bottom
                 topMargin: visible ? UM.Theme.getSize("narrow_margin").height: 0
                 left: parent.left
                 leftMargin: UM.Theme.getSize("default_margin").width
