@@ -219,6 +219,8 @@ ListView
             textArea.textFormat: Text.RichText
             textArea.readOnly: true
             textArea.onLinkActivated: Qt.openUrlExternally(link)
+            textArea.background: null
+            textArea.padding: 0
         }
 
         UM.CheckBox
@@ -226,7 +228,7 @@ ListView
             id: optionToggle
             anchors
             {
-                top: scrollableMessage.bottom
+                top: scrollableMessageLabel.bottom
                 topMargin: visible ? UM.Theme.getSize("narrow_margin").height: 0
                 left: parent.left
                 leftMargin: UM.Theme.getSize("default_margin").width

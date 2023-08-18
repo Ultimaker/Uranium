@@ -3,13 +3,9 @@
 
 import QtQuick 2.10
 import QtQuick.Controls 2.3
+import UM 1.7 as UM
 
-import UM 1.5 as UM
-
-
-//
-// Cura-style TextArea with scrolls
-//
+//TextArea with scrolls that uses our own theme.
 Flickable
 {
     id: scrollableTextAreaBase
