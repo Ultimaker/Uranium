@@ -208,7 +208,7 @@ ListView
                 topMargin: UM.Theme.getSize("default_margin").height
             }
 
-            height: textArea.text == "" ? 0 : Math.min(200, contentHeight)
+            height: textArea.text === "" ? 0 : Math.min(UM.Theme.getSize("message").height * 3, contentHeight)
 
             function getProgressText()
             {
