@@ -1,5 +1,7 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2023 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
+
+import os
 
 from UM.Application import Application
 from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
@@ -16,7 +18,8 @@ class LocalFileOutputDevicePlugin(OutputDevicePlugin):
         super().__init__()
 
         Application.getInstance().getPreferences().addPreference("local_file/last_used_type", "")
-        Application.getInstance().getPreferences().addPreference("local_file/dialog_save_path", "")
+        Application.getInstance().getPreferences().addPreference("local_file/dialog_save_path",
+                                                                 os.path.expanduser("~/"))
 
     def start(self):
         self.getOutputDeviceManager().addProjectOutputDevice(LocalFileOutputDevice(add_to_output_devices = True))
