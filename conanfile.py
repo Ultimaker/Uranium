@@ -9,7 +9,7 @@ from conan.tools.microsoft import unix_path
 from conan.tools.scm import Version
 from conan.errors import ConanInvalidConfiguration
 
-required_conan_version = ">=1.56.0"
+required_conan_version = ">=1.58.0 <2.0.0"
 
 
 class UraniumConan(ConanFile):
