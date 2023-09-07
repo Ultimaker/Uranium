@@ -38,6 +38,11 @@ if TYPE_CHECKING:
 
 @signalemitter
 class Application:
+    class ShutdownSeverity:
+        HardCrash = "hard_crash"
+        CrashHandler = "crash_handler"
+        NormalShutdown = "normal_shutdown"
+
     """Central object responsible for running the main event loop and creating other central objects.
 
     The Application object is a central object for accessing other important objects. It is also
@@ -207,6 +212,7 @@ class Application:
         self._preferences.addPreference("general/visible_settings", "")
         self._preferences.addPreference("general/plugins_to_remove", "")
         self._preferences.addPreference("general/disabled_plugins", "")
+        self._preferences.addPreference("general/last_shutdown_severity", Application.ShutdownSeverity.NormalShutdown)
 
         self._controller = Controller(self)
         self._output_device_manager = OutputDeviceManager()
