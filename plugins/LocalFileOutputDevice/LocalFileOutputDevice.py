@@ -196,36 +196,41 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         self.writeProgress.emit(self, progress)
 
     def _onWriteJobFinished(self, job):
-        self._writing = False
-        self.writeFinished.emit(self)
-        if job.getResult():
-            self.writeSuccess.emit(self)
-            message = Message(
-                catalog.i18nc("@info:status Don't translate the XML tags <filename>!", "Saved to <filename>{0}</filename>").format(job.getFileName()),
-                title = catalog.i18nc("@info:title", "File Saved"),
-                message_type = Message.MessageType.POSITIVE)
-            message.addAction("open_folder", catalog.i18nc("@action:button", "Open Folder"), "open-folder", catalog.i18nc("@info:tooltip", "Open the folder containing the file"))
-            message._folder = os.path.dirname(job.getFileName())
-            message.actionTriggered.connect(self._onMessageActionTriggered)
-            message.show()
-        else:
-            message = Message(catalog.i18nc("@info:status Don't translate the XML tags <filename> or <message>!",
-                                            "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())),
-                                            lifetime = 0,
-                                            title = catalog.i18nc("@info:title", "Error"),
-                                            message_type = Message.MessageType.ERROR)
-            message.show()
-            self.writeError.emit(self)
+        if job.getStream():
+            error = job.getError()
+            try:
+                # Explicitly closing the stream flushes the write-buffer
+                job.getStream().close()
+            except Exception as e:
+                if not error:
+                    # Only log new error if there was no previous one
+                    error = e
 
-        try:
-            job.getStream().close()
-        except (OSError, PermissionError): #When you don't have the rights to do the final flush or the disk is full.
-            message = Message(catalog.i18nc("@info:status",
-                                            "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())),
-                                            title = catalog.i18nc("@info:title", "Error"),
-                                            message_type = Message.MessageType.ERROR)
-            message.show()
-            self.writeError.emit(self)
+            self._writing = False
+            self.writeFinished.emit(self)
+
+            if not error:
+                message = Message(
+                    catalog.i18nc("@info:status Don't translate the XML tags <filename>!", "Saved to <filename>{0}</filename>").format(job.getFileName()),
+                    title=catalog.i18nc("@info:title", "File Saved"),
+                    message_type=Message.MessageType.POSITIVE)
+                message.addAction("open_folder", catalog.i18nc("@action:button", "Open Folder"), "open-folder", catalog.i18nc("@info:tooltip", "Open the folder containing the file"))
+                message._folder = os.path.dirname(job.getFileName())
+                message.actionTriggered.connect(self._onMessageActionTriggered)
+                message.show()
+                self.writeSuccess.emit(self)
+            else:
+                try:
+                    os.remove(job.getFileName())
+                except Exception as e:
+                    Logger.logException("e", "Exception when trying to remove incomplete exported file %s",
+                                        str(job.getFileName()))
+                message = Message(catalog.i18nc("@info:status Don't translate the XML tags <filename> or <message>!",
+                                                "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(error)),
+                                  title=catalog.i18nc("@info:title", "Error"),
+                                  message_type=Message.MessageType.ERROR)
+                message.show()
+                self.writeError.emit(self)
 
     def _onMessageActionTriggered(self, message, action):
         if action == "open_folder" and hasattr(message, "_folder"):
