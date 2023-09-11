@@ -1,0 +1,44 @@
+{
+  "test_setting":
+  {
+    "children":
+    {
+      "glombump":
+      {
+        "label": "Snosmozea",
+        "description": "Sudoriferous.",
+        "unit": "mm/s",
+        "type": "float",
+        "minimum_value": "0.1",
+        "maximum_value_warning": "150",
+        "maximum_value": "500",
+        "default_value": 60,
+        "settable_per_mesh": true
+      }
+    }
+  },
+  "category_too":
+  {
+    "label": "Warble!",
+    "type": "category",
+    "description": "Blomblimg",
+    "icon": "Printer",
+    "children":
+    {
+      "zharbler":
+      {
+        "label": "Frumg",
+        "description": "Pleonastic Pellerator.",
+        "unit": "mm/s",
+        "type": "float",
+        "minimum_value": "0.1",
+        "maximum_value_warning": "150",
+        "maximum_value": "500",
+        "default_value": 60,
+        "value": "glombump * 1.2",
+        "settable_per_mesh": false
+      }
+    }
+  }
+}
+
