@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 09:26+0000\n"
+"POT-Creation-Date: 2023-09-12 17:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,6 +22,11 @@ msgstr ""
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "Была импортирована конфигурация от старой версии {0}."
+
+#, python-brace-format
+msgctxt "@error:Required plugins not found"
+msgid "A number of plugins are required, but could not be loaded: {plugins}"
+msgstr ""
 
 msgctxt "@option"
 msgid "Abort"
@@ -527,11 +532,6 @@ msgid "Snap Scaling"
 msgstr "Быстрое масштабирование"
 
 #, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Ошибка сохранения в <filename>{0}</filename>: <message>{1}</message>"
-
-#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Файл <filename>{0}</filename> уже существует. Вы уверены, что желаете перезаписать его?"
@@ -732,3 +732,8 @@ msgstr "Доступна версия {application_name} {version_number}!"
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} обеспечивает более качественную и надежную печать."
+
+#, python-brace-format
+#~ msgctxt "@info:status"
+#~ msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "Ошибка сохранения в <filename>{0}</filename>: <message>{1}</message>"
