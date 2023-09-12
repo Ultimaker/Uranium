@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 09:26+0000\n"
+"POT-Creation-Date: 2023-09-12 17:11+0200\n"
 "PO-Revision-Date: 2022-01-02 20:28+0800\n"
 "Last-Translator: Valen Chang  <carf17771@gmail.com>\n"
 "Language-Team: Valen Chang <carf17771@gmail.com>\n"
@@ -23,6 +23,11 @@ msgstr ""
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "已匯入舊版本 {0} 所使用的設定。"
+
+#, python-brace-format
+msgctxt "@error:Required plugins not found"
+msgid "A number of plugins are required, but could not be loaded: {plugins}"
+msgstr ""
 
 msgctxt "@option"
 msgid "Abort"
@@ -528,11 +533,6 @@ msgid "Snap Scaling"
 msgstr "等距縮放（Snap Scaling）"
 
 #, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "儲存 <filename>{0}</filename> 時發生錯誤：<message>{1}</message>"
-
-#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "檔案 <filename>{0}</filename> 已經存在。你確定要覆蓋檔案嗎？"
@@ -969,6 +969,11 @@ msgstr "{application_name} {version_number} 提供更好、更可靠的列印體
 #~ msgctxt "@title:tab"
 #~ msgid "Setting Visibility"
 #~ msgstr "參數顯示設定"
+
+#, python-brace-format
+#~ msgctxt "@info:status"
+#~ msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "儲存 <filename>{0}</filename> 時發生錯誤：<message>{1}</message>"
 
 #~ msgctxt "@error"
 #~ msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue"

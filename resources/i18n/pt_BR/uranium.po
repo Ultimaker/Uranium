@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 09:26+0000\n"
+"POT-Creation-Date: 2023-09-12 17:11+0200\n"
 "PO-Revision-Date: 2022-04-25 07:03+0200\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
@@ -21,6 +21,11 @@ msgstr ""
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "A configuração da versão antiga de {0} foi importada."
+
+#, python-brace-format
+msgctxt "@error:Required plugins not found"
+msgid "A number of plugins are required, but could not be loaded: {plugins}"
+msgstr ""
 
 msgctxt "@option"
 msgid "Abort"
@@ -524,11 +529,6 @@ msgstr "Alinhar Rotação"
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Alinhar Redimensionamento"
-
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Algo deu errado ao salvar <filename>{0}</filename>: <message>{1}</message>"
 
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
@@ -1118,6 +1118,11 @@ msgstr "{application_name} {version_number} provê uma experiência melhor e mai
 #~ msgctxt "@label"
 #~ msgid "Simple View"
 #~ msgstr "Visão Simples"
+
+#, python-brace-format
+#~ msgctxt "@info:status"
+#~ msgid "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "Algo deu errado ao salvar <filename>{0}</filename>: <message>{1}</message>"
 
 #~ msgctxt "@label"
 #~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
