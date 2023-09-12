@@ -2,12 +2,11 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from enum import IntEnum
-import struct
 import subprocess
 import sys
 import threading
 from time import sleep
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List, Callable, TextIO
 
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Logger import Logger
@@ -20,7 +19,18 @@ import pyArcus as Arcus
 
 
 class BackendState(IntEnum):
-    """The current processing state of the backend."""
+    """
+    The current processing state of the backend.
+
+    :class:`BackendState` is an enumeration class that represents the different states that the backend can be in.
+
+    Attributes:
+        - NotStarted (int): The backend has not started processing.
+        - Processing (int): The backend is currently processing data.
+        - Done (int): The backend has finished processing successfully.
+        - Error (int): The backend encountered an error during processing.
+        - Disabled (int): The backend is disabled and cannot process data.
+    """
 
     NotStarted = 1
     Processing = 2
@@ -31,24 +41,24 @@ class BackendState(IntEnum):
 
 @signalemitter
 class Backend(PluginObject):
-    """Base class for any backend communication (separate piece of software).
+    """
+    Base class for any backend communication (separate piece of software).
     It makes use of the Socket class from libArcus for the actual communication bits.
     The message_handlers dict should be filled with string (full name of proto message), function pairs.
     """
 
-    def __init__(self):
-        super().__init__()  # Call super to make multiple inheritance work.
-        self._supported_commands = {}
+    def __init__(self) -> None:
+        super().__init__()
 
-        self._message_handlers = {}
+        self._message_handlers: Dict[str, Callable[Arcus.PythonMessage]] = {}
 
         self._socket = None
         self._port = 49674
-        self._process = None # type: Optional[subprocess.Popen]
-        self._backend_log = []
+        self._process: Optional[subprocess.Popen] = None
+        self._backend_log: List[bytes] = []
         self._backend_log_max_lines = None
 
-        self._backend_state = BackendState.NotStarted
+        self._backend_state: BackendState = BackendState.NotStarted
 
         UM.Application.Application.getInstance().callLater(self._createSocket)
 
@@ -58,7 +68,7 @@ class Backend(PluginObject):
     backendQuit = Signal()
     backendDone = Signal()
 
-    def setState(self, new_state):
+    def setState(self, new_state: BackendState) -> None:
         if new_state != self._backend_state:
             self._backend_state = new_state
             self.backendStateChange.emit(self._backend_state)
@@ -66,9 +76,9 @@ class Backend(PluginObject):
             if self._backend_state == BackendState.Done:
                 self.backendDone.emit()
 
-
-    def startEngine(self):
-        """:brief Start the backend / engine.
+    def startEngine(self) -> None:
+        """
+        Start the backend / engine.
         Runs the engine, this is only called when the socket is fully opened & ready to accept connections
         """
 
@@ -77,61 +87,83 @@ class Backend(PluginObject):
             self._createSocket()
             return
 
-        if not self._backend_log_max_lines:
-            self._backend_log = []
-
-        # Double check that the old process is indeed killed.
-        if self._process is not None:
-            try:
-                self._process.terminate()
-            except PermissionError:
-                Logger.log("e", "Unable to kill running engine. Access is denied.")
-                return
-            Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
+        self._flushBackendLog()
+        self._ensureOldProcessIsTerminated()
 
         self._process = self._runEngineProcess(command)
         if self._process is None:  # Failed to start engine.
             return
         Logger.log("i", "Started engine process: %s", self.getEngineCommand()[0])
+
+        self._beginThreads()
+
+    def _beginThreads(self) -> None:
         self._backendLog(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
-        t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stdout,), name = "EngineOutputThread")
+        t = threading.Thread(target=self._storeOutputToLogThread, args=(self._process.stdout,),
+                             name="EngineOutputThread")
         t.daemon = True
         t.start()
-        t = threading.Thread(target = self._storeStderrToLogThread, args = (self._process.stderr,), name = "EngineErrorThread")
+        t = threading.Thread(target=self._storeStderrToLogThread, args=(self._process.stderr,),
+                             name="EngineErrorThread")
         t.daemon = True
         t.start()
 
-    def close(self):
+    def _ensureOldProcessIsTerminated(self) -> None:
+        if self._process is not None:
+            try:
+                self._process.terminate()
+            except PermissionError:
+                Logger.error("Unable to kill running engine. Access is denied.")
+                return
+            Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
+
+    def _flushBackendLog(self) -> None:
+        if not self._backend_log_max_lines:
+            self._backend_log = []
+
+    def close(self) -> None:
         if self._socket:
             while self._socket.getState() == Arcus.SocketState.Opening:
                 sleep(0.1)
             self._socket.close()
 
-    def _backendLog(self, line):
+    @staticmethod
+    def _decodeLine(line: bytes) -> str:
         try:
-            line_str = line.decode("utf-8")
+            return line.decode("utf-8")
         except UnicodeDecodeError:
-            line_str = line.decode("latin1") #Latin-1 as a fallback since it can never give decoding errors. All characters are 1 byte.
+            # We use Latin-1 as a fallback since it can never give decoding errors. All characters are 1 byte
+            return line.decode("latin1")
+
+    def _backendLog(self, line: bytes) -> None:
+        line_str = self._decodeLine(line)
         Logger.log("d", "[Backend] " + line_str.strip())
         self._backend_log.append(line)
 
-    def getLog(self):
-        """Get the logging messages of the backend connection."""
+    def getLog(self) -> List[bytes]:
+        """
+        Returns the backend log.
 
+        :return: A list of bytes representing the backend log.
+        """
         if self._backend_log_max_lines and type(self._backend_log_max_lines) == int:
             while len(self._backend_log) >= self._backend_log_max_lines:
                 del(self._backend_log[0])
         return self._backend_log
 
-    def getEngineCommand(self):
+    def getEngineCommand(self) -> List[str]:
         """Get the command used to start the backend executable """
 
         return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
 
-    def _runEngineProcess(self, command_list) -> Optional[subprocess.Popen]:
-        """Start the (external) backend process."""
+    def _runEngineProcess(self, command_list: List[str]) -> Optional[subprocess.Popen]:
+        """
+        Start the (external) backend process.
+        :param command_list:
+        :return:
+        """
 
-        kwargs = {} #type: Dict[str, Any]
+        kwargs: Dict[str, Any] = {}
         if sys.platform == "win32":
             su = subprocess.STARTUPINFO()
             su.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -163,7 +195,15 @@ class Backend(PluginObject):
                 break
             self._backendLog(line)
 
-    def _storeStderrToLogThread(self, handle):
+    def _storeStderrToLogThread(self, handle: TextIO) -> None:
+        """
+        Stores the standard error output from the backend process to the log.
+
+        :param handle: The handle to the standard error output stream.
+        :type handle: file-like object
+
+        :return: None
+        """
         while True:
             try:
                 line = handle.readline()
@@ -174,7 +214,7 @@ class Backend(PluginObject):
                 break
             self._backendLog(line)
 
-    def _onSocketStateChanged(self, state):
+    def _onSocketStateChanged(self, state: Arcus.SocketState) -> None:
         """Private socket state changed handler."""
 
         self._logSocketState(state)
@@ -185,7 +225,7 @@ class Backend(PluginObject):
             Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()
 
-    def _logSocketState(self, state):
+    def _logSocketState(self, state: Arcus.SocketState) -> None:
         """Debug function created to provide more info for CURA-2127"""
 
         if state == Arcus.SocketState.Listening:
@@ -201,8 +241,8 @@ class Backend(PluginObject):
         elif state == Arcus.SocketState.Closed:
             Logger.log("d", "Socket state changed to Closed")
 
-    def _onMessageReceived(self):
-        """Private message handler"""
+    def _onMessageReceived(self) -> None:
+        """Protected message handler"""
 
         message = self._socket.takeNextMessage()
 
@@ -212,7 +252,7 @@ class Backend(PluginObject):
 
         self._message_handlers[message.getTypeName()](message)
 
-    def _onSocketError(self, error):
+    def _onSocketError(self, error: Arcus.ErrorCode) -> None:
         """Private socket error handler"""
 
         if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
@@ -228,20 +268,31 @@ class Backend(PluginObject):
 
         self._createSocket()
 
-    def _createSocket(self, protocol_file):
-        """Creates a socket and attaches listeners."""
+    def _cleanupExistingSocket(self) -> None:
+        self._socket.stateChanged.disconnect(self._onSocketStateChanged)
+        self._socket.messageReceived.disconnect(self._onMessageReceived)
+        self._socket.error.disconnect(self._onSocketError)
+        # Hack for (at least) Linux. If the socket is connecting, the close will deadlock.
+        while self._socket.getState() == Arcus.SocketState.Opening:
+            sleep(0.1)
+        # If the error occurred due to parsing, both connections believe that connection is okay.
+        # So we need to force a close.
+        self._socket.close()
+
+    def _createSocket(self, protocol_file: Optional[str] = None) -> None:
+        """
+        Create a socket for communication with an external backend.
+
+        :param protocol_file: Optional. The path to the protocol file. Default is None.
+        :return: None
+        """
+        if not protocol_file:
+            Logger.warn("Unable to create socket without protocol file!")
+            return
 
         if self._socket:
             Logger.log("d", "Previous socket existed. Closing that first.") # temp debug logging
-            self._socket.stateChanged.disconnect(self._onSocketStateChanged)
-            self._socket.messageReceived.disconnect(self._onMessageReceived)
-            self._socket.error.disconnect(self._onSocketError)
-            # Hack for (at least) Linux. If the socket is connecting, the close will deadlock.
-            while self._socket.getState() == Arcus.SocketState.Opening:
-                sleep(0.1)
-            # If the error occurred due to parsing, both connections believe that connection is okay.
-            # So we need to force a close.
-            self._socket.close()
+            self._cleanupExistingSocket()
 
         self._socket = SignalSocket()
         self._socket.stateChanged.connect(self._onSocketStateChanged)

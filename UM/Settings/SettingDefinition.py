@@ -105,8 +105,8 @@ class SettingDefinition:
 
         self._i18n_catalog = i18n_catalog  # type: Optional[i18nCatalog]
 
-        self._children = []     # type: List[SettingDefinition]
-        self._relations = []    # type: List[SettingRelation]
+        self._children: List[SettingDefinition] = [] 
+        self._relations: List[SettingRelation] = []
 
         # Cached set of keys of ancestors. Used for fast lookups of ancestors.
         self.__ancestors = set()  # type: Set[str]
@@ -115,6 +115,21 @@ class SettingDefinition:
         self.__descendants = {}  # type: Dict[str, "SettingDefinition"]
 
         self.__property_values = {}  # type: Dict[str, Any]
+
+    def extend_category(self, value_id: str, value_display: str, plugin_id: Optional[str] = None,
+                        plugin_version: Optional[str] = None) -> None:
+        """Append a category to the setting.
+
+        :param value_id: :type{str} The id of the category.
+        :param value_display: :type{str} The display name of the category. If the display string needs to be translated, provide the translated string.
+        :param plugin_id: :type{Optional[str]} The id of the plugin that owns the category. Defaults to None.
+        :param plugin_version: :type{Optional[str]} The version of the plugin that owns the category. Defaults to None.
+        """
+        if plugin_id is not None and plugin_version is not None:
+            value_id = f"PLUGIN::{plugin_id}@{plugin_version}::{value_id}"
+        elif plugin_id is not None or plugin_version is not None:
+            raise ValueError("Both plugin_id and plugin_version must be provided if one of them is provided.")
+        self.options[value_id] = value_display
 
     def __getattr__(self, name: str) -> Any:
         """Override __getattr__ to provide access to definition properties."""
@@ -650,12 +665,17 @@ class SettingDefinition:
                 continue
 
             if key not in self.__property_definitions:
-                Logger.log("w", "Unrecognised property %s in setting %s", key, self._key)
+                Logger.log("w", f"Unrecognised property {key} in setting {self._key}")
                 continue
 
             if key == "type":
                 if value not in self.__type_definitions:
-                    raise ValueError("Type {0} is not a correct setting type".format(value))
+                    raise ValueError(f"Type {value} is not a correct setting type.")
+
+            if key == "options" and not isinstance(value, collections.OrderedDict):
+                if not isinstance(value, dict):
+                    raise ValueError(f"Type {value} is not a correct value for an enum-definition.")
+                value = collections.OrderedDict(value)
 
             if self.__property_definitions[key]["type"] == DefinitionPropertyType.Any:
                 self.__property_values[key] = value
@@ -666,11 +686,11 @@ class SettingDefinition:
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.Function:
                 self.__property_values[key] = SettingFunction.SettingFunction(str(value))
             else:
-                Logger.log("w", "Unknown DefinitionPropertyType (%s) for key %s", key, self.__property_definitions[key]["type"])
+                Logger.log("w", f"Unknown DefinitionPropertyType ({key}) for key {self.__property_definitions[key]['type']}")
 
         for key in filter(lambda i: self.__property_definitions[i]["required"], self.__property_definitions):
             if key not in self.__property_values:
-                raise AttributeError("Setting {0} is missing required property {1}".format(self._key, key))
+                raise AttributeError(f"Setting {self._key} is missing required property {key}")
 
         self.__ancestors = self._updateAncestors()
         self.__descendants = self._updateDescendants()
