@@ -537,7 +537,8 @@ class PluginRegistry(QObject):
             self.enablePlugin(plugin_id)
             Logger.info(f"Loaded plugin {plugin_id} {plugin_version}")
 
-        except Exception:
+        except Exception as e:
+            Logger.log("w", "Plugin [%s] failed to register: %s", plugin_id, str(e))
             self.removeCorruptedPluginMessage(plugin_id)
 
     def _acceptedRemoveCorruptedPluginMessage(self, plugin_id: str, original_message: Message):
