@@ -160,6 +160,9 @@ class Polygon:
         point. If `None`, the 0,0 coordinate will be used.
         :return: A transformed polygon.
         """
+        if not self.isValid():
+            return self
+
         if origin is None:
             origin = [0, 0]
 
