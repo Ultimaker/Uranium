@@ -34,7 +34,7 @@ class UraniumConan(ConanFile):
     
     def set_version(self):
         if not self.version:
-            self.version = "5.5.0-alpha"
+            self.version = "5.5.0-beta.1"
 
     @property
     def _base_dir(self):
@@ -95,7 +95,7 @@ class UraniumConan(ConanFile):
                 raise ConanInvalidConfiguration("Only versions 5+ are support")
 
     def requirements(self):
-        self.requires("pyarcus/5.3.0")
+        self.requires("pyarcus/(latest)@ultimaker/stable")
         self.requires("cpython/3.10.4")
 
     def build_requirements(self):
