@@ -471,7 +471,8 @@ class SettingDefinitionsModel(QAbstractListModel):
             if self._i18n_catalog:
                 label = self._i18n_catalog.i18nc(relation.target.key + " label", label)
 
-            result.append({ "key": relation.target.key, "label": label})
+            if not self.foundKeyInresult(relation.target.key, result) and (label !=""):
+                result.append({ "key": relation.target.key, "label": label})
 
         return result
 
@@ -493,7 +494,8 @@ class SettingDefinitionsModel(QAbstractListModel):
             if self._i18n_catalog:
                 label = self._i18n_catalog.i18nc(relation.target.key + " label", label)
 
-            result.append({ "key": relation.target.key, "label": label})
+            if not self.foundKeyInresult(relation.target.key, result) and (label !=""):
+                result.append({ "key": relation.target.key, "label": label})
 
         return result
 
@@ -525,6 +527,12 @@ class SettingDefinitionsModel(QAbstractListModel):
         """
 
         return self.count
+
+    def foundKeyInresult(self, key, result):
+        for key_i in result:
+            if key_i["key"] == key:
+                return True
+        return False
 
     def data(self, index, role):
         """Reimplemented from QAbstractListModel"""
