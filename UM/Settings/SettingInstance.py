@@ -173,14 +173,14 @@ class SettingInstance:
 
                     self.updateRelations(container, emit_signals = emit_signals)
 
-                if self._validator and emit_signals:
-                    self.propertyChanged.emit(self._definition.key, "validationState")
-
                 if emit_signals:
+                    if self._validator:
+                        self.propertyChanged.emit(self._definition.key, "validationState")
+
                     self.propertyChanged.emit(self._definition.key, name)
-                for property_name in self._definition.getPropertyNames():
-                    if self._definition.dependsOnProperty(property_name) == name:
-                        if emit_signals:
+
+                    for property_name in self._definition.getPropertyNames():
+                        if self._definition.dependsOnProperty(property_name) == name:
                             self.propertyChanged.emit(self._definition.key, property_name)
         else:
             if name == "state":
