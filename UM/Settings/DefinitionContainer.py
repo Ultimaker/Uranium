@@ -581,3 +581,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def __hash__(self) -> int:
+        return hash(self.getId())
