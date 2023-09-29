@@ -181,13 +181,12 @@ class SettingPropertyProvider(QObject):
         return self._stack_levels
 
     @pyqtSlot(str, "QVariant")
-    def setPropertyValue(self, property_name, property_value, *, skip_resolve = False):
+    def setPropertyValue(self, property_name, property_value):
         """Set the value of a property.
 
         :param stack_index: At which level in the stack should this property be set?
         :param property_name: The name of the property to set.
         :param property_value: The value of the property to set.
-        :param skip_resolve: to skip resolve function and force property value
         """
 
         if not self._stack or not self._key:
@@ -221,13 +220,28 @@ class SettingPropertyProvider(QObject):
                         # the value. Note that we only do this when this is not caused by the calculated state
                         # In this case the setting does need to be set, as it needs to be stored in the user settings.
                         self.removeFromContainer(self._store_index)
-                        continue
+                        return
                     else:  # First value that we encountered was different, stop looking & continue as normal.
                         break
 
         # _remove_unused_value is used when the stack value differs from the effective value
         # i.e. there is a resolve function
-        if self._property_map.value(property_name) == property_value and self._remove_unused_value and not skip_resolve:
+        if self._property_map.value(property_name) == property_value and self._remove_unused_value:
+            return
+
+        container.setProperty(self._key, property_name, property_value)
+
+    @pyqtSlot(str, "QVariant")
+    def setPropertyValueForce(self, property_name, property_value):
+        if not self._stack or not self._key:
+            return
+
+        if property_name not in self._watched_properties:
+            Logger.log("w", "Tried to set a property that is not being watched")
+            return
+
+        container = self._stack.getContainer(self._store_index)
+        if isinstance(container, DefinitionContainer):
             return
 
         container.setProperty(self._key, property_name, property_value)
