@@ -259,12 +259,15 @@ class SettingInstance:
         :param roles: list of name of the properties value of the settings
         """
 
-        for relation in filter(lambda r: r.role in roles, relations):
+        for relation in relations:
             if relation.type == RelationType.RequiresTarget:
                 continue
 
             # Do not add relation to self.
             if relation.target.key == self.definition.key:
+                continue
+
+            if relation.role not in roles:
                 continue
 
             # Don't add it to list if it's already there.
