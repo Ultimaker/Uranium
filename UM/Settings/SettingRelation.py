@@ -46,7 +46,11 @@ class SettingRelation:
     def __hash__(self) -> int:
         """Ensure that the SettingRelation is hashable, so it can be used in a set."""
 
-        return hash((self._owner, self._target, self._type, self._role))
+        try:
+            return self._hash
+        except AttributeError:
+            self._hash = hash((self._owner, self._target, self._type, self._role))
+            return self._hash
 
     @property
     def owner(self) -> SettingDefinition:
