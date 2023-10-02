@@ -37,7 +37,7 @@ def _traceRelations(instance: "SettingInstance", container: ContainerInterface, 
             continue
 
         changed_relations = set()   # type: Set[SettingRelation]
-        instance._addRelations(changed_relations, instance.definition.relations, [property_name])
+        SettingInstance._listRelations(instance.definition.key, changed_relations, instance.definition.relations, [property_name])
 
         for relation in changed_relations:
             Logger.log("d", "Emitting property change for relation {0}", relation)
@@ -239,19 +239,20 @@ class SettingInstance:
             if SettingDefinition.isReadOnlyProperty(property_name):
                 continue
 
-            changed_relations = set()   # type: Set[SettingRelation]
-            self._addRelations(changed_relations, self._definition.relations, [property_name])
-
             # TODO: We should send this as a single change event instead of several of them.
             # That would increase performance by reducing the amount of updates.
             if emit_signals:
+                changed_relations = set()   # type: Set[SettingRelation]
+                SettingInstance._listRelations(self.definition.key, changed_relations, self._definition.relations, [property_name])
+
                 for relation in changed_relations:
                     container.propertyChanged.emit(relation.target.key, relation.role)
                     # If the value/minimum value/etc state is updated, the validation state must be re-evaluated
                     if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
                         container.propertyChanged.emit(relation.target.key, "validationState")
 
-    def _addRelations(self, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], roles: List[str]) -> None:
+    @staticmethod
+    def _listRelations(key: str, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], roles: List[str]) -> None:
         """Recursive function to put all settings that require eachother for changes of a property value in a list
 
         :param relations_set: :type{set} Set of keys (strings) of settings that are influenced
@@ -264,7 +265,7 @@ class SettingInstance:
                 continue
 
             # Do not add relation to self.
-            if relation.target.key == self.definition.key:
+            if relation.target.key == key:
                 continue
 
             if relation.role not in roles:
@@ -281,4 +282,4 @@ class SettingInstance:
             property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
             property_names.insert(0, "value")
 
-            self._addRelations(relations_set, relation.target.relations, property_names)
+            SettingInstance._listRelations(key, relations_set, relation.target.relations, property_names)
