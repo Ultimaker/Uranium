@@ -353,7 +353,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             else:
                 self._definitions.append(definition)
 
-        for definition in self._definitions:
             self._updateRelations(definition)
 
     def appendAdditionalSettingDefinitions(self, additional_settings: Dict[str, Dict[str, Any]]) -> None:
