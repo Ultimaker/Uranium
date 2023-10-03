@@ -25,7 +25,7 @@ MenuItem
         enabled: root.action == null && root.enabled
         onActivated: root.triggered()
         context: Qt.ApplicationShortcut
-        sequence: root.action != null ? root.action.shortcut: null
+        sequences: root.action !== null ? [root.action] : []
     }
 
     // Workaround for menu items in controls not supporting mnemonic shortcuts in all cases.

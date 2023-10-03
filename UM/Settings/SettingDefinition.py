@@ -153,7 +153,7 @@ class SettingDefinition:
     def __hash__(self):
         """Ensure that the SettingDefinition is hashable, so it can be used in a set."""
 
-        return hash(str(self))
+        return hash((id(self), self._key, self._container))
 
     def __getstate__(self):
         """For Pickle support.
