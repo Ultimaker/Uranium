@@ -36,7 +36,7 @@ def _traceRelations(instance: "SettingInstance", container: ContainerInterface, 
         if SettingDefinition.isReadOnlyProperty(property_name):
             continue
 
-        changed_relations = set()   # type: Set[SettingRelation]
+        changed_relations: Set[SettingRelation] = set()
         SettingInstance._listRelations(instance.definition.key, changed_relations, instance.definition.relations, [property_name])
 
         for relation in changed_relations:
@@ -242,7 +242,7 @@ class SettingInstance:
             # TODO: We should send this as a single change event instead of several of them.
             # That would increase performance by reducing the amount of updates.
             if emit_signals:
-                changed_relations = set()   # type: Set[SettingRelation]
+                changed_relations: Set[SettingRelation] = set()
                 SettingInstance._listRelations(self.definition.key, changed_relations, self._definition.relations, [property_name])
 
                 for relation in changed_relations:
