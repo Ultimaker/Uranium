@@ -231,20 +231,6 @@ class SettingPropertyProvider(QObject):
 
         container.setProperty(self._key, property_name, property_value)
 
-    @pyqtSlot(str, "QVariant")
-    def setPropertyValueForce(self, property_name, property_value):
-        if not self._stack or not self._key:
-            return
-
-        if property_name not in self._watched_properties:
-            Logger.log("w", "Tried to set a property that is not being watched")
-            return
-
-        container = self._stack.getContainer(self._store_index)
-        if isinstance(container, DefinitionContainer):
-            return
-
-        container.setProperty(self._key, property_name, property_value)
 
     @pyqtSlot(str, int, result = "QVariant")
     def getPropertyValue(self, property_name: str, stack_level: int) -> Any:
