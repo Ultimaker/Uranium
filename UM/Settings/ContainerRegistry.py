@@ -17,7 +17,7 @@ from UM.Resources import Resources
 from UM.Settings.EmptyInstanceContainer import EmptyInstanceContainer
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
-from UM.Settings.AdditionalSettingDefinitionAppender import AdditionalSettingDefinitionsAppender
+from UM.Settings.AdditionalSettingDefinitionsAppender import AdditionalSettingDefinitionsAppender
 from UM.Settings.constant_instance_containers import empty_container
 from . import ContainerQuery
 from UM.Settings.ContainerStack import ContainerStack
