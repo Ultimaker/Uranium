@@ -333,9 +333,13 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         self._metadata["container_type"] = DefinitionContainer
 
         self._deserializeDefinitions(parsed["settings"])
+
+        for definition in self._definitions:
+            self._updateRelations(definition)
+
         return serialized
 
-    def _deserializeDefinitions(self, settings_dict: Dict[str, Any], force_category: Optional[str] = None) -> None:
+    def _deserializeDefinitions(self, settings_dict: Dict[str, Any], force_category: Optional[str] = None) -> List[SettingDefinition]:
 
         # When there is a forced category (= parent) present, find the category parent, create it if it doesn't exist.
         category_parent = None
@@ -343,6 +347,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             category_parent = self.findDefinitions(key = force_category)
             category_parent = category_parent[0] if len(category_parent) > 0 else None
 
+        added_definitions = []
         for key, value in settings_dict.items():
             definition = SettingDefinition(key, self, category_parent, self._i18n_catalog)
             self._definition_cache[key] = definition
@@ -352,9 +357,9 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 category_parent.children.append(definition)
             else:
                 self._definitions.append(definition)
+            added_definitions.append(definition)
 
-        for definition in self._definitions:
-            self._updateRelations(definition)
+        return added_definitions
 
     def appendAdditionalSettingDefinitions(self, additional_settings: Dict[str, Dict[str, Any]]) -> None:
         """
@@ -375,14 +380,18 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 else:
                     create_new_categories[category] = values
 
+            added_definitions = []
             if len(create_new_categories) > 0:
                 self._deserializeDefinitions(create_new_categories)
             for category, values in merge_with_existing_categories.items():
                 if "children" in values:
                     for key, value in values["children"].items():
-                        self._deserializeDefinitions({key: value}, category)
+                        added_definitions += self._deserializeDefinitions({key: value}, category)
                 else:
-                    self._deserializeDefinitions(values, category)
+                    added_definitions += self._deserializeDefinitions(values, category)
+
+            for definition in added_definitions:
+                self._updateRelations(definition)
 
         except Exception as ex:
             Logger.error(f"Failed to append additional settings from external source because: {str(ex)}")
@@ -581,3 +590,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def __repr__(self) -> str:
         return str(self)
+
+    def __hash__(self) -> int:
+        return hash(self.getId())
