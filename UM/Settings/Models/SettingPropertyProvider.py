@@ -231,21 +231,6 @@ class SettingPropertyProvider(QObject):
 
         container.setProperty(self._key, property_name, property_value)
 
-    @pyqtSlot(str, "QVariant")
-    def setPropertyValueForce(self, property_name, property_value):
-        if not self._stack or not self._key:
-            return
-
-        if property_name not in self._watched_properties:
-            Logger.log("w", "Tried to set a property that is not being watched")
-            return
-
-        container = self._stack.getContainer(self._store_index)
-        if isinstance(container, DefinitionContainer):
-            return
-
-        container.setProperty(self._key, property_name, property_value)
-
     @pyqtSlot(str, int, result = "QVariant")
     def getPropertyValue(self, property_name: str, stack_level: int) -> Any:
         """Manually request the value of a property.
@@ -346,6 +331,7 @@ class SettingPropertyProvider(QObject):
                     # This can happen when the QtObject in C++ has been destroyed, but the python object hasn't quite
                     # caught on yet. Once we call any signals, it will cause a runtimeError since all the underlying
                     # logic to emit pyqtSignals is gone.
+                    print( "RuntimeRErroe", self._key)
                     return
             return
 
@@ -353,7 +339,7 @@ class SettingPropertyProvider(QObject):
         for property_name in property_names:
             if property_name not in self._watched_properties:
                 continue
-
+            print(f"propertyChanged, inserting {self._key}_{property_name}")
             has_values_changed = True
             try:
                 self._property_map.insert(property_name, self._getPropertyValue(property_name))
@@ -362,6 +348,7 @@ class SettingPropertyProvider(QObject):
                 # This can happen when the QtObject in C++ has been destroyed, but the python object hasn't quite
                 # caught on yet. Once we call any signals, it will cause a runtimeError since all the underlying
                 # logic to emit pyqtSignals is gone.
+                print("w", "Value of property cannot be set: "+self._key+ property_name)
                 return
 
         self._updateStackLevels()
