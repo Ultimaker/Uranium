@@ -346,7 +346,6 @@ class SettingPropertyProvider(QObject):
                     # This can happen when the QtObject in C++ has been destroyed, but the python object hasn't quite
                     # caught on yet. Once we call any signals, it will cause a runtimeError since all the underlying
                     # logic to emit pyqtSignals is gone.
-                    print( "RuntimeRErroe", self._key)
                     return
             return
 
@@ -354,7 +353,6 @@ class SettingPropertyProvider(QObject):
         for property_name in property_names:
             if property_name not in self._watched_properties:
                 continue
-            print(f"propertyChanged, inserting {self._key}_{property_name}")
             has_values_changed = True
             try:
                 self._property_map.insert(property_name, self._getPropertyValue(property_name))
@@ -363,7 +361,6 @@ class SettingPropertyProvider(QObject):
                 # This can happen when the QtObject in C++ has been destroyed, but the python object hasn't quite
                 # caught on yet. Once we call any signals, it will cause a runtimeError since all the underlying
                 # logic to emit pyqtSignals is gone.
-                print("w", "Value of property cannot be set: "+self._key+ property_name)
                 return
 
         self._updateStackLevels()
