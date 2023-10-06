@@ -88,7 +88,7 @@ class ActiveToolProxy(QObject):
             return
         if hasattr(self._active_tool, "set" + property):
             option_setter = getattr(self._active_tool, "set" + property)
-            if option_setter:
+            if option_setter and value != '':
                 option_setter(value)
 
         if hasattr(self._active_tool, property):
