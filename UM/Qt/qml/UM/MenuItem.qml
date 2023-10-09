@@ -84,8 +84,7 @@ MenuItem
         {
             // Middle margin
             id: middleSpacer
-            width: visible ? UM.Theme.getSize("default_margin").width : 0
-            visible: _shortcut.nativeText != "" || root.subMenu
+            width: (_shortcut.nativeText != "" || root.subMenu) ? UM.Theme.getSize("default_margin").width : 0
         }
 
         UM.Label
