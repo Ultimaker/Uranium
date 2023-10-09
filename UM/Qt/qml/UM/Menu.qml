@@ -17,7 +17,7 @@ Menu
         {
             root.parent.visible = shouldBeVisible
             root.parent.height = shouldBeVisible ? UM.Theme.getSize("menu").height : 0
-            root.width = shouldBeVisible ? Qt.binding(setWidth) : 0
+            root.width = shouldBeVisible ? setWidth() : 0
         }
     }
 
