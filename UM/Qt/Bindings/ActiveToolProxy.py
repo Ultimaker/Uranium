@@ -88,8 +88,11 @@ class ActiveToolProxy(QObject):
             return
         if hasattr(self._active_tool, "set" + property):
             option_setter = getattr(self._active_tool, "set" + property)
-            if option_setter and value != '':
-                option_setter(value)
+            if option_setter:
+                try:
+                    option_setter(value)
+                except Exception as e:
+                    Logger.logException("e", f"Unable to set value '{value}' to property '{property}'.")
 
         if hasattr(self._active_tool, property):
             setattr(self._active_tool, property, value)
