@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 15:53+0200\n"
+"POT-Creation-Date: 2023-10-23 04:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -589,30 +590,6 @@ msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr ""
 msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr ""
-
-msgctxt "name"
-msgid "Simple View"
-msgstr ""
-
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr ""
-
-msgctxt "name"
-msgid "Update Checker"
-msgstr ""
-
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr ""
-
-msgctxt "name"
-msgid "Console Logger"
-msgstr ""
-
-msgctxt "description"
 msgid "Enables saving to local files."
 msgstr ""
 
@@ -629,11 +606,11 @@ msgid "Local Container Provider"
 msgstr ""
 
 msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
+msgid "Makes it possible to read Wavefront OBJ files."
 msgstr ""
 
 msgctxt "name"
-msgid "File Logger"
+msgid "Wavefront OBJ Reader"
 msgstr ""
 
 msgctxt "description"
@@ -645,6 +622,14 @@ msgid "STL Writer"
 msgstr ""
 
 msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr ""
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr ""
+
+msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
 msgstr ""
 
@@ -653,19 +638,59 @@ msgid "Wavefront OBJ Writer"
 msgstr ""
 
 msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
+msgid "Outputs log information to a file in your settings folder."
 msgstr ""
 
 msgctxt "name"
-msgid "Wavefront OBJ Reader"
+msgid "File Logger"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides support for reading STL files."
+msgid "Outputs log information to the console."
 msgstr ""
 
 msgctxt "name"
-msgid "STL Reader"
+msgid "Console Logger"
+msgstr ""
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr ""
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr ""
+
+msgctxt "name"
+msgid "Camera Tool"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr ""
+
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides the Move tool."
+msgstr ""
+
+msgctxt "name"
+msgid "Move Tool"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr ""
+
+msgctxt "name"
+msgid "Mirror Tool"
 msgstr ""
 
 msgctxt "description"
@@ -685,34 +710,10 @@ msgid "Scale Tool"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides the Mirror tool."
+msgid "Provides a simple solid mesh view."
 msgstr ""
 
 msgctxt "name"
-msgid "Mirror Tool"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr ""
-
-msgctxt "name"
-msgid "Camera Tool"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides the Move tool."
-msgstr ""
-
-msgctxt "name"
-msgid "Move Tool"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides the Rotate tool."
-msgstr ""
-
-msgctxt "name"
-msgid "Rotate Tool"
+msgid "Simple View"
 msgstr ""
 
