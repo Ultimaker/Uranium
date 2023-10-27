@@ -185,8 +185,10 @@ class Application:
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
 
         if not hasattr(sys, "frozen"):
+            Resources.addSearchPath(str(Path(sys.executable).parent.joinpath("share", "cura", "resources")))
             Resources.addSearchPath(str(Path(__file__).parent.parent.joinpath("resources")))
             Resources.addSearchPath(str(Path(__file__).parent.parent.joinpath("plugins")))
+            Resources.addSearchPath(str(Path(sys.executable).parent.joinpath("share", "cura", "plugins")))
 
             # local Conan cache
             Resources.addSearchPath(str(Path(__file__).parent.parent.parent.joinpath("resources")))
