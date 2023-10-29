@@ -185,10 +185,11 @@ class Application:
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
 
         if not hasattr(sys, "frozen"):
-            Resources.addSearchPath(str(Path(sys.executable).parent.joinpath("share", "cura", "resources")))
+            uranium_data_root = os.environ.get('URANIUM_DATA_ROOT', None)
+            if uranium_data_root:
+                Resources.addSearchPath(str(Path(uranium_data_root).joinpath("resources")))
             Resources.addSearchPath(str(Path(__file__).parent.parent.joinpath("resources")))
             Resources.addSearchPath(str(Path(__file__).parent.parent.joinpath("plugins")))
-            Resources.addSearchPath(str(Path(sys.executable).parent.joinpath("share", "cura", "plugins")))
 
             # local Conan cache
             Resources.addSearchPath(str(Path(__file__).parent.parent.parent.joinpath("resources")))
@@ -236,6 +237,9 @@ class Application:
         self._plugin_registry.addPluginLocation(local_path)
 
         if not hasattr(sys, "frozen"):
+            uranium_plugin_root = os.environ.get('URANIUM_DATA_ROOT', None)
+            if uranium_plugin_root:
+                Resources.addSearchPath(str(Path(uranium_plugin_root).joinpath("plugins")))
             self._plugin_registry.addPluginLocation(str(Path(__file__).parent.parent.joinpath("plugins")))
             self._plugin_registry.addPluginLocation(str(Path(__file__).parent.parent.parent.joinpath("plugins")))
 
