@@ -23,7 +23,6 @@ Menu
 
     Component.onCompleted: handleVisibility()
     onShouldBeVisibleChanged: handleVisibility()
-    onAboutToShow: handleVisibility()
 
     // Automatically set the width to fit the widest MenuItem
     // Based on https://martin.rpdev.net/2018/03/13/qt-quick-controls-2-automatically-set-the-width-of-menus.html
