@@ -113,6 +113,22 @@ class AxisAlignedBox:
     def maximum(self) -> Vector:
         return self._max
 
+    @property
+    def points(self) -> Tuple[Vector, Vector, Vector, Vector, Vector, Vector, Vector, Vector]:
+        """Get the 8 points of the bounding box.
+        :return: A tuple of 8 points.
+        """
+        return (
+            Vector(self._min.x, self._min.y, self._min.z),
+            Vector(self._max.x, self._min.y, self._min.z),
+            Vector(self._min.x, self._max.y, self._min.z),
+            Vector(self._max.x, self._max.y, self._min.z),
+            Vector(self._min.x, self._min.y, self._max.z),
+            Vector(self._max.x, self._min.y, self._max.z),
+            Vector(self._min.x, self._max.y, self._max.z),
+            Vector(self._max.x, self._max.y, self._max.z),
+        )
+
     def isValid(self) -> bool:
         """Check if the bounding box is valid.
         Uses fuzzycompare to validate.

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Ultimaker B.V.
+# Copyright (c) 2023 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
@@ -41,18 +41,18 @@ class QtRenderer(Renderer):
     def __init__(self) -> None:
         super().__init__()
 
-        self._initialized = False  # type: bool
+        self._initialized: bool = False
 
-        self._light_position = Vector(0, 0, 0)  # type: Vector
-        self._background_color = QColor(128, 128, 128)  # type: QColor
-        self._viewport_width = 0  # type: int
-        self._viewport_height = 0  # type: int
-        self._window_width = 0  # type: int
-        self._window_height = 0  # type: int
+        self._light_position: Vector = Vector(0, 0, 0)
+        self._background_color: QColor = QColor(128, 128, 128)
+        self._viewport_width: int = 0
+        self._viewport_height: int = 0
+        self._window_width: int = 0
+        self._window_height: int = 0
 
-        self._batches = []  # type: List[RenderBatch]
-        self._named_batches = {}  # type: Dict[str, RenderBatch]
-        self._quad_buffer = None  # type: QOpenGLBuffer
+        self._batches: List[RenderBatch] = []
+        self._named_batches: Dict[str, RenderBatch] = {}
+        self._quad_buffer: QOpenGLBuffer = None
 
     initialized = Signal()
 
@@ -210,10 +210,10 @@ class QtRenderer(Renderer):
         supports_vao = OpenGLContext.supportsVertexArrayObjects()  # fill the OpenGLContext.properties
         Logger.log("d", "Support for Vertex Array Objects: %s", supports_vao)
 
-        OpenGL()
         self._gl = OpenGL.getInstance().getBindingsObject()
 
-        default_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))  # type: Optional[ShaderProgram]
+        default_shader: Optional[ShaderProgram] = OpenGL.getInstance().createShaderProgram(
+            Resources.getPath(Resources.Shaders, "default.shader"))
         if default_shader is None:
             return
         self._default_material = default_shader
