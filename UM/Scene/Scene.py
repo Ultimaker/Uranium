@@ -188,6 +188,7 @@ class Scene:
 
         if modified_nodes:
             # Hide the message if it was already visible
+            # Todo: keep one message for each modified file, when multiple had been updated at same time
             if self._reload_message is not None:
                 self._reload_message.hide()
 
@@ -197,11 +198,11 @@ class Scene:
             self._reload_message.addAction("reload", i18n_catalog.i18nc("@action:button", "Reload"),
                                            icon = "",
                                            description = i18n_catalog.i18nc("@action:description", "This will trigger the modified files to reload from disk."))
-            self._reload_callback = functools.partial(self._reloadNodes, modified_nodes)
+            self._reload_callback = functools.partial(self._reloadNodes, modified_nodes, file_path)
             self._reload_message.actionTriggered.connect(self._reload_callback)
             self._reload_message.show()
 
-    def _reloadNodes(self, nodes: List["SceneNode"], message: str, action: str) -> None:
+    def _reloadNodes(self, nodes: List["SceneNode"], file_path: str, message: str, action: str) -> None:
         """Reloads a list of nodes after the user pressed the "Reload" button.
 
         :param nodes: The list of nodes that needs to be reloaded.
@@ -213,31 +214,54 @@ class Scene:
             return
         if self._reload_message is not None:
             self._reload_message.hide()
-        for node in nodes:
-            meshdata = node.getMeshData()
-            if meshdata:
-                filename = meshdata.getFileName()
-                if not filename or not os.path.isfile(filename):  # File doesn't exist any more.
-                    continue
-                job = ReadMeshJob(filename)
-                reload_finished_callback = functools.partial(self._reloadJobFinished, node)
 
-                # Store it so it won't get garbage collected. This is a memory leak, but just one partial per reload so
-                # it's not much.
-                self._callbacks.add(reload_finished_callback)
+        if not file_path or not os.path.isfile(file_path):  # File doesn't exist anymore.
+            return
 
-                job.finished.connect(reload_finished_callback)
-                job.start()
+        job = ReadMeshJob(file_path)
+        reload_finished_callback = functools.partial(self._reloadJobFinished, nodes)
 
-    def _reloadJobFinished(self, replaced_node: SceneNode, job: ReadMeshJob) -> None:
+        # Store it so it won't get garbage collected. This is a memory leak, but just one partial per reload so
+        # it's not much.
+        self._callbacks.add(reload_finished_callback)
+
+        job.finished.connect(reload_finished_callback)
+        job.start()
+
+    def _reloadJobFinished(self, replaced_nodes: [SceneNode], job: ReadMeshJob) -> None:
         """Triggered when reloading has finished.
 
-        This then puts the resulting mesh data in the node.
+        This then puts the resulting mesh data in the nodes.
+        Objects in the scene that are not in the reloaded file will be kept. (same as in the ReloadAll action)
         """
+        renamed_nodes = {}  # type: Dict[str, int]
 
         for node in job.getResult():
             mesh_data = node.getMeshData()
-            if mesh_data:
-                replaced_node.setMeshData(mesh_data)
-            else:
+            if not mesh_data:
                 Logger.log("w", "Could not find a mesh in reloaded node.")
+                continue
+
+            # Solves issues with object naming
+            node_name = node.getName()
+            if not node_name:
+                node_name = os.path.basename(mesh_data.getFileName())
+            if node_name in renamed_nodes:  # objects may get renamed by Cura.UI.ObjectsModel._renameNodes() when loaded
+                renamed_nodes[node_name] += 1
+                node_name = "{0}({1})".format(node.getName(), renamed_nodes[node.getName()])
+            else:
+                renamed_nodes[node.getName()] = 0
+
+            # Find the matching scene node to replace
+            scene_node = None
+            for replaced_node in replaced_nodes:
+                if replaced_node.getName() == node_name:
+                    scene_node = replaced_node
+                    break
+
+            if scene_node:
+                scene_node.setMeshData(mesh_data)
+            else:
+                # Current node is a new one in the file, or it's name has changed
+                # TODO: Load this mesh into the scene. Also alter the "ReloadAll" action in CuraApplication.
+                Logger.log("w", "Could not find matching node for object '{0}' in the scene.", node_name)
