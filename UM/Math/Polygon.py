@@ -193,7 +193,7 @@ class Polygon:
 
         clipper = pyclipper.Pyclipper()
         clipper.AddPath(me._clipperPoints(), pyclipper.PT_SUBJECT, closed = True)
-        clipper.AddPath(other._clipperPoints(), pyclipper.PT_CLIP, closed = True)
+        clipper.AddPath(him._clipperPoints(), pyclipper.PT_CLIP, closed=True)
 
         points = clipper.Execute(pyclipper.CT_INTERSECTION, pyclipper.PFT_NONZERO, pyclipper.PFT_NONZERO)
         if len(points) == 0:
