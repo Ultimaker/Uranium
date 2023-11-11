@@ -34,7 +34,7 @@ class UraniumConan(ConanFile):
     
     def set_version(self):
         if not self.version:
-            self.version = "5.6.0-beta.1"
+            self.version = self.conan_data["version"]
 
     @property
     def _base_dir(self):
