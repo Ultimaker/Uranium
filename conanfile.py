@@ -4,13 +4,12 @@ from pathlib import Path
 
 from conan import ConanFile
 from conan.tools.env import VirtualBuildEnv, VirtualRunEnv
-from conan.tools.files import copy, mkdir
+from conan.tools.files import copy, mkdir, update_conandata
 from conan.tools.microsoft import unix_path
 from conan.tools.scm import Version
 from conan.errors import ConanInvalidConfiguration
 
 required_conan_version = ">=1.58.0 <2.0.0"
-
 
 class UraniumConan(ConanFile):
     name = "uranium"
@@ -22,14 +21,15 @@ class UraniumConan(ConanFile):
     exports = "LICENSE*"
     settings = "os", "compiler", "build_type", "arch"
 
-    python_requires = "umbase/[>=0.1.7]@ultimaker/stable", "translationextractor/[>=2.1.2]@ultimaker/stable"
-    python_requires_extend = "umbase.UMBaseConanfile"
+    python_requires = "translationextractor/[>=2.1.2]@ultimaker/stable"
 
     options = {
-        "devtools": [True, False]
+        "devtools": [True, False],
+        "enable_i18n": [True, False],
     }
     default_options = {
         "devtools": False,
+        "enable_i18n": False,
     }
     
     def set_version(self):
@@ -77,6 +77,9 @@ class UraniumConan(ConanFile):
             py_interp = Path(*[f'"{p}"' if " " in p else p for p in py_interp.parts])
         return py_interp
 
+    def export(self):
+        update_conandata(self, {"version": self.version})
+
     def export_sources(self):
         copy(self, "*", os.path.join(self.recipe_folder, "plugins"), os.path.join(self.export_sources_folder, "plugins"))
         copy(self, "*", os.path.join(self.recipe_folder, "resources"), os.path.join(self.export_sources_folder, "resources"), excludes = "*.mo")
@@ -84,6 +87,10 @@ class UraniumConan(ConanFile):
         copy(self, "*", os.path.join(self.recipe_folder, "UM"), os.path.join(self.export_sources_folder, "UM"))
         copy(self, "requirements.txt", self.recipe_folder, self.export_sources_folder)
         copy(self, "requirements-dev.txt", self.recipe_folder, self.export_sources_folder)
+
+    def config_options(self):
+        if self.settings.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", check_type=str):
+            del self.options.enable_i18n
 
     def configure(self):
         self.options["pyarcus"].shared = True
@@ -100,35 +107,31 @@ class UraniumConan(ConanFile):
         self.requires("cpython/3.10.4")
 
     def build_requirements(self):
-        if self.options.devtools:
-            if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
-                # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
-                self.tool_requires("gettext/0.21@ultimaker/testing", force_host_context = True)
+        if self.options.get_safe("enable_i18n", False):
+            self.tool_requires("gettext/0.21@ultimaker/testing", force_host_context = True)
 
     def generate(self):
         vr = VirtualRunEnv(self)
         vr.generate()
 
-        if self.options.devtools:
-            if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type=str):
-                vb = VirtualBuildEnv(self)
-                vb.generate()
+        if self.options.get_safe("enable_i18n", False):
+            # Update the po and pot files
+            vb = VirtualBuildEnv(self)
+            vb.generate()
 
-                # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
-                cpp_info = self.dependencies["gettext"].cpp_info
-                pot = self.python_requires["translationextractor"].module.ExtractTranslations(self, cpp_info.bindirs[0])
-                pot.generate()
+            # # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
+            cpp_info = self.dependencies["gettext"].cpp_info
+            pot = self.python_requires["translationextractor"].module.ExtractTranslations(self, cpp_info.bindirs[0])
+            pot.generate()
 
     def build(self):
-        if self.options.devtools:
-            if self.settings.os != "Windows" or self.conf.get("tools.microsoft.bash:path", check_type = str):
-                # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
-                for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
-                    mo_file = Path(self.build_folder, po_file.with_suffix('.mo').relative_to(self.source_path))
-                    mo_file = mo_file.parent.joinpath("LC_MESSAGES", mo_file.name)
-                    mkdir(self, str(unix_path(self, Path(mo_file).parent)))
-                    cpp_info = self.dependencies["gettext"].cpp_info
-                    self.run(f"{cpp_info.bindirs[0]}/msgfmt {po_file} -o {mo_file} -f", env="conanbuild", ignore_errors=True)
+        if self.options.get_safe("enable_i18n", False):
+            for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
+                mo_file = Path(self.build_folder, po_file.with_suffix('.mo').relative_to(self.source_path))
+                mo_file = mo_file.parent.joinpath("LC_MESSAGES", mo_file.name)
+                mkdir(self, str(unix_path(self, Path(mo_file).parent)))
+                cpp_info = self.dependencies["gettext"].cpp_info
+                self.run(f"{cpp_info.bindirs[0]}/msgfmt {po_file} -o {mo_file} -f", env="conanbuild", ignore_errors=True)
 
     def layout(self):
         self.folders.source = "."
@@ -160,4 +163,5 @@ class UraniumConan(ConanFile):
         self.info.clear()
 
         del self.info.options.devtools
+        self.options.rm_safe("enable_i18n")
 
