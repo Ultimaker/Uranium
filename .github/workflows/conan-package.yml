@@ -39,7 +39,6 @@ jobs:
     with:
       recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
       recipe_id_latest: ${{ needs.conan-recipe-version.outputs.recipe_id_latest }}
-      update_system_requirements: true
       conan_export_binaries: true
       conan_extra_args: '-c tools.build:skip_test=True -o ${{ needs.conan-recipe-version.outputs.project_name }}:enable_i18n=True'
     secrets: inherit
