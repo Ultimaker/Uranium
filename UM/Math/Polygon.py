@@ -184,16 +184,21 @@ class Polygon:
         :param other: The other polygon to intersect convex hulls with.
         :return: The intersection of the two polygons' convex hulls.
         """
-        me = self.getConvexHull()
-        him = other.getConvexHull()
+        return self.getConvexHull().intersection(other.getConvexHull())
 
-        # If either polygon has no surface area, then the intersection is empty.
-        if len(me.getPoints()) <= 2 or len(him.getPoints()) <= 2:
+    def intersection(self, other: "Polygon") -> "Polygon":
+        """Computes the intersection of this and another polygon.
+
+        :param other: The other polygon to intersect with.
+        :return: The intersection of the two polygons.
+        """
+
+        if len(self.getPoints()) <= 2 or len(other.getPoints()) <= 2:
             return Polygon()
 
         clipper = pyclipper.Pyclipper()
-        clipper.AddPath(me._clipperPoints(), pyclipper.PT_SUBJECT, closed = True)
-        clipper.AddPath(other._clipperPoints(), pyclipper.PT_CLIP, closed = True)
+        clipper.AddPath(self._clipperPoints(), pyclipper.PT_SUBJECT, closed=True)
+        clipper.AddPath(other._clipperPoints(), pyclipper.PT_CLIP, closed=True)
 
         points = clipper.Execute(pyclipper.CT_INTERSECTION, pyclipper.PFT_NONZERO, pyclipper.PFT_NONZERO)
         if len(points) == 0:
