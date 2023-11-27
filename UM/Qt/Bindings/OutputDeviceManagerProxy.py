@@ -24,7 +24,7 @@ catalog = i18nCatalog("uranium")
 class OutputDeviceManagerProxy(QObject):
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
-        self._device_manager = Application.getInstance().getOutputDeviceManager() #type: OutputDeviceManager
+        self._device_manager: OutputDeviceManager = Application.getInstance().getOutputDeviceManager()
         self._device_manager.activeDeviceChanged.connect(self._onActiveDeviceChanged)
 
         Application.getInstance().getPreferences().addPreference("output_devices/last_used_device", "")
@@ -140,7 +140,7 @@ class OutputDeviceManagerProxy(QObject):
         device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return
-        file_handler = None #type: Optional[FileHandler]
+        file_handler: Optional[FileHandler] = None
         if file_type == "mesh":
             file_handler = UM.Qt.QtApplication.QtApplication.getInstance().getMeshFileHandler()
         elif file_type == "workspace":

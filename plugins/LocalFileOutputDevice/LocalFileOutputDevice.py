@@ -94,8 +94,15 @@ class LocalFileOutputDevice(ProjectOutputDevice):
                 preferred_mimetype = mime_type
                 break
 
+        container = Application.getInstance().getGlobalContainerStack().findContainer({"file_formats": "*"})
+        machine_file_formats = [file_type.strip() for file_type in
+                                container.getMetaDataEntry("file_formats").split(";")]
+
         extension_added = False
         for item in file_types:
+            if item["mime_type"] not in machine_file_formats:
+                continue
+
             type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
             filters.append(type_filter)
             mime_types.append(item["mime_type"])

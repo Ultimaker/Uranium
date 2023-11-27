@@ -42,13 +42,13 @@ class FileHandler(QObject):
         cast(FileHandler, self.__class__).__instance = self
 
         self._application = application
-        self._readers = {} # type: Dict[str, FileReader]
-        self._writers = {} # type: Dict[str, FileWriter]
+        self._readers: Dict[str, FileReader] = {}
+        self._writers: Dict[str, FileWriter] = {}
 
-        self._writer_type = writer_type # type: str
-        self._reader_type = reader_type # type: str
+        self._writer_type: str = writer_type
+        self._reader_type: str = reader_type
 
-        self._add_to_recent_files_hints = [] # type: List[QUrl]
+        self._add_to_recent_files_hints: List[QUrl] = []
 
         PluginRegistry.addType(self._writer_type, self.addWriter)
         PluginRegistry.addType(self._reader_type, self.addReader)
