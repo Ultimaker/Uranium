@@ -158,7 +158,7 @@ msgstr "Flach"
 
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr "Objekt flach auf die Druckplatte leben..."
+msgstr "Objekt flach auf die Druckplatte legen..."
 
 msgctxt "@action:button"
 msgid "Learn more"
