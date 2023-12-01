@@ -11,6 +11,7 @@ from conan.errors import ConanInvalidConfiguration
 
 required_conan_version = ">=1.58.0 <2.0.0"
 
+
 class UraniumConan(ConanFile):
     name = "uranium"
     license = "LGPL-3.0"
@@ -35,6 +36,10 @@ class UraniumConan(ConanFile):
     def set_version(self):
         if not self.version:
             self.version = self.conan_data["version"]
+
+    @property
+    def _i18n_options(self):
+        return self.conf.get("user.i18n:options", default = {"extract": True, "build": True}, check_type = dict)
 
     @property
     def _base_dir(self):
@@ -89,7 +94,7 @@ class UraniumConan(ConanFile):
         copy(self, "requirements-dev.txt", self.recipe_folder, self.export_sources_folder)
 
     def config_options(self):
-        if self.settings.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", check_type=str):
+        if self.settings.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", check_type = str):
             del self.options.enable_i18n
 
     def configure(self):
@@ -104,28 +109,27 @@ class UraniumConan(ConanFile):
     def requirements(self):
         for req in self.conan_data["requirements"]:
             self.requires(req)
-        self.requires("cpython/3.10.4")
+        self.requires("cpython/3.10.4@ultimaker/stable")
 
     def build_requirements(self):
         if self.options.get_safe("enable_i18n", False):
-            self.tool_requires("gettext/0.21@ultimaker/testing", force_host_context = True)
+            self.tool_requires("gettext/0.21", force_host_context = True)
 
     def generate(self):
         vr = VirtualRunEnv(self)
         vr.generate()
 
-        if self.options.get_safe("enable_i18n", False):
-            # Update the po and pot files
+        if self.options.get_safe("enable_i18n", False) and self._i18n_options["extract"]:
             vb = VirtualBuildEnv(self)
             vb.generate()
 
-            # # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
+            # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
             cpp_info = self.dependencies["gettext"].cpp_info
             pot = self.python_requires["translationextractor"].module.ExtractTranslations(self, cpp_info.bindirs[0])
             pot.generate()
 
     def build(self):
-        if self.options.get_safe("enable_i18n", False):
+        if self.options.get_safe("enable_i18n", False) and self._i18n_options["build"]:
             for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
                 mo_file = Path(self.build_folder, po_file.with_suffix('.mo').relative_to(self.source_path))
                 mo_file = mo_file.parent.joinpath("LC_MESSAGES", mo_file.name)
