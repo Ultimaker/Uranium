@@ -48,6 +48,7 @@ class ReadFileJob(Job):
                 message_type=Message.MessageType.ERROR,
             )
             result_message.show()
+            forceStackTrace()
             return
 
         # Give the plugin a chance to display a dialog before showing the loading UI
