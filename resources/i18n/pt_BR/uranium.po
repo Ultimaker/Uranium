@@ -1,13 +1,13 @@
 # Uranium
-# Copyright (C) 2022 Ultimaker B.V.
+# Copyright (C) 2023 UltiMaker
 # This file is distributed under the same license as the Uranium package.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 15:53+0200\n"
-"PO-Revision-Date: 2022-04-25 07:03+0200\n"
+"POT-Creation-Date: 2023-10-23 04:26+0000\n"
+"PO-Revision-Date: 2023-10-23 05:16+0200\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #, python-brace-format
 msgctxt "@info:version-upgrade"
@@ -25,7 +25,7 @@ msgstr "A configuração da versão antiga de {0} foi importada."
 #, python-brace-format
 msgctxt "@error:Required plugins not found"
 msgid "A number of plugins are required, but could not be loaded: {plugins}"
-msgstr ""
+msgstr "Certos complementos são requeridos, mas não puderam ser carregados: {plugins}"
 
 msgctxt "@option"
 msgid "Abort"
@@ -117,7 +117,7 @@ msgstr "Baixar"
 
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr ""
+msgstr "Largar o Modelo"
 
 msgctxt "description"
 msgid "Enables saving to local files."

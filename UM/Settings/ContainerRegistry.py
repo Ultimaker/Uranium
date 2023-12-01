@@ -17,7 +17,7 @@ from UM.Resources import Resources
 from UM.Settings.EmptyInstanceContainer import EmptyInstanceContainer
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.ContainerProvider import ContainerProvider
-from UM.Settings.AdditionalSettingDefinitionAppender import AdditionalSettingDefinitionsAppender
+from UM.Settings.AdditionalSettingDefinitionsAppender import AdditionalSettingDefinitionsAppender
 from UM.Settings.constant_instance_containers import empty_container
 from . import ContainerQuery
 from UM.Settings.ContainerStack import ContainerStack
@@ -866,11 +866,13 @@ class ContainerRegistry(ContainerRegistryInterface):
     def _isMetadataValid(self, metadata: Optional[metadata_type]) -> bool:
         """Validate a metadata object.
 
-        If the metadata is invalid, the container is not allowed to be in the registry.
+        If the metadata is invalid, the container is not allowed to be in the
+        registry.
         :param metadata: A metadata object.
         :return: Whether this metadata was valid.
         """
-        return metadata is not None and "type" in metadata and "name" in metadata
+
+        return metadata is not None
 
     def getLockFilename(self) -> str:
         """Get the lock filename including full path

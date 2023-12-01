@@ -16,6 +16,7 @@ from UM.Signal import Signal, signalemitter
 from UM.Scene.Camera import Camera
 from typing import Optional
 
+from UM.View.GL.OpenGL import OpenGL
 
 @signalemitter
 class MainWindow(QQuickWindow):
@@ -280,7 +281,14 @@ class MainWindow(QQuickWindow):
 
     renderCompleted = Signal(type = Signal.Queued)
 
+    _OPEN_GL_INITIALIZED = False
+
     def _render(self):
+        if not self._OPEN_GL_INITIALIZED:
+            # initialize OpenGL singleton
+            OpenGL()
+            self._OPEN_GL_INITIALIZED = True
+
         self.beginExternalCommands()
         if self._full_render_required:
             renderer = self._app.getRenderer()

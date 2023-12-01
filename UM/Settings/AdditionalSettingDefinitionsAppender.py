@@ -6,6 +6,7 @@ from pathlib import Path
 import os.path
 from typing import Any, Dict, List
 
+from UM.i18n import i18nCatalog
 from UM.Logger import Logger
 from UM.PluginObject import PluginObject
 from UM.Settings.SettingDefinition import DefinitionPropertyType, SettingDefinition
@@ -28,10 +29,11 @@ class AdditionalSettingDefinitionsAppender(PluginObject):
     instead of providing the files. This should then return a dict, as if parsed by json.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, catalog: i18nCatalog = None) -> None:
         super().__init__()
         self.appender_type = "PLUGIN"
         self.definition_file_paths: List[Path] = []
+        self._catalog = catalog
 
     def getAppenderType(self) -> str:
         """
@@ -71,6 +73,8 @@ class AdditionalSettingDefinitionsAppender(PluginObject):
 
     def _prependIdToSettings(self, settings: Dict[str, Any]) -> Dict[str, Any]:
         """ This takes the whole (extra) settings-map as defined by the provider, and returns a tag-renamed version.
+
+        Note that this function also translates the (label and description of the) settings, if a catalog is present.
 
         Additional (appended) settings will need to be prepended with (an) extra identifier(s)/namespaces to not collide.
         This is done for when there are multiple additional settings appenders that might not know about each other.
@@ -112,21 +116,25 @@ class AdditionalSettingDefinitionsAppender(PluginObject):
 
         key_map = _getMapping(settings)
 
-        # Get all values that can be functions, so it's known where to replace.
+        # Get all values that can be functions (or need to be translated), so it's known where to replace.
         function_type_names = set(SettingDefinition.getPropertyNames(DefinitionPropertyType.Function))
+        translation_type_names = set(SettingDefinition.getPropertyNames(DefinitionPropertyType.TranslatedString))
 
         # Replace all, both as key-names and their use in formulas.
-        def _doReplace(values: Dict[str, Any]) -> Dict[str, str]:
+        def _doReplace(values: Dict[str, Any], original_parent_name: str = "") -> Dict[str, str]:
             result = {}
             for key, value in values.items():
                 if key in function_type_names and isinstance(value, str):
                     # Replace key-names in the specified settings-function.
                     for original, mapped in key_map.items():
                         value = value.replace(original, mapped)
+                elif key in translation_type_names and self._catalog is not None:
+                    value = self._catalog.i18nc(f"{original_parent_name} {key}", value)
                 elif isinstance(value, dict):
                     # Replace key-name 'heading'.
+                    original_key = key
                     key = key_map.get(key, key)
-                    value = _doReplace(value)
+                    value = _doReplace(value, original_key)
                 result[key] = value
             return result
 
