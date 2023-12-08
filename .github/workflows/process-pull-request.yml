@@ -7,5 +7,5 @@ on:
 # FIXME: Use `main` instead of `CURA-10831` once merged
 jobs:
   add_label:
-    uses: ultimaker/cura-workflows/.github/workflows/process-pull-request.yml@CURA-10831
+    uses: ultimaker/cura-workflows/.github/workflows/process-pull-request.yml@main
     secrets: inherit
