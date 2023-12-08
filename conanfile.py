@@ -4,7 +4,7 @@ from pathlib import Path
 
 from conan import ConanFile
 from conan.tools.env import VirtualBuildEnv, VirtualRunEnv
-from conan.tools.files import copy, mkdir
+from conan.tools.files import copy, mkdir, update_conandata
 from conan.tools.microsoft import unix_path
 from conan.tools.scm import Version
 from conan.errors import ConanInvalidConfiguration
@@ -22,8 +22,7 @@ class UraniumConan(ConanFile):
     exports = "LICENSE*"
     settings = "os", "compiler", "build_type", "arch"
 
-    python_requires = "umbase/[>=0.1.7]@ultimaker/stable", "translationextractor/[>=2.2.0]@ultimaker/stable"
-    python_requires_extend = "umbase.UMBaseConanfile"
+    python_requires = "translationextractor/[>=2.1.2]@ultimaker/stable"
 
     options = {
         "devtools": [True, False],
@@ -36,7 +35,7 @@ class UraniumConan(ConanFile):
     
     def set_version(self):
         if not self.version:
-            self.version = "5.7.0-alpha"
+            self.version = self.conan_data["version"]
 
     @property
     def _i18n_options(self):
@@ -83,6 +82,9 @@ class UraniumConan(ConanFile):
             py_interp = Path(*[f'"{p}"' if " " in p else p for p in py_interp.parts])
         return py_interp
 
+    def export(self):
+        update_conandata(self, {"version": self.version})
+
     def export_sources(self):
         copy(self, "*", os.path.join(self.recipe_folder, "plugins"), os.path.join(self.export_sources_folder, "plugins"))
         copy(self, "*", os.path.join(self.recipe_folder, "resources"), os.path.join(self.export_sources_folder, "resources"), excludes = "*.mo")
@@ -105,8 +107,9 @@ class UraniumConan(ConanFile):
                 raise ConanInvalidConfiguration("Only versions 5+ are support")
 
     def requirements(self):
-        self.requires("pyarcus/5.3.0")
-        self.requires("cpython/3.10.4")
+        for req in self.conan_data["requirements"]:
+            self.requires(req)
+        self.requires("cpython/3.10.4@ultimaker/stable")
 
     def build_requirements(self):
         if self.options.get_safe("enable_i18n", False):
@@ -127,7 +130,6 @@ class UraniumConan(ConanFile):
 
     def build(self):
         if self.options.get_safe("enable_i18n", False) and self._i18n_options["build"]:
-            # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
             for po_file in self.source_path.joinpath("resources", "i18n").glob("**/*.po"):
                 mo_file = Path(self.build_folder, po_file.with_suffix('.mo').relative_to(self.source_path))
                 mo_file = mo_file.parent.joinpath("LC_MESSAGES", mo_file.name)
@@ -165,4 +167,5 @@ class UraniumConan(ConanFile):
         self.info.clear()
 
         del self.info.options.devtools
+        self.options.rm_safe("enable_i18n")
 
