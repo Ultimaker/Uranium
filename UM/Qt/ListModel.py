@@ -51,7 +51,7 @@ class ListModel(QAbstractListModel):
 
         if not index.isValid():
             return QVariant()
-        return self._items[index.row()][self._role_names[role].decode("utf-8")]
+        return self._items[index.row()].get(self._role_names[role].decode("utf-8"), QVariant())
 
     @pyqtSlot(int, result="QVariantMap")
     def getItem(self, index: int) -> Dict[str, Any]:

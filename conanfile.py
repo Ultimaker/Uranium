@@ -100,6 +100,8 @@ class UraniumConan(ConanFile):
     def configure(self):
         self.options["pyarcus"].shared = True
         self.options["cpython"].shared = True
+        if self.settings.os == "Linux":
+            self.options["openssl"].shared = True
 
     def validate(self):
         if self.version:
@@ -110,6 +112,7 @@ class UraniumConan(ConanFile):
         for req in self.conan_data["requirements"]:
             self.requires(req)
         self.requires("cpython/3.10.4@ultimaker/stable")
+        self.requires("openssl/3.2.0")
 
     def build_requirements(self):
         if self.options.get_safe("enable_i18n", False):
