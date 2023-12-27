@@ -93,10 +93,11 @@ ListView
             UM.StatusIcon
             {
                 id: messageTypeIcon
-                visible: status !== UM.StatusIcon.Status.NEUTRAL
+                visible: state !== UM.StatusIcon.Status.NEUTRAL
                 height: visible ? UM.Theme.getSize("message_type_icon").height: 0
                 width: visible ? UM.Theme.getSize("message_type_icon").height : 0
-                property var status:
+                status: state
+                property var state:
                 {
                     switch (model.message_type)
                     {
