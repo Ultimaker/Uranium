@@ -89,14 +89,14 @@ ListView
                 margins: UM.Theme.getSize("default_margin").width
             }
 
-            height: messageTypeIcon.visible? Math.max(messageTypeIcon.height, messageTitle.height): 0
+            height: messageTypeIcon.visible? Math.max(messageTypeIcon.height, messageTitle.height): messageTitle.height
             UM.StatusIcon
             {
                 id: messageTypeIcon
                 visible: status !== UM.StatusIcon.Status.NEUTRAL
                 height: visible ? UM.Theme.getSize("message_type_icon").height: 0
                 width: visible ? UM.Theme.getSize("message_type_icon").height : 0
-                status:
+                property var status:
                 {
                     switch (model.message_type)
                     {
