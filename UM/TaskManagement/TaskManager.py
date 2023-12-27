@@ -17,7 +17,7 @@ class _CallFunctionEvent(QEvent):
 
     def __init__(self, task_manager: "TaskManager", func: Callable, args: Any, kwargs: Any,
                  delay: Optional[float] = None) -> None:
-        super().__init__(task_manager.event_type)
+        super().__init__(QEvent.Type(task_manager.event_type))
 
         self._task_manager = task_manager
         self._function = func

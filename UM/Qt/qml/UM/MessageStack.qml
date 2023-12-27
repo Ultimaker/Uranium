@@ -12,6 +12,7 @@ ListView
     id: base
     boundsBehavior: ListView.StopAtBounds
     verticalLayoutDirection: ListView.BottomToTop
+    width: UM.Theme.getSize("message").width
 
     model: UM.VisibleMessagesModel { }
     spacing: UM.Theme.getSize("default_margin").height
@@ -88,11 +89,11 @@ ListView
                 margins: UM.Theme.getSize("default_margin").width
             }
 
-            height: Math.max(messageTypeIcon.height, messageTitle.height)
+            height: messageTypeIcon.visible? Math.max(messageTypeIcon.height, messageTitle.height): 0
             UM.StatusIcon
             {
                 id: messageTypeIcon
-                visible: status != UM.StatusIcon.Status.NEUTRAL
+                visible: status !== UM.StatusIcon.Status.NEUTRAL
                 height: visible ? UM.Theme.getSize("message_type_icon").height: 0
                 width: visible ? UM.Theme.getSize("message_type_icon").height : 0
                 status:
