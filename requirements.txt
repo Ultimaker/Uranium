@@ -254,5 +254,3 @@ typing-extensions==4.3.0 \
 colorama==0.4.5; \
     sys_platform=="win32" \
     --hash=sha256:854bf444933e37f5824ae7bfc1e98d5bce2ebe4160d46b5edf346a89358e99da
-polib==1.1.1; \
-    --hash=sha256:d3ee85e0c6788f789353416b1612c6c92d75fe6ccfac0029711974d6abd0f86d

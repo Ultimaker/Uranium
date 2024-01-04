@@ -30,7 +30,7 @@ class UraniumConan(ConanFile):
     }
     default_options = {
         "devtools": False,
-        "enable_i18n": False,
+        "enable_i18n": True,
     }
     
     def set_version(self):
@@ -94,7 +94,7 @@ class UraniumConan(ConanFile):
         copy(self, "requirements-dev.txt", self.recipe_folder, self.export_sources_folder)
 
     def config_options(self):
-        if self.settings.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", check_type = str):
+        if self.settings.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", check_type=str):
             del self.options.enable_i18n
 
     def configure(self):
@@ -170,5 +170,3 @@ class UraniumConan(ConanFile):
         self.info.clear()
 
         del self.info.options.devtools
-        self.options.rm_safe("enable_i18n")
-
