@@ -167,5 +167,4 @@ class UraniumConan(ConanFile):
         self.info.clear()
 
         del self.info.options.devtools
-        self.options.rm_safe("enable_i18n")
 
