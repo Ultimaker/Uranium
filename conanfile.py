@@ -31,7 +31,7 @@ class UraniumConan(ConanFile):
     }
     default_options = {
         "devtools": False,
-        "enable_i18n": False,
+        "enable_i18n": True,
     }
     
     def set_version(self):
