@@ -9,7 +9,6 @@ from UM.Qt.Duration import Duration, DurationFormat
 from . import MainWindow
 from . import ViewModel
 from . import ToolModel
-from . import ApplicationProxy
 from . import ControllerProxy
 from . import BackendProxy
 from . import ResourcesProxy
@@ -46,9 +45,6 @@ class Bindings:
     def createControllerProxy(self, engine, script_engine):
         return ControllerProxy.ControllerProxy()
 
-    @classmethod
-    def createApplicationProxy(self, engine, script_engine):
-        return ApplicationProxy.ApplicationProxy()
 
     @classmethod
     def createBackendProxy(self, engine, script_engine):
@@ -78,7 +74,6 @@ class Bindings:
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, Bindings.createControllerProxy, "Controller")
-        qmlRegisterSingletonType(ApplicationProxy.ApplicationProxy, "UM", 1, 0, Bindings.createApplicationProxy, "Application")
         qmlRegisterSingletonType(BackendProxy.BackendProxy, "UM", 1, 0, Bindings.createBackendProxy, "Backend")
         qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, Bindings.createResourcesProxy, "Resources")
         qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, Bindings.createOperationStackProxy, "OperationStack")

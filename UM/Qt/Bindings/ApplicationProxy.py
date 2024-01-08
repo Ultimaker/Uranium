@@ -4,8 +4,9 @@
 from PyQt6.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Application import Application
+from UM.Decorators import deprecated
 
-
+@deprecated
 class ApplicationProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
