@@ -12,7 +12,6 @@ from . import ToolModel
 from . import ControllerProxy
 from . import BackendProxy
 from . import ResourcesProxy
-from . import OperationStackProxy
 from . import Window
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
@@ -21,7 +20,6 @@ from . import Theme
 from . import OpenGLContextProxy
 from . import PointingRectangle
 from UM.ColorImage import ColorImage
-from . import ActiveToolProxy
 from . import OutputDevicesModel
 from . import SelectionProxy
 from . import OutputDeviceManagerProxy
@@ -39,12 +37,10 @@ from UM.Settings.Models.SettingPropertyProvider import SettingPropertyProvider
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
 from UM.Settings.Models.ContainerPropertyProvider import ContainerPropertyProvider
 
-
 class Bindings:
     @classmethod
     def createControllerProxy(self, engine, script_engine):
         return ControllerProxy.ControllerProxy()
-
 
     @classmethod
     def createBackendProxy(self, engine, script_engine):
@@ -53,10 +49,6 @@ class Bindings:
     @classmethod
     def createResourcesProxy(cls, engine, script_engine):
         return ResourcesProxy.ResourcesProxy()
-
-    @classmethod
-    def createOperationStackProxy(cls, engine, script_engine):
-        return OperationStackProxy.OperationStackProxy()
 
     @classmethod
     def createOpenGLContextProxy(cls, engine, script_engine):
@@ -76,11 +68,9 @@ class Bindings:
         qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, Bindings.createControllerProxy, "Controller")
         qmlRegisterSingletonType(BackendProxy.BackendProxy, "UM", 1, 0, Bindings.createBackendProxy, "Backend")
         qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, Bindings.createResourcesProxy, "Resources")
-        qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, Bindings.createOperationStackProxy, "OperationStack")
         qmlRegisterSingletonType(MeshFileHandler, "UM", 1, 0, MeshFileHandler.getInstance, "MeshFileHandler")
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, "UM", 1, 0, PreferencesProxy.createPreferencesProxy, "Preferences")
         qmlRegisterSingletonType(Theme.Theme, "UM", 1, 0, Theme.createTheme, "Theme")
-        qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, ActiveToolProxy.createActiveToolProxy, "ActiveTool")
         qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, SelectionProxy.createSelectionProxy, "Selection")
 
         qmlRegisterUncreatableType(Duration, "UM", 1, 0, "", "Duration")

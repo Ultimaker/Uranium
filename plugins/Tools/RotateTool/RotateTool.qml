@@ -26,7 +26,7 @@ Item
 
         z: 2
 
-        onClicked: UM.ActiveTool.triggerAction("resetRotation")
+        onClicked: UM.Controller.triggerAction("resetRotation")
     }
 
     UM.ToolbarButton
@@ -47,10 +47,10 @@ Item
 
         z: 1
 
-        onClicked: UM.ActiveTool.triggerAction("layFlat");
+        onClicked: UM.Controller.triggerAction("layFlat");
 
         // (Not yet:) Alternative 'lay flat' when legacy OpenGL makes selection of a face in an indexed model impossible.
-        // visible: ! UM.ActiveTool.properties.getValue("SelectFaceSupported");
+        // visible: ! UM.Controller.properties.getValue("SelectFaceSupported");
     }
 
     UM.ToolbarButton{
@@ -71,10 +71,10 @@ Item
         checkable: true
 
         enabled: UM.Selection.selectionCount == 1
-        checked: UM.ActiveTool.properties.getValue("SelectFaceToLayFlatMode")
-        onClicked: UM.ActiveTool.setProperty("SelectFaceToLayFlatMode", checked)
+        checked: UM.Controller.properties.getValue("SelectFaceToLayFlatMode")
+        onClicked: UM.Controller.setProperty("SelectFaceToLayFlatMode", checked)
 
-        visible: UM.ActiveTool.properties.getValue("SelectFaceSupported") == true //Might be undefined if we're switching away from the RotateTool!
+        visible: UM.Controller.properties.getValue("SelectFaceSupported") == true //Might be undefined if we're switching away from the RotateTool!
     }
 
     UM.CheckBox
@@ -86,21 +86,21 @@ Item
         //: Snap Rotation checkbox
         text: catalog.i18nc("@action:checkbox","Snap Rotation")
 
-        checked: UM.ActiveTool.properties.getValue("RotationSnap")
-        onClicked: UM.ActiveTool.setProperty("RotationSnap", checked)
+        checked: UM.Controller.properties.getValue("RotationSnap")
+        onClicked: UM.Controller.setProperty("RotationSnap", checked)
     }
 
     Binding
     {
         target: snapRotationCheckbox
         property: "checked"
-        value: UM.ActiveTool.properties.getValue("RotationSnap")
+        value: UM.Controller.properties.getValue("RotationSnap")
     }
 
     Binding
     {
         target: alignFaceButton
         property: "checked"
-        value: UM.ActiveTool.properties.getValue("SelectFaceToLayFlatMode")
+        value: UM.Controller.properties.getValue("SelectFaceToLayFlatMode")
     }
 }
