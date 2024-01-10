@@ -9,9 +9,11 @@ from UM.Qt.Duration import Duration, DurationFormat
 from . import MainWindow
 from . import ViewModel
 from . import ToolModel
+from . import ApplicationProxy
 from . import ControllerProxy
 from . import BackendProxy
 from . import ResourcesProxy
+from . import OperationStackProxy
 from . import Window
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
@@ -20,6 +22,7 @@ from . import Theme
 from . import OpenGLContextProxy
 from . import PointingRectangle
 from UM.ColorImage import ColorImage
+from . import ActiveToolProxy
 from . import OutputDevicesModel
 from . import SelectionProxy
 from . import OutputDeviceManagerProxy
@@ -36,11 +39,18 @@ from UM.Settings.Models.ContainerStacksModel import ContainerStacksModel
 from UM.Settings.Models.SettingPropertyProvider import SettingPropertyProvider
 from UM.Settings.Models.SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler
 from UM.Settings.Models.ContainerPropertyProvider import ContainerPropertyProvider
+from ...Decorators import deprecated
+
 
 class Bindings:
     @classmethod
     def createControllerProxy(self, engine, script_engine):
         return ControllerProxy.ControllerProxy()
+
+    @classmethod
+    @deprecated("UM.Application is depricated and will be removed in major SDK release, Use CuraApplication instead", since = "5.7.0")
+    def createApplicationProxy(self, engine, script_engine):
+        return ApplicationProxy.ApplicationProxy()
 
     @classmethod
     def createBackendProxy(self, engine, script_engine):
@@ -49,6 +59,11 @@ class Bindings:
     @classmethod
     def createResourcesProxy(cls, engine, script_engine):
         return ResourcesProxy.ResourcesProxy()
+
+    @classmethod
+    @deprecated("UM.OperationStack is depricated and will be removed in major SDK release, Use CuraActions instead", since = "5.7.0")
+    def createOperationStackProxy(cls, engine, script_engine):
+        return OperationStackProxy.OperationStackProxy()
 
     @classmethod
     def createOpenGLContextProxy(cls, engine, script_engine):
@@ -66,11 +81,14 @@ class Bindings:
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, Bindings.createControllerProxy, "Controller")
+        qmlRegisterSingletonType(ApplicationProxy.ApplicationProxy, "UM", 1, 0, Bindings.createApplicationProxy, "Application")
         qmlRegisterSingletonType(BackendProxy.BackendProxy, "UM", 1, 0, Bindings.createBackendProxy, "Backend")
         qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, Bindings.createResourcesProxy, "Resources")
+        qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, Bindings.createOperationStackProxy, "OperationStack")
         qmlRegisterSingletonType(MeshFileHandler, "UM", 1, 0, MeshFileHandler.getInstance, "MeshFileHandler")
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, "UM", 1, 0, PreferencesProxy.createPreferencesProxy, "Preferences")
         qmlRegisterSingletonType(Theme.Theme, "UM", 1, 0, Theme.createTheme, "Theme")
+        qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, ActiveToolProxy.createActiveToolProxy, "ActiveTool")
         qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, SelectionProxy.createSelectionProxy, "Selection")
 
         qmlRegisterUncreatableType(Duration, "UM", 1, 0, "", "Duration")

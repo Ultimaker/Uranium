@@ -4,10 +4,9 @@
 from PyQt6.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Application import Application
-from UM.Decorators import deprecated
 
 
-@deprecated("OperationStackProxy is deprecated and will be removed in major SDK release")
+#"OperationStackProxy is deprecated and will be removed in major SDK release"
 class OperationStackProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)

@@ -14,8 +14,7 @@ import os.path
 
 from ...Decorators import deprecated
 
-
-@deprecated("ActiveToolProxy is depricated and will be removed in major SDK release")
+# Class Active Tool Proxy is deprecated and will be removed in next major SDK release
 class ActiveToolProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -125,6 +124,6 @@ class ActiveToolProxy(QObject):
 
         self.propertiesChanged.emit()
 
-@deprecated("createActiveToolProxy is depricated and will be removed in major SDK release")
+@deprecated("UM.ActiveTool is depricated and will be removed in major SDK release, Use UM.Controller instead", since = "5.7.0")
 def createActiveToolProxy(engine, script_engine):
     return ActiveToolProxy()

@@ -344,7 +344,7 @@ class QtApplication(QApplication, Application):
     recentFilesChanged = pyqtSignal()
 
     @pyqtSlot(result = str)
-    def applicationVersion(self) -> str:
+    def version(self) -> str:
         return Application.getInstance().getVersion()
 
     @pyqtProperty("QVariantList", notify=recentFilesChanged)
