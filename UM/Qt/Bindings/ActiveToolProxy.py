@@ -124,6 +124,6 @@ class ActiveToolProxy(QObject):
 
         self.propertiesChanged.emit()
 
-@deprecated("UM.ActiveTool is depricated and will be removed in major SDK release, Use UM.Controller instead", since = "5.7.0")
+@deprecated("UM.ActiveTool is deprecated and will be removed in major SDK release, Use UM.Controller instead", since = "5.7.0")
 def createActiveToolProxy(engine, script_engine):
     return ActiveToolProxy()

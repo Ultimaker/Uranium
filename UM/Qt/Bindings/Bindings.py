@@ -48,7 +48,7 @@ class Bindings:
         return ControllerProxy.ControllerProxy()
 
     @classmethod
-    @deprecated("UM.Application is depricated and will be removed in major SDK release, Use CuraApplication instead", since = "5.7.0")
+    @deprecated("UM.Application is deprecated and will be removed in major SDK release, Use CuraApplication instead", since = "5.7.0")
     def createApplicationProxy(self, engine, script_engine):
         return ApplicationProxy.ApplicationProxy()
 
@@ -61,7 +61,7 @@ class Bindings:
         return ResourcesProxy.ResourcesProxy()
 
     @classmethod
-    @deprecated("UM.OperationStack is depricated and will be removed in major SDK release, Use CuraActions instead", since = "5.7.0")
+    @deprecated("UM.OperationStack is deprecated and will be removed in major SDK release, Use CuraActions instead", since = "5.7.0")
     def createOperationStackProxy(cls, engine, script_engine):
         return OperationStackProxy.OperationStackProxy()
 
