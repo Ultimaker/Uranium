@@ -100,6 +100,7 @@ class HttpRequestManager(TaskManager):
 
         # A FIFO queue for the pending requests.
         self._request_queue = deque()  # type: deque
+        self._urgent_request_queue = deque()  # type: deque
 
         # A set of all currently in progress requests
         self._requests_in_progress = set()  # type: Set[HttpRequestData]
@@ -111,6 +112,10 @@ class HttpRequestManager(TaskManager):
         # Enabling benchmarking will make the manager to time how much time it takes for a request from start to finish
         # and log them.
         self._enable_request_benchmarking = enable_request_benchmarking
+
+        # It is possible to delay the non-urgent requests until further notice, so that more urgent ones
+        # can be processed in priority
+        self._delay_requests = False
 
     @pyqtProperty(bool, notify = internetReachableChanged)
     def isInternetReachable(self) -> bool:
@@ -125,13 +130,15 @@ class HttpRequestManager(TaskManager):
             download_progress_callback: Optional[Callable[[int, int], None]] = None,
             upload_progress_callback: Optional[Callable[[int, int], None]] = None,
             timeout: Optional[float] = None,
-            scope: Optional[HttpRequestScope] = None) -> "HttpRequestData":
+            scope: Optional[HttpRequestScope] = None,
+            urgent: bool = False) -> "HttpRequestData":
         return self._createRequest("get", url, headers_dict = headers_dict,
                                    callback = callback, error_callback = error_callback,
                                    download_progress_callback = download_progress_callback,
                                    upload_progress_callback = upload_progress_callback,
                                    timeout = timeout,
-                                   scope = scope)
+                                   scope = scope,
+                                   urgent = urgent)
 
     # Public API for creating an HTTP PUT request.
     # Returns an HttpRequestData instance that represents this request.
@@ -143,13 +150,15 @@ class HttpRequestManager(TaskManager):
             download_progress_callback: Optional[Callable[[int, int], None]] = None,
             upload_progress_callback: Optional[Callable[[int, int], None]] = None,
             timeout: Optional[float] = None,
-            scope: Optional[HttpRequestScope] = None) -> "HttpRequestData":
+            scope: Optional[HttpRequestScope] = None,
+            urgent: bool = False) -> "HttpRequestData":
         return self._createRequest("put", url, headers_dict = headers_dict, data = data,
                                    callback = callback, error_callback = error_callback,
                                    download_progress_callback = download_progress_callback,
                                    upload_progress_callback = upload_progress_callback,
                                    timeout = timeout,
-                                   scope = scope)
+                                   scope = scope,
+                                   urgent = urgent)
 
     # Public API for creating an HTTP POST request. Returns a unique request ID for this request.
     # Returns an HttpRequestData instance that represents this request.
@@ -161,13 +170,15 @@ class HttpRequestManager(TaskManager):
              download_progress_callback: Optional[Callable[[int, int], None]] = None,
              upload_progress_callback: Optional[Callable[[int, int], None]] = None,
              timeout: Optional[float] = None,
-             scope: Optional[HttpRequestScope] = None) -> "HttpRequestData":
+             scope: Optional[HttpRequestScope] = None,
+             urgent: bool = False) -> "HttpRequestData":
         return self._createRequest("post", url, headers_dict = headers_dict, data = data,
                                    callback = callback, error_callback = error_callback,
                                    download_progress_callback = download_progress_callback,
                                    upload_progress_callback = upload_progress_callback,
                                    timeout = timeout,
-                                   scope = scope)
+                                   scope = scope,
+                                   urgent = urgent)
 
     # Public API for creating an HTTP DELETE request.
     # Returns an HttpRequestData instance that represents this request.
@@ -178,13 +189,15 @@ class HttpRequestManager(TaskManager):
                download_progress_callback: Optional[Callable[[int, int], None]] = None,
                upload_progress_callback: Optional[Callable[[int, int], None]] = None,
                timeout: Optional[float] = None,
-               scope: Optional[HttpRequestScope] = None) -> "HttpRequestData":
+               scope: Optional[HttpRequestScope] = None,
+               urgent: bool = False) -> "HttpRequestData":
         return self._createRequest("deleteResource", url, headers_dict=headers_dict,
                                    callback=callback, error_callback=error_callback,
                                    download_progress_callback=download_progress_callback,
                                    upload_progress_callback=upload_progress_callback,
                                    timeout=timeout,
-                                   scope=scope)
+                                   scope=scope,
+                                   urgent=urgent)
 
     # Public API for aborting a given HttpRequestData. If the request is not pending or in progress, nothing
     # will be done.
@@ -194,11 +207,21 @@ class HttpRequestManager(TaskManager):
             if request in self._request_queue:
                 self._request_queue.remove(request)
 
+            elif request in self._urgent_request_queue:
+                self._urgent_request_queue.remove(request)
+
             # If the request is currently in progress, abort it.
-            if request in self._requests_in_progress:
+            elif request in self._requests_in_progress:
                 if request.reply is not None and request.reply.isRunning():
                     request.reply.abort()
                     Logger.log("d", "%s aborted", request)
+
+    # Sets or unsets the normal requests delaying. As long as this is active, all the requests not specifically marked
+    # as urgent will stay waiting in the queue.
+    def setDelayRequests(self, delay_requests: bool) -> None:
+        self._delay_requests = delay_requests
+        if not self._delay_requests:
+            self.callLater(0, self._processNextRequestsInQueue)
 
     @staticmethod
     def readJSON(reply: QNetworkReply) -> Any:
@@ -250,7 +273,8 @@ class HttpRequestManager(TaskManager):
                        download_progress_callback: Optional[Callable[[int, int], None]] = None,
                        upload_progress_callback: Optional[Callable[[int, int], None]] = None,
                        timeout: Optional[float] = None,
-                       scope: Optional[HttpRequestScope] = None ) -> "HttpRequestData":
+                       scope: Optional[HttpRequestScope] = None,
+                       urgent: bool = False) -> "HttpRequestData":
         # Sanity checks
         if timeout is not None and timeout <= 0:
             raise ValueError("Timeout must be a positive number if provided, but [%s] was given" % timeout)
@@ -281,7 +305,10 @@ class HttpRequestManager(TaskManager):
                                        timeout = timeout)
 
         with self._request_lock:
-            self._request_queue.append(request_data)
+            if urgent:
+                self._urgent_request_queue.append(request_data)
+            else:
+                self._request_queue.append(request_data)
 
             # Schedule a call to process pending requests in the queue
             if not self._process_requests_scheduled:
@@ -308,22 +335,18 @@ class HttpRequestManager(TaskManager):
     # Processes the next requests in the pending queue. This function will issue as many requests to the QNetworkManager
     # as possible but limited by the value "_max_concurrent_requests". It stops if there is no more pending requests.
     def _processNextRequestsInQueue(self) -> None:
+        with self._request_lock:
+            self._processNextRequests(self._urgent_request_queue)
+            if not self._delay_requests:
+                self._processNextRequests(self._request_queue)
+            self._process_requests_scheduled = False
+
+    # Processes the next requests in the given pending queue
+    def _processNextRequests(self, queue: deque):
         # Process all requests until the max concurrent number is hit or there's no more requests to process.
-        while True:
-            with self._request_lock:
-                # Do nothing if there's no more requests to process
-                if not self._request_queue:
-                    self._process_requests_scheduled = False
-                    return
-
-                # Do not exceed the max request limit
-                if len(self._requests_in_progress) >= self._max_concurrent_requests:
-                    self._process_requests_scheduled = False
-                    return
-
-                # Fetch the next request and process
-                next_request_data = self._request_queue.popleft()
-            self._processRequest(cast(HttpRequestData, next_request_data))
+        while queue and len(self._requests_in_progress) < self._max_concurrent_requests:
+            # Fetch the next request and process
+            self._processRequest(cast(HttpRequestData, queue.popleft()))
 
     # Processes the given HttpRequestData by issuing the request using QNetworkAccessManager and moves the
     # request into the currently in-progress list.
