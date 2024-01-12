@@ -94,7 +94,7 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("X", modified_text)
+                UM.Controller.setProperty("X", modified_text)
             }
             onActiveFocusChanged:
             {
@@ -123,7 +123,7 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Y", modified_text)
+                UM.Controller.setProperty("Y", modified_text)
             }
 
             onActiveFocusChanged:
@@ -152,7 +152,7 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Z", modified_text)
+                UM.Controller.setProperty("Z", modified_text)
             }
 
             onActiveFocusChanged:
@@ -187,7 +187,7 @@ Item
             tristate: true
             nextCheckState: function() {
                 const new_state = checkState !== Qt.Checked;
-                UM.ActiveTool.setProperty("LockPosition", new_state)
+                UM.Controller.setProperty("LockPosition", new_state)
                 return new_state ? Qt.Checked : Qt.Unchecked
             }
 
@@ -202,7 +202,7 @@ Item
             tristate: true
             nextCheckState: function() {
                 const new_state = checkState !== Qt.Checked;
-                UM.ActiveTool.setProperty("AutoDropDown", new_state)
+                UM.Controller.setProperty("AutoDropDown", new_state)
                 return new_state ? Qt.Checked : Qt.Unchecked
             }
 
@@ -210,7 +210,7 @@ Item
         }
 
         function getCheckBoxState(property) {
-            const value = UM.ActiveTool.properties.getValue(property)
+            const value = UM.Controller.properties.getValue(property)
             if (value) {
                 return Qt.Checked
             }
@@ -244,20 +244,20 @@ Item
     {
         target: base
         property: "xText"
-        value: base.roundFloat(UM.ActiveTool.properties.getValue("X"), 4)
+        value: base.roundFloat(UM.Controller.properties.getValue("X"), 4)
     }
 
     Binding
     {
         target: base
         property: "yText"
-        value: base.roundFloat(UM.ActiveTool.properties.getValue("Y"), 4)
+        value: base.roundFloat(UM.Controller.properties.getValue("Y"), 4)
     }
 
     Binding
     {
         target: base
         property: "zText"
-        value:base.roundFloat(UM.ActiveTool.properties.getValue("Z"), 4)
+        value:base.roundFloat(UM.Controller.properties.getValue("Z"), 4)
     }
 }
