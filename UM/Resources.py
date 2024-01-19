@@ -478,13 +478,15 @@ class Resources:
 
     @classmethod
     def __initializeStoragePaths(cls) -> None:
-        Logger.log("d", "Initializing storage paths")
-        # use nested structure: <app-name>/<version>/...
         if cls.ApplicationVersion in ["master", "main", "dev"] or cls.ApplicationVersion == "unknown":
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
         else:
             version = Version(cls.ApplicationVersion)
-            storage_dir_name = os.path.join(cls.ApplicationIdentifier, "%s.%s" % (version.getMajor(), version.getMinor()))
+            if version.hasPostFix() and version.getPostfixType() == "alpha":
+                storage_dir_name = os.path.join(cls.ApplicationIdentifier,
+                                                f"{version.getMajor()}.{version.getMinor()}-{version.getPostfixType()}")
+            else:
+                storage_dir_name = os.path.join(cls.ApplicationIdentifier, f"{version.getMajor()}.{version.getMinor()}")
 
         # config is saved in "<CONFIG_ROOT>/<storage_dir_name>"
         cls.__config_storage_path = os.path.join(Resources._getConfigStorageRootPath(), storage_dir_name)
