@@ -3,12 +3,10 @@
 
 from typing import List
 
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt
 from PyQt6.QtQml import QQmlEngine
 
 from UM.Application import Application
-from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
-from UM.OutputDevice.ProjectOutputDevice import ProjectOutputDevice
 from UM.Qt.ListModel import ListModel
 
 
@@ -22,7 +20,8 @@ class MeshWritersModel(ListModel):
     """
 
     MimeTypeRole = Qt.ItemDataRole.UserRole + 1
-    DescriptionRole = Qt.ItemDataRole.UserRole + 2
+    ModeRole = Qt.ItemDataRole.UserRole + 2
+    DescriptionRole = Qt.ItemDataRole.UserRole + 3
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -30,6 +29,7 @@ class MeshWritersModel(ListModel):
         QQmlEngine.setObjectOwnership(self, QQmlEngine.ObjectOwnership.CppOwnership)
 
         self.addRoleName(self.MimeTypeRole, "mime_type")
+        self.addRoleName(self.ModeRole, "mode")
         self.addRoleName(self.DescriptionRole, "description")
 
         self.setItems(Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite())
