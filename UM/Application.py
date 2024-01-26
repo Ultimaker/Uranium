@@ -178,10 +178,12 @@ class Application:
 
         app_root = os.path.abspath(os.path.join(os.path.dirname(sys.executable)))
         Resources.addSecureSearchPath(os.path.join(app_root, "share", "uranium", "resources"))
+        Resources.addSecureSearchPath(os.path.join(app_root, "Resources", "share", "uranium", "resources"))
 
         Resources.addSecureSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "share", "uranium", "resources"))
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", "uranium", "resources"))
+        Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", "share", "uranium", "resources"))
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
 
         if not hasattr(sys, "frozen"):
@@ -197,6 +199,8 @@ class Application:
 
             # venv site-packages
             Resources.addSearchPath(str(Path(sys.executable).parent.parent.joinpath("share", "uranium", "resources")))
+            Resources.addSearchPath(
+                str(Path(sys.executable).parent.parent.joinpath("Resources", "share", "uranium", "resources")))
 
         i18nCatalog.setApplication(self)
 
@@ -217,6 +221,14 @@ class Application:
         self._operation_stack = OperationStack(self._controller)
 
         self._plugin_registry = PluginRegistry(self)
+
+        Logger.warning(f"os.path.join(app_root, \"Resources\", \"share\", \"cura\", \"plugins\"): %s",
+                       os.path.join(app_root, "Resources", "share", "cura", "plugins"))
+        Logger.warning(f"os.path.join(app_root, \"Resources\", \"share\", \"uranium\", \"plugins\"): %s",
+                       os.path.join(app_root, "Resources", "share", "uranium", "plugins"))
+
+        self._plugin_registry.addPluginLocation(os.path.join(app_root, "Resources", "share", "uranium", "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(app_root, "Resources", "share", "cura", "plugins"))
 
         self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "uranium", "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "cura", "plugins"))
