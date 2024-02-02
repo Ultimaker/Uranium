@@ -233,11 +233,20 @@ class Application:
         self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "uranium", "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "cura", "plugins"))
 
+        self._plugin_registry.addPluginLocation(os.path.join(app_root, "..", "share", "uranium", "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(app_root, "..", "share", "cura", "plugins"))
+
+        self._plugin_registry.addPluginLocation(
+            os.path.join(app_root, "..", "Resources", "share", "uranium", "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(app_root, "..", "Resources", "share", "cura", "plugins"))
+
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib", "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib64", "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib32", "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "Resources", "uranium", "plugins"))
+        self._plugin_registry.addPluginLocation(
+            os.path.join(self._app_install_dir, "Resources", "uranium", "share", "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "Resources", self._app_name, "plugins"))
         # Locally installed plugins
         local_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
