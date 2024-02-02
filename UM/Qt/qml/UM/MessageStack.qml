@@ -76,6 +76,16 @@ ListView
         border.color: UM.Theme.getColor("message_border")
         radius: UM.Theme.getSize("message_radius").width
 
+        MouseArea {
+            anchors.fill: message
+
+            hoverEnabled: true
+            onEntered: {
+                message.opacity= 1;
+                hoverEnabled = false;
+            }
+        }
+
         RowLayout
         {
             id: titleBar
