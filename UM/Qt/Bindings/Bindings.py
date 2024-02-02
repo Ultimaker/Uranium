@@ -31,7 +31,6 @@ from . import ExtensionModel
 from . import VisibleMessagesModel
 from . import Utilities
 from . import TableModel
-from . import MeshWritersModel
 
 from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
 from UM.Settings.Models.DefinitionContainersModel import DefinitionContainersModel
@@ -127,9 +126,6 @@ class Bindings:
         # Additions after 5.0
         qmlRegisterType(TableModel.TableModel, "UM", 1, 6, "TableModel")
         qmlRegisterType(Window.Window, "UM", 1, 6, "Window")
-
-        # Additions after 5.6
-        qmlRegisterType(MeshWritersModel.MeshWritersModel, "UM", 1, 7, "MeshWritersModel")
 
     @staticmethod
     def addRegisterType(class_type: type, qml_import_name: str, major_version: int, minor_version: int, class_name: str) -> None:
