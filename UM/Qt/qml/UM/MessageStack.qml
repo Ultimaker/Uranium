@@ -435,7 +435,7 @@ ListView
 
     add: Transition
     {
-        NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 200; }
+        NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 100; }
     }
 
     displaced: Transition
@@ -445,7 +445,7 @@ ListView
 
     remove: Transition
     {
-        NumberAnimation { property: "opacity"; to: 0; duration: 200; }
+        NumberAnimation { property: "opacity"; to: 0; duration: 100; }
     }
 
 }
