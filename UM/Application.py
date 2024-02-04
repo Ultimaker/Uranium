@@ -520,7 +520,7 @@ class Application:
         else:
             executable = sys.executable
         try:
-            return os.path.dirname(os.path.realpath(executable))
+            return os.path.join(os.path.dirname(os.path.realpath(executable)), "..", "Resources")
         except EnvironmentError:  # Symlinks can't be dereferenced.
             return os.path.dirname(executable)
 
