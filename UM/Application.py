@@ -183,7 +183,6 @@ class Application:
         Resources.addSecureSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "share", "uranium", "resources"))
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", "uranium", "resources"))
-        Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", "share", "uranium", "resources"))
         Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
 
         if not hasattr(sys, "frozen"):
