@@ -81,10 +81,6 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         if limit_mimetypes:
             file_types = list(filter(lambda i: i["mime_type"] in limit_mimetypes, file_types))
 
-        limit_modes = kwargs.get("limit_modes", None)
-        if limit_modes:
-            file_types = list(filter(lambda i: i["mode"] in limit_modes, file_types))
-
         file_types = [ft for ft in file_types if not ft["hide_in_file_dialog"]]
 
         if len(file_types) == 0:

@@ -87,13 +87,12 @@ class OutputDeviceManagerProxy(QObject):
         """
 
         limit_mimetypes = kwargs.get("limit_mimetypes", None)
-        limit_modes = kwargs.get("limit_modes", None)
         file_type = kwargs.get("file_type", "mesh")
         preferred_mimetypes = kwargs.get("preferred_mimetypes", None)
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot()], device_id, file_name, limit_mimetypes, limit_modes, file_type, preferred_mimetypes = preferred_mimetypes)
+        Application.getInstance().callLater(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot()], device_id, file_name, limit_mimetypes, file_type, preferred_mimetypes = preferred_mimetypes)
 
     @pyqtSlot(str, str, "QVariantMap")
     def requestWriteSelectionToDevice(self, device_id: str, file_name: str, kwargs: Mapping[str, str]) -> None:
@@ -113,25 +112,17 @@ class OutputDeviceManagerProxy(QObject):
         if not Selection.hasSelection():
             return
 
-        limit_mimetypes = kwargs.get("limit_mimetypes", None)
-        limit_modes = kwargs.get("limit_mimetypes", None)
+        limit_mimetypes = kwargs.get("limit_mimetypes", False)
         preferred_mimetypes = kwargs.get("preferred_mimetypes", None)
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, Selection.getAllSelectedObjects(), device_id, file_name, limit_mimetypes, limit_modes, preferred_mimetypes = preferred_mimetypes)
+        Application.getInstance().callLater(self._writeToDevice, Selection.getAllSelectedObjects(), device_id, file_name, limit_mimetypes, preferred_mimetypes = preferred_mimetypes)
 
     def _onActiveDeviceChanged(self) -> None:
         self.activeDeviceChanged.emit()
 
-    def _writeToDevice(self,
-                       nodes: List[SceneNode],
-                       device_id: str,
-                       file_name: str,
-                       limit_mimetypes: Optional[List[str]],
-                       limit_modes: Optional[List[str]],
-                       file_type: str = "mesh",
-                       **kwargs) -> None:
+    def _writeToDevice(self, nodes: List[SceneNode], device_id: str, file_name: str, limit_mimetypes: bool, file_type: str = "mesh", **kwargs) -> None:
         """Writes the specified node to the output device.
 
         The output device to write with will be selected based on the device_id.
@@ -143,7 +134,6 @@ class OutputDeviceManagerProxy(QObject):
         :param file_name: A suggestion for the file name to write
         to. Can be freely ignored if providing a file name makes no sense.
         :param limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
-        :param limit_modes: If not None, limit available types to the ones given
         :param file_type: What file handler to get the writer from.
         """
 
@@ -157,7 +147,7 @@ class OutputDeviceManagerProxy(QObject):
             file_handler = UM.Qt.QtApplication.QtApplication.getInstance().getWorkspaceFileHandler()
 
         try:
-            device.requestWrite(nodes, file_name, limit_mimetypes, file_handler, limit_modes = limit_modes, **kwargs)
+            device.requestWrite(nodes, file_name, limit_mimetypes, file_handler, **kwargs)
         except OutputDeviceError.UserCanceledError:
             pass
         except OutputDeviceError.DeviceBusyError:
