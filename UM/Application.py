@@ -222,11 +222,6 @@ class Application:
 
         self._plugin_registry = PluginRegistry(self)
 
-        Logger.warning(f"os.path.join(app_root, \"Resources\", \"share\", \"cura\", \"plugins\"): %s",
-                       os.path.join(app_root, "Resources", "share", "cura", "plugins"))
-        Logger.warning(f"os.path.join(app_root, \"Resources\", \"share\", \"uranium\", \"plugins\"): %s",
-                       os.path.join(app_root, "Resources", "share", "uranium", "plugins"))
-
         self._plugin_registry.addPluginLocation(os.path.join(app_root, "Resources", "share", "uranium", "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(app_root, "Resources", "share", "cura", "plugins"))
 
