@@ -14,31 +14,43 @@ on:
       - main
       - 'CURA-*'
       - 'PP-*'
+      - 'NP-*'
       - '[0-9].[0-9]*'
       - '[0-9].[0-9][0-9]*'
-
+      -
 env:
   CONAN_LOGIN_USERNAME_CURA: ${{ secrets.CONAN_USER }}
   CONAN_PASSWORD_CURA: ${{ secrets.CONAN_PASS }}
 
 jobs:
+# FIXME: Use main once merged
   conan-recipe-version:
-    uses: ultimaker/cura-workflows/.github/workflows/conan-recipe-version.yml@main
+    uses: ultimaker/cura-workflows/.github/workflows/conan-recipe-version.yml@CURA-11622_conan_v2
     with:
       project_name: uranium
 
+# FIXME: Use main once merged
   conan-package-export:
     needs: [ conan-recipe-version ]
-    uses: ultimaker/cura-workflows/.github/workflows/conan-recipe-export.yml@main
+    uses: ultimaker/cura-workflows/.github/workflows/conan-recipe-export.yml@CURA-11622_conan_v2
     with:
+      recipe_id_name: ${{ needs.conan-recipe-version.outputs.project_name }}
+      recipe_id_version: ${{ needs.conan-recipe-version.outputs.recipe_semver_full }}
+      recipe_id_user: ${{ needs.conan-recipe-version.outputs.user }}
+      recipe_id_channel: ${{ needs.conan-recipe-version.outputs.channel }}
       recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
-      recipe_id_latest: ${{ needs.conan-recipe-version.outputs.recipe_id_latest }}
     secrets: inherit
 
-  conan-package-create:
+# FIXME: Use main once merged
+  conan-package-create-linux:
     needs: [ conan-recipe-version, conan-package-export ]
-    uses: ultimaker/cura-workflows/.github/workflows/conan-package-create-linux.yml@main
+    if: ${{ (github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'master' || needs.conan-recipe-version.outputs.is_release_branch == 'true')) }}
+    uses: ultimaker/cura-workflows/.github/workflows/conan-package-create-linux.yml@CURA-11622_conan_v2
     with:
+      recipe_id_name: ${{ needs.conan-recipe-version.outputs.project_name }}
+      recipe_id_version: ${{ needs.conan-recipe-version.outputs.recipe_semver_full }}
+      recipe_id_user: ${{ needs.conan-recipe-version.outputs.user }}
+      recipe_id_channel: ${{ needs.conan-recipe-version.outputs.channel }}
       recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
       conan_extra_args: "-o uranium:enable_i18n=True"
     secrets: inherit

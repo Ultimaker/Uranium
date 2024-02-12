@@ -9,7 +9,7 @@ from conan.tools.microsoft import unix_path
 from conan.tools.scm import Version
 from conan.errors import ConanInvalidConfiguration
 
-required_conan_version = ">=1.58.0 <2.0.0"
+required_conan_version = ">=1.58.0"
 
 
 class UraniumConan(ConanFile):
@@ -21,8 +21,9 @@ class UraniumConan(ConanFile):
     topics = ("conan", "python", "pyqt6", "qt", "3d-graphics", "3d-models", "python-framework")
     exports = "LICENSE*"
     settings = "os", "compiler", "build_type", "arch"
+    package_type = "header-library"
 
-    python_requires = "translationextractor/[>=2.1.2]@ultimaker/stable"
+    python_requires = "translationextractor/[>=2.2.0]@ultimaker/cura_11622"
 
     options = {
         "devtools": [True, False],
@@ -32,14 +33,14 @@ class UraniumConan(ConanFile):
         "devtools": False,
         "enable_i18n": False,
     }
-    
+
     def set_version(self):
         if not self.version:
             self.version = self.conan_data["version"]
 
     @property
     def _i18n_options(self):
-        return self.conf.get("user.i18n:options", default = {"extract": True, "build": True}, check_type = dict)
+        return self.conf.get("user.i18n:options", default={"extract": True, "build": True}, check_type=dict)
 
     @property
     def _base_dir(self):
@@ -54,7 +55,7 @@ class UraniumConan(ConanFile):
 
     @property
     def requirements_txts(self):
-        if self.options.devtools:
+        if self.options.get_safe("devtools", False):
             return ["requirements.txt", "requirements-dev.txt"]
         return ["requirements.txt"]
 
@@ -86,15 +87,17 @@ class UraniumConan(ConanFile):
         update_conandata(self, {"version": self.version})
 
     def export_sources(self):
-        copy(self, "*", os.path.join(self.recipe_folder, "plugins"), os.path.join(self.export_sources_folder, "plugins"))
-        copy(self, "*", os.path.join(self.recipe_folder, "resources"), os.path.join(self.export_sources_folder, "resources"), excludes = "*.mo")
+        copy(self, "*", os.path.join(self.recipe_folder, "plugins"),
+             os.path.join(self.export_sources_folder, "plugins"))
+        copy(self, "*", os.path.join(self.recipe_folder, "resources"),
+             os.path.join(self.export_sources_folder, "resources"), excludes="*.mo")
         copy(self, "*", os.path.join(self.recipe_folder, "tests"), os.path.join(self.export_sources_folder, "tests"))
         copy(self, "*", os.path.join(self.recipe_folder, "UM"), os.path.join(self.export_sources_folder, "UM"))
         copy(self, "requirements.txt", self.recipe_folder, self.export_sources_folder)
         copy(self, "requirements-dev.txt", self.recipe_folder, self.export_sources_folder)
 
     def config_options(self):
-        if self.settings.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", check_type = str):
+        if self.settings.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", check_type=str):
             del self.options.enable_i18n
 
     def configure(self):
@@ -111,12 +114,12 @@ class UraniumConan(ConanFile):
     def requirements(self):
         for req in self.conan_data["requirements"]:
             self.requires(req)
-        self.requires("cpython/3.12.2@ultimaker/cura_11079")
-        self.requires("openssl/3.2.0")
+        self.requires("cpython/3.12.2@ultimaker/cura_11622")  # FIXME: use stable after merge
+        self.requires("openssl/3.2.1")
 
     def build_requirements(self):
         if self.options.get_safe("enable_i18n", False):
-            self.tool_requires("gettext/0.21", force_host_context = True)
+            self.tool_requires("gettext/0.21")
 
     def generate(self):
         vr = VirtualRunEnv(self)
@@ -126,8 +129,7 @@ class UraniumConan(ConanFile):
             vb = VirtualBuildEnv(self)
             vb.generate()
 
-            # FIXME: once m4, autoconf, automake are Conan V2 ready use self.win_bash and add gettext as base tool_requirement
-            cpp_info = self.dependencies["gettext"].cpp_info
+            cpp_info = self.dependencies.build["gettext"].cpp_info
             pot = self.python_requires["translationextractor"].module.ExtractTranslations(self, cpp_info.bindirs[0])
             pot.generate()
 
@@ -137,8 +139,9 @@ class UraniumConan(ConanFile):
                 mo_file = Path(self.build_folder, po_file.with_suffix('.mo').relative_to(self.source_path))
                 mo_file = mo_file.parent.joinpath("LC_MESSAGES", mo_file.name)
                 mkdir(self, str(unix_path(self, Path(mo_file).parent)))
-                cpp_info = self.dependencies["gettext"].cpp_info
-                self.run(f"{cpp_info.bindirs[0]}/msgfmt {po_file} -o {mo_file} -f", env="conanbuild", ignore_errors=True)
+                cpp_info = self.dependencies.build["gettext"].cpp_info
+                self.run(f"{cpp_info.bindirs[0]}/msgfmt {po_file} -o {mo_file} -f", env="conanbuild",
+                         ignore_errors=True)
 
     def layout(self):
         self.folders.source = "."
@@ -146,30 +149,32 @@ class UraniumConan(ConanFile):
         self.folders.generators = os.path.join(self.folders.build, "conan")
 
         self.cpp.package.libdirs = [os.path.join("site-packages", "UM")]
-        self.cpp.package.resdirs = ["resources", "plugins", "pip_requirements"]  # Note: pip_requirements should be the last item in the list
+        self.cpp.package.resdirs = ["resources", "plugins",
+                                    "pip_requirements"]  # Note: pip_requirements should be the last item in the list
+
+        self.layouts.source.runenv_info.prepend_path("PYTHONPATH", ".")
+        self.layouts.source.runenv_info.prepend_path("PYTHONPATH", "plugins")
+        self.layouts.package.runenv_info.prepend_path("PYTHONPATH", "site-packages")
+        self.layouts.package.runenv_info.prepend_path("PYTHONPATH", self.cpp.package.resdirs[1])
 
     def package(self):
-        copy(self, "*", src = os.path.join(self.source_folder, "UM"), dst = os.path.join(self.package_folder, self.cpp.package.libdirs[0]))
-        copy(self, "*", src = os.path.join(self.source_folder, "resources"), dst = os.path.join(self.package_folder, self.cpp.package.resdirs[0]))
-        copy(self, "*.mo", src = os.path.join(self.build_folder, "resources"), dst = os.path.join(self.package_folder, self.cpp.package.resdirs[0]))
-        copy(self, "*", src = os.path.join(self.source_folder, "plugins"), dst = os.path.join(self.package_folder, self.cpp.package.resdirs[1]))
-        copy(self, "requirement*.txt", src = self.source_folder, dst = os.path.join(self.package_folder, self.cpp.package.resdirs[-1]))
+        copy(self, "*", src=os.path.join(self.source_folder, "UM"),
+             dst=os.path.join(self.package_folder, self.cpp.package.libdirs[0]))
+        copy(self, "*", src=os.path.join(self.source_folder, "resources"),
+             dst=os.path.join(self.package_folder, self.cpp.package.resdirs[0]))
+        copy(self, "*.mo", src=os.path.join(self.build_folder, "resources"),
+             dst=os.path.join(self.package_folder, self.cpp.package.resdirs[0]))
+        copy(self, "*", src=os.path.join(self.source_folder, "plugins"),
+             dst=os.path.join(self.package_folder, self.cpp.package.resdirs[1]))
+        copy(self, "requirement*.txt", src=self.source_folder,
+             dst=os.path.join(self.package_folder, self.cpp.package.resdirs[-1]))
 
     def package_info(self):
         self.user_info.pip_requirements = "requirements.txt"
         self.user_info.pip_requirements_build = "requirements-dev.txt"
 
-        if self.in_local_cache:
-            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.package_folder, "site-packages"))
-            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.package_folder, "plugins"))
-        else:
-            self.runenv_info.append_path("PYTHONPATH", self.source_folder)
-            self.runenv_info.append_path("PYTHONPATH", os.path.join(self.source_folder, "plugins"))
-
     def package_id(self):
         self.info.clear()
 
-        del self.info.options.devtools
-        if self.options.get_safe("enable_i18n", False):
-            del self.info.options.enable_i18n
-
+        self.info.options.rm_safe("devtools")
+        self.info.options.rm_safe("enable_i18n")
