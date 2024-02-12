@@ -6,7 +6,7 @@ from conan import ConanFile
 from conan.tools.env import VirtualBuildEnv, VirtualRunEnv
 from conan.tools.files import copy, mkdir, update_conandata
 from conan.tools.microsoft import unix_path
-from conan.tools.scm import Version
+from conan.tools.scm import Version, Git
 from conan.errors import ConanInvalidConfiguration
 
 required_conan_version = ">=1.58.0"
@@ -84,7 +84,8 @@ class UraniumConan(ConanFile):
         return py_interp
 
     def export(self):
-        update_conandata(self, {"version": self.version})
+        git = Git(self)
+        update_conandata(self, {"version": self.version, "commit": git.get_commit()})
 
     def export_sources(self):
         copy(self, "*", os.path.join(self.recipe_folder, "plugins"),
