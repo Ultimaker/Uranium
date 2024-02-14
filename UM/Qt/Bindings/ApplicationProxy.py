@@ -5,7 +5,7 @@ from PyQt6.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Application import Application
 
-
+#ApplicationProxy is deprecated and will be removed in major SDK release, use CuraApplication.version() in place of UM.Application.version
 class ApplicationProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
