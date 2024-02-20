@@ -9,5 +9,16 @@ class DepthFirstIterator(Iterator.Iterator):
         super().__init__(scene_node)
 
     def _fillStack(self) -> None:
+        self._addNodesToStack()
+        self._set_print_order_for_sliceable_nodes()
+
+    def _addNodesToStack(self) -> None:
         self._node_stack.append(self._scene_node)
         self._node_stack.extend(self._scene_node.getAllChildren())
+
+    def _setPrintOrderForSliceableNodes(self) -> None:
+        order_counter = 1
+        for node in self._node_stack:
+            if node.callDecoration("isSliceable"):
+                node.printOrder = order_counter
+                order_counter += 1
