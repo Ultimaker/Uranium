@@ -10,7 +10,7 @@ class DepthFirstIterator(Iterator.Iterator):
 
     def _fillStack(self) -> None:
         self._addNodesToStack()
-        self._set_print_order_for_sliceable_nodes()
+        self._setPrintOrderForSliceableNodes()
 
     def _addNodesToStack(self) -> None:
         self._node_stack.append(self._scene_node)
