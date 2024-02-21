@@ -18,7 +18,7 @@ class TestActiveToolProxy(TestCase):
         # These objects only need to be set / created once.
         if TestActiveToolProxy.proxy is None:
             TestActiveToolProxy.controller = Controller(mocked_app)
-            with patch("UM.Application.Application.getInstance.getController", MagicMock(return_value=TestActiveToolProxy.controller)):
+            with patch("UM.Application.Application.getInstance().getController", MagicMock(return_value=TestActiveToolProxy.controller)):
                 TestActiveToolProxy.proxy = ActiveToolProxy()
 
         self.tool = Tool()
