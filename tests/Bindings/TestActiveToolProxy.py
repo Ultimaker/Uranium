@@ -22,8 +22,8 @@ class TestActiveToolProxy(TestCase):
             with patch("UM.Application.Application.getInstance", return_value=mocked_app):
                 TestActiveToolProxy.proxy = ActiveToolProxy()
 
-        self.tool = Tool()
-        self.tool.setPluginId("test_tool_1")
+                self.tool = Tool()
+                self.tool.setPluginId("test_tool_1")
 
     def tearDown(self):
         TestActiveToolProxy.controller.setActiveTool("")
