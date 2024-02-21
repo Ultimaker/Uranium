@@ -3,28 +3,32 @@ from unittest import TestCase
 from PyQt6.QtCore import QUrl
 from unittest.mock import MagicMock, patch
 
-from UM.Application import Application
+from UM.Controller import Controller
 from UM.Qt.Bindings.ActiveToolProxy import ActiveToolProxy
 from UM.Tool import Tool
 
 
+mocked_app = MagicMock()
+
 class TestActiveToolProxy(TestCase):
     proxy = None
+    controller = None
 
     def setUp(self):
         # These objects only need to be set / created once.
         if TestActiveToolProxy.proxy is None:
             TestActiveToolProxy.proxy = ActiveToolProxy()
+            TestActiveToolProxy.controller = Controller(mocked_app)
 
         self.tool = Tool()
         self.tool.setPluginId("test_tool_1")
 
     def tearDown(self):
-        Application.getInstance().getController().setActiveTool("")
+        TestActiveToolProxy.controller.setActiveTool("")
 
     def test_isValid(self):
         assert not self.proxy.valid
-        Application.getInstance().getController().setActiveTool(self.tool)
+        TestActiveToolProxy.controller.setActiveTool(self.tool)
         assert self.proxy.valid  # It is valid now
 
     def test_activeToolPanel(self):
@@ -33,19 +37,19 @@ class TestActiveToolProxy(TestCase):
 
         with patch.object(self.tool, "getMetaData", MagicMock(return_value={"tool_panel": "derp"})):
             with patch("UM.PluginRegistry.PluginRegistry.getPluginPath", MagicMock(return_value = "OMG")):
-                Application.getInstance().getController().setActiveTool(self.tool)
+                TestActiveToolProxy.controller.setActiveTool(self.tool)
                 assert self.proxy.activeToolPanel == QUrl.fromLocalFile("OMG/derp")
         # Try again with empty metadata
         with patch("UM.PluginRegistry.PluginRegistry.getMetaData", MagicMock(return_value={"tool": {}})):
-            Application.getInstance().getController().setActiveTool("")
-            Application.getInstance().getController().setActiveTool(self.tool)
+            TestActiveToolProxy.controller.setActiveTool("")
+            TestActiveToolProxy.controller.setActiveTool(self.tool)
             assert self.proxy.activeToolPanel == QUrl.fromLocalFile("")
 
     def test_triggerAction(self):
         # There is no active tool, so this is just a check to see if nothing breaks.
         self.proxy.triggerAction("derp")
 
-        Application.getInstance().getController().setActiveTool(self.tool)
+        TestActiveToolProxy.controller.setActiveTool(self.tool)
 
         # It is active now, but it doesn't have a function called "derp". Again, nothing should break.
         self.proxy.triggerAction("derp")
@@ -59,7 +63,7 @@ class TestActiveToolProxy(TestCase):
         # There is no active tool, so this is just a check to see if nothing breaks.
         self.proxy.triggerActionWithData("derp", "omgzomg")
 
-        Application.getInstance().getController().setActiveTool(self.tool)
+        TestActiveToolProxy.controller.setActiveTool(self.tool)
 
         # It is active now, but it doesn't have a function called "derp". Again, nothing should break.
         self.proxy.triggerActionWithData("derp", "omgzomg")
@@ -79,7 +83,7 @@ class TestActiveToolProxy(TestCase):
         self.tool.beep = ""
         self.tool.getbeep = MagicMock()
 
-        Application.getInstance().getController().setActiveTool(self.tool)
+        TestActiveToolProxy.controller.setActiveTool(self.tool)
         assert self.proxy.properties.getValue("Bla") == "BlaBla"  # The default
         self.proxy.forceUpdate()
         self.proxy.setProperty("Bla", "OMGZOMG")

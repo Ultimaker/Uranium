@@ -25,17 +25,17 @@ class ControllerProxy(QObject):
 
         self._active_tool = None
         self._properties = {}
-        Application.getInstance().getController().activeToolChanged.connect(self._onActiveToolChanged)
-        self._onActiveToolChanged()
-
 
         self._properties_proxy = ContainerProxy.ContainerProxy(self._properties)
 
         # bind needed signals
+        self._controller.activeToolChanged.connect(self._onActiveToolChanged)
         self._controller.toolOperationStarted.connect(self._onToolOperationStarted)
         self._controller.toolOperationStopped.connect(self._onToolOperationStopped)
         self._controller.activeStageChanged.connect(self._onActiveStageChanged)
         self._controller.activeViewChanged.connect(self._onActiveViewChanged)
+
+        self._onActiveToolChanged()
 
     toolsEnabledChanged = pyqtSignal()
     activeStageChanged = pyqtSignal()
