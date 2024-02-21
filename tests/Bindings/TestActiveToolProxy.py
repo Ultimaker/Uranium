@@ -3,6 +3,7 @@ from unittest import TestCase
 from PyQt6.QtCore import QUrl
 from unittest.mock import MagicMock, patch
 
+from UM.Application import Application
 from UM.Controller import Controller
 from UM.Qt.Bindings.ActiveToolProxy import ActiveToolProxy
 from UM.Tool import Tool
