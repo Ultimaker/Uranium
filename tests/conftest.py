@@ -59,3 +59,17 @@ def upgrade_manager(application):
     upgrade_manager = VersionUpgradeManager(application)
     return upgrade_manager
 
+def pytest_collection_modifyitems(items):
+    """ Modifies test items in place to ensure test classes run in a given order.
+        See: https://stackoverflow.com/questions/70738211/run-pytest-classes-in-custom-order/70758938#70758938
+    """
+    CLASS_ORDER = ["TestActiveToolProxy"]  # All classes that need to be run in-order, in that order -- all others will run _before_.
+    class_mapping = {item: (item.cls.__name__ if item.cls else "") for item in items}
+
+    sorted_items = items.copy()
+    # Iteratively move tests of each class to the end of the test queue
+    for class_ in CLASS_ORDER:
+        sorted_items = [it for it in sorted_items if class_mapping[it] != class_] + [
+            it for it in sorted_items if class_mapping[it] == class_
+        ]
+    items[:] = sorted_items
