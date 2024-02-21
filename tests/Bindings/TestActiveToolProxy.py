@@ -3,7 +3,6 @@ from unittest import TestCase
 from PyQt6.QtCore import QUrl
 from unittest.mock import MagicMock, patch
 
-from UM.Application import Application
 from UM.Controller import Controller
 from UM.Qt.Bindings.ActiveToolProxy import ActiveToolProxy
 from UM.Tool import Tool
@@ -19,7 +18,8 @@ class TestActiveToolProxy(TestCase):
         # These objects only need to be set / created once.
         if TestActiveToolProxy.proxy is None:
             TestActiveToolProxy.controller = Controller(mocked_app)
-            with patch("UM.Application.Application.getInstance().getController", MagicMock(return_value=TestActiveToolProxy.controller)):
+            mocked_app.getController = MagicMock(return_value=TestActiveToolProxy.controller)
+            with patch("UM.Application.Application.getInstance", return_value=mocked_app):
                 TestActiveToolProxy.proxy = ActiveToolProxy()
 
         self.tool = Tool()
