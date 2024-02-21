@@ -64,7 +64,7 @@ def pytest_collection_modifyitems(items):
         See: https://stackoverflow.com/questions/70738211/run-pytest-classes-in-custom-order/70758938#70758938
     """
     CLASS_ORDER = ["TestActiveToolProxy"]  # All classes that need to be run in-order, in that order -- all others will run _before_.
-    class_mapping = {item: item.cls.__name__ for item in items}
+    class_mapping = {item: (item.cls.__name__ if item.cls else "") for item in items}
 
     sorted_items = items.copy()
     # Iteratively move tests of each class to the end of the test queue
