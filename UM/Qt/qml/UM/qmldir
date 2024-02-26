@@ -45,6 +45,7 @@ CategoryButton          1.5 CategoryButton.qml
 Switch                  1.7 Switch.qml
 Slider                  1.7 Slider.qml
 ComponentWithIcon       1.7 ComponentWithIcon.qml
+HelpIcon                1.8 HelpIcon.qml
 
 # Validators
 FloatValidator              1.7 Validators/FloatValidator.qml
