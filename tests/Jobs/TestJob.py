@@ -32,7 +32,7 @@ def test_start():
     job_queue = MagicMock()
     with patch("UM.JobQueue.JobQueue.getInstance", MagicMock(return_value = job_queue)):
         job.start()
-    job_queue.add.called_once_with(job)
+    job_queue.add.assert_called_once_with(job)
 
 
 def test_cancel():
@@ -40,7 +40,7 @@ def test_cancel():
     job_queue = MagicMock()
     with patch("UM.JobQueue.JobQueue.getInstance", MagicMock(return_value=job_queue)):
         job.cancel()
-    job_queue.remove.called_once_with(job)
+    job_queue.remove.assert_called_once_with(job)
 
 
 def test_isRunning():
