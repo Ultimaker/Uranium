@@ -255,13 +255,11 @@ class RotateTool(Tool):
         rotation_quaternion = Quaternion.rotationTo(face_normal_vector.normalized(), Vector(0.0, -1.0, 0.0))
 
         operation = GroupedOperation()
-        current_node = None  # type: Optional[SceneNode]
-        for node in Selection.getAllSelectedObjects():
-            current_node = node
+        current_node = original_node
+        parent_node = current_node.getParent()
+        while parent_node and parent_node.callDecoration("isGroup"):
+            current_node = parent_node
             parent_node = current_node.getParent()
-            while parent_node and parent_node.callDecoration("isGroup"):
-                current_node = parent_node
-                parent_node = current_node.getParent()
         if current_node is None:
             return
 

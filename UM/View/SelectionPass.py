@@ -143,18 +143,22 @@ class SelectionPass(RenderPass):
                 # This should be OK, as we should get both the mesh-id _and_ face-id from the rendering mesh.
                 self._face_mode_max_objects = sum([1 if (node.isSelectable() and node.getMeshData()) else 0 for node in node.getChildren()])
                 current_model_id = 0
-                for node in node.getChildren():
-                    if node.isSelectable() and node.getMeshData():
-                        selectable_objects = True
-                        batch.addItem(
-                            transformation = node.getWorldTransformation(copy = False),
-                            mesh = node.getMeshData(),
-                            uniforms = {"model_id": current_model_id, "max_model_id": self._face_mode_max_objects},
-                            normal_transformation = node.getCachedNormalMatrix())
-                        self._face_mode_selection_map.append(node)
-                        current_model_id += 1
-                        if current_model_id >= 128:
-                            break  # Shader can't handle more than 128 (ids 0 through 127) objects in a group.
+                node_list = [node]
+                while len(node_list) > 0:
+                    for node in node_list.pop().getChildren():
+                        if node.isSelectable() and node.getMeshData():
+                            selectable_objects = True
+                            batch.addItem(
+                                transformation = node.getWorldTransformation(copy = False),
+                                mesh = node.getMeshData(),
+                                uniforms = {"model_id": current_model_id, "max_model_id": self._face_mode_max_objects},
+                                normal_transformation = node.getCachedNormalMatrix())
+                            self._face_mode_selection_map.append(node)
+                            current_model_id += 1
+                            if current_model_id >= 128:
+                                break  # Shader can't handle more than 128 (ids 0 through 127) objects in a group.
+                        elif node.callDecoration("isGroup"):
+                            node_list.append(node)
 
             if selectable_objects:
                 break  # only one group allowed
@@ -183,6 +187,8 @@ class SelectionPass(RenderPass):
     def getIdAtPositionFaceMode(self, x, y):
         """Get an unique identifier to any object currently selected for by-face manipulation at a pixel coordinate."""
         output = self.getOutput()
+
+        output.save("C:/tmp_/faceid.png")
 
         window_size = self._renderer.getWindowSize()
 
