@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Optional
@@ -20,8 +20,7 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
-from UM.Version import Version
-from UM.View.GL.OpenGL import OpenGL
+from UM.View.GL.OpenGL import OpenGLContext
 
 try:
     from . import RotateToolHandle
@@ -237,10 +236,12 @@ class RotateTool(Tool):
         self._handle.setEnabled(not Selection.getFaceSelectMode())
 
         selected_face = Selection.getSelectedFace()
-        if not Selection.getSelectedFace() or not (Selection.hasSelection() and Selection.getFaceSelectMode()):
+        if selected_face is None or not (Selection.hasSelection() and Selection.getFaceSelectMode()):
             return
 
         original_node, face_id = selected_face
+        if original_node is None:
+            return
         meshdata = original_node.getMeshDataTransformed()
         if not meshdata or face_id < 0:
             return
@@ -285,8 +286,7 @@ class RotateTool(Tool):
 
         :return: True if it is supported, or False otherwise.
         """
-        # Use a dummy postfix, since an equal version with a postfix is considered smaller normally.
-        return Version(OpenGL.getInstance().getOpenGLVersion()) >= Version("4.1 dummy-postfix")
+        return not OpenGLContext.isLegacyOpenGL()
 
     def getRotationSnap(self):
         """Get the state of the "snap rotation to N-degree increments" option

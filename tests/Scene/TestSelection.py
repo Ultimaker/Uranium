@@ -101,6 +101,8 @@ class TestSelection:
         assert Selection.getSelectedFace() == (node_1, 91)
         Selection.toggleFace(node_2, 92)
         assert Selection.getSelectedFace() == (node_2, 92)
+        Selection.toggleFace(node_1, 92)
+        assert Selection.getSelectedFace() == (node_1, 92)
         Selection.toggleFace(node_2, 93)
         assert Selection.getSelectedFace() == (node_2, 93)
         Selection.toggleFace(node_2, 93)
