@@ -188,8 +188,6 @@ class SelectionPass(RenderPass):
         """Get an unique identifier to any object currently selected for by-face manipulation at a pixel coordinate."""
         output = self.getOutput()
 
-        output.save("C:/tmp_/faceid.png")
-
         window_size = self._renderer.getWindowSize()
 
         px = round((0.5 + x / 2.0) * window_size[0])
