@@ -22,7 +22,7 @@ MouseArea
     {
         id: image
         anchors.fill: parent
-        color: UM.Theme.getColor('warning')
+        color: UM.Theme.getColor("warning")
         source: UM.Theme.getIcon("Help")
 
         UM.ToolTip
