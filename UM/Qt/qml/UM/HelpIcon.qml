@@ -21,7 +21,7 @@ MouseArea
     {
         id: image
         anchors.fill: parent
-        color: "orange"
+        color: UM.Theme.getColor("warning")
         source: UM.Theme.getIcon("Help")
 
         UM.ToolTip
