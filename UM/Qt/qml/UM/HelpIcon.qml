@@ -10,6 +10,7 @@ MouseArea
 {
     property alias text: tooltip.text
     property alias icon: image.source
+    property alias color: image.color
 
     id: helpIconMouseArea
     hoverEnabled: true
@@ -21,7 +22,7 @@ MouseArea
     {
         id: image
         anchors.fill: parent
-        color: UM.Theme.getColor("text")
+        color: UM.Theme.getColor("warning")
         source: UM.Theme.getIcon("Help")
 
         UM.ToolTip
