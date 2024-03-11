@@ -34,7 +34,7 @@ class FrameBufferObject:
 
     def getContents(self) -> QImage:
         """Get the contents of the FBO as an image data object."""
-        if not self._contents:
+        if self._contents is None:
             self._contents = self._fbo.toImage()
 
         return self._contents
