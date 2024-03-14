@@ -99,7 +99,7 @@ CheckBox
         verticalAlignment: Text.AlignVCenter
         leftPadding: control.indicator.width
     }
-    ToolTip
+    UM.ToolTip
     {
         id: tooltip
         text: ""
