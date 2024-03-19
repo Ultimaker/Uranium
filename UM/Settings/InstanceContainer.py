@@ -798,7 +798,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(*signal_arg)
             
-    def getAllKeysWithUserState(self):
+    def getAllKeysWithUserState(self)-> Set[str]:
         """Get the keys of all the setting having a User state"""
         self._instantiateCachedValues()
 
