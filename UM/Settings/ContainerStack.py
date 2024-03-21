@@ -17,6 +17,7 @@ from UM.PluginObject import PluginObject
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.ContainerFormatError import ContainerFormatError
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
+from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Settings.SettingDefinition import SettingDefinition
@@ -500,6 +501,23 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if self._next_stack:
             keys |= self._next_stack.getAllKeys()
         return keys
+
+    def getAllKeysWithUserState(self) -> Set[str]:
+        """Get a subset of all the settings keys in all the containers having a User state
+
+        This can also be achieved by getting all the keys then getting their state, but this call is way faster because
+        it won't run through all the containers stack for each setting but just once.
+        """
+        settings = set()
+
+        for container in self._containers:
+            if isinstance(container, InstanceContainer):
+                settings.update(container.getAllKeysWithUserState())
+
+        if self._next_stack:
+            settings.update(self._next_stack.getAllKeysWithUserState())
+
+        return settings
 
     def getContainers(self) -> List[ContainerInterface]:
         """Get a list of all containers in this stack.

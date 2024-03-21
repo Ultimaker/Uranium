@@ -15,6 +15,7 @@ from UM.Trust import Trust
 from UM.Decorators import override
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext #For typing.
+from UM.Settings.SettingInstance import InstanceState
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
@@ -796,6 +797,17 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         while self._postponed_emits:
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(*signal_arg)
+            
+    def getAllKeysWithUserState(self)-> Set[str]:
+        """Get the keys of all the setting having a User state"""
+        self._instantiateCachedValues()
+
+        result_settings = set()
+        for setting_key, setting_instance in self._instances.items():
+            if setting_instance.state == InstanceState.User:
+                result_settings.add(setting_key)
+
+        return result_settings
 
 
 _containerRegistry = ContainerRegistryInterface()  # type:  ContainerRegistryInterface
