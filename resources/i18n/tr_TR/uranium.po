@@ -1,8 +1,9 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 15:53+0200\n"
+"POT-Creation-Date: 2024-03-13 09:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +29,7 @@ msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Tüm Dosyalar (*)"
 
+#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Tüm desteklenen türler ({0})"
@@ -43,10 +45,6 @@ msgstr "%1’i kaldırmak istediğinizden emin misiniz? Bu eylem geri alınamaz!
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "Model orijinal boyutun %{0} kadarına otomatik ölçeklendirilir"
-
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "İptal Et"
 
 msgctxt "@option"
 msgid "Cancel"
@@ -72,10 +70,6 @@ msgctxt "@title:window"
 msgid "Confirm Remove"
 msgstr "Kaldırmayı Onayla"
 
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<filename>{0}</filename> dosyasına kaydedilemedi: <message>{1}</message>"
-
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteği gerektirir. Lütfen ekran kartı sürücülerinizi kontrol edin."
@@ -96,10 +90,6 @@ msgctxt "@option:check"
 msgid "Drop Down Model"
 msgstr "Alçalan Model"
 
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Hata"
-
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "OpenGL Başlatılamadı"
@@ -115,10 +105,6 @@ msgstr "<filename>{0}</filename> dosyası yüklenemedi. Dosya bozuk veya erişil
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Dosya Zaten Mevcut"
-
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Dosya Kaydedildi"
 
 msgctxt "@info:title"
 msgid "File has been modified"
@@ -276,6 +262,10 @@ msgctxt "@title:tab"
 msgid "Printers"
 msgstr "Yazıcılar"
 
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "Basit gerçek bir ağ görünümü sağlar."
+
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Yeniden Yükle"
@@ -380,10 +370,6 @@ msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr "Yapı plakasıyla hizalanacak yüzü seçin"
 
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Ayarlar"
-
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "Basit"
@@ -396,17 +382,22 @@ msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Ölçeklendirmeyi Tuttur"
 
+#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Dosya <filename>{0}</filename> zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
 
 msgctxt "@info:status"
-msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
-msgstr "Eklenti kurulumu yapıldı.\nEklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr "Eklenti kurulumu yapıldı.Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
 
 msgctxt "@info:status"
-msgid "The plugin has been removed.\nPlease restart {0} to finish uninstall."
-msgstr "Eklenti kaldırıldı.\nKaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr "Eklenti kaldırıldı.Kaldırmayı tamamlamak için lütfen {0} yeniden başlatın."
 
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
@@ -425,12 +416,15 @@ msgid "There is no mesh to write."
 msgstr "Yazdırılacak ağ yok."
 
 msgctxt "@error:update"
-msgid "There was an error uninstalling the package {package} before installing new version:\n{error}.\nPlease try to upgrade again later."
-msgstr "Yeni sürüm yüklenmeden önce {package} paketi kaldırılırken hata meydana geldi:\n{error}.\nLütfen daha sonra tekrar yükseltmeyi deneyin."
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr "Yeni sürüm yüklenmeden önce {package} paketi kaldırılırken hata meydana geldi:{error}.Lütfen daha sonra tekrar yükseltmeyi deneyin."
 
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Şu paketler kaldırılırken bazı hatalar meydana geldi:\n{packages}"
+msgstr "Şu paketler kaldırılırken bazı hatalar meydana geldi:{packages}"
 
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
@@ -509,8 +503,11 @@ msgid "Your configuration seems to be corrupt."
 msgstr "Yapılandırmanız bozuk görünüyor."
 
 msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "Yapılandırmanız bozuk görünüyor. Şu profillerde bir sorun var gibi görünüyor:\n- {profiles}\n Fabrika varsayılanlarına sıfırlamak ister misiniz? Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır."
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr "Yapılandırmanız bozuk görünüyor. Şu profillerde bir sorun var gibi görünüyor:- {profiles} Fabrika varsayılanlarına sıfırlamak ister misiniz? Sıfırlama işlemi tüm mevcut yazıcılarınızı ve profillerinizi kaldırır."
 
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
@@ -547,115 +544,11 @@ msgid "{application_name} {version_number} provides a better and more reliable p
 msgstr "{application_name} {version_number}, daha iyi ve daha güvenilir bir yazdırma deneyimi sunar."
 
 msgid "Provides a simple solid mesh view."
-msgstr "Normal gerçek bir ağ görünümü sağlar."
+msgstr "Basit bir katı ağ görünümü sağlar."
 
 msgctxt "name"
 msgid "Simple View"
 msgstr "Basit Görünüm"
-
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Yazılım güncellemelerini denetler."
-
-msgctxt "name"
-msgid "Update Checker"
-msgstr "Güncelleme Denetleyicisi"
-
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Günlük bilgilerinin çıktısını konsola aktarır."
-
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Konsol Günlükçüsü"
-
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Yerel dosyalara kaydetmeyi sağlar."
-
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Yerel Dosya Çıkış Cihazı"
-
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "Uygulamanın kurulumuyla birlikte gelen yerleşik ayar kapsayıcılarını sunar."
-
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr "Yerel Kapsayıcı Sağlayıcısı"
-
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Ayarlar klasörünüzde bulunan bir dosyaya günlük bilgilerini gönderir."
-
-msgctxt "name"
-msgid "File Logger"
-msgstr "Dosya Günlükçüsü"
-
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "STL dosyalarının yazılması için destek sağlar."
-
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL Yazıcı"
-
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Wavefront OBJ dosyalarının yazılmasına olanak sağlar."
-
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ Yazıcı"
-
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Wavefront OBJ dosyalarının okunmasına olanak sağlar."
-
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ Okuyucu"
-
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "STL dosyalarının okunması için destek sağlar."
-
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL Okuyucu"
-
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Seçim aracı sağlar."
-
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "Seçim Aracı"
-
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Ölçeklendirme aracı sağlar."
-
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Ölçeklendirme Aracı"
-
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Ayna aracı sağlar."
-
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Ayna Aracı"
-
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Aracın kamerayı yönlendirmesini sağlar."
-
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Kamera Aracı"
 
 msgctxt "description"
 msgid "Provides the Move tool."
@@ -674,5 +567,126 @@ msgid "Rotate Tool"
 msgstr "Döndürme Aracı"
 
 msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "Basit gerçek bir ağ görünümü sağlar."
+msgid "Provides the Mirror tool."
+msgstr "Ayna aracı sağlar."
+
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Ayna Aracı"
+
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Aracın kamerayı yönlendirmesini sağlar."
+
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Kamera Aracı"
+
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "İptal Et"
+
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Ölçeklendirme aracı sağlar."
+
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Ölçeklendirme Aracı"
+
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Seçim aracı sağlar."
+
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Seçim Aracı"
+
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Ayarlar"
+
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "Yerel dosyalara kaydetmeyi sağlar."
+
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Hata"
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "Yerel Dosya Çıkış Cihazı"
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "Uygulamanın kurulumuyla birlikte gelen yerleşik ayar kapsayıcılarını sunar."
+
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "Yerel Kapsayıcı Sağlayıcısı"
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Yazılım güncellemelerini denetler."
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr "Güncelleme Denetleyicisi"
+
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Wavefront OBJ dosyalarının yazılmasına olanak sağlar."
+
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ Yazıcı"
+
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "STL dosyalarının yazılması için destek sağlar."
+
+msgctxt "name"
+msgid "STL Writer"
+msgstr "STL Yazıcı"
+
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "STL dosyalarının okunması için destek sağlar."
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STL Okuyucu"
+
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Wavefront OBJ dosyalarının okunmasına olanak sağlar."
+
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ Okuyucu"
+
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Günlük bilgilerinin çıktısını konsola aktarır."
+
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Konsol Günlükçüsü"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "<filename>{0}</filename> dosyasına kaydedilemedi: <message>{1}</message>"
+
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Ayarlar klasörünüzde bulunan bir dosyaya günlük bilgilerini gönderir."
+
+msgctxt "name"
+msgid "File Logger"
+msgstr "Dosya Günlükçüsü"
+
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Dosya Kaydedildi"

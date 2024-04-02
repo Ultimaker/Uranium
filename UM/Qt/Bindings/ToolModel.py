@@ -49,7 +49,7 @@ class ToolModel(ListModel):
 
             # Skip tools that are marked as not visible, or are not there
             tool = self._controller.getTool(name)
-            if ("visible" in tool_meta_data and not tool_meta_data["visible"]) or tool is None:
+            if (tool_meta_data is not None and "visible" in tool_meta_data and not tool_meta_data["visible"]) or tool is None:
                 continue
 
             # Optional metadata elements

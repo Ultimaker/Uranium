@@ -1,8 +1,9 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 15:53+0200\n"
+"POT-Creation-Date: 2024-03-13 09:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +29,7 @@ msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Все файлы (*)"
 
+#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Все поддерживаемые типы ({0})"
@@ -43,10 +45,6 @@ msgstr "Вы уверены, что желаете удалить %1? Это н�
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "Автоматическое масштабирование модели к {0}% от оригинального размера"
-
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Отмена"
 
 msgctxt "@option"
 msgid "Cancel"
@@ -72,10 +70,6 @@ msgctxt "@title:window"
 msgid "Confirm Remove"
 msgstr "Подтвердите удаление"
 
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Не могу записать <filename>{0}</filename>: <message>{1}</message>"
-
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Важные дополнения OpenGL отсутствуют. Данная программа требует поддержки для объектов фреймбуфера. Пожалуйста, проверьте драйвер своей видеокарты."
@@ -96,10 +90,6 @@ msgctxt "@option:check"
 msgid "Drop Down Model"
 msgstr "Модель нависаний"
 
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Ошибка"
-
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "Не удалось инициализировать OpenGL"
@@ -115,10 +105,6 @@ msgstr "Не удалось загрузить <filename>{0}</filename>. Воз�
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Файл уже существует"
-
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Файл сохранён"
 
 msgctxt "@info:title"
 msgid "File has been modified"
@@ -276,6 +262,10 @@ msgctxt "@title:tab"
 msgid "Printers"
 msgstr "Принтеры"
 
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "Предоставляет просмотр в виде целого тела."
+
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Перезагрузить"
@@ -380,10 +370,6 @@ msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr "Выберите поверхность для выравнивания с печатной пластиной"
 
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Параметры"
-
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "Обычный"
@@ -396,17 +382,22 @@ msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Быстрое масштабирование"
 
+#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Файл <filename>{0}</filename> уже существует. Вы уверены, что желаете перезаписать его?"
 
 msgctxt "@info:status"
-msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
-msgstr "Плагин был установлен\nПожалуйста, перезапустите приложение для активации плагина."
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr "Плагин был установленПожалуйста, перезапустите приложение для активации плагина."
 
 msgctxt "@info:status"
-msgid "The plugin has been removed.\nPlease restart {0} to finish uninstall."
-msgstr "Плагин удален.\nПерезапустите {0} для завершения удаления."
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr "Плагин удален.Перезапустите {0} для завершения удаления."
 
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
@@ -425,12 +416,15 @@ msgid "There is no mesh to write."
 msgstr "Отсутствует объект для записи."
 
 msgctxt "@error:update"
-msgid "There was an error uninstalling the package {package} before installing new version:\n{error}.\nPlease try to upgrade again later."
-msgstr "Возникла ошибка при удалении пакета {package} перед установкой новой версии:\n{error}.\nПовторите попытку обновления позже."
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr "Возникла ошибка при удалении пакета {package} перед установкой новой версии:{error}.Повторите попытку обновления позже."
 
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Возникли некоторые ошибки при удалении этих пакетов: \n{packages}"
+msgstr "Возникли некоторые ошибки при удалении этих пакетов: {packages}"
 
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
@@ -509,8 +503,11 @@ msgid "Your configuration seems to be corrupt."
 msgstr "Вероятно, данные вашей конфигурации повреждены."
 
 msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:\n- {profiles}\nВыполнить сброс до заводских настроек по умолчанию? Сброс приведет к удалению данных всех текущих принтеров и профилей."
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr "Вероятно, данные вашей конфигурации повреждены. Возникли проблемы со следующими профилями:- {profiles}Выполнить сброс до заводских настроек по умолчанию? Сброс приведет к удалению данных всех текущих принтеров и профилей."
 
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
@@ -520,6 +517,7 @@ msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}ч {1:0>2}мин"
 
+#, fuzzy
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
@@ -528,6 +526,7 @@ msgstr[1] "{0} дня"
 msgstr[2] "{0} дня"
 msgstr[3] ""
 
+#, fuzzy
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
@@ -536,6 +535,7 @@ msgstr[1] "{0} часа"
 msgstr[2] "{0} часа"
 msgstr[3] ""
 
+#, fuzzy
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
@@ -553,115 +553,11 @@ msgid "{application_name} {version_number} provides a better and more reliable p
 msgstr "{application_name} {version_number} обеспечивает более качественную и надежную печать."
 
 msgid "Provides a simple solid mesh view."
-msgstr "Обеспечивает простой вид сплошной сетки."
+msgstr "Создает простой вид сплошной сетки."
 
 msgctxt "name"
 msgid "Simple View"
 msgstr "Обычный вид"
-
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Проверяет наличие обновлений ПО."
-
-msgctxt "name"
-msgid "Update Checker"
-msgstr "Проверка обновлений"
-
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Выводит содержимое журнала на консоль."
-
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Консольный журнал"
-
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Разрешает сохранение в локальные файлы."
-
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Устройство вывода локальных файлов"
-
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "Формирует встроенные контейнеры настроек, предоставляемые при установке приложения."
-
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr "Местный поставщик контейнеров"
-
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Выводит содержимое журнала в файл, который располагается в каталоге с вашими настройками."
-
-msgctxt "name"
-msgid "File Logger"
-msgstr "Запись журнала в файл"
-
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Предоставляет поддержку для записи STL файлов."
-
-msgctxt "name"
-msgid "STL Writer"
-msgstr "Запись STL"
-
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Позволяет записывать файлы Wavefront OBJ."
-
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Запись Wavefront OBJ"
-
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Позволяет читать файлы Wavefront OBJ."
-
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Чтение Wavefront OBJ"
-
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Предоставляет поддержку для чтения STL файлов."
-
-msgctxt "name"
-msgid "STL Reader"
-msgstr "Чтение STL"
-
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Предоставляет инструмент \"Выбор\"."
-
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "Инструмент \"Выбор\""
-
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Предоставляет инструмент \"Масштабирование\"."
-
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Инструмент \"Масштабирование\""
-
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Предоставляет инструмент \"Зеркало\"."
-
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Инструмент \"Зеркало\""
-
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Предоставляет возможность управлять камерой."
-
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Инструмент \"Камера\""
 
 msgctxt "description"
 msgid "Provides the Move tool."
@@ -680,5 +576,126 @@ msgid "Rotate Tool"
 msgstr "Инструмент \"Вращение\""
 
 msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "Предоставляет просмотр в виде целого тела."
+msgid "Provides the Mirror tool."
+msgstr "Предоставляет инструмент \"Зеркало\"."
+
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Инструмент \"Зеркало\""
+
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Предоставляет возможность управлять камерой."
+
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Инструмент \"Камера\""
+
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Отмена"
+
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Предоставляет инструмент \"Масштабирование\"."
+
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Инструмент \"Масштабирование\""
+
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Предоставляет инструмент \"Выбор\"."
+
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Инструмент \"Выбор\""
+
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Параметры"
+
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "Разрешает сохранение в локальные файлы."
+
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Ошибка"
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "Устройство вывода локальных файлов"
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "Формирует встроенные контейнеры настроек, предоставляемые при установке приложения."
+
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "Местный поставщик контейнеров"
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Проверяет наличие обновлений ПО."
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr "Проверка обновлений"
+
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Позволяет записывать файлы Wavefront OBJ."
+
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Запись Wavefront OBJ"
+
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "Предоставляет поддержку для записи STL файлов."
+
+msgctxt "name"
+msgid "STL Writer"
+msgstr "Запись STL"
+
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "Предоставляет поддержку для чтения STL файлов."
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr "Чтение STL"
+
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Позволяет читать файлы Wavefront OBJ."
+
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Чтение Wavefront OBJ"
+
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Выводит содержимое журнала на консоль."
+
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Консольный журнал"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Не могу записать <filename>{0}</filename>: <message>{1}</message>"
+
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Выводит содержимое журнала в файл, который располагается в каталоге с вашими настройками."
+
+msgctxt "name"
+msgid "File Logger"
+msgstr "Запись журнала в файл"
+
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Файл сохранён"

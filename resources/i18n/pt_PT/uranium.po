@@ -1,8 +1,9 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 15:53+0200\n"
+"POT-Creation-Date: 2024-03-13 09:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +29,7 @@ msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Todos os Ficheiros (*)"
 
+#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Todos os Formatos Suportados ({0})"
@@ -43,10 +45,6 @@ msgstr "Tem a certeza de que deseja remover %1? Não é possível desfazer esta 
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "Modelo redimensionado automaticamente para {0}% do tamanho original"
-
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "Cancelar"
 
 msgctxt "@option"
 msgid "Cancel"
@@ -72,10 +70,6 @@ msgctxt "@title:window"
 msgid "Confirm Remove"
 msgstr "Confirmar Remoção"
 
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Não foi possível guardar em <filename>{0}</filename>: <message>{1}</message>"
-
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Extensões cruciais do OpenGL não foram encontradas. Este programa requer o suporte de Framebuffer Objects. Por favor verifique os controladores da placa gráfica."
@@ -96,10 +90,6 @@ msgctxt "@option:check"
 msgid "Drop Down Model"
 msgstr "Modelo pendente"
 
-msgctxt "@info:title"
-msgid "Error"
-msgstr "Erro"
-
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "Não foi possível inicializar o OpenGL"
@@ -115,10 +105,6 @@ msgstr "Não foi possível carregar <filename>{0}</filename>. O ficheiro pode es
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "O Ficheiro já Existe"
-
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "Ficheiro Guardado"
 
 msgctxt "@info:title"
 msgid "File has been modified"
@@ -276,6 +262,10 @@ msgctxt "@title:tab"
 msgid "Printers"
 msgstr "Impressoras"
 
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "Permite uma visualização sólida simples dos objectos."
+
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "Recarregar"
@@ -380,10 +370,6 @@ msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr "Selecione a face que pretende alinhar com a base de construção"
 
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "Definições"
-
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "Simples"
@@ -396,17 +382,22 @@ msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Restringir Dimensões"
 
+#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "O ficheiro <filename>{0}</filename> já existe. Tem a certeza de que deseja substituí-lo?"
 
 msgctxt "@info:status"
-msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
-msgstr "O plug-in foi instalado.\nPor favor reinicie a aplicação para ativar o plug-in."
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr "O plug-in foi instalado.Por favor reinicie a aplicação para ativar o plug-in."
 
 msgctxt "@info:status"
-msgid "The plugin has been removed.\nPlease restart {0} to finish uninstall."
-msgstr "O plug-in foi removido.\nPor favor reinicie o {0} para concluir a desinstalação."
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr "O plug-in foi removido.Por favor reinicie o {0} para concluir a desinstalação."
 
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
@@ -425,12 +416,15 @@ msgid "There is no mesh to write."
 msgstr "Não existe uma malha para gravar."
 
 msgctxt "@error:update"
-msgid "There was an error uninstalling the package {package} before installing new version:\n{error}.\nPlease try to upgrade again later."
-msgstr "Ocorreu um erro ao desinstalar o pacote {package} antes de instalar uma nova versão:\n{error}.\nTente atualizar novamente mais tarde."
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr "Ocorreu um erro ao desinstalar o pacote {package} antes de instalar uma nova versão:{error}.Tente atualizar novamente mais tarde."
 
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Ocorreram alguns erros ao desinstalar os seguintes pacotes:\n{packages}"
+msgstr "Ocorreram alguns erros ao desinstalar os seguintes pacotes:{packages}"
 
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
@@ -509,8 +503,11 @@ msgid "Your configuration seems to be corrupt."
 msgstr "A sua configuração parece estar danificada."
 
 msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:\n- {profiles}\n Deseja repor as predefinições de fábrica? A reposição removerá todos os perfis e impressoras atuais."
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr "A sua configuração parece estar danificada. Parece haver algo de errado com os seguintes perfis:- {profiles} Deseja repor as predefinições de fábrica? A reposição removerá todos os perfis e impressoras atuais."
 
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
@@ -547,115 +544,11 @@ msgid "{application_name} {version_number} provides a better and more reliable p
 msgstr "A {application_name} {version_number} proporciona uma experiência de impressão melhor e mais fiável."
 
 msgid "Provides a simple solid mesh view."
-msgstr "Oferece uma vista em malha sólida e simples."
+msgstr "Oferece uma vista de malha sólida simples."
 
 msgctxt "name"
 msgid "Simple View"
 msgstr "Visualização simples"
-
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "Verifica se existem atualizações do software."
-
-msgctxt "name"
-msgid "Update Checker"
-msgstr "Verificador de Atualizações"
-
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "Exporta um relatório de informações para a consola."
-
-msgctxt "name"
-msgid "Console Logger"
-msgstr "Console Logger"
-
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "Permite guardar em ficheiros locais."
-
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "Dispositivo de Saída de ficheiros locais"
-
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "Fornece acesso aos \"setting containers\" que estão incluídos na instalação da aplicação."
-
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr "Fornecedor de recipientes local"
-
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Exporta um relatório de informações para um ficheiro na pasta de definições."
-
-msgctxt "name"
-msgid "File Logger"
-msgstr "File Logger"
-
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "Permite a gravação de ficheiros STL."
-
-msgctxt "name"
-msgid "STL Writer"
-msgstr "Gravador de STL"
-
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Possibilita a gravação de ficheiros OBJ Wavefront."
-
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Gravador de OBJ Wavefront"
-
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Possibilita ler ficheiros Wavefront OBJ."
-
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Leitor de OBJ Wavefront"
-
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "Fornece suporte para ler ficheiros STL."
-
-msgctxt "name"
-msgid "STL Reader"
-msgstr "Leitor de STL"
-
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "Fornece a ferramenta de Seleção."
-
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "Ferramenta Seleção"
-
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "Fornece a ferramenta Dimensionar."
-
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "Ferramenta Dimensionar"
-
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "Fornece a ferramenta Espelhar."
-
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "Ferramenta Espelhar"
-
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Fornece a ferramenta para manipular a câmera."
-
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "Ferramenta Câmera"
 
 msgctxt "description"
 msgid "Provides the Move tool."
@@ -674,5 +567,126 @@ msgid "Rotate Tool"
 msgstr "Ferramenta Rodar"
 
 msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "Permite uma visualização sólida simples dos objectos."
+msgid "Provides the Mirror tool."
+msgstr "Fornece a ferramenta Espelhar."
+
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "Ferramenta Espelhar"
+
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "Fornece a ferramenta para manipular a câmera."
+
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "Ferramenta Câmera"
+
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "Fornece a ferramenta Dimensionar."
+
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "Ferramenta Dimensionar"
+
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "Fornece a ferramenta de Seleção."
+
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "Ferramenta Seleção"
+
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "Definições"
+
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "Permite guardar em ficheiros locais."
+
+msgctxt "@info:title"
+msgid "Error"
+msgstr "Erro"
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "Dispositivo de Saída de ficheiros locais"
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "Fornece acesso aos \"setting containers\" que estão incluídos na instalação da aplicação."
+
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "Fornecedor de recipientes local"
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "Verifica se existem atualizações do software."
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr "Verificador de Atualizações"
+
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "Possibilita a gravação de ficheiros OBJ Wavefront."
+
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Gravador de OBJ Wavefront"
+
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "Permite a gravação de ficheiros STL."
+
+msgctxt "name"
+msgid "STL Writer"
+msgstr "Gravador de STL"
+
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "Fornece suporte para ler ficheiros STL."
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr "Leitor de STL"
+
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "Possibilita ler ficheiros Wavefront OBJ."
+
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Leitor de OBJ Wavefront"
+
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "Exporta um relatório de informações para a consola."
+
+msgctxt "name"
+msgid "Console Logger"
+msgstr "Console Logger"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Não foi possível guardar em <filename>{0}</filename>: <message>{1}</message>"
+
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "Exporta um relatório de informações para um ficheiro na pasta de definições."
+
+msgctxt "name"
+msgid "File Logger"
+msgstr "File Logger"
+
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "Ficheiro Guardado"
