@@ -50,7 +50,7 @@ class DefinitionContainersModel(ListModel):
         """Private convenience function to reset & repopulate the model."""
 
         items = []
-        definition_containers = ContainerRegistry.getInstance().findDefinitionContainersMetadata(**self._filter_dict)
+        definition_containers = ContainerRegistry.getInstance().findDefinitionContainersMetadata(ignore_case = True, **self._filter_dict)
         definition_containers.sort(key = self._sortKey)
 
         for metadata in definition_containers:
