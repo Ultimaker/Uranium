@@ -627,18 +627,18 @@ class QtApplication(QApplication, Application):
         return result
 
     @pyqtSlot()
-    def deleteAll(self, only_selectable = True) -> None:
+    def deleteAll(self, only_selectable = True, clear_all:bool = False) -> None:
         """Delete all nodes containing mesh data in the scene.
         :param only_selectable:. Set this to False to delete objects from all build plates
         """
 
-        self.getController().deleteAllNodesWithMeshData(only_selectable)
+        self.getController().deleteAllNodesWithMeshData(only_selectable, clear_all = clear_all)
 
     @pyqtSlot()
     def resetWorkspace(self) -> None:
         self._workspace_metadata_storage.clear()
         self._current_workspace_information.clear()
-        self.deleteAll()
+        self.deleteAll(clear_all = True)
         self.workspaceLoaded.emit("")
         self.getController().getScene().clearMetaData()
 

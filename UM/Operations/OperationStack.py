@@ -34,12 +34,10 @@ class OperationStack():
     def _onToolOperationStarted(self, tool):
         self._merge_operations = False
 
-    def controlStackSize(self):
-        if sys.getsizeof(self._operations)> 5000:
-            print("getting stack size", sys.getsizeof(self._operations), len(self._operations))
-            self._current_index -=1
-            self._operations.pop(0)
-            self.controlStackSize()
+    def clearStack(self):
+        self._operations = []
+        self._current_index = -1
+        self._merge_operations = False
 
     def _onToolOperationStopped(self, tool):
         self._merge_operations = False
@@ -74,7 +72,6 @@ class OperationStack():
             self.changed.emit()
         finally:
             self._lock.release()
-        self.controlStackSize()
         elapsed_time = time.time() - start_time
 
         Logger.log("d", " ".join(repr(operation).splitlines()) + ", took {0}ms".format(int(elapsed_time * 1000))) #Don't remove; used in regression-tests.
