@@ -1,6 +1,6 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
+import sys
 import threading
 import time
 
@@ -37,6 +37,13 @@ class OperationStack():
     def _onToolOperationStopped(self, tool):
         self._merge_operations = False
 
+    def controlStackSize(self):
+        if sys.getsizeof(self._operations)> 5000:
+            print("getting stack size", sys.getsizeof(self._operations), len(self._operations))
+            self._current_index -=1
+            self._operations.pop(0)
+            self.controlStackSize()
+
     def push(self, operation):
         """Push an operation on the stack.
 
@@ -68,7 +75,7 @@ class OperationStack():
         finally:
             self._lock.release()
         elapsed_time = time.time() - start_time
-
+        self.controlStackSize()
         Logger.log("d", " ".join(repr(operation).splitlines()) + ", took {0}ms".format(int(elapsed_time * 1000))) #Don't remove; used in regression-tests.
 
     def undo(self):
