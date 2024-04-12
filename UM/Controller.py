@@ -464,7 +464,7 @@ class Controller:
     def setToolsEnabled(self, enabled: bool) -> None:
         self._tools_enabled = enabled
 
-    def deleteAllNodesWithMeshData(self, only_selectable:bool = True, clear_all :bool = False) -> None:
+    def deleteAllNodesWithMeshData(self, only_selectable:bool = True, clear_all:bool = False) -> None:
         Logger.log("i", "Clearing scene")
         if not self.getToolsEnabled():
             return
