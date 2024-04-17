@@ -36,7 +36,7 @@ class OperationStack():
     def clearStackMemory(self, indexStart, indexEnd):
         for node in self._operations[indexStart:indexEnd]:
             node.delete()
-        del self._operations[0:len(self._operations)]
+        del self._operations[indexStart:indexEnd]
 
 
     def clearStack(self):
