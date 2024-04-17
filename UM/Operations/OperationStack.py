@@ -42,7 +42,7 @@ class OperationStack():
     def clearStack(self):
         try:
             with self._lock:
-                self.clearStackMemory(0, len(self._operations)-1)
+                self.clearStackMemory(0, len(self._operations))
                 self._current_index = -1
                 self._merge_operations = False
                 self.changed.emit()
