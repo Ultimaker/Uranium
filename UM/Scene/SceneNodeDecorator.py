@@ -27,7 +27,6 @@ class SceneNodeDecorator:
     def clear(self) -> None:
         """Clear all data associated with this decorator. This will be called before the decorator is removed"""
         self._node = None
-        pass
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "SceneNodeDecorator":
         raise NotImplementedError("Subclass {0} of SceneNodeDecorator should implement their own __deepcopy__() method.".format(str(self)))
