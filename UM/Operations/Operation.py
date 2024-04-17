@@ -62,3 +62,6 @@ class Operation:
         # Because of circular dependency
         from UM.Application import Application
         Application.getInstance().getOperationStack().clearStack()
+
+    def delete(self) -> None:
+        pass

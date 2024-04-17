@@ -26,7 +26,7 @@ class SceneNodeDecorator:
 
     def clear(self) -> None:
         """Clear all data associated with this decorator. This will be called before the decorator is removed"""
-
+        self._node = None
         pass
 
     def __deepcopy__(self, memo: Dict[int, object]) -> "SceneNodeDecorator":

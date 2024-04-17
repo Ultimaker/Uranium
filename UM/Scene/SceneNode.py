@@ -101,6 +101,31 @@ class SceneNode:
         if parent:
             parent.addChild(self)
 
+    def reset(self):
+        """Reset this scene node instance"""
+        self._children = []
+        self._mesh_data = None
+        self.metadata = {}
+        self._transformation = Matrix()
+        self._position = Vector()
+        self._scale = Vector(1.0, 1.0, 1.0)
+        self._shear = Vector(0.0, 0.0, 0.0)
+        self._mirror = Vector(1.0, 1.0, 1.0)
+        self._orientation = Quaternion()
+        self._world_transformation = Matrix()
+        self._cached_normal_matrix = Matrix()
+        self._derived_position = Vector()
+        self._derived_orientation = Quaternion()
+        self._derived_scale = Vector()
+        self._enabled = False
+        self._selectable = False
+        self._resetAABB()
+        self._visible = False
+        self._name = ""
+        self._id = ""
+        self.removeDecorators()
+        self._settings = {}
+
     def __deepcopy__(self, memo: Dict[int, object]) -> "SceneNode":
         copy = self.__class__()
         copy.setTransformation(self.getLocalTransformation())
@@ -262,7 +287,6 @@ class SceneNode:
 
     def removeDecorators(self):
         """Remove all decorators"""
-
         for decorator in self._decorators:
             decorator.clear()
         self._decorators = []
