@@ -288,7 +288,7 @@ class SceneNode:
     def removeDecorators(self):
         """Remove all decorators"""
         for decorator in self._decorators:
-            decorator.clear()
+            decorator.clearDecoratorData()
         self._decorators = []
         self.decoratorsChanged.emit(self)
 

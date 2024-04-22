@@ -24,7 +24,7 @@ class SceneNodeDecorator:
     def getNode(self) -> Optional["SceneNode"]:
         return self._node
 
-    def clear(self) -> None:
+    def clearDecoratorData(self) -> None:
         """Clear all data associated with this decorator. This will be called before the decorator is removed"""
         self._node = None
 
