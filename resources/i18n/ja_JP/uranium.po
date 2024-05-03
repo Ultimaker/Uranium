@@ -1,8 +1,9 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 15:53+0200\n"
+"POT-Creation-Date: 2024-03-13 09:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +29,7 @@ msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "全てのファイル"
 
+#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "すべてのサポートのタイプ ({0})"
@@ -43,10 +45,6 @@ msgstr "%1を取り外しますか？この作業はやり直しが効きませ�
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "元のサイズの{0}%まで自動的にスケールされたモデル"
-
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "キャンセル"
 
 msgctxt "@option"
 msgid "Cancel"
@@ -72,10 +70,6 @@ msgctxt "@title:window"
 msgid "Confirm Remove"
 msgstr "モデルを取り除きました"
 
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}</message>"
-
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
@@ -96,10 +90,6 @@ msgctxt "@option:check"
 msgid "Drop Down Model"
 msgstr "ドロップダウンモデル"
 
-msgctxt "@info:title"
-msgid "Error"
-msgstr "エラー"
-
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "OpenGLの初期化に失敗しました"
@@ -115,10 +105,6 @@ msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファ
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "すでに存在するファイルです"
-
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "ファイル保存"
 
 msgctxt "@info:title"
 msgid "File has been modified"
@@ -276,6 +262,10 @@ msgctxt "@title:tab"
 msgid "Printers"
 msgstr "プリンター"
 
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "シンプルソリッドメッシュビューを供給する。"
+
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "再ロード"
@@ -380,10 +370,6 @@ msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr "ビルドプレートに合わせる面を選択します"
 
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "設定"
-
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "シンプル"
@@ -396,17 +382,22 @@ msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "スナップスケーリング"
 
+#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
 
 msgctxt "@info:status"
-msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
-msgstr "プラグインがインストールされました。\nアプリケーションを再起動して、プラグインをアクティベートしてください。"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr "プラグインがインストールされました。アプリケーションを再起動して、プラグインをアクティベートしてください。"
 
 msgctxt "@info:status"
-msgid "The plugin has been removed.\nPlease restart {0} to finish uninstall."
-msgstr "プラグインが外されました。\n{0} を再起動してアンインストールを終了してください。"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr "プラグインが外されました。{0} を再起動してアンインストールを終了してください。"
 
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
@@ -425,12 +416,15 @@ msgid "There is no mesh to write."
 msgstr "書き込むメッシュがありません。"
 
 msgctxt "@error:update"
-msgid "There was an error uninstalling the package {package} before installing new version:\n{error}.\nPlease try to upgrade again later."
-msgstr "新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n{error}.\n後からアップグレードをやり直してください。"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr "新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:{error}.後からアップグレードをやり直してください。"
 
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "次のパッケージのアンインストールでエラーが発生しました:\n{packages}"
+msgstr "次のパッケージのアンインストールでエラーが発生しました:{packages}"
 
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
@@ -509,8 +503,11 @@ msgid "Your configuration seems to be corrupt."
 msgstr "構成が破損している可能性があります。"
 
 msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n- {profiles}\n工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：- {profiles}工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
 
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
@@ -544,115 +541,11 @@ msgid "{application_name} {version_number} provides a better and more reliable p
 msgstr "{application_name} {version_number} なら、より優れた信頼性の隊かい印刷体験が得られます。"
 
 msgid "Provides a simple solid mesh view."
-msgstr "シンプルなソリッドメッシュビューが利用できます。"
+msgstr "シンプルなソリッドメッシュビューを提供します。"
 
 msgctxt "name"
 msgid "Simple View"
 msgstr "シンプルビュー"
-
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "ソフトウェアのアップデートを確認中。"
-
-msgctxt "name"
-msgid "Update Checker"
-msgstr "アップデートチェッカー"
-
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "ログ情報をコンソールにアウトプットする。"
-
-msgctxt "name"
-msgid "Console Logger"
-msgstr "コンソールロガー"
-
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "ローカルファイルに保存することができます。"
-
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "ローカルファイルアウトプットデバイス"
-
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
-
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr "ローカルコンテナプロバイダー"
-
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "ログ情報を設定フォルダーのファイルにアウトプットする。"
-
-msgctxt "name"
-msgid "File Logger"
-msgstr "ファイルロガー"
-
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "STLファイルを書き出すためのサポートを供給する。"
-
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STLライター"
-
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
-
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "ウェイブフロントOBJライター"
-
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
-
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "ウェイブフロントOBJリーダー"
-
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "STLファイルを読み込むためのサポートを供給する。"
-
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STLリーダー"
-
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "セレクションツールを供給する。"
-
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "セレクションツール"
-
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "スケールツールを供給すｒ。"
-
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "スケールツール"
-
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "ミラーツールを供給する。"
-
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "ミラーツール"
-
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "カメラを操作するためのツールを供給する。"
-
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "カメラツール"
 
 msgctxt "description"
 msgid "Provides the Move tool."
@@ -671,5 +564,126 @@ msgid "Rotate Tool"
 msgstr "回転ツール"
 
 msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "シンプルソリッドメッシュビューを供給する。"
+msgid "Provides the Mirror tool."
+msgstr "ミラーツールを供給する。"
+
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "ミラーツール"
+
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "カメラを操作するためのツールを供給する。"
+
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "カメラツール"
+
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "キャンセル"
+
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "スケールツールを供給すｒ。"
+
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "スケールツール"
+
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "セレクションツールを供給する。"
+
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "セレクションツール"
+
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "設定"
+
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "ローカルファイルに保存することができます。"
+
+msgctxt "@info:title"
+msgid "Error"
+msgstr "エラー"
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "ローカルファイルアウトプットデバイス"
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "アプリケーションのインストール時に導入されるビルトイン設定コンテナを提供します。"
+
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "ローカルコンテナプロバイダー"
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "ソフトウェアのアップデートを確認中。"
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr "アップデートチェッカー"
+
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
+
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "ウェイブフロントOBJライター"
+
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "STLファイルを書き出すためのサポートを供給する。"
+
+msgctxt "name"
+msgid "STL Writer"
+msgstr "STLライター"
+
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "STLファイルを読み込むためのサポートを供給する。"
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STLリーダー"
+
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
+
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "ウェイブフロントOBJリーダー"
+
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "ログ情報をコンソールにアウトプットする。"
+
+msgctxt "name"
+msgid "Console Logger"
+msgstr "コンソールロガー"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}</message>"
+
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "ログ情報を設定フォルダーのファイルにアウトプットする。"
+
+msgctxt "name"
+msgid "File Logger"
+msgstr "ファイルロガー"
+
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "ファイル保存"

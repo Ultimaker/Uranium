@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 15:53+0200\n"
+"POT-Creation-Date: 2024-03-11 11:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -597,91 +598,19 @@ msgid "Simple View"
 msgstr ""
 
 msgctxt "description"
-msgid "Checks for updates of the software."
+msgid "Provides the Move tool."
 msgstr ""
 
 msgctxt "name"
-msgid "Update Checker"
+msgid "Move Tool"
 msgstr ""
 
 msgctxt "description"
-msgid "Outputs log information to the console."
+msgid "Provides the Rotate tool."
 msgstr ""
 
 msgctxt "name"
-msgid "Console Logger"
-msgstr ""
-
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr ""
-
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr ""
-
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr ""
-
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr ""
-
-msgctxt "name"
-msgid "File Logger"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr ""
-
-msgctxt "name"
-msgid "STL Writer"
-msgstr ""
-
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr ""
-
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr ""
-
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr ""
-
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr ""
-
-msgctxt "name"
-msgid "STL Reader"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr ""
-
-msgctxt "name"
-msgid "Selection Tool"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr ""
-
-msgctxt "name"
-msgid "Scale Tool"
+msgid "Rotate Tool"
 msgstr ""
 
 msgctxt "description"
@@ -701,18 +630,90 @@ msgid "Camera Tool"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides the Move tool."
+msgid "Provides the Scale tool."
 msgstr ""
 
 msgctxt "name"
-msgid "Move Tool"
+msgid "Scale Tool"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides the Rotate tool."
+msgid "Provides the Selection tool."
 msgstr ""
 
 msgctxt "name"
-msgid "Rotate Tool"
+msgid "Selection Tool"
+msgstr ""
+
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr ""
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr ""
+
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr ""
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr ""
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr ""
+
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr ""
+
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr ""
+
+msgctxt "name"
+msgid "STL Writer"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr ""
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr ""
+
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr ""
+
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr ""
+
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr ""
+
+msgctxt "name"
+msgid "Console Logger"
+msgstr ""
+
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr ""
+
+msgctxt "name"
+msgid "File Logger"
 msgstr ""
 

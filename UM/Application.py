@@ -1,6 +1,6 @@
 # Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
+import platform
 from pathlib import Path
 import argparse
 import os
@@ -177,12 +177,19 @@ class Application:
         Resources.ApplicationVersion = self._version
 
         app_root = os.path.abspath(os.path.join(os.path.dirname(sys.executable)))
-        Resources.addSecureSearchPath(os.path.join(app_root, "share", "uranium", "resources"))
+
+        if platform.system() == "Darwin":
+            Resources.addSecureSearchPath(os.path.join(app_root, "Resources", "share", "uranium", "resources"))
+        else:
+            Resources.addSecureSearchPath(os.path.join(app_root, "share", "uranium", "resources"))
 
         Resources.addSecureSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
-        Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "share", "uranium", "resources"))
-        Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", "uranium", "resources"))
-        Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "Resources", self._app_name, "resources"))
+
+        if platform.system() == "Darwin":
+            Resources.addSecureSearchPath(
+                os.path.join(self._app_install_dir, "Resources", "share", "uranium", "resources"))
+        else:
+            Resources.addSecureSearchPath(os.path.join(self._app_install_dir, "share", "uranium", "resources"))
 
         if not hasattr(sys, "frozen"):
             uranium_data_root = os.environ.get('URANIUM_DATA_ROOT', None)
@@ -196,7 +203,12 @@ class Application:
             Resources.addSearchPath(str(Path(__file__).parent.parent.parent.joinpath("plugins")))
 
             # venv site-packages
-            Resources.addSearchPath(str(Path(sys.executable).parent.parent.joinpath("share", "uranium", "resources")))
+            if platform.system() == "Darwin":
+                Resources.addSearchPath(
+                    str(Path(sys.executable).parent.parent.joinpath("Resources", "share", "uranium", "resources")))
+            else:
+                Resources.addSearchPath(
+                    str(Path(sys.executable).parent.parent.joinpath("share", "uranium", "resources")))
 
         i18nCatalog.setApplication(self)
 
@@ -220,6 +232,10 @@ class Application:
 
         self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "uranium", "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(app_root, "share", "cura", "plugins"))
+
+        self._plugin_registry.addPluginLocation(
+            os.path.join(app_root, "..", "Resources", "share", "uranium", "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(app_root, "..", "Resources", "share", "cura", "plugins"))
 
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib", "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(self._app_install_dir, "lib64", "uranium"))
@@ -499,7 +515,10 @@ class Application:
         else:
             executable = sys.executable
         try:
-            return os.path.dirname(os.path.realpath(executable))
+            if platform.system() == "Darwin":
+                return os.path.join(os.path.dirname(os.path.realpath(executable)), "..", "Resources")
+            else:
+                return os.path.dirname(os.path.realpath(executable))
         except EnvironmentError:  # Symlinks can't be dereferenced.
             return os.path.dirname(executable)
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt6 import QtCore, QtWidgets
@@ -67,8 +67,6 @@ class SelectionTool(Tool):
             self._selection_pass = self._renderer.getRenderPass("selection")
 
         self.checkModifierKeys(event)
-        #if event.type == MouseEvent.MouseMoveEvent and Selection.getFaceSelectMode():
-        #    return self._pixelHover(event)
         if event.type == MouseEvent.MousePressEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
             # Perform a selection operation
             if self._selection_mode == self.PixelSelectionMode:
@@ -159,9 +157,10 @@ class SelectionTool(Tool):
                         return True
             else:
                 if Selection.getFaceSelectMode():
+                    node_for_face = self._selection_pass.getIdAtPositionFaceMode(event.x, event.y)
                     face_id = self._selection_pass.getFaceIdAtPosition(event.x, event.y)
                     if face_id >= 0:
-                        Selection.toggleFace(node, face_id)
+                        Selection.toggleFace(node_for_face, face_id)
                     else:
                         Selection.clear()
                         Selection.clearFace()

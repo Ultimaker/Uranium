@@ -113,6 +113,7 @@ class UraniumConan(ConanFile):
             self.requires(req)
         self.requires("cpython/3.12.2@ultimaker/cura_11079")
         self.requires("openssl/3.2.0")
+        self.requires("protobuf/3.21.12")
 
     def build_requirements(self):
         if self.options.get_safe("enable_i18n", False):

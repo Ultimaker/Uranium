@@ -1,7 +1,8 @@
-# Copyright (c) 2020 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import enum
+import math
 import random
 from typing import TYPE_CHECKING
 
@@ -45,6 +46,7 @@ class SelectionPass(RenderPass):
         self._renderer = Application.getInstance().getRenderer()
 
         self._selection_map = {}
+        self._face_mode_selection_map = []
         self._default_toolhandle_selection_map = {
             self._dropAlpha(ToolHandle.DisabledSelectionColor): ToolHandle.NoAxis,
             self._dropAlpha(ToolHandle.XAxisSelectionColor): ToolHandle.XAxis,
@@ -63,6 +65,7 @@ class SelectionPass(RenderPass):
 
         self._mode = SelectionPass.SelectionMode.OBJECTS
         Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
+        self._face_mode_max_objects = 1  # Needed when selecting a face for (a) grouped or merged object(s).
 
         self._output = None
 
@@ -121,6 +124,10 @@ class SelectionPass(RenderPass):
 
     def _renderFacesMode(self):
         batch = RenderBatch(self._face_shader)
+        self._face_mode_max_objects = 1
+        self._face_shader.setUniformValue("u_modelId", 0)
+        self._face_shader.setUniformValue("u_maxModelId", self._face_mode_max_objects)
+        self._face_mode_selection_map = []
 
         selectable_objects = False
         for node in Selection.getAllSelectedObjects():
@@ -130,6 +137,31 @@ class SelectionPass(RenderPass):
             if node.isSelectable() and node.getMeshData():
                 selectable_objects = True
                 batch.addItem(transformation = node.getWorldTransformation(copy = False), mesh = node.getMeshData(), normal_transformation=node.getCachedNormalMatrix())
+                self._face_mode_selection_map.append(node)
+            elif node.hasChildren():
+                # Drill down to see if we're in a group or merged meshes type situation.
+                # This should be OK, as we should get both the mesh-id _and_ face-id from the rendering mesh.
+                self._face_mode_max_objects = sum([1 if (node.isSelectable() and node.getMeshData()) else 0 for node in node.getChildren()])
+                current_model_id = 0
+                node_list = [node]
+                while len(node_list) > 0:
+                    for node in node_list.pop().getChildren():
+                        if node.isSelectable() and node.getMeshData():
+                            selectable_objects = True
+                            batch.addItem(
+                                transformation = node.getWorldTransformation(copy = False),
+                                mesh = node.getMeshData(),
+                                uniforms = {"model_id": current_model_id, "max_model_id": self._face_mode_max_objects},
+                                normal_transformation = node.getCachedNormalMatrix())
+                            self._face_mode_selection_map.append(node)
+                            current_model_id += 1
+                            if current_model_id >= 128:
+                                break  # Shader can't handle more than 128 (ids 0 through 127) objects in a group.
+                        elif node.callDecoration("isGroup"):
+                            node_list.append(node)
+
+            if selectable_objects:
+                break  # only one group allowed
 
         self.bind()
         if selectable_objects:
@@ -152,6 +184,29 @@ class SelectionPass(RenderPass):
         pixel = output.pixel(px, py)
         return self._selection_map.get(Color.fromARGB(pixel), None)
 
+    def getIdAtPositionFaceMode(self, x, y):
+        """Get an unique identifier to any object currently selected for by-face manipulation at a pixel coordinate."""
+        output = self.getOutput()
+
+        window_size = self._renderer.getWindowSize()
+
+        px = round((0.5 + x / 2.0) * window_size[0])
+        py = round((0.5 + y / 2.0) * window_size[1])
+
+        if px < 0 or px > (output.width() - 1) or py < 0 or py > (output.height() - 1):
+            return None
+
+        blue_channel = int(Color.fromARGB(output.pixel(px, py)).b * 255.)
+        if blue_channel % 2 == 0:  # check signal (any selected object here) bit
+            return None
+
+        max_objects_mask = int(math.pow(2, int(math.ceil(math.log2(self._face_mode_max_objects))) + 1)) - 1
+        index = (blue_channel & max_objects_mask) >> 1
+        if 0 <= index < len(self._face_mode_selection_map):
+            return self._face_mode_selection_map[index]
+        else:
+            return None
+
     def getFaceIdAtPosition(self, x, y):
         """Get an unique identifier to the face of the polygon at a certain pixel-coordinate."""
         output = self.getOutput()
@@ -167,8 +222,10 @@ class SelectionPass(RenderPass):
         face_color = Color.fromARGB(output.pixel(px, py))
         if int(face_color.b * 255) % 2 == 0:
             return -1
+
+        max_objects_adjusted = int(math.ceil(math.log2(self._face_mode_max_objects))) + 1
         return (
-            ((int(face_color.b * 255.) - 1) << 15) |
+            ((int(face_color.b * 255.) >> max_objects_adjusted) << 15) |
             (int(face_color.g * 255.) << 8) |
             int(face_color.r * 255.)
         )

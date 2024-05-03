@@ -1,8 +1,9 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 15:53+0200\n"
+"POT-Creation-Date: 2024-03-13 09:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +29,7 @@ msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
+#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "所有支持的文件类型 ({0})"
@@ -43,10 +45,6 @@ msgstr "您确认要删除 %1？该操作无法恢复！"
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "已将模型自动缩放为原有大小的 {0}%"
-
-msgctxt "@action:button"
-msgid "Cancel"
-msgstr "取消"
 
 msgctxt "@option"
 msgid "Cancel"
@@ -72,10 +70,6 @@ msgctxt "@title:window"
 msgid "Confirm Remove"
 msgstr "确认删除"
 
-msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "无法保存到 <filename>{0}</filename>： <message>{1}</message>"
-
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "关键 OpenGL 拓展文件缺失。该程序需要对 Framebuffer Objects 的支持。请检查您的显卡驱动是否正常。"
@@ -96,10 +90,6 @@ msgctxt "@option:check"
 msgid "Drop Down Model"
 msgstr "下拉式模型"
 
-msgctxt "@info:title"
-msgid "Error"
-msgstr "错误"
-
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "无法初始化 OpenGL"
@@ -115,10 +105,6 @@ msgstr "无法加载 <filename>{0}</filename>。文件可能已损坏或无法�
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "文件已存在"
-
-msgctxt "@info:title"
-msgid "File Saved"
-msgstr "文件已保存"
 
 msgctxt "@info:title"
 msgid "File has been modified"
@@ -276,6 +262,10 @@ msgctxt "@title:tab"
 msgid "Printers"
 msgstr "打印机"
 
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr "提供简单实体网格视图。"
+
 msgctxt "@action:button"
 msgid "Reload"
 msgstr "重新加载"
@@ -380,10 +370,6 @@ msgctxt "@action:button"
 msgid "Select face to align to the build plate"
 msgstr "选择要与构建板对齐的面"
 
-msgctxt "@title:tab"
-msgid "Settings"
-msgstr "设置"
-
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "简单"
@@ -396,17 +382,22 @@ msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "等距缩放（Snap Scaling）"
 
+#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "文件 <filename>{0}</filename> 已存在。 您确定要覆盖它吗？"
 
 msgctxt "@info:status"
-msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
-msgstr "插件已安装。\n请重新启动应用程序以激活插件。"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr "插件已安装。请重新启动应用程序以激活插件。"
 
 msgctxt "@info:status"
-msgid "The plugin has been removed.\nPlease restart {0} to finish uninstall."
-msgstr "插件已移除。\n请重启 {0} 完成卸载。"
+msgid ""
+"The plugin has been removed.\n"
+"Please restart {0} to finish uninstall."
+msgstr "插件已移除。请重启 {0} 完成卸载。"
 
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
@@ -425,12 +416,15 @@ msgid "There is no mesh to write."
 msgstr "没有要写入的网格。"
 
 msgctxt "@error:update"
-msgid "There was an error uninstalling the package {package} before installing new version:\n{error}.\nPlease try to upgrade again later."
-msgstr "在安装新版本之前卸载程序包 {package} 时出现了一个错误：\n{error}。\n请稍后再次尝试升级。"
+msgid ""
+"There was an error uninstalling the package {package} before installing new version:\n"
+"{error}.\n"
+"Please try to upgrade again later."
+msgstr "在安装新版本之前卸载程序包 {package} 时出现了一个错误：{error}。请稍后再次尝试升级。"
 
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "卸载以下程序包时出现了一些错误：\n{packages}"
+msgstr "卸载以下程序包时出现了一些错误：{packages}"
 
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There where no models in <filename>{0}</filename>."
@@ -509,8 +503,11 @@ msgid "Your configuration seems to be corrupt."
 msgstr "配置似乎已损坏。"
 
 msgctxt "@info:status"
-msgid "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "配置似乎已损坏。以下配置文件似乎出现问题：\n- {profiles}\n 是否要恢复出厂默认设置？重置将移除当前所有的打印机和配置文件。"
+msgid ""
+"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
+"- {profiles}\n"
+" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr "配置似乎已损坏。以下配置文件似乎出现问题：- {profiles} 是否要恢复出厂默认设置？重置将移除当前所有的打印机和配置文件。"
 
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
@@ -544,115 +541,11 @@ msgid "{application_name} {version_number} provides a better and more reliable p
 msgstr "{application_name} {version_number} 提供更好、更可靠的打印体验。"
 
 msgid "Provides a simple solid mesh view."
-msgstr "提供一个简单的实体网格视图。"
+msgstr "提供实体网格简化视图。"
 
 msgctxt "name"
 msgid "Simple View"
 msgstr "简单视图"
-
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr "检查软件更新。"
-
-msgctxt "name"
-msgid "Update Checker"
-msgstr "固件更新检查"
-
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr "输出日志信息至控制台。"
-
-msgctxt "name"
-msgid "Console Logger"
-msgstr "控制台日志记录"
-
-msgctxt "description"
-msgid "Enables saving to local files."
-msgstr "开启保存到本地文件的功能。"
-
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr "本地文件输出设备"
-
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr "提供安装应用程序附带的内置设置容器。"
-
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr "本地容器供应商"
-
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "将日志信息输出到设置文件夹中的一个文件。"
-
-msgctxt "name"
-msgid "File Logger"
-msgstr "文件日志记录"
-
-msgctxt "description"
-msgid "Provides support for writing STL files."
-msgstr "提供对写入 STL 文件的支持。"
-
-msgctxt "name"
-msgid "STL Writer"
-msgstr "STL 文件写入器"
-
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "提供对写入 Wavefront OBJ 文件的支持。"
-
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ 文件写入器"
-
-msgctxt "description"
-msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "提供对读取 Wavefront OBJ 文件的支持。"
-
-msgctxt "name"
-msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ 文件读取器"
-
-msgctxt "description"
-msgid "Provides support for reading STL files."
-msgstr "提供对读取 STL 文件的支持。"
-
-msgctxt "name"
-msgid "STL Reader"
-msgstr "STL 文件读取器"
-
-msgctxt "description"
-msgid "Provides the Selection tool."
-msgstr "提供选择工具。"
-
-msgctxt "name"
-msgid "Selection Tool"
-msgstr "选择工具"
-
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr "提供缩放工具。"
-
-msgctxt "name"
-msgid "Scale Tool"
-msgstr "缩放工具"
-
-msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr "提供镜像工具。"
-
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr "镜像工具"
-
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr "提供变换视角功能。"
-
-msgctxt "name"
-msgid "Camera Tool"
-msgstr "视角工具"
 
 msgctxt "description"
 msgid "Provides the Move tool."
@@ -671,5 +564,126 @@ msgid "Rotate Tool"
 msgstr "旋转工具"
 
 msgctxt "description"
-msgid "Provides a simple solid mesh view."
-msgstr "提供简单实体网格视图。"
+msgid "Provides the Mirror tool."
+msgstr "提供镜像工具。"
+
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr "镜像工具"
+
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr "提供变换视角功能。"
+
+msgctxt "name"
+msgid "Camera Tool"
+msgstr "视角工具"
+
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "取消"
+
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr "提供缩放工具。"
+
+msgctxt "name"
+msgid "Scale Tool"
+msgstr "缩放工具"
+
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr "提供选择工具。"
+
+msgctxt "name"
+msgid "Selection Tool"
+msgstr "选择工具"
+
+msgctxt "@title:tab"
+msgid "Settings"
+msgstr "设置"
+
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr "开启保存到本地文件的功能。"
+
+msgctxt "@info:title"
+msgid "Error"
+msgstr "错误"
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr "本地文件输出设备"
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr "提供安装应用程序附带的内置设置容器。"
+
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr "本地容器供应商"
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr "检查软件更新。"
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr "固件更新检查"
+
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr "提供对写入 Wavefront OBJ 文件的支持。"
+
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ 文件写入器"
+
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr "提供对写入 STL 文件的支持。"
+
+msgctxt "name"
+msgid "STL Writer"
+msgstr "STL 文件写入器"
+
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr "提供对读取 STL 文件的支持。"
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr "STL 文件读取器"
+
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr "提供对读取 Wavefront OBJ 文件的支持。"
+
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ 文件读取器"
+
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr "输出日志信息至控制台。"
+
+msgctxt "name"
+msgid "Console Logger"
+msgstr "控制台日志记录"
+
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "无法保存到 <filename>{0}</filename>： <message>{1}</message>"
+
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr "将日志信息输出到设置文件夹中的一个文件。"
+
+msgctxt "name"
+msgid "File Logger"
+msgstr "文件日志记录"
+
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr "文件已保存"
