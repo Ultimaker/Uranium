@@ -23,7 +23,6 @@ class Job:
         self._running = False   # type: bool
         self._finished = False  # type: bool
         self._result = None     # type: Any
-        self._message = None    # type: Any
         self._error = None      # type: Optional[Exception]
 
     def run(self) -> None:
