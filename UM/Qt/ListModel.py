@@ -108,7 +108,7 @@ class ListModel(QAbstractListModel):
             self.endRemoveRows()
 
         # Notify that the existing items have been changed.
-        if changed_row_count >= 0:
+        if changed_row_count >= 1:
             self.dataChanged.emit(self.index(0, 0), self.index(changed_row_count - 1, 0))
 
         # Notify with the custom signal itemsChanged to keep it backwards compatible in case something relies on it.
