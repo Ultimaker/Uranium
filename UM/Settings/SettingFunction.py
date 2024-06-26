@@ -242,21 +242,6 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         """
         raise IllegalMethodError("Slices are not allowed")
 
-    def visit_Str(self, node: ast.Str) -> None:
-        """This one is used before Python 3.8 to visit string types.
-
-        visit_Str will be marked as deprecated from Python 3.8 and onwards.
-        """
-        # The blacklisting is done just in case (All function calls should be whitelisted. The blacklist is to make
-        # extra sure that certain calls are *not* made!)
-        if node.s in self._blacklist:
-            raise IllegalMethodError(node.s)
-        if node.s.startswith("_"):
-            raise IllegalMethodError(node.s)
-
-        if node.s not in self._knownNames and node.s not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.s.
-            self.keys.add(node.s)  # type: ignore
-
     def visit_Subscript(self, node: ast.Subscript):
         if type(node.value) == ast.Str:
             raise IllegalMethodError("Indexing on strings is not allowed")
