@@ -65,7 +65,6 @@ class SelectionPass(RenderPass):
 
         self._mode = SelectionPass.SelectionMode.OBJECTS
         Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
-        self._face_mode_max_objects = 1  # Needed when selecting a face for (a) grouped or merged object(s).
 
         self._output = None
 
@@ -124,9 +123,7 @@ class SelectionPass(RenderPass):
 
     def _renderFacesMode(self):
         batch = RenderBatch(self._face_shader)
-        self._face_mode_max_objects = 1
         self._face_shader.setUniformValue("u_modelId", 0)
-        self._face_shader.setUniformValue("u_maxModelId", self._face_mode_max_objects)
         self._face_mode_selection_map = []
 
         selectable_objects = False
@@ -141,7 +138,6 @@ class SelectionPass(RenderPass):
             elif node.hasChildren():
                 # Drill down to see if we're in a group or merged meshes type situation.
                 # This should be OK, as we should get both the mesh-id _and_ face-id from the rendering mesh.
-                self._face_mode_max_objects = sum([1 if (node.isSelectable() and node.getMeshData()) else 0 for node in node.getChildren()])
                 current_model_id = 0
                 node_list = [node]
                 while len(node_list) > 0:
@@ -151,12 +147,12 @@ class SelectionPass(RenderPass):
                             batch.addItem(
                                 transformation = node.getWorldTransformation(copy = False),
                                 mesh = node.getMeshData(),
-                                uniforms = {"model_id": current_model_id, "max_model_id": self._face_mode_max_objects},
+                                uniforms = {"model_id": current_model_id},
                                 normal_transformation = node.getCachedNormalMatrix())
                             self._face_mode_selection_map.append(node)
                             current_model_id += 1
-                            if current_model_id >= 128:
-                                break  # Shader can't handle more than 128 (ids 0 through 127) objects in a group.
+                            if current_model_id >= 255:
+                                break  # Shader can't handle more than 255 (ids 0 through 254) objects in a group.
                         elif node.callDecoration("isGroup"):
                             node_list.append(node)
 
@@ -196,13 +192,12 @@ class SelectionPass(RenderPass):
         if px < 0 or px > (output.width() - 1) or py < 0 or py > (output.height() - 1):
             return None
 
-        blue_channel = int(Color.fromARGB(output.pixel(px, py)).b * 255.)
-        if blue_channel % 2 == 0:  # check signal (any selected object here) bit
+        alpha_channel = int(Color.fromARGB(output.pixel(px, py)).a * 255.)
+        if alpha_channel == 0:  # check if there is any selected object here
             return None
 
-        max_objects_mask = int(math.pow(2, int(math.ceil(math.log2(self._face_mode_max_objects))) + 1)) - 1
-        index = (blue_channel & max_objects_mask) >> 1
-        if 0 <= index < len(self._face_mode_selection_map):
+        index = 255 - alpha_channel
+        if index < len(self._face_mode_selection_map):
             return self._face_mode_selection_map[index]
         else:
             return None
@@ -220,14 +215,13 @@ class SelectionPass(RenderPass):
             return -1
 
         face_color = Color.fromARGB(output.pixel(px, py))
-        if int(face_color.b * 255) % 2 == 0:
+        if int(face_color.a * 255) == 0:
             return -1
 
-        max_objects_adjusted = int(math.ceil(math.log2(self._face_mode_max_objects))) + 1
         return (
-            ((int(face_color.b * 255.) >> max_objects_adjusted) << 15) |
-            (int(face_color.g * 255.) << 8) |
-            int(face_color.r * 255.)
+            ((int(face_color.b * 255.) << 16) & 0xff0000) |
+            ((int(face_color.g * 255.) << 8) & 0x00ff00) |
+            (int(face_color.r * 255.) & 0x0000ff)
         )
 
     def _getNodeColor(self, node):
