@@ -151,8 +151,8 @@ class SelectionPass(RenderPass):
                                 normal_transformation = node.getCachedNormalMatrix())
                             self._face_mode_selection_map.append(node)
                             current_model_id += 1
-                            if current_model_id >= 128:
-                                break  # Shader can't handle more than 128 (ids 0 through 127) objects in a group.
+                            if current_model_id >= 255:
+                                break  # Shader can't handle more than 255 (ids 0 through 254) objects in a group.
                         elif node.callDecoration("isGroup"):
                             node_list.append(node)
 
