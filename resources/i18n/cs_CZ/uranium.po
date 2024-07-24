@@ -586,7 +586,7 @@ msgstr "Nastaly chyby při odinstalaci následujících balíčků: {packages}"
 
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
+msgid "There were no models in <filename>{0}</filename>."
 msgstr "V souboru <filename>{0}</filename> nebyly žádné modely."
 
 msgctxt "@action:description"

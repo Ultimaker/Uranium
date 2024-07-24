@@ -575,7 +575,7 @@ msgstr "Si sono verificati alcuni errori durante la disinstallazione dei seguent
 
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
+msgid "There were no models in <filename>{0}</filename>."
 msgstr "Nessun modello in <filename>{0}</filename>."
 
 msgctxt "@action:description"

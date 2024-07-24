@@ -88,7 +88,7 @@ class ReadFileJob(Job):
             self._loading_message.hide()
             if reader.emptyFileHintSet():
                 result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!",
-                                                            "There where no models in <filename>{0}</filename>.",
+                                                            "There were no models in <filename>{0}</filename>.",
                                                             self._filename),
                                          lifetime = 0,
                                          title = i18n_catalog.i18nc("@info:title", "No Models in File"),

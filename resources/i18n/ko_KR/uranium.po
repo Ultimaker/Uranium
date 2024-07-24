@@ -575,7 +575,7 @@ msgstr "다음 패키지를 제거하는 중에 오류가 발생했습니다. {p
 
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
+msgid "There were no models in <filename>{0}</filename>."
 msgstr "<filename>{0}</filename>에 모델이 없습니다."
 
 msgctxt "@action:description"

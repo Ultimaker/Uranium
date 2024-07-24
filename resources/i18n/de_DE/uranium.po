@@ -575,7 +575,7 @@ msgstr "Beim Deinstallieren der folgenden Pakete traten Fehler auf:{packages}"
 
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
+msgid "There were no models in <filename>{0}</filename>."
 msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."
 
 msgctxt "@action:description"
