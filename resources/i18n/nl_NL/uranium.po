@@ -575,7 +575,7 @@ msgstr "Er zijn fouten opgetreden bij het deïnstalleren van de volgende package
 
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
+msgid "There were no models in <filename>{0}</filename>."
 msgstr "Er waren geen modellen in <filename>{0}</filename>."
 
 msgctxt "@action:description"
