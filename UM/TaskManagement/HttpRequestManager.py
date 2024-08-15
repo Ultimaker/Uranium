@@ -286,8 +286,11 @@ class HttpRequestManager(TaskManager):
             for key, value in headers_dict.items():
                 request.setRawHeader(key.encode("utf-8"), value.encode("utf-8"))
 
-        if scope is not None:
-            scope.requestHook(request)
+        if scope is None:
+            from UM.TaskManagement.HttpRequestScope import DefaultUserAgentScope
+            from UM.Application import Application
+            scope = DefaultUserAgentScope(Application.getInstance())
+        scope.requestHook(request)
 
         # Generate a unique request ID
         request_id = uuid.uuid4().hex
