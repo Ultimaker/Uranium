@@ -51,6 +51,10 @@ class JsonDecoratorScope(HttpRequestScope):
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
+        # JsonDecorator probably _should_ have inherited from DefaultUserAgentScope in the first place.
+        # In order to prevent a break in the API by forcing that, just check if there are extra header specs needed.
+        if hasattr(self.base, "header_dict"):
+            self.header_dict.update(self.base.header_dict)
 
     def requestHook(self, request: QNetworkRequest) -> None:
         # not calling super().request_hook() because base will do that.
