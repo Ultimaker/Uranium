@@ -11,9 +11,10 @@ from typing import Callable, cast, Dict, Set, Union, Optional, Any
 from PyQt6.QtCore import QObject, QUrl, Qt, pyqtSignal, pyqtProperty
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
+from UM.Application import Application
 from UM.Logger import Logger
 from UM.TaskManagement.HttpRequestData import HttpRequestData
-from UM.TaskManagement.HttpRequestScope import HttpRequestScope
+from UM.TaskManagement.HttpRequestScope import DefaultUserAgentScope, HttpRequestScope
 from UM.TaskManagement.TaskManager import TaskManager
 
 
@@ -286,8 +287,9 @@ class HttpRequestManager(TaskManager):
             for key, value in headers_dict.items():
                 request.setRawHeader(key.encode("utf-8"), value.encode("utf-8"))
 
-        if scope is not None:
-            scope.requestHook(request)
+        if scope is None:
+            scope = DefaultUserAgentScope(Application.getInstance())
+        scope.requestHook(request)
 
         # Generate a unique request ID
         request_id = uuid.uuid4().hex
