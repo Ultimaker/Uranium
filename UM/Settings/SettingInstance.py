@@ -3,9 +3,11 @@
 
 import copy #To implement deepcopy.
 import enum
+from functools import lru_cache
 import os
 from typing import Any, cast, Dict, Iterable, List, Optional, Set, TYPE_CHECKING
 
+from UM.Decorators import CachedMemberFunctions, cachePerInstance
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
@@ -92,6 +94,7 @@ class SettingInstance:
 
         self.__property_values = {}  # type: Dict[str, Any]
 
+    @cachePerInstance
     def getPropertyNames(self) -> Iterable[str]:
         """Get a list of all supported property names"""
 
@@ -129,9 +132,13 @@ class SettingInstance:
                 return False
         return True
 
+    def __hash__(self) -> int:
+        return id(self)
+
     def __ne__(self, other: object) -> bool:
         return not (self == other)
 
+    @cachePerInstance
     def __getattr__(self, name: str) -> Any:
         if name == "_SettingInstance__property_values":
             # Prevent infinite recursion when __property_values is not set.
@@ -156,6 +163,8 @@ class SettingInstance:
             if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
                 return
+
+            CachedMemberFunctions.clearInstanceCache(self)
 
             if name not in self.__property_values or value != self.__property_values[name]:
                 if isinstance(value, str) and value.strip().startswith("="):
@@ -222,6 +231,7 @@ class SettingInstance:
         return self._state
 
     def resetState(self) -> None:
+        CachedMemberFunctions.clearInstanceCache(self)
         self._state = InstanceState.Default
 
     def __repr__(self) -> str:
@@ -234,6 +244,8 @@ class SettingInstance:
         property_names = SettingDefinition.getPropertyNames()
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
+
+        CachedMemberFunctions.clearInstanceCache(self)
 
         for property_name in property_names:
             if SettingDefinition.isReadOnlyProperty(property_name):
@@ -252,6 +264,7 @@ class SettingInstance:
                         container.propertyChanged.emit(relation.target.key, "validationState")
 
     @staticmethod
+    # TODO: Passing sets and lists (which can't be hashed) prevents caching of this function.
     def _listRelations(key: str, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], roles: List[str]) -> None:
         """Recursive function to put all settings that require eachother for changes of a property value in a list
 
