@@ -1,8 +1,9 @@
-# Copyright (c) 2022 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
 import io
+from functools import lru_cache
 from typing import Any, cast, Dict, List, Optional, Set, Tuple
 
 from PyQt6.QtCore import QObject, pyqtProperty, pyqtSignal
@@ -12,6 +13,7 @@ from PyQt6.QtQml import QQmlEngine
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
+from UM.Decorators import CachedMemberFunctions, cachePerInstance
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
@@ -94,6 +96,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     def __setstate__(self, state: Dict[str, Any]) -> None:
         """For pickle support"""
 
+        CachedMemberFunctions.clearInstanceCache(self)
         self.__dict__.update(state)
 
     def getId(self) -> str:
@@ -121,6 +124,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         """
 
         if name != self.getName():
+            CachedMemberFunctions.clearInstanceCache(self)
             self._metadata["name"] = name
             self._dirty = True
             self.nameChanged.emit()
@@ -141,6 +145,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def setReadOnly(self, read_only: bool) -> None:
         if read_only != self._read_only:
+            CachedMemberFunctions.clearInstanceCache(self)
             self._read_only = read_only
             self.readOnlyChanged.emit()
 
@@ -160,6 +165,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         if meta_data == self.getMetaData():
             return #Unnecessary.
+        CachedMemberFunctions.clearInstanceCache(self)
 
         #We'll fill a temporary dictionary with all the required metadata and overwrite it with the new metadata.
         #This way it is ensured that at least the required metadata is still there.
@@ -176,12 +182,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     metaDataChanged = pyqtSignal(QObject)
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
 
-    def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
-        """:copydoc ContainerInterface::getMetaDataEntry
-
-        Reimplemented from ContainerInterface
-        """
-
+    @cachePerInstance
+    def _getRawMetaDataEntry(self, entry: str) -> Any:
         value = self._metadata.get(entry, None)
 
         if value is None:
@@ -190,6 +192,15 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                 if value is not None:
                     break
 
+        return value
+
+    def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
+        """:copydoc ContainerInterface::getMetaDataEntry
+
+        Reimplemented from ContainerInterface
+        """
+
+        value = self._getRawMetaDataEntry(entry)
         if value is None:
             return default
         else:
@@ -197,12 +208,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def setMetaDataEntry(self, key: str, value: Any) -> None:
         if key not in self._metadata or self._metadata[key] != value:
+            CachedMemberFunctions.clearInstanceCache(self)
             self._metadata[key] = value
             self._dirty = True
             self.metaDataChanged.emit(self)
 
     def removeMetaDataEntry(self, key: str) -> None:
         if key in self._metadata:
+            CachedMemberFunctions.clearInstanceCache(self)
             del self._metadata[key]
             self.metaDataChanged.emit(self)
 
@@ -210,10 +223,12 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return self._dirty
 
     def setDirty(self, dirty: bool) -> None:
+        CachedMemberFunctions.clearInstanceCache(self)
         self._dirty = dirty
 
     containersChanged = Signal()
 
+    @cachePerInstance
     def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
         """:copydoc ContainerInterface::getProperty
 
@@ -240,6 +255,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return value
 
+    @cachePerInstance
     def getRawProperty(self, key: str, property_name: str, *, context: Optional[PropertyEvaluationContext] = None, use_next: bool = True, skip_until_container: Optional[ContainerInterface] = None) -> Any:
         """Retrieve a property of a setting by key and property name.
 
@@ -289,6 +305,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         else:
             return None
 
+    @cachePerInstance
     def hasProperty(self, key: str, property_name: str) -> bool:
         """:copydoc ContainerInterface::hasProperty
 
@@ -346,6 +363,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return stream.getvalue()
 
     @classmethod
+    @lru_cache
     def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
         """Deserializes the given data and checks if the required fields are present.
 
@@ -362,6 +380,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return parser
 
     @classmethod
+    @lru_cache
     def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
@@ -374,6 +393,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return configuration_type
 
     @classmethod
+    @lru_cache
     def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
         configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
         if not configuration_type:
@@ -389,6 +409,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             Logger.log("d", "Could not get version from serialized: %s", e)
         return version
 
+    @cachePerInstance
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         """:copydoc ContainerInterface::deserialize
 
@@ -452,6 +473,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return serialized
 
     @classmethod
+    @lru_cache
     def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
         """Gets the metadata of a container stack from a serialised format.
 
@@ -485,6 +507,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return [metadata]
 
+    @cachePerInstance
     def getAllKeys(self) -> Set[str]:
         """Get all keys known to this container stack.
 
@@ -502,6 +525,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             keys |= self._next_stack.getAllKeys()
         return keys
 
+    @cachePerInstance
     def getAllKeysWithUserState(self) -> Set[str]:
         """Get a subset of all the settings keys in all the containers having a User state
 
@@ -519,6 +543,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return settings
 
+    @cachePerInstance
     def getContainers(self) -> List[ContainerInterface]:
         """Get a list of all containers in this stack.
 
@@ -586,8 +611,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         Reimplemented from ContainerInterface
         """
 
+        CachedMemberFunctions.clearInstanceCache(self)
         self._path = path
 
+    @cachePerInstance
     def getSettingDefinition(self, key: str) -> Optional[SettingDefinition]:
         """Get the SettingDefinition object for a specified key"""
 
@@ -605,6 +632,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             return None
 
     @UM.FlameProfiler.profile
+    #TODO: Find a way around keyword-arguments being passed as a dict, or live with not cacheing this particular func.
     def findContainer(self, criteria: Dict[str, Any] = None, container_type: type = None, **kwargs: Any) -> Optional[ContainerInterface]:
         """Find a container matching certain criteria.
 
@@ -648,6 +676,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         :param container: The container to add to the stack.
         """
 
+        CachedMemberFunctions.clearInstanceCache(self)
         self.insertContainer(0, container)
 
     def insertContainer(self, index: int, container: ContainerInterface) -> None:
@@ -661,6 +690,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if container is self:
             raise Exception("Unable to add stack to itself.")
 
+        CachedMemberFunctions.clearInstanceCache(self)
         container.propertyChanged.connect(self._collectPropertyChanges)
         self._containers.insert(index, container)
         self.containersChanged.emit(container)
@@ -682,6 +712,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if container is self:
             raise Exception("Unable to replace container with ContainerStack (self) ")
 
+        CachedMemberFunctions.clearInstanceCache(self)
         self._containers[index].propertyChanged.disconnect(self._collectPropertyChanges)
         container.propertyChanged.connect(self._collectPropertyChanges)
         self._containers[index] = container
@@ -703,6 +734,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if index < 0:
             raise IndexError
         try:
+            CachedMemberFunctions.clearInstanceCache(self)
             container = self._containers[index]
             self._dirty = True
             container.propertyChanged.disconnect(self._collectPropertyChanges)
@@ -735,6 +767,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if self._next_stack == stack:
             return
 
+        CachedMemberFunctions.clearInstanceCache(self)
         if self._next_stack:
             self._next_stack.propertyChanged.disconnect(self._collectPropertyChanges)
             self.containersChanged.disconnect(self._next_stack.containersChanged)
@@ -754,6 +787,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             signal.emit(signal_arg)
 
     @UM.FlameProfiler.profile
+    @cachePerInstance
     def hasErrors(self) -> bool:
         """Check if the container stack has errors"""
 
@@ -776,6 +810,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return False
 
     @UM.FlameProfiler.profile
+    @cachePerInstance
     def getErrorKeys(self) -> List[str]:
         """Get all the keys that are in an error state in this stack"""
 
