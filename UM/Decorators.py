@@ -1,7 +1,8 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import copy
+from functools import lru_cache, partial
 import warnings
 import inspect
 
@@ -138,3 +139,37 @@ def timeit(method):
         return result
 
     return timed
+
+
+class CachedMemberFunctions:
+    __instance = None
+
+    @classmethod
+    def getInstance(cls):
+        if cls.__instance is None:
+            cls.__instance = cls()
+        return cls.__instance
+
+    @classmethod
+    def clearInstanceCache(cls, instance):
+        cls.getInstance()._cache[instance] = {}
+
+    def __init__(self):
+        if CachedMemberFunctions.__instance is not None:
+            raise RuntimeError(f"Attempt to instantiate singleton '{self.__class__.__name__}' more than once.")
+        self._cache = {}
+
+    def callFunction(self, instance, function, *args, **kwargs):
+        # FIXME: Keyword arguments ('kwargs') will probably not _actually_ work here, since it's given as a dictionary,
+        #        and the arguments need to be hashable in order for it to properly fit into the lru_cache.
+        if instance not in self._cache:
+            self._cache[instance] = {}
+        if function not in self._cache[instance]:
+            self._cache[instance][function] = lru_cache()(partial(function, instance))
+        return self._cache[instance][function](*args, **kwargs)
+
+
+def cachePerInstance(function):
+    def wrapper(instance, *args, **kwargs):
+        return CachedMemberFunctions.getInstance().callFunction(instance, function, *args, **kwargs)
+    return wrapper
