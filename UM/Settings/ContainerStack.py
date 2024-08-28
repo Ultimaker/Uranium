@@ -194,6 +194,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return value
 
+    # Note that '_getRawMetaDataEntry' is cached, not this one, because default may be a list and that's unhashable.
     def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
         """:copydoc ContainerInterface::getMetaDataEntry
 
