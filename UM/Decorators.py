@@ -154,6 +154,10 @@ class CachedMemberFunctions:
     def clearInstanceCache(cls, instance):
         cls.getInstance()._cache[instance] = {}
 
+    @classmethod
+    def deleteInstanceCache(cls, instance):
+        del cls.getInstance()._cache[instance]
+
     def __init__(self):
         if CachedMemberFunctions.__instance is not None:
             raise RuntimeError(f"Attempt to instantiate singleton '{self.__class__.__name__}' more than once.")
