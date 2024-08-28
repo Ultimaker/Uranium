@@ -409,7 +409,6 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             Logger.log("d", "Could not get version from serialized: %s", e)
         return version
 
-    @cachePerInstance
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         """:copydoc ContainerInterface::deserialize
 
@@ -417,6 +416,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         TODO: Expand documentation here, include the fact that this should _not_ include all containers
         """
+
+        CachedMemberFunctions.clearInstanceCache(self)
 
         # Update the serialized data first
         serialized = super().deserialize(serialized, file_name)
@@ -839,6 +840,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     # In addition, it allows us to emit a single signal that reports all properties that
     # have changed.
     def _collectPropertyChanges(self, key: str, property_name: str) -> None:
+        CachedMemberFunctions.clearInstanceCache(self)
+
         if key not in self._property_changes:
             self._property_changes[key] = set()
 

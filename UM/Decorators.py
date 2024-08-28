@@ -156,7 +156,8 @@ class CachedMemberFunctions:
 
     @classmethod
     def deleteInstanceCache(cls, instance):
-        del cls.getInstance()._cache[instance]
+        if instance in cls.getInstance()._cache:
+            del cls.getInstance()._cache[instance]
 
     def __init__(self):
         if CachedMemberFunctions.__instance is not None:
