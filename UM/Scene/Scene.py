@@ -52,6 +52,12 @@ class Scene:
 
         self._metadata: Dict[str, Any] = {}
 
+        # If available connect reloadAll to hide the file change reload message.
+        import UM.Application
+        app = UM.Application.Application.getInstance()
+        if getattr(app, "startReloadAll", None):
+            app.startReloadAll.connect(self._hideReloadMessage)
+
     def setMetaDataEntry(self, key: str, entry: Any) -> None:
         self._metadata[key] = entry
 
@@ -189,8 +195,7 @@ class Scene:
         if modified_nodes:
             # Hide the message if it was already visible
             # Todo: keep one message for each modified file, when multiple had been updated at same time
-            if self._reload_message is not None:
-                self._reload_message.hide()
+            self._hideReloadMessage()
 
             self._reload_message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(
                                                 filename = os.path.basename(file_path)),
@@ -212,8 +217,7 @@ class Scene:
 
         if action != "reload":
             return
-        if self._reload_message is not None:
-            self._reload_message.hide()
+        self._hideReloadMessage()
 
         if not file_path or not os.path.isfile(file_path):  # File doesn't exist anymore.
             return
@@ -265,3 +269,10 @@ class Scene:
                 # Current node is a new one in the file, or it's name has changed
                 # TODO: Load this mesh into the scene. Also alter the "ReloadAll" action in CuraApplication.
                 Logger.log("w", "Could not find matching node for object '{0}' in the scene.", node_name)
+
+    def _hideReloadMessage(self) -> None:
+        """Hide file modification reload dialog if showing"""
+        if self._reload_message is not None:
+            self._reload_message.hide()
+        if self._reload_callback is not None:
+            self._reload_callback = None
