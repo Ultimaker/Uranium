@@ -3,7 +3,6 @@
 
 from typing import Union, List
 
-import UM.Application
 from UM.FileHandler.FileReader import FileReader
 from UM.FileHandler.FileHandler import resolveAnySymlink
 from UM.Logger import Logger
@@ -24,7 +23,6 @@ class MeshReader(FileReader):
 
         file_name = resolveAnySymlink(file_name)
         result = self._read(file_name)
-        UM.Application.Application.getInstance().getController().getScene().addWatchedFile(file_name)
 
         # The mesh reader may set a MIME type itself if it knows a more specific MIME type than just going by extension.
         # If not, automatically generate one from our MIME type database, going by the file extension.

@@ -49,7 +49,6 @@ class MeshData:
 
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
                  center_position=None, zero_position=None, type = MeshType.faces, attributes=None) -> None:
-        self._application = None  # Initialize this later otherwise unit tests break
 
         self._vertices = NumPyUtil.immutableNDArray(vertices)
         self._normals = NumPyUtil.immutableNDArray(normals)
@@ -81,16 +80,6 @@ class MeshData:
                     else:
                         new_value[attribute_key] = attribute_value
                 self._attributes[key] = new_value
-
-    def __del__(self):
-        """Triggered when this file is deleted.
-
-        The file will then no longer be watched for changes.
-        """
-
-        if self._file_name:
-            if self._application:
-                self._application.getController().getScene().removeWatchedFile(self._file_name)
 
     def set(self, vertices=Reuse, normals=Reuse, indices=Reuse, colors=Reuse, uvs=Reuse, file_name=Reuse,
             center_position=Reuse, zero_position=Reuse, attributes=Reuse) -> "MeshData":
