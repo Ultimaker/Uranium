@@ -142,39 +142,31 @@ def timeit(method):
 
 
 class CachedMemberFunctions:
-    __instance = None
-
-    @classmethod
-    def getInstance(cls):
-        if cls.__instance is None:
-            cls.__instance = cls()
-        return cls.__instance
+    __cache = {}
 
     @classmethod
     def clearInstanceCache(cls, instance):
-        cls.getInstance()._cache[instance] = {}
+        cls.__cache[instance] = {}
 
     @classmethod
     def deleteInstanceCache(cls, instance):
-        if instance in cls.getInstance()._cache:
-            del cls.getInstance()._cache[instance]
+        if instance in cls.__cache:
+            del cls.__cache[instance]
 
-    def __init__(self):
-        if CachedMemberFunctions.__instance is not None:
-            raise RuntimeError(f"Attempt to instantiate singleton '{self.__class__.__name__}' more than once.")
-        self._cache = {}
-
-    def callFunction(self, instance, function, *args, **kwargs):
-        # FIXME: Keyword arguments ('kwargs') will probably not _actually_ work here, since it's given as a dictionary,
-        #        and the arguments need to be hashable in order for it to properly fit into the lru_cache.
-        if instance not in self._cache:
-            self._cache[instance] = {}
-        if function not in self._cache[instance]:
-            self._cache[instance][function] = lru_cache()(partial(function, instance))
-        return self._cache[instance][function](*args, **kwargs)
+    @classmethod
+    def callMemberFunction(cls, instance, function, *args, **kwargs):
+        if kwargs is not None and len(kwargs) > 0:
+            # NOTE The `lru_cache` can't handle keyword-arguments (because it's a dict).
+            # We could make a frozendict, but that's probably a lot more hassle than it's worth, so just call normally.
+            return function(instance, *args, **kwargs)
+        if instance not in cls.__cache:
+            cls.__cache[instance] = {}
+        if function not in cls.__cache[instance]:
+            cls.__cache[instance][function] = lru_cache()(partial(function, instance))
+        return cls.__cache[instance][function](*args)
 
 
 def cachePerInstance(function):
     def wrapper(instance, *args, **kwargs):
-        return CachedMemberFunctions.getInstance().callFunction(instance, function, *args, **kwargs)
+        return CachedMemberFunctions.callMemberFunction(instance, function, *args, **kwargs)
     return wrapper
