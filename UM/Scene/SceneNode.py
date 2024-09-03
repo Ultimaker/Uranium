@@ -429,7 +429,10 @@ class SceneNode:
         self.meshDataChanged.emit(self)
 
     meshDataChanged = Signal()
-    """Emitted whenever the attached mesh data object changes."""
+    """Emitted whenever the attached mesh data object changes.
+
+    :param object: The SceneNode that had the changed mesh data object.
+    """
 
     def _onMeshDataChanged(self) -> None:
         self.meshDataChanged.emit(self)
@@ -517,7 +520,7 @@ class SceneNode:
     childrenChanged = Signal()
     """Emitted whenever the list of children of this object or any child object changes.
 
-    :param object: The object that triggered the change.
+    :param object: The SceneNode that triggered the change.
     """
 
     def _updateCachedNormalMatrix(self) -> None:
@@ -716,7 +719,8 @@ class SceneNode:
 
     transformationChanged = Signal()
     """Signal. Emitted whenever the transformation of this object or any child object changes.
-    :param object: The object that caused the change.
+
+    :param object: The SceneNode that triggered the change.
     """
 
     def lookAt(self, target: Vector, up: Vector = Vector.Unit_Y) -> None:
