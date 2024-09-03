@@ -189,6 +189,10 @@ class SettingDefinition:
         if not hasattr(self, "_all_keys"):
             self._all_keys = set()
 
+    def __del__(self) -> None:
+        # None of the 'parents' seem to have __del__, so OK not to call `super.del` here.
+        CachedMemberFunctions.deleteInstanceCache(self)
+
     @property
     def key(self) -> str:
         """The key of this setting.

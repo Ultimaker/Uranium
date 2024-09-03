@@ -872,7 +872,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return str(self)
 
     def __del__(self) -> None:
-        # None of the 'parents' seem to have __dell__, so OK not to call `super.del` here.
+        # None of the 'parents' seem to have __del__, so OK not to call `super.del` here.
         CachedMemberFunctions.deleteInstanceCache(self)
 
 

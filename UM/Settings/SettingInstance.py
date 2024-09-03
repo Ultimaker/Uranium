@@ -157,6 +157,10 @@ class SettingInstance:
 
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
+    def __del__(self) -> None:
+        # None of the 'parents' seem to have __del__, so OK not to call `super.del` here.
+        CachedMemberFunctions.deleteInstanceCache(self)
+
     @call_if_enabled(_traceSetProperty, _isTraceEnabled())
     def setProperty(self, name: str, value: Any, container: Optional[ContainerInterface] = None, emit_signals: bool = True) -> None:
         if SettingDefinition.hasProperty(name):

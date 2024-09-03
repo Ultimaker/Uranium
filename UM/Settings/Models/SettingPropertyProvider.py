@@ -470,3 +470,7 @@ class SettingPropertyProvider(QObject):
             return options_map
 
         return str(property_value)
+
+    def __del__(self) -> None:
+        # None of the 'parents' seem to have __del__, so OK not to call `super.del` here.
+        CachedMemberFunctions.deleteInstanceCache(self)
