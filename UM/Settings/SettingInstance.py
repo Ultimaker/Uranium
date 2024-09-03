@@ -38,8 +38,8 @@ def _traceRelations(instance: "SettingInstance", container: ContainerInterface, 
         if SettingDefinition.isReadOnlyProperty(property_name):
             continue
 
-        changed_relations: Set[SettingRelation] = set()
-        SettingInstance._listRelations(instance.definition.key, changed_relations, instance.definition.relations, [property_name])
+        changed_relations: frozenset[SettingRelation] = frozenset()
+        SettingInstance._listRelations(instance.definition.key, changed_relations, instance.definition.relationsAsFrozenSet(), frozenset({property_name}))
 
         for relation in changed_relations:
             Logger.log("d", "Emitting property change for relation {0}", relation)
@@ -254,8 +254,8 @@ class SettingInstance:
             # TODO: We should send this as a single change event instead of several of them.
             # That would increase performance by reducing the amount of updates.
             if emit_signals:
-                changed_relations: Set[SettingRelation] = set()
-                SettingInstance._listRelations(self.definition.key, changed_relations, self._definition.relations, [property_name])
+                changed_relations: frozenset[SettingRelation] = frozenset()
+                SettingInstance._listRelations(self.definition.key, changed_relations, self._definition.relationsAsFrozenSet(), frozenset([property_name]))
 
                 for relation in changed_relations:
                     container.propertyChanged.emit(relation.target.key, relation.role)
@@ -264,8 +264,8 @@ class SettingInstance:
                         container.propertyChanged.emit(relation.target.key, "validationState")
 
     @staticmethod
-    # TODO: Passing sets and lists (which can't be hashed) prevents caching of this function.
-    def _listRelations(key: str, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], roles: List[str]) -> None:
+    @lru_cache
+    def _listRelations(key: str, relations_set: frozenset["SettingRelation"], relations: frozenset["SettingRelation"], roles: frozenset[str]) -> None:
         """Recursive function to put all settings that require eachother for changes of a property value in a list
 
         :param relations_set: :type{set} Set of keys (strings) of settings that are influenced
@@ -289,10 +289,10 @@ class SettingInstance:
             if relation in relations_set:
                 continue
 
-            relations_set.add(relation)
+            relations_set = relations_set.union({relation})
 
             property_names = SettingDefinition.getPropertyNames()
             property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
             property_names.insert(0, "value")
 
-            SettingInstance._listRelations(key, relations_set, relation.target.relations, property_names)
+            SettingInstance._listRelations(key, relations_set, relation.target.relationsAsFrozenSet(), frozenset(property_names))
