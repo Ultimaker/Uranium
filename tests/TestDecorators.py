@@ -104,6 +104,7 @@ def test_interface():
 
 def test_cachePerInstance():
 
+    CachedMemberFunctions._CachedMemberFunctions__cache = {}
     bigDeal = MagicMock()
 
     class SomeClass:
