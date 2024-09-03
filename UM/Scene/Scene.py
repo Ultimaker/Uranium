@@ -46,11 +46,18 @@ class Scene:
         self._file_watcher.fileChanged.connect(self._onFileChanged)
 
         self._reload_message: Optional[Message] = None
+        self._reload_callback: Optional[functools.partial] = None
 
         # Need to keep these in memory. This is a memory leak every time you refresh, but a tiny one.
         self._callbacks: Set[Callable] = set()
 
         self._metadata: Dict[str, Any] = {}
+
+        # If available connect reloadAll to hide the file change reload message.
+        import UM.Application
+        app = UM.Application.Application.getInstance()
+        if getattr(app, "startReloadAll", None):
+            app.startReloadAll.connect(self._hideReloadMessage)
 
     def setMetaDataEntry(self, key: str, entry: Any) -> None:
         self._metadata[key] = entry
@@ -65,11 +72,13 @@ class Scene:
         self._root.transformationChanged.connect(self.sceneChanged)
         self._root.childrenChanged.connect(self.sceneChanged)
         self._root.meshDataChanged.connect(self.sceneChanged)
+        self._root.meshDataChanged.connect(self._updateWatchedFiles)
 
     def _disconnectSignalsRoot(self) -> None:
         self._root.transformationChanged.disconnect(self.sceneChanged)
         self._root.childrenChanged.disconnect(self.sceneChanged)
         self._root.meshDataChanged.disconnect(self.sceneChanged)
+        self._root.meshDataChanged.disconnect(self._updateWatchedFiles)
 
     def setIgnoreSceneChanges(self, ignore_scene_changes: bool) -> None:
         if self._ignore_scene_changes != ignore_scene_changes:
@@ -149,25 +158,39 @@ class Scene:
                 return node
         return None
 
-    def addWatchedFile(self, file_path: str) -> None:
-        """Add a file to be watched for changes.
+    def _updateWatchedFiles(self, node_changed: SceneNode) -> None:
+        """Update the list of watched files based on the currently loaded nodes.
+        This handles both add and remove for _file_watcher."""
 
-        :param file_path: The path to the file that must be watched.
-        """
+        watching = set(self._file_watcher.files())
+        active = set()
 
-        # File watcher causes cura to crash on windows if threaded from removable device (usb, ...).
-        # Create QEventLoop earlier to fix this.
-        if Platform.isWindows():
-            QEventLoop()
-        self._file_watcher.addPath(file_path)
+        # Get the list of files that are currently loaded in the scene graph.
+        from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
+        for node in DepthFirstIterator(self.getRoot()):
+            md = node.getMeshData()
+            if md and md.getFileName() is not None:
+                active.add(md.getFileName())
 
-    def removeWatchedFile(self, file_path: str) -> None:
-        """Remove a file so that it will no longer be watched for changes.
+        if watching == active:
+            return
 
-        :param file_path: The path to the file that must no longer be watched.
-        """
+        stop_watching = watching - active
+        start_watching = active - watching
+        for file_path in stop_watching:
+            self._file_watcher.removePath(file_path)
+        if start_watching:
+            # File watcher causes cura to crash on windows if threaded from removable device (usb, ...).
+            # Create QEventLoop earlier to fix this.
+            if Platform.isWindows():
+                QEventLoop()
 
-        self._file_watcher.removePath(file_path)
+            for file_path in start_watching:
+                self._file_watcher.addPath(file_path)
+
+        # Remove modified reload prompt if the file is no longer watched.
+        if self._reload_callback is not None and self._reload_callback.args[1] in stop_watching:
+            self._hideReloadMessage()
 
     def _onFileChanged(self, file_path: str) -> None:
         """Triggered whenever a file is changed that we currently have loaded."""
@@ -189,8 +212,7 @@ class Scene:
         if modified_nodes:
             # Hide the message if it was already visible
             # Todo: keep one message for each modified file, when multiple had been updated at same time
-            if self._reload_message is not None:
-                self._reload_message.hide()
+            self._hideReloadMessage()
 
             self._reload_message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(
                                                 filename = os.path.basename(file_path)),
@@ -212,8 +234,7 @@ class Scene:
 
         if action != "reload":
             return
-        if self._reload_message is not None:
-            self._reload_message.hide()
+        self._hideReloadMessage()
 
         if not file_path or not os.path.isfile(file_path):  # File doesn't exist anymore.
             return
@@ -265,3 +286,10 @@ class Scene:
                 # Current node is a new one in the file, or it's name has changed
                 # TODO: Load this mesh into the scene. Also alter the "ReloadAll" action in CuraApplication.
                 Logger.log("w", "Could not find matching node for object '{0}' in the scene.", node_name)
+
+    def _hideReloadMessage(self) -> None:
+        """Hide file modification reload dialog if showing"""
+        if self._reload_message is not None:
+            self._reload_message.hide()
+        if self._reload_callback is not None:
+            self._reload_callback = None
