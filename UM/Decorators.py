@@ -142,19 +142,24 @@ def timeit(method):
 
 
 class CachedMemberFunctions:
+    """Helper class to handle instance-cache w.r.t. results of member-functions decorated with '@cachePerInstance'."""
+
     __cache = {}
 
     @classmethod
     def clearInstanceCache(cls, instance):
+        """Clear all the cache-entries for the specified instance."""
         cls.__cache[instance] = {}
 
     @classmethod
     def deleteInstanceCache(cls, instance):
+        """Completely delete the entry of the specified instance."""
         if instance in cls.__cache:
             del cls.__cache[instance]
 
     @classmethod
     def callMemberFunction(cls, instance, function, *args, **kwargs):
+        """Call the specified member function, make use of (results) cache if available, and create if not."""
         if kwargs is not None and len(kwargs) > 0:
             # NOTE The `lru_cache` can't handle keyword-arguments (because it's a dict).
             # We could make a frozendict, but that's probably a lot more hassle than it's worth, so just call normally.

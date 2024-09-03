@@ -1,9 +1,10 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
+from unittest.mock import MagicMock
 
 import pytest
 
-from UM.Decorators import interface
+from UM.Decorators import interface, CachedMemberFunctions, cachePerInstance
 
 def test_interface():
     def declare_interface():
@@ -99,3 +100,47 @@ def test_interface():
 
     sub = should_ignore_private_functions()
     assert sub is not None
+
+
+def test_cachePerInstance():
+
+    bigDeal = MagicMock()
+
+    class SomeClass:
+        def __init__(self):
+            self._map = {}
+
+        @cachePerInstance
+        def getThing(self, a):
+            bigDeal()
+            return self._map.get(a, None)
+
+        def setThing(self, a, b):
+            CachedMemberFunctions.clearInstanceCache(self)
+            self._map[a] = b
+
+    instance = SomeClass()
+
+    instance.setThing("marco", "polo")
+    instance.getThing("marco")
+    instance.getThing("marco")
+    assert instance.getThing("marco") == "polo"
+    assert bigDeal.call_count == 1
+
+    instance.setThing("marco", "bolo")
+    assert instance.getThing("marco") == "bolo"
+    assert bigDeal.call_count == 2
+    instance.getThing("marco")
+    instance.getThing("marco")
+    assert bigDeal.call_count == 2
+
+    other = SomeClass()
+    other.setThing("marco", "yolo")
+    other.getThing("marco")
+    other.getThing("marco")
+    assert other.getThing("marco") == "yolo"
+    assert bigDeal.call_count == 3
+
+    assert len(CachedMemberFunctions._CachedMemberFunctions__cache) == 2
+    CachedMemberFunctions.deleteInstanceCache(instance)
+    assert len(CachedMemberFunctions._CachedMemberFunctions__cache) == 1
