@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Optional, List, Set, Any, OrderedDict
@@ -7,6 +7,7 @@ from PyQt6.QtCore import QObject, QTimer, pyqtProperty, pyqtSignal
 from PyQt6.QtQml import QQmlPropertyMap
 from UM.FlameProfiler import pyqtSlot
 
+from UM.Decorators import CachedMemberFunctions, cachePerInstance
 from UM.Logger import Logger
 from UM.Application import Application
 from UM.Settings.ContainerStack import ContainerStack
@@ -57,6 +58,8 @@ class SettingPropertyProvider(QObject):
         if self._stack == stack:
             return  # Nothing to do, attempting to set stack to the same value.
 
+        CachedMemberFunctions.clearInstanceCache(self)
+
         if self._stack:
             self._stack.propertiesChanged.disconnect(self._onPropertiesChanged)
             self._stack.containersChanged.disconnect(self._containersChanged)
@@ -76,6 +79,8 @@ class SettingPropertyProvider(QObject):
 
         if stack_id == self.containerStackId:
             return  # No change.
+
+        CachedMemberFunctions.clearInstanceCache(self)
 
         if stack_id:
             if stack_id == "global":
@@ -109,6 +114,7 @@ class SettingPropertyProvider(QObject):
 
     def setRemoveUnusedValue(self, remove_unused_value: bool) -> None:
         if self._remove_unused_value != remove_unused_value:
+            CachedMemberFunctions.clearInstanceCache(self)
             self._remove_unused_value = remove_unused_value
             self.removeUnusedValueChanged.emit()
 
@@ -120,6 +126,7 @@ class SettingPropertyProvider(QObject):
         """Set the watchedProperties property."""
 
         if properties != self._watched_properties:
+            CachedMemberFunctions.clearInstanceCache(self)
             self._watched_properties = properties
             self._updateDelayed()
             self.watchedPropertiesChanged.emit()
@@ -137,6 +144,7 @@ class SettingPropertyProvider(QObject):
         """Set the key property."""
 
         if key != self._key:
+            CachedMemberFunctions.clearInstanceCache(self)
             self._key = key
             self._validator = None
             self._updateDelayed()
@@ -162,6 +170,7 @@ class SettingPropertyProvider(QObject):
 
     def setStoreIndex(self, index):
         if index != self._store_index:
+            CachedMemberFunctions.clearInstanceCache(self)
             self._store_index = index
             self.storeIndexChanged.emit()
 
@@ -199,6 +208,8 @@ class SettingPropertyProvider(QObject):
         container = self._stack.getContainer(self._store_index)
         if isinstance(container, DefinitionContainer):
             return
+
+        CachedMemberFunctions.clearInstanceCache(self)
 
         # In some cases we clean some stuff and the result is as when nothing as been changed manually.
         if property_name == "value" and self._remove_unused_value:
@@ -268,6 +279,7 @@ class SettingPropertyProvider(QObject):
 
     @pyqtSlot(int)
     def removeFromContainer(self, index: int) -> None:
+        CachedMemberFunctions.clearInstanceCache(self)
         current_stack = self._stack
         while current_stack:
             num_containers = len(current_stack.getContainers())
@@ -321,6 +333,8 @@ class SettingPropertyProvider(QObject):
         return self._value_used
 
     def _onPropertiesChanged(self, key: str, property_names: List[str]) -> None:
+        CachedMemberFunctions.clearInstanceCache(self)
+
         if key != self._key:
             if key in self._relations:
                 self._value_used = None
@@ -364,6 +378,8 @@ class SettingPropertyProvider(QObject):
         if not self._stack or not self._watched_properties or not self._key:
             return
 
+        CachedMemberFunctions.clearInstanceCache(self)
+
         self._updateStackLevels()
         relations = self._stack.getProperty(self._key, "relations")
         if relations:  # If the setting doesn't have the property relations, None is returned
@@ -397,6 +413,7 @@ class SettingPropertyProvider(QObject):
     def _updateStackLevels(self) -> None:
         """Updates the self._stack_levels field, which indicates at which levels in the stack the property is set."""
 
+        CachedMemberFunctions.clearInstanceCache(self)
         levels = []
         # Start looking at the stack this provider is attached to.
         current_stack = self._stack
@@ -416,6 +433,7 @@ class SettingPropertyProvider(QObject):
             self._stack_levels = levels
             self.stackLevelChanged.emit()
 
+    @cachePerInstance
     def _getPropertyValue(self, property_name):
         # Use the evaluation context to skip certain containers
         context = PropertyEvaluationContext(self._stack)
