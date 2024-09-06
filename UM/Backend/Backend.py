@@ -5,7 +5,6 @@ from enum import IntEnum
 import subprocess
 import sys
 import threading
-import os
 from time import sleep
 from typing import Any, Dict, Optional, List, Callable, TextIO
 
@@ -173,8 +172,6 @@ class Backend(PluginObject):
         try:
             # STDIN needs to be None because we provide no input, but communicate via a local socket instead. The NUL device sometimes doesn't exist on some computers.
             # STDOUT and STDERR need to be pipes because we'd like to log the output on those channels into the application log.
-            Logger.info("##### Starting backend with {}", command_list)
-            Logger.info(os.environ)
             return subprocess.Popen(command_list, stdin = None, stdout = subprocess.PIPE, stderr = subprocess.PIPE, **kwargs)
         except PermissionError:
             Logger.log("e", "Couldn't start back-end: No permission to execute process.")
