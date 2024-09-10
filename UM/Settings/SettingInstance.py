@@ -198,6 +198,7 @@ class SettingInstance:
         else:
             if name == "state":
                 if value == "InstanceState.Calculated":
+                    CachedMemberFunctions.clearInstanceCache(self)
                     if self._state != InstanceState.Calculated:
                         self._state = InstanceState.Calculated
                         if emit_signals:
