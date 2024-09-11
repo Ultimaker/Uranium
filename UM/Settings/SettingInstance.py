@@ -161,12 +161,12 @@ class SettingInstance:
 
     @call_if_enabled(_traceSetProperty, _isTraceEnabled())
     def setProperty(self, name: str, value: Any, container: Optional[ContainerInterface] = None, emit_signals: bool = True) -> None:
+        CachedMemberFunctions.clearInstanceCache(self)
+
         if SettingDefinition.hasProperty(name):
             if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
                 return
-
-            CachedMemberFunctions.clearInstanceCache(self)
 
             if name not in self.__property_values or value != self.__property_values[name]:
                 if isinstance(value, str) and value.strip().startswith("="):
@@ -196,7 +196,6 @@ class SettingInstance:
         else:
             if name == "state":
                 if value == "InstanceState.Calculated":
-                    CachedMemberFunctions.clearInstanceCache(self)
                     if self._state != InstanceState.Calculated:
                         self._state = InstanceState.Calculated
                         if emit_signals:
