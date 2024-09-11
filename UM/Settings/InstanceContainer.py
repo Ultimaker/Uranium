@@ -10,7 +10,7 @@ from typing import Any, cast, Dict, List, Optional, Set, Tuple
 from PyQt6.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt6.QtQml import QQmlEngine #To take ownership of this class ourselves.
 
-from UM.Decorators import CachedMemberFunctions, cachePerInstance
+from UM.Decorators import CachedMemberFunctions, cache_per_instance, cache_per_instance_copy_result
 from UM.FastConfigParser import FastConfigParser
 from UM.Trust import Trust
 from UM.Decorators import override
@@ -308,7 +308,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             CachedMemberFunctions.clearInstanceCache(self)
             self._dirty = dirty
 
-    @cachePerInstance
+    @cache_per_instance
     def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
         """:copydoc ContainerInterface::getProperty
 
@@ -327,7 +327,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return None
 
-    @cachePerInstance
+    @cache_per_instance
     def hasProperty(self, key: str, property_name: str) -> bool:
         """:copydoc ContainerInterface::hasProperty
 
@@ -435,7 +435,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             self.removeInstance(key, postpone_emit=True)
         self.sendPostponedEmits()
 
-    @cachePerInstance
+    @cache_per_instance_copy_result
     def getAllKeys(self) -> Set[str]:
         """Get all the keys of the instances of this container
         :returns: list of keys
@@ -702,7 +702,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return result
 
-    @cachePerInstance
+    @cache_per_instance
     def getInstance(self, key: str) -> Optional[SettingInstance]:
         """Get an instance by key"""
 
@@ -776,7 +776,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                     self.propertyChanged.emit(key, property_name)
         self._dirty = True
 
-    @cachePerInstance
+    @cache_per_instance
     def getDefinition(self) -> DefinitionContainerInterface:
         """Get the DefinitionContainer used for new instance creation."""
 
@@ -831,7 +831,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(*signal_arg)
             
-    @cachePerInstance
+    @cache_per_instance_copy_result
     def getAllKeysWithUserState(self)-> Set[str]:
         """Get the keys of all the setting having a User state"""
         self._instantiateCachedValues()

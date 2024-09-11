@@ -7,7 +7,7 @@ from functools import lru_cache
 import os
 from typing import Any, cast, Dict, Iterable, List, Optional, Set, TYPE_CHECKING
 
-from UM.Decorators import CachedMemberFunctions, cachePerInstance
+from UM.Decorators import CachedMemberFunctions, cache_per_instance
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
@@ -92,7 +92,7 @@ class SettingInstance:
 
         self.__property_values = {}  # type: Dict[str, Any]
 
-    @cachePerInstance
+    @cache_per_instance
     def getPropertyNames(self) -> Iterable[str]:
         """Get a list of all supported property names"""
 
@@ -136,7 +136,7 @@ class SettingInstance:
     def __ne__(self, other: object) -> bool:
         return not (self == other)
 
-    @cachePerInstance
+    @cache_per_instance
     def __getattr__(self, name: str) -> Any:
         if name == "_SettingInstance__property_values":
             # Prevent infinite recursion when __property_values is not set.

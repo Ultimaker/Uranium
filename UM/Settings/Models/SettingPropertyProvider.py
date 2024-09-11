@@ -7,7 +7,7 @@ from PyQt6.QtCore import QObject, QTimer, pyqtProperty, pyqtSignal
 from PyQt6.QtQml import QQmlPropertyMap
 from UM.FlameProfiler import pyqtSlot
 
-from UM.Decorators import CachedMemberFunctions, cachePerInstance
+from UM.Decorators import CachedMemberFunctions, cache_per_instance
 from UM.Logger import Logger
 from UM.Application import Application
 from UM.Settings.ContainerStack import ContainerStack
@@ -433,7 +433,7 @@ class SettingPropertyProvider(QObject):
             self._stack_levels = levels
             self.stackLevelChanged.emit()
 
-    @cachePerInstance
+    @cache_per_instance
     def _getPropertyValue(self, property_name):
         # Use the evaluation context to skip certain containers
         context = PropertyEvaluationContext(self._stack)

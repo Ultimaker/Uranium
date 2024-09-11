@@ -13,7 +13,7 @@ from PyQt6.QtQml import QQmlEngine
 import UM.FlameProfiler
 
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
-from UM.Decorators import CachedMemberFunctions, cachePerInstance
+from UM.Decorators import CachedMemberFunctions, cache_per_instance, cache_per_instance_copy_result
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
@@ -182,7 +182,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     metaDataChanged = pyqtSignal(QObject)
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
 
-    @cachePerInstance
+    @cache_per_instance
     def _getRawMetaDataEntry(self, entry: str) -> Any:
         value = self._metadata.get(entry, None)
 
@@ -229,7 +229,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     containersChanged = Signal()
 
-    @cachePerInstance
+    @cache_per_instance
     def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
         """:copydoc ContainerInterface::getProperty
 
@@ -256,7 +256,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return value
 
-    @cachePerInstance
+    @cache_per_instance
     def getRawProperty(self, key: str, property_name: str, *, context: Optional[PropertyEvaluationContext] = None, use_next: bool = True, skip_until_container: Optional[ContainerInterface] = None) -> Any:
         """Retrieve a property of a setting by key and property name.
 
@@ -306,7 +306,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         else:
             return None
 
-    @cachePerInstance
+    @cache_per_instance
     def hasProperty(self, key: str, property_name: str) -> bool:
         """:copydoc ContainerInterface::hasProperty
 
@@ -509,7 +509,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return [metadata]
 
-    @cachePerInstance
+    @cache_per_instance_copy_result
     def getAllKeys(self) -> Set[str]:
         """Get all keys known to this container stack.
 
@@ -527,7 +527,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             keys |= self._next_stack.getAllKeys()
         return keys
 
-    @cachePerInstance
+    @cache_per_instance_copy_result
     def getAllKeysWithUserState(self) -> Set[str]:
         """Get a subset of all the settings keys in all the containers having a User state
 
@@ -545,7 +545,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return settings
 
-    @cachePerInstance
+    @cache_per_instance
     def getContainers(self) -> List[ContainerInterface]:
         """Get a list of all containers in this stack.
 
@@ -616,7 +616,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         CachedMemberFunctions.clearInstanceCache(self)
         self._path = path
 
-    @cachePerInstance
+    @cache_per_instance
     def getSettingDefinition(self, key: str) -> Optional[SettingDefinition]:
         """Get the SettingDefinition object for a specified key"""
 
@@ -789,7 +789,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             signal.emit(signal_arg)
 
     @UM.FlameProfiler.profile
-    @cachePerInstance
+    @cache_per_instance
     def hasErrors(self) -> bool:
         """Check if the container stack has errors"""
 
@@ -812,7 +812,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return False
 
     @UM.FlameProfiler.profile
-    @cachePerInstance
+    @cache_per_instance_copy_result
     def getErrorKeys(self) -> List[str]:
         """Get all the keys that are in an error state in this stack"""
 

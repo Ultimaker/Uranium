@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from UM.Decorators import interface, CachedMemberFunctions, cachePerInstance
+from UM.Decorators import interface, CachedMemberFunctions, cache_per_instance, cache_per_instance_copy_result
 
 def test_interface():
     def declare_interface():
@@ -111,10 +111,15 @@ def test_cachePerInstance():
         def __init__(self):
             self._map = {}
 
-        @cachePerInstance
+        @cache_per_instance
         def getThing(self, a):
             bigDeal()
             return self._map.get(a, None)
+
+        @cache_per_instance_copy_result
+        def getList(self):
+            bigDeal()
+            return [234, 456, 789]
 
         def setThing(self, a, b):
             CachedMemberFunctions.clearInstanceCache(self)
@@ -145,3 +150,8 @@ def test_cachePerInstance():
     assert len(CachedMemberFunctions._CachedMemberFunctions__cache) == 2
     CachedMemberFunctions.deleteInstanceCache(instance)
     assert len(CachedMemberFunctions._CachedMemberFunctions__cache) == 1
+
+    lizt = other.getList()
+    assert lizt == [234, 456, 789]
+    lizt.append(111)
+    assert other.getList() == [234, 456, 789]

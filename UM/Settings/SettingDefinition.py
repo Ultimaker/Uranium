@@ -9,7 +9,7 @@ import collections
 import re
 from typing import Any, List, Dict, Callable, Match, Set, Union, Optional
 
-from UM.Decorators import CachedMemberFunctions, cachePerInstance
+from UM.Decorators import CachedMemberFunctions, cache_per_instance, cache_per_instance_copy_result
 from UM.Logger import Logger
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.i18n import i18nCatalog
@@ -238,7 +238,7 @@ class SettingDefinition:
 
         return self._relations
 
-    @cachePerInstance
+    @cache_per_instance
     def relationsAsFrozenSet(self) -> frozenset["SettingRelation"]:
         """A frozen set of SettingRelation objects of this setting.
 
@@ -255,7 +255,7 @@ class SettingDefinition:
 
         pass
 
-    @cachePerInstance
+    @cache_per_instance_copy_result
     def getAllKeys(self) -> Set[str]:
         """Gets the key of this setting definition and of all its descendants.
 
@@ -301,7 +301,7 @@ class SettingDefinition:
             parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
             self._deserialize_dict(parsed)
 
-    @cachePerInstance
+    @cache_per_instance
     def getChild(self, key: str) -> Optional["SettingDefinition"]:
         """Get a child by key
 
@@ -323,7 +323,7 @@ class SettingDefinition:
 
         return None
 
-    @cachePerInstance
+    @cache_per_instance
     def _matches1l8nProperty(self, property_name: str, value: Any, catalog) -> bool:
         try:
             property_value = getattr(self, property_name)
@@ -446,7 +446,7 @@ class SettingDefinition:
 
         return definitions
 
-    @cachePerInstance
+    @cache_per_instance
     def isAncestor(self, key: str) -> bool:
         """Check whether a certain setting is an ancestor of this definition.
 
@@ -460,7 +460,7 @@ class SettingDefinition:
 
         return key in self.__ancestors
 
-    @cachePerInstance
+    @cache_per_instance
     def isDescendant(self, key: str) -> bool:
         """Check whether a certain setting is a descendant of this definition.
 
@@ -474,7 +474,7 @@ class SettingDefinition:
 
         return key in self.__descendants
 
-    @cachePerInstance
+    @cache_per_instance_copy_result
     def getAncestors(self) -> Set[str]:
         """Get a set of keys representing the setting's ancestors."""
 
@@ -737,7 +737,7 @@ class SettingDefinition:
         self.__ancestors = self._updateAncestors()
         self.__descendants = self._updateDescendants()
 
-    @cachePerInstance
+    @cache_per_instance_copy_result
     def _updateAncestors(self) -> Set[str]:
         result = set()  # type: Set[str]
 

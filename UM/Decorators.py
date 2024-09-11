@@ -142,7 +142,7 @@ def timeit(method):
 
 
 class CachedMemberFunctions:
-    """Helper class to handle instance-cache w.r.t. results of member-functions decorated with '@cachePerInstance'."""
+    """Helper class to handle instance-cache w.r.t. results of member-functions decorated with '@cache_per_instance'."""
 
     __cache = {}
 
@@ -171,7 +171,16 @@ class CachedMemberFunctions:
         return cls.__cache[instance][function](*args)
 
 
-def cachePerInstance(function):
+def cache_per_instance(function):
     def wrapper(instance, *args, **kwargs):
         return CachedMemberFunctions.callMemberFunction(instance, function, *args, **kwargs)
+    return wrapper
+
+
+def cache_per_instance_copy_result(function):
+    def wrapper(instance, *args, **kwargs):
+        result = CachedMemberFunctions.callMemberFunction(instance, function, *args, **kwargs)
+        if hasattr(result, "copy"):
+            return result.copy()
+        return copy.copy(result)
     return wrapper
