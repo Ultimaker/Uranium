@@ -472,5 +472,5 @@ class SettingPropertyProvider(QObject):
         return str(property_value)
 
     def __del__(self) -> None:
-        # None of the 'parents' seem to have __del__, so OK not to call `super.del` here.
         CachedMemberFunctions.deleteInstanceCache(self)
+        getattr(super(), "__del__", lambda s: None)(self)

@@ -190,8 +190,8 @@ class SettingDefinition:
             self._all_keys = set()
 
     def __del__(self) -> None:
-        # None of the 'parents' seem to have __del__, so OK not to call `super.del` here.
         CachedMemberFunctions.deleteInstanceCache(self)
+        getattr(super(), "__del__", lambda s: None)(self)
 
     @property
     def key(self) -> str:
