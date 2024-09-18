@@ -5,6 +5,7 @@ import copy
 from functools import lru_cache, partial
 import warnings
 import inspect
+from threading import Lock
 
 from UM.Logger import Logger
 from typing import Callable, Any
@@ -145,17 +146,26 @@ class CachedMemberFunctions:
     """Helper class to handle instance-cache w.r.t. results of member-functions decorated with '@cache_per_instance'."""
 
     __cache = {}
+    __locks = {}
+
+    @classmethod
+    def _getInstanceLock(cls, instance):
+        if instance not in cls.__locks:
+            cls.__locks[instance] = Lock()
+        return cls.__locks[instance]
 
     @classmethod
     def clearInstanceCache(cls, instance):
         """Clear all the cache-entries for the specified instance."""
-        cls.__cache[instance] = {}
+        with cls._getInstanceLock(instance):
+            cls.__cache[instance] = {}
 
     @classmethod
     def deleteInstanceCache(cls, instance):
         """Completely delete the entry of the specified instance."""
-        if instance in cls.__cache:
-            del cls.__cache[instance]
+        with cls._getInstanceLock(instance):
+            if instance in cls.__cache:
+                del cls.__cache[instance]
 
     @classmethod
     def callMemberFunction(cls, instance, function, *args, **kwargs):
@@ -164,11 +174,14 @@ class CachedMemberFunctions:
             # NOTE The `lru_cache` can't handle keyword-arguments (because it's a dict).
             # We could make a frozendict, but that's probably a lot more hassle than it's worth, so just call normally.
             return function(instance, *args, **kwargs)
-        if instance not in cls.__cache:
-            cls.__cache[instance] = {}
-        if function not in cls.__cache[instance]:
-            cls.__cache[instance][function] = lru_cache()(partial(function, instance))
-        return cls.__cache[instance][function](*args)
+        with cls._getInstanceLock(instance):
+            if instance not in cls.__cache:
+                cls.__cache[instance] = {}
+            if function not in cls.__cache[instance]:
+                cls.__cache[instance][function] = lru_cache()(partial(function, instance))
+            func = cls.__cache[instance][function]
+        # Need to call the function outside the locked part, as it may introduce a race-condition otherwise.
+        return func(*args)
 
 
 def cache_per_instance(function):
