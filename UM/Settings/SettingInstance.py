@@ -235,6 +235,10 @@ class SettingInstance:
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
 
+        # Note: The global stack is only used in case of cross-stack relations ('force_depends_on_settings'), see below.
+        from UM.Application import Application
+        global_stack_container = Application.getInstance().getGlobalContainerStack()
+
         for property_name in property_names:
             if SettingDefinition.isReadOnlyProperty(property_name):
                 continue
@@ -246,10 +250,13 @@ class SettingInstance:
                 SettingInstance._listRelations(self.definition.key, changed_relations, self._definition.relations, [property_name])
 
                 for relation in changed_relations:
-                    container.propertyChanged.emit(relation.target.key, relation.role)
+                    used_container = container
+                    if self.definition.key in relation.target.force_depends_on_settings:
+                        used_container = global_stack_container
+                    used_container.propertyChanged.emit(relation.target.key, relation.role)
                     # If the value/minimum value/etc state is updated, the validation state must be re-evaluated
                     if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
-                        container.propertyChanged.emit(relation.target.key, "validationState")
+                        used_container.propertyChanged.emit(relation.target.key, "validationState")
 
     @staticmethod
     def _listRelations(key: str, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], roles: List[str]) -> None:
