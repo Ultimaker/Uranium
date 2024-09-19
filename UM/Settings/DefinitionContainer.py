@@ -554,7 +554,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             settings_dependencies.update(function.getUsedSettingKeys())
 
         try:
-            settings_dependencies.update(definition.depends_on_settings)
+            settings_dependencies.update(definition.force_depends_on_settings)
         except AttributeError:
             pass
 
