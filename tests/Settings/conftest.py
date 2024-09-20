@@ -50,6 +50,9 @@ def container_registry(application, test_containers_provider, plugin_registry: P
         )
     )
 
+    if ContainerRegistry._ContainerRegistry__instance is not None and ContainerRegistry._ContainerRegistry__instance._db_connection is not None:
+        ContainerRegistry._ContainerRegistry__instance._db_connection.close()
+        ContainerRegistry._ContainerRegistry__instance._db_connection = None
     ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
     registry = ContainerRegistry(application)
 

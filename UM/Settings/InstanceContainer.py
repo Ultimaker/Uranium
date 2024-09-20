@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import configparser
@@ -10,6 +10,7 @@ from typing import Any, cast, Dict, List, Optional, Set, Tuple
 from PyQt6.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt6.QtQml import QQmlEngine #To take ownership of this class ourselves.
 
+from UM.Decorators import CachedMemberFunctions, cache_per_instance, cache_per_instance_copy_result
 from UM.FastConfigParser import FastConfigParser
 from UM.Trust import Trust
 from UM.Decorators import override
@@ -143,6 +144,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def __setstate__(self, state: Dict[str, Any]) -> None:
         """For pickle support"""
 
+        CachedMemberFunctions.clearInstanceCache(self)
         self.__dict__.update(state)
 
     @classmethod
@@ -178,6 +180,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setCachedValues(self, cached_values: Dict[str, Any]) -> None:
         if not self._instances:
+            CachedMemberFunctions.clearInstanceCache(self)
             self._cached_values = cached_values
         else:
             Logger.log("w", "Unable set values to be lazy loaded when values are already loaded ")
@@ -200,6 +203,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         Reimplemented from ContainerInterface
         """
 
+        CachedMemberFunctions.clearInstanceCache(self)
         self._path = path
 
     def getName(self) -> str:
@@ -212,6 +216,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def setName(self, name: str) -> None:
         if name != self.getName():
+            CachedMemberFunctions.clearInstanceCache(self)
             self._metadata["name"] = name
             self._dirty = True
             self.nameChanged.emit()
@@ -251,6 +256,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         if metadata == self._metadata:
             return #No need to do anything or even emit the signal.
 
+        CachedMemberFunctions.clearInstanceCache(self)
         #We'll fill a temporary dictionary with all the required metadata and overwrite it with the new metadata.
         #This way it is ensured that at least the required metadata is still there.
         self._metadata = {
@@ -285,6 +291,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         """
 
         if key not in self._metadata or self._metadata[key] != value:
+            CachedMemberFunctions.clearInstanceCache(self)
             self._metadata[key] = value
             self._dirty = True
             self.metaDataChanged.emit(self)
@@ -298,8 +305,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         if self._read_only:
             Logger.log("w", "Tried to set dirty on read-only object.")
         else:
+            CachedMemberFunctions.clearInstanceCache(self)
             self._dirty = dirty
 
+    @cache_per_instance
     def getProperty(self, key: str, property_name: str, context: PropertyEvaluationContext = None) -> Any:
         """:copydoc ContainerInterface::getProperty
 
@@ -318,6 +327,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return None
 
+    @cache_per_instance
     def hasProperty(self, key: str, property_name: str) -> bool:
         """:copydoc ContainerInterface::hasProperty
 
@@ -345,6 +355,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         if not self._cached_values:
             return
+
+        CachedMemberFunctions.clearInstanceCache(self)
 
         for key, value in self._cached_values.items():
             if key not in self._instances:
@@ -387,6 +399,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                     property_name, property_value, key, self.id))
             return
 
+        CachedMemberFunctions.clearInstanceCache(self)
+
         if key not in self._instances:
             try:
                 definition = self.getDefinition()
@@ -414,12 +428,14 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def clear(self) -> None:
         """Remove all instances from this container."""
 
+        CachedMemberFunctions.clearInstanceCache(self)
         self._instantiateCachedValues()
         all_keys = self._instances.copy()
         for key in all_keys:
             self.removeInstance(key, postpone_emit=True)
         self.sendPostponedEmits()
 
+    @cache_per_instance_copy_result
     def getAllKeys(self) -> Set[str]:
         """Get all the keys of the instances of this container
         :returns: list of keys
@@ -588,6 +604,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         Reimplemented from ContainerInterface
         """
 
+        CachedMemberFunctions.clearInstanceCache(self)
+
         # update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
@@ -656,6 +674,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         """Instance containers are lazy loaded. This function ensures that it happened."""
         if not self._cached_values:
             return
+        CachedMemberFunctions.clearInstanceCache(self)
         definition = self.getDefinition()
         try:
             for key, value in self._cached_values.items():
@@ -665,6 +684,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         self._cached_values = None
 
+    # TODO: Deal with cacheing kwargs type arguments, as that is passed as an 'unhashable' dict.
     def findInstances(self, **kwargs: Any) -> List[SettingInstance]:
         """Find instances matching certain criteria.
 
@@ -682,6 +702,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return result
 
+    @cache_per_instance
     def getInstance(self, key: str) -> Optional[SettingInstance]:
         """Get an instance by key"""
 
@@ -699,6 +720,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         if key in self._instances:
             return
 
+        CachedMemberFunctions.clearInstanceCache(self)
+
         instance.propertyChanged.connect(self.propertyChanged)
         instance.propertyChanged.emit(key, "value")
         self._instances[key] = instance
@@ -712,6 +735,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         self._instantiateCachedValues()
         if key not in self._instances:
             return
+
+        CachedMemberFunctions.clearInstanceCache(self)
 
         instance = self._instances[key]
         del self._instances[key]
@@ -739,6 +764,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def update(self) -> None:
         """Update all instances from this container."""
 
+        CachedMemberFunctions.clearInstanceCache(self)
+
         self._instantiateCachedValues()
         for key, instance in self._instances.items():
             instance.propertyChanged.emit(key, "value")
@@ -749,6 +776,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
                     self.propertyChanged.emit(key, property_name)
         self._dirty = True
 
+    @cache_per_instance
     def getDefinition(self) -> DefinitionContainerInterface:
         """Get the DefinitionContainer used for new instance creation."""
 
@@ -766,6 +794,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         way of figuring out what SettingDefinition to use when creating a new SettingInstance.
         """
 
+        CachedMemberFunctions.clearInstanceCache(self)
         self._metadata["definition"] = definition_id
         self._definition = None
 
@@ -787,6 +816,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def __repr__(self) -> str:
         return str(self)
 
+    def __del__(self) -> None:
+        CachedMemberFunctions.deleteInstanceCache(self)
+        getattr(super(), "__del__", lambda s: None)(self)
+
     def sendPostponedEmits(self) -> None:
         """Send the postponed emits
 
@@ -798,6 +831,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(*signal_arg)
             
+    @cache_per_instance_copy_result
     def getAllKeysWithUserState(self)-> Set[str]:
         """Get the keys of all the setting having a User state"""
         self._instantiateCachedValues()

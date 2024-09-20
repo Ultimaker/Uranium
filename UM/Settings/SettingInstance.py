@@ -1,11 +1,13 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import copy #To implement deepcopy.
 import enum
+from functools import lru_cache
 import os
 from typing import Any, cast, Dict, Iterable, List, Optional, Set, TYPE_CHECKING
 
+from UM.Decorators import CachedMemberFunctions, cache_per_instance
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
@@ -36,9 +38,7 @@ def _traceRelations(instance: "SettingInstance", container: ContainerInterface, 
         if SettingDefinition.isReadOnlyProperty(property_name):
             continue
 
-        changed_relations: Set[SettingRelation] = set()
-        SettingInstance._listRelations(instance.definition.key, changed_relations, instance.definition.relations, [property_name])
-
+        changed_relations = SettingInstance._listRelations(instance.definition.key, frozenset(), instance.definition.relationsAsFrozenSet(), frozenset({property_name}))
         for relation in changed_relations:
             Logger.log("d", "Emitting property change for relation {0}", relation)
             #container.propertyChanged.emit(relation.target.key, relation.role)
@@ -92,6 +92,7 @@ class SettingInstance:
 
         self.__property_values = {}  # type: Dict[str, Any]
 
+    @cache_per_instance
     def getPropertyNames(self) -> Iterable[str]:
         """Get a list of all supported property names"""
 
@@ -129,9 +130,13 @@ class SettingInstance:
                 return False
         return True
 
+    def __hash__(self) -> int:
+        return id(self)
+
     def __ne__(self, other: object) -> bool:
         return not (self == other)
 
+    @cache_per_instance
     def __getattr__(self, name: str) -> Any:
         if name == "_SettingInstance__property_values":
             # Prevent infinite recursion when __property_values is not set.
@@ -150,8 +155,14 @@ class SettingInstance:
 
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
+    def __del__(self) -> None:
+        CachedMemberFunctions.deleteInstanceCache(self)
+        getattr(super(), "__del__", lambda s: None)(self)
+
     @call_if_enabled(_traceSetProperty, _isTraceEnabled())
     def setProperty(self, name: str, value: Any, container: Optional[ContainerInterface] = None, emit_signals: bool = True) -> None:
+        CachedMemberFunctions.clearInstanceCache(self)
+
         if SettingDefinition.hasProperty(name):
             if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
@@ -222,6 +233,7 @@ class SettingInstance:
         return self._state
 
     def resetState(self) -> None:
+        CachedMemberFunctions.clearInstanceCache(self)
         self._state = InstanceState.Default
 
     def __repr__(self) -> str:
@@ -235,6 +247,8 @@ class SettingInstance:
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
 
+        CachedMemberFunctions.clearInstanceCache(self)
+        
         # Note: The global stack is only used in case of cross-stack relations ('force_depends_on_settings'), see below.
         from UM.Application import Application
         global_stack_container = Application.getInstance().getGlobalContainerStack()
@@ -246,8 +260,7 @@ class SettingInstance:
             # TODO: We should send this as a single change event instead of several of them.
             # That would increase performance by reducing the amount of updates.
             if emit_signals:
-                changed_relations: Set[SettingRelation] = set()
-                SettingInstance._listRelations(self.definition.key, changed_relations, self._definition.relations, [property_name])
+                changed_relations = SettingInstance._listRelations(self.definition.key, frozenset(), self._definition.relationsAsFrozenSet(), frozenset([property_name]))
 
                 for relation in changed_relations:
                     used_container = container
@@ -259,7 +272,8 @@ class SettingInstance:
                         used_container.propertyChanged.emit(relation.target.key, "validationState")
 
     @staticmethod
-    def _listRelations(key: str, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], roles: List[str]) -> None:
+    @lru_cache
+    def _listRelations(key: str, relations_set: frozenset["SettingRelation"], relations: frozenset["SettingRelation"], roles: frozenset[str]) -> frozenset["SettingRelation"]:
         """Recursive function to put all settings that require eachother for changes of a property value in a list
 
         :param relations_set: :type{set} Set of keys (strings) of settings that are influenced
@@ -283,10 +297,12 @@ class SettingInstance:
             if relation in relations_set:
                 continue
 
-            relations_set.add(relation)
+            relations_set = relations_set.union({relation})
 
             property_names = SettingDefinition.getPropertyNames()
             property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
             property_names.insert(0, "value")
 
-            SettingInstance._listRelations(key, relations_set, relation.target.relations, property_names)
+            relations_set = SettingInstance._listRelations(key, relations_set, relation.target.relationsAsFrozenSet(), frozenset(property_names))
+
+        return relations_set
