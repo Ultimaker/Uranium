@@ -26,11 +26,9 @@ class UraniumConan(ConanFile):
     python_requires = "translationextractor/[>=2.2.0]@ultimaker/cura_11622"
 
     options = {
-        "devtools": [True, False],
         "enable_i18n": [True, False],
     }
     default_options = {
-        "devtools": False,
         "enable_i18n": False,
     }
 
@@ -52,12 +50,6 @@ class UraniumConan(ConanFile):
             return Path(self.install_folder)
         else:
             return Path(self.source_folder, "venv")
-
-    @property
-    def requirements_txts(self):
-        if self.options.get_safe("devtools", False):
-            return ["requirements.txt", "requirements-dev.txt"]
-        return ["requirements.txt"]
 
     @property
     def _share_dir(self):
@@ -94,8 +86,6 @@ class UraniumConan(ConanFile):
              os.path.join(self.export_sources_folder, "resources"), excludes="*.mo")
         copy(self, "*", os.path.join(self.recipe_folder, "tests"), os.path.join(self.export_sources_folder, "tests"))
         copy(self, "*", os.path.join(self.recipe_folder, "UM"), os.path.join(self.export_sources_folder, "UM"))
-        copy(self, "requirements.txt", self.recipe_folder, self.export_sources_folder)
-        copy(self, "requirements-dev.txt", self.recipe_folder, self.export_sources_folder)
 
     def config_options(self):
         if self.settings.os == "Windows" and not self.conf.get("tools.microsoft.bash:path", check_type=str):
@@ -150,8 +140,7 @@ class UraniumConan(ConanFile):
         self.folders.generators = os.path.join(self.folders.build, "conan")
 
         self.cpp.package.libdirs = [os.path.join("site-packages", "UM")]
-        self.cpp.package.resdirs = ["resources", "plugins",
-                                    "pip_requirements"]  # Note: pip_requirements should be the last item in the list
+        self.cpp.package.resdirs = ["resources", "plugins"]
 
         self.layouts.source.runenv_info.prepend_path("PYTHONPATH", ".")
         self.layouts.source.runenv_info.prepend_path("PYTHONPATH", "plugins")
@@ -167,15 +156,8 @@ class UraniumConan(ConanFile):
              dst=os.path.join(self.package_folder, self.cpp.package.resdirs[0]))
         copy(self, "*", src=os.path.join(self.source_folder, "plugins"),
              dst=os.path.join(self.package_folder, self.cpp.package.resdirs[1]))
-        copy(self, "requirement*.txt", src=self.source_folder,
-             dst=os.path.join(self.package_folder, self.cpp.package.resdirs[-1]))
-
-    def package_info(self):
-        self.user_info.pip_requirements = "requirements.txt"
-        self.user_info.pip_requirements_build = "requirements-dev.txt"
 
     def package_id(self):
         self.info.clear()
 
-        self.info.options.rm_safe("devtools")
         self.info.options.rm_safe("enable_i18n")
