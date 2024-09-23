@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-20 15:53+0200\n"
+"POT-Creation-Date: 2024-07-08 09:10+0200\n"
 "PO-Revision-Date: 2019-11-15 15:35+0100\n"
 "Last-Translator: Mariusz 'Virgin71' Matłosz <matliks@gmail.com>\n"
 "Language-Team: reprapy.pl\n"
@@ -589,7 +589,7 @@ msgstr ""
 
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
+msgid "There were no models in <filename>{0}</filename>."
 msgstr ""
 
 msgctxt "@action:description"

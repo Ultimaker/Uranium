@@ -104,8 +104,7 @@ class SettingFunction:
             local_variables[name] = value
 
         if additional_variables is not None:
-            for name, value in additional_variables.items():
-                local_variables[name] = value
+            local_variables |= additional_variables
 
         globals_variables: Dict[str, Any] = {}
         globals_variables.update(globals())

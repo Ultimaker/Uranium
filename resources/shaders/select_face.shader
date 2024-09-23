@@ -1,8 +1,10 @@
 [shaders]
 vertex =
+    // NOTE: These legacy shaders are compiled, but not used. Select-by-face isn't possible in legacy-render-mode.
     uniform highp mat4 u_modelMatrix;
     uniform highp mat4 u_viewMatrix;
     uniform highp mat4 u_projectionMatrix;
+    uniform highp int u_modelId;
 
     attribute highp vec4 a_vertex;
 
@@ -12,6 +14,8 @@ vertex =
     }
 
 fragment =
+    // NOTE: These legacy shaders are compiled, but not used. Select-by-face isn't possible in legacy-render-mode.
+
     void main()
     {
         gl_FragColor = vec4(0., 0., 0., 1.);
@@ -22,29 +26,35 @@ fragment =
 
 vertex41core =
     #version 410
+
     uniform highp mat4 u_modelMatrix;
     uniform highp mat4 u_viewMatrix;
     uniform highp mat4 u_projectionMatrix;
+    uniform highp int u_modelId;
 
     in highp vec4 a_vertex;
+
+    flat out highp int v_modelId;
 
     void main()
     {
         gl_Position = u_projectionMatrix * u_viewMatrix * u_modelMatrix * a_vertex;
+        v_modelId = u_modelId;
     }
 
 fragment41core =
     #version 410
+
+    flat in highp int v_modelId;
+
     out vec4 frag_color;
 
     void main()
     {
-        frag_color = vec4(0., 0., 0., 1.);
-        frag_color.r = (gl_PrimitiveID % 0x100) / 255.;
-        frag_color.g = ((gl_PrimitiveID / 0x100) % 0x100) / 255.;
-        frag_color.b = (0x1 + 2 * ((gl_PrimitiveID / 0x10000) % 0x80)) / 255.;
-        // Don't use alpha for anything, as some faces may be behind others, an only the front one's value is desired.
-        // There isn't any control over the background color, so a signal-bit is put into the blue byte.
+        frag_color.r = (gl_PrimitiveID & 0xff) / 255.;
+        frag_color.g = ((gl_PrimitiveID >> 8) & 0xff) / 255.;
+        frag_color.b = ((gl_PrimitiveID >> 16) & 0xff) / 255.;
+        frag_color.a = (255 - v_modelId) / 255.; // Invert to ease visualization in images, and so that 0 means no object
     }
 
 [defaults]
@@ -53,6 +63,7 @@ fragment41core =
 u_modelMatrix = model_matrix
 u_viewMatrix = view_matrix
 u_projectionMatrix = projection_matrix
+u_modelId = model_id
 
 [attributes]
 a_vertex = vertex

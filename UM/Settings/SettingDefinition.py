@@ -1,13 +1,15 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ast
+from functools import lru_cache
 import json
 import enum
 import collections
 import re
 from typing import Any, List, Dict, Callable, Match, Set, Union, Optional
 
+from UM.Decorators import CachedMemberFunctions, cache_per_instance, cache_per_instance_copy_result
 from UM.Logger import Logger
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.i18n import i18nCatalog
@@ -116,6 +118,8 @@ class SettingDefinition:
 
         self.__property_values = {}  # type: Dict[str, Any]
 
+        self.__init_done = True
+
     def extend_category(self, value_id: str, value_display: str, plugin_id: Optional[str] = None,
                         plugin_version: Optional[str] = None) -> None:
         """Append a category to the setting.
@@ -129,6 +133,7 @@ class SettingDefinition:
             value_id = f"PLUGIN::{plugin_id}@{plugin_version}::{value_id}"
         elif plugin_id is not None or plugin_version is not None:
             raise ValueError("Both plugin_id and plugin_version must be provided if one of them is provided.")
+        CachedMemberFunctions.clearInstanceCache(self)
         self.options[value_id] = value_display
 
     def __getattr__(self, name: str) -> Any:
@@ -147,6 +152,9 @@ class SettingDefinition:
 
         if name in self.__property_definitions:
             raise NotImplementedError("Setting of property {0} not supported".format(name))
+
+        if "__init_done" in self.__dict__:
+            CachedMemberFunctions.clearInstanceCache(self)
 
         super().__setattr__(name, value)
 
@@ -171,12 +179,19 @@ class SettingDefinition:
         behaviour doesn't combine well with a non-default __getattr__.
         """
 
+        if "__init_done" in self.__dict__:
+            CachedMemberFunctions.clearInstanceCache(self)
+
         self.__dict__.update(state)
         # For 4.0 we added the _all_keys property, but the pickling fails to restore this.
         # This is just there to prevent issues for developers, since only releases ignore caches.
         # If you're reading this after that. Remove this.
         if not hasattr(self, "_all_keys"):
             self._all_keys = set()
+
+    def __del__(self) -> None:
+        CachedMemberFunctions.deleteInstanceCache(self)
+        getattr(super(), "__del__", lambda s: None)(self)
 
     @property
     def key(self) -> str:
@@ -223,6 +238,15 @@ class SettingDefinition:
 
         return self._relations
 
+    @cache_per_instance
+    def relationsAsFrozenSet(self) -> frozenset["SettingRelation"]:
+        """A frozen set of SettingRelation objects of this setting.
+
+        :return: :type{frozenset<SettingRelation>}
+        """
+
+        return frozenset(self.relations)
+
     def serialize(self) -> str:
         """Serialize this setting to a string.
 
@@ -231,6 +255,7 @@ class SettingDefinition:
 
         pass
 
+    @cache_per_instance_copy_result
     def getAllKeys(self) -> Set[str]:
         """Gets the key of this setting definition and of all its descendants.
 
@@ -269,12 +294,14 @@ class SettingDefinition:
         :param serialized: :type{string or dict} A serialized representation of this setting.
         """
 
+        CachedMemberFunctions.clearInstanceCache(self)
         if isinstance(serialized, dict):
             self._deserialize_dict(serialized)
         else:
             parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
             self._deserialize_dict(parsed)
 
+    @cache_per_instance
     def getChild(self, key: str) -> Optional["SettingDefinition"]:
         """Get a child by key
 
@@ -296,6 +323,7 @@ class SettingDefinition:
 
         return None
 
+    @cache_per_instance
     def _matches1l8nProperty(self, property_name: str, value: Any, catalog) -> bool:
         try:
             property_value = getattr(self, property_name)
@@ -418,6 +446,7 @@ class SettingDefinition:
 
         return definitions
 
+    @cache_per_instance
     def isAncestor(self, key: str) -> bool:
         """Check whether a certain setting is an ancestor of this definition.
 
@@ -431,6 +460,7 @@ class SettingDefinition:
 
         return key in self.__ancestors
 
+    @cache_per_instance
     def isDescendant(self, key: str) -> bool:
         """Check whether a certain setting is a descendant of this definition.
 
@@ -444,6 +474,7 @@ class SettingDefinition:
 
         return key in self.__descendants
 
+    @cache_per_instance_copy_result
     def getAncestors(self) -> Set[str]:
         """Get a set of keys representing the setting's ancestors."""
 
@@ -490,10 +521,12 @@ class SettingDefinition:
         value should be re-evaluated.
         """
 
+        cls._clearClassCache()
         cls.__property_definitions[name] = {"type": property_type, "required": required, "read_only": read_only,
                                             "default": default, "depends_on": depends_on}
 
     @classmethod
+    @lru_cache
     def getPropertyNames(cls, def_type: DefinitionPropertyType = None) -> List[str]:
         """Get the names of all supported properties.
 
@@ -507,6 +540,7 @@ class SettingDefinition:
         return [key for key, value in cls.__property_definitions.items() if not def_type or value["type"] == def_type]
 
     @classmethod
+    @lru_cache
     def hasProperty(cls, name: str) -> bool:
         """Check if a property with the specified name is defined as a supported property.
 
@@ -518,6 +552,7 @@ class SettingDefinition:
         return name in cls.__property_definitions
 
     @classmethod
+    @lru_cache
     def getPropertyType(cls, name: str) -> Optional[str]:
         """Get the type of a specified property.
 
@@ -532,6 +567,7 @@ class SettingDefinition:
         return None
 
     @classmethod
+    @lru_cache
     def isRequiredProperty(cls, name: str) -> bool:
         """Check if the specified property is considered a required property.
 
@@ -549,6 +585,7 @@ class SettingDefinition:
         return False
 
     @classmethod
+    @lru_cache
     def isReadOnlyProperty(cls, name: str) -> bool:
         """Check if the specified property is considered a read-only property.
 
@@ -565,6 +602,7 @@ class SettingDefinition:
         return False
 
     @classmethod
+    @lru_cache
     def dependsOnProperty(cls, name: str) -> Optional[str]:
         """Check if the specified property depends on another property
 
@@ -590,9 +628,11 @@ class SettingDefinition:
 
         """
 
+        cls._clearClassCache()
         cls.__type_definitions[type_name] = { "from": from_string, "to": to_string, "validator": validator }
 
     @classmethod
+    @lru_cache
     def settingValueFromString(cls, type_name: str, string_value: str) -> Any:
         """Convert a string to a value according to a setting type.
 
@@ -639,6 +679,7 @@ class SettingDefinition:
         return value
 
     @classmethod
+    @lru_cache
     def getValidatorForType(cls, type_name: str) -> Callable[[str],Validator]:
         """Get the validator type for a certain setting type."""
 
@@ -653,6 +694,7 @@ class SettingDefinition:
         Deserialize from a dictionary
         """
 
+        CachedMemberFunctions.clearInstanceCache(self)
         self._children = []
         self._relations = []
 
@@ -695,6 +737,7 @@ class SettingDefinition:
         self.__ancestors = self._updateAncestors()
         self.__descendants = self._updateDescendants()
 
+    @cache_per_instance_copy_result
     def _updateAncestors(self) -> Set[str]:
         result = set()  # type: Set[str]
 
@@ -706,6 +749,7 @@ class SettingDefinition:
         return result
 
     def _updateDescendants(self, definition: "SettingDefinition" = None) -> Dict[str, "SettingDefinition"]:
+        CachedMemberFunctions.clearInstanceCache(self)
         result = {}
         self._all_keys = set()  # Reset the keys cache.
         if not definition:
@@ -716,6 +760,17 @@ class SettingDefinition:
             result.update(self._updateDescendants(child))
 
         return result
+
+    @classmethod
+    def _clearClassCache(cls):
+        cls.getPropertyNames.cache_clear()
+        cls.hasProperty.cache_clear()
+        cls.getPropertyType.cache_clear()
+        cls.isRequiredProperty.cache_clear()
+        cls.isReadOnlyProperty.cache_clear()
+        cls.dependsOnProperty.cache_clear()
+        cls.settingValueFromString.cache_clear()
+        cls.getValidatorForType.cache_clear()
 
     __property_definitions = {
         # The name of the setting. Only used for display purposes.
@@ -760,6 +815,8 @@ class SettingDefinition:
         "warning_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": None, "depends_on": None},
         # For bool type: if the value is the same as the error value, the setting will be in the error state.
         "error_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": None, "depends_on": None},
+        # Optional list of settings that a setting explicitely depends on, which is useful when this can not be fully calculated from the formula.
+        "force_depends_on_settings": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True, "default": [], "depends_on": None},
     }   # type: Dict[str, Dict[str, Any]]
 
     __type_definitions = {

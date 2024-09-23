@@ -548,10 +548,17 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         except AttributeError:
             return
 
-        if not isinstance(function, SettingFunction):
-            return
+        settings_dependencies = set()
 
-        for setting in function.getUsedSettingKeys():
+        if isinstance(function, SettingFunction):
+            settings_dependencies.update(function.getUsedSettingKeys())
+
+        try:
+            settings_dependencies.update(definition.force_depends_on_settings)
+        except AttributeError:
+            pass
+
+        for setting in settings_dependencies:
             # Prevent circular relations between the same setting and the same property
             # Note that the only property used by SettingFunction is the "value" property, which
             # is why this is hard coded here.

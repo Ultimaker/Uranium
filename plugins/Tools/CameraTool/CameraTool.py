@@ -40,6 +40,7 @@ class CameraTool(Tool):
         self._shift_is_active = False
         self._ctrl_is_active = False
         self._space_is_active = False
+        self._alt_is_active = False
 
         self._start_drag = None  # type: Optional[Tuple[int, int]]
         self._start_y = None
@@ -48,16 +49,21 @@ class CameraTool(Tool):
 
         Application.getInstance().getPreferences().addPreference("view/invert_zoom", False)
         Application.getInstance().getPreferences().addPreference("view/zoom_to_mouse", False)
+        Application.getInstance().getPreferences().addPreference("view/navigation_style", "cura")
         self._invert_zoom = Application.getInstance().getPreferences().getValue("view/invert_zoom")
         self._zoom_to_mouse = Application.getInstance().getPreferences().getValue("view/zoom_to_mouse")
+        self._navigation_style = Application.getInstance().getPreferences().getValue("view/navigation_style")
         Application.getInstance().getPreferences().preferenceChanged.connect(self._onPreferencesChanged)
 
     def _onPreferencesChanged(self, name: str) -> None:
-        if name != "view/invert_zoom" and name != "view/zoom_to_mouse":
-            return
-        self._invert_zoom = Application.getInstance().getPreferences().getValue("view/invert_zoom")
-        self._zoom_to_mouse = Application.getInstance().getPreferences().getValue("view/zoom_to_mouse")
-
+        match name:
+            case "view/invert_zoom":
+                self._invert_zoom = Application.getInstance().getPreferences().getValue("view/invert_zoom")
+            case "view/zoom_to_mouse":
+                self._zoom_to_mouse = Application.getInstance().getPreferences().getValue("view/zoom_to_mouse")
+            case "view/navigation_style":
+                self._navigation_style = Application.getInstance().getPreferences().getValue("view/navigation_style")
+        
     def setZoomRange(self, min: float, max: float) -> None:
         """Set the minimum and maximum distance from the origin used for "zooming" the camera
 
@@ -116,6 +122,7 @@ class CameraTool(Tool):
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         self._shift_is_active = (modifiers & QtCore.Qt.KeyboardModifier.ShiftModifier) != QtCore.Qt.KeyboardModifier.NoModifier
         self._ctrl_is_active = (modifiers & QtCore.Qt.KeyboardModifier.ControlModifier) != QtCore.Qt.KeyboardModifier.NoModifier
+        self._alt_is_active = (modifiers & QtCore.Qt.KeyboardModifier.AltModifier) != QtCore.Qt.KeyboardModifier.NoModifier
         # Checks for the press and release event of the space key
         if event.type is Event.KeyPressEvent:
             if event.key == KeyEvent.SpaceKey:
@@ -123,6 +130,18 @@ class CameraTool(Tool):
         if event.type is Event.KeyReleaseEvent:
             if event.key == KeyEvent.SpaceKey:
                 self._space_is_active = False
+        if self._navigation_style == "freecad_trackpad":
+            if self._rotate and not self._alt_is_active:
+                self._rotate = False
+            if self._move and not self._shift_is_active:
+                self._move = False
+            if event.type is Event.MouseMoveEvent:
+                if self._shift_is_active and not self._move:
+                    self._move = True
+                    self._start_drag = (event.x, event.y)
+                elif self._alt_is_active and not self._rotate:
+                    self._rotate = True
+                    self._start_drag = (event.x, event.y)
 
     def moveEvent(self, event) -> bool:
         """Check if the event warrants a call off the _moveCamera method

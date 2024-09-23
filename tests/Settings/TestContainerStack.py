@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2024 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Optional
@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from UM.Decorators import CachedMemberFunctions
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.ContainerStack import IncorrectVersionError
@@ -814,6 +815,9 @@ def test_getHasErrors(container_stack):
 
     # We won't get any wrong validation states, so it shouldn't have errors.
     assert not container_stack.hasErrors()
+
+    # Clear the cache (so 'hasErrors' recalculates, as from the perspective of the container-stack, it hasn't changed).
+    CachedMemberFunctions.clearInstanceCache(container_stack)
 
     # Fake the property so it does return validation state
     container_stack.getProperty = MagicMock(return_value = ValidatorState.MaximumError)
