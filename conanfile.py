@@ -9,7 +9,7 @@ from conan.tools.microsoft import unix_path
 from conan.tools.scm import Version, Git
 from conan.errors import ConanInvalidConfiguration
 
-required_conan_version = ">=1.58.0"
+required_conan_version = ">=2.7.0"
 
 
 class UraniumConan(ConanFile):
@@ -115,7 +115,7 @@ class UraniumConan(ConanFile):
     def requirements(self):
         for req in self.conan_data["requirements"]:
             self.requires(req)
-        self.requires("cpython/3.12.2@ultimaker/cura_11622")  # FIXME: use stable after merge
+        self.requires("cpython/3.12.2")
         self.requires("openssl/3.2.1")
 
     def build_requirements(self):
