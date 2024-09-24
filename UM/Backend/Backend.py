@@ -263,6 +263,9 @@ class Backend(PluginObject):
         elif error.getErrorCode() == Arcus.ErrorCode.Debug:
             Logger.log("d", "Socket debug: %s", str(error))
             return
+        elif error.getErrorCode() == Arcus.ErrorCode.MessageTooBigError:
+            Logger.log("w", "Message was too big to be sent", str(error))
+            return
         else:
             Logger.log("w", "Unhandled socket error %s", str(error.getErrorCode()))
 
