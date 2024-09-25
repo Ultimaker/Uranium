@@ -214,14 +214,18 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return self._metadata["name"]
 
-    def setName(self, name: str) -> None:
+    def setName(self, name: str, *, supress_signals = False) -> None:
+        # In some cases you want to change the name of multiple containers and not yet want to trigger events.
+        # In thsoe cases you need to use supress_signals to make sure that no signals are sent. Be *very* carefull
+        # with using this!
         if name != self.getName():
             CachedMemberFunctions.clearInstanceCache(self)
             self._metadata["name"] = name
             self._dirty = True
-            self.nameChanged.emit()
-            self.pyqtNameChanged.emit()
-            self.metaDataChanged.emit(self)
+            if not supress_signals:
+                self.nameChanged.emit()
+                self.pyqtNameChanged.emit()
+                self.metaDataChanged.emit(self)
 
 
     # Because we want to expose the properties of InstanceContainer as Qt properties for
