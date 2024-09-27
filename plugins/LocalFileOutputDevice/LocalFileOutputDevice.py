@@ -138,9 +138,10 @@ class LocalFileOutputDevice(ProjectOutputDevice):
                 raise OutputDeviceError.UserCanceledError()
 
         silent_save = kwargs.get("silent_save", False)
-        self._performWrite(file_name, selected_type, file_handler, nodes, silent_save)
+        writer_args = kwargs.get("writer_args", {})
+        self._performWrite(file_name, selected_type, file_handler, nodes, silent_save, writer_args)
 
-    def _performWrite(self, file_name, selected_type, file_handler, nodes, silent_save):
+    def _performWrite(self, file_name, selected_type, file_handler, nodes, silent_save, writer_args):
         """Writes the specified nodes to a file. This is split from requestWrite to allow interception
         in other plugins. See Ultimaker/Cura#10917.
 
@@ -149,6 +150,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         :param file_handler: File handler for writing to the file.
         :param nodes: A collection of scene nodes that should be written to the
         :param silent_save: When true, ignore all side effects (set project name, add recent file, ...)
+        :param writer_args: Extra list of arguments to be given to the writer
         file.
         """
 
@@ -174,7 +176,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
                 Logger.log("e", "Unrecognised OutputMode.")
                 return None
 
-            job = WriteFileJob(file_writer, stream, nodes, mode)
+            job = WriteFileJob(file_writer, stream, nodes, mode, writer_args)
             job.setFileName(file_name)
             if not silent_save:
                 job.setAddToRecentFiles(True)  # The file will be added into the "recent files" list upon success
