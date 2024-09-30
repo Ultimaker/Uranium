@@ -19,7 +19,7 @@ class WriteFileJob(Job):
     The writer defines what the result of this job is.
     """
 
-    def __init__(self, writer: Optional[FileWriter], stream: Union[io.BytesIO, io.StringIO], data: Any, mode: int, writer_args: dict = {}) -> None:
+    def __init__(self, writer: Optional[FileWriter], stream: Union[io.BytesIO, io.StringIO], data: Any, mode: int, writer_args: Optional[Dict] = None) -> None:
         """Creates a new job for writing.
 
         :param writer: The file writer to use, with the correct MIME type.
@@ -37,7 +37,7 @@ class WriteFileJob(Job):
         self._mode = mode
         self._add_to_recent_files = False  # If this file should be added to the "recent files" list upon success
         self._message = None  # type: Optional[Message]
-        self._writer_args = writer_args
+        self._writer_args = writer_args if writer_args is not None else {}
         self.progress.connect(self._onProgress)
         self.finished.connect(self._onFinished)
 
