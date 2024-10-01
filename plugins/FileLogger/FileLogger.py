@@ -37,11 +37,13 @@ class FileLogger(LogOutput):
             pass  # TODO, add handling
 
     def flush(self) -> None:
+        """Flushes all the open output streams"""
         for handler in self._logger.handlers:
             if isinstance(handler, StreamHandler):
                 handler.flush()
 
-    def getFilesPaths(self):
+    def getFilesPaths(self) -> list[str]:
+        """Gets the list of paths to files currently open for log writing"""
         files_paths = []
 
         for handler in self._logger.handlers:
