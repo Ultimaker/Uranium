@@ -10,7 +10,7 @@ from UM.Message import Message
 import io
 import time
 
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Dict
 
 
 class WriteFileJob(Job):
@@ -19,13 +19,14 @@ class WriteFileJob(Job):
     The writer defines what the result of this job is.
     """
 
-    def __init__(self, writer: Optional[FileWriter], stream: Union[io.BytesIO, io.StringIO], data: Any, mode: int) -> None:
+    def __init__(self, writer: Optional[FileWriter], stream: Union[io.BytesIO, io.StringIO], data: Any, mode: int, writer_args: Optional[Dict[str, Any]] = None) -> None:
         """Creates a new job for writing.
 
         :param writer: The file writer to use, with the correct MIME type.
         :param stream: The output stream to write to.
         :param data: Whatever it is what we want to write.
         :param mode: Additional information to send to the writer, for example: such as whether to
+        :param writer_args: Extra arguments to be passed to the writer
         write in binary format or in ASCII format.
         """
 
@@ -37,6 +38,7 @@ class WriteFileJob(Job):
         self._mode = mode
         self._add_to_recent_files = False  # If this file should be added to the "recent files" list upon success
         self._message = None  # type: Optional[Message]
+        self._writer_args = writer_args if writer_args is not None else {}
         self.progress.connect(self._onProgress)
         self.finished.connect(self._onFinished)
 
@@ -73,7 +75,7 @@ class WriteFileJob(Job):
     def run(self) -> None:
         Job.yieldThread()
         begin_time = time.time()
-        self.setResult(None if not self._writer else self._writer.write(self._stream, self._data, self._mode))
+        self.setResult(None if not self._writer else self._writer.write(self._stream, self._data, self._mode, **self._writer_args))
         if not self.getResult():
             self.setError(Exception("No writer in WriteFileJob" if not self._writer else self._writer.getInformation()))
         end_time = time.time()

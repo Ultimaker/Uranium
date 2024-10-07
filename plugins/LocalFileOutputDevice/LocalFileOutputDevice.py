@@ -136,9 +136,12 @@ class LocalFileOutputDevice(ProjectOutputDevice):
             result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label Don't translate the XML tag <filename>!", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(file_name))
             if result == QMessageBox.StandardButton.No:
                 raise OutputDeviceError.UserCanceledError()
-        self._performWrite(file_name, selected_type, file_handler, nodes)
 
-    def _performWrite(self, file_name, selected_type, file_handler, nodes):
+        silent_save = kwargs.get("silent_save", False)
+        writer_args = kwargs.get("writer_args", {})
+        self._performWrite(file_name, selected_type, file_handler, nodes, silent_save, writer_args)
+
+    def _performWrite(self, file_name, selected_type, file_handler, nodes, silent_save, writer_args):
         """Writes the specified nodes to a file. This is split from requestWrite to allow interception
         in other plugins. See Ultimaker/Cura#10917.
 
@@ -146,6 +149,8 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         :param selected_type: Selected file type to write.
         :param file_handler: File handler for writing to the file.
         :param nodes: A collection of scene nodes that should be written to the
+        :param silent_save: When true, ignore all side effects (set project name, add recent file, ...)
+        :param writer_args: Extra list of arguments to be given to the writer
         file.
         """
 
@@ -155,7 +160,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         else:
             file_writer = Application.getInstance().getMeshFileHandler().getWriter(selected_type["id"])
 
-        if isinstance(file_writer, WorkspaceWriter):
+        if isinstance(file_writer, WorkspaceWriter) and not silent_save:
             self.setLastOutputName(file_name)
         self.writeStarted.emit(self)
 
@@ -171,9 +176,10 @@ class LocalFileOutputDevice(ProjectOutputDevice):
                 Logger.log("e", "Unrecognised OutputMode.")
                 return None
 
-            job = WriteFileJob(file_writer, stream, nodes, mode)
+            job = WriteFileJob(file_writer, stream, nodes, mode, writer_args)
             job.setFileName(file_name)
-            job.setAddToRecentFiles(True)  # The file will be added into the "recent files" list upon success
+            if not silent_save:
+                job.setAddToRecentFiles(True)  # The file will be added into the "recent files" list upon success
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)
 
