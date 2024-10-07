@@ -19,7 +19,7 @@ class WriteFileJob(Job):
     The writer defines what the result of this job is.
     """
 
-    def __init__(self, writer: Optional[FileWriter], stream: Union[io.BytesIO, io.StringIO], data: Any, mode: int, writer_args: Optional[Dict[str: Any]] = None) -> None:
+    def __init__(self, writer: Optional[FileWriter], stream: Union[io.BytesIO, io.StringIO], data: Any, mode: int, writer_args: Optional[Dict[str, Any]] = None) -> None:
         """Creates a new job for writing.
 
         :param writer: The file writer to use, with the correct MIME type.
