@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 09:10+0200\n"
+"POT-Creation-Date: 2024-10-09 14:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -458,13 +458,13 @@ msgid ""
 msgstr ""
 
 #, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There were no models in <filename>{0}</filename>."
 msgstr ""
 
 #, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There were no models in <filename>{0}</filename>."
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
 msgstr ""
 
 msgctxt "@action:description"
@@ -591,6 +591,46 @@ msgid "{application_name} {version_number} provides a better and more reliable p
 msgstr ""
 
 msgctxt "description"
+msgid "Enables saving to local files."
+msgstr ""
+
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr ""
+
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr ""
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr ""
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr ""
+
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr ""
+
+msgctxt "name"
+msgid "Console Logger"
+msgstr ""
+
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr ""
+
+msgctxt "name"
+msgid "File Logger"
+msgstr ""
+
+msgctxt "description"
 msgid "Provides a simple solid mesh view."
 msgstr ""
 
@@ -647,30 +687,6 @@ msgid "Selection Tool"
 msgstr ""
 
 msgctxt "description"
-msgid "Enables saving to local files."
-msgstr ""
-
-msgctxt "name"
-msgid "Local File Output Device"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr ""
-
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr ""
-
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr ""
-
-msgctxt "name"
-msgid "Update Checker"
-msgstr ""
-
-msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
 msgstr ""
 
@@ -700,20 +716,4 @@ msgstr ""
 
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
-msgstr ""
-
-msgctxt "description"
-msgid "Outputs log information to the console."
-msgstr ""
-
-msgctxt "name"
-msgid "Console Logger"
-msgstr ""
-
-msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
-msgstr ""
-
-msgctxt "name"
-msgid "File Logger"
 msgstr ""

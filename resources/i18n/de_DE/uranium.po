@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 09:10+0200\n"
+"POT-Creation-Date: 2024-10-09 14:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -569,14 +569,14 @@ msgid ""
 msgstr "Beim Deinstallieren des Pakets {package} vor dem Installieren einer neuen Version trat ein Fehler auf:{error}.Versuchen Sie später erneut, die Aktualisierung durchzuführen."
 
 #, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Beim Deinstallieren der folgenden Pakete traten Fehler auf:{packages}"
-
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There were no models in <filename>{0}</filename>."
 msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."
+
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr "Beim Deinstallieren der folgenden Pakete traten Fehler auf:{packages}"
 
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
