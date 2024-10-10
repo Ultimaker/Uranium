@@ -48,7 +48,7 @@ class MeshData:
     """
 
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
-                 center_position=None, zero_position=None, type = MeshType.faces, attributes=None) -> None:
+                 center_position=None, zero_position=None, type = MeshType.faces, attributes=None, mesh_id=None) -> None:
         self._application = None  # Initialize this later otherwise unit tests break
 
         self._vertices = NumPyUtil.immutableNDArray(vertices)
@@ -60,6 +60,7 @@ class MeshData:
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = type
         self._file_name = file_name  # type: Optional[str]
+        self._mesh_id: Optional[str] = mesh_id
         # original center position
         self._center_position = center_position
         # original zero position, is changed after transformation
@@ -93,7 +94,7 @@ class MeshData:
                 self._application.getController().getScene().removeWatchedFile(self._file_name)
 
     def set(self, vertices=Reuse, normals=Reuse, indices=Reuse, colors=Reuse, uvs=Reuse, file_name=Reuse,
-            center_position=Reuse, zero_position=Reuse, attributes=Reuse) -> "MeshData":
+            center_position=Reuse, zero_position=Reuse, attributes=Reuse, mesh_id=Reuse) -> "MeshData":
         """Create a new MeshData with specified changes
 
         :return: :type{MeshData}
@@ -105,12 +106,14 @@ class MeshData:
         colors = colors if colors is not Reuse else self._colors
         uvs = uvs if uvs is not Reuse else self._uvs
         file_name = file_name if file_name is not Reuse else self._file_name
+        mesh_id = mesh_id if mesh_id is not Reuse else self._mesh_id
         center_position = center_position if center_position is not Reuse else self._center_position
         zero_position = zero_position if zero_position is not Reuse else self._zero_position
         attributes = attributes if attributes is not Reuse else self._attributes
 
         return MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
-                        file_name=file_name, center_position=center_position, zero_position=zero_position, attributes=attributes)
+                        file_name=file_name, center_position=center_position, zero_position=zero_position,
+                        attributes=attributes, mesh_id=mesh_id)
 
     def getHash(self):
         m = hashlib.sha256()
@@ -183,6 +186,9 @@ class MeshData:
 
     def getFileName(self) -> Optional[str]:
         return self._file_name
+
+    def getMeshId(self) -> Optional[str]:
+        return self._mesh_id
 
     def getTransformed(self, transformation: Matrix) -> "MeshData":
         """Transform the meshdata, center and zero position by given Matrix
