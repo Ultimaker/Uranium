@@ -363,16 +363,16 @@ class SettingPropertyProvider(QObject):
                 # logic to emit pyqtSignals is gone.
                 return
 
-        self._updateStackLevels()
-        if has_values_changed:
-            try:
+        try:
+            self._updateStackLevels()
+            if has_values_changed:
                 self.propertiesChanged.emit()
-            except RuntimeError:
-                # QtObject has been destroyed, no need to handle the signals anymore.
-                # This can happen when the QtObject in C++ has been destroyed, but the python object hasn't quite
-                # caught on yet. Once we call any signals, it will cause a runtimeError since all the underlying
-                # logic to emit pyqtSignals is gone.
-                return
+        except RuntimeError:
+            # QtObject has been destroyed, no need to handle the signals anymore.
+            # This can happen when the QtObject in C++ has been destroyed, but the python object hasn't quite
+            # caught on yet. Once we call any signals, it will cause a runtimeError since all the underlying
+            # logic to emit pyqtSignals is gone.
+            return
 
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:
