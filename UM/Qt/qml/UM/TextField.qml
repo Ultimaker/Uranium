@@ -30,6 +30,9 @@ TextField
     placeholderTextColor: UM.Theme.getColor("text_field_text_disabled")
     selectionColor: UM.Theme.getColor("text_selection")
 
+    // Force getting focus on press to fix selection by triple-click
+    onPressed: forceActiveFocus()
+
     background: UM.UnderlineBackground
     {
         id: background
