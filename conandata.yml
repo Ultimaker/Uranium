@@ -4,7 +4,7 @@ requirements:
   - "pyarcus/[>=5.4.0]@ultimaker/cura_11622"
 
 pip_requirements:
-  any:
+  any_os:
     PyQt6:
       version: "6.6.0"
       hashes:
@@ -353,10 +353,11 @@ pip_requirements:
         - sha256:ffa75af20b44f8dba823498024771d5ac50620e6915abac414251bd971b4529f
 
 pip_requirements_dev:
-  - pytest
-  - twisted
-  - pytest-benchmark
-  - sip
+  any_os:
+    pytest: {}
+    twisted: {}
+    pytest-benchmark: {}
+    sip: {}
 
 python_translation_source_folders:
   - UM
