@@ -2,13 +2,17 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
-import UM 1.5 as UM
+import UM 1.7 as UM
 
 Item
 {
     width: childrenRect.width
     height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "uranium"}
+
+    property string xText
+    property string yText
+    property string zText
 
     UM.ToolbarButton
     {
@@ -89,6 +93,110 @@ Item
         checked: UM.Controller.properties.getValue("RotationSnap")
         onClicked: UM.Controller.setProperty("RotationSnap", checked)
     }
+
+    Grid
+    {
+        id: textfields
+
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors.top: snapRotationCheckbox.bottom
+
+        columns: 2
+        flow: Grid.TopToBottom
+        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
+
+        UM.Label
+        {
+            height: UM.Theme.getSize("setting_control").height
+            text: "X"
+            color: UM.Theme.getColor("x_axis")
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+
+        UM.Label
+        {
+            height: UM.Theme.getSize("setting_control").height
+            text: "Y"
+            color: UM.Theme.getColor("z_axis"); // This is intentional. The internal axis are switched.
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+
+        UM.Label
+        {
+            height: UM.Theme.getSize("setting_control").height
+            text: "Z"
+            color: UM.Theme.getColor("y_axis"); // This is intentional. The internal axis are switched.
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+
+		UM.TextFieldWithUnit
+        {
+            id: xangleTextField
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "degrees"
+            text: xText
+
+            onEditingFinished:
+            {
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.Controller.setProperty("RX", modified_text)
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    xText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
+                    xText = 0
+                }
+            }
+        }
+        UM.TextFieldWithUnit
+        {
+            id: yangleTextField
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "degrees"
+            text: yText
+
+            onEditingFinished:
+            {
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.Controller.setProperty("RY", modified_text)
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    yText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
+                    yText = 0
+                }
+            }
+        }
+        UM.TextFieldWithUnit
+        {
+            id: zangleTextField
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "degrees"
+            text: zText
+
+            onEditingFinished:
+            {
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.Controller.setProperty("RZ", modified_text)
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    zText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
+                    zText = 0
+                }
+            }
+        }
+
+	}
 
     Binding
     {
