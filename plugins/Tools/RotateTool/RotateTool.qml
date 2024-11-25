@@ -135,7 +135,7 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
-            text: xText
+            text: UM.Controller.properties.getValue("RX")
 
             onEditingFinished:
             {
@@ -157,7 +157,7 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
-            text: yText
+            text: UM.Controller.properties.getValue("RY")
 
             onEditingFinished:
             {
@@ -179,7 +179,7 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
-            text: zText
+            text: UM.Controller.properties.getValue("RZ")
 
             onEditingFinished:
             {
