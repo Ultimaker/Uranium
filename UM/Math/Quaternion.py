@@ -285,6 +285,24 @@ class Quaternion:
         q.setByAngleAxis(angle, axis)
         return q
 
+    def getAngleOnAxis(self, axis: Vector) -> float:
+        """
+        Retrieve the angle of rotation around a specific axis.
+
+        :param axis: :type{Vector} The axis to compute the rotation angle around.
+        :return: The angle of rotation in radians.
+        """
+        normalized_axis = axis.normalized()
+
+        # Project the quaternion's axis onto the given axis.
+        axis_dot = normalized_axis.x * self.x + normalized_axis.y * self.y + normalized_axis.z * self.z
+        rotation_length = math.sqrt(axis_dot ** 2 + self.w ** 2)
+
+        # Compute the angle of rotation (half-angle is stored in w).
+        calculated_angle = 2 * math.atan2(axis_dot, self.w)
+
+        return calculated_angle
+
     def __repr__(self):
         return "Quaternion(x={0}, y={1}, z={2}, w={3})".format(self.x, self.y, self.z, self.w)
 

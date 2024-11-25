@@ -48,6 +48,9 @@ class RotateTool(Tool):
         self._snap_angle = math.radians(15)
 
         self._angle = None
+        self._x_angle = 0
+        self._y_angle = 0
+        self._z_angle = 0
         self._angle_update_time = None
 
         self._shortcut_key = Qt.Key.Key_R
@@ -232,44 +235,56 @@ class RotateTool(Tool):
     def setRX(self, rx: str) -> None:
         angle = float(rx)
         _angle = math.radians(angle)
-        if self._angle == math.radians(angle):
-            return True
-        elif self._angle:
-            angle = angle - float(math.degrees(self._angle))
+        if self._x_angle == math.radians(angle):
+            return
+        elif self._x_angle:
+            angle = angle - float(math.degrees(self._x_angle))
         self._rotateModel(angle, Vector.Unit_X)
-        self._angle = _angle
+        self._x_angle = _angle
         self.propertyChanged.emit()
 
     def setRY(self, ry: str) -> None:
         angle = float(ry)
         _angle = math.radians(angle)
-        if self._angle == math.radians(angle):
-            return True
-        elif self._angle:
-            angle = angle - float(math.degrees(self._angle))
+        if self._y_angle == math.radians(angle):
+            return
+        elif self._y_angle:
+            angle = angle - float(math.degrees(self._y_angle))
         self._rotateModel(angle, Vector.Unit_Y)
-        self._angle = _angle
+        self._y_angle = _angle
         self.propertyChanged.emit()
 
     def setRZ(self, rz: str) -> None:
         angle = float(rz)
         _angle = math.radians(angle)
-        if self._angle == math.radians(angle):
-            return True
-        elif self._angle:
-            angle = angle - float(math.degrees(self._angle))
+        if self._z_angle == math.radians(angle):
+            return
+        elif self._z_angle:
+            angle = angle - float(math.degrees(self._z_angle))
         self._rotateModel(angle, Vector.Unit_Z)
-        self._angle = _angle
+        self._z_angle = _angle
         self.propertyChanged.emit()
 
     def getRX(self) -> float:
-        return 0.0
+        nodelist = self._getSelectedObjectsWithoutSelectedAncestors()
+        for node in nodelist:
+            q = node.getOrientation()
+            self._x_angle = math.ceil(q.getAngleOnAxis(Vector.Unit_X) * 90)
+            return self._x_angle
 
     def getRY(self) -> float:
-        return 0.0
+        nodelist = self._getSelectedObjectsWithoutSelectedAncestors()
+        for node in nodelist:
+            q = node.getOrientation()
+            self._y_angle = math.ceil(q.getAngleOnAxis(Vector.Unit_Y) * 90)
+            return self._y_angle
 
     def getRZ(self) -> float:
-        return 0.0
+        nodelist = self._getSelectedObjectsWithoutSelectedAncestors()
+        for node in nodelist:
+            q = node.getOrientation()
+            self._z_angle = math.ceil(q.getAngleOnAxis(Vector.Unit_Z) * 90)
+            return self._z_angle
 
     def _onSelectedFaceChanged(self):
         if not self._select_face_mode:
