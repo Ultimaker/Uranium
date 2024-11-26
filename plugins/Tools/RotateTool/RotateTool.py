@@ -307,10 +307,11 @@ class RotateTool(Tool):
     def getRotationSnapAngle(self):
         """Get the number of degrees used in the "snap rotation to N-degree increments" option"""
 
-        return self._snap_angle
+        return math.degrees(self._snap_angle)
 
     def setRotationSnapAngle(self, angle):
         """Set the number of degrees used in the "snap rotation to N-degree increments" option"""
+        angle = math.radians(float(angle))
 
         if angle != self._snap_angle:
             self._snap_angle = angle
