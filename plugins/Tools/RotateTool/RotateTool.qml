@@ -2,13 +2,39 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
-import UM 1.5 as UM
+import UM 1.7 as UM
 
 Item
 {
+    id: base
     width: childrenRect.width
     height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "uranium"}
+
+    property string snapText
+
+    //Rounds a floating point number to 4 decimals. This prevents floating
+    //point rounding errors.
+    //
+    //input:    The number to round.
+    //decimals: The number of decimals (digits after the radix) to round to.
+    //return:   The rounded number.
+    function roundFloat(input, decimals)
+    {
+        //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
+        //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
+        //Then remove any trailing zeroes and the radix.
+        var output = ""
+        if (input !== undefined)
+        {
+            output = input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+        }
+        if (output == "-0")
+        {
+            output = "0"
+        }
+        return output
+    }
 
     UM.ToolbarButton
     {
@@ -77,6 +103,57 @@ Item
         visible: UM.Controller.properties.getValue("SelectFaceSupported") == true //Might be undefined if we're switching away from the RotateTool!
     }
 
+    Grid
+    {
+        id: textfields
+
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors.top: snapRotationCheckbox.bottom
+
+        columns: 2
+        flow: Grid.TopToBottom
+        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
+
+        UM.Label
+        {
+            height: UM.Theme.getSize("setting_control").height
+            text: "Snap Angle"
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+			visible: snapRotationCheckbox.checked
+        }
+
+		UM.TextFieldWithUnit
+        {
+            id: angleTextField
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "degrees"
+            text: snapText
+			visible: snapRotationCheckbox.checked
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
+            onEditingFinished:
+            {
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                if(text !="")
+                {
+                    UM.Controller.setProperty("RotationSnapAngle", modified_text)
+                }
+            }
+
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    snapText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
+                    snapText = UM.Controller.properties.getValue("RotationSnapAngle")
+                }
+            }
+        }
+    }
     UM.CheckBox
     {
         id: snapRotationCheckbox
@@ -102,5 +179,12 @@ Item
         target: alignFaceButton
         property: "checked"
         value: UM.Controller.properties.getValue("SelectFaceToLayFlatMode")
+    }
+
+    Binding
+    {
+        target: base
+        property: "snapText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RotationSnapAngle"), 2)
     }
 }
