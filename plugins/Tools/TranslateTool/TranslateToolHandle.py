@@ -55,7 +55,7 @@ class TranslateToolHandle(ToolHandle):
                 width = self._line_width,
                 height = self._line_width,
                 depth = self._line_length,
-                center = Vector(0, 0, self._handle_position / 2),
+                center = Vector(0, 0, -(self._handle_position / 2)),
                 color = self._z_axis_color
             )
 
@@ -85,10 +85,10 @@ class TranslateToolHandle(ToolHandle):
                 width = self._handle_width,
                 height = self._handle_height,
                 depth = self._handle_width,
-                center = Vector(0, 0, self._handle_position),
+                center = Vector(0, 0, -(self._handle_position)),
                 color = self._z_axis_color,
                 axis = Vector.Unit_X,
-                angle = -90
+                angle = 90
             )
 
         self.setSolidMesh(mb.build())
@@ -117,7 +117,7 @@ class TranslateToolHandle(ToolHandle):
                 width = self._active_line_width,
                 height = self._active_line_width,
                 depth = self._active_line_length,
-                center = Vector(0, 0, self._active_handle_position / 2),
+                center = Vector(0, 0, -(self._active_handle_position / 2)),
                 color = self._z_axis_color
             )
 
@@ -142,7 +142,7 @@ class TranslateToolHandle(ToolHandle):
             width = self._active_handle_width,
             height = self._active_handle_width,
             depth = self._active_handle_width,
-            center = Vector(0, 0, self._active_handle_position),
+            center = Vector(0, 0, -(self._active_handle_position)),
             color = ToolHandle.ZAxisSelectionColor
         )
         self.setSelectionMesh(mb.build())
