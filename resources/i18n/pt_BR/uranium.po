@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 09:10+0200\n"
+"POT-Creation-Date: 2024-10-09 14:31+0200\n"
 "PO-Revision-Date: 2023-10-23 05:16+0200\n"
 "Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
 "Language-Team: Cláudio Sampaio\n"
@@ -580,14 +580,14 @@ msgstr ""
 "Por favor tente atualizar novamente mais tarde."
 
 #, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Houve alguns erros ao desinstalar os seguintes pacotes: {packages}"
-
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "There were no models in <filename>{0}</filename>."
 msgstr "Não há modelos em <filename>{0}</filename>."
+
+#, python-brace-format
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
+msgstr "Houve alguns erros ao desinstalar os seguintes pacotes: {packages}"
 
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."

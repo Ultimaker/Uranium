@@ -37,6 +37,7 @@ class MeshBuilder:
         self._face_count = 0
         self._type = MeshType.faces
         self._file_name = None  # type: Optional[str]
+        self._mesh_id: Optional[str] = None
         # original center position
         self._center_position = None  # type: Optional[Vector]
 
@@ -48,7 +49,7 @@ class MeshBuilder:
 
         return MeshData(vertices = self.getVertices(), normals = self.getNormals(), indices = self.getIndices(),
                         colors = self.getColors(), uvs = self.getUVCoordinates(), file_name = self.getFileName(),
-                        center_position = self.getCenterPosition())
+                        center_position = self.getCenterPosition(), mesh_id = self.getMeshId())
 
     def setCenterPosition(self, position: Optional[Vector]) -> None:
         self._center_position = position
@@ -165,6 +166,12 @@ class MeshBuilder:
 
     def setFileName(self, file_name: Optional[str]) -> None:
         self._file_name = file_name
+
+    def getMeshId(self) -> Optional[str]:
+        return self._mesh_id
+
+    def setMeshId(self, mesh_id: Optional[str]) -> None:
+        self._mesh_id = mesh_id
 
     def reserveFaceCount(self, num_faces: int) -> None:
         """Set the amount of faces before loading data to the mesh.

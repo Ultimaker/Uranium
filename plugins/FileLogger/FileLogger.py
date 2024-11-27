@@ -5,6 +5,8 @@ import logging
 import logging.handlers
 from typing import Set
 
+from logging import StreamHandler, FileHandler
+
 from UM.Logger import LogOutput
 from UM.Resources import Resources
 from UM.VersionUpgradeManager import VersionUpgradeManager
@@ -33,6 +35,22 @@ class FileLogger(LogOutput):
             self._logger.addHandler(file_handler)
         else:
             pass  # TODO, add handling
+
+    def flush(self) -> None:
+        """Flushes all the open output streams"""
+        for handler in self._logger.handlers:
+            if isinstance(handler, StreamHandler):
+                handler.flush()
+
+    def getFilesPaths(self) -> list[str]:
+        """Gets the list of paths to files currently open for log writing"""
+        files_paths = []
+
+        for handler in self._logger.handlers:
+            if isinstance(handler, FileHandler):
+                files_paths.append(handler.baseFilename)
+
+        return files_paths
 
     def log(self, log_type: str, message: str) -> None:
         """Log message to file. 

@@ -1,24 +1,21 @@
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-08 09:10+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2024-10-30 02:17+0000\n"
+"Last-Translator: h1data <h1data@users.noreply.github.com>\n"
+"Language-Team: Japanese <https://github.com/h1data/Cura/wiki>\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
-msgstr "前のバージョン {0} のコンフィグレーションが取り込まれました。"
+msgstr "過去のバージョン {0} のコンフィグレーションがインポートされました。"
 
-#, python-brace-format
 msgctxt "@error:Required plugins not found"
 msgid "A number of plugins are required, but could not be loaded: {plugins}"
 msgstr "多数のプラグインが必要ですが、読み込めませんでした：{plugins}"
@@ -29,12 +26,11 @@ msgstr "中止"
 
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
-msgstr "全てのファイル"
+msgstr "全てのファイル (*)"
 
-#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
-msgstr "すべてのサポートのタイプ ({0})"
+msgstr "サポートされたすべてのタイプ ({0})"
 
 msgctxt "@option"
 msgid "Apply"
@@ -42,9 +38,8 @@ msgstr "適用"
 
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "%1を取り外しますか？この作業はやり直しが効きません！"
+msgstr "%1を取り外しますか？この操作は取り消しできません。"
 
-#, fuzzy, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "元のサイズの{0}%まで自動的にスケールされたモデル"
@@ -61,22 +56,21 @@ msgctxt "@option"
 msgid "Cancel"
 msgstr "キャンセル"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "<filename>{0}</filename>のファイルタイプは開けません"
 
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
-msgstr "アップデートがあるか確認する"
+msgstr "アップデートを確認"
 
 msgctxt "description"
 msgid "Checks for updates of the software."
-msgstr "ソフトウェアのアップデートを確認中。"
+msgstr "ソフトウェアのアップデートを確認する。"
 
 msgctxt "@option"
 msgid "Close"
-msgstr "閉める"
+msgstr "閉じる"
 
 msgctxt "@info:title"
 msgid "Configuration errors"
@@ -84,20 +78,19 @@ msgstr "構成エラー"
 
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr "モデルを取り除きました"
+msgstr "モデルを削除しました"
 
 msgctxt "name"
 msgid "Console Logger"
 msgstr "コンソールロガー"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "<filename>{0}</filename>を保存できませんでした: <message>{1}</message>"
 
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "重要なOpenGLの拡張子が見つかりません。このプログラムではフレームバファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
+msgstr "重要なOpenGLの拡張が見つかりません。このプログラムではフレームバッファーオブジェクトのサポートが必須です。ビデオカードドライバーをチェックしてください。"
 
 msgctxt "@option"
 msgid "Discard"
@@ -113,7 +106,7 @@ msgstr "ダウンロード"
 
 msgctxt "@option:check"
 msgid "Drop Down Model"
-msgstr "ドロップダウンモデル"
+msgstr "モデルを下ろす"
 
 msgctxt "description"
 msgid "Enables saving to local files."
@@ -127,15 +120,13 @@ msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "OpenGLの初期化に失敗しました"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
-msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできない可能性があります。"
+msgstr "<filename>{0}</filename>の読み込みに失敗しました。ファイルが破損しているか、アクセスできない可能性があります。"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
-msgstr "<filename>{0}</filename>を読み込むのに失敗しました。ファイルが破損しているか、アクセスできないか、モデルが含まれていませんでした。"
+msgstr "<filename>{0}</filename>の読み込みに失敗しました。ファイルが破損しているか、アクセスできないか、モデルが含まれていません。"
 
 msgctxt "@title:window"
 msgid "File Already Exists"
@@ -147,7 +138,7 @@ msgstr "ファイルロガー"
 
 msgctxt "@info:title"
 msgid "File Saved"
-msgstr "ファイル保存"
+msgstr "ファイル保存完了"
 
 msgctxt "@info:title"
 msgid "File has been modified"
@@ -173,7 +164,6 @@ msgctxt "@info:progress"
 msgid "Initializing package manager..."
 msgstr "パッケージマネージャーを初期化中..."
 
-#, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "プラグイン{package_id}をインストール中..."
@@ -184,7 +174,7 @@ msgstr "無効なファイル"
 
 msgctxt "@action:button"
 msgid "Lay flat"
-msgstr "平らに置く"
+msgstr "平らに配置"
 
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
@@ -202,18 +192,17 @@ msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "UIをロード中..."
 
-#, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
 msgstr "プラグイン{plugin_id}をロード中..."
 
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr "プラグインをロードする..."
+msgstr "プラグインをロード中..."
 
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr "プレファレンスをロード中..."
+msgstr "環境設定をロード中..."
 
 msgctxt "name"
 msgid "Local Container Provider"
@@ -229,19 +218,19 @@ msgstr "ローカルファイルアウトプットデバイス"
 
 msgctxt "@option:check"
 msgid "Lock Model"
-msgstr "モデルのロック"
+msgstr "モデルをロック"
 
 msgctxt "description"
 msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
+msgstr "Wavefront OBJファイルの書き出しを可能にします。"
 
 msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "ウェイブフロントOBJファイルの書き出しを可能にします。"
+msgstr "Wavefront OBJファイルの書き出しを可能にします。"
 
 msgctxt "@label"
 msgid "Mirror"
-msgstr "反転させる"
+msgstr "反転"
 
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
@@ -253,15 +242,15 @@ msgstr "ミラーツール"
 
 msgctxt "@action:button"
 msgid "Move"
-msgstr "動かす"
+msgstr "移動"
 
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr "モデルを動かす"
+msgstr "モデルを移動する"
 
 msgctxt "name"
 msgid "Move Tool"
-msgstr "ムーブツール"
+msgstr "移動ツール"
 
 msgctxt "@option"
 msgid "No"
@@ -273,7 +262,7 @@ msgstr "ファイルにモデルがありません"
 
 msgctxt "@info"
 msgid "No new version was found."
-msgstr "新しいバージョンが見つかりました。"
+msgstr "新しいバージョンは見つかりませんでした。"
 
 msgctxt "@option"
 msgid "No to All"
@@ -281,7 +270,7 @@ msgstr "すべていいえ"
 
 msgctxt "@error:not supported"
 msgid "OBJWriter does not support non-text mode."
-msgstr "OBJWriter は非テキストモードはサポートしていません。"
+msgstr "OBJWriterは非テキストモードをサポートしていません。"
 
 msgctxt "@action:button"
 msgid "OK"
@@ -309,16 +298,15 @@ msgstr "ファイルが入ったフォルダーを開く"
 
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr "ログ情報を設定フォルダーのファイルにアウトプットする。"
+msgstr "ログ情報を設定フォルダーのファイルに出力。"
 
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr "ログ情報をコンソールにアウトプットする。"
+msgstr "ログ情報をコンソールに出力。"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "<filename>{0}</filename>保存中に却下されました"
+msgstr "<filename>{0}</filename>を保存する権限がありません"
 
 msgctxt "@info"
 msgid "Please provide a new name."
@@ -334,7 +322,7 @@ msgstr "プラグイン{}は検証できなかったため、読み込まれて�
 
 msgctxt "@title:window"
 msgid "Preferences"
-msgstr "プレファレンス"
+msgstr "環境設定"
 
 msgctxt "@title:tab"
 msgid "Printers"
@@ -342,7 +330,7 @@ msgstr "プリンター"
 
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
-msgstr "シンプルソリッドメッシュビューを供給する。"
+msgstr "シンプルなソリッドメッシュビューを提供します。"
 
 msgctxt "description"
 msgid "Provides built-in setting containers that come with the installation of the application."
@@ -350,39 +338,39 @@ msgstr "アプリケーションのインストール時に導入されるビル
 
 msgctxt "description"
 msgid "Provides support for reading STL files."
-msgstr "STLファイルを読み込むためのサポートを供給する。"
+msgstr "STLファイル読み込み機能を提供します。"
 
 msgctxt "description"
 msgid "Provides support for writing STL files."
-msgstr "STLファイルを書き出すためのサポートを供給する。"
+msgstr "STLファイル書き出し機能を提供します。"
 
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr "ミラーツールを供給する。"
+msgstr "反転ツールを提供します。"
 
 msgctxt "description"
 msgid "Provides the Move tool."
-msgstr "ムーブツールを供給する。"
+msgstr "移動ツールを提供します。"
 
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr "回転ツールを供給する。"
+msgstr "回転ツールを提供します。"
 
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr "スケールツールを供給すｒ。"
+msgstr "拡大／縮小ツールを提供します。"
 
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr "セレクションツールを供給する。"
+msgstr "選択ツールを提供します。"
 
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr "カメラを操作するためのツールを供給する。"
+msgstr "カメラ操作ツールを提供します。"
 
 msgctxt "@action:button"
 msgid "Reload"
-msgstr "再ロード"
+msgstr "再読込"
 
 msgctxt "@action:button"
 msgid "Remove plugin"
@@ -390,11 +378,11 @@ msgstr "プラグインを削除"
 
 msgctxt "@title:window"
 msgid "Rename"
-msgstr "名前を変える"
+msgstr "名称変更"
 
 msgctxt "@action:button"
 msgid "Reset"
-msgstr "リセットする"
+msgstr "リセット"
 
 msgctxt "@option"
 msgid "Reset"
@@ -402,7 +390,7 @@ msgstr "リセットする"
 
 msgctxt "@title:window"
 msgid "Reset to factory"
-msgstr "工場リセット"
+msgstr "ファクトリーリセット"
 
 msgctxt "@label"
 msgid "Reset will remove all your current printers and profiles! Are you sure you want to reset?"
@@ -418,7 +406,7 @@ msgstr "リトライ"
 
 msgctxt "@label"
 msgid "Rotate"
-msgstr "回転させる"
+msgstr "回転"
 
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
@@ -434,7 +422,7 @@ msgstr "STLファイル"
 
 msgctxt "@item:inlistbox"
 msgid "STL File (ASCII)"
-msgstr "STLファイル（ASCII)"
+msgstr "STLファイル (ASCII)"
 
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
@@ -468,7 +456,6 @@ msgctxt "@title:window"
 msgid "Save to Disk"
 msgstr "ディスクに保存する"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "<filename>{0}</filename>に保存しました"
@@ -477,26 +464,25 @@ msgctxt "@info:title"
 msgid "Saving"
 msgstr "保存中"
 
-#, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "<filename>{0}</filename>に保存する"
 
 msgctxt "@label"
 msgid "Scale"
-msgstr "スケールする"
+msgstr "拡大／縮小"
 
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr "モデルをスケールする"
+msgstr "モデルを拡大／縮小する"
 
 msgctxt "name"
 msgid "Scale Tool"
-msgstr "スケールツール"
+msgstr "拡大／縮小ツール"
 
 msgctxt "@info:title"
 msgid "Scaling Object"
-msgstr "造形物をスケールする"
+msgstr "造形物を拡大／縮小する"
 
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
@@ -504,7 +490,7 @@ msgstr "ビルドプレートに合わせる面を選択します"
 
 msgctxt "name"
 msgid "Selection Tool"
-msgstr "セレクションツール"
+msgstr "選択ツール"
 
 msgctxt "@title:tab"
 msgid "Settings"
@@ -520,13 +506,12 @@ msgstr "シンプルビュー"
 
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
-msgstr "スナップローテーション"
+msgstr "段階的に回転"
 
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr "スナップスケーリング"
+msgstr "段階的に拡大／縮小"
 
-#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "<filename>{0}</filename> は既に存在します。ファイルを上書きしますか？"
@@ -535,22 +520,25 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "プラグインがインストールされました。アプリケーションを再起動して、プラグインをアクティベートしてください。"
+msgstr ""
+"プラグインがインストールされました。\n"
+"アプリケーションを再起動して、プラグインをアクティベートしてください。"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "The plugin has been removed.\n"
 "Please restart {0} to finish uninstall."
-msgstr "プラグインが外されました。{0} を再起動してアンインストールを終了してください。"
+msgstr ""
+"プラグインが削除されました。\n"
+"{0} を再起動してアンインストールを終了してください。"
 
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
-msgstr "プラグイン{}を読み込むことができませんでした。プラグインを再インストールすると、問題が解決する場合があります。"
+msgstr "プラグイン{}を読み込めませんでした。プラグインを再インストールすると、問題が解決する場合があります。"
 
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr "ご使用のバージョンはアップデート更新通知をサポートしていません。"
+msgstr "ご使用のバージョンはアップデート更新チェックをサポートしていません。"
 
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
@@ -560,22 +548,22 @@ msgctxt "@error:no mesh"
 msgid "There is no mesh to write."
 msgstr "書き込むメッシュがありません。"
 
-#, python-brace-format
 msgctxt "@error:update"
 msgid ""
 "There was an error uninstalling the package {package} before installing new version:\n"
 "{error}.\n"
 "Please try to upgrade again later."
-msgstr "新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:{error}.後からアップグレードをやり直してください。"
+msgstr ""
+"新しいバージョンをインストールする前に、パッケージ {package} のアンインストールでエラーが発生しました:\n"
+"{error}\n"
+"後ほどアップグレードをやり直してください。"
 
-#, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
 msgstr "次のパッケージのアンインストールでエラーが発生しました:{packages}"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There were no models in <filename>{0}</filename>."
+msgid "There where no models in <filename>{0}</filename>."
 msgstr "<filename>{0}</filename>にはモデルがありませんでした。"
 
 msgctxt "@action:description"
@@ -586,7 +574,6 @@ msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
 msgstr "ディスクへ"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
 msgstr "最新のベータ版をお試しいただき、{application_name}の改善にご協力ください。"
@@ -601,7 +588,7 @@ msgstr "ファイルを開けません"
 
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr "ユニフォームスケーリング"
+msgstr "縦・横・高さの比を維持"
 
 msgctxt "@info:title"
 msgid "Uninstalling errors"
@@ -609,7 +596,7 @@ msgstr "アンインストールエラー"
 
 msgctxt "@error:not supported"
 msgid "Unsupported output mode writing STL to stream."
-msgstr "サポートされていない出力モードで STL をストリームに書き込んでいます。"
+msgstr "サポートされていない出力モードでSTLをストリームに書き込んでいます。"
 
 msgctxt "@item:inmenu"
 msgid "Update Checker"
@@ -621,7 +608,7 @@ msgstr "アップデートチェッカー"
 
 msgctxt "@info:progress"
 msgid "Updating configuration..."
-msgstr "コンフィグレーションをアップデートする..."
+msgstr "コンフィグレーションをアップデート中..."
 
 msgctxt "@info:title"
 msgid "Updating error"
@@ -637,17 +624,16 @@ msgstr "警告"
 
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
-msgstr "ウェーブフロントOBJファイル"
+msgstr "Wavefront OBJファイル"
 
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
-msgstr "ウェイブフロントOBJリーダー"
+msgstr "Wavefront OBJリーダー"
 
 msgctxt "name"
 msgid "Wavefront OBJ Writer"
-msgstr "ウェイブフロントOBJライター"
+msgstr "Wavefront OBJライター"
 
-#, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "{filename}を再ロードしますか？"
@@ -664,51 +650,47 @@ msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "構成が破損している可能性があります。"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
 "- {profiles}\n"
 " Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：- {profiles}工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
+msgstr ""
+"構成が破損している可能性があります。以下のプロファイルでエラーが発生しています：\n"
+"- {profiles}\n"
+"工場出荷状態にリセットしますか？リセットすると使用してるすべてのプリンターおよびプロファイルが削除されます。"
 
-#, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}日 {1:0>2}時間 {2:0>2}分"
 
-#, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}時間 {1:0>2}分"
 
-#, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0}日"
 
-#, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0}時間"
 
-#, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0}分"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "{application_name} {version_number} が利用可能です！"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
-msgstr "{application_name} {version_number} なら、より優れた信頼性の隊かい印刷体験が得られます。"
+msgstr "{application_name} {version_number} なら、より優れた信頼性の高い印刷体験が得られます。"
 
-#~ msgid "Provides a simple solid mesh view."
-#~ msgstr "シンプルなソリッドメッシュビューを提供します。"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There were no models in <filename>{0}</filename>."
+msgstr "<filename>{0}</filename>にはモデルがありませんでした。"

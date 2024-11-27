@@ -1,9 +1,8 @@
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 09:10+0200\n"
+"POT-Creation-Date: 2024-03-13 09:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,12 +12,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "Eine Konfiguration einer älteren Version von {0} wurde importiert."
 
-#, python-brace-format
 msgctxt "@error:Required plugins not found"
 msgid "A number of plugins are required, but could not be loaded: {plugins}"
 msgstr "Eine Reihe von Plug-ins werden benötigt, konnten aber nicht geladen werden: {plugins}"
@@ -31,7 +28,6 @@ msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Alle Dateien (*)"
 
-#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Alle unterstützten Typen ({0})"
@@ -44,7 +40,6 @@ msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr "Möchten Sie %1 wirklich entfernen? Dies kann nicht rückgängig gemacht werden!"
 
-#, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "Automatische Skalierung des Modells auf {0} % der Originalgröße"
@@ -61,7 +56,6 @@ msgctxt "@option"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "Dateien des Typs <filename>{0}</filename> können nicht geöffnet werden"
@@ -90,7 +84,6 @@ msgctxt "name"
 msgid "Console Logger"
 msgstr "Konsolen-Protokolleinrichtung"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Konnte nicht als <filename>{0}</filename> gespeichert werden: <message>{1}</message>"
@@ -127,12 +120,10 @@ msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "OpenGL konnte nicht initialisiert werden"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
 msgstr "<filename>{0}</filename> konnte nicht geladen werden. Die Datei könnte fehlerhaft oder unzugänglich sein."
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
 msgstr "<filename>{0}</filename> konnte nicht geladen werden. Die Datei könnte beschädigt oder unzugänglich sein, oder sie enthielt keine Modelle."
@@ -173,7 +164,6 @@ msgctxt "@info:progress"
 msgid "Initializing package manager..."
 msgstr "Paketmanager wird initialisiert ..."
 
-#, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "Plugin {package_id} wird installiert..."
@@ -202,7 +192,6 @@ msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "Benutzeroberfläche wird geladen..."
 
-#, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
 msgstr "Plugin {plugin_id} wird geladen..."
@@ -315,7 +304,6 @@ msgctxt "description"
 msgid "Outputs log information to the console."
 msgstr "Gibt Protokoll-Informationen an die Konsole weiter."
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Beim Versuch <filename>{0}</filename> zu speichern, wird der Zugriff verweigert"
@@ -468,7 +456,6 @@ msgctxt "@title:window"
 msgid "Save to Disk"
 msgstr "Auf Festplatte speichern"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Wurde als <filename>{0}</filename> gespeichert"
@@ -477,7 +464,6 @@ msgctxt "@info:title"
 msgid "Saving"
 msgstr "Wird gespeichert"
 
-#, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Wird gespeichert unter <filename>{0}</filename>"
@@ -526,23 +512,19 @@ msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Snap-Skalierung"
 
-#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Die Datei <filename>{0}</filename> ist bereits vorhanden. Soll die Datei wirklich überschrieben werden?"
 
 msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr "Das Plugin wurde installiert.Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
+msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
+msgstr "Das Plugin wurde installiert."
+"Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
 
-#, python-brace-format
 msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr "Das Plugin wurde entfernt.Bitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
+msgid "The plugin has been removed.\nPlease restart {0} to finish uninstall."
+msgstr "Das Plugin wurde entfernt."
+"Bitte starten Sie {0} erneut, um die Deinstallation abzuschließen."
 
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
@@ -560,22 +542,19 @@ msgctxt "@error:no mesh"
 msgid "There is no mesh to write."
 msgstr "Es ist kein Mesh zum Schreiben vorhanden."
 
-#, python-brace-format
 msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr "Beim Deinstallieren des Pakets {package} vor dem Installieren einer neuen Version trat ein Fehler auf:{error}.Versuchen Sie später erneut, die Aktualisierung durchzuführen."
+msgid "There was an error uninstalling the package {package} before installing new version:\n{error}.\nPlease try to upgrade again later."
+msgstr "Beim Deinstallieren des Pakets {package} vor dem Installieren einer neuen Version trat ein Fehler auf:"
+"{error}."
+"Versuchen Sie später erneut, die Aktualisierung durchzuführen."
 
-#, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "Beim Deinstallieren der folgenden Pakete traten Fehler auf:{packages}"
+msgstr "Beim Deinstallieren der folgenden Pakete traten Fehler auf:"
+"{packages}"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There were no models in <filename>{0}</filename>."
+msgid "There where no models in <filename>{0}</filename>."
 msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."
 
 msgctxt "@action:description"
@@ -586,7 +565,6 @@ msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
 msgstr "Auf die Festplatte"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
 msgstr "Testen Sie die neueste BETA-Version und helfen Sie uns, {application_name} zu verbessern."
@@ -647,7 +625,6 @@ msgctxt "name"
 msgid "Wavefront OBJ Writer"
 msgstr "Wavefront OBJ-Writer"
 
-#, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "Möchten Sie {filename} neu laden?"
@@ -664,54 +641,46 @@ msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "Ihre Konfiguration scheint beschädigt zu sein."
 
-#, python-brace-format
 msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:- {profiles} Möchten Sie auf die Werkseinstellungen zurücksetzen? Durch das Zurücksetzen werden all Ihre aktuellen Drucker und Profile entfernt."
+msgid "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr "Ihre Konfiguration scheint beschädigt zu sein. Offensichtlich liegt ein Fehler bei den folgenden Profilen vor:"
+"- {profiles}"
+" Möchten Sie auf die Werkseinstellungen zurücksetzen? Durch das Zurücksetzen werden all Ihre aktuellen Drucker und Profile entfernt."
 
-#, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}T. {1:0>2}St. {2:0>2}Mi."
 
-#, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}St. {1:0>2}Mi."
 
-#, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0} Tag"
 msgstr[1] "{0} Tage"
 
-#, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0} Stunde"
 msgstr[1] "{0} Stunden"
 
-#, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0} Minute"
 msgstr[1] "{0} Minuten"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "{application_name} {version_number} ist verfügbar!"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} bietet eine bessere und zuverlässigere Druckerfahrung."
 
-#~ msgid "Provides a simple solid mesh view."
-#~ msgstr "Bietet eine einfache Solid-Mesh-Ansicht."
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There were no models in <filename>{0}</filename>."
+msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."

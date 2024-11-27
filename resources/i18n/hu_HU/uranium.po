@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 09:10+0200\n"
+"POT-Creation-Date: 2024-10-09 14:31+0200\n"
 "PO-Revision-Date: 2019-10-10 22:30+0200\n"
 "Last-Translator: Nagy Attila\n"
 "Language-Team: AT-VLOG <LL@li.org>\n"
@@ -578,13 +578,13 @@ msgstr ""
 "Próbáld meg később a frissítést."
 
 #, python-brace-format
-msgctxt "@error:uninstall"
-msgid "There were some errors uninstalling the following packages: {packages}"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There were no models in <filename>{0}</filename>."
 msgstr ""
 
 #, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There were no models in <filename>{0}</filename>."
+msgctxt "@error:uninstall"
+msgid "There were some errors uninstalling the following packages: {packages}"
 msgstr ""
 
 msgctxt "@action:description"

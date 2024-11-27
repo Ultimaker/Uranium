@@ -1,9 +1,8 @@
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 09:10+0200\n"
+"POT-Creation-Date: 2024-03-13 09:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,12 +12,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "已导入旧版本 {0} 所使用的配置。"
 
-#, python-brace-format
 msgctxt "@error:Required plugins not found"
 msgid "A number of plugins are required, but could not be loaded: {plugins}"
 msgstr "需要一些插件，但是无法加载：{plugins}"
@@ -31,7 +28,6 @@ msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
-#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "所有支持的文件类型 ({0})"
@@ -44,7 +40,6 @@ msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr "您确认要删除 %1？该操作无法恢复！"
 
-#, fuzzy, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "已将模型自动缩放为原有大小的 {0}%"
@@ -61,7 +56,6 @@ msgctxt "@option"
 msgid "Cancel"
 msgstr "取消"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
 msgstr "无法打开文件类型 <filename>{0}</filename>"
@@ -90,7 +84,6 @@ msgctxt "name"
 msgid "Console Logger"
 msgstr "控制台日志记录"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "无法保存到 <filename>{0}</filename>： <message>{1}</message>"
@@ -127,12 +120,10 @@ msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "无法初始化 OpenGL"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt or inaccessible."
 msgstr "无法加载 <filename>{0}</filename>。文件可能已损坏或无法访问。"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>. The file could be corrupt, inaccessible or it did not contain any models."
 msgstr "无法加载 <filename>{0}</filename>。文件可能已损坏或无法访问，或者它未包含任何模型。"
@@ -173,7 +164,6 @@ msgctxt "@info:progress"
 msgid "Initializing package manager..."
 msgstr "正在初始化程序包管理器..."
 
-#, python-brace-format
 msgctxt "@info:progress Don't translate {package_id}"
 msgid "Installing plugin {package_id}..."
 msgstr "正在安装插件 {package_id}..."
@@ -202,7 +192,6 @@ msgctxt "@info:progress"
 msgid "Loading UI..."
 msgstr "正在加载用户界面..."
 
-#, python-brace-format
 msgctxt "@info:progress"
 msgid "Loading plugin {plugin_id}..."
 msgstr "正在加载插件 {plugin_id}..."
@@ -315,7 +304,6 @@ msgctxt "description"
 msgid "Outputs log information to the console."
 msgstr "输出日志信息至控制台。"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "保存 <filename>{0}</filename> 时发生错误：权限不足"
@@ -468,7 +456,6 @@ msgctxt "@title:window"
 msgid "Save to Disk"
 msgstr "保存到磁盘"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "已保存至 <filename>{0}</filename>"
@@ -477,7 +464,6 @@ msgctxt "@info:title"
 msgid "Saving"
 msgstr "正在保存"
 
-#, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "正在保存至 <filename>{0}</filename>"
@@ -526,23 +512,19 @@ msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "等距缩放（Snap Scaling）"
 
-#, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "文件 <filename>{0}</filename> 已存在。 您确定要覆盖它吗？"
 
 msgctxt "@info:status"
-msgid ""
-"The plugin has been installed.\n"
-"Please re-start the application to activate the plugin."
-msgstr "插件已安装。请重新启动应用程序以激活插件。"
+msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
+msgstr "插件已安装。"
+"请重新启动应用程序以激活插件。"
 
-#, python-brace-format
 msgctxt "@info:status"
-msgid ""
-"The plugin has been removed.\n"
-"Please restart {0} to finish uninstall."
-msgstr "插件已移除。请重启 {0} 完成卸载。"
+msgid "The plugin has been removed.\nPlease restart {0} to finish uninstall."
+msgstr "插件已移除。"
+"请重启 {0} 完成卸载。"
 
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
@@ -560,22 +542,19 @@ msgctxt "@error:no mesh"
 msgid "There is no mesh to write."
 msgstr "没有要写入的网格。"
 
-#, python-brace-format
 msgctxt "@error:update"
-msgid ""
-"There was an error uninstalling the package {package} before installing new version:\n"
-"{error}.\n"
-"Please try to upgrade again later."
-msgstr "在安装新版本之前卸载程序包 {package} 时出现了一个错误：{error}。请稍后再次尝试升级。"
+msgid "There was an error uninstalling the package {package} before installing new version:\n{error}.\nPlease try to upgrade again later."
+msgstr "在安装新版本之前卸载程序包 {package} 时出现了一个错误："
+"{error}。"
+"请稍后再次尝试升级。"
 
-#, python-brace-format
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "卸载以下程序包时出现了一些错误：{packages}"
+msgstr "卸载以下程序包时出现了一些错误："
+"{packages}"
 
-#, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There were no models in <filename>{0}</filename>."
+msgid "There where no models in <filename>{0}</filename>."
 msgstr "<filename>{0}</filename> 中没有模型。"
 
 msgctxt "@action:description"
@@ -586,7 +565,6 @@ msgctxt "@item:inmenu About saving files to the hard drive"
 msgid "To Disk"
 msgstr "到磁盘"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid "Try out the latest BETA version and help us improve {application_name}."
 msgstr "试用最新的 BETA 版，帮助我们改进 {application_name}。"
@@ -647,7 +625,6 @@ msgctxt "name"
 msgid "Wavefront OBJ Writer"
 msgstr "Wavefront OBJ 文件写入器"
 
-#, python-brace-format
 msgctxt "@info"
 msgid "Would you like to reload {filename}?"
 msgstr "是否要重新加载 {filename}？"
@@ -664,51 +641,43 @@ msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt."
 msgstr "配置似乎已损坏。"
 
-#, python-brace-format
 msgctxt "@info:status"
-msgid ""
-"Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n"
-"- {profiles}\n"
-" Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "配置似乎已损坏。以下配置文件似乎出现问题：- {profiles} 是否要恢复出厂默认设置？重置将移除当前所有的打印机和配置文件。"
+msgid "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
+msgstr "配置似乎已损坏。以下配置文件似乎出现问题："
+"- {profiles}"
+" 是否要恢复出厂默认设置？重置将移除当前所有的打印机和配置文件。"
 
-#, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}天 {1:0>2}小时 {2:0>2}分钟"
 
-#, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}小时 {1:0>2}分钟"
 
-#, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0} 天"
 
-#, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0} 小时"
 
-#, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0} 分钟"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} is available!"
 msgstr "{application_name} {version_number} 可用！"
 
-#, python-brace-format
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} 提供更好、更可靠的打印体验。"
 
-#~ msgid "Provides a simple solid mesh view."
-#~ msgstr "提供实体网格简化视图。"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
+msgid "There were no models in <filename>{0}</filename>."
+msgstr "<filename>{0}</filename> 中没有模型。"

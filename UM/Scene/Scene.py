@@ -253,15 +253,14 @@ class Scene:
                 renamed_nodes[node.getName()] = 0
 
             # Find the matching scene node to replace
-            scene_node = None
+            mesh_replaced = False
             for replaced_node in replaced_nodes:
-                if replaced_node.getName() == node_name:
-                    scene_node = replaced_node
-                    break
+                mesh_id = replaced_node.getMeshData().getMeshId()
+                if mesh_id is None or mesh_id == mesh_data.getMeshId():
+                    replaced_node.setMeshData(mesh_data)
+                    mesh_replaced = True
 
-            if scene_node:
-                scene_node.setMeshData(mesh_data)
-            else:
-                # Current node is a new one in the file, or it's name has changed
+            if not mesh_replaced:
+                # Current node is a new one in the file, or it's ID has changed
                 # TODO: Load this mesh into the scene. Also alter the "ReloadAll" action in CuraApplication.
                 Logger.log("w", "Could not find matching node for object '{0}' in the scene.", node_name)
