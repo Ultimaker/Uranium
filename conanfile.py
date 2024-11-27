@@ -97,11 +97,6 @@ class UraniumConan(ConanFile):
         if self.settings.os == "Linux":
             self.options["openssl"].shared = True
 
-    def validate(self):
-        if self.version:
-            if Version(self.version) <= Version("4"):
-                raise ConanInvalidConfiguration("Only versions 5+ are support")
-
     def requirements(self):
         for req in self.conan_data["requirements"]:
             self.requires(req)
