@@ -100,8 +100,7 @@ class UraniumConan(ConanFile):
     def requirements(self):
         for req in self.conan_data["requirements"]:
             self.requires(req)
-        self.requires("cpython/3.12.2")
-        self.requires("openssl/3.2.1")
+        self.requires("cpython/3.12.7")
 
     def build_requirements(self):
         if self.options.get_safe("enable_i18n", False):
