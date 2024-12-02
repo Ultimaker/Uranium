@@ -112,6 +112,7 @@ Item
 
         anchors.leftMargin: UM.Theme.getSize("default_margin").width
         anchors.top: snapRotationCheckbox.bottom
+        visible: snapRotationCheckbox.checked
 
         columns: 2
         flow: Grid.TopToBottom
@@ -122,7 +123,6 @@ Item
             height: UM.Theme.getSize("setting_control").height
             text: "Snap Angle"
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
-			visible: snapRotationCheckbox.checked
         }
 
 		UM.TextFieldWithUnit
@@ -132,7 +132,7 @@ Item
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
             text: snapText
-			visible: snapRotationCheckbox.checked
+
             validator: UM.FloatValidator
             {
                 maxBeforeDecimal: 3
@@ -146,7 +146,6 @@ Item
                     UM.Controller.setProperty("RotationSnapAngle", modified_text)
                 }
             }
-
             onActiveFocusChanged:
             {
                 if(!activeFocus && text =="")
@@ -172,7 +171,7 @@ Item
 
     Grid
     {
-        id: textfields
+        id: manualInputTextFields
 
         anchors.leftMargin: UM.Theme.getSize("default_margin").width
         anchors.top: snapRotationCheckbox.bottom
@@ -180,6 +179,7 @@ Item
         columns: 2
         flow: Grid.TopToBottom
         spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
+        visible: !snapRotationCheckbox.checked
 
         UM.Label
         {
@@ -211,19 +211,27 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
-            text: UM.Controller.properties.getValue("RX")
+            text: xText
 
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.Controller.setProperty("RX", modified_text)
+                if(text !="")
+                {
+                    UM.Controller.setProperty("RX", modified_text)
+                }
             }
             onActiveFocusChanged:
             {
                 if(!activeFocus && text =="")
                 {
                     xText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
-                    xText = 0
+                    xText = UM.Controller.properties.getValue("RX")
                 }
             }
         }
@@ -233,19 +241,27 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
-            text: UM.Controller.properties.getValue("RY")
+            text: yText
 
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.Controller.setProperty("RY", modified_text)
+                if(text !="")
+                {
+                    UM.Controller.setProperty("RY", modified_text)
+                }
             }
             onActiveFocusChanged:
             {
                 if(!activeFocus && text =="")
                 {
                     yText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
-                    yText = 0
+                    yText = UM.Controller.properties.getValue("RY")
                 }
             }
         }
@@ -255,19 +271,27 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
-            text: UM.Controller.properties.getValue("RZ")
+            text: zText
 
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.Controller.setProperty("RZ", modified_text)
+                if(text !="")
+                {
+                    UM.Controller.setProperty("RZ", modified_text)
+                }
             }
             onActiveFocusChanged:
             {
                 if(!activeFocus && text =="")
                 {
                     zText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
-                    zText = 0
+                    zText = UM.Controller.properties.getValue("RZ")
                 }
             }
         }
@@ -293,5 +317,26 @@ Item
         target: base
         property: "snapText"
         value: base.roundFloat(UM.Controller.properties.getValue("RotationSnapAngle"), 2)
+    }
+
+    Binding
+    {
+        target: base
+        property: "xText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RX"), 2)
+    }
+
+    Binding
+    {
+        target: base
+        property: "yText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RY"), 2)
+    }
+
+    Binding
+    {
+        target: base
+        property: "zText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RZ"), 2)
     }
 }

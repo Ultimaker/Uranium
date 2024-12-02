@@ -235,7 +235,7 @@ class RotateTool(Tool):
     def setRX(self, rx: str) -> None:
         angle = float(rx)
         _angle = math.radians(angle)
-        if self._x_angle == math.radians(angle):
+        if self._x_angle == _angle:
             return
         elif self._x_angle:
             angle = angle - float(math.degrees(self._x_angle))
@@ -246,7 +246,7 @@ class RotateTool(Tool):
     def setRY(self, ry: str) -> None:
         angle = float(ry)
         _angle = math.radians(angle)
-        if self._y_angle == math.radians(angle):
+        if self._y_angle == _angle:
             return
         elif self._y_angle:
             angle = angle - float(math.degrees(self._y_angle))
@@ -257,7 +257,7 @@ class RotateTool(Tool):
     def setRZ(self, rz: str) -> None:
         angle = float(rz)
         _angle = math.radians(angle)
-        if self._z_angle == math.radians(angle):
+        if self._z_angle == _angle:
             return
         elif self._z_angle:
             angle = angle - float(math.degrees(self._z_angle))
@@ -269,22 +269,22 @@ class RotateTool(Tool):
         nodelist = self._getSelectedObjectsWithoutSelectedAncestors()
         for node in nodelist:
             q = node.getOrientation()
-            self._x_angle = math.ceil(q.getAngleOnAxis(Vector.Unit_X) * 90)
-            return self._x_angle
+            self._x_angle, self._y_angle, self._z_angle = q.euler_from_quaternion()
+            return math.degrees(self._x_angle)
 
     def getRY(self) -> float:
         nodelist = self._getSelectedObjectsWithoutSelectedAncestors()
         for node in nodelist:
             q = node.getOrientation()
-            self._y_angle = math.ceil(q.getAngleOnAxis(Vector.Unit_Y) * 90)
-            return self._y_angle
+            self._x_angle, self._y_angle, self._z_angle = q.euler_from_quaternion()
+            return math.degrees(self._y_angle)
 
     def getRZ(self) -> float:
         nodelist = self._getSelectedObjectsWithoutSelectedAncestors()
         for node in nodelist:
             q = node.getOrientation()
-            self._z_angle = math.ceil(q.getAngleOnAxis(Vector.Unit_Z) * 90)
-            return self._z_angle
+            self._x_angle, self._y_angle, self._z_angle = q.euler_from_quaternion()
+            return math.degrees(self._z_angle)
 
     def _onSelectedFaceChanged(self):
         if not self._select_face_mode:
