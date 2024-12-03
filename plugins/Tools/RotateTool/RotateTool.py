@@ -51,6 +51,7 @@ class RotateTool(Tool):
         self._x_angle = 0
         self._y_angle = 0
         self._z_angle = 0
+        self._rotation_axis = None
         self._angle_update_time = None
 
         self._shortcut_key = Qt.Key.Key_R
@@ -162,12 +163,15 @@ class RotateTool(Tool):
             if self.getLockedAxis() == ToolHandle.XAxis:
                 direction = 1 if Vector.Unit_X.dot(drag_start.cross(drag_end)) > 0 else -1
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_X)
+                self._rotation_axis = Vector.Unit_X
             elif self.getLockedAxis() == ToolHandle.YAxis:
                 direction = 1 if Vector.Unit_Y.dot(drag_start.cross(drag_end)) > 0 else -1
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Y)
+                self._rotation_axis = Vector.Unit_Y
             elif self.getLockedAxis() == ToolHandle.ZAxis:
                 direction = 1 if Vector.Unit_Z.dot(drag_start.cross(drag_end)) > 0 else -1
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Z)
+                self._rotation_axis = Vector.Unit_Z
             else:
                 direction = -1
 
@@ -178,6 +182,15 @@ class RotateTool(Tool):
             if not self._angle_update_time or new_time - self._angle_update_time > 0.1:
                 self._angle_update_time = new_time
                 self._angle += direction * angle
+                match self._rotation_axis:
+                    case Vector.Unit_X:
+                        self._x_angle = self._angle
+                    case Vector.Unit_Y:
+                        self._y_angle = self._angle
+                    case Vector.Unit_Z:
+                        self._z_angle = self._angle
+                    case _:
+                        pass
                 self.propertyChanged.emit()
 
                 # Rotate around the saved centeres of all selected nodes
@@ -204,10 +217,13 @@ class RotateTool(Tool):
                     axis += self._handle.XAxis
                     if axis == ToolHandle.XAxis:
                         rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_X)
+                        self._x_angle += angle
                     elif axis == ToolHandle.YAxis:
                         rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_Y)
+                        self._y_angle += angle
                     else:
                         rotation = Quaternion.fromAngleAxis(angle, Vector.Unit_Z)
+                        self._z_angle += angle
 
 
                     # Rotate around the saved centeres of all selected nodes
@@ -266,25 +282,19 @@ class RotateTool(Tool):
         self.propertyChanged.emit()
 
     def getRX(self) -> float:
-        nodelist = self._getSelectedObjectsWithoutSelectedAncestors()
-        for node in nodelist:
-            q = node.getOrientation()
-            self._x_angle, self._y_angle, self._z_angle = q.euler_from_quaternion()
-            return math.degrees(self._x_angle)
+        return math.degrees(self._x_angle)
 
     def getRY(self) -> float:
-        nodelist = self._getSelectedObjectsWithoutSelectedAncestors()
-        for node in nodelist:
-            q = node.getOrientation()
-            self._x_angle, self._y_angle, self._z_angle = q.euler_from_quaternion()
-            return math.degrees(self._y_angle)
+        return math.degrees(self._y_angle)
 
     def getRZ(self) -> float:
-        nodelist = self._getSelectedObjectsWithoutSelectedAncestors()
-        for node in nodelist:
-            q = node.getOrientation()
-            self._x_angle, self._y_angle, self._z_angle = q.euler_from_quaternion()
-            return math.degrees(self._z_angle)
+        return math.degrees(self._z_angle)
+
+    def _resetXYZRotation(self) -> None:
+        self._x_angle = 0
+        self._y_angle = 0
+        self._z_angle = 0
+        self.propertyChanged.emit()
 
     def _onSelectedFaceChanged(self):
         if not self._select_face_mode:
@@ -394,6 +404,7 @@ class RotateTool(Tool):
     def resetRotation(self):
         """Reset the orientation of the mesh(es) to their original orientation(s)"""
 
+        self._resetXYZRotation()
         for node in self._getSelectedObjectsWithoutSelectedAncestors():
             node.setMirror(Vector(1, 1, 1))
 
