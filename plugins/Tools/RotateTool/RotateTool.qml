@@ -150,12 +150,13 @@ Item
             {
                 if(!activeFocus && text =="")
                 {
-                    snapText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
+                    snapText = 0.1; // Need to change it to something else so we can force it to getvalue
                     snapText = UM.Controller.properties.getValue("RotationSnapAngle")
                 }
             }
         }
     }
+
     UM.CheckBox
     {
         id: snapRotationCheckbox
@@ -230,11 +231,12 @@ Item
             {
                 if(!activeFocus && text =="")
                 {
-                    xText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
+                    xText = 0.1; // Need to change it to something else so we can force it to getvalue
                     xText = UM.Controller.properties.getValue("RX")
                 }
             }
         }
+
         UM.TextFieldWithUnit
         {
             id: yangleTextField
@@ -253,18 +255,21 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 if(text !="")
                 {
-                    UM.Controller.setProperty("RY", modified_text)
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    UM.Controller.setProperty("RZ", modified_text)
                 }
             }
             onActiveFocusChanged:
             {
                 if(!activeFocus && text =="")
                 {
-                    yText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
-                    yText = UM.Controller.properties.getValue("RY")
+                    yText = 0.1; // Need to change it to something else so we can force it to getvalue
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    yText = UM.Controller.properties.getValue("RZ")
                 }
             }
         }
+
         UM.TextFieldWithUnit
         {
             id: zangleTextField
@@ -283,15 +288,17 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 if(text !="")
                 {
-                    UM.Controller.setProperty("RZ", modified_text)
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    UM.Controller.setProperty("RY", modified_text)
                 }
             }
             onActiveFocusChanged:
             {
                 if(!activeFocus && text =="")
                 {
-                    zText = 0.1; // Yeaaah i know. We need to change it to something else so we can force it to 0
-                    zText = UM.Controller.properties.getValue("RZ")
+                    zText = 0.1; // Need to change it to something else so we can force it to getvalue
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    zText = UM.Controller.properties.getValue("RY")
                 }
             }
         }
@@ -329,14 +336,14 @@ Item
     Binding
     {
         target: base
-        property: "yText"
+        property: "zText"
         value: base.roundFloat(UM.Controller.properties.getValue("RY"), 2)
     }
 
     Binding
     {
         target: base
-        property: "zText"
+        property: "yText"
         value: base.roundFloat(UM.Controller.properties.getValue("RZ"), 2)
     }
 }
