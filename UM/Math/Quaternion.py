@@ -285,48 +285,7 @@ class Quaternion:
         q.setByAngleAxis(angle, axis)
         return q
 
-    def getAngleOnAxis(self, axis: Vector) -> float:
-        """
-        Retrieve the angle of rotation around a specific axis.
 
-        :param axis: :type{Vector} The axis to compute the rotation angle around.
-        :return: The angle of rotation in radians.
-        """
-        normalized_axis = axis.normalized()
-        axis_quaternion = Quaternion(normalized_axis.x, normalized_axis.y, normalized_axis.z, 0)
-
-        # Extract the quaternion's rotational component along the specified axis.
-        projected_quaternion = self * axis_quaternion * self.getInverse()
-        projected_vector = Vector(projected_quaternion.x, projected_quaternion.y, projected_quaternion.z)
-
-        # Compute the angle of rotation using the projected vector.
-        sin_angle = projected_vector.dot(normalized_axis)
-        cos_angle = self.w
-        calculated_angle = 2 * math.atan2(sin_angle, cos_angle)
-
-        return calculated_angle
-
-    def euler_from_quaternion(self):
-        """
-        Convert a quaternion into euler angles (roll, pitch, yaw)
-        roll is rotation around x in radians (counterclockwise)
-        pitch is rotation around y in radians (counterclockwise)
-        yaw is rotation around z in radians (counterclockwise)
-        """
-        t0 = +2.0 * (self.w * self.x + self.y * self.z)
-        t1 = +1.0 - 2.0 * (self.x * self.x + self.y * self.y)
-        roll_x = math.atan2(t0, t1)
-
-        t2 = +2.0 * (self.w * self.y - self.z * self.x)
-        t2 = +1.0 if t2 > +1.0 else t2
-        t2 = -1.0 if t2 < -1.0 else t2
-        pitch_y = math.asin(t2)
-
-        t3 = +2.0 * (self.w * self.z + self.x * self.y)
-        t4 = +1.0 - 2.0 * (self.y * self.y + self.z * self.z)
-        yaw_z = math.atan2(t3, t4)
-
-        return roll_x, pitch_y, yaw_z  # in radians
     def __repr__(self):
         return "Quaternion(x={0}, y={1}, z={2}, w={3})".format(self.x, self.y, self.z, self.w)
 
