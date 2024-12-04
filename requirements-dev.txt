@@ -1,4 +1,0 @@
-pytest
-twisted
-pytest-benchmark
-sip==6.5.1

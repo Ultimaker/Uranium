@@ -1,37 +1,33 @@
-import shutil
-
 from io import StringIO
-from pathlib import Path
 
 from conan import ConanFile
 from conan.tools.env import VirtualRunEnv
-from conans import tools
-from conans.errors import ConanException
+from conan.tools.build import can_run
+from conan.errors import ConanException
+from conan.tools.files import copy
+
 
 class UraniumTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "VirtualRunEnv"
+    test_type = "explicit"
+
+    def requirements(self):
+        self.requires(self.tested_reference_str)
 
     def generate(self):
         venv = VirtualRunEnv(self)
         venv.generate()
 
-    def build(self):
-        if not tools.cross_building(self):
-            shutil.copy(Path(self.source_folder).joinpath("test.py"), Path(self.build_folder).joinpath("test.py"))
+        cpp_info = self.dependencies[self.tested_reference_str].cpp_info
+        copy(self, "*.pyd", src=cpp_info.libdirs[0], dst=self.build_folder)
 
-    def imports(self):
-        if self.settings.os == "Windows" and not tools.cross_building(self, skip_x64_x86 = True):
-            self.copy("*.pyd", dst=".", src="@libdirs")
+        for dep in self.dependencies.values():
+            for bin_dir in dep.cpp_info.bindirs:
+                copy(self, "*.dll", src=bin_dir, dst=self.build_folder)
 
     def test(self):
-        if not tools.cross_building(self):
+        if can_run(self):
             test_buf = StringIO()
-            try:
-                self.run(f"python test.py", env="conanrun", output=test_buf)
-            except Exception:
-                print(test_buf.getvalue())
-                raise ConanException("Uranium wasn't build correctly!")
-
+            self.run(f"python test.py", env="conanrun", stdout=test_buf, scope="run")
             if "True" not in test_buf.getvalue():
                 raise ConanException("Uranium wasn't build correctly!")
