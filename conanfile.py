@@ -130,8 +130,8 @@ class UraniumConan(ConanFile):
 
     def layout(self):
         self.folders.source = "."
-        self.folders.build = "venv"
-        self.folders.generators = os.path.join(self.folders.build, "conan")
+        self.folders.build = "build"
+        self.folders.generators = os.path.join(self.folders.build, "generators")
 
         self.cpp.package.libdirs = [os.path.join("site-packages", "UM")]
         self.cpp.package.resdirs = ["resources", "plugins"]
