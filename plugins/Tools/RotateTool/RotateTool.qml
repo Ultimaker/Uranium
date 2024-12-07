@@ -11,6 +11,9 @@ Item
     height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "uranium"}
 
+    property string xText
+    property string yText
+    property string zText
     property string snapText
 
     //Rounds a floating point number to 4 decimals. This prevents floating
@@ -209,15 +212,28 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
-            text: ""
+            text: xText
 
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 if(text !="")
                 {
                     UM.Controller.setProperty("RX", modified_text)
-                    text =""
+                    text = "0"
+                }
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    xText = 0.1; // Need to change it to something else so we can force it to getvalue
+                    xText = 0
                 }
             }
         }
@@ -228,8 +244,13 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
-            text: ""
+            text: yText
 
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
@@ -237,7 +258,16 @@ Item
                 {
                     // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
                     UM.Controller.setProperty("RZ", modified_text)
-                    text =""
+                    text = "0"
+                }
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    yText = 0.1; // Need to change it to something else so we can force it to getvalue
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    yText = 0
                 }
             }
         }
@@ -248,8 +278,13 @@ Item
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
             unit: "degrees"
-            text: ""
+            text: zText
 
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
@@ -257,7 +292,16 @@ Item
                 {
                     // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
                     UM.Controller.setProperty("RY", modified_text)
-                    text = ""
+                    text = "0"
+                }
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    zText = 0.1; // Need to change it to something else so we can force it to getvalue
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    zText = 0
                 }
             }
         }
@@ -283,5 +327,26 @@ Item
         target: base
         property: "snapText"
         value: base.roundFloat(UM.Controller.properties.getValue("RotationSnapAngle"), 2)
+    }
+
+    Binding
+    {
+        target: base
+        property: "xText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RX"), 2)
+    }
+
+    Binding
+    {
+        target: base
+        property: "zText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RY"), 2)
+    }
+
+    Binding
+    {
+        target: base
+        property: "yText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RZ"), 2)
     }
 }

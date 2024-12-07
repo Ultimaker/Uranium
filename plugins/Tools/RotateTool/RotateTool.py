@@ -244,6 +244,15 @@ class RotateTool(Tool):
         self._rotateModel(angle, Vector.Unit_Z)
         self.propertyChanged.emit()
 
+    def getRX(self) -> float:
+        return 0
+
+    def getRY(self) -> float:
+        return 0
+
+    def getRZ(self) -> float:
+        return 0
+
     def _onSelectedFaceChanged(self):
         if not self._select_face_mode:
             return
@@ -422,7 +431,7 @@ class RotateTool(Tool):
         for node in self._getSelectedObjectsWithoutSelectedAncestors():
             self._saved_node_positions.append((node, node.getPosition()))
 
-        # Rotate around the saved centeres of all selected nodes
+        # Rotate around the saved centers of all selected nodes
         if len(self._saved_node_positions) > 1:
             op = GroupedOperation()
             for node, position in self._saved_node_positions:
