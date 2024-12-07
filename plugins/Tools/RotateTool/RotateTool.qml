@@ -2,13 +2,42 @@
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
-import UM 1.5 as UM
+import UM 1.7 as UM
 
 Item
 {
+    id: base
     width: childrenRect.width
     height: childrenRect.height
     UM.I18nCatalog { id: catalog; name: "uranium"}
+
+    property string xText
+    property string yText
+    property string zText
+    property string snapText
+
+    //Rounds a floating point number to 4 decimals. This prevents floating
+    //point rounding errors.
+    //
+    //input:    The number to round.
+    //decimals: The number of decimals (digits after the radix) to round to.
+    //return:   The rounded number.
+    function roundFloat(input, decimals)
+    {
+        //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
+        //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
+        //Then remove any trailing zeroes and the radix.
+        var output = ""
+        if (input !== undefined)
+        {
+            output = input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+        }
+        if (output == "-0")
+        {
+            output = "0"
+        }
+        return output
+    }
 
     UM.ToolbarButton
     {
@@ -77,6 +106,57 @@ Item
         visible: UM.Controller.properties.getValue("SelectFaceSupported") == true //Might be undefined if we're switching away from the RotateTool!
     }
 
+    Grid
+    {
+        id: textfields
+
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors.top: snapRotationCheckbox.bottom
+        visible: snapRotationCheckbox.checked
+
+        columns: 2
+        flow: Grid.TopToBottom
+        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
+
+        UM.Label
+        {
+            height: UM.Theme.getSize("setting_control").height
+            text: "Snap Angle"
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+
+		UM.TextFieldWithUnit
+        {
+            id: angleTextField
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "degrees"
+            text: snapText
+
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
+            onEditingFinished:
+            {
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                if(text !="")
+                {
+                    UM.Controller.setProperty("RotationSnapAngle", modified_text)
+                }
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    snapText = 0.1; // Need to change it to something else so we can force it to getvalue
+                    snapText = UM.Controller.properties.getValue("RotationSnapAngle")
+                }
+            }
+        }
+    }
+
     UM.CheckBox
     {
         id: snapRotationCheckbox
@@ -90,6 +170,144 @@ Item
         onClicked: UM.Controller.setProperty("RotationSnap", checked)
     }
 
+    Grid
+    {
+        id: manualInputTextFields
+
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors.top: snapRotationCheckbox.bottom
+
+        columns: 2
+        flow: Grid.TopToBottom
+        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
+        visible: !snapRotationCheckbox.checked
+
+        UM.Label
+        {
+            height: UM.Theme.getSize("setting_control").height
+            text: "X"
+            color: UM.Theme.getColor("x_axis")
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+
+        UM.Label
+        {
+            height: UM.Theme.getSize("setting_control").height
+            text: "Y"
+            color: UM.Theme.getColor("z_axis"); // This is intentional. The internal axis are switched.
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+
+        UM.Label
+        {
+            height: UM.Theme.getSize("setting_control").height
+            text: "Z"
+            color: UM.Theme.getColor("y_axis"); // This is intentional. The internal axis are switched.
+            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
+        }
+
+		UM.TextFieldWithUnit
+        {
+            id: xangleTextField
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "degrees"
+            text: xText
+
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
+            onEditingFinished:
+            {
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                if(text !="")
+                {
+                    UM.Controller.setProperty("RX", modified_text)
+                    text = "0"
+                }
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    xText = 0.1; // Need to change it to something else so we can force it to getvalue
+                    xText = 0
+                }
+            }
+        }
+
+        UM.TextFieldWithUnit
+        {
+            id: yangleTextField
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "degrees"
+            text: yText
+
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
+            onEditingFinished:
+            {
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                if(text !="")
+                {
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    UM.Controller.setProperty("RZ", modified_text)
+                    text = "0"
+                }
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    yText = 0.1; // Need to change it to something else so we can force it to getvalue
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    yText = 0
+                }
+            }
+        }
+
+        UM.TextFieldWithUnit
+        {
+            id: zangleTextField
+            width: UM.Theme.getSize("setting_control").width
+            height: UM.Theme.getSize("setting_control").height
+            unit: "degrees"
+            text: zText
+
+            validator: UM.FloatValidator
+            {
+                maxBeforeDecimal: 3
+                maxAfterDecimal: 2
+            }
+            onEditingFinished:
+            {
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                if(text !="")
+                {
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    UM.Controller.setProperty("RY", modified_text)
+                    text = "0"
+                }
+            }
+            onActiveFocusChanged:
+            {
+                if(!activeFocus && text =="")
+                {
+                    zText = 0.1; // Need to change it to something else so we can force it to getvalue
+                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                    zText = 0
+                }
+            }
+        }
+
+	}
+
     Binding
     {
         target: snapRotationCheckbox
@@ -102,5 +320,33 @@ Item
         target: alignFaceButton
         property: "checked"
         value: UM.Controller.properties.getValue("SelectFaceToLayFlatMode")
+    }
+
+    Binding
+    {
+        target: base
+        property: "snapText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RotationSnapAngle"), 2)
+    }
+
+    Binding
+    {
+        target: base
+        property: "xText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RX"), 2)
+    }
+
+    Binding
+    {
+        target: base
+        property: "zText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RY"), 2)
+    }
+
+    Binding
+    {
+        target: base
+        property: "yText"
+        value: base.roundFloat(UM.Controller.properties.getValue("RZ"), 2)
     }
 }
