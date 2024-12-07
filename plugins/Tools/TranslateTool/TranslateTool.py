@@ -84,7 +84,10 @@ class TranslateTool(Tool):
         if Selection.hasSelection():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            return float(Selection.getBoundingBox().center.z)
+            # direction handles the Y flip axis conversions for the UI if user has it enabled.
+            direction = -1 if bool(
+                Application.getInstance().getPreferences().getValue("tool/flip_y_axis_tool_handle")) else 1
+            return float(Selection.getBoundingBox().center.z) * direction
         return 0.0
 
     def getZ(self) -> float:
@@ -142,7 +145,10 @@ class TranslateTool(Tool):
         the selection bounding box center.
         :param y: Location in mm.
         """
-        parsed_y = self._parseFloat(y)
+        # direction handles the Y flip axis conversions for the UI if user has it enabled.
+        direction = -1 if bool(
+            Application.getInstance().getPreferences().getValue("tool/flip_y_axis_tool_handle")) else 1
+        parsed_y = self._parseFloat(y) * direction
         bounding_box = Selection.getBoundingBox()
 
         if not Float.fuzzyCompare(parsed_y, float(bounding_box.center.z), DIMENSION_TOLERANCE):
