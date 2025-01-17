@@ -6,12 +6,16 @@ requirements:
 pip_requirements_core:
   any_os:
     PyQt6:
-      version: "6.6.0"
+      version: "6.8.0"
       hashes:
-        - sha256:33655db05ac2de699320f035250c21434c77144a6a2943aca3f4c579dabc3f7b
-        - sha256:3ef68830a9b32050c30f7962c56a5927802c9193b68eaf405faecb8ce9ae10a8
-        - sha256:d41512d66044c2df9c5f515a56a922170d68a37b3406ffddc8b4adc57181b576
-        - sha256:fc7185d65755f26d7a6842492ec5398c92544dc4eafbbcbef1b1922aca585c96
+        -sha256:3a4354816f11e812b727206a9ea6e79ff3774f1bb7228ad4b9318442d2c64ff9
+        -sha256:452bae5840077bf0f146c798d7777f70d7bdd0c7dcfa9ee7a415c1daf2d10038
+        -sha256:48bace7b87676bba5e6114482f3a20ca20be90c7f261b5d340464313f5f2bf5e
+        -sha256:6d8628de4c2a050f0b74462e4c9cb97f839bf6ffabbca91711722ffb281570d9
+        -sha256:8c5c05f5fdff31a5887dbc29b27615b09df467631238d7b449283809ffca6228
+        -sha256:a9913d479f1ffee804bf7f232079baea4fb4b221a8f4890117588917a54ea30d
+        -sha256:cf7123caea14e7ecf10bd12cae48e8d9970ef7caf627bc7d7988b0baa209adb3
+
     colorlog:
       version: "6.6.0"
       hashes:
