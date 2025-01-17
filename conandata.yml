@@ -15,7 +15,6 @@ pip_requirements_core:
         -sha256:8c5c05f5fdff31a5887dbc29b27615b09df467631238d7b449283809ffca6228
         -sha256:a9913d479f1ffee804bf7f232079baea4fb4b221a8f4890117588917a54ea30d
         -sha256:cf7123caea14e7ecf10bd12cae48e8d9970ef7caf627bc7d7988b0baa209adb3
-
     colorlog:
       version: "6.6.0"
       hashes:
