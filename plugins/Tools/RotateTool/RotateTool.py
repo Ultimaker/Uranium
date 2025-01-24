@@ -56,7 +56,7 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         self._rotating = False
-        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported", "SelectFaceToLayFlatMode", "RX", "RY", "RZ")
+        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported", "SelectFaceToLayFlatMode", "RotationX", "RotationY", "RotationZ")
         self._saved_node_positions = []
 
         self._active_widget = None  # type: Optional[RotateToolHandle.ExtraWidgets]
@@ -229,28 +229,28 @@ class RotateTool(Tool):
                     self.operationStopped.emit(self)
                 return True
 
-    def setRX(self, rx: str) -> None:
-        angle = float(rx)
+    def setRotationX(self, rotation_x: str) -> None:
+        angle = float(rotation_x)
         self._rotateModel(angle, Vector.Unit_X)
         self.propertyChanged.emit()
 
-    def setRY(self, ry: str) -> None:
-        angle = float(ry)
+    def setRotationY(self, rotation_y: str) -> None:
+        angle = float(rotation_y)
         self._rotateModel(angle, Vector.Unit_Y)
         self.propertyChanged.emit()
 
-    def setRZ(self, rz: str) -> None:
-        angle = float(rz)
+    def setRotationZ(self, rotation_z: str) -> None:
+        angle = float(rotation_z)
         self._rotateModel(angle, Vector.Unit_Z)
         self.propertyChanged.emit()
 
-    def getRX(self) -> float:
+    def getRotationX(self) -> float:
         return 0
 
-    def getRY(self) -> float:
+    def getRotationY(self) -> float:
         return 0
 
-    def getRZ(self) -> float:
+    def getRotationZ(self) -> float:
         return 0
 
     def _onSelectedFaceChanged(self):

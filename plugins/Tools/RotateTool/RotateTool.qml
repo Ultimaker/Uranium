@@ -125,12 +125,12 @@ Item
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
-		UM.TextFieldWithUnit
+        UM.TextFieldWithUnit
         {
             id: angleTextField
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
-            unit: "degrees"
+            unit: "°"
             text: snapText
 
             validator: UM.FloatValidator
@@ -141,14 +141,14 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                if(text !="")
+                if(text != "")
                 {
                     UM.Controller.setProperty("RotationSnapAngle", modified_text)
                 }
             }
             onActiveFocusChanged:
             {
-                if(!activeFocus && text =="")
+                if(!activeFocus && text == "")
                 {
                     snapText = 0.1; // Need to change it to something else so we can force it to getvalue
                     snapText = UM.Controller.properties.getValue("RotationSnapAngle")
@@ -206,12 +206,12 @@ Item
             width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
         }
 
-		UM.TextFieldWithUnit
+        UM.TextFieldWithUnit
         {
             id: xangleTextField
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
-            unit: "degrees"
+            unit: "°"
             text: xText
 
             validator: UM.FloatValidator
@@ -222,15 +222,15 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                if(text !="")
+                if(text != "")
                 {
-                    UM.Controller.setProperty("RX", modified_text)
+                    UM.Controller.setProperty("RotationX", modified_text)
                     text = "0"
                 }
             }
             onActiveFocusChanged:
             {
-                if(!activeFocus && text =="")
+                if(!activeFocus && text == "")
                 {
                     xText = 0.1; // Need to change it to something else so we can force it to getvalue
                     xText = 0
@@ -243,7 +243,7 @@ Item
             id: yangleTextField
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
-            unit: "degrees"
+            unit: "°"
             text: yText
 
             validator: UM.FloatValidator
@@ -254,16 +254,16 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                if(text !="")
+                if(text != "")
                 {
                     // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
-                    UM.Controller.setProperty("RZ", modified_text)
+                    UM.Controller.setProperty("RotationZ", modified_text)
                     text = "0"
                 }
             }
             onActiveFocusChanged:
             {
-                if(!activeFocus && text =="")
+                if(!activeFocus && text == "")
                 {
                     yText = 0.1; // Need to change it to something else so we can force it to getvalue
                     // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
@@ -277,7 +277,7 @@ Item
             id: zangleTextField
             width: UM.Theme.getSize("setting_control").width
             height: UM.Theme.getSize("setting_control").height
-            unit: "degrees"
+            unit: "°"
             text: zText
 
             validator: UM.FloatValidator
@@ -288,16 +288,16 @@ Item
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                if(text !="")
+                if(text != "")
                 {
                     // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
-                    UM.Controller.setProperty("RY", modified_text)
+                    UM.Controller.setProperty("RotationY", modified_text)
                     text = "0"
                 }
             }
             onActiveFocusChanged:
             {
-                if(!activeFocus && text =="")
+                if(!activeFocus && text == "")
                 {
                     zText = 0.1; // Need to change it to something else so we can force it to getvalue
                     // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
@@ -333,20 +333,20 @@ Item
     {
         target: base
         property: "xText"
-        value: base.roundFloat(UM.Controller.properties.getValue("RX"), 2)
+        value: base.roundFloat(UM.Controller.properties.getValue("RotationX"), 2)
     }
 
     Binding
     {
         target: base
         property: "zText"
-        value: base.roundFloat(UM.Controller.properties.getValue("RY"), 2)
+        value: base.roundFloat(UM.Controller.properties.getValue("RotationY"), 2)
     }
 
     Binding
     {
         target: base
         property: "yText"
-        value: base.roundFloat(UM.Controller.properties.getValue("RZ"), 2)
+        value: base.roundFloat(UM.Controller.properties.getValue("RotationZ"), 2)
     }
 }
