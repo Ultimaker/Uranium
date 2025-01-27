@@ -83,7 +83,8 @@ Item
         // visible: ! UM.Controller.properties.getValue("SelectFaceSupported");
     }
 
-    UM.ToolbarButton{
+    UM.ToolbarButton
+    {
         id: alignFaceButton
 
         anchors.left: layFlatButton.visible ? layFlatButton.right : resetRotationButton.right
@@ -171,7 +172,8 @@ Item
         onClicked: UM.Controller.setProperty("RotationSnap", checked)
     }
 
-    Item {
+    Item
+    {
         id: dynamicContainer
         anchors.top: snapRotationCheckbox.bottom
         anchors.topMargin: UM.Theme.getSize("default_margin").width
@@ -179,7 +181,8 @@ Item
         width: manualInputTextFields.visible ? manualInputTextFields.width : 0
         height: manualInputTextFields.visible ? manualInputTextFields.height : 0
 
-        Grid {
+        Grid
+        {
             id: manualInputTextFields
             columns: 2
             flow: Grid.TopToBottom
