@@ -56,7 +56,7 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         self._rotating = False
-        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported", "SelectFaceToLayFlatMode")
+        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle", "SelectFaceSupported", "SelectFaceToLayFlatMode", "RotationX", "RotationY", "RotationZ")
         self._saved_node_positions = []
 
         self._active_widget = None  # type: Optional[RotateToolHandle.ExtraWidgets]
@@ -229,6 +229,30 @@ class RotateTool(Tool):
                     self.operationStopped.emit(self)
                 return True
 
+    def setRotationX(self, rotation_x: str) -> None:
+        angle = math.radians(float(rotation_x))
+        self._rotateModel(angle, Vector.Unit_X)
+        self.propertyChanged.emit()
+
+    def setRotationY(self, rotation_y: str) -> None:
+        angle = math.radians(float(rotation_y))
+        self._rotateModel(angle, Vector.Unit_Y)
+        self.propertyChanged.emit()
+
+    def setRotationZ(self, rotation_z: str) -> None:
+        angle = math.radians(float(rotation_z))
+        self._rotateModel(angle, Vector.Unit_Z)
+        self.propertyChanged.emit()
+
+    def getRotationX(self) -> float:
+        return 0
+
+    def getRotationY(self) -> float:
+        return 0
+
+    def getRotationZ(self) -> float:
+        return 0
+
     def _onSelectedFaceChanged(self):
         if not self._select_face_mode:
             return
@@ -307,10 +331,11 @@ class RotateTool(Tool):
     def getRotationSnapAngle(self):
         """Get the number of degrees used in the "snap rotation to N-degree increments" option"""
 
-        return self._snap_angle
+        return math.degrees(self._snap_angle)
 
     def setRotationSnapAngle(self, angle):
         """Set the number of degrees used in the "snap rotation to N-degree increments" option"""
+        angle = math.radians(float(angle))
 
         if angle != self._snap_angle:
             self._snap_angle = angle
@@ -399,6 +424,23 @@ class RotateTool(Tool):
             self._progress_message = None
 
         self.operationStopped.emit(self)
+
+    def _rotateModel(self, angle, vector_unit) -> None:
+        rotation = Quaternion.fromAngleAxis(angle, vector_unit)
+        self._saved_node_positions = []
+        for node in self._getSelectedObjectsWithoutSelectedAncestors():
+            self._saved_node_positions.append((node, node.getPosition()))
+
+        # Rotate around the saved centers of all selected nodes
+        if len(self._saved_node_positions) > 1:
+            op = GroupedOperation()
+            for node, position in self._saved_node_positions:
+                op.addOperation(RotateOperation(node, rotation, rotate_around_point=position))
+            op.push()
+        else:
+            for node, position in self._saved_node_positions:
+                RotateOperation(node, rotation, rotate_around_point=position).push()
+        return True
 
 
 class LayFlatJob(Job):

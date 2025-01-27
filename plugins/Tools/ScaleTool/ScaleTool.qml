@@ -121,6 +121,7 @@ Item
 
             checked: !UM.Controller.properties.getValue("NonUniformScale")
             onClicked: UM.Controller.setProperty("NonUniformScale", !checked)
+            tooltip: catalog.i18nc("@checkbox:description", "If a model has been rotated then 'Non-Uniform Scaling' might result in skewing of the model.")
         }
 
         Binding
