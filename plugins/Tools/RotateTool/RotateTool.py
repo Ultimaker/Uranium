@@ -230,17 +230,17 @@ class RotateTool(Tool):
                 return True
 
     def setRotationX(self, rotation_x: str) -> None:
-        angle = float(rotation_x)
+        angle = math.radians(float(rotation_x))
         self._rotateModel(angle, Vector.Unit_X)
         self.propertyChanged.emit()
 
     def setRotationY(self, rotation_y: str) -> None:
-        angle = float(rotation_y)
+        angle = math.radians(float(rotation_y))
         self._rotateModel(angle, Vector.Unit_Y)
         self.propertyChanged.emit()
 
     def setRotationZ(self, rotation_z: str) -> None:
-        angle = float(rotation_z)
+        angle = math.radians(float(rotation_z))
         self._rotateModel(angle, Vector.Unit_Z)
         self.propertyChanged.emit()
 
@@ -426,7 +426,7 @@ class RotateTool(Tool):
         self.operationStopped.emit(self)
 
     def _rotateModel(self, angle, vector_unit) -> None:
-        rotation = Quaternion.fromAngleAxis(angle / 90, vector_unit)
+        rotation = Quaternion.fromAngleAxis(angle, vector_unit)
         self._saved_node_positions = []
         for node in self._getSelectedObjectsWithoutSelectedAncestors():
             self._saved_node_positions.append((node, node.getPosition()))
