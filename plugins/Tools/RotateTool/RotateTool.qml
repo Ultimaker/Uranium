@@ -15,6 +15,7 @@ Item
     property string yText
     property string zText
     property string snapText
+    property bool snapEnabled: snapRotationCheckbox.checked
 
     //Rounds a floating point number to 4 decimals. This prevents floating
     //point rounding errors.
@@ -170,143 +171,146 @@ Item
         onClicked: UM.Controller.setProperty("RotationSnap", checked)
     }
 
-    Grid
-    {
-        id: manualInputTextFields
-
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+    Item {
+        id: dynamicContainer
         anchors.top: snapRotationCheckbox.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").width
 
-        columns: 2
-        flow: Grid.TopToBottom
-        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
-        visible: !snapRotationCheckbox.checked
+        width: manualInputTextFields.visible ? manualInputTextFields.width : 0
+        height: manualInputTextFields.visible ? manualInputTextFields.height : 0
 
-        UM.Label
-        {
-            height: UM.Theme.getSize("setting_control").height
-            text: "X"
-            color: UM.Theme.getColor("x_axis")
-            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
-        }
+        Grid {
+            id: manualInputTextFields
+            columns: 2
+            flow: Grid.TopToBottom
+            spacing: Math.round(UM.Theme.getSize("default_margin").width / 2)
+            visible: !snapEnabled
 
-        UM.Label
-        {
-            height: UM.Theme.getSize("setting_control").height
-            text: "Y"
-            color: UM.Theme.getColor("z_axis"); // This is intentional. The internal axis are switched.
-            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
-        }
-
-        UM.Label
-        {
-            height: UM.Theme.getSize("setting_control").height
-            text: "Z"
-            color: UM.Theme.getColor("y_axis"); // This is intentional. The internal axis are switched.
-            width: Math.ceil(contentWidth) //Make sure that the grid cells have an integer width.
-        }
-
-        UM.TextFieldWithUnit
-        {
-            id: xangleTextField
-            width: UM.Theme.getSize("setting_control").width
-            height: UM.Theme.getSize("setting_control").height
-            unit: "°"
-            text: xText
-
-            validator: UM.FloatValidator
+            UM.Label
             {
-                maxBeforeDecimal: 3
-                maxAfterDecimal: 2
+                height: UM.Theme.getSize("setting_control").height
+                text: "X"
+                color: UM.Theme.getColor("x_axis")
+                width: Math.ceil(contentWidth) // Make sure that the grid cells have an integer width.
             }
-            onEditingFinished:
+
+            UM.Label
             {
-                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                if(text != "")
+                height: UM.Theme.getSize("setting_control").height
+                text: "Y"
+                color: UM.Theme.getColor("z_axis"); // This is intentional. The internal axis are switched.
+                width: Math.ceil(contentWidth) // Make sure that the grid cells have an integer width.
+            }
+
+            UM.Label
+            {
+                height: UM.Theme.getSize("setting_control").height
+                text: "Z"
+                color: UM.Theme.getColor("y_axis"); // This is intentional. The internal axis are switched.
+                width: Math.ceil(contentWidth) // Make sure that the grid cells have an integer width.
+            }
+
+            UM.TextFieldWithUnit
+            {
+                id: xAngleTextField
+                width: UM.Theme.getSize("setting_control").width
+                height: UM.Theme.getSize("setting_control").height
+                unit: "°"
+                text: xText
+
+                validator: UM.FloatValidator
                 {
-                    UM.Controller.setProperty("RotationX", modified_text)
-                    text = "0"
+                    maxBeforeDecimal: 3
+                    maxAfterDecimal: 2
+                }
+                onEditingFinished:
+                {
+                    var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                    if(text != "")
+                    {
+                        UM.Controller.setProperty("RotationX", modified_text)
+                        text = "0"
+                    }
+                }
+                onActiveFocusChanged:
+                {
+                    if(!activeFocus && text == "")
+                    {
+                        xText = 0.1; // Need to change it to something else so we can force it to getvalue
+                        xText = 0
+                    }
                 }
             }
-            onActiveFocusChanged:
+
+            UM.TextFieldWithUnit
             {
-                if(!activeFocus && text == "")
+                id: yAngleTextField
+                width: UM.Theme.getSize("setting_control").width
+                height: UM.Theme.getSize("setting_control").height
+                unit: "°"
+                text: yText
+
+                validator: UM.FloatValidator
                 {
-                    xText = 0.1; // Need to change it to something else so we can force it to getvalue
-                    xText = 0
+                    maxBeforeDecimal: 3
+                    maxAfterDecimal: 2
+                }
+                onEditingFinished:
+                {
+                    var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                    if(text != "")
+                    {
+                        // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                        UM.Controller.setProperty("RotationZ", modified_text)
+                        text = "0"
+                    }
+                }
+                onActiveFocusChanged:
+                {
+                    if(!activeFocus && text == "")
+                    {
+                        yText = 0.1; // Need to change it to something else so we can force it to getvalue
+                        // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                        yText = 0
+                    }
+                }
+            }
+
+            UM.TextFieldWithUnit
+            {
+                id: zAngleTextField
+                width: UM.Theme.getSize("setting_control").width
+                height: UM.Theme.getSize("setting_control").height
+                unit: "°"
+                text: zText
+
+                validator: UM.FloatValidator
+                {
+                    maxBeforeDecimal: 3
+                    maxAfterDecimal: 2
+                }
+                onEditingFinished:
+                {
+                    var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                    if(text != "")
+                    {
+                        // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                        UM.Controller.setProperty("RotationY", modified_text)
+                        text = "0"
+                    }
+                }
+                onActiveFocusChanged:
+                {
+                    if(!activeFocus && text == "")
+                    {
+                        zText = 0.1; // Need to change it to something else so we can force it to getvalue
+                        // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
+                        zText = 0
+                    }
                 }
             }
         }
-
-        UM.TextFieldWithUnit
-        {
-            id: yangleTextField
-            width: UM.Theme.getSize("setting_control").width
-            height: UM.Theme.getSize("setting_control").height
-            unit: "°"
-            text: yText
-
-            validator: UM.FloatValidator
-            {
-                maxBeforeDecimal: 3
-                maxAfterDecimal: 2
-            }
-            onEditingFinished:
-            {
-                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                if(text != "")
-                {
-                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
-                    UM.Controller.setProperty("RotationZ", modified_text)
-                    text = "0"
-                }
-            }
-            onActiveFocusChanged:
-            {
-                if(!activeFocus && text == "")
-                {
-                    yText = 0.1; // Need to change it to something else so we can force it to getvalue
-                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
-                    yText = 0
-                }
-            }
-        }
-
-        UM.TextFieldWithUnit
-        {
-            id: zangleTextField
-            width: UM.Theme.getSize("setting_control").width
-            height: UM.Theme.getSize("setting_control").height
-            unit: "°"
-            text: zText
-
-            validator: UM.FloatValidator
-            {
-                maxBeforeDecimal: 3
-                maxAfterDecimal: 2
-            }
-            onEditingFinished:
-            {
-                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                if(text != "")
-                {
-                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
-                    UM.Controller.setProperty("RotationY", modified_text)
-                    text = "0"
-                }
-            }
-            onActiveFocusChanged:
-            {
-                if(!activeFocus && text == "")
-                {
-                    zText = 0.1; // Need to change it to something else so we can force it to getvalue
-                    // Yes this is intentional. Y & Z are flipped between model axes and build plate axes
-                    zText = 0
-                }
-            }
-        }
-
-	}
+    }
 
     Binding
     {
