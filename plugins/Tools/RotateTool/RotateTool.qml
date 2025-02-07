@@ -145,6 +145,12 @@ Item
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
                 if(text != "")
                 {
+                    var value = parseFloat(modified_text)
+                    if (value === 0)
+                    {
+                        text = snapText; // Revert to previous valid value
+                        return;
+                    }
                     UM.Controller.setProperty("RotationSnapAngle", modified_text)
                 }
             }
