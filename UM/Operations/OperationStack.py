@@ -1,6 +1,5 @@
 # Copyright (c) 2019 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
 import threading
 import time
 
@@ -34,6 +33,23 @@ class OperationStack():
     def _onToolOperationStarted(self, tool):
         self._merge_operations = False
 
+    def clearStackMemory(self, indexStart, indexEnd):
+        for node in self._operations[indexStart:indexEnd]:
+            node.delete()
+        del self._operations[indexStart:indexEnd]
+
+
+    def clearStack(self):
+        try:
+            with self._lock:
+                self.clearStackMemory(0, len(self._operations))
+                self._current_index = -1
+                self._merge_operations = False
+                self.changed.emit()
+        except Exception as e:
+            print("Error in clearing memory", e)
+
+
     def _onToolOperationStopped(self, tool):
         self._merge_operations = False
 
@@ -56,7 +72,7 @@ class OperationStack():
 
         try:
             if self._current_index < len(self._operations) - 1:
-                del self._operations[self._current_index + 1:len(self._operations)]
+                self.clearStackMemory(self._current_index + 1, len(self._operations))
 
             self._operations.append(operation)
             operation.redo()
