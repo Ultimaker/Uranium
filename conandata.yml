@@ -1,7 +1,7 @@
 version: "5.10.0-alpha.0"
 
 requirements:
-  - "pyarcus/5.4.1@ultimaker/stable"
+  - "pyarcus/5.10.0@ultimaker/stable"
 
 pip_requirements_core:
   any_os:
