@@ -3,10 +3,18 @@ version: "5.10.0-alpha.0"
 requirements:
   - "pyarcus/5.10.0@ultimaker/stable"
 
+extra_dependencies:
+  Qt:
+    version: "6.6.0"
+    sources_url: https://code.qt.io/cgit/qt/qtbase.git/
+    license: LGPL v3
+    license_file: LICENSES/LGPL-3.0-only.txt
+    summary: Qt is a cross-platform framework for graphical user interfaces.
+
 pip_requirements_core:
   any_os:
     PyQt6:
-      version: "6.6.0"
+      version: "6.6.0" # When changing the version, also change the one in extra_dependencies
       hashes:
         - sha256:33655db05ac2de699320f035250c21434c77144a6a2943aca3f4c579dabc3f7b
         - sha256:3ef68830a9b32050c30f7962c56a5927802c9193b68eaf405faecb8ce9ae10a8
