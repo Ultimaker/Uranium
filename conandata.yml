@@ -6,7 +6,8 @@ requirements:
 extra_dependencies:
   Qt:
     version: "6.6.0"
-    sources_url: https://code.qt.io/cgit/qt/qtbase.git/
+    sources_url: https://code.qt.io/cgit/qt/qtbase.git
+    home_url: https://github.com/Ultimaker/Cura/blob/main/licenses_thirdparty/qt.md
     license: LGPL v3
     license_file: LICENSES/LGPL-3.0-only.txt
     summary: Qt is a cross-platform framework for graphical user interfaces.
