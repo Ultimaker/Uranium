@@ -43,7 +43,6 @@ msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr "%1を取り外しますか？この操作は取り消しできません。"
 
-#, fuzzy, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled model to {0}% of original size"
 msgstr "元のサイズの{0}%まで自動的にスケールされたモデル"
