@@ -23,7 +23,7 @@ class UraniumConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     package_type = "header-library"
 
-    python_requires = "translationextractor/[>=2.2.0]@ultimaker/stable"
+    python_requires = "translationextractor/[>=2.2.0]"
     tool_requires = "gettext/0.22.5"
 
     options = {

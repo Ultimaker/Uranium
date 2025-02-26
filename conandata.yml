@@ -1,7 +1,7 @@
 version: "5.10.0-beta.1"
 
 requirements:
-  - "pyarcus/5.10.0@ultimaker/stable"
+  - "pyarcus/5.10.0"
 
 extra_dependencies:
   Qt:
