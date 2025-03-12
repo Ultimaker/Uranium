@@ -77,8 +77,10 @@ class ProjectOutputDevice(QObject, OutputDevice):
                     Application.getInstance().getOutputDeviceManager().removeOutputDevice(self.getId())
 
     @staticmethod
-    def getLastOutputName() -> Optional[str]:
-        return ProjectOutputDevice.last_out_name
+    def popLastOutputName() -> Optional[str]:
+        output_name = ProjectOutputDevice.last_out_name
+        ProjectOutputDevice.last_out_name = None
+        return output_name
 
     @staticmethod
     def setLastOutputName(name: Optional[str] = None) -> None:
