@@ -341,6 +341,10 @@ class OpenGL:
     __instance = None    # type: OpenGL
 
     def activateContext(self):
+        """
+        Make sure the OpenGL is currently active. This should be called every time before starting an OpenGL rendering
+        with this object
+        """
         from UM.Qt.QtApplication import QtApplication
         self._context.makeCurrent(QtApplication.getInstance().getMainWindow())
 
