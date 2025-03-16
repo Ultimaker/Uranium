@@ -724,5 +724,5 @@ msgid "{application_name} {version_number} provides a better and more reliable p
 msgstr "{application_name} {version_number} なら、より優れた信頼性の高い印刷体験が得られます。"
 
 #~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "There where no models in <filename>{0}</filename>."
+#~ msgid "There were no models in <filename>{0}</filename>."
 #~ msgstr "<filename>{0}</filename>にはモデルがありませんでした。"
