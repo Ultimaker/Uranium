@@ -681,10 +681,6 @@ msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} offre une expérience d'impression plus agréable et plus fiable."
 
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There were no models in <filename>{0}</filename>."
-msgstr "Aucun modèle trouvé dans <filename>{0}</filename>."
-
 msgctxt "@checkbox:description"
 msgid "If a model has been rotated then 'Non-Uniform Scaling' might result in skewing of the model."
 msgstr "Si un modèle a été tourné, l’option « Non-Uniform Scaling » (mise à l’échelle non uniforme) peut entraîner une distorsion du modèle."
