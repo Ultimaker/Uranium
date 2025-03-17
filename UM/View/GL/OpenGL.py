@@ -57,12 +57,12 @@ class OpenGL:
         profile.setVersion(OpenGLContext.major_version, OpenGLContext.minor_version)
         profile.setProfile(OpenGLContext.profile)
 
-        context = QOpenGLContext.currentContext()
-        if not context:
+        self._context = QOpenGLContext.currentContext()
+        if not self._context:
             Logger.log("e", "Startup failed due to OpenGL context creation failing")
             QOpenGLContext.currentContext()
             sys.exit(1)
-        self._gl = QOpenGLVersionFunctionsFactory.get(profile, context)
+        self._gl = QOpenGLVersionFunctionsFactory.get(profile, self._context)
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
             QMessageBox.critical(QMessageBox.Icon.Critical, "Failed to Initialize OpenGL", i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
@@ -339,6 +339,14 @@ class OpenGL:
         return buffer
 
     __instance = None    # type: OpenGL
+
+    def activateContext(self):
+        """
+        Make sure the OpenGL is currently active. This should be called every time before starting an OpenGL rendering
+        with this object
+        """
+        from UM.Qt.QtApplication import QtApplication
+        self._context.makeCurrent(QtApplication.getInstance().getMainWindow())
 
     @classmethod
     def getInstance(cls, *args, **kwargs) -> "OpenGL":
