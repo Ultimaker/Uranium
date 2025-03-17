@@ -678,10 +678,6 @@ msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} 提供更好、更可靠的打印体验。"
 
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There were no models in <filename>{0}</filename>."
-msgstr "<filename>{0}</filename> 中没有模型。"
-
 msgctxt "@checkbox:description"
 msgid "If a model has been rotated then 'Non-Uniform Scaling' might result in skewing of the model."
 msgstr "如果模型已旋转,则\"非均匀缩放\"可能会导致模型倾斜。"
