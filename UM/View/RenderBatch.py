@@ -177,6 +177,8 @@ class RenderBatch:
             Logger.log("e", "Unable to render batch without a camera.")
             return
 
+        OpenGL.getInstance().activateContext()
+
         self._shader.bind()
 
         if self._backface_cull:

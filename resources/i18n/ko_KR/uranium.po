@@ -554,7 +554,7 @@ msgstr "다음 패키지를 제거하는 중에 오류가 발생했습니다. "
 "{packages}"
 
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
+msgid "There were no models in <filename>{0}</filename>."
 msgstr "<filename>{0}</filename>에 모델이 없습니다."
 
 msgctxt "@action:description"
@@ -677,10 +677,6 @@ msgstr "{application_name} {version_number}을(를) 사용할 수 있습니다!"
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number}은(는) 보다 개선된 안정적인 인쇄 환경을 제공합니다."
-
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There were no models in <filename>{0}</filename>."
-msgstr "<filename>{0}</filename>에 모델이 없습니다."
 
 msgctxt "@checkbox:description"
 msgid "If a model has been rotated then 'Non-Uniform Scaling' might result in skewing of the model."

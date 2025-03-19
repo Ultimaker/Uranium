@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Optional
@@ -6,6 +6,7 @@ from typing import Optional
 from PyQt6.QtCore import pyqtSignal, QObject
 
 from UM.Application import Application
+from UM.Decorators import deprecated
 from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.Signal import signalemitter
 from UM.i18n import i18nCatalog
@@ -77,6 +78,13 @@ class ProjectOutputDevice(QObject, OutputDevice):
                     Application.getInstance().getOutputDeviceManager().removeOutputDevice(self.getId())
 
     @staticmethod
+    def popLastOutputName() -> Optional[str]:
+        output_name = ProjectOutputDevice.last_out_name
+        ProjectOutputDevice.last_out_name = None
+        return output_name
+
+    @staticmethod
+    @deprecated("getLastOutputName is deprecated and will be removed in the next major release, use popLastOutputName instead", since = "5.10.0")
     def getLastOutputName() -> Optional[str]:
         return ProjectOutputDevice.last_out_name
 

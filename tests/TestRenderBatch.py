@@ -63,31 +63,34 @@ def test_compare(data):
 
 
 def test_render():
-    mocked_shader = MagicMock()
-    with patch("UM.View.GL.OpenGL.OpenGL.getInstance"):
+    with patch("UM.View.GL.OpenGL.OpenGL.getInstance") as mock_getInstance:
+        mocked_opengl = MagicMock()
+        mocked_opengl.activate = MagicMock()
+        mock_getInstance.return_value = mocked_opengl
+
+        mocked_shader = MagicMock()
         render_batch = RenderBatch(mocked_shader)
 
-    # Render without a camera shouldn't cause any effect.
-    render_batch.render(None)
-    assert mocked_shader.bind.call_count == 0
+        # Render without a camera shouldn't cause any effect.
+        render_batch.render(None)
+        assert mocked_shader.bind.call_count == 0
 
-    # Rendering with a camera should cause the shader to be bound and released (even if the batch is empty)
-    mocked_camera = MagicMock()
-    mocked_camera.getWorldTransformation = MagicMock(return_value = Matrix())
-    mocked_camera.getViewProjectionMatrix = MagicMock(return_value=Matrix())
-    with patch("UM.View.GL.OpenGLContext.OpenGLContext.properties"):
-        render_batch.render(mocked_camera)
-    assert mocked_shader.bind.call_count == 1
-    assert mocked_shader.release.call_count == 1
-
-    # Actualy render with an item in the batch
-    mb = MeshBuilder()
-    mb.addPyramid(10, 10, 10, color=Color(0.0, 1.0, 0.0, 1.0))
-    mb.calculateNormals()
-    mesh_data = mb.build()
-    render_batch.addItem(Matrix(), mesh_data, {})
-    with patch("UM.View.GL.OpenGL.OpenGL.getInstance"):
+        # Rendering with a camera should cause the shader to be bound and released (even if the batch is empty)
+        mocked_camera = MagicMock()
+        mocked_camera.getWorldTransformation = MagicMock(return_value = Matrix())
+        mocked_camera.getViewProjectionMatrix = MagicMock(return_value=Matrix())
         with patch("UM.View.GL.OpenGLContext.OpenGLContext.properties"):
             render_batch.render(mocked_camera)
-    assert mocked_shader.bind.call_count == 2
-    assert mocked_shader.release.call_count == 2
+        assert mocked_shader.bind.call_count == 1
+        assert mocked_shader.release.call_count == 1
+
+        # Actualy render with an item in the batch
+        mb = MeshBuilder()
+        mb.addPyramid(10, 10, 10, color=Color(0.0, 1.0, 0.0, 1.0))
+        mb.calculateNormals()
+        mesh_data = mb.build()
+        render_batch.addItem(Matrix(), mesh_data, {})
+        with patch("UM.View.GL.OpenGLContext.OpenGLContext.properties"):
+            render_batch.render(mocked_camera)
+        assert mocked_shader.bind.call_count == 2
+        assert mocked_shader.release.call_count == 2

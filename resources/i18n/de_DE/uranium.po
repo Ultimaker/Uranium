@@ -554,7 +554,7 @@ msgstr "Beim Deinstallieren der folgenden Pakete traten Fehler auf:"
 "{packages}"
 
 msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
+msgid "There were no models in <filename>{0}</filename>."
 msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."
 
 msgctxt "@action:description"
@@ -680,10 +680,6 @@ msgstr "{application_name} {version_number} ist verfügbar!"
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} bietet eine bessere und zuverlässigere Druckerfahrung."
-
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There were no models in <filename>{0}</filename>."
-msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."
 
 msgctxt "@checkbox:description"
 msgid "If a model has been rotated then 'Non-Uniform Scaling' might result in skewing of the model."
