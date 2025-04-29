@@ -12,7 +12,7 @@ class MeshWriter(FileWriter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def write(self, stream, node, mode = FileWriter.OutputMode.BinaryMode):
+    def write(self, stream, node, mode = FileWriter.OutputMode.BinaryMode, **kwargs):
         """Output a collection of nodes to stream in such a way that it makes sense
         for the file format.
 
@@ -22,6 +22,7 @@ class MeshWriter(FileWriter):
 
         :param stream: :type{IOStream} The stream to output to.
         :param node: A collection of scene nodes to write to the stream.
+        :param kwargs extra arguments to customize the output (e.g. target mime_type)
         """
 
         raise NotImplementedError("MeshWriter plugin was not correctly implemented, no write was specified")

@@ -12,7 +12,7 @@ from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
 
 class STLWriter(MeshWriter):
-    def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
+    def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode, **kwargs):
         """Write the specified sequence of nodes to a stream in the STL format.
 
         :param stream: The output stream to write to.
