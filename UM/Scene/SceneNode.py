@@ -369,7 +369,7 @@ class SceneNode:
 
         return self._mesh_data
 
-    def getMeshDataTransformed(self) -> Optional[MeshData]:
+    def getMeshDataTransformed(self, include_uvs: bool = False) -> Optional[MeshData]:
         """Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root.
 
         If this node is a group, it will recursively concatenate all child nodes/objects.
