@@ -12,7 +12,7 @@ class Texture:
     This interface should be implemented by OpenGL implementations to handle texture
     objects.
     """
-    def __init__(self, open_gl_binding_object: QAbstractOpenGLFunctions, fallback_width: int = 1, fallback_height: int = 1) -> None:
+    def __init__(self, open_gl_binding_object: QAbstractOpenGLFunctions, fallback_width: int = 1, fallback_height: int = 1, aa_filter: QOpenGLTexture.Filter = QOpenGLTexture.Filter.Nearest) -> None:
         super().__init__()
 
         self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target.Target2D)
@@ -21,6 +21,7 @@ class Texture:
         self._image = None
         self._fallback_width = fallback_width
         self._fallback_height = fallback_height
+        self._aa_filter = aa_filter
         self._pixel_updates = []
 
     def getTextureId(self) -> int:
@@ -54,7 +55,7 @@ class Texture:
                 self._image = QImage(self._fallback_width, self._fallback_height, QImage.Format.Format_ARGB32)
                 self._image.fill(0)
             self._qt_texture.setData(self._image)
-            self._qt_texture.setMinMagFilters(QOpenGLTexture.Filter.Linear, QOpenGLTexture.Filter.Linear)
+            self._qt_texture.setMinMagFilters(self._aa_filter, self._aa_filter)
         self._performPixelUpdates()
         self._qt_texture.bind(texture_unit)
 
