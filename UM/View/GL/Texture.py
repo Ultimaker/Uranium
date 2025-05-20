@@ -33,7 +33,9 @@ class Texture:
             return
         xrange = range(self._image.width())
         yrange = range(self._image.height())
-        for (x, y, color) in self._pixel_updates:
+        for (xx, yy, color) in self._pixel_updates:
+            x = int(xx * xrange.stop)
+            y = int(yy * yrange.stop)
             if not (x in xrange and y in yrange):
                 Logger.warning(f"Attempt to set pixel <{x}, {y}> to OpenGL texture outside of image bounds [{xrange.stop}x{yrange.stop}].")
                 continue
@@ -56,7 +58,7 @@ class Texture:
         self._performPixelUpdates()
         self._qt_texture.bind(texture_unit)
 
-    def setPixel(self, x: int, y: int, color: [int]) -> None:
+    def setPixel(self, x: float, y: float, color: [int]) -> None:
         """ Put a new pixel into the texture (activates on next `bind` call).
 
         :param x: Horizontal position of pixel to set.
