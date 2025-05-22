@@ -32,15 +32,9 @@ class Texture:
         if self._image is None:
             Logger.warning("Attempt to update OpenGL texture pixels without an image set.")
             return
-        xrange = range(self._image.width())
-        yrange = range(self._image.height())
-        for (xx, yy, color) in self._pixel_updates:
-            x = int(xx * xrange.stop)
-            y = int(yy * yrange.stop)
-            if not (x in xrange and y in yrange):
-                Logger.warning(f"Attempt to set pixel <{x}, {y}> to OpenGL texture outside of image bounds [{xrange.stop}x{yrange.stop}].")
-                continue
-            self._qt_texture.setData(x, y, 0, 1, 1, 1, QOpenGLTexture.PixelFormat.RGBA, QOpenGLTexture.PixelType.UInt8, bytes(color))
+        # FIXME: Pretend this is efficient for now.
+        for (x, y, color) in self._pixel_updates:
+            self._qt_texture.setData(x, y, 0, 1, 1, 1, QOpenGLTexture.PixelFormat.RGBA, QOpenGLTexture.PixelType.UInt8, color)
         self._pixel_updates.clear()
 
     def bind(self, texture_unit):
@@ -59,14 +53,21 @@ class Texture:
         self._performPixelUpdates()
         self._qt_texture.bind(texture_unit)
 
-    def setPixel(self, x: float, y: float, color: [int]) -> None:
+    def setPixel(self, xf: float, yf: float, color: [int]) -> None:
         """ Put a new pixel into the texture (activates on next `bind` call).
 
-        :param x: Horizontal position of pixel to set.
-        :param y: Vertical position of pixel to set.
+        :param xf: Horizontal position of pixel to set `[0.0, 1.0]`.
+        :param yf: Vertical position of pixel to set `[0.0, 1.0]`.
         :param color: Array with four uint8 bytes `[R8, G8, B8, A8]`.
         """
-        self._pixel_updates.append((x, y, color))
+        xrange = range(self._image.width())
+        yrange = range(self._image.height())
+        x = int(xf * xrange.stop)
+        y = int(yf * yrange.stop)
+        if not (x in xrange and y in yrange):
+            Logger.warning(f"Attempt to set pixel <{x}, {y}> to OpenGL texture outside of image bounds [{xrange.stop}x{yrange.stop}].")
+            return
+        self._pixel_updates.append((x, y, bytes(color)))
 
     def release(self, texture_unit):
         """Release the texture from a certain texture unit.
