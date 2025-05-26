@@ -38,13 +38,13 @@ ToolTip
         switch (contentAlignment)
         {
             case UM.Enums.ContentAlignment.AlignLeft:
-                return (label.width + Math.round(UM.Theme.getSize("default_arrow").width * 1.2) + padding * 2) * -1;
+                return (contentItem.width + Math.round(UM.Theme.getSize("default_arrow").width * 1.2) + padding * 2) * -1;
             case UM.Enums.ContentAlignment.AlignRight:
                 return parent.width + Math.round(UM.Theme.getSize("default_arrow").width * 1.2 + padding);
         }
     }
 
-    y: Math.round(parent.height / 2 - label.height / 2 ) - padding
+    y: Math.round(parent.height / 2 - contentItem.height / 2 ) - padding
 
     padding: UM.Theme.getSize("thin_margin").width
 
@@ -67,7 +67,7 @@ ToolTip
     }
 
     function show() {
-        opacity = text != "" ? 1 : 0
+        opacity = (contentItem !== label || text != "") ? 1 : 0
     }
 
     function hide() {
