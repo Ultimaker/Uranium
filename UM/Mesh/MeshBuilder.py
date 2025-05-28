@@ -161,6 +161,9 @@ class MeshBuilder:
             return None
         return self._uvs[0: self._vertex_count]
 
+    def setUVCoordinates(self, uv_coordinates: numpy.ndarray):
+        self._uvs = uv_coordinates
+
     def getFileName(self) -> Optional[str]:
         return self._file_name
 
