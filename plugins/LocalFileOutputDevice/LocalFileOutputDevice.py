@@ -176,6 +176,8 @@ class LocalFileOutputDevice(ProjectOutputDevice):
                 Logger.log("e", "Unrecognised OutputMode.")
                 return None
 
+            writer_args["mime_type"] = selected_type["mime_type"]
+
             job = WriteFileJob(file_writer, stream, nodes, mode, writer_args)
             job.setFileName(file_name)
             if not silent_save:
