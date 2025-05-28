@@ -1,10 +1,13 @@
 # Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from typing import List
+
 from PyQt6.QtGui import QImage
 from PyQt6.QtOpenGL import QOpenGLTexture, QAbstractOpenGLFunctions
 
 from UM.Logger import Logger
+
 
 class Texture:
     """A class describing the interface to be used for texture objects.
@@ -22,20 +25,19 @@ class Texture:
         self._fallback_width = fallback_width
         self._fallback_height = fallback_height
         self._aa_filter = aa_filter
-        self._pixel_updates = []
+        self._subimage_updates: List[(QImage, int, int)] = []
 
     def getTextureId(self) -> int:
         """Get the OpenGL ID of the texture."""
         return self._qt_texture.textureId()
 
-    def _performPixelUpdates(self) -> None:
+    def _performSubImageUpdates(self) -> None:
         if self._image is None:
             Logger.warning("Attempt to update OpenGL texture pixels without an image set.")
             return
-        # FIXME: Pretend this is efficient for now.
-        for (x, y, color) in self._pixel_updates:
-            self._qt_texture.setData(x, y, 0, 1, 1, 1, QOpenGLTexture.PixelFormat.RGBA, QOpenGLTexture.PixelType.UInt8, color)
-        self._pixel_updates.clear()
+        for (image, x, y) in self._subimage_updates:
+            self._qt_texture.setData(x, y, 0, image.width(), image.height(), 1, QOpenGLTexture.PixelFormat.RGBA, QOpenGLTexture.PixelType.UInt8, image.bits())
+        self._subimage_updates.clear()
 
     def bind(self, texture_unit):
         """Bind the texture to a certain texture unit.
@@ -50,24 +52,16 @@ class Texture:
                 self._image.fill(0)
             self._qt_texture.setData(self._image)
             self._qt_texture.setMinMagFilters(self._aa_filter, self._aa_filter)
-        self._performPixelUpdates()
+        self._performSubImageUpdates()
         self._qt_texture.bind(texture_unit)
 
-    def setPixel(self, xf: float, yf: float, color: [int]) -> None:
-        """ Put a new pixel into the texture (activates on next `bind` call).
-
-        :param xf: Horizontal position of pixel to set `[0.0, 1.0]`.
-        :param yf: Vertical position of pixel to set `[0.0, 1.0]`.
-        :param color: Array with four uint8 bytes `[R8, G8, B8, A8]`.
-        """
+    def setSubImage(self, image: QImage, x: int, y: int) -> None:
         xrange = range(self._image.width())
         yrange = range(self._image.height())
-        x = int(xf * xrange.stop)
-        y = int(yf * yrange.stop)
-        if not (x in xrange and y in yrange):
-            Logger.warning(f"Attempt to set pixel <{x}, {y}> to OpenGL texture outside of image bounds [{xrange.stop}x{yrange.stop}].")
+        if (not (x in xrange and y in yrange)) or (not ((x + image.width()) in xrange and (y + image.height()) in yrange)):
+            Logger.warning(f"Attempt to set image at <{x}, {y}> with dimensions <{image.width()},{image.height()}> to OpenGL texture would result in data outside of image bounds [{xrange.stop}x{yrange.stop}].")
             return
-        self._pixel_updates.append((x, y, bytes(color)))
+        self._subimage_updates.append((image, x, y))
 
     def release(self, texture_unit):
         """Release the texture from a certain texture unit.
