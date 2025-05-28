@@ -1,9 +1,10 @@
 # Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import List
+from typing import List, Optional, Tuple
 
-from PyQt6.QtGui import QImage
+from PyQt6.QtCore import QRect
+from PyQt6.QtGui import QImage, QPainter
 from PyQt6.QtOpenGL import QOpenGLTexture, QAbstractOpenGLFunctions
 
 from UM.Logger import Logger
@@ -25,7 +26,7 @@ class Texture:
         self._fallback_width = fallback_width
         self._fallback_height = fallback_height
         self._aa_filter = aa_filter
-        self._subimage_updates: List[(QImage, int, int)] = []
+        self._subimage_updates: List[Tuple[QImage, int, int, QImage]] = []
 
     def getTextureId(self) -> int:
         """Get the OpenGL ID of the texture."""
@@ -35,8 +36,13 @@ class Texture:
         if self._image is None:
             Logger.warning("Attempt to update OpenGL texture pixels without an image set.")
             return
-        for (image, x, y) in self._subimage_updates:
-            self._qt_texture.setData(x, y, 0, image.width(), image.height(), 1, QOpenGLTexture.PixelFormat.RGBA, QOpenGLTexture.PixelType.UInt8, image.bits())
+        for (updated, x, y, image) in self._subimage_updates:
+            painter = QPainter(image)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+            painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
+            painter.drawImage(0, 0, updated)
+            painter.end()
+            self._qt_texture.setData(x, y, 0, image.width(), image.height(), 1, QOpenGLTexture.PixelFormat.BGRA, QOpenGLTexture.PixelType.UInt8, image.bits())
         self._subimage_updates.clear()
 
     def bind(self, texture_unit):
@@ -55,13 +61,20 @@ class Texture:
         self._performSubImageUpdates()
         self._qt_texture.bind(texture_unit)
 
-    def setSubImage(self, image: QImage, x: int, y: int) -> None:
+    def setSubImage(self, image: QImage, x: int, y: int) -> Optional[QImage]:
         xrange = range(self._image.width())
         yrange = range(self._image.height())
         if (not (x in xrange and y in yrange)) or (not ((x + image.width()) in xrange and (y + image.height()) in yrange)):
             Logger.warning(f"Attempt to set image at <{x}, {y}> with dimensions <{image.width()},{image.height()}> to OpenGL texture would result in data outside of image bounds [{xrange.stop}x{yrange.stop}].")
-            return
-        self._subimage_updates.append((image, x, y))
+            return None
+        old_pixels = self._image.copy(QRect(x, y, image.width(), image.height()))
+        painter = QPainter(self._image)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
+        painter.drawImage(x, y, image)
+        painter.end()
+        self._subimage_updates.append((image, x, y, old_pixels))
+        return old_pixels
 
     def release(self, texture_unit):
         """Release the texture from a certain texture unit.
