@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Ultimaker B.V.
+# Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import ctypes   # type: ignore
@@ -191,12 +191,12 @@ class OpenGL:
         """
         return FrameBufferObject(width, height)
 
-    def createTexture(self) -> Texture:
+    def createTexture(self, fallback_width: int = 1, fallback_height: int = 1) -> Texture:
         """Create a Texture Object.
 
         This should return an implementation-specific Texture subclass.
         """
-        return Texture(self._gl)
+        return Texture(self._gl, fallback_width, fallback_height)
 
     def createShaderProgram(self, file_name: str) -> Optional[ShaderProgram]:
         """Create a ShaderProgram Object.
