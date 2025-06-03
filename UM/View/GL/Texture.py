@@ -32,6 +32,15 @@ class Texture:
         """Get the OpenGL ID of the texture."""
         return self._qt_texture.textureId()
 
+    def getWidth(self) -> int:
+        return self._image.width() if self._image is not None else self._fallback_width
+
+    def getHeight(self) -> int:
+        return self._image.height() if self._image is not None else self._fallback_height
+
+    def getImage(self) -> QImage:
+        return self._image
+
     def _performSubImageUpdates(self) -> None:
         if self._image is None:
             Logger.warning("Attempt to update OpenGL texture pixels without an image set.")
