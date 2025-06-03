@@ -103,3 +103,8 @@ class Texture:
 
     def setImage(self, image):
         self._image = image
+
+    def __deepcopy__(self, memo) -> "Texture":
+        copied_texture = Texture(self._gl, self._fallback_width, self._fallback_height, self._aa_filter)
+        copied_texture.setImage(QImage(self._image))
+        return copied_texture
