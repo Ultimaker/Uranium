@@ -62,11 +62,8 @@ class Texture:
         self._qt_texture.bind(texture_unit)
 
     def setSubImage(self, image: QImage, x: int, y: int) -> Optional[QImage]:
-        xrange = range(self._image.width())
-        yrange = range(self._image.height())
-        if (not (x in xrange and y in yrange)) or (not ((x + image.width()) in xrange and (y + image.height()) in yrange)):
-            Logger.warning(f"Attempt to set image at <{x}, {y}> with dimensions <{image.width()},{image.height()}> to OpenGL texture would result in data outside of image bounds [{xrange.stop}x{yrange.stop}].")
-            return None
+        if not (0 <= x <= self._image.width() - image.width() and 0 <= y <= self._image.height() - image.height()):
+            Logger.warning(f"Attempt to set image at <{x}, {y}> with dimensions <{image.width()},{image.height()}> to OpenGL texture would result in data outside of image bounds [{self._image.width()}x{self._image.height()}].")
         old_pixels = self._image.copy(QRect(x, y, image.width(), image.height()))
         painter = QPainter(self._image)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
