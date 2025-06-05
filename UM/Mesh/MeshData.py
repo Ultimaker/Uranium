@@ -347,6 +347,20 @@ class MeshData:
             v_c = self._vertices[self._indices[face_id][2]]
         return v_a, v_b, v_c
 
+    def getFaceUvCoords(self, face_id: int) -> Optional[Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]]:
+        if self._uvs is None:
+            return None
+        if self._indices is None or len(self._indices) == 0:
+            base_index = face_id * 3
+            uv_a = self._uvs[base_index]
+            uv_b = self._uvs[base_index + 1]
+            uv_c = self._uvs[base_index + 2]
+        else:
+            uv_a = self._uvs[self._indices[face_id][0]]
+            uv_b = self._uvs[self._indices[face_id][1]]
+            uv_c = self._uvs[self._indices[face_id][2]]
+        return uv_a, uv_b, uv_c
+
     def hasAttribute(self, key: str) -> bool:
         return key in self._attributes
 
