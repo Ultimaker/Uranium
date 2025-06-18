@@ -79,7 +79,7 @@ class Texture:
         old_pixels = self._image.copy(QRect(x, y, image.width(), image.height()))
         painter = QPainter(self._image)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
-        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
+        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Source)
         painter.drawImage(x, y, image)
         painter.end()
         self._subimage_updates.append((image, x, y, old_pixels))
