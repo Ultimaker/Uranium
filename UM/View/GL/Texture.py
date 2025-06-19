@@ -32,6 +32,15 @@ class Texture:
         """Get the OpenGL ID of the texture."""
         return self._qt_texture.textureId()
 
+    def getWidth(self) -> int:
+        return self._image.width() if self._image is not None else self._fallback_width
+
+    def getHeight(self) -> int:
+        return self._image.height() if self._image is not None else self._fallback_height
+
+    def getImage(self) -> QImage:
+        return self._image
+
     def _performSubImageUpdates(self) -> None:
         if self._image is None:
             Logger.warning("Attempt to update OpenGL texture pixels without an image set.")
@@ -91,3 +100,8 @@ class Texture:
 
     def setImage(self, image):
         self._image = image
+
+    def __deepcopy__(self, memo) -> "Texture":
+        copied_texture = Texture(self._gl, self._fallback_width, self._fallback_height, self._aa_filter)
+        copied_texture.setImage(QImage(self._image))
+        return copied_texture
