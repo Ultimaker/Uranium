@@ -48,7 +48,7 @@ class Texture:
         for (updated, x, y, image) in self._subimage_updates:
             painter = QPainter(image)
             painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
-            painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
+            painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Source)
             painter.drawImage(0, 0, updated)
             painter.end()
             self._qt_texture.setData(x, y, 0, image.width(), image.height(), 1, QOpenGLTexture.PixelFormat.BGRA, QOpenGLTexture.PixelType.UInt8, image.bits())
@@ -76,7 +76,7 @@ class Texture:
         old_pixels = self._image.copy(QRect(x, y, image.width(), image.height()))
         painter = QPainter(self._image)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
-        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
+        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Source)
         painter.drawImage(x, y, image)
         painter.end()
         self._subimage_updates.append((image, x, y, old_pixels))
