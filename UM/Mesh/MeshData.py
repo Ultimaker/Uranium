@@ -268,6 +268,9 @@ class MeshData:
             return None
         return self._colors.tobytes()
 
+    def getUVCoordinates(self) -> Optional[numpy.ndarray]:
+        return self._uvs
+
     def getUVCoordinatesAsByteArray(self) -> Optional[bytes]:
         if self._uvs is None:
             return None
