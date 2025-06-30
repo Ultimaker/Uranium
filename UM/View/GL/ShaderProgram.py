@@ -30,16 +30,16 @@ class ShaderProgram:
     be used for uniform values and uniform and attribute bindings.
     """
     def __init__(self) -> None:
-        self._bindings = {}  # type: Dict[str, str]
-        self._attribute_bindings = {}  # type: Dict[str, str]
+        self._bindings: Dict[str, str] = {}
+        self._attribute_bindings: Dict[str, str] = {}
 
-        self._shader_program = None  # type: Optional[QOpenGLShaderProgram]
-        self._uniform_indices = {}  # type: Dict[str, int]
-        self._attribute_indices = {}  # type: Dict[str, int]
-        self._uniform_values = {}  # type: Dict[int, Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]]
-        self._uniform_values_array = {}  # type: Dict[int, Union[List[List[int]]]]
+        self._shader_program: Optional[QOpenGLShaderProgram] = None
+        self._uniform_indices: Dict[str, int] = {}
+        self._attribute_indices: Dict[str, int] = {}
+        self._uniform_values: Dict[int, Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]] = {}
+        self._uniform_values_array: Dict[int, Union[List[List[int]]]] = {}
         self._bound = False
-        self._textures = {}  # type: Dict[int, Texture]
+        self._textures: Dict[int, Texture] = {}
 
         self._debug_shader = False  # Set this to true to enable extra logging concerning shaders
 
