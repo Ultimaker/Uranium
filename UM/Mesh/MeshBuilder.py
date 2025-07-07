@@ -9,7 +9,7 @@ from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Logger import Logger
 
-import libuvula
+import pyUvula as uvula
 
 import numpy
 import math
@@ -844,7 +844,7 @@ class MeshBuilder:
             remove_indices = True
             self._indices = numpy.arange(self._vertex_count, dtype=numpy.int32).reshape(-1, 3)  # 3 verts per sub-array.
 
-        self._uvs = libuvula.unwrap(self._vertices, self._indices)
+        self._uvs = uvula.unwrap(self._vertices, self._indices)
 
         if remove_indices:
             self._indices = None
