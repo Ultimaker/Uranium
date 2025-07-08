@@ -9,8 +9,6 @@ from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Logger import Logger
 
-import pyUvula as uvula
-
 import numpy
 import math
 import numbers
@@ -834,17 +832,3 @@ class MeshBuilder:
         self.addQuad(v0, v1, v2, v3, color = color, normal = normal)
 
         return True
-
-    def unwrapNewUvs(self):
-        """Create a new set of texture coordinates for the mesh."""
-        remove_indices = False
-        if self._indices is None:
-            if self._vertices is None or self._vertex_count < 3:
-                return
-            remove_indices = True
-            self._indices = numpy.arange(self._vertex_count, dtype=numpy.int32).reshape(-1, 3)  # 3 verts per sub-array.
-
-        self._uvs = uvula.unwrap(self._vertices, self._indices)
-
-        if remove_indices:
-            self._indices = None
