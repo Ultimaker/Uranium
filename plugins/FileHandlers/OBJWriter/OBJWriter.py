@@ -40,6 +40,7 @@ class OBJWriter(MeshWriter):
             verts = mesh_data.getVertices()
             if verts is None:
                 continue   # No mesh data, nothing to do.
+            uvs = mesh_data.getUVCoordinates()
 
             stream.write("# {0}\n# Vertices\n".format(node.getName()))
 
@@ -58,10 +59,15 @@ class OBJWriter(MeshWriter):
             else:
                 for vertex in verts:
                     stream.write("v {0} {1} {2}\n".format(vertex[0], -vertex[2], vertex[1]))
+                for uv in uvs:
+                    stream.write("vt {0} {1}\n".format(uv[0], uv[1]))
 
                 stream.write("# Faces\n")
                 for face in range(face_offset, face_offset + len(verts) - 1, 3):
-                    stream.write("f {0} {1} {2}\n".format(face, face + 1, face + 2))
+                    if mesh_data.hasUVCoordinates():
+                        stream.write("f {0}/{0} {1}/{1} {2}/{2}\n".format(face, face + 1, face + 2))
+                    else:
+                        stream.write("f {0} {1} {2}\n".format(face, face + 1, face + 2))
 
             face_offset += mesh_data.getVertexCount()
 
