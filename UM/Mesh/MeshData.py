@@ -130,7 +130,7 @@ class MeshData:
         return self._type
 
     def getFaceCount(self) -> int:
-        return self._face_count
+        return self._face_count if self.hasIndices() else self._vertex_count / 3
 
     def getVertices(self) -> numpy.ndarray:
         """Get the array of vertices"""
@@ -270,6 +270,9 @@ class MeshData:
         if self._colors is None:
             return None
         return self._colors.tobytes()
+
+    def getUVCoordinates(self) -> Optional[numpy.ndarray]:
+        return self._uvs
 
     def getUVCoordinatesAsByteArray(self) -> Optional[bytes]:
         if self._uvs is None:
