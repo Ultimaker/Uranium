@@ -409,7 +409,7 @@ class MeshData:
                 new_vertices.append(self._vertices[i + 2])
             self._vertices = NumPyUtil.immutableNDArray(new_vertices)
 
-    def calculateUnwrappedUVCoordinates(self, desired_texture_resolution: int) -> Optional[tuple[int, int]]:
+    def calculateUnwrappedUVCoordinates(self) -> Optional[tuple[int, int]]:
         """Create a new set of unwrapped texture coordinates for the mesh."""
         # remove_indices = False
         if self._indices is None:
@@ -420,7 +420,7 @@ class MeshData:
         else:
             indices = numpy.array()
 
-        self._uvs, texture_width, texture_height = uvula.unwrap(self._vertices, indices, desired_texture_resolution)
+        self._uvs, texture_width, texture_height = uvula.unwrap(self._vertices, indices)
 
         # if remove_indices:
         #     self._indices = None
