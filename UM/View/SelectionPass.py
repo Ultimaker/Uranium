@@ -88,11 +88,11 @@ class SelectionPass(RenderPass):
     def render(self):
         """Perform the actual rendering."""
         if self._mode == SelectionPass.SelectionMode.OBJECTS:
-            self._renderObjectsMode()
+            self.renderObjectsMode()
         elif self._mode == SelectionPass.SelectionMode.FACES:
-            self._renderFacesMode()
+            self.renderFacesMode()
 
-    def _renderObjectsMode(self):
+    def renderObjectsMode(self):
         self._selection_map = self._toolhandle_selection_map.copy()
 
         batch = RenderBatch(self._shader)
@@ -121,7 +121,7 @@ class SelectionPass(RenderPass):
 
         self.release()
 
-    def _renderFacesMode(self):
+    def renderFacesMode(self):
         batch = RenderBatch(self._face_shader)
         self._face_shader.setUniformValue("u_modelId", 0)
         self._face_mode_selection_map = []

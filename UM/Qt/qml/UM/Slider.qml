@@ -25,6 +25,7 @@ RowLayout
     property alias value: slider.value
     property alias vertical: slider.vertical
     property alias visualPosition: slider.visualPosition
+    property alias indicatorVisible: percentageBackground.visible
 
     property var onPressedChanged
     property alias backgroundTickCount: ticks.model

@@ -22,7 +22,7 @@ class Plane:
     def distance(self):
         return self._distance
 
-    def intersectsRay(self, ray):
+    def intersectsRay(self, ray, forward_only = True):
         w = ray.origin - (self._normal * self._distance)
 
         nDotR = self._normal.dot(ray.direction)
@@ -32,7 +32,7 @@ class Plane:
             return False
 
         t = nDotW / nDotR
-        if t < 0:
+        if t < 0 and forward_only:
             return False
 
         return t

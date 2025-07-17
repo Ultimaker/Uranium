@@ -30,15 +30,16 @@ class ShaderProgram:
     be used for uniform values and uniform and attribute bindings.
     """
     def __init__(self) -> None:
-        self._bindings = {}  # type: Dict[str, str]
-        self._attribute_bindings = {}  # type: Dict[str, str]
+        self._bindings: Dict[str, str] = {}
+        self._attribute_bindings: Dict[str, str] = {}
 
-        self._shader_program = None  # type: Optional[QOpenGLShaderProgram]
-        self._uniform_indices = {}  # type: Dict[str, int]
-        self._attribute_indices = {}  # type: Dict[str, int]
-        self._uniform_values = {}  # type: Dict[int, Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]]
+        self._shader_program: Optional[QOpenGLShaderProgram] = None
+        self._uniform_indices: Dict[str, int] = {}
+        self._attribute_indices: Dict[str, int] = {}
+        self._uniform_values: Dict[int, Union[Vector, Matrix, Color, List[float], List[List[float]], float, int]] = {}
+        self._uniform_values_array: Dict[int, Union[List[List[int]]]] = {}
         self._bound = False
-        self._textures = {}  # type: Dict[int, Texture]
+        self._textures: Dict[int, Texture] = {}
 
         self._debug_shader = False  # Set this to true to enable extra logging concerning shaders
 
@@ -182,13 +183,7 @@ class ShaderProgram:
         Possible keywords:
         - cache: False when the value should not be cached for later calls to bind().
         """
-        if not self._shader_program:
-            return
-
-        if name not in self._uniform_indices and self._shader_program is not None:
-            self._uniform_indices[name] = self._shader_program.uniformLocation(name)
-
-        uniform = self._uniform_indices[name]
+        uniform = self._get_uniform_index(name)
         if uniform == -1:
             return
 
@@ -197,6 +192,43 @@ class ShaderProgram:
 
         if self._bound:
             self._setUniformValueDirect(uniform, value)
+
+    def setUniformValueArray(self, name: str, value: Union[List[List[int]]], **kwargs: Any) -> None:
+        """Set a named uniform variable.
+
+        Unless otherwise specified as argument, the specified value will be cached so that
+        it does not matter whether bind() has already been called. Instead, if the shader
+        is not currently bound, the next call to bind() will update the uniform values.
+
+        :param name: The name of the uniform variable.
+        :param value: The value to set the variable to.
+        :param kwargs: Keyword arguments.
+        Possible keywords:
+        - cache: False when the value should not be cached for later calls to bind().
+        """
+        uniform = self._get_uniform_index(name)
+        if uniform == -1:
+            return
+
+        if kwargs.get("cache", True):
+            self._uniform_values_array[uniform] = value
+
+        if self._bound:
+            self._setUniformValueArrayDirect(uniform, value)
+
+    def _get_uniform_index(self, name: str) -> int:
+        """Registers a named uniform variable.
+
+        :param name: The name of the uniform variable.
+        :return The index of the registered uniform variable, or -1 if it wasn't registered.
+        """
+        if not self._shader_program:
+            return -1
+
+        if name not in self._uniform_indices and self._shader_program is not None:
+            self._uniform_indices[name] = self._shader_program.uniformLocation(name)
+
+        return self._uniform_indices[name]
 
     def setTexture(self, texture_unit: int, texture: Texture) -> None:
         """Set a texture that should be bound to a specified texture unit when this shader is bound.
@@ -271,6 +303,9 @@ class ShaderProgram:
 
         for uniform in self._uniform_values:
             self._setUniformValueDirect(uniform, self._uniform_values[uniform])
+
+        for uniform, value in self._uniform_values_array.items():
+            self._setUniformValueArrayDirect(uniform, value)
 
         for texture_unit, texture in self._textures.items():
             texture.bind(texture_unit)
@@ -381,3 +416,10 @@ class ShaderProgram:
             cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
         else:
             cast(QOpenGLShaderProgram, self._shader_program).setUniformValue(uniform, cast(Union[float, int], value))
+
+    def _setUniformValueArrayDirect(self, uniform: int, value: Union[List[List[int]]]) -> None:
+        if type(value) is list and type(cast(List[List[int]], value)[0]) is list and len(cast(List[List[int]], value)[0]) == 3:
+            value = [QVector3D(vector[0], vector[1], vector[2]) for vector in value]
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValueArray(uniform, value)
+        else:
+            cast(QOpenGLShaderProgram, self._shader_program).setUniformValueArray(uniform, cast(Union[float, int], value))
