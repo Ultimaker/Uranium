@@ -10,6 +10,8 @@ import tempfile
 import time  # To reduce chance of concurrency issues when deleting files if the OS is slow to register whether a file exists or not.
 from typing import Dict, Generator, List, Optional, Union, cast
 
+from PyQt6.QtWidgets import QMessageBox
+
 from UM.Logger import Logger
 from UM.Platform import Platform
 from UM.Version import Version
@@ -481,7 +483,8 @@ class Resources:
         Logger.log("d", "Initializing storage paths")
         # use nested structure: <app-name>/<version>/...
         version = Version(cls.ApplicationVersion)
-        if version.getPostfixType() == "alpha" or cls.ApplicationVersion == "unknown":
+        is_alpha_version = version.getPostfixType() == "alpha" or cls.ApplicationVersion == "unknown"
+        if is_alpha_version:
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
         else:
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, "%s.%s" % (version.getMajor(), version.getMinor()))
@@ -510,7 +513,19 @@ class Resources:
                 cls.__cache_storage_path = os.path.join(cls.__cache_storage_path, "cache")
         Logger.log("d", "Cache storage path is %s", cls.__cache_storage_path)
         if not os.path.exists(cls.__config_storage_path) or not os.path.exists(cls.__data_storage_path):
-            cls._copyLatestDirsIfPresent()
+            copy_latest_dirs = True
+            if is_alpha_version:
+                message_box = QMessageBox()
+                message_box.setIcon(QMessageBox.Icon.Warning)
+                message_box.setWindowTitle("Cura Alpha Version")
+                message_box.setText("Starting an Alpha version of Cura without a configuration, do you want to import the configuration from the latest stable version or start a clean version ?")
+                button_import = message_box.addButton("Import config", QMessageBox.ButtonRole.AcceptRole)
+                message_box.addButton("Start clean", QMessageBox.ButtonRole.RejectRole)
+                message_box.exec()
+                copy_latest_dirs = (message_box.clickedButton() == button_import)
+
+            if copy_latest_dirs:
+                cls._copyLatestDirsIfPresent()
         if not os.path.exists(cls.__cache_storage_path):
             try:
                 os.makedirs(cls.__cache_storage_path, exist_ok = True)
