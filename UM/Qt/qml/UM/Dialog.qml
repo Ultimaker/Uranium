@@ -83,7 +83,8 @@ Window
         base.accepted();
     }
 
-    function reject() {
+    function reject()
+    {
         //If we don't have a close button we don't want to allow the user to close the window by rejecting it (escape key).
         if (base.flags & Qt.WindowCloseButtonHint)
         {
