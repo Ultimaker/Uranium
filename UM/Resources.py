@@ -10,7 +10,7 @@ import tempfile
 import time  # To reduce chance of concurrency issues when deleting files if the OS is slow to register whether a file exists or not.
 from typing import Dict, Generator, List, Optional, Union, cast
 
-from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QMessageBox, QApplication
 
 from UM.Logger import Logger
 from UM.Platform import Platform
@@ -514,7 +514,7 @@ class Resources:
         Logger.log("d", "Cache storage path is %s", cls.__cache_storage_path)
         if not os.path.exists(cls.__config_storage_path) or not os.path.exists(cls.__data_storage_path):
             copy_latest_dirs = True
-            if is_alpha_version:
+            if is_alpha_version and QApplication.instance() is not None:
                 message_box = QMessageBox()
                 message_box.setIcon(QMessageBox.Icon.Warning)
                 message_box.setWindowTitle("Cura Alpha Version")
