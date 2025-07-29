@@ -21,6 +21,7 @@ class UraniumConan(ConanFile):
     topics = ("conan", "python", "pyqt6", "qt", "3d-graphics", "3d-models", "python-framework")
     exports = "LICENSE*"
     settings = "os", "compiler", "build_type", "arch"
+    generators = "VirtualPythonEnv"
     package_type = "header-library"
 
     python_requires = "translationextractor/[>=2.2.0]"

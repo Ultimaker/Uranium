@@ -8,8 +8,10 @@ from conan.tools.files import copy
 
 
 class UraniumTestConan(ConanFile):
+    name = "uranium_test"
     settings = "os", "compiler", "build_type", "arch"
     test_type = "explicit"
+    generators = "VirtualPythonEnv"
 
     def requirements(self):
         self.requires(self.tested_reference_str)
@@ -28,6 +30,6 @@ class UraniumTestConan(ConanFile):
     def test(self):
         if can_run(self):
             test_buf = StringIO()
-            self.run(f"python test.py", env="conanrun", stdout=test_buf, scope="run")
+            self.run(f"python test.py", env="virtual_python_env", stdout=test_buf, scope="run")
             if "True" not in test_buf.getvalue():
                 raise ConanException("Uranium wasn't build correctly!")
