@@ -418,7 +418,12 @@ class MeshData:
         else:
             indices = numpy.array()
 
-        self._uvs, texture_width, texture_height = uvula.unwrap(self._vertices, indices)
+        try:
+            self._uvs, texture_width, texture_height = uvula.unwrap(self._vertices, indices)
+        except:
+            Logger.logException("e", "Error when processing mesh UV-unwrapping")
+            texture_width = 0
+            texture_height = 0
 
         return texture_width, texture_height
 
