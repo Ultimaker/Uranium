@@ -3,6 +3,7 @@
 
 import functools  # For partial to update files that were changed.
 import os.path  # To watch files for changes.
+import tempfile
 import threading
 from typing import Callable, List, Optional, Set, Any, Dict
 
@@ -202,12 +203,24 @@ class Scene:
             self._reload_message.actionTriggered.connect(self._reload_callback)
             self._reload_message.show()
 
-    def _reloadNodes(self, nodes: List["SceneNode"], file_path: str, message: str, action: str) -> None:
+    def reloadNodes(self, nodes: List["SceneNode"], file_path: str, on_done: Optional[Callable] = None):
+        """Reloads a list of nodes.
+
+        :param nodes: The list of nodes that needs to be reloaded.
+        :param file_path: The path to the file that was reloaded.
+        :param on_done: Optional callback to call when reloading is finished.
+        """
+
+        self._reloadNodes(nodes, file_path, "", "reload", on_done)
+
+    def _reloadNodes(self, nodes: List["SceneNode"], file_path: str, message: str, action: str, on_done: Optional[Callable] = None) -> None:
         """Reloads a list of nodes after the user pressed the "Reload" button.
 
         :param nodes: The list of nodes that needs to be reloaded.
+        :param file_path: The path to the file that was reloaded.
         :param message: The message that triggered the action to reload them.
         :param action: The button that triggered the action to reload them.
+        :param on_done: Optional callback to call when reloading is finished.
         """
 
         if action != "reload":
@@ -218,7 +231,8 @@ class Scene:
         if not file_path or not os.path.isfile(file_path):  # File doesn't exist anymore.
             return
 
-        job = ReadMeshJob(file_path)
+        dir_path = os.path.normpath(os.path.dirname(file_path))
+        job = ReadMeshJob(file_path, add_to_recent_files=file_path != tempfile.gettempdir())  # Don't add temp files to the recent files list
         reload_finished_callback = functools.partial(self._reloadJobFinished, nodes)
 
         # Store it so it won't get garbage collected. This is a memory leak, but just one partial per reload so
@@ -226,6 +240,9 @@ class Scene:
         self._callbacks.add(reload_finished_callback)
 
         job.finished.connect(reload_finished_callback)
+        if on_done:
+            self._callbacks.add(on_done)
+            job.finished.connect(on_done)
         job.start()
 
     def _reloadJobFinished(self, replaced_nodes: [SceneNode], job: ReadMeshJob) -> None:
@@ -248,7 +265,7 @@ class Scene:
                 node_name = os.path.basename(mesh_data.getFileName())
             if node_name in renamed_nodes:  # objects may get renamed by Cura.UI.ObjectsModel._renameNodes() when loaded
                 renamed_nodes[node_name] += 1
-                node_name = "{0}({1})".format(node.getName(), renamed_nodes[node.getName()])
+                node_name = f"{node.getName()}({renamed_nodes[node.getName()]})"
             else:
                 renamed_nodes[node.getName()] = 0
 
@@ -262,5 +279,5 @@ class Scene:
 
             if not mesh_replaced:
                 # Current node is a new one in the file, or it's ID has changed
-                # TODO: Load this mesh into the scene. Also alter the "ReloadAll" action in CuraApplication.
-                Logger.log("w", "Could not find matching node for object '{0}' in the scene.", node_name)
+                # TODO: Load this mesh into the scene.
+                Logger.log("w", f"Could not find matching node for object '{node_name}' in the scene.")
