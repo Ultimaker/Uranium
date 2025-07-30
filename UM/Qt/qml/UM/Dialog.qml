@@ -23,6 +23,7 @@ Window
 
     property int margin: UM.Theme.getSize("default_margin").width
     property bool closeOnAccept: true;  // Automatically close the window when the window is "accepted" (eg using the return key)
+    property bool selfDestroy: false;  // Automatically destroys the dialog when it has been hidden, useful if it has been created with component.createObject
 
     default property alias contents: contentItem.children;
 
@@ -83,7 +84,8 @@ Window
         base.accepted();
     }
 
-    function reject() {
+    function reject()
+    {
         //If we don't have a close button we don't want to allow the user to close the window by rejecting it (escape key).
         if (base.flags & Qt.WindowCloseButtonHint)
         {
@@ -95,6 +97,14 @@ Window
     function open()
     {
         base.visible = true;
+    }
+
+    onVisibleChanged:
+    {
+        if(selfDestroy && !visible)
+        {
+            destroy();
+        }
     }
 
     Rectangle

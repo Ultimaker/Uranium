@@ -116,6 +116,7 @@ class QtApplication(QApplication, Application):
         self._tray_icon_widget: Optional[QSystemTrayIcon] = None
         self._theme: Optional[Theme] = None
         self._renderer: Optional[QtRenderer] = None
+        self._sub_windows: list[QQuickWindow] = [] # List of active sub-windows, to prevent them from being garbage-collected
 
         self._job_queue: Optional[JobQueue] = None
         self._version_upgrade_manager: Optional[VersionUpgradeManager] = None
@@ -598,10 +599,39 @@ class QtApplication(QApplication, Application):
             QtApplication.splash.close()
             QtApplication.splash = None
 
+    def _onWindowVisibleChange(self, visible: bool) -> None:
+        if not visible:
+            self._sub_windows.remove(self.sender())
+
+    def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None) -> Optional["QQuickWindow"]:
+        """
+        Create a QML window from a QML file. This method uses createQmlComponent internally, but adds a few specific
+        features for windows management:
+            * The created object is a QQuickWindow instance
+            * The transient parent of the window is explicitly set to be the main window
+            * The window ownership is handled and it will be destroyed as soon as it's no longer visible,
+              so the caller should not keep a reference to it
+        :param qml_file_path: The absolute file path to the root qml file.
+        :param context_properties: Optional dictionary containing the properties that will be set on the context of the
+        qml instance before creation.
+        :return: The created QQuickWindow instance, or None in case the creation failed (qml error)
+        """
+        result = self.createQmlComponent(qml_file_path, context_properties)
+        if result is None:
+            return None
+
+        result.setTransientParent(self._main_window)
+
+        # Keep a link to the window so that it is not garbage-collected, then register it for destruction
+        self._sub_windows.append(result)
+        result.visibleChanged.connect(self._onWindowVisibleChange)
+
+        return result
+
     def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None) -> Optional["QObject"]:
         """Create a QML component from a qml file.
-        :param qml_file_path:: The absolute file path to the root qml file.
-        :param context_properties:: Optional dictionary containing the properties that will be set on the context of the
+        :param qml_file_path: The absolute file path to the root qml file.
+        :param context_properties: Optional dictionary containing the properties that will be set on the context of the
         qml instance before creation.
         :return: None in case the creation failed (qml error), else it returns the qml instance.
         :note If the creation fails, this function will ensure any errors are logged to the logging service.
@@ -611,7 +641,7 @@ class QtApplication(QApplication, Application):
             return None
         path = QUrl.fromLocalFile(qml_file_path)
         component = QQmlComponent(self._qml_engine, path)
-        result_context = QQmlContext(self._qml_engine.rootContext()) #type: ignore #MyPy doens't realise that self._qml_engine can't be None here.
+        result_context = QQmlContext(self._qml_engine.rootContext()) #type: ignore #MyPy doesn't realise that self._qml_engine can't be None here.
         if context_properties is not None:
             for name, value in context_properties.items():
                 result_context.setContextProperty(name, value)
