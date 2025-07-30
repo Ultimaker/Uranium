@@ -143,7 +143,7 @@ class QtRenderer(Renderer):
 
         self._batches.append(batch)
 
-    def createRenderBatch(self, **kwargs):
+    def createRenderBatch(self, **kwargs) -> RenderBatch:
         type = kwargs.pop("type", RenderBatch.RenderType.Solid)
         if kwargs.pop("transparent", False):
             type = RenderBatch.RenderType.Transparent
