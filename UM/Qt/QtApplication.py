@@ -605,10 +605,11 @@ class QtApplication(QApplication, Application):
 
     def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None) -> Optional["QQuickWindow"]:
         """
-        Create a QML window from a QML file. This is different from createQmlComponent in 3 different ways:
+        Create a QML window from a QML file. This method uses createQmlComponent internally, but adds a few specific
+        features for windows management:
             * The created object is a QQuickWindow instance
             * The transient parent of the window is explicitly set to be the main window
-            * The window ownership is handled and it will be destroyed as soon as it is no more visible,
+            * The window ownership is handled and it will be destroyed as soon as it's no longer visible,
               so the caller should not keep a reference to it
         :param qml_file_path: The absolute file path to the root qml file.
         :param context_properties: Optional dictionary containing the properties that will be set on the context of the

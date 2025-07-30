@@ -103,7 +103,7 @@ Window
     {
         if(selfDestroy && !visible)
         {
-            destroy()
+            destroy();
         }
     }
 
