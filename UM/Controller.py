@@ -346,8 +346,6 @@ class Controller:
                 Logger.log("w", "Controller does not have an active tool and could not default to the tool, called \"{}\".".format(self._fallback_tool))
 
         if tool_changed:
-            Selection.setFaceSelectMode(False)
-            Selection.clearFace()
             self.activeToolChanged.emit()
 
     toolsChanged = Signal()

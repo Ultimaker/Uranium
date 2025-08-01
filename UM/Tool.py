@@ -25,19 +25,19 @@ class Tool(PluginObject):
         self._controller = UM.Application.Application.getInstance().getController()  # Circular dependency blah
         self._enabled = True
 
-        self._handle = None  # type: Optional[ToolHandle]
-        self._locked_axis = ToolHandle.NoAxis #type: int
-        self._drag_plane = None #type: Optional[Plane]
-        self._drag_start = None #type: Optional[Vector]
-        self._exposed_properties = [] #type: List[str]
+        self._handle: Optional[ToolHandle] = None
+        self._locked_axis: int = ToolHandle.NoAxis
+        self._drag_plane: Optional[Plane] = None
+        self._drag_start: Optional[Vector] = None
+        self._exposed_properties: List[str] = []
 
-        self._selection_pass = None #type: Optional[SelectionPass]
+        self._selection_pass: Optional[SelectionPass] = None
 
         self._controller.toolEnabledChanged.connect(self._onToolEnabledChanged)
         Selection.selectionChanged.connect(self._onSelectionChanged)
-        self._selected_objects_without_selected_ancestors = None #type: Optional[List[SceneNode]]
+        self._selected_objects_without_selected_ancestors: Optional[List[SceneNode]] = None
 
-        self._shortcut_key = None  # type: Optional[int]
+        self._shortcut_key: Optional[int] = None
 
     operationStarted = Signal()
     """Should be emitted whenever a longer running operation is started, like a drag to scale an object.
@@ -205,6 +205,9 @@ class Tool(PluginObject):
             return True
         else:
             return None # At least one is True, but not all
+
+    def getRequiredExtraRenderingPasses(self) -> list[str]:
+        return []
 
     def _onToolEnabledChanged(self, tool_id: str, enabled: bool) -> None:
         if tool_id == self._plugin_id:

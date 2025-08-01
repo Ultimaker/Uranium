@@ -28,10 +28,11 @@ class RenderPass:
     """
 
     def __init__(self, name: str, width: int, height: int, priority: int = 0) -> None:
-        self._name = name #type: str
-        self._width = width #type: int
-        self._height = height #type: int
-        self._priority = priority #type: int
+        self._name: str = name
+        self._width: int = width
+        self._height: int = height
+        self._priority: int = priority
+        self._enabled: bool = True
 
         self._gl = OpenGL.getInstance().getBindingsObject()
 
@@ -74,6 +75,12 @@ class RenderPass:
             self._height = height
             self._fbo = None  # Ensure the fbo is re-created next render pass.
 
+    def isEnabled(self)-> bool:
+        return self._enabled
+
+    def setEnabled(self, enabled: bool) -> None:
+        self._enabled = enabled
+
     def bind(self) -> None:
         """Bind the render pass so it can be rendered to.
 
@@ -84,6 +91,8 @@ class RenderPass:
         :note It is very important to call release() after a call to
         bind(), once done with rendering.
         """
+
+        OpenGL.getInstance().activateContext()
 
         if self._fbo is None:
             # Ensure that the fbo is created. This is done on (first) bind, as this needs to be done on the main thread.

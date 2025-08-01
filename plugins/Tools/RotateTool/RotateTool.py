@@ -5,6 +5,7 @@ from typing import Optional
 
 from PyQt6.QtCore import Qt
 
+from UM.Application import Application
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Job import Job
 from UM.Math.Plane import Plane
@@ -21,6 +22,7 @@ from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Tool import Tool
 from UM.View.GL.OpenGL import OpenGLContext
+from UM.View.SelectionPass import SelectionPass
 
 try:
     from . import RotateToolHandle
@@ -63,7 +65,8 @@ class RotateTool(Tool):
         self._widget_click_start = 0
 
         self._select_face_mode = False
-        Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
+
+        self._faces_selection_pass: Optional[SelectionPass] = None
 
     def event(self, event):
         """Handle mouse and keyboard events
@@ -72,6 +75,9 @@ class RotateTool(Tool):
         """
 
         super().event(event)
+
+        if event.type == Event.ToolActivateEvent:
+            self._handle.setEnabled(not self._select_face_mode)
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
             # Snap is toggled when pressing the shift button
@@ -86,6 +92,11 @@ class RotateTool(Tool):
             if MouseEvent.LeftButton not in event.buttons:
                 return False
 
+            if not self._faces_selection_pass:
+                self._faces_selection_pass = Application.getInstance().getRenderer().getRenderPass("selection_faces")
+                if not self._faces_selection_pass:
+                    return False
+
             id = self._selection_pass.getIdAtPosition(event.x, event.y)
             if not id:
                 return False
@@ -95,6 +106,9 @@ class RotateTool(Tool):
                 self._widget_click_start = time.monotonic()
                 # Continue as if the picked widget is the appropriate axis
                 id = math.floor((self._active_widget.value - self._active_widget.XPositive90.value) / 2) + self._handle.XAxis
+            elif self._select_face_mode:
+                self._onSelectedFaceChanged(id, event.x, event.y)
+                return True
 
             if self._handle.isAxis(id):
                 self.setLockedAxis(id)
@@ -253,33 +267,29 @@ class RotateTool(Tool):
     def getRotationZ(self) -> float:
         return 0
 
-    def _onSelectedFaceChanged(self):
-        if not self._select_face_mode:
+    def _onSelectedFaceChanged(self, node_id: int, x: int, y: int):
+        node = self._controller.getScene().findObject(node_id)
+        if not node:
             return
 
-        self._handle.setEnabled(not Selection.getFaceSelectMode())
-
-        selected_face = Selection.getSelectedFace()
-        if selected_face is None or not (Selection.hasSelection() and Selection.getFaceSelectMode()):
+        face_id = self._faces_selection_pass.getFaceIdAtPosition(x, y)
+        if face_id < 0:
             return
 
-        original_node, face_id = selected_face
-        if original_node is None:
-            return
-        meshdata = original_node.getMeshDataTransformed()
-        if not meshdata or face_id < 0:
+        meshdata = node.getMeshDataTransformed()
+        if not meshdata:
             return
         if face_id > (meshdata.getVertexCount() / 3 if not meshdata.hasIndices() else meshdata.getFaceCount()):
             return
 
         face_mid, face_normal = meshdata.getFacePlane(face_id)
-        object_mid = original_node.getBoundingBox().center
+        object_mid = node.getBoundingBox().center
         rotation_point_vector = Vector(object_mid.x, object_mid.y, face_mid[2])
         face_normal_vector = Vector(face_normal[0], face_normal[1], face_normal[2])
         rotation_quaternion = Quaternion.rotationTo(face_normal_vector.normalized(), Vector(0.0, -1.0, 0.0))
 
         operation = GroupedOperation()
-        current_node = original_node
+        current_node = node
         parent_node = current_node.getParent()
         while parent_node and parent_node.callDecoration("isGroup"):
             current_node = parent_node
@@ -343,19 +353,14 @@ class RotateTool(Tool):
 
     def getSelectFaceToLayFlatMode(self) -> bool:
         """Whether the rotate tool is in 'Lay flat by face'-Mode."""
-
-        if not Selection.getFaceSelectMode():
-            self._select_face_mode = False  # .. but not the other way around!
         return self._select_face_mode
 
     def setSelectFaceToLayFlatMode(self, select: bool) -> None:
         """Set the rotate tool to/from 'Lay flat by face'-Mode."""
 
-        if select != self._select_face_mode or select != Selection.getFaceSelectMode():
+        if select != self._select_face_mode:
             self._select_face_mode = select
-            if not select:
-                Selection.clearFace()
-            Selection.setFaceSelectMode(self._select_face_mode)
+            self._handle.setEnabled(not select)
             self.propertyChanged.emit()
 
     def resetRotation(self):
@@ -441,6 +446,9 @@ class RotateTool(Tool):
             for node, position in self._saved_node_positions:
                 RotateOperation(node, rotation, rotate_around_point=position).push()
         return True
+
+    def getRequiredExtraRenderingPasses(self) -> list[str]:
+        return ["selection_faces"]
 
 
 class LayFlatJob(Job):

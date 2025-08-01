@@ -3,6 +3,7 @@
 
 from PyQt6.QtCore import QObject, pyqtSignal, pyqtProperty, pyqtSlot
 
+from UM.Decorators import deprecated
 from UM.Scene.Selection import Selection
 
 
@@ -19,16 +20,25 @@ class SelectionProxy(QObject):
     def hasSelection(self):
         return Selection.hasSelection()
 
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the Selection Pass for faces in CuraRenderer instead",
+        since="5.11.0")
     @pyqtProperty(bool, notify = selectedFaceChanged)
     def faceSelectMode(self):
         return Selection.getFaceSelectMode()
 
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the Selection Pass for faces in CuraRenderer instead",
+        since="5.11.0")
     @pyqtSlot(bool)
     def setFaceSelectMode(self, select: bool) -> None:
         Selection.setFaceSelectMode(select)
         if not select:
             Selection.clearFace()
 
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the Selection Pass for faces in CuraRenderer instead",
+        since="5.11.0")
     @pyqtProperty(bool, notify = selectedFaceChanged)
     def hasFaceSelected(self):
         return Selection.getSelectedFace() is not None
