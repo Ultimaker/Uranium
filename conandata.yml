@@ -2,6 +2,7 @@ version: "5.11.0-alpha.0"
 
 requirements:
   - "pyarcus/5.10.0"
+  - "uvula/1.0.0"
 
 extra_dependencies:
   Qt:
