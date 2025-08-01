@@ -186,7 +186,7 @@ class MeshData:
         return self._colors
 
     def hasUVCoordinates(self) -> bool:
-        return self._uvs is not None
+        return self._uvs is not None and len(self._uvs) > 0
 
     def getFileName(self) -> Optional[str]:
         return self._file_name
