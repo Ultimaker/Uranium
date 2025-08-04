@@ -17,6 +17,7 @@ import scipy.spatial
 import scipy.spatial.qhull
 import hashlib
 from time import time
+import pyUvula as uvula
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
 MAXIMUM_HULL_VERTICES_COUNT = 1024   # Maximum number of vertices to have in the convex hull.
@@ -150,6 +151,9 @@ class MeshData:
         except IndexError:
             return None
 
+    def getUVCoordinates(self) -> numpy.ndarray:
+        return self._uvs
+
     def hasNormals(self) -> bool:
         """Return whether this mesh has vertex normals."""
 
@@ -182,7 +186,7 @@ class MeshData:
         return self._colors
 
     def hasUVCoordinates(self) -> bool:
-        return self._uvs is not None
+        return self._uvs is not None and len(self._uvs) > 0
 
     def getFileName(self) -> Optional[str]:
         return self._file_name
@@ -404,6 +408,22 @@ class MeshData:
                 new_vertices.append(self._vertices[i])
                 new_vertices.append(self._vertices[i + 2])
             self._vertices = NumPyUtil.immutableNDArray(new_vertices)
+
+    def calculateUnwrappedUVCoordinates(self) -> Optional[tuple[int, int]]:
+        """Create a new set of unwrapped texture coordinates for the mesh."""
+        if self._indices is None:
+            if self._vertices is None or self._vertex_count < 3:
+                return 0, 0
+            indices = numpy.arange(self._vertex_count, dtype=numpy.int32).reshape(-1, 3)  # 3 verts per sub-array.
+        else:
+            indices = self._indices
+
+        try:
+            self._uvs, texture_width, texture_height = uvula.unwrap(self._vertices, indices)
+            return texture_width, texture_height
+        except:
+            Logger.logException("e", "Error when processing mesh UV-unwrapping")
+            return 0, 0
 
     def toString(self) -> str:
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
