@@ -413,19 +413,17 @@ class MeshData:
         """Create a new set of unwrapped texture coordinates for the mesh."""
         if self._indices is None:
             if self._vertices is None or self._vertex_count < 3:
-                return None
+                return 0, 0
             indices = numpy.arange(self._vertex_count, dtype=numpy.int32).reshape(-1, 3)  # 3 verts per sub-array.
         else:
             indices = self._indices
 
         try:
             self._uvs, texture_width, texture_height = uvula.unwrap(self._vertices, indices)
+            return texture_width, texture_height
         except:
             Logger.logException("e", "Error when processing mesh UV-unwrapping")
-            texture_width = 0
-            texture_height = 0
-
-        return texture_width, texture_height
+            return 0, 0
 
     def toString(self) -> str:
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
