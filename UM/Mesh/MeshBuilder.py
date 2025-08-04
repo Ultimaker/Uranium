@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ultimaker B.V.
+# Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Mesh.MeshData import MeshData
@@ -13,7 +13,7 @@ import numpy
 import math
 import numbers
 
-from typing import Optional, Union
+from typing import Optional
 
 
 class MeshBuilder:
