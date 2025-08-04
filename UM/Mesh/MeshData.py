@@ -416,7 +416,7 @@ class MeshData:
                 return None
             indices = numpy.arange(self._vertex_count, dtype=numpy.int32).reshape(-1, 3)  # 3 verts per sub-array.
         else:
-            indices = numpy.array()
+            indices = self._indices
 
         try:
             self._uvs, texture_width, texture_height = uvula.unwrap(self._vertices, indices)
