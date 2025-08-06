@@ -34,8 +34,8 @@ class SelectionPass(RenderPass):
         OBJECTS = "objects"
         FACES = "faces"
 
-    def __init__(self, width, height):
-        super().__init__("selection", width, height, -999)
+    def __init__(self, width, height, mode: SelectionMode):
+        super().__init__("selection" if mode == SelectionPass.SelectionMode.OBJECTS else "selection_faces", width, height, -999)
 
         self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "selection.shader"))
         self._face_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "select_face.shader"))
@@ -63,10 +63,10 @@ class SelectionPass(RenderPass):
         Application.getInstance().getController().activeToolChanged.connect(self._onActiveToolChanged)
         self._onActiveToolChanged()
 
-        self._mode = SelectionPass.SelectionMode.OBJECTS
-        Selection.selectedFaceChanged.connect(self._onSelectedFaceChanged)
+        self._mode = mode
 
         self._output = None
+        self._ignore_unselected_objects = False
 
     def _onActiveToolChanged(self):
         self._toolhandle_selection_map = self._default_toolhandle_selection_map.copy()
@@ -82,8 +82,8 @@ class SelectionPass(RenderPass):
             self._toolhandle_selection_map[color] = name
             self._toolhandle_selection_map[self._dropAlpha(color)] = name
 
-    def _onSelectedFaceChanged(self):
-        self._mode = SelectionPass.SelectionMode.FACES if Selection.getFaceSelectMode() else SelectionPass.SelectionMode.OBJECTS
+    def setIgnoreUnselectedObjects(self, ignore_unselected_objects):
+        self._ignore_unselected_objects = ignore_unselected_objects
 
     def render(self):
         """Perform the actual rendering."""
@@ -103,7 +103,7 @@ class SelectionPass(RenderPass):
                 tool_handle.addItem(node.getWorldTransformation(copy = False), mesh = node.getSelectionMesh())
                 continue
 
-            if node.isSelectable() and node.getMeshData():
+            if node.isSelectable() and node.getMeshData() and (not self._ignore_unselected_objects or Selection.isSelected(node)):
                 selectable_objects = True
                 batch.addItem(transformation = node.getWorldTransformation(copy = False), mesh = node.getMeshData(), uniforms = { "selection_color": self._getNodeColor(node)}, normal_transformation=node.getCachedNormalMatrix())
 
@@ -202,7 +202,7 @@ class SelectionPass(RenderPass):
         else:
             return None
 
-    def getFaceIdAtPosition(self, x, y):
+    def getFaceIdAtPosition(self, x, y) -> int:
         """Get an unique identifier to the face of the polygon at a certain pixel-coordinate."""
         output = self.getOutput()
 

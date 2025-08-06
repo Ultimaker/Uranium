@@ -25,19 +25,20 @@ class Tool(PluginObject):
         self._controller = UM.Application.Application.getInstance().getController()  # Circular dependency blah
         self._enabled = True
 
-        self._handle = None  # type: Optional[ToolHandle]
-        self._locked_axis = ToolHandle.NoAxis #type: int
-        self._drag_plane = None #type: Optional[Plane]
-        self._drag_start = None #type: Optional[Vector]
-        self._exposed_properties = [] #type: List[str]
+        self._handle: Optional[ToolHandle] = None
+        self._locked_axis: int = ToolHandle.NoAxis
+        self._drag_plane: Optional[Plane] = None
+        self._drag_start: Optional[Vector] = None
+        self._exposed_properties: List[str] = []
 
-        self._selection_pass = None #type: Optional[SelectionPass]
+        self._selection_pass: Optional[SelectionPass] = None
 
         self._controller.toolEnabledChanged.connect(self._onToolEnabledChanged)
         Selection.selectionChanged.connect(self._onSelectionChanged)
-        self._selected_objects_without_selected_ancestors = None #type: Optional[List[SceneNode]]
+        self._selected_objects_without_selected_ancestors: Optional[List[SceneNode]] = None
 
-        self._shortcut_key = None  # type: Optional[int]
+        self._shortcut_key: Optional[int] = None
+        self._active_view: Optional[str] = None
 
     operationStarted = Signal()
     """Should be emitted whenever a longer running operation is started, like a drag to scale an object.
@@ -53,6 +54,8 @@ class Tool(PluginObject):
 
     propertyChanged = Signal()
 
+    activeViewChanged = Signal()
+
     def getExposedProperties(self) -> List[str]:
         return self._exposed_properties
 
@@ -61,6 +64,18 @@ class Tool(PluginObject):
 
     def getShortcutKey(self) -> Optional[int]:
         return self._shortcut_key
+
+    def getActiveView(self) -> Optional[str]:
+        return self._active_view
+
+    def setActiveView(self, name: str) -> None:
+        """Set the currently active view for this tool.
+        :param name:  The name of the view to set as active, or None is the tool has no specific view
+        """
+
+        if name != self._active_view:
+            self._active_view = name
+            self.activeViewChanged.emit()
 
     def event(self, event: Event) -> bool:
         """Handle an event.
@@ -205,6 +220,9 @@ class Tool(PluginObject):
             return True
         else:
             return None # At least one is True, but not all
+
+    def getRequiredExtraRenderingPasses(self) -> list[str]:
+        return []
 
     def _onToolEnabledChanged(self, tool_id: str, enabled: bool) -> None:
         if tool_id == self._plugin_id:

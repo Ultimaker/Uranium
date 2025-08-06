@@ -11,6 +11,7 @@ from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 
 from . import ContainerProxy
+from ...Decorators import deprecated
 from ...Logger import Logger
 from ...PluginRegistry import PluginRegistry
 
@@ -51,6 +52,7 @@ class ControllerProxy(QObject):
         return self._controller.getActiveStage()
 
     @pyqtSlot(str)
+    @deprecated("Active view should be set through the active Stage", since="5.11.0")
     def setActiveView(self, view):
         self._controller.setActiveView(view)
 
