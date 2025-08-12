@@ -38,6 +38,7 @@ class Tool(PluginObject):
         self._selected_objects_without_selected_ancestors: Optional[List[SceneNode]] = None
 
         self._shortcut_key: Optional[int] = None
+        self._active_view: Optional[str] = None
 
     operationStarted = Signal()
     """Should be emitted whenever a longer running operation is started, like a drag to scale an object.
@@ -53,6 +54,8 @@ class Tool(PluginObject):
 
     propertyChanged = Signal()
 
+    activeViewChanged = Signal()
+
     def getExposedProperties(self) -> List[str]:
         return self._exposed_properties
 
@@ -61,6 +64,18 @@ class Tool(PluginObject):
 
     def getShortcutKey(self) -> Optional[int]:
         return self._shortcut_key
+
+    def getActiveView(self) -> Optional[str]:
+        return self._active_view
+
+    def setActiveView(self, name: str) -> None:
+        """Set the currently active view for this tool.
+        :param name:  The name of the view to set as active, or None is the tool has no specific view
+        """
+
+        if name != self._active_view:
+            self._active_view = name
+            self.activeViewChanged.emit()
 
     def event(self, event: Event) -> bool:
         """Handle an event.
