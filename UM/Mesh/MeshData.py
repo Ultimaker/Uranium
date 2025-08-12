@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Math.Vector import Vector
@@ -49,7 +49,7 @@ class MeshData:
     """
 
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
-                 center_position=None, zero_position=None, type = MeshType.faces, attributes=None, mesh_id=None) -> None:
+                 center_position=None, zero_position=None, type = MeshType.faces, attributes=None, mesh_id=None, face_connections=None) -> None:
         self._application = None  # Initialize this later otherwise unit tests break
 
         self._vertices = NumPyUtil.immutableNDArray(vertices)
@@ -62,6 +62,8 @@ class MeshData:
         self._type = type
         self._file_name = file_name  # type: Optional[str]
         self._mesh_id: Optional[str] = mesh_id
+        self._face_connections = face_connections if face_connections is not None else self._buildFaceConnections()
+
         # original center position
         self._center_position = center_position
         # original zero position, is changed after transformation
@@ -104,6 +106,7 @@ class MeshData:
         vertices = vertices if vertices is not Reuse else self._vertices
         normals = normals if normals is not Reuse else self._normals
         indices = indices if indices is not Reuse else self._indices
+        face_connections = self._face_connections if indices is Reuse else None
         colors = colors if colors is not Reuse else self._colors
         uvs = uvs if uvs is not Reuse else self._uvs
         file_name = file_name if file_name is not Reuse else self._file_name
@@ -114,7 +117,67 @@ class MeshData:
 
         return MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
                         file_name=file_name, center_position=center_position, zero_position=zero_position,
-                        attributes=attributes, mesh_id=mesh_id)
+                        attributes=attributes, mesh_id=mesh_id, face_connections=face_connections)
+
+    def _buildFaceConnections(self) -> Optional[numpy.ndarray]:
+        """Build Face connections indicate which faces are connected to each other by sharing edges.
+
+        The result is a 2D array with shape (face_count, 3) where each row contains the indices of the connected faces.
+        """
+
+        if self._vertices is None:
+            return None
+
+        def build_index_equivalences():
+            # Build index equivalence mapping (in case of triangle-soup meshes).
+            res = numpy.arange(len(self._vertices), dtype=numpy.int32)
+            position_to_index = {}
+            for i_vertex, vertex in enumerate(self._vertices):
+                position = tuple(vertex)
+                if position in position_to_index:
+                    res[i_vertex] = position_to_index[position]
+                else:
+                    position_to_index[position] = i_vertex
+            return res
+
+        def get_edge_list(face_idx):
+            # An edge is represented by a tuple of two vertex indices (smaller index first).
+            if self._indices is None or len(self._indices) == 0:
+                base = face_idx * 3
+                face = [base, base + 1, base + 2]
+            else:
+                face = self._indices[face_idx]
+            a, b, c = [index_equivalences[idx] for idx in face]
+            return [
+                (min(a, b), max(a, b)),
+                (min(b, c), max(b, c)),
+                (min(c, a), max(c, a))
+            ]
+
+        index_equivalences = build_index_equivalences()
+
+        face_count = len(self._vertices) // 3 if self._indices is None or len(self._indices) == 0 else self._face_count
+        connections = numpy.full((face_count, 3), -1, dtype=numpy.int32)
+
+        edge_to_face = {}
+
+        for face_idx in range(face_count):
+            edges = get_edge_list(face_idx)
+
+            for edge_idx, edge in enumerate(edges):
+                if edge in edge_to_face:
+                    other_face = edge_to_face[edge]
+                    connections[face_idx, edge_idx] = other_face
+
+                    other_edges = get_edge_list(other_face)
+                    for i_edge, e in enumerate(other_edges):
+                        if e == edge:
+                            connections[other_face, i_edge] = face_idx
+                            break
+                else:
+                    edge_to_face[edge] = face_idx
+
+        return connections
 
     def getHash(self):
         m = hashlib.sha256()
@@ -367,6 +430,11 @@ class MeshData:
             uv_b = self._uvs[self._indices[face_id][1]]
             uv_c = self._uvs[self._indices[face_id][2]]
         return uv_a, uv_b, uv_c
+
+    def getFaceNeighbourIDs(self, face_id: int) -> numpy.ndarray:
+        if self._face_connections is None or face_id < 0 or face_id >= len(self._face_connections):
+            return numpy.ndarray([-1, -1, -1])
+        return self._face_connections[face_id]
 
     def hasAttribute(self, key: str) -> bool:
         return key in self._attributes
