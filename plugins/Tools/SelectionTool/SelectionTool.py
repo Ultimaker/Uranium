@@ -113,10 +113,7 @@ class SelectionTool(Tool):
 
         # Find a node id by looking at a pixel value at the requested location
         if self._selection_pass:
-            if Selection.getFaceSelectMode():
-                item_id = id(Selection.getSelectedObject(0))
-            else:
-                item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
+            item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
         else:
             Logger.log("w", "Selection pass is None. getRenderPass('selection') returned None")
             return False
@@ -156,14 +153,6 @@ class SelectionTool(Tool):
                             Selection.add(self._findTopGroupNode(node))
                         return True
             else:
-                if Selection.getFaceSelectMode():
-                    node_for_face = self._selection_pass.getIdAtPositionFaceMode(event.x, event.y)
-                    face_id = self._selection_pass.getFaceIdAtPosition(event.x, event.y)
-                    if face_id >= 0:
-                        Selection.toggleFace(node_for_face, face_id)
-                    else:
-                        Selection.clear()
-                        Selection.clearFace()
                 if not is_selected or Selection.getCount() > 1:
                     # Select only the SceneNode and its siblings in a group
                     Selection.clear()
@@ -178,16 +167,6 @@ class SelectionTool(Tool):
                     Selection.add(node)
                     return True
 
-        return False
-
-    def _pixelHover(self, event):
-        if Selection.getFaceSelectMode():
-            face_id = self._selection_pass.getFaceIdAtPosition(event.x, event.y)
-            if face_id >= 0:
-                Selection.hoverFace(Selection.getSelectedObject(0), face_id)
-            else:
-                Selection.clearFace()
-            return True
         return False
 
     def _isNodeInGroup(self, node):
