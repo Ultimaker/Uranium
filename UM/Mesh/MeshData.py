@@ -220,7 +220,7 @@ class MeshData:
     def hasNormals(self) -> bool:
         """Return whether this mesh has vertex normals."""
 
-        return self._normals is not None
+        return self._normals is not None and len(self._normals) > 0
 
     def getNormals(self) -> numpy.ndarray:
         """Return the list of vertex normals."""
@@ -230,7 +230,7 @@ class MeshData:
     def hasIndices(self) -> bool:
         """Return whether this mesh has indices."""
 
-        return self._indices is not None
+        return self._indices is not None and len(self._indices) > 0
 
     def getIndices(self) -> numpy.ndarray:
         """Get the array of indices
@@ -246,7 +246,7 @@ class MeshData:
         return self._colors is not None
 
     def getColors(self) -> numpy.ndarray:
-        return self._colors
+        return self._colors and len(self._colors) > 0
 
     def hasUVCoordinates(self) -> bool:
         return self._uvs is not None and len(self._uvs) > 0

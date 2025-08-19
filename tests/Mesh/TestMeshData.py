@@ -77,7 +77,12 @@ def test_hasData():
     assert not empty_mesh.hasUVCoordinates()
     assert not empty_mesh.hasIndices()
 
-    filled_mesh = MeshData(normals = [], colors = [], uvs = [], indices=[])
+    vertices = numpy.zeros((3, 3), dtype=numpy.float32)
+    normals =  numpy.zeros((3, 3), dtype=numpy.float32)
+    colors = [0xff0000, 0x00ff00, 0x0000ff]
+    uvs = numpy.zeros((3, 2), dtype=numpy.float32)
+    indices = [0,1,2]
+    filled_mesh = MeshData(vertices = vertices, normals = normals, colors = colors, uvs = uvs, indices = indices)
     assert filled_mesh.hasNormals()
     assert filled_mesh.hasColors()
     assert filled_mesh.hasUVCoordinates()
