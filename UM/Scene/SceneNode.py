@@ -376,7 +376,7 @@ class SceneNode:
         :returns: MeshData
         """
 
-        return MeshData(vertices = self.getMeshDataTransformedVertices(), normals = self.getMeshDataTransformedNormals(), uvs = self._mesh_data.getUVCoordinates())
+        return MeshData(vertices = self.getMeshDataTransformedVertices(), normals = self.getMeshDataTransformedNormals())
 
     def getMeshDataTransformedVertices(self) -> Optional[numpy.ndarray]:
         """Get the transformed vertices from this scene node/object, based on the transformation of scene nodes wrt root.
