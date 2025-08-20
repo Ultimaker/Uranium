@@ -439,7 +439,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._metadata["id"] = parser["general"]["id"]
         self._metadata["name"] = parser["general"].get("name", self.getId())
         self._metadata["version"] = self.Version  # Guaranteed to be equal to what's in the container. See above.
-        self._metadata["container_type"] = ContainerStack
+        self._metadata["container_type"] = type(self)
 
         if "containers" in parser:
             for index, container_id in parser.items("containers"):
@@ -496,7 +496,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         metadata = {
             "id": container_id,
-            "container_type": ContainerStack
+            "container_type": cls
         }
         try:
             metadata["name"] = parser["general"]["name"]
