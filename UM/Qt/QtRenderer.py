@@ -7,7 +7,6 @@ from PyQt6.QtOpenGL import QOpenGLBuffer, QOpenGLVertexArrayObject
 from typing import List, Tuple, Dict, Optional
 
 import UM.Qt.QtApplication
-from UM.View.Renderer import Renderer
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Resources import Resources
@@ -17,7 +16,9 @@ from UM.View.DefaultPass import DefaultPass
 from UM.View.SelectionPass import SelectionPass
 from UM.View.GL.OpenGL import OpenGL
 from UM.View.GL.OpenGLContext import OpenGLContext
+from UM.View.Renderer import Renderer
 from UM.View.RenderBatch import RenderBatch
+from UM.View.RenderPass import RenderPass
 
 from UM.Signal import Signal, signalemitter
 
@@ -143,7 +144,7 @@ class QtRenderer(Renderer):
 
         self._batches.append(batch)
 
-    def createRenderBatch(self, **kwargs):
+    def createRenderBatch(self, **kwargs) -> RenderBatch:
         type = kwargs.pop("type", RenderBatch.RenderType.Solid)
         if kwargs.pop("transparent", False):
             type = RenderBatch.RenderType.Transparent
@@ -206,6 +207,13 @@ class QtRenderer(Renderer):
         shader.disableAttribute("a_uvs")
         self._quad_buffer.release()
 
+    def _makeRenderPasses(self) -> list[RenderPass]:
+        return [
+            DefaultPass(self._viewport_width, self._viewport_height),
+            SelectionPass(self._viewport_width, self._viewport_height, SelectionPass.SelectionMode.OBJECTS),
+            CompositePass(self._viewport_width, self._viewport_height)
+        ]
+
     def _initialize(self) -> None:
         supports_vao = OpenGLContext.supportsVertexArrayObjects()  # fill the OpenGLContext.properties
         Logger.log("d", "Support for Vertex Array Objects: %s", supports_vao)
@@ -218,9 +226,8 @@ class QtRenderer(Renderer):
             return
         self._default_material = default_shader
 
-        self.addRenderPass(DefaultPass(self._viewport_width, self._viewport_height))
-        self.addRenderPass(SelectionPass(self._viewport_width, self._viewport_height))
-        self.addRenderPass(CompositePass(self._viewport_width, self._viewport_height))
+        for render_pass in self._makeRenderPasses():
+            self.addRenderPass(render_pass)
 
         buffer = QOpenGLBuffer(QOpenGLBuffer.Type.VertexBuffer)
         buffer.create()

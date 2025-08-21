@@ -1,5 +1,6 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+from UM.Decorators import deprecated
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Scene.Scene import Scene
 from UM.Event import Event, KeyEvent, MouseEvent, ToolEvent, ViewEvent
@@ -99,6 +100,7 @@ class Controller:
 
         return self._active_view
 
+    @deprecated("Active view should be set through the Stage", since = "5.11.0")
     def setActiveView(self, name: str) -> None:
         """Set the currently active view.
 
@@ -121,6 +123,45 @@ class Controller:
         except Exception as e:
             Logger.logException("e", "An exception occurred while switching views: %s", str(e))
 
+    def _updateActiveView(self) -> None:
+        """Update the currently active view, based on the current stage and tool. Each stage must declare an active
+           view, that will be used when the stage is made active. However, tools can also declare an active view.
+           So if the active tool has an active view, this one will override the stage's view."""
+
+        new_active_view_name = None
+        if self._active_tool is not None:
+            new_active_view_name = self._active_tool.getActiveView()
+
+        if new_active_view_name is None and self._active_stage is not None:
+            new_active_view_name = self._active_stage.getActiveView()
+
+        if new_active_view_name is None:
+            return
+
+        if new_active_view_name not in self._views:
+            Logger.error(f"No view named {new_active_view_name} found")
+            return
+
+        new_active_view = self._views[new_active_view_name]
+
+        if new_active_view == self._active_view:
+            return
+
+        Logger.debug(f"Setting active view to {new_active_view_name}")
+
+        try:
+            if self._active_view:
+                self._active_view.event(ViewEvent(Event.ViewDeactivateEvent))
+
+            self._active_view = new_active_view
+
+            if self._active_view:
+                self._active_view.event(ViewEvent(Event.ViewActivateEvent))
+
+            self.activeViewChanged.emit()
+        except Exception as e:
+            Logger.logException("e", "An exception occurred while switching views: %s", str(e))
+
     viewsChanged = Signal()
     """Emitted when the list of views changes."""
 
@@ -136,6 +177,7 @@ class Controller:
         name = stage.getId()
         if name not in self._stages:
             self._stages[name] = stage
+            stage.activeViewChanged.connect(self._updateActiveView)
             self.stagesChanged.emit()
 
     def getStage(self, name: str) -> Optional[Stage]:
@@ -184,7 +226,9 @@ class Controller:
                 if previous_stage is not None:
                     previous_stage.onStageDeselected()
                 self._active_stage.onStageSelected()
+
                 self.activeStageChanged.emit()
+                self._updateActiveView()
         except KeyError:
             Logger.log("e", "No stage named %s found", name)
         except Exception as e:
@@ -282,6 +326,7 @@ class Controller:
             self._tools[name] = tool
             tool.operationStarted.connect(self._onToolOperationStarted)
             tool.operationStopped.connect(self._onToolOperationStopped)
+            tool.activeViewChanged.connect(self._updateActiveView)
             self.toolsChanged.emit()
         else:
             Logger.log("w", "%s was already added to tool list. Unable to add it again.", name)
@@ -346,9 +391,8 @@ class Controller:
                 Logger.log("w", "Controller does not have an active tool and could not default to the tool, called \"{}\".".format(self._fallback_tool))
 
         if tool_changed:
-            Selection.setFaceSelectMode(False)
-            Selection.clearFace()
             self.activeToolChanged.emit()
+            self._updateActiveView()
 
     toolsChanged = Signal()
     """Emitted when the list of tools changes."""

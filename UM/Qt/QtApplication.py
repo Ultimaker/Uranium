@@ -456,9 +456,12 @@ class QtApplication(QApplication, Application):
     def registerObjects(self, engine) -> None: #type: ignore #Don't type engine, because the type depends on the platform you're running on so it always gives an error somewhere.
         engine.rootContext().setContextProperty("PluginRegistry", PluginRegistry.getInstance())
 
+    def makeRenderer(self) -> QtRenderer:
+        return QtRenderer()
+
     def getRenderer(self) -> QtRenderer:
         if not self._renderer:
-            self._renderer = QtRenderer()
+            self._renderer = self.makeRenderer()
 
         return cast(QtRenderer, self._renderer)
 

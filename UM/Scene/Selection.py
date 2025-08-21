@@ -3,6 +3,7 @@
 
 from typing import List, Optional, Tuple
 
+from UM.Decorators import deprecated
 from UM.Signal import Signal
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
@@ -31,34 +32,48 @@ class Selection:
     def remove(cls, object: SceneNode) -> None:
         if object in cls.__selection:
             cls.__selection.remove(object)
-            cls.unsetFace(object)
             object.transformationChanged.disconnect(cls._onTransformationChanged)
             cls._onTransformationChanged(object)
             cls.selectionChanged.emit()
 
     @classmethod
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the Selection Pass for faces in CuraRenderer instead",
+        since="5.11.0")
     def getFaceSelectMode(cls) -> bool:
         return cls.__face_select_mode
 
     @classmethod
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the Selection Pass for faces in CuraRenderer instead",
+        since="5.11.0")
     def setFaceSelectMode(cls, select: bool) -> None:
         if select != cls.__face_select_mode:
             cls.__face_select_mode = select
             cls.selectedFaceChanged.emit()
 
     @classmethod
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the Selection Pass for faces in CuraRenderer instead",
+        since="5.11.0")
     def setFace(cls, object: SceneNode, face_id: int) -> None:
         # Don't force-add the object, as the parent may be the 'actual' selected one.
         cls.__selected_face = (object, face_id)
         cls.selectedFaceChanged.emit()
 
     @classmethod
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the Selection Pass for faces in CuraRenderer instead",
+        since="5.11.0")
     def unsetFace(cls, object: Optional["SceneNode"] = None) -> None:
         if object is None or cls.__selected_face is None or object == cls.__selected_face[0]:
             cls.__selected_face = None
             cls.selectedFaceChanged.emit()
 
     @classmethod
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the Selection Pass for faces in CuraRenderer instead",
+        since="5.11.0")
     def toggleFace(cls, object: SceneNode, face_id: int) -> None:
         current_face = cls.__selected_face
         if current_face is None or object != current_face[0] or face_id != current_face[1]:
@@ -67,6 +82,9 @@ class Selection:
             cls.unsetFace(object)
 
     @classmethod
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the Selection Pass for faces in CuraRenderer instead",
+        since="5.11.0")
     def hoverFace(cls, object: SceneNode, face_id: int) -> None:
         current_hover = cls.__hover_face
         if current_hover is None or object != current_hover[0] or face_id != current_hover[1]:
@@ -75,6 +93,9 @@ class Selection:
             cls.hoverFaceChanged.emit()
 
     @classmethod
+    @deprecated(
+        "Face selection using the Selection class is deprecated, please use the SelectionPass for faces in CuraRenderer instead",
+        since="5.11.0")
     def unhoverFace(cls, object: Optional["SceneNode"] = None) -> None:
         if object is None or not cls.__hover_face or object == cls.__hover_face[0]:
             cls.__hover_face = None
