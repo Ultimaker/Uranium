@@ -34,7 +34,7 @@ class SelectionPass(RenderPass):
         OBJECTS = "objects"
         FACES = "faces"
 
-    def __init__(self, width, height, mode: SelectionMode):
+    def __init__(self, width, height, mode: SelectionMode = SelectionMode.OBJECTS):
         super().__init__("selection" if mode == SelectionPass.SelectionMode.OBJECTS else "selection_faces", width, height, -999)
 
         self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "selection.shader"))
