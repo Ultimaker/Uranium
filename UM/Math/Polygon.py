@@ -1,7 +1,7 @@
 # Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Optional, Tuple, List, Union
+from typing import Optional, Tuple, List, Union, Callable
 
 import numpy
 import math
@@ -75,6 +75,9 @@ class Polygon:
 
         coordinates = (("[" + str(point[0]) + "," + str(point[1]) + "]") for point in self._points)
         return "[" + ", ".join(coordinates) + "]"
+
+    def __getitem__(self, item):
+        return self._points[item]
 
     def isValid(self) -> bool:
         return bool(self._points is not None and len(self._points) >= 3)
@@ -177,6 +180,9 @@ class Polygon:
 
         return Polygon(point_data[:, :-1])  # Leave out the affine component.
 
+    def map(self, func: Callable) -> "Polygon":
+        return Polygon([func(x) for x in self._points])
+
     def intersectionConvexHulls(self, other: "Polygon") -> "Polygon":
         """Computes the intersection of the convex hulls of this and another
         polygon.
@@ -197,10 +203,12 @@ class Polygon:
             return Polygon()
 
         clipper = pyclipper.Pyclipper()
-        clipper.AddPath(self._clipperPoints(), pyclipper.PT_SUBJECT, closed=True)
-        clipper.AddPath(other._clipperPoints(), pyclipper.PT_CLIP, closed=True)
-
-        points = clipper.Execute(pyclipper.CT_INTERSECTION, pyclipper.PFT_NONZERO, pyclipper.PFT_NONZERO)
+        try:
+            clipper.AddPath(self._clipperPoints(), pyclipper.PT_SUBJECT, closed=True)
+            clipper.AddPath(other._clipperPoints(), pyclipper.PT_CLIP, closed=True)
+            points = clipper.Execute(pyclipper.CT_INTERSECTION, pyclipper.PFT_NONZERO, pyclipper.PFT_NONZERO)
+        except pyclipper.ClipperException:
+            return Polygon()
         if len(points) == 0:
             return Polygon()
         points = points[0]  # Intersection between convex hulls should result in a single (convex) simple polygon. Take just the one polygon.
