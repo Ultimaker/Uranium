@@ -144,7 +144,12 @@ class MeshData:
                 base = face_idx * 3
                 face = [base, base + 1, base + 2]
             else:
-                face = self._indices[face_idx]
+                try:
+                    face_ = self._indices[face_idx]
+                    face = [face_[0], face_[1], face_[2]]
+                except (TypeError, IndexError):
+                    # This might occur in cases where the 'face' is non-triangular, like in the lines for the preview.
+                    return []
             a, b, c = [index_equivalences[int(idx)] for idx in face]
             return [
                 (min(a, b), max(a, b)),
