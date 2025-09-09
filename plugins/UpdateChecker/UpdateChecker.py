@@ -172,14 +172,15 @@ class UpdateChecker(Extension):
                 return True
             return False  # Nothing to do!
 
-        if local_version < latest_version_shown and not display_same_version:
+        if latest_version_shown >= newest_version and not display_same_version:
             return False  # User was already informed once.
 
         if local_version > newest_version:
             return False  # No idea how this can happen, but don't bother the user with this.
 
         preferences.setValue(preference_key, str(newest_version))
-        Logger.log("i", "Found a new version of the software. Spawning message")
+        Application.getInstance().savePreferences()
+        Logger.log("i", f"Found a new version of the software ({str(newest_version)}). Spawning message")
 
         message = message_class(
             application_display_name = Application.getInstance().getApplicationDisplayName().title(),
