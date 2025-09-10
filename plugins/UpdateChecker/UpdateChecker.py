@@ -89,13 +89,13 @@ class UpdateChecker(Extension):
                                 str(data[application_name][os]["postfix_type"]),
                                 int(data[application_name][os]["postfix_version"])]),
                         data[application_name][os]["url"],
-                        data[application_name][os]["whatsnew_txt"])
+                        data[application_name][os].get("whatsnew_txt", None))
             else:
                 return (Version([int(data[application_name][os]["major"]),
                                 int(data[application_name][os]["minor"]),
                                 int(data[application_name][os]["revision"])]),
                         data[application_name][os]["url"],
-                        data[application_name][os]["whatsnew_txt"])
+                        data[application_name][os].get("whatsnew_txt", None))
         except KeyError as err:
             Logger.error(f"Failed to find key in version data from latest.json: {err}")
             return None, None, None
