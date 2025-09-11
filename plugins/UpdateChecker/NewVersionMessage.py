@@ -1,5 +1,7 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
+
+from typing import Optional
 
 from UM import i18nCatalog
 from UM.Application import Application
@@ -12,16 +14,18 @@ I18N_CATALOG = i18nCatalog("uranium")
 
 
 class NewVersionMessage(AnnotatedUpdateMessage):
-    def __init__(self, application_display_name: str, newest_version: Version) -> None:
+    def __init__(self, application_display_name: str, newest_version: Version, whatsnew_txt: Optional[str]) -> None:
+        actual_whatsnew_txt = "" if whatsnew_txt is None else f"\n\n{whatsnew_txt}"
+        message_txt = I18N_CATALOG.i18nc("@info:status",
+                        "{application_name} {version_number} provides a better and more reliable printing experience.").format(
+                        application_name=application_display_name,
+                        version_number=newest_version)
         super().__init__(
             title = I18N_CATALOG.i18nc("@info:status",
                                         "{application_name} {version_number} is available!").format(
                                         application_name = application_display_name,
                                         version_number = newest_version),
-            text = I18N_CATALOG.i18nc("@info:status",
-                                         "{application_name} {version_number} provides a better and more reliable printing experience.").format(
-                                         application_name = application_display_name,
-                                         version_number = newest_version))
+            text = f"{message_txt}{actual_whatsnew_txt}")
 
         self.change_log_url = Application.getInstance().change_log_url
 
