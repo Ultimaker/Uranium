@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Ultimaker B.V.
+# Copyright (c) 2025 UltiMaker
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 import platform
@@ -38,6 +38,7 @@ class UpdateChecker(Extension):
 
         self.latest_url = Application.getInstance().latest_url
         self._download_url: Optional[str] = None
+        self._whatsnew_txt: Optional[str] = None
 
         self.setMenuName(i18n_catalog.i18nc("@item:inmenu", "Update Checker"))
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
@@ -71,35 +72,39 @@ class UpdateChecker(Extension):
         self._download_url = None
 
     @classmethod
-    def _extractVersionAndURLFromData(cls, data: Dict, application_name: str) -> Tuple[Optional[Version], Optional[str]]:
+    def _extractVersionAndInfoFromData(cls, data: Dict, application_name: str) -> Tuple[Optional[Version], Optional[str], Optional[str]]:
         if application_name not in data:
-            return None, None
+            return None, None, None
 
         os = platform.system()
         if os not in data[application_name]:
-            return None, None
+            return None, None, None
 
         try:
             if "postfix_type" in data[application_name][os] and "postfix_version" in data[application_name][os]:
                 # Prerelease versions include the extra postfix_type and postfix_version keys
-                return Version([int(data[application_name][os]["major"]),
+                return (Version([int(data[application_name][os]["major"]),
                                 int(data[application_name][os]["minor"]),
                                 int(data[application_name][os]["revision"]),
                                 str(data[application_name][os]["postfix_type"]),
-                                int(data[application_name][os]["postfix_version"])]), data[application_name][os]["url"]
+                                int(data[application_name][os]["postfix_version"])]),
+                        data[application_name][os]["url"],
+                        data[application_name][os].get("whatsnew_txt", None))
             else:
-                return Version([int(data[application_name][os]["major"]),
+                return (Version([int(data[application_name][os]["major"]),
                                 int(data[application_name][os]["minor"]),
-                                int(data[application_name][os]["revision"])]), data[application_name][os]["url"]
+                                int(data[application_name][os]["revision"])]),
+                        data[application_name][os]["url"],
+                        data[application_name][os].get("whatsnew_txt", None))
         except KeyError as err:
             Logger.error(f"Failed to find key in version data from latest.json: {err}")
-            return None, None
+            return None, None, None
         except Exception as err:
             Logger.error(f"Failed to extract version data from latest.json: {err}")
-            return None, None
+            return None, None, None
 
     def _onRequestCompleted(self, reply: "QNetworkReply", silent: bool, display_same_version: bool) -> None:
-        if reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute) != 200:
+        if reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute) not in [200, None]:
             Logger.log("w", "Something went wrong when checking for updates. We didn't get the expected response")
             return
         try:
@@ -116,8 +121,8 @@ class UpdateChecker(Extension):
                         title=i18n_catalog.i18nc("@info:title", "Warning")).show()
             return
         application_name = Application.getInstance().getApplicationName()
-        newest_version, download_url = self._extractVersionAndURLFromData(data, application_name)
-        newest_beta_version, beta_download_url = self._extractVersionAndURLFromData(data, application_name + "-beta")
+        newest_version, download_url, whatsnew_txt = self._extractVersionAndInfoFromData(data, application_name)
+        newest_beta_version, beta_download_url, beta_whatsnew_txt = self._extractVersionAndInfoFromData(data, application_name + "-beta")
 
         if newest_version is None:
             Logger.log("w", "Unable to extract latest version from the provided data.")
@@ -130,6 +135,9 @@ class UpdateChecker(Extension):
         if download_url is not None:
             self._download_url = download_url
 
+        if whatsnew_txt is not None:
+            self._whatsnew_txt = whatsnew_txt
+
         local_version = Version(app_version)
         preferences = Application.getInstance().getPreferences()
         if preferences.getValue("info/latest_update_source") == "beta":
@@ -139,8 +147,10 @@ class UpdateChecker(Extension):
                                          "info/latest_update_version_shown")
             else:
                 # Beta version is the highest, check for that
-                if download_url is not None:
+                if beta_download_url is not None:
                     self._download_url = beta_download_url
+                if beta_whatsnew_txt is not None:
+                    self._whatsnew_txt = beta_whatsnew_txt
                 self._handleLatestUpdate(local_version, newest_beta_version, silent, display_same_version,
                                          NewBetaVersionMessage, "info/latest_beta_update_version_shown")
         else:
@@ -172,18 +182,20 @@ class UpdateChecker(Extension):
                 return True
             return False  # Nothing to do!
 
-        if local_version < latest_version_shown and not display_same_version:
+        if latest_version_shown >= newest_version and not display_same_version:
             return False  # User was already informed once.
 
         if local_version > newest_version:
             return False  # No idea how this can happen, but don't bother the user with this.
 
         preferences.setValue(preference_key, str(newest_version))
-        Logger.log("i", "Found a new version of the software. Spawning message")
+        Application.getInstance().savePreferences()
+        Logger.log("i", f"Found a new version of the software ({str(newest_version)}). Spawning message")
 
         message = message_class(
             application_display_name = Application.getInstance().getApplicationDisplayName().title(),
-            newest_version = newest_version)
+            newest_version = newest_version,
+            whatsnew_txt = self._whatsnew_txt)
         message.download_url = self._download_url  # At this point 'our own' _download_url is set to the correct value.
         message.actionTriggered.connect(self._onActionTriggered)
         message.show()

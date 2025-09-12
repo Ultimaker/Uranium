@@ -59,6 +59,8 @@ def test__extractVersionAndURLFromData(data, application_name, expected_version,
     ("1.0.0",       "1.0.0",        "1.0.0",                True,                   True),
     ("2.0.0",       "1.0.0",        "1.0.0",                True,                   False),
     ("0.5.0",       "1.0.0",        "1.0.0",                False,                  False),
+    ("1.0.0",       "1.1.2",        "1.1.1",                True,                   True),
+    ("1.0.0",       "1.1.2",        "1.1.1",                False,                  True),
 ])
 def test__handleLatestUpdate(update_checker, local_version, latest_version, latest_version_shown, display_same_version, result):
     local_version = Version(local_version)
