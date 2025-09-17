@@ -10,6 +10,7 @@ import scipy.spatial
 
 from UM.Logger import Logger
 from UM.Math import NumPyUtil
+from UM.Math.AxisAlignedBox2D import AxisAlignedBox2D
 
 class Polygon:
     """A class representing an immutable arbitrary 2-dimensional polygon."""
@@ -324,6 +325,16 @@ class Polygon:
             if self._isRightTurn(self._points[i], self._points[(i + 1) % len(self._points)], point) == -1: #Outside this halfplane!
                 return False
         return True
+
+    def getBoundingBox(self) -> AxisAlignedBox2D:
+        if not self.isValid():
+            return None
+
+        min_x = numpy.min(self._points[:, 0])
+        min_y = numpy.min(self._points[:, 1])
+        max_x = numpy.max(self._points[:, 0])
+        max_y = numpy.max(self._points[:, 1])
+        return AxisAlignedBox2D(numpy.array([min_x, min_y]), numpy.array([max_x, max_y]))
 
     def _isRightTurn(self, p: numpy.ndarray, q: numpy.ndarray, r: numpy.ndarray) -> float:
         sum1 = q[0] * r[1] + p[0] * q[1] + r[0] * p[1]

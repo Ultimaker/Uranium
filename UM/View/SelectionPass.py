@@ -218,7 +218,7 @@ class SelectionPass(RenderPass):
 
         return self._getFaceId(Color.fromARGB(output.pixel(px, py)))
 
-    def getFacesIdsUnderMask(self, x: int, y: int, mask: "QImage") -> List[int]:
+    def getFacesIdsUnderMask(self, mask: "QImage", x: int, y: int) -> List[int]:
         output = self.getOutput()
         output_ptr = output.constBits()
         output_ptr.setsize(output.sizeInBytes())
