@@ -181,9 +181,6 @@ class Polygon:
 
         return Polygon(point_data[:, :-1])  # Leave out the affine component.
 
-    def map(self, func: Callable) -> "Polygon":
-        return Polygon([func(x) for x in self._points])
-
     def intersectionConvexHulls(self, other: "Polygon") -> "Polygon":
         """Computes the intersection of the convex hulls of this and another
         polygon.
