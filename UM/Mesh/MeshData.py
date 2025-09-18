@@ -62,7 +62,7 @@ class MeshData:
         self._type = type
         self._file_name = file_name  # type: Optional[str]
         self._mesh_id: Optional[str] = mesh_id
-        self._face_connections = face_connections if face_connections is not None else self._buildFaceConnections()
+        self._face_connections = face_connections
 
         # original center position
         self._center_position = center_position
@@ -428,8 +428,12 @@ class MeshData:
         return uv_a, uv_b, uv_c
 
     def getFaceNeighbourIDs(self, face_id: int) -> numpy.ndarray:
+        if self._face_connections is None:
+            self._face_connections = self._buildFaceConnections()
+
         if self._face_connections is None or face_id < 0 or face_id >= len(self._face_connections):
             return numpy.ndarray([-1, -1, -1])
+
         return self._face_connections[face_id]
 
     def hasAttribute(self, key: str) -> bool:
