@@ -237,18 +237,17 @@ class Camera(SceneNode.SceneNode):
 
         position = position.preMultiply(view)
         position = position.preMultiply(projection)
-        return position.x / position.z / 2.0, position.y / position.z / 2.0
+
+        if self.isPerspective() and position.z != 0:
+            position /= (position.z * 2.0)
+
+        return position.x, position.y
 
     def projectToViewport(self, position: Vector) -> Tuple[float, float]:
         """Project a 3D position onto the 2D viewport."""
 
-        projection = self._projection_matrix
-        view = self.getWorldTransformation()
-        view.invert()
-
-        position = position.preMultiply(view)
-        position = position.preMultiply(projection)
-        return position.x * self.getViewportWidth() / 2.0, position.y * self.getViewportHeight() / 2.0
+        projected = self.project(position)
+        return projected[0] * self.getViewportWidth() / 2.0, projected[1] * self.getViewportHeight() / 2.0
 
     def _preferencesChanged(self, key: str) -> None:
         """Updates the _perspective field if the preference was modified."""
