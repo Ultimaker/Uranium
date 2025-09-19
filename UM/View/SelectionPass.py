@@ -4,7 +4,8 @@
 import enum
 import math
 import random
-from typing import TYPE_CHECKING
+import numpy
+from typing import List, TYPE_CHECKING
 
 from UM.Resources import Resources
 from UM.Application import Application
@@ -21,6 +22,7 @@ from UM.View.GL.OpenGL import OpenGL
 
 if TYPE_CHECKING:
     from UM.Scene.SceneNode import SceneNode
+    from PyQt6.QtGui import QImage
 
 class SelectionPass(RenderPass):
     """A RenderPass subclass responsible for rendering selectable objects to a texture.
@@ -214,14 +216,35 @@ class SelectionPass(RenderPass):
         if px < 0 or px > (output.width() - 1) or py < 0 or py > (output.height() - 1):
             return -1
 
-        face_color = Color.fromARGB(output.pixel(px, py))
-        if int(face_color.a * 255) == 0:
+        return self._getFaceId(Color.fromARGB(output.pixel(px, py)))
+
+    def getFacesIdsUnderMask(self, mask: "QImage", x: int, y: int) -> List[int]:
+        output = self.getOutput()
+        output_ptr = output.constBits()
+        output_ptr.setsize(output.sizeInBytes())
+        output_array = numpy.frombuffer(output_ptr, dtype=numpy.uint8).reshape((output.height(), output.width(), output.bytesPerLine() // output.width()))
+        output_array = output_array[y:y + mask.height(), x:x + mask.width()]
+
+        mask_ptr = mask.constBits()
+        mask_ptr.setsize(mask.sizeInBytes())
+        mask_array = numpy.frombuffer(mask_ptr, dtype=numpy.uint8).reshape((mask.height(), mask.width(), mask.bytesPerLine() // mask.width()))
+        mask_array = mask_array[..., 0] # Keep only the first color channel, we assume it is filled with white
+        mask_array = mask_array > 0
+
+        pixels_under_mask = output_array[mask_array != 0]
+        unique_pixels = numpy.unique(pixels_under_mask.reshape(-1, 4), axis=0)
+
+        return [self._getFaceId(Color(pixel[2], pixel[1], pixel[0], pixel[3])) for pixel in unique_pixels]
+
+    @staticmethod
+    def _getFaceId(color: Color) -> int:
+        if int(color.a * 255) == 0:
             return -1
 
         return (
-            ((int(face_color.b * 255.) << 16) & 0xff0000) |
-            ((int(face_color.g * 255.) << 8) & 0x00ff00) |
-            (int(face_color.r * 255.) & 0x0000ff)
+            ((int(color.b * 255.) << 16) & 0xff0000) |
+            ((int(color.g * 255.) << 8) & 0x00ff00) |
+            (int(color.r * 255.) & 0x0000ff)
         )
 
     def _getNodeColor(self, node):
