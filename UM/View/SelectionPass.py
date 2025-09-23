@@ -216,13 +216,13 @@ class SelectionPass(RenderPass):
         if px < 0 or px > (output.width() - 1) or py < 0 or py > (output.height() - 1):
             return -1
 
-        return self._getFaceId(Color.fromARGB(output.pixel(px, py)))
+        return self._getFaceId(output.pixel(px, py))
 
     def getFacesIdsUnderMask(self, mask: "QImage", x: int, y: int) -> List[int]:
         output = self.getOutput()
         output_ptr = output.constBits()
         output_ptr.setsize(output.sizeInBytes())
-        output_array = numpy.frombuffer(output_ptr, dtype=numpy.uint8).reshape((output.height(), output.width(), output.bytesPerLine() // output.width()))
+        output_array = numpy.frombuffer(output_ptr, dtype=numpy.uint32).reshape((output.height(), output.width()))
         output_array = output_array[y:y + mask.height(), x:x + mask.width()]
 
         mask_ptr = mask.constBits()
@@ -232,12 +232,14 @@ class SelectionPass(RenderPass):
         mask_array = mask_array > 0
 
         pixels_under_mask = output_array[mask_array != 0]
-        unique_pixels = numpy.unique(pixels_under_mask.reshape(-1, 4), axis=0)
+        unique_pixels = numpy.unique(pixels_under_mask)
 
-        return [self._getFaceId(Color(pixel[2], pixel[1], pixel[0], pixel[3])) for pixel in unique_pixels]
+        return [self._getFaceId(pixel) for pixel in unique_pixels]
 
     @staticmethod
-    def _getFaceId(color: Color) -> int:
+    def _getFaceId(pixel: int) -> int:
+        color = Color.fromARGB(pixel)
+
         if int(color.a * 255) == 0:
             return -1
 
