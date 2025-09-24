@@ -210,9 +210,6 @@ class MeshData:
         except IndexError:
             return None
 
-    def getUVCoordinates(self) -> numpy.ndarray:
-        return self._uvs
-
     def hasNormals(self) -> bool:
         """Return whether this mesh has vertex normals."""
 
