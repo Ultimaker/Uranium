@@ -46,3 +46,8 @@ class AddSceneNodeOperation(Operation):
         self._node.setParent(self._parent)
         if self._selected:  # It was selected while the operation was undone. We should restore that selection.
             Selection.add(self._node)
+
+    def delete(self) -> None:
+        self._node.reset()
+        if self._parent.getName() != "Root":
+            self._parent.reset()
