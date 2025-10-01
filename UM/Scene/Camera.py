@@ -228,15 +228,19 @@ class Camera(SceneNode.SceneNode):
 
         return Ray(origin, Vector(direction[0], direction[1], direction[2]))
 
-    def project(self, position: Vector) -> Tuple[float, float]:
-        """Project a 3D position onto the 2D view plane."""
-
-        projection = self._projection_matrix
+    def getProjectToViewMatrix(self) -> Matrix:
+        """Get the matrix to be used to project a 3D position onto the 2D view plane"""
         view = self.getWorldTransformation()
         view.invert()
 
-        position = position.preMultiply(view)
-        position = position.preMultiply(projection)
+        projection = self._projection_matrix
+        view.preMultiply(projection)
+
+        return view
+
+    def project(self, position: Vector) -> Tuple[float, float]:
+        """Project a 3D position onto the 2D view plane."""
+        position = position.preMultiply(self.getProjectToViewMatrix())
 
         if self.isPerspective() and position.z != 0:
             position /= (position.z * 2.0)

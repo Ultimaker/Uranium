@@ -333,6 +333,9 @@ class Polygon:
         max_y = numpy.max(self._points[:, 1])
         return AxisAlignedBox2D(numpy.array([min_x, min_y]), numpy.array([max_x, max_y]))
 
+    def toType(self, new_type: type) -> None:
+        self._points = new_type(self._points)
+
     def _isRightTurn(self, p: numpy.ndarray, q: numpy.ndarray, r: numpy.ndarray) -> float:
         sum1 = q[0] * r[1] + p[0] * q[1] + r[0] * p[1]
         sum2 = q[0] * p[1] + r[0] * q[1] + p[0] * r[1]
