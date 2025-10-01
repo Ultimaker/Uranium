@@ -424,6 +424,12 @@ class MeshData:
             uv_c = self._uvs[int(self._indices[face_id][2])]
         return uv_a, uv_b, uv_c
 
+    def getFacesConnections(self) -> numpy.ndarray:
+        if self._face_connections is None:
+            self._face_connections = self._buildFaceConnections()
+
+        return self._face_connections
+
     def getFaceNeighbourIDs(self, face_id: int) -> numpy.ndarray:
         if self._face_connections is None:
             self._face_connections = self._buildFaceConnections()
