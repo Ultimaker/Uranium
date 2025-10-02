@@ -214,6 +214,23 @@ class Polygon:
             points.pop()
         return self._fromClipperPoints(numpy.array(points))
 
+    @staticmethod
+    def union(polygons: list["Polygon"]) -> list["Polygon"]:
+        clipper = pyclipper.Pyclipper()
+        result = []
+        try:
+            for polygon in polygons:
+                clipper.AddPath(polygon._clipperPoints(), pyclipper.PT_SUBJECT, closed=True)
+            points = clipper.Execute(pyclipper.CT_UNION, pyclipper.PFT_NONZERO, pyclipper.PFT_NONZERO)
+
+            for contour in points:
+                result.append(Polygon._fromClipperPoints(numpy.array(contour)))
+
+        except pyclipper.ClipperException:
+            pass
+
+        return result
+
     #  Computes the convex hull of the union of the convex hulls of this and another polygon.
     #
     #   \param other The other polygon to combine convex hulls with.
@@ -331,6 +348,21 @@ class Polygon:
         min_y = numpy.min(self._points[:, 1])
         max_x = numpy.max(self._points[:, 0])
         max_y = numpy.max(self._points[:, 1])
+        return AxisAlignedBox2D(numpy.array([min_x, min_y]), numpy.array([max_x, max_y]))
+
+    @staticmethod
+    def getGlobalBoundingBox(polygons: List["Polygon"]) -> Optional[AxisAlignedBox2D]:
+        if not polygons:
+            return None
+
+        all_points = numpy.concatenate([polygon.getPoints() for polygon in polygons if polygon.isValid()])
+        if all_points.size == 0:
+            return None
+
+        min_x = numpy.min(all_points[:, 0])
+        min_y = numpy.min(all_points[:, 1])
+        max_x = numpy.max(all_points[:, 0])
+        max_y = numpy.max(all_points[:, 1])
         return AxisAlignedBox2D(numpy.array([min_x, min_y]), numpy.array([max_x, max_y]))
 
     def toType(self, new_type: type) -> None:
