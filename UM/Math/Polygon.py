@@ -223,8 +223,7 @@ class Polygon:
                 clipper.AddPath(polygon._clipperPoints(), pyclipper.PT_SUBJECT, closed=True)
             points = clipper.Execute(pyclipper.CT_UNION, pyclipper.PFT_NONZERO, pyclipper.PFT_NONZERO)
 
-            for contour in points:
-                result.append(Polygon._fromClipperPoints(numpy.array(contour)))
+            result = [Polygon._fromClipperPoints(numpy.array(contour)) for contour in points]
 
         except pyclipper.ClipperException:
             pass
