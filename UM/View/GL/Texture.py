@@ -26,7 +26,7 @@ class Texture:
         self._fallback_width = fallback_width
         self._fallback_height = fallback_height
         self._aa_filter = aa_filter
-        self._subimage_updates: List[Tuple[QImage, int, int, QImage]] = []
+        self._image_update_part: Optional[QRect] = None
 
     def getTextureId(self) -> int:
         """Get the OpenGL ID of the texture."""
@@ -45,14 +45,19 @@ class Texture:
         if self._image is None:
             Logger.warning("Attempt to update OpenGL texture pixels without an image set.")
             return
-        for (updated, x, y, image) in self._subimage_updates:
-            painter = QPainter(image)
-            painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
-            painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Source)
-            painter.drawImage(0, 0, updated)
-            painter.end()
-            self._qt_texture.setData(x, y, 0, image.width(), image.height(), 1, QOpenGLTexture.PixelFormat.BGRA, QOpenGLTexture.PixelType.UInt8, image.bits())
-        self._subimage_updates.clear()
+
+        if self._image_update_part is not None:
+            buffer = self._image.copy(self._image_update_part)
+            self._qt_texture.setData(self._image_update_part.left(),
+                                     self._image_update_part.top(),
+                                     0,
+                                     self._image_update_part.width(),
+                                     self._image_update_part.height(),
+                                     1,
+                                     QOpenGLTexture.PixelFormat.BGRA,
+                                     QOpenGLTexture.PixelType.UInt8,
+                                     buffer.bits())
+            self._image_update_part = None
 
     def bind(self, texture_unit):
         """Bind the texture to a certain texture unit.
@@ -70,17 +75,15 @@ class Texture:
         self._performSubImageUpdates()
         self._qt_texture.bind(texture_unit)
 
-    def setSubImage(self, image: QImage, x: int, y: int) -> Optional[QImage]:
-        if not (0 <= x <= self._image.width() - image.width() and 0 <= y <= self._image.height() - image.height()):
-            Logger.warning(f"Attempt to set image at <{x}, {y}> with dimensions <{image.width()},{image.height()}> to OpenGL texture would result in data outside of image bounds [{self._image.width()}x{self._image.height()}].")
-        old_pixels = self._image.copy(QRect(x, y, image.width(), image.height()))
-        painter = QPainter(self._image)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
-        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Source)
-        painter.drawImage(x, y, image)
-        painter.end()
-        self._subimage_updates.append((image, x, y, old_pixels))
-        return old_pixels
+    def updateImagePart(self, region: QRect) -> None:
+        """Update the texture based on a part of the image that has been updated
+
+        :param region: The region of the image that has been updated
+        """
+        if self._image_update_part is None:
+            self._image_update_part = region
+        else:
+            self._image_update_part |= region
 
     def release(self, texture_unit):
         """Release the texture from a certain texture unit.
