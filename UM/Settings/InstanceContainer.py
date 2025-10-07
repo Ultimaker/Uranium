@@ -161,10 +161,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             flat_container.setDefinition(instance_container1.getDefinition().getId())
 
         for key in instance_container2.getAllKeys():
-            flat_container.setProperty(key, "value", instance_container2.getProperty(key, "value"))
+            flat_container.setProperty(key, "value", instance_container2.getProperty(key, "value"), set_from_cache = False)
 
         for key in instance_container1.getAllKeys():
-            flat_container.setProperty(key, "value", instance_container1.getProperty(key, "value"))
+            flat_container.setProperty(key, "value", instance_container1.getProperty(key, "value"), set_from_cache = False)
 
         return flat_container
 
