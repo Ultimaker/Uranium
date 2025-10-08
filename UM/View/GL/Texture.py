@@ -56,7 +56,7 @@ class Texture:
                                      1,
                                      QOpenGLTexture.PixelFormat.BGRA,
                                      QOpenGLTexture.PixelType.UInt8,
-                                     buffer.bits())
+                                     buffer.constBits())
             self._image_update_part = None
 
     def bind(self, texture_unit):
