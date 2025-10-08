@@ -1,10 +1,11 @@
 # Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
+import numpy
 from PyQt6.QtCore import QRect
-from PyQt6.QtGui import QImage, QPainter
+from PyQt6.QtGui import QImage
 from PyQt6.QtOpenGL import QOpenGLTexture, QAbstractOpenGLFunctions
 
 from UM.Logger import Logger
@@ -40,6 +41,18 @@ class Texture:
 
     def getImage(self) -> QImage:
         return self._image
+
+    def getTexelCountsInRect(self, bounding_rect: QRect, bit_range: Tuple[int, int]) -> Dict[int, int]:
+        res = {}
+        buffer = self._image.copy(bounding_rect)
+        buffer_bits = buffer.constBits()
+        buffer_bits.setsize(buffer.sizeInBytes())
+        buffer_size = buffer.height(), buffer.width()
+        buffer_array = numpy.frombuffer(buffer_bits, dtype=numpy.uint32).reshape(buffer_size)
+        for bit in range(bit_range[0], bit_range[1]):
+            bitmask = 0x1 << bit
+            res[bit] = numpy.count_nonzero(buffer_array & bitmask)
+        return res
 
     def _performSubImageUpdates(self) -> None:
         if self._image is None:
