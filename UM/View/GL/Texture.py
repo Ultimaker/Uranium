@@ -43,16 +43,17 @@ class Texture:
         return self._image
 
     def getTexelCountsInRect(self, bounding_rect: QRect, bit_range: Tuple[int, int]) -> Dict[int, int]:
-        res = {}
         buffer = self._image.copy(bounding_rect)
         buffer_bits = buffer.constBits()
         buffer_bits.setsize(buffer.sizeInBytes())
-        buffer_size = buffer.height(), buffer.width()
-        buffer_array = numpy.frombuffer(buffer_bits, dtype=numpy.uint32).reshape(buffer_size)
-        for bit in range(bit_range[0], bit_range[1]):
-            bitmask = 0x1 << bit
-            res[bit] = numpy.count_nonzero(buffer_array & bitmask)
-        return res
+        buffer_array = numpy.frombuffer(buffer_bits, dtype=numpy.uint32)
+
+        bit_range_start, bit_range_end = bit_range
+        full_int32 = 0xffffffff
+        bit_mask = (((full_int32 << (32 - 1 - (bit_range_end - bit_range_start))) & full_int32) >> (
+                    32 - 1 - bit_range_end))
+
+        return numpy.bincount((buffer_array & bit_mask) >> bit_range_start)
 
     def _performSubImageUpdates(self) -> None:
         if self._image is None:
