@@ -53,7 +53,8 @@ class Texture:
         bit_mask = (((full_int32 << (32 - 1 - (bit_range_end - bit_range_start))) & full_int32) >> (
                     32 - 1 - bit_range_end))
 
-        return numpy.bincount((buffer_array & bit_mask) >> bit_range_start)
+        texel_counts = numpy.bincount((buffer_array & bit_mask) >> bit_range_start)
+        return {extruder_nr: count for extruder_nr, count in enumerate(texel_counts)}
 
     def _performSubImageUpdates(self) -> None:
         if self._image is None:
