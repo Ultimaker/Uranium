@@ -1,9 +1,8 @@
 # Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Dict, Optional, Tuple
+from typing import Optional
 
-import numpy
 from PyQt6.QtCore import QRect
 from PyQt6.QtGui import QImage
 from PyQt6.QtOpenGL import QOpenGLTexture, QAbstractOpenGLFunctions
