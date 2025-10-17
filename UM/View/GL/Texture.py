@@ -1,10 +1,10 @@
 # Copyright (c) 2025 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import List, Optional, Tuple
+from typing import Optional
 
 from PyQt6.QtCore import QRect
-from PyQt6.QtGui import QImage, QPainter
+from PyQt6.QtGui import QImage
 from PyQt6.QtOpenGL import QOpenGLTexture, QAbstractOpenGLFunctions
 
 from UM.Logger import Logger
@@ -56,7 +56,7 @@ class Texture:
                                      1,
                                      QOpenGLTexture.PixelFormat.BGRA,
                                      QOpenGLTexture.PixelType.UInt8,
-                                     buffer.bits())
+                                     buffer.constBits())
             self._image_update_part = None
 
     def bind(self, texture_unit):
