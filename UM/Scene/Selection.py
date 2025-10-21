@@ -172,9 +172,9 @@ class Selection:
 
     selectionCenterChanged = Signal()
 
-    selectedFaceChanged = Signal()
+    selectedFaceChanged = Signal(Signal.Auto, "'selectedFaceChanged': Face selection using the Selection class is deprecated, since 5.11.0, please use the SelectionPass for faces in CuraRenderer instead.")
 
-    hoverFaceChanged = Signal()
+    hoverFaceChanged = Signal(Signal.Auto, "'hoverFaceChanged': Face selection using the Selection class is deprecated, since 5.11.0, please use the SelectionPass for faces in CuraRenderer instead.")
 
     @classmethod
     def getSelectionCenter(cls) -> Vector:
