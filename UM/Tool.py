@@ -40,6 +40,8 @@ class Tool(PluginObject):
         self._shortcut_key: Optional[int] = None
         self._active_view: Optional[str] = None
 
+        self._face_id: int = -1  # <- Used for backwards compat since 5.11, please remove during/after the next major.
+
     operationStarted = Signal()
     """Should be emitted whenever a longer running operation is started, like a drag to scale an object.
 
@@ -106,6 +108,17 @@ class Tool(PluginObject):
                 self._handle.setActiveAxis(tool_id)
             else:
                 self._handle.setActiveAxis(None)
+
+        # NOTE: The next block here is to support plugin-tools using the deprecated (since 5.11) way to select faces.
+        #       Please return this to just an empty list at the next major release.
+        if (Selection.getFaceSelectMode() and Selection.selectedFaceChanged.numListeners() >= 2 and
+                event.type == Event.MousePressEvent and (MouseEvent.LeftButton in event.buttons)):
+            fpass = UM.Application.Application.getInstance().getRenderer().getRenderPass("selection_faces")
+            face_id = fpass.getFaceIdAtPosition(event.x, event.y)
+            if face_id != self._face_id:
+                self._face_id = face_id
+                Selection.setFace(Selection.getSelectedObject(0), self._face_id)
+        # (end block)
 
         if event.type == Event.ToolDeactivateEvent and self._handle:
             self._handle.setParent(None)
@@ -222,7 +235,9 @@ class Tool(PluginObject):
             return None # At least one is True, but not all
 
     def getRequiredExtraRenderingPasses(self) -> list[str]:
-        return []
+        # NOTE: The check here is to support plugin-tools using the deprecated (since 5.11) way to select faces.
+        #       Please return this to just returning an empty list at the next major release.
+        return ["selection_faces"] if Selection.selectedFaceChanged.numListeners() >= 2 else []
 
     def _onToolEnabledChanged(self, tool_id: str, enabled: bool) -> None:
         if tool_id == self._plugin_id:
