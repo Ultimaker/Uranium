@@ -135,7 +135,7 @@ class Signal:
     Auto = 2
     Queued = 3
 
-    def __init__(self, type: int = Auto) -> None:
+    def __init__(self, type: int = Auto, warn_on_use: Optional[str] = None) -> None:
         """Initialize the instance.
 
         :param type: The signal type. Defaults to Auto.
@@ -153,6 +153,9 @@ class Signal:
         self._postpone_thread = None    # type: Optional[threading.Thread]
         self._compress_postpone = False # type: bool
         self._postponed_emits = None    # type: Any
+
+        self._warn_on_use = warn_on_use
+        self._num_listeners = 0
 
         if _recordSignalNames():
             try:
@@ -224,10 +227,14 @@ class Signal:
         :param connector: The signal or slot (function) to connect.
         """
 
+        if self._warn_on_use is not None:
+            Logger.log("w_once", self._warn_on_use)
+
         if self._postpone_emit:
             Logger.log("w", "Tried to connect to signal %s that is currently being postponed, this is not possible", self.__name)
             return
 
+        self._num_listeners += 1
         with self.__lock:
             if isinstance(connector, Signal):
                 if connector == self:
@@ -251,10 +258,14 @@ class Signal:
         :param connector: The signal or slot (function) to disconnect.
         """
 
+        if self._warn_on_use is not None:
+            Logger.log("w_once", self._warn_on_use)
+
         if self._postpone_emit:
             Logger.log("w", "Tried to disconnect from signal %s that is currently being postponed, this is not possible", self.__name)
             return
 
+        self._num_listeners -= 1
         with self.__lock:
             if isinstance(connector, Signal):
                 self.__signals = self.__signals.remove(connector)
@@ -270,10 +281,15 @@ class Signal:
             Logger.log("w", "Tried to disconnect from signal %s that is currently being postponed, this is not possible", self.__name)
             return
 
+        self._num_listeners = 0
         with self.__lock:
             self.__functions = WeakImmutableList()      # type: "WeakImmutableList"
             self.__methods = WeakImmutablePairList()    # type: "WeakImmutablePairList"
             self.__signals = WeakImmutableList()        # type: "WeakImmutableList"
+
+    def numListeners(self):
+        """Get the number of connected slots."""
+        return self._num_listeners
 
     def __getstate__(self):
         """To support Pickle

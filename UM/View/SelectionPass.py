@@ -234,7 +234,8 @@ class SelectionPass(RenderPass):
         pixels_under_mask = output_array[mask_array != 0]
         unique_pixels = numpy.unique(pixels_under_mask)
 
-        return [self._getFaceId(pixel) for pixel in unique_pixels]
+        faces_ids = [self._getFaceId(pixel) for pixel in unique_pixels]
+        return [face_id for face_id in faces_ids if face_id >= 0]
 
     @staticmethod
     def _getFaceId(pixel: int) -> int:
