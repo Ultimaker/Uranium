@@ -199,7 +199,11 @@ def cache_per_instance_copy_result(function):
     return wrapper
 
 def singleton(cls):
-    """Function decorator that marks a class as being a Singleton, so that it gets a getInstance method."""
+    """
+    Function decorator that marks a class as being a Singleton, so that it gets a getInstance method.
+    note: I couldn't find a way to make typing-based PyCharm code-completion work with this properly.
+          If there is a way, please advise :)
+    """
 
     cls.__instance = None
 
