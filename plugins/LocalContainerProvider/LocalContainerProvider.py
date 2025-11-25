@@ -7,6 +7,7 @@ import pickle  # For caching definitions.
 import re  # To detect back-up files in the ".../old/#/..." folders.
 import time
 import urllib.parse  # For interpreting escape characters using unquote_plus.
+import gc
 from typing import Any, Dict, Iterable, Optional, Set, Tuple
 
 from UM.Application import Application  # To get the current version for finding the cache directory.
@@ -264,12 +265,15 @@ class LocalContainerProvider(ContainerProvider):
             return None
 
         try:
+            gc.disable()
             with open(cache_path, "rb") as f:
                 # The DefinitionContainerUnpickler has a list of whitelisted globals
                 definition = DefinitionContainerUnpickler(f).load()
         except (OSError, PermissionError, IOError, AttributeError, EOFError, ImportError, IndexError, pickle.UnpicklingError) as e:
             Logger.log("w", "Failed to load definition {definition_id} from cached file: {error_msg}".format(definition_id = definition_id, error_msg = str(e)))
             return None
+        finally:
+            gc.enable()
 
         try:
             for file_path in definition.getInheritedFiles():
