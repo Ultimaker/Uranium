@@ -98,7 +98,7 @@ class UraniumConan(ConanFile):
     def requirements(self):
         for req in self.conan_data["requirements"]:
             self.requires(req)
-        self.requires("cpython/3.12.2")
+        self.requires("cpython/3.12.7")
 
     def generate(self):
         vr = VirtualRunEnv(self)
