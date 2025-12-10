@@ -1,7 +1,7 @@
 # Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import List, Dict, Union, Optional, Any
+from typing import List, Dict, Union, Optional, Any, Tuple
 
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
@@ -151,7 +151,7 @@ class RenderBatch:
 
         return False
 
-    def addItem(self, transformation: Optional[Matrix], mesh: Optional[MeshData], uniforms = None, normal_transformation: Optional[Matrix] = None):
+    def addItem(self, transformation: Optional[Matrix], mesh: Optional[MeshData], uniforms = None, normal_transformation: Optional[Matrix] = None, flip_zy_plane: Tuple[bool, float] = None):
         """Add an item to render to this batch.
 
         :param transformation: The transformation matrix to use for rendering the item.
@@ -166,7 +166,7 @@ class RenderBatch:
             Logger.log("w", "Tried to add an item to batch without mesh")
             return
 
-        self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms, "normal_transformation": normal_transformation})
+        self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms, "normal_transformation": normal_transformation, "flip_zy_plane": flip_zy_plane})
 
     def render(self, camera: Optional[Camera]):
         """Render the batch.
@@ -244,6 +244,14 @@ class RenderBatch:
         # Do not render if there's no vertex (empty mesh)
         if mesh.getVertexCount() == 0:
             return
+
+        if "flip_zy_plane" in item and item["flip_zy_plane"] is not None and item["flip_zy_plane"][0]:
+            transformation.setColumn( 0, [
+                -transformation.at(0, 0),
+                transformation.at(0, 1),
+                transformation.at(0, 2),
+                item["flip_zy_plane"][1] + transformation.at(0, 3)
+            ])
 
         normal_matrix = item["normal_transformation"]
         if mesh.hasNormals() and normal_matrix is None:
