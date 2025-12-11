@@ -300,7 +300,7 @@ pip_requirements_core:
   Windows:
     numpy:
       version: "1.26.1"
-      url: https://cura.jfrog.io/artifactory/cura-local-pypi/numpy/numpy/numpy-mkl-1.26.1-cp312-cp312-win_amd64.whl
+      url: "https://cura.jfrog.io/artifactory/cura-local-pypi/numpy/numpy/numpy-1.26.1+mkl-cp312-cp312-win_amd64.whl"
       hashes:
         - sha256:9e2c5e7f01bedb3c688e22ad27ffaf7904adee536d6c555a12aa7a01769a7aa0
     colorama:
