@@ -151,7 +151,7 @@ class RenderBatch:
 
         return False
 
-    def addItem(self, transformation: Optional[Matrix], mesh: Optional[MeshData], uniforms = None, normal_transformation: Optional[Matrix] = None, flip_zy_plane: Tuple[bool, float] = None):
+    def addItem(self, transformation: Optional[Matrix], mesh: Optional[MeshData], uniforms = None, normal_transformation: Optional[Matrix] = None, flip_zy_plane: Optional[float] = None):
         """Add an item to render to this batch.
 
         :param transformation: The transformation matrix to use for rendering the item.
@@ -245,12 +245,12 @@ class RenderBatch:
         if mesh.getVertexCount() == 0:
             return
 
-        if "flip_zy_plane" in item and item["flip_zy_plane"] is not None and item["flip_zy_plane"][0]:
+        if "flip_zy_plane" in item and item["flip_zy_plane"] is not None:
             transformation.setColumn( 0, [
                 -transformation.at(0, 0),
                 transformation.at(0, 1),
                 transformation.at(0, 2),
-                item["flip_zy_plane"][1] + transformation.at(0, 3)
+                item["flip_zy_plane"] + transformation.at(0, 3)
             ])
 
         normal_matrix = item["normal_transformation"]
