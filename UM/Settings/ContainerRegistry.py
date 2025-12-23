@@ -228,6 +228,8 @@ class ContainerRegistry(ContainerRegistryInterface):
                 except Exception as e:
                     Logger.logException("e", "Error when loading container {container_id}: {error_msg}".format(container_id = metadata["id"], error_msg = str(e)))
                     continue
+                if new_container is None:
+                    continue
                 self.addContainer(new_container)
                 self.containerLoadComplete.emit(new_container.getId())
                 result.append(new_container)

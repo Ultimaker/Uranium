@@ -81,7 +81,11 @@ class LocalContainerProvider(ContainerProvider):
         # Not cached, so load by deserialising.
         container = container_class(base_id)
         with open(file_path, "r", encoding = "utf-8") as f:
-            container.deserialize(f.read(), file_path)
+            try:
+                container.deserialize(f.read(), file_path)
+            except Exception:
+                if not hasattr(sys, "frozen"):
+                    return None
         container.setPath(file_path)
 
         if isinstance(container, DefinitionContainer):

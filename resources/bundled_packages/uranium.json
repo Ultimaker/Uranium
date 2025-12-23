@@ -237,23 +237,6 @@
             }
         }
     },
-    "UpdateChecker": {
-        "package_info": {
-            "package_id": "UpdateChecker",
-            "package_type": "plugin",
-            "display_name": "Update Checker",
-            "description": "Checks for updates of the software.",
-            "package_version": "1.0.1",
-            "sdk_version": "8.6.0",
-            "website": "https://ultimaker.com",
-            "author": {
-                "author_id": "UltimakerPackages",
-                "display_name": "UltiMaker",
-                "email": "plugins@ultimaker.com",
-                "website": "https://ultimaker.com"
-            }
-        }
-    },
     "SimpleView": {
         "package_info": {
             "package_id": "SimpleView",
