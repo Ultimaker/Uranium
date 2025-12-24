@@ -54,6 +54,9 @@ class DefinitionContainersModel(ListModel):
         definition_containers.sort(key = self._sortKey)
 
         for metadata in definition_containers:
+            if metadata["type"] == "machine" and "belt" not in metadata["id"]:
+                continue
+
             metadata = dict(metadata) # For fully loaded definitions, the metadata is an OrderedDict which does not pass to QML correctly
 
             items.append({
