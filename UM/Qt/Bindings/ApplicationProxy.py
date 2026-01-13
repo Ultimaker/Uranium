@@ -13,4 +13,4 @@ class ApplicationProxy(QObject):
 
     @pyqtProperty(str, constant = True)
     def version(self):
-        return self._application.getVersion()
+        return self._application.getVersion().split("-")[0]
