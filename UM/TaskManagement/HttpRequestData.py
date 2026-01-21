@@ -108,7 +108,11 @@ class HttpRequestData(QObject):
     def setDone(self) -> None:
         if self._timeout is not None:
             self._timeout_timer.stop()
-            self._timeout_timer.timeout.disconnect(self._onTimeoutTimerTriggered)
+            try:
+                self._timeout_timer.timeout.disconnect(self._onTimeoutTimerTriggered)
+            except TypeError:
+                # In case the signal was not connected, which can happen if setStartTime was never called
+                pass
 
     # Since Qt 5.12, pyqtSignal().connect() will return a Connection instance that represents a connection. This
     # Connection instance can later be used to disconnect for cleanup purpose. We are using Qt 5.10 and this feature
