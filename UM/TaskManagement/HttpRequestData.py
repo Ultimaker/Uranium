@@ -112,6 +112,7 @@ class HttpRequestData(QObject):
                 self._timeout_timer.timeout.disconnect(self._onTimeoutTimerTriggered)
             except TypeError:
                 # In case the signal was not connected, which can happen if setStartTime was never called
+                Logger.log("d", "HttpRequestData: Timeout timer signal was not connected, skipping disconnect.")
                 pass
 
     # Since Qt 5.12, pyqtSignal().connect() will return a Connection instance that represents a connection. This
