@@ -59,8 +59,9 @@ class OBJWriter(MeshWriter):
             else:
                 for vertex in verts:
                     stream.write("v {0} {1} {2}\n".format(vertex[0], -vertex[2], vertex[1]))
-                for uv in uvs:
-                    stream.write("vt {0} {1}\n".format(uv[0], uv[1]))
+                if uvs is not None:
+                    for uv in uvs:
+                        stream.write("vt {0} {1}\n".format(uv[0], uv[1]))
 
                 stream.write("# Faces\n")
                 for face in range(face_offset, face_offset + len(verts) - 1, 3):
