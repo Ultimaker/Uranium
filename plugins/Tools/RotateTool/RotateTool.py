@@ -475,7 +475,7 @@ class RotateTool(Tool):
             text=i18n_catalog.i18nc("@info", "Select a face on the model to align it to the build plate. "
                                             "The rotation controls are disabled while in this mode."),
             title=i18n_catalog.i18nc("@info:title", "Select Face Mode Active"),
-            lifetime=0,
+            lifetime=-1,
             dismissable=False,
             message_type=Message.MessageType.NEUTRAL
         )
