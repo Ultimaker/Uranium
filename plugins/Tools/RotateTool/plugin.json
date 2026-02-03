@@ -1,7 +1,7 @@
 {
     "name": "Rotate Tool",
     "author": "Ultimaker B.V.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Provides the Rotate tool.",
     "api": 8,
     "i18n-catalog": "uranium"
