@@ -1,4 +1,4 @@
-version: "5.12.0-alpha.0"
+version: "5.12.0-alpha.1"
 
 requirements:
   - "pyarcus/5.11.0"
