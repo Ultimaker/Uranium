@@ -553,10 +553,6 @@ msgid "There were some errors uninstalling the following packages: {packages}"
 msgstr "Beim Deinstallieren der folgenden Pakete traten Fehler auf:"
 "{packages}"
 
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "There where no models in <filename>{0}</filename>."
-msgstr "Es waren keine Modelle in <filename>{0}</filename> vorhanden."
-
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
 msgstr "Damit werden die geänderten Dateien erneut von der Festplatte geladen."

@@ -709,7 +709,3 @@ msgstr "Доступна версия {application_name} {version_number}!"
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number} обеспечивает более качественную и надежную печать."
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "There where no models in <filename>{0}</filename>."
-#~ msgstr "Там, где нет моделей в <filename>{0}</filename>."
