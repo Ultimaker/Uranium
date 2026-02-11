@@ -102,6 +102,10 @@ class RotateTool(Tool):
             if not id:
                 return False
 
+            node = self.getController().getScene().findObject(id)
+            if node and not Selection.isSelected(node):
+                return False
+
             if id in self._handle.getExtraWidgetsColorMap():
                 self._active_widget = self._handle.ExtraWidgets(id)
                 self._widget_click_start = time.monotonic()
