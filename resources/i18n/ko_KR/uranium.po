@@ -700,7 +700,3 @@ msgstr "{application_name} {version_number}을(를) 사용할 수 있습니다!"
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "{application_name} {version_number}은(는) 보다 개선된 안정적인 인쇄 환경을 제공합니다."
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "There where no models in <filename>{0}</filename>."
-#~ msgstr "<filename>{0}</filename>에 모델이 없습니다."

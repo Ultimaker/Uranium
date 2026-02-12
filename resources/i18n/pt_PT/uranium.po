@@ -703,7 +703,3 @@ msgstr "A {application_name} {version_number} encontra-se disponível!"
 msgctxt "@info:status"
 msgid "{application_name} {version_number} provides a better and more reliable printing experience."
 msgstr "A {application_name} {version_number} proporciona uma experiência de impressão melhor e mais fiável."
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "There where no models in <filename>{0}</filename>."
-#~ msgstr "Não existiam modelos em <filename>{0}</filename>."
