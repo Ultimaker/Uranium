@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-05 14:57+0100\n"
-"PO-Revision-Date: 2025-03-14 03:15+0000\n"
+"PO-Revision-Date: 2026-02-20 13:55+0000\n"
 "Last-Translator: h1data <h1data@users.noreply.github.com>\n"
 "Language-Team: Japanese <https://github.com/h1data/Cura/wiki>\n"
 "Language: ja_JP\n"
@@ -110,7 +110,7 @@ msgstr "モデルを下ろす"
 
 msgctxt "description"
 msgid "Enables saving to local files."
-msgstr "ローカルファイルに保存することができます。"
+msgstr "ローカルファイルに保存できます。"
 
 msgctxt "@info:title"
 msgid "Error"
@@ -118,7 +118,7 @@ msgstr "エラー"
 
 msgctxt "@action:button"
 msgid "Exit Select Face Mode"
-msgstr ""
+msgstr "面選択モードを終了"
 
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
@@ -162,7 +162,7 @@ msgstr "ヘルプ"
 
 msgctxt "@checkbox:description"
 msgid "If a model has been rotated then 'Non-Uniform Scaling' might result in skewing of the model."
-msgstr "モデルを回転し、縦・横・高さの比を維持せずに拡大／縮小を行うと、モデルが歪んでしまう場合があります。"
+msgstr "モデルを回転してから縦・横・高さの比を維持せずに拡大／縮小すると、モデルが歪んでしまう場合があります。"
 
 msgctxt "@option"
 msgid "Ignore"
@@ -186,7 +186,7 @@ msgstr "平らに配置"
 
 msgctxt "@label"
 msgid "Laying object flat on buildplate..."
-msgstr "オブジェクトをビルドプレート上に平に並べる..."
+msgstr "オブジェクトをビルドプレート上に平らに並べる..."
 
 msgctxt "@action:button"
 msgid "Learn more"
@@ -414,7 +414,7 @@ msgstr "リトライ"
 
 msgctxt "@info:tooltip"
 msgid "Return to normal rotation mode"
-msgstr ""
+msgstr "通常の回転モードに戻る"
 
 msgctxt "@label"
 msgid "Rotate"
@@ -498,11 +498,11 @@ msgstr "造形物を拡大／縮小する"
 
 msgctxt "@info:title"
 msgid "Select Face Mode Active"
-msgstr ""
+msgstr "面選択モードを有効化"
 
 msgctxt "@info"
 msgid "Select a face on the model to align it to the build plate. The rotation controls are disabled while in this mode."
-msgstr ""
+msgstr "ビルドプレートに合わせるモデル上の面を選択します。このモードの間、回転コントロールは無効になります。"
 
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
@@ -554,7 +554,7 @@ msgstr ""
 
 msgctxt "@error"
 msgid "The plugin {} could not be loaded. Re-installing the plugin might solve the issue."
-msgstr "プラグイン{}を読み込めませんでした。プラグインを再インストールすると、問題が解決する場合があります。"
+msgstr "プラグイン{}を読み込めませんでした。プラグインを再インストールすることで問題を解決できる場合があります。"
 
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
@@ -584,7 +584,7 @@ msgstr "<filename>{0}</filename>にはモデルがありませんでした。"
 
 msgctxt "@error:uninstall"
 msgid "There were some errors uninstalling the following packages: {packages}"
-msgstr "次のパッケージのアンインストールでエラーが発生しました:{packages}"
+msgstr "次のパッケージのアンインストールでエラーが発生しました: {packages}"
 
 msgctxt "@action:description"
 msgid "This will trigger the modified files to reload from disk."
