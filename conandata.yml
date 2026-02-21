@@ -1,8 +1,8 @@
-version: "5.12.0-beta.0"
+version: "5.12.0-beta.1"
 
 requirements:
   - "pyarcus/5.11.0"
-  - "uvula/1.0.0"
+  - "uvula/1.0.1"
 
 extra_dependencies:
   Qt:
