@@ -43,3 +43,8 @@ class RemoveSceneNodeOperation(Operation.Operation):
             pass
         if Selection.isSelected(self._node):  # Also remove the selection.
             Selection.remove(self._node)
+
+    def delete(self) -> None:
+        self._node.reset()
+        if self._parent.getName() != "Root":
+            self._parent.reset()
