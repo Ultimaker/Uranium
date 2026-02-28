@@ -65,6 +65,7 @@ class RotateTool(Tool):
         self._widget_click_start = 0
 
         self._select_face_mode = False
+        self._select_face_mode_message = None  # type: Optional[Message]
 
         self._faces_selection_pass: Optional[SelectionPass] = None
 
@@ -243,6 +244,11 @@ class RotateTool(Tool):
                     self.operationStopped.emit(self)
                 return True
 
+        if event.type == Event.ToolDeactivateEvent:
+            # Exit select face mode when switching away from the rotate tool
+            if self._select_face_mode:
+                self.setSelectFaceToLayFlatMode(False)
+
     def setRotationX(self, rotation_x: str) -> None:
         angle = math.radians(float(rotation_x))
         self._rotateModel(angle, Vector.Unit_X)
@@ -361,6 +367,16 @@ class RotateTool(Tool):
         if select != self._select_face_mode:
             self._select_face_mode = select
             self._handle.setEnabled(not select)
+            
+            # Force a scene update to refresh the handle visibility immediately
+            self._controller.getScene().sceneChanged.emit(self._handle)
+            
+            # Show or hide the persistent message
+            if select:
+                self._showSelectFaceModeMessage()
+            else:
+                self._hideSelectFaceModeMessage()
+            
             self.propertyChanged.emit()
 
     def resetRotation(self):
@@ -449,6 +465,39 @@ class RotateTool(Tool):
 
     def getRequiredExtraRenderingPasses(self) -> list[str]:
         return ["selection_faces"]
+
+    def _showSelectFaceModeMessage(self) -> None:
+        """Show a persistent message informing the user about select-face mode."""
+        if self._select_face_mode_message:
+            self._select_face_mode_message.hide()
+        
+        self._select_face_mode_message = Message(
+            text=i18n_catalog.i18nc("@info", "Select a face on the model to align it to the build plate. "
+                                            "The rotation controls are disabled while in this mode."),
+            title=i18n_catalog.i18nc("@info:title", "Select Face Mode Active"),
+            lifetime=-1,
+            dismissable=False,
+            message_type=Message.MessageType.NEUTRAL
+        )
+        self._select_face_mode_message.addAction(
+            "exit_select_face_mode",
+            name=i18n_catalog.i18nc("@action:button", "Exit Select Face Mode"),
+            icon="",
+            description=i18n_catalog.i18nc("@info:tooltip", "Return to normal rotation mode")
+        )
+        self._select_face_mode_message.actionTriggered.connect(self._onSelectFaceModeMessageActionTriggered)
+        self._select_face_mode_message.show()
+
+    def _hideSelectFaceModeMessage(self) -> None:
+        """Hide the select-face mode message."""
+        if self._select_face_mode_message:
+            self._select_face_mode_message.hide()
+            self._select_face_mode_message = None
+
+    def _onSelectFaceModeMessageActionTriggered(self, message: Message, action: str) -> None:
+        """Handle action triggered from the select-face mode message."""
+        if action == "exit_select_face_mode":
+            self.setSelectFaceToLayFlatMode(False)
 
 
 class LayFlatJob(Job):
