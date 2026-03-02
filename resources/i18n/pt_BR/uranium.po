@@ -2,20 +2,21 @@
 # Copyright (C) 2023 UltiMaker
 # This file is distributed under the same license as the Uranium package.
 #
+# SPDX-FileCopyrightText: 2026 Claudio Sampaio (Patola)
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-05 14:57+0100\n"
-"PO-Revision-Date: 2023-10-23 05:16+0200\n"
-"Last-Translator: Cláudio Sampaio <patola@gmail.com>\n"
-"Language-Team: Cláudio Sampaio\n"
+"PO-Revision-Date: 2026-03-02 12:31+0100\n"
+"Last-Translator: Claudio Sampaio (Patola) <patola@gmail.com>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
@@ -123,7 +124,7 @@ msgstr "Erro"
 
 msgctxt "@action:button"
 msgid "Exit Select Face Mode"
-msgstr ""
+msgstr "Sair do Modo de Seleção de Face"
 
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
@@ -167,7 +168,7 @@ msgstr "Ajuda"
 
 msgctxt "@checkbox:description"
 msgid "If a model has been rotated then 'Non-Uniform Scaling' might result in skewing of the model."
-msgstr ""
+msgstr "Se um modelo foi rotacionado então 'Redimensionamento Não-Uniforme' pode resultar em sua distorção."
 
 msgctxt "@option"
 msgid "Ignore"
@@ -419,7 +420,7 @@ msgstr "Tentar Novamente"
 
 msgctxt "@info:tooltip"
 msgid "Return to normal rotation mode"
-msgstr ""
+msgstr "Retornar ao modo normal de rotação"
 
 msgctxt "@label"
 msgid "Rotate"
@@ -503,11 +504,11 @@ msgstr "Redimensionando Objeto"
 
 msgctxt "@info:title"
 msgid "Select Face Mode Active"
-msgstr ""
+msgstr "Modo de Seleção de Face Ativo"
 
 msgctxt "@info"
 msgid "Select a face on the model to align it to the build plate. The rotation controls are disabled while in this mode."
-msgstr ""
+msgstr "Selecione uma face do modelo para alinhar com a plataforma de impressão. Os controles de rotação são desabilitados quando nesse modo."
 
 msgctxt "@action:button"
 msgid "Select face to align to the build plate"
