@@ -93,7 +93,7 @@ Item
 
         text:
         {
-            if(UM.Controller.properties.getValue("SelectFaceSupported") === true)
+            if (UM.Controller.properties.getValue("SelectFaceSupported"))
             {
                 return catalog.i18nc("@action:button", "Select face to align to the build plate");
             }
