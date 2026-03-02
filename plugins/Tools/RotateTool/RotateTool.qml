@@ -111,6 +111,7 @@ Item
 
         checkable: true
 
+        // Property might be undefined when we're switching away from the RotateTool!
         enabled: UM.Selection.selectionCount === 1 && UM.Controller.properties.getValue("SelectFaceSupported") === true
         checked: UM.Controller.properties.getValue("SelectFaceToLayFlatMode")
         onClicked: UM.Controller.setProperty("SelectFaceToLayFlatMode", checked)
