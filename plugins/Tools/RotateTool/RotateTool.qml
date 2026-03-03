@@ -99,7 +99,7 @@ Item
             }
             else
             {
-                return catalog.i18nc("@action:button", "Alignment by face is not available in OpenGL compatibility mode");
+                return catalog.i18nc("@action:button", "Alignment by face is not available on this device. Your graphics card or drivers do not fully support it. Updating your graphics drivers may enable this feature.");
             }
         }
 
