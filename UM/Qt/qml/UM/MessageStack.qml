@@ -68,6 +68,7 @@ ListView
         width: UM.Theme.getSize("message").width
         // Height is the size of the children + a margin on top & bottom.
         height: childrenRect.height + 2 * UM.Theme.getSize("default_margin").height
+        opacity: 1
 
         anchors.horizontalCenter: parent !== null ? parent.horizontalCenter : undefined
 
@@ -431,11 +432,6 @@ ListView
                 }
             }
         }
-    }
-
-    add: Transition
-    {
-        NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 200; }
     }
 
     displaced: Transition
