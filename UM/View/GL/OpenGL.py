@@ -293,7 +293,7 @@ class OpenGL:
 
         for attribute_name in mesh.attributeNames():
             attribute = mesh.getAttribute(attribute_name)
-            attribute_byte_array = attribute["value"].tostring()
+            attribute_byte_array = attribute["value"].tobytes()
             buffer.write(offset, attribute_byte_array, len(attribute_byte_array))
             offset += len(attribute_byte_array)
 
