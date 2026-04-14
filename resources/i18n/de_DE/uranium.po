@@ -700,3 +700,7 @@ msgstr "Flächenauswahl-Modus aktiv"
 msgctxt "@info"
 msgid "Select a face on the model to align it to the build plate. The rotation controls are disabled while in this mode."
 msgstr "Wählen Sie eine Fläche am Modell aus, um sie auf der Druckplatte auszurichten. Die Rotationssteuerungen sind in diesem Modus deaktiviert."
+
+msgctxt "@action:button"
+msgid "Alignment by face is not available on this device. Your graphics card or drivers do not fully support it. Updating your graphics drivers may enable this feature."
+msgstr "Ausrichtung nach Fläche nicht verfügbar: Die Ausrichtung nach Fläche ist auf diesem Gerät nicht verfügbar. Ihre Grafikkarte oder Treiber unterstützen diese Funktion nicht vollständig. Durch Aktualisieren der Grafiktreiber kann diese Funktion möglicherweise aktiviert werden."

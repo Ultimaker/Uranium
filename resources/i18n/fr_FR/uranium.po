@@ -700,3 +700,7 @@ msgstr "Mode sélection de faces actif"
 msgctxt "@info"
 msgid "Select a face on the model to align it to the build plate. The rotation controls are disabled while in this mode."
 msgstr "Sélectionnez une face du modèle pour l'aligner sur le plateau de construction. Les commandes de rotation sont désactivées dans ce mode."
+
+msgctxt "@action:button"
+msgid "Alignment by face is not available on this device. Your graphics card or drivers do not fully support it. Updating your graphics drivers may enable this feature."
+msgstr "L'alignement par face n'est pas disponible sur cet appareil. Votre carte graphique ou vos pilotes ne le prennent pas entièrement en charge. La mise à jour de vos pilotes graphiques pourrait permettre d'activer cette fonctionnalité."

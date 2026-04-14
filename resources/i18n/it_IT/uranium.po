@@ -700,3 +700,7 @@ msgstr "Seleziona Modalità faccia attiva"
 msgctxt "@info"
 msgid "Select a face on the model to align it to the build plate. The rotation controls are disabled while in this mode."
 msgstr "Seleziona una faccia del modello da allineare al piano di stampa. In questa modalità, i controlli di rotazione sono disabilitati."
+
+msgctxt "@action:button"
+msgid "Alignment by face is not available on this device. Your graphics card or drivers do not fully support it. Updating your graphics drivers may enable this feature."
+msgstr "Su questo dispositivo non è disponibile l'allineamento in base alla faccia. La scheda grafica o i driver non supportano pienamente questa funzione. L'aggiornamento dei driver della scheda grafica potrebbe consentire l'utilizzo di questa funzione."
