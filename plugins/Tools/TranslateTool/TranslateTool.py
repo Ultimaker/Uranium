@@ -261,6 +261,10 @@ class TranslateTool(Tool):
             if not id:
                 return False
 
+            node = self.getController().getScene().findObject(id)
+            if node and not Selection.isSelected(node):
+                return False
+
             if id in self._enabled_axis:
                 self.setLockedAxis(id)
             elif self._handle.isAxis(id):
