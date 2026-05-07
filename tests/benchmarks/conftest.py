@@ -7,7 +7,7 @@ import warnings
 warn = True
 
 @pytest.hookimpl
-def pytest_ignore_collect(path, config):
+def pytest_ignore_collect(collection_path, config):
     if config.pluginmanager.hasplugin("pytest-benchmark"):
         return False
     else:

@@ -631,7 +631,7 @@ class QtApplication(QApplication, Application):
 
         return result
 
-    def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None) -> Optional["QObject"]:
+    def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None, initial_properties: Dict[str, "QObject"] = {}) -> Optional["QObject"]:
         """Create a QML component from a qml file.
         :param qml_file_path: The absolute file path to the root qml file.
         :param context_properties: Optional dictionary containing the properties that will be set on the context of the
@@ -648,7 +648,7 @@ class QtApplication(QApplication, Application):
         if context_properties is not None:
             for name, value in context_properties.items():
                 result_context.setContextProperty(name, value)
-        result = component.create(result_context)
+        result = component.createWithInitialProperties(initial_properties, result_context)
         for err in component.errors():
             Logger.log("e", str(err.toString()))
         if result is None:
