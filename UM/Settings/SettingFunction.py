@@ -274,8 +274,8 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
 
         if node.value in self._blacklist:
             raise IllegalMethodError(node.value)
-        if node.s.startswith("_"):
-            raise IllegalMethodError(node.s)
+        if node.value.startswith("_"):
+            raise IllegalMethodError(node.value)
         if node.value not in self._knownNames and node.value not in dir(builtins):  # type: ignore #AST uses getattr stuff, so ignore type of node.value.
             self.keys.add(node.value)  # type: ignore
 
