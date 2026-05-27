@@ -8,6 +8,8 @@ RowLayout
 {
     id: root
 
+    property string tooltipUnit: "%"
+
     // alias all slider properties to the slider component
     property alias from: slider.from
     property alias handle: slider.handle
@@ -120,7 +122,7 @@ RowLayout
             UM.Label
             {
                 id: percentageLabel
-                text: `${slider.value}%`
+                text: `${slider.value}${root.tooltipUnit}`
                 horizontalAlignment: TextInput.AlignHCenter
                 leftPadding: UM.Theme.getSize("narrow_margin").width
                 rightPadding: UM.Theme.getSize("narrow_margin").width
