@@ -1,3 +1,6 @@
+// Copyright (c) 2026 UltiMaker
+// Uranium is released under the terms of the LGPLv3 or higher.
+
 import QtQuick 2.7
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
@@ -116,7 +119,7 @@ RowLayout
             height: childrenRect.height
             target: Qt.point(handleButton.x + handleButton.width / 2, handleButton.y + handleButton.height / 2)
             x: handleButton.x + Math.round((handleButton.width - width) / 2)
-            y: handleButton.y - height - UM.Theme.getSize("button_tooltip_arrow").height - UM.Theme.getSize("narrow_margin").height
+            y: handleButton.y - height - UM.Theme.getSize("button_tooltip_arrow").height - UM.Theme.getSize("default_lining").height
             color: UM.Theme.getColor("tooltip");
 
             UM.Label
