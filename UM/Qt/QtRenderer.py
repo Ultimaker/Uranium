@@ -160,8 +160,6 @@ class QtRenderer(Renderer):
 
         self._batches.sort()
 
-        # print(self.getRenderPasses())
-
         for render_pass in self.getRenderPasses():
             width, height = render_pass.getSize()
             self._gl.glViewport(0, 0, width, height)
