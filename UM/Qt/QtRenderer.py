@@ -172,7 +172,6 @@ class QtRenderer(Renderer):
         """
 
         self.beginRendering() # First ensure that the viewport is set correctly.
-        # print([self.getRenderPasses()[-1]])
         self.getRenderPasses()[-1].render()
 
     def endRendering(self) -> None:
