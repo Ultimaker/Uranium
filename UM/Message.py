@@ -151,7 +151,7 @@ class Message(QObject):
 
         self._lifetime_timer = timer
         if self._lifetime_timer:
-            if self._lifetime:
+            if self._lifetime and self._lifetime > 0:
                 self._lifetime_timer.setInterval(self._lifetime * 1000)
                 self._lifetime_timer.setSingleShot(True)
                 self._lifetime_timer.timeout.connect(self.hide)
