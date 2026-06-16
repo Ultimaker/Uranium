@@ -292,7 +292,7 @@ class RotateTool(Tool):
         object_mid = node.getBoundingBox().center
         rotation_point_vector = Vector(object_mid.x, object_mid.y, face_mid[2])
         face_normal_vector = Vector(face_normal[0], face_normal[1], face_normal[2])
-        rotation_quaternion = Quaternion.rotationTo(face_normal_vector.normalized(), Vector(0.0, -1.0, 0.0))
+        rotation_quaternion = Quaternion.rotationTo(face_normal_vector, Vector(0.0, -1.0, 0.0))
 
         operation = GroupedOperation()
         current_node = node
