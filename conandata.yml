@@ -346,7 +346,8 @@ pip_requirements_core:
 pip_requirements_dev:
   any_os:
     pytest: {}
-    twisted: {}
+    twisted:
+      version: "21.2.0"
     pytest-benchmark: {}
     sip: {}
 
