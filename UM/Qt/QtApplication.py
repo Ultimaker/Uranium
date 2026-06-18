@@ -600,6 +600,7 @@ class QtApplication(QApplication, Application):
 
         if QtApplication.splash:
             QtApplication.splash.close()
+            QtApplication.splash.deleteLater()
             QtApplication.splash = None
 
     def _onWindowVisibleChange(self, visible: bool) -> None:
