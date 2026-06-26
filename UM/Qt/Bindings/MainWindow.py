@@ -4,7 +4,7 @@
 from PyQt6.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF, QRect, QObject, \
     QEvent
 from PyQt6.QtGui import QColor
-from PyQt6.QtQuick import QQuickWindow
+from PyQt6.QtQuick import QQuickWindow, QQuickItem
 
 
 from UM.Logger import Logger
@@ -17,6 +17,26 @@ from UM.Scene.Camera import Camera
 from typing import Optional
 
 from UM.View.GL.OpenGL import OpenGL
+
+
+class _RenderRequestItem(QQuickItem):
+    """Minimal scene graph item that drives Qt Quick render frames on demand.
+
+    In Qt 6.8+, QQuickWindow::update() alone may not trigger beforeRenderPassRecording
+    when no QML items are dirty. By participating in the scene graph with ItemHasContents
+    set, calling update() on this item properly marks the scene as dirty, guaranteeing
+    a render frame will be produced and beforeRenderPassRecording will fire.
+    """
+
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        # FIXME: As of time of writing, you can not reference flags by name in Qt6.
+        # Flag(8) is QQuickItem::ItemHasContents.
+        self.setFlag(QQuickItem.Flag(8))
+
+    def updatePaintNode(self, old_node, update_data):
+        return old_node  # No visual content; exists only to drive the render cycle.
+
 
 @signalemitter
 class MainWindow(QQuickWindow):
@@ -116,6 +136,9 @@ class MainWindow(QQuickWindow):
         self._full_render_required = True
 
         self._allow_resize = True
+
+        self._render_request_item = None  # type: Optional[_RenderRequestItem]
+        self.sceneGraphInitialized.connect(self._onSceneGraphInitialized)
 
     # This event is triggered before hideEvent(self, event) event and might prevent window closing if
     # does not pass the check, for example if USB printer is printing
@@ -304,13 +327,25 @@ class MainWindow(QQuickWindow):
             self._app.getRenderer().reRenderLast()
         self.endExternalCommands()
 
+    def _onSceneGraphInitialized(self) -> None:
+        if self._render_request_item is None:
+            self._render_request_item = _RenderRequestItem(self.contentItem())
+        if self._full_render_required:
+            self._render_request_item.update()
+
     def _onSceneChanged(self, object = None):
         self._full_render_required = True
-        self.update()
+        if self._render_request_item is not None:
+            self._render_request_item.update()
+        else:
+            self.update()  # Fallback before the scene graph is initialised.
 
     def _onActiveViewChanged(self):
         self._full_render_required = True
-        self.update()
+        if self._render_request_item is not None:
+            self._render_request_item.update()
+        else:
+            self.update()  # Fallback before the scene graph is initialised.
 
     @pyqtSlot()
     def _onWindowGeometryChanged(self):

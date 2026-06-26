@@ -627,7 +627,7 @@ class QtApplication(QApplication, Application):
 
         # Keep a link to the window so that it is not garbage-collected, then register it for destruction
         self._sub_windows.append(result)
-        result.visibleChanged.connect(self._onWindowVisibleChange)
+        result.visibleChanged.connect(self._onWindowVisibleChange, Qt.ConnectionType.QueuedConnection)
 
         return result
 
