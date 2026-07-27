@@ -137,16 +137,26 @@ class RenderBatch:
     def __lt__(self, other):
         """Less-than comparison method.
 
-        This sorts RenderType.Solid before RenderType.Transparent
-        and RenderType.Transparent before RenderType.Overlay.
+        Render order (first to last, i.e. bottom to top visually):
+          Transparent → Solid → Overlay
+
+        - Solid always renders on top of Transparent: the Solid pass writes depth and
+          overwrites any transparent pixels underneath, so the model is always visible.
+        - Overlay (tool handles) renders last with depth-test disabled, so it always
+          appears on top of everything.
+        - Within the same RenderType, lower sort_weight renders first.
         """
         if self._render_type == other._render_type:
             return self._sort_weight < other._sort_weight
 
-        if self._render_type == self.RenderType.Solid:
-            return True
+        if self._render_type == self.RenderType.Overlay:
+            return False  # Overlay renders last
 
-        if self._render_type == self.RenderType.Transparent and other._render_type != self.RenderType.Solid:
+        if other._render_type == self.RenderType.Overlay:
+            return True  # Transparent and Solid both render before Overlay
+
+        # Between Solid and Transparent: Transparent renders first, Solid on top
+        if self._render_type == self.RenderType.Transparent:
             return True
 
         return False
