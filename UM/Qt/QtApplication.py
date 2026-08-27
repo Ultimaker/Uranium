@@ -606,7 +606,7 @@ class QtApplication(QApplication, Application):
         if not visible:
             self._sub_windows.remove(self.sender())
 
-    def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None) -> Optional["QQuickWindow"]:
+    def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None, initial_properties: Dict[str, "QObject"] = {}) -> Optional["QQuickWindow"]:
         """
         Create a QML window from a QML file. This method uses createQmlComponent internally, but adds a few specific
         features for windows management:
@@ -619,7 +619,7 @@ class QtApplication(QApplication, Application):
         qml instance before creation.
         :return: The created QQuickWindow instance, or None in case the creation failed (qml error)
         """
-        result = self.createQmlComponent(qml_file_path, context_properties)
+        result = self.createQmlComponent(qml_file_path, context_properties, initial_properties)
         if result is None:
             return None
 
