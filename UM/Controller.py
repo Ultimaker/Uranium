@@ -508,7 +508,7 @@ class Controller:
     def setToolsEnabled(self, enabled: bool) -> None:
         self._tools_enabled = enabled
 
-    def deleteAllNodesWithMeshData(self, only_selectable:bool = True) -> None:
+    def deleteAllNodesWithMeshData(self, only_selectable:bool = True, clear_all:bool = False) -> None:
         Logger.log("i", "Clearing scene")
         if not self.getToolsEnabled():
             return
@@ -536,8 +536,11 @@ class Controller:
                 self.getScene().sceneChanged.emit(node)
 
             op.push()
+            if clear_all:
+                op.clear()
             from UM.Scene.Selection import Selection
             Selection.clear()
+
 
     # Rotate camera view according defined angle
     def setCameraRotation(self, coordinate: str = "x", angle: int = 0) -> None:

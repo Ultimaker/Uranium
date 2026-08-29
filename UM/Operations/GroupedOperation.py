@@ -91,3 +91,7 @@ class GroupedOperation(Operation.Operation):
         for child in self._children:
             output += "{0!r}\n".format(child)
         return output
+
+    def delete(self) -> None:
+        for node in self._children:
+            node.delete()
