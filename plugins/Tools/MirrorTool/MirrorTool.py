@@ -41,6 +41,10 @@ class MirrorTool(Tool):
             if not id:
                 return False
 
+            node = self.getController().getScene().findObject(id)
+            if node and not Selection.isSelected(node):
+                return False
+
             if self._handle.isAxis(id):
                 self.setLockedAxis(id)
                 self._operation_started = True
