@@ -3,7 +3,7 @@
 
 from typing import Optional
 
-from PyQt6.QtCore import pyqtSignal, QObject
+from PyQt6.QtCore import pyqtSignal, pyqtProperty, QObject
 
 from UM.Application import Application
 from UM.Decorators import deprecated
@@ -24,7 +24,7 @@ class ProjectOutputDevice(QObject, OutputDevice):
     """Signal which informs whether the project output device has been enabled or disabled, so that it can be added or removed 
      from the 'File->Save Project...' submenu"""
 
-    last_out_name = None  # type: Optional[str]
+    last_out_name: Optional[str] = None
     """Last output project name, gives the possibility to do something with the updated project-name on saving, if any.
     """
 
@@ -43,22 +43,17 @@ class ProjectOutputDevice(QObject, OutputDevice):
         device will appear as an option also in the OutputDevicesActionButton.
         """
 
-        self.menu_entry_text = None  # type: Optional[str]
+        self._menu_entry_text: Optional[str] = None
         """
         Text that appears as the title of the menu item in the 'File->Save Project...' submenu
         """
 
-        self.shortcut = None  # type: Optional[str]
+        self._shortcut: Optional[str] = None
         """
         Shortcut key combination
         """
 
-    @property
-    def enabled(self) -> bool:
-        return self._enabled
-
-    @enabled.setter
-    def enabled(self, enabled: bool) -> None:
+    def setEnabled(self, enabled: bool) -> None:
         """
         Setter for the enable property. It ensures that a project output device that gets enabled is also added to
         the output devices, if that is necessary.
@@ -76,6 +71,32 @@ class ProjectOutputDevice(QObject, OutputDevice):
                     Application.getInstance().getOutputDeviceManager().addOutputDevice(self)
                 else:
                     Application.getInstance().getOutputDeviceManager().removeOutputDevice(self.getId())
+
+    @pyqtProperty(str, constant=True)
+    def id(self) -> str:
+        return self.getId()
+
+    @pyqtProperty(bool, fset=setEnabled, notify=enabledChanged)
+    def enabled(self) -> bool:
+        return self._enabled
+
+    def setMenuEntryText(self, menu_entry_text: str) -> None:
+        self._menu_entry_text = menu_entry_text
+
+    @pyqtProperty(str, fset=setMenuEntryText, constant=True)
+    def menu_entry_text(self):
+        return self._menu_entry_text
+
+    @pyqtProperty(str, fset=setMenuEntryText, constant=True)
+    def menuEntryText(self):
+        return self._menu_entry_text
+
+    def setShortcut(self, shortcut: str) -> None:
+        self._shortcut = shortcut
+
+    @pyqtProperty(str, fset=setShortcut, constant=True)
+    def shortcut(self) -> str:
+        return self._shortcut
 
     @staticmethod
     def popLastOutputName() -> Optional[str]:
