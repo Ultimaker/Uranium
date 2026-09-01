@@ -25,7 +25,6 @@ class ProjectOutputDevicesModel(ListModel):
         items = []
         for device in self._device_manager.getProjectOutputDevices():
             items.append({"modelData": device})
-            print(device.menuEntryText)
         self.setItems(items)
         self.sort(lambda x: -float(x["modelData"].getPriority()))
 
