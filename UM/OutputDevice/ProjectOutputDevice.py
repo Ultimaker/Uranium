@@ -98,6 +98,10 @@ class ProjectOutputDevice(QObject, OutputDevice):
     def shortcut(self) -> str:
         return self._shortcut
 
+    @pyqtProperty(str, constant=True)
+    def iconName(self) -> str:
+        return self.getIconName()
+
     @staticmethod
     def popLastOutputName() -> Optional[str]:
         output_name = ProjectOutputDevice.last_out_name
