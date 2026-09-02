@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Ultimaker B.V.
+# Copyright (c) 2026 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import base64
@@ -17,10 +17,23 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey, RSAPriva
 from cryptography.hazmat.primitives.asymmetric.utils import Prehashed
 from cryptography.hazmat.primitives.serialization import load_pem_public_key, load_pem_private_key
 
-from UM.CentralFileStorage import CentralFileStorage
-from UM.Logger import Logger
-from UM.Resources import Resources
-from UM.Version import Version
+try:
+    from UM.Decorators import deprecated
+except ImportError:
+    def deprecated(*args, **kwargs):
+        def dummy_decorator(func):
+            return func
+        return dummy_decorator
+try:
+    from UM.Logger import Logger
+except ImportError:
+    class Logger:
+        @classmethod
+        def log(cls, typ: str, message: str) -> None:
+            print(f"LOG ({typ}): {message}")
+        @classmethod
+        def logException(cls, typ: str, message: str) -> None:
+            print(f"EXCEPTION ({typ}): {message}")
 
 
 class TrustBasics:
@@ -34,7 +47,6 @@ class TrustBasics:
 
     # For (in) directories (plugins for example):
     __signatures_relative_filename = "signature.json"
-    __central_storage_relative_filename = "central_storage.json"
     __root_signatures_category = "root_signatures"
     __root_signed_manifest_key = "root_manifest_signature"
 
@@ -63,8 +75,9 @@ class TrustBasics:
         return cls.__hash_algorithm
 
     @classmethod
+    @deprecated("Central File Storage was removed, stub that returns ''.", since="5.14.0")
     def getCentralStorageFilename(cls) -> str:
-        return cls.__central_storage_relative_filename
+        return ""
 
     @classmethod
     def getSignaturesLocalFilename(cls) -> str:
@@ -144,7 +157,7 @@ class TrustBasics:
                 hasher.update(file.read())
                 return base64.b64encode(hasher.finalize()).decode("utf-8")
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Couldn't read '{0}' for plain hash generation.".format(filename))
+            Logger.logException("e", f"Couldn't read '{filename}' for plain hash generation.")
         return None
 
     @classmethod
@@ -183,7 +196,7 @@ class TrustBasics:
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             if err_info is None:
                 err_info = "HASH:" + shash
-            Logger.logException("e", "Couldn't sign '{0}', no signature generated.".format(err_info))
+            Logger.logException("e", f"Couldn't sign '{err_info}', no signature generated.")
         return None
 
     @classmethod
@@ -258,11 +271,11 @@ class TrustBasics:
             with open(public_path, "wb") as public_file:
                 public_file.write(public_pem)
 
-            Logger.log("i", "Private/public key-pair saved to '{0}','{1}'.".format(private_path, public_path))
+            Logger.log("i", f"Private/public key-pair saved to '{private_path}','{public_path}'.")
             return True
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Save private/public key to '{0}','{1}' failed.".format(private_path, public_path))
+            Logger.logException("e", f"Save private/public key to '{private_path}','{public_path}' failed.")
         return False
 
     @classmethod
@@ -294,7 +307,7 @@ class TrustBasics:
             return True
 
         except:  # Yes, we  do really want this on _every_ exception that might occur.
-            Logger.logException("e", "Removal of pycache for unbundled path '{0}' failed.".format(path))
+            Logger.logException("e", f"Removal of pycache for unbundled path '{path}' failed.")
         return False
 
     @staticmethod
@@ -325,13 +338,18 @@ class Trust:
     __instance = None
 
     @staticmethod
-    def getPublicRootKeyPath() -> str:
+    def getPublicRootKeyPath(fallback: str = "") -> str:
         """It is assumed that the application will have a 'master' public key.
 
+        :param fallback: The fallback key file to use if there's no 'Resource' system.
         :return: Path to the 'master' public key of this application.
         """
 
-        return Resources.getPath(Resources.Resources, "public_key.pem")
+        try:
+            from UM.Resources import Resources
+            return Resources.getPath(Resources.Resources, "public_key.pem")
+        except ImportError:
+            return fallback
 
     @classmethod
     def getInstance(cls):
@@ -359,7 +377,7 @@ class Trust:
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             return None
 
-    def __init__(self, public_key_filename: str, pre_err_handler: Callable[[str], None] = None) -> None:
+    def __init__(self, public_key_filename: str, pre_err_handler: Optional[Callable[[str], None]] = None) -> None:
         """Initializes a Trust object. A Trust object represents a public key and related utility methods on that key.
         If the application only has a single public key, it's best to use 'getInstance' or 'getInstanceOrNone'.
 
@@ -377,7 +395,7 @@ class Trust:
                 self._public_key = cast(RSAPublicKey, load_pem_public_key(file.read(), backend = default_backend()))
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             self._public_key = None
-            raise Exception("e", "Couldn't load public-key '{0}'.".format(public_key_filename))
+            raise Exception("e", f"Couldn't load public-key '{public_key_filename}'.")
             # NOTE: Handle _potential_ security violation outside of this initializer, in case it's just for validation.
 
         def violation_handler(message: str):
@@ -403,7 +421,7 @@ class Trust:
         except:  # Yes, we  do really want this on _every_ exception that might occur.
             if err_info is None:
                 err_info = "HASH:" + shash
-            self._violation_handler("Couldn't verify '{0}' with supplied signature.".format(err_info))
+            self._violation_handler(f"Couldn't verify '{err_info}' with supplied signature.")
         return False
 
     def _verifyFile(self, filename: str, signature: str) -> bool:
@@ -424,88 +442,9 @@ class Trust:
         except:  # Yes, we do really want this on _every_ exception that might occur.
             return False
 
+    @deprecated("Central File Storage was removed, stub that returns true.", since="5.14.0")
     def signedFolderPreStorageCheck(self, path: str) -> bool:
-        """Do a quick check whether the 'central storage file' of a folder has been tampered with. This is necessary,
-        since the central storage system (which otherwise runs first) copies files, and the copying of files itself
-        can be an attack. Note that right after copying, a full check can be done, so the files themselves don't have
-        to be checked yet (since that happens in the full check after copying).
-
-        Shared pools of versioned items ('central storage') are used if a folder contains a 'central storage file'.
-        (See the CentralFileStorage class for details.) The 'canonical' version of a folder as far as the Trust system
-        is concerned, is the one where the items are already in central storage. Otherwise there would either be a whole
-        range of 'acceptable answers' (and that's harder to test against) or, there would always be a need to verify
-        a situation that shouldn't be that frequent (items need to be copied to central storage). This creates a problem
-        in that the central storage mechanism needs to run _first_, however. The central storage has its own security
-        measures, but this means that the central storage file in a folder (which contains info on what items should be
-        copied) hasn't been checked against the trust manifest file in that folder yet.
-
-        This only concerns the signature of the central storage file (and the correctness of the manifest file itself).
-        Per separation of concern, and since the storage system already needs to be aware of security, any other
-        'sanity checks' on the contents central storage file itself are the job of that system.
-
-        :param path: The folder to do a quick pre-move check for.
-        :return: True if the central-storage file is correctly signed. A folder without such a file is correct as well.
-        """
-
-        try:
-            # Check if the central storage file exist, if not, then the system won't copy anything in any case.
-            central_storage_filename = os.path.join(path, TrustBasics.getCentralStorageFilename())
-            if not os.path.exists(central_storage_filename):
-                Logger.log("i", f"No central storage file for unbundled folder '{path}'.")
-                return True
-
-            # Open the file containing signatures (just reading the json is negligible compared to the verify or store):
-            manifest_path = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
-            with open(manifest_path, "r", encoding = "utf-8") as manifest_file:
-                manifest_content = json.load(manifest_file)
-                file_signatures = manifest_content.get(TrustBasics.getRootSignatureCategory(), None)
-                if file_signatures is None:
-                    self._violation_handler(f"Can't parse (folder) signature file '{manifest_file}' in '{path}'.")
-                    return False
-
-                # Check if there is an entry, since this file is known to exist in the folder:
-                central_storage_basename = TrustBasics.getCentralStorageFilename()
-                if central_storage_basename not in file_signatures:
-                    self._violation_handler(f"Central storage file not signed for '{path}'.")
-                    return False
-
-                # Verify that the central storage file hasn't been tampered with:
-                if not self._verifyFile(central_storage_filename, file_signatures[central_storage_basename]):
-                    self._violation_handler(f"Central storage file does not match signature for '{path}'.")
-                    return False
-
-                # Check if the signing file itself has been tampered with (manifest is self-signed):
-                if not self._verifyManifestIntegrety(file_signatures, manifest_content):
-                    self._violation_handler(f"Manifest '{manifest_path}' is not properly self-signed in '{path}'.")
-                    return False
-
-            # Check if the central storage file doesn't contain files that would be moved outside the plugin folder, or
-            # files that would be moved to outside of the central storage location:
-            with open(central_storage_filename, "r", encoding = "utf-8") as central_storage_file:
-                central_storage_list = json.loads(central_storage_file.read())
-
-                storage_location = CentralFileStorage.getCentralStorageLocation()
-                for file_to_move in central_storage_list:
-
-                    # Any file is not from outside of the plugin:
-                    source_full_path = os.path.join(path, file_to_move[0])
-                    if not TrustBasics.isPathInLocation(path, source_full_path):
-                        self._violation_handler(f"Item to store '{file_to_move[0]}' is from outside of '{path}'.")
-                        return False
-
-                    # Any file does not go outside of storage territory:
-                    dest_full_path = os.path.join(storage_location, file_to_move[1])
-                    if not TrustBasics.isPathInLocation(storage_location, dest_full_path):
-                        self._violation_handler(f"Move '{file_to_move[0]}' from '{path}' to outside of storage folder.")
-                        return False
-
-            # Otherwise, as far as this quick pre check is concerned, there is nothing wrong:
-            Logger.log("i", f"Central storage file signed correctly for '{path}'.")
-            return True
-
-        except:  # Yes, we do really want this on _every_ exception that might occur.
-            self._violation_handler(f"Exception during verification of central storage file for '{path}'.")
-        return False
+        return True
 
     def signedFolderCheck(self, path: str) -> bool:
         """In the 'singed folder' case, check whether the folder is signed according to the Trust-objects' public key.
@@ -516,25 +455,19 @@ class Trust:
 
         try:
             manifest_path = os.path.join(path, TrustBasics.getSignaturesLocalFilename())
-            storage_filename = os.path.join(path, TrustBasics.getCentralStorageFilename())
-
-            storage_list = None
-            if os.path.exists(storage_filename):
-                with open(storage_filename, "r", encoding = "utf-8") as storage_file:
-                    storage_list = json.load(storage_file)
 
             # Open the file containing signatures:
             with open(manifest_path, "r", encoding = "utf-8") as manifest_file:
                 manifest_content = json.load(manifest_file)
                 file_signatures = manifest_content.get(TrustBasics.getRootSignatureCategory(), None)
                 if file_signatures is None:
-                    self._violation_handler("Can't parse (folder) signature file '{0}'.".format(manifest_file))
+                    self._violation_handler(f"Can't parse (folder) signature file '{manifest_file}'.")
                     return False
 
                 # Any filename outside of the plugin-root is a sure sign of tampering:
                 for key in file_signatures.keys():
                     if ".." in key:
-                        self._violation_handler("Suspect key '{0}' in signature file '{1}'.".format(key, manifest_file))
+                        self._violation_handler(f"Suspect key '{key}' in signature file '{manifest_file}'.")
                         return False
 
                 # Check if the signing file itself has been tampered with (manifest is self-signed):
@@ -554,45 +487,24 @@ class Trust:
                         # Get the signature for the current to-verify file:
                         signature = file_signatures.get(name_in_data, None)
                         if signature is None:
-                            self._violation_handler("File '{0}' was not signed with a checksum.".format(name_on_disk))
+                            self._violation_handler(f"File '{name_on_disk}' was not signed with a checksum.")
                             return False
 
                         # Verify the file:
                         if not self._verifyFile(name_on_disk, signature):
-                            self._violation_handler("File '{0}' didn't match with checksum.".format(name_on_disk))
+                            self._violation_handler(f"File '{name_on_disk}' didn't match with checksum.")
                             return False
                     for dirname in dirnames:
                         dir_full_path = os.path.join(path, dirname)
                         if os.path.islink(dir_full_path) and not self._follow_symlinks:
-                            Logger.log("w", "Directory symbolic link '{0}' will not be followed.".format(dir_full_path))
-
-                # Check if the files moved to storage are still correct.
-                if storage_list:
-                    for entry in storage_list:
-                        try:
-                            # If this doesn't raise an exception, it's correct, since central storage uses hashes.
-                            central_storage_path = CentralFileStorage.retrieve(entry[1], entry[3], Version(entry[2]))
-
-                            # File could have been removed during execution (also helps with tests).
-                            if not os.path.exists(central_storage_path):
-                                continue
-
-                            # If a directory was moved, add all the files in that directory to the file_count. For
-                            # individual files mentioned in the central_storage.json increment the file_count by 1.
-                            if os.path.isdir(central_storage_path):
-                                file_count += sum([len(files) for _, _, files in os.walk(central_storage_path)])
-                            elif os.path.isfile(central_storage_path):
-                                file_count += 1
-                        except (EnvironmentError, IOError):
-                            self._violation_handler(f"Couldn't verify at least one centrally stored file for '{path}'.")
-                            return False
+                            Logger.log("w", f"Directory symbolic link '{dir_full_path}' will not be followed.")
 
                 # The number of correctly signed files should be the same as the number of signatures:
                 if len(file_signatures.keys()) != file_count:
-                    self._violation_handler("Mismatch: # entries in '{0}' vs. real files.".format(manifest_path))
+                    self._violation_handler(f"Mismatch: # entries in '{manifest_path}' vs. real files.")
                     return False
 
-            Logger.log("i", "Verified unbundled folder '{0}'.".format(path))
+            Logger.log("i", f"Verified unbundled folder '{path}'.")
             return True
 
         except:  # Yes, we do really want this on _every_ exception that might occur.
@@ -613,14 +525,14 @@ class Trust:
                 json_data = json.load(data_file)
                 signature = json_data.get(TrustBasics.getRootSignatureEntry(), None)
                 if signature is None:
-                    self._violation_handler("Can't parse signature file '{0}'.".format(signature_filename))
+                    self._violation_handler(f"Can't parse signature file '{signature_filename}'.")
                     return False
 
                 if not self._verifyFile(filename, signature):
-                    self._violation_handler("File '{0}' didn't match with checksum.".format(filename))
+                    self._violation_handler(f"File '{filename}' didn't match with checksum.")
                     return False
 
-            Logger.log("i", "Verified unbundled file '{0}'.".format(filename))
+            Logger.log("i", f"Verified unbundled file '{filename}'.")
             return True
 
         except:  # Yes, we do really want this on _every_ exception that might occur.
