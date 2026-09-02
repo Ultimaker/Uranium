@@ -16,7 +16,6 @@ from typing import Any, Callable, Dict, List, Optional, Set, Tuple, TYPE_CHECKIN
 from PyQt6.QtCore import QCoreApplication
 from PyQt6.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
-from UM.CentralFileStorage import CentralFileStorage
 from UM.Logger import Logger
 from UM.Message import Message
 from UM.Platform import Platform
@@ -745,24 +744,6 @@ class PluginRegistry(QObject):
                     highest_version = current_version
                     final_location = loc
 
-        # Move data (if any) to central storage
-        central_storage_file = os.path.join(final_location, plugin_id, TrustBasics.getCentralStorageFilename())
-        if os.path.exists(central_storage_file):
-            plugin_final_path = os.path.join(final_location, plugin_id)
-
-            if self._check_if_trusted and plugin_id not in self._checked_plugin_ids and not self.isBundledPlugin(plugin_id):
-                # Do a quick check if the central-storage file itself hasn't been tampered with (and such).
-                # This is necessary, as we move to central storage first, and only _then_ properly check the manifest.
-                if self._trust_checker and not self._trust_checker.signedFolderPreStorageCheck(plugin_final_path):
-                    self._distrusted_plugin_ids.append(plugin_id)
-                    return None
-
-            try:
-                with open(central_storage_file, "r", encoding = "utf-8") as file_stream:
-                    if not self._handleCentralStorage(file_stream.read(), plugin_final_path, is_bundled_plugin = self.isBundledPlugin(plugin_id)):
-                        return None
-            except Exception:
-                pass
         try:
             spec = importlib.machinery.PathFinder().find_spec(plugin_id, [final_location])
             if len(spec.submodule_search_locations) != 1:
@@ -818,29 +799,6 @@ class PluginRegistry(QObject):
                 return os.path.abspath(os.path.join(folder_path, ".."))
 
         return None
-
-    @staticmethod
-    def _handleCentralStorage(file_data: str, plugin_path: str, is_bundled_plugin: bool = False) -> bool:
-        """
-        Plugins can indicate that they want certain things to be stored in a central location.
-        In the case of a signed plugin you *must* do this by means of the central_storage.json file.
-        :param file_data: The data as loaded from the file
-        :param plugin_path: The location of the plugin on the file system
-        :return: False if there is a security suspicion, True otherwise (even if the method otherwise fails).
-        """
-        try:
-            file_manifest = json.loads(file_data)
-        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
-            Logger.logException("e", f"Failed to parse the central storage file for '{plugin_path}'.")
-            return True
-
-        for file_to_move in file_manifest:
-            full_path = os.path.join(plugin_path, file_to_move[0])
-            try:
-                CentralFileStorage.store(full_path, file_to_move[1], Version(file_to_move[2]), move_file = not is_bundled_plugin)
-            except (FileExistsError, TypeError, IndexError, OSError):
-                Logger.logException("w", f"Can't move file {file_to_move[0]} to central storage for '{plugin_path}'.")
-        return True
 
     @staticmethod
     def _parsePluginInfo(plugin_id: str, file_data: str, meta_data: Dict[str, Any]) -> None:
