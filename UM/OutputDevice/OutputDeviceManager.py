@@ -116,6 +116,12 @@ class OutputDeviceManager:
     projectOutputDevicesChanged = Signal()
     """Emitted whenever an output device that can handle project files is added or removed."""
 
+    projectOutputDeviceAdded = Signal()
+    """Emitted whenever an output device that can handle project files is added."""
+
+    projectOutputDeviceRemoved = Signal()
+    """Emitted whenever an output device that can handle project files is removed."""
+
     activeDeviceChanged = Signal()
     """Emitted whenever the active device changes."""
 
@@ -271,6 +277,7 @@ class OutputDeviceManager:
                 self.connectWriteSignalsToDevice(device)
 
         self.projectOutputDevicesChanged.emit()
+        self.projectOutputDeviceAdded.emit(device)
 
     def removeProjectOutputDevice(self, device_id: str) -> bool:
         """Remove a registered project output device by ID
@@ -290,6 +297,7 @@ class OutputDeviceManager:
 
         self.disconnectWriteSignalsFromDevice(device)
         self.projectOutputDevicesChanged.emit()
+        self.projectOutputDeviceRemoved.emit(device)
 
         if device_id in self._output_devices:
             del self._output_devices[device_id]

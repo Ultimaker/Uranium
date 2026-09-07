@@ -1,64 +1,52 @@
 # Copyright (c) 2022 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import List
-
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtQml import QQmlEngine
+from PyQt6.QtCore import Qt
 
 from UM.Application import Application
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
-from UM.OutputDevice.ProjectOutputDevice import ProjectOutputDevice
 from UM.Qt.ListModel import ListModel
 
 
 class ProjectOutputDevicesModel(ListModel):
-    """A list model providing a list of all registered OutputDevices that can save projects.
+    """A list model providing a list of all registered OutputDevices that can save projects."""
 
-    Exposes the following roles:
-    * id - The device ID
-    * name - The human-readable name of the device
-    * priority - The device priority
-
-    """
-
-    IdRole = Qt.ItemDataRole.UserRole + 1
-    NameRole = Qt.ItemDataRole.UserRole + 2
-    PriorityRole = Qt.ItemDataRole.UserRole + 3
-    ShortcutRole = Qt.ItemDataRole.UserRole + 4
-
-    projectOutputDevicesChanged = pyqtSignal()
+    ModelDataRole = Qt.ItemDataRole.UserRole
 
     def __init__(self, parent = None):
         super().__init__(parent)
-        # Ensure that this model doesn't get garbage collected (Now the bound object is destroyed when the wrapper is)
-        QQmlEngine.setObjectOwnership(self, QQmlEngine.ObjectOwnership.CppOwnership)
-        self._device_manager = Application.getInstance().getOutputDeviceManager()  # type: OutputDeviceManager
+        self._device_manager: OutputDeviceManager = Application.getInstance().getOutputDeviceManager()
 
-        self.addRoleName(self.IdRole, "id")
-        self.addRoleName(self.NameRole, "name")
-        self.addRoleName(self.PriorityRole, "priority")
-        self.addRoleName(self.ShortcutRole, "shortcut")
+        self.addRoleName(self.ModelDataRole, "modelData")
 
-        self._device_manager.projectOutputDevicesChanged.connect(self._update)
-        self._update()
+        self._device_manager.projectOutputDeviceAdded.connect(self._onProjectOutputDeviceAdded)
+        self._device_manager.projectOutputDeviceRemoved.connect(self._onProjectOutputDeviceRemoved)
 
-    def _update(self):
-
-        self.clear()
         items = []
-
-        # Make a copy here, because we could discover devices during iteration.
-        devices = [device for device in self._device_manager.getProjectOutputDevices() if device.enabled]  # type: List[ProjectOutputDevice]
-        for device in devices:
-            items.append({
-                "id": device.getId(),
-                "name": device.menu_entry_text,
-                "priority": device.getPriority(),
-                "shortcut": device.shortcut
-            })
-
-        items.sort(key = lambda i: -i["priority"])
+        for device in self._device_manager.getProjectOutputDevices():
+            items.append({"modelData": device})
         self.setItems(items)
+        self.sort(lambda x: -float(x["modelData"].getPriority()))
 
-        self.projectOutputDevicesChanged.emit()
+    def _onProjectOutputDeviceAdded(self, device):
+        new_item = {"modelData": device}
+        actual_devices = self._device_manager.getProjectOutputDevices()
+        if actual_devices:
+            insert_position = None
+            for index, actual_device in enumerate(actual_devices):
+                if actual_device.getPriority() < device.getPriority():
+                    insert_position = index
+                    break
+
+            if insert_position is not None:
+                self.insertItem(insert_position, new_item)
+            else:
+                self.appendItem(new_item)
+        else:
+            self.appendItem(new_item)
+
+    def _onProjectOutputDeviceRemoved(self, device):
+        for index, item in enumerate(self.items):
+            if item["modelData"] is device:
+                self.removeItem(index)
+                return

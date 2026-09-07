@@ -7,23 +7,20 @@ Menu
 {
     id: root
 
-    // This is a work around for menu's not actually being visual items. Upon creation, a visual item is created
-    // The work around is based on the suggestion given in https://stackoverflow.com/questions/59167352/qml-how-to-hide-submenu
-    property bool shouldBeVisible: true
-
     // Automatically set the width to fit the widest MenuItem
     // Based on https://martin.rpdev.net/2018/03/13/qt-quick-controls-2-automatically-set-the-width-of-menus.html
-    function setWidth()
+    width:
     {
-        var result = 0;
         var padding = 0;
         var result = 0;
-        for (var i = 0; i < count; ++i) {
+        for (var i = 0; i < count; ++i)
+        {
             var item = itemAt(i);
             if (item.hasOwnProperty("contentWidth"))
             {
                 var itemWidth = item.contentWidth;
-                if (item.hasOwnProperty("shortcut") && item.shortcut != null) {
+                if (item.hasOwnProperty("shortcut") && item.shortcut != null)
+                {
                     itemWidth += UM.Theme.getSize("default_margin").width;
                 }
                 result = Math.max(itemWidth, result);
@@ -33,24 +30,19 @@ Menu
         return result + padding * 2;
     }
 
-    function adjustWidth()
-    {
-        root.width = shouldBeVisible ? setWidth() : 0
-    }
+    // This is a workaround for menu's not actually being visual items. Upon creation, a visual item is created
+    // The work around is based on the suggestion given in https://stackoverflow.com/questions/59167352/qml-how-to-hide-submenu
+    property bool shouldBeVisible: true
 
     function handleVisibility()
     {
         if(parent)
         {
             root.parent.visible = shouldBeVisible
-            root.parent.height = shouldBeVisible ? UM.Theme.getSize("menu").height : 0
-            adjustWidth()
         }
     }
 
     onParentChanged: handleVisibility()
     Component.onCompleted: handleVisibility()
     onShouldBeVisibleChanged: handleVisibility()
-    onAboutToShow: adjustWidth()
-    implicitWidth: setWidth()
 }
