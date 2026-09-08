@@ -85,7 +85,7 @@ class CompositePass(RenderPass):
         texture_unit = 0
         for binding in self._layer_bindings:
             render_pass = self._renderer.getRenderPass(binding)
-            if not render_pass:
+            if not render_pass or not render_pass.isEnabled():
                 continue
 
             self._gl.glActiveTexture(getattr(self._gl, "GL_TEXTURE{0}".format(texture_unit)))

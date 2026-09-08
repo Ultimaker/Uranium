@@ -113,6 +113,8 @@ class Application:
 
         self._app_install_dir = self.getInstallPrefix()  # type: str
 
+        self._loading_workspace = False
+
         # Intended for keeping plugin workspace metadata that is going to be saved in and retrieved from workspace files.
         # When the workspace is stored, all workspace readers will need to ensure that the workspace metadata is correctly
         # stored to the output file. The same also holds when loading a workspace; the existing data will be cleared
@@ -125,6 +127,12 @@ class Application:
 
     def getAPIVersion(self) -> "Version":
         return self._api_version
+
+    def getloadingWorkspace(self) -> bool:
+        return self._loading_workspace
+
+    def setloadingWorkspace(self, loading_workspace: bool) -> None:
+        self._loading_workspace = loading_workspace
 
     def getWorkspaceMetadataStorage(self) -> WorkspaceMetadataStorage:
         return self._workspace_metadata_storage

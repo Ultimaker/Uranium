@@ -831,25 +831,26 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     # Clear the internal query cache
     def _clearQueryCache(self, *args: Any, **kwargs: Any) -> None:
-        ContainerQuery.ContainerQuery.cache.clear()
+        with ContainerQuery.ContainerQuery.lock:
+            ContainerQuery.ContainerQuery.cache.clear()
 
     def _clearQueryCacheByContainer(self, container: ContainerInterface) -> None:
         """Clear the query cache by using container type.
         This is a slightly smarter way of clearing the cache. Only queries that are of the same type (or without one)
         are cleared.
         """
+        with ContainerQuery.ContainerQuery.lock:
+            # Remove all case-insensitive matches since we won't find those with the below "<=" subset check.
+            # TODO: Properly check case-insensitively in the dict's values.
+            for key in list(ContainerQuery.ContainerQuery.cache):
+                if not key[0]:
+                    del ContainerQuery.ContainerQuery.cache[key]
 
-        # Remove all case-insensitive matches since we won't find those with the below "<=" subset check.
-        # TODO: Properly check case-insensitively in the dict's values.
-        for key in list(ContainerQuery.ContainerQuery.cache):
-            if not key[0]:
-                del ContainerQuery.ContainerQuery.cache[key]
-
-        # Remove all cache items that this container could fall in.
-        for key in list(ContainerQuery.ContainerQuery.cache):
-            query_metadata = dict(zip(key[1::2], key[2::2]))
-            if query_metadata.items() <= container.getMetaData().items():
-                del ContainerQuery.ContainerQuery.cache[key]
+            # Remove all cache items that this container could fall in.
+            for key in list(ContainerQuery.ContainerQuery.cache):
+                query_metadata = dict(zip(key[1::2], key[2::2]))
+                if query_metadata.items() <= container.getMetaData().items():
+                    del ContainerQuery.ContainerQuery.cache[key]
 
     def _onContainerMetaDataChanged(self, *args: ContainerInterface, **kwargs: Any) -> None:
         """Called when any container's metadata changed.

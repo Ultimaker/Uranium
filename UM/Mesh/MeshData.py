@@ -1,4 +1,4 @@
-# Copyright (c) 2025 UltiMaker
+# Copyright (c) 2026 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Math.Vector import Vector
@@ -190,7 +190,7 @@ class MeshData:
         return self._type
 
     def getFaceCount(self) -> int:
-        return self._face_count if self.hasIndices() else self._vertex_count / 3
+        return self._face_count if self.hasIndices() else self._vertex_count // 3
 
     def getVertices(self) -> numpy.ndarray:
         """Get the array of vertices"""
@@ -390,6 +390,7 @@ class MeshData:
         v_a, v_b, v_c = self.getFaceNodes(face_id)
         in_point = (v_a + v_b + v_c) / 3.0
         face_normal = numpy.cross(v_b - v_a, v_c - v_a)
+        face_normal /= numpy.linalg.norm(face_normal)
         return in_point, face_normal
 
     def getFaceNodes(self, face_id: int) -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]:

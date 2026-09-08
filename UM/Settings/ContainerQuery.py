@@ -3,6 +3,7 @@
 
 import collections  # To cache queries.
 import re
+from threading import Lock
 from typing import Any, cast, Dict, List, Optional, Tuple, Type, TYPE_CHECKING, Union, ValuesView
 import functools
 
@@ -21,6 +22,7 @@ class ContainerQuery:
     """
 
     cache = {}  # type: Dict[Tuple[Any, ...], ContainerQuery]  # To speed things up, we're keeping a cache of the container queries we've executed before.
+    lock = Lock()
 
     # If a field is provided in the format "[t1|t2|t3|...]", try to find if any of the given tokens is present in the
     # value. Use regex to do matching because certain fields such as name can be filled by a user and it can be string
@@ -94,9 +96,10 @@ class ContainerQuery:
         # Filter on all the key-word arguments one by one.
         for key, value in self._kwargs.items():  # For each progressive filter...
             key_so_far += (key, value)
-            if candidates is None and key_so_far in self.cache:
-                filtered_candidates = cast(List[Dict[str, Any]], self.cache[key_so_far].getResult())
-                continue
+            with self.lock:
+                if candidates is None and key_so_far in self.cache:
+                    filtered_candidates = cast(List[Dict[str, Any]], self.cache[key_so_far].getResult())
+                    continue
 
             # Find the filter to execute.
             if isinstance(value, type):
@@ -112,14 +115,16 @@ class ContainerQuery:
             else:
                 key_filter = functools.partial(self._matchDirect, property_name = key, value = value)
 
-            # Execute this filter.
-            filtered_candidates = list(filter(key_filter, filtered_candidates))
+            with self.lock:
+                # Execute this filter.
+                filtered_candidates = list(filter(key_filter, filtered_candidates))
 
             # Store the result in the cache.
             if candidates is None:  # Only cache if we didn't pre-filter candidates.
                 cached_arguments = dict(zip(key_so_far[1::2], key_so_far[2::2]))
-                self.cache[key_so_far] = ContainerQuery(self._registry, ignore_case = self._ignore_case, **cached_arguments)  # Cache this query for the next time.
-                self.cache[key_so_far]._result = filtered_candidates
+                with self.lock:
+                    self.cache[key_so_far] = ContainerQuery(self._registry, ignore_case = self._ignore_case, **cached_arguments)  # Cache this query for the next time.
+                    self.cache[key_so_far]._result = filtered_candidates
 
         if not isinstance(filtered_candidates, list):
             filtered_candidates = list(filtered_candidates)

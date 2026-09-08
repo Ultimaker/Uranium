@@ -606,7 +606,7 @@ class QtApplication(QApplication, Application):
         if not visible:
             self._sub_windows.remove(self.sender())
 
-    def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None) -> Optional["QQuickWindow"]:
+    def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None, initial_properties: Dict[str, "QObject"] = {}) -> Optional["QQuickWindow"]:
         """
         Create a QML window from a QML file. This method uses createQmlComponent internally, but adds a few specific
         features for windows management:
@@ -619,7 +619,7 @@ class QtApplication(QApplication, Application):
         qml instance before creation.
         :return: The created QQuickWindow instance, or None in case the creation failed (qml error)
         """
-        result = self.createQmlComponent(qml_file_path, context_properties)
+        result = self.createQmlComponent(qml_file_path, context_properties, initial_properties)
         if result is None:
             return None
 
@@ -627,11 +627,11 @@ class QtApplication(QApplication, Application):
 
         # Keep a link to the window so that it is not garbage-collected, then register it for destruction
         self._sub_windows.append(result)
-        result.visibleChanged.connect(self._onWindowVisibleChange)
+        result.visibleChanged.connect(self._onWindowVisibleChange, Qt.ConnectionType.QueuedConnection)
 
         return result
 
-    def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None) -> Optional["QObject"]:
+    def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None, initial_properties: Dict[str, "QObject"] = {}) -> Optional["QObject"]:
         """Create a QML component from a qml file.
         :param qml_file_path: The absolute file path to the root qml file.
         :param context_properties: Optional dictionary containing the properties that will be set on the context of the
@@ -648,7 +648,7 @@ class QtApplication(QApplication, Application):
         if context_properties is not None:
             for name, value in context_properties.items():
                 result_context.setContextProperty(name, value)
-        result = component.create(result_context)
+        result = component.createWithInitialProperties(initial_properties, result_context)
         for err in component.errors():
             Logger.log("e", str(err.toString()))
         if result is None:

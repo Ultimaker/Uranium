@@ -66,12 +66,12 @@ vertex41core =
 
     uniform highp mat4 u_normalMatrix;
 
-    attribute highp vec4 a_vertex;
-    attribute highp vec4 a_normal;
-    attribute highp vec2 a_uvs;
+    in highp vec4 a_vertex;
+    in highp vec4 a_normal;
+    in highp vec2 a_uvs;
 
-    varying highp vec3 v_vertex;
-    varying highp vec3 v_normal;
+    out highp vec3 v_vertex;
+    out highp vec3 v_normal;
 
     void main()
     {
@@ -91,8 +91,10 @@ fragment41core =
     uniform mediump float u_shininess;
     uniform highp vec3 u_viewPosition;
 
-    varying highp vec3 v_vertex;
-    varying highp vec3 v_normal;
+    in highp vec3 v_vertex;
+    in highp vec3 v_normal;
+
+    out vec4 frag_color;
 
     void main()
     {
@@ -115,8 +117,8 @@ fragment41core =
         highp float NdotR = clamp(dot(viewVector, reflectedLight), 0.0, 1.0);
         finalColor += pow(NdotR, u_shininess) * u_specularColor;
 
-        gl_FragColor = finalColor;
-        gl_FragColor.a = 1.0;
+        frag_color = finalColor;
+        frag_color.a = 1.0;
     }
 
 [defaults]

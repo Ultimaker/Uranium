@@ -91,7 +91,17 @@ Item
         anchors.leftMargin: UM.Theme.getSize("default_margin").width
         width: visible ? UM.Theme.getIcon("LayFlatOnFace").width : 0
 
-        text: catalog.i18nc("@action:button", "Select face to align to the build plate")
+        text:
+        {
+            if (UM.Controller.properties.getValue("SelectFaceSupported"))
+            {
+                return catalog.i18nc("@action:button", "Select face to align to the build plate");
+            }
+            else
+            {
+                return catalog.i18nc("@action:button", "Alignment by face is not available on this device. Your graphics card or drivers do not fully support it. Updating your graphics drivers may enable this feature.");
+            }
+        }
 
         toolItem: UM.ColorImage
         {
@@ -101,11 +111,10 @@ Item
 
         checkable: true
 
-        enabled: UM.Selection.selectionCount == 1
+        // Property might be undefined when we're switching away from the RotateTool!
+        enabled: UM.Selection.selectionCount === 1 && UM.Controller.properties.getValue("SelectFaceSupported") === true
         checked: UM.Controller.properties.getValue("SelectFaceToLayFlatMode")
         onClicked: UM.Controller.setProperty("SelectFaceToLayFlatMode", checked)
-
-        visible: UM.Controller.properties.getValue("SelectFaceSupported") == true //Might be undefined if we're switching away from the RotateTool!
     }
 
     Grid

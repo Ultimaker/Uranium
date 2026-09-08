@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-21 16:48+0100\n"
+"POT-Creation-Date: 2026-03-31 08:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,6 +30,10 @@ msgstr ""
 
 msgctxt "@option"
 msgid "Abort"
+msgstr ""
+
+msgctxt "@action:button"
+msgid "Alignment by face is not available on this device. Your graphics card or drivers do not fully support it. Updating your graphics drivers may enable this feature."
 msgstr ""
 
 msgctxt "@item:inlistbox"
@@ -110,6 +114,10 @@ msgstr ""
 
 msgctxt "@info:title"
 msgid "Error"
+msgstr ""
+
+msgctxt "@action:button"
+msgid "Exit Select Face Mode"
 msgstr ""
 
 msgctxt "@message"
@@ -333,6 +341,10 @@ msgctxt "@option"
 msgid "Retry"
 msgstr ""
 
+msgctxt "@info:tooltip"
+msgid "Return to normal rotation mode"
+msgstr ""
+
 msgctxt "@label"
 msgid "Rotate"
 msgstr ""
@@ -397,6 +409,14 @@ msgstr ""
 
 msgctxt "@info:title"
 msgid "Scaling Object"
+msgstr ""
+
+msgctxt "@info:title"
+msgid "Select Face Mode Active"
+msgstr ""
+
+msgctxt "@info"
+msgid "Select a face on the model to align it to the build plate. The rotation controls are disabled while in this mode."
 msgstr ""
 
 msgctxt "@action:button"

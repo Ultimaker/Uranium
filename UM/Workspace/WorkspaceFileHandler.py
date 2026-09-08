@@ -46,6 +46,8 @@ class WorkspaceFileHandler(FileHandler):
         return results
 
     def _readLocalFile(self, file: QUrl, add_to_recent_files_hint: bool = True) -> None:
+        self._application.setloadingWorkspace(True)
+
         from UM.FileHandler.ReadFileJob import ReadFileJob
         filename = file.toLocalFile()
         job = ReadFileJob(filename, handler = self, add_to_recent_files = add_to_recent_files_hint)
@@ -71,3 +73,4 @@ class WorkspaceFileHandler(FileHandler):
 
             self._application.getWorkspaceMetadataStorage().setAllData(metadata)
             self._application.workspaceLoaded.emit(cast(WorkspaceReader, self.workspace_reader).workspaceName())
+        self._application.setloadingWorkspace(False)

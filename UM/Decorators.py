@@ -29,6 +29,25 @@ def deprecated(message, since = "Unknown"): #pylint: disable=bad-whitespace
     return deprecated_decorator
 
 
+def deprecated_argument(argument_index: int, argument_name: str, message, since = "Unknown"): #pylint: disable=bad-whitespace
+    """Decorator that can be used to indicate a method has been deprecated
+
+    :param argument: The name or index of the argument that is no more used
+    :param message: The message to display when the method is called with a non-default argument. Should include a suggestion about what to use.
+    :param since: A version since when this method has been deprecated.
+    """
+
+    def deprecated_decorator(function):
+        def deprecated_function(*args, **kwargs):
+            if argument_name in kwargs or argument_index < len(args):
+                warning = f"Argument '{argument_name}' of function {function} is deprecated (since {since}): {message}"
+                Logger.log("w_once", warning)
+                warnings.warn(warning, DeprecationWarning, stacklevel=2)
+            return function(*args, **kwargs)
+        return deprecated_function
+    return deprecated_decorator
+
+
 def ascopy(function):
     """Decorator to ensure the returned value is always a copy and never a direct reference
 

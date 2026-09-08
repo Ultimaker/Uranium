@@ -1,9 +1,9 @@
 // Copyright (c) 2022 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
-import QtQuick 2.10
-import QtQuick.Window 2.2
-import QtQuick.Layouts 1.3
+import QtQuick
+import QtQuick.Window
+import QtQuick.Layouts
 import QtQuick.Dialogs
 
 import UM 1.5 as UM
@@ -161,6 +161,19 @@ Window
             Layout.preferredWidth: parent.width
             Layout.preferredHeight: childrenRect.height
             sourceComponent: footerComponent
+        }
+    }
+
+    onTransientParentChanged: centerOnParent()
+    Component.onCompleted: centerOnParent()
+
+    function centerOnParent()
+    {
+        if (transientParent && Qt.platform.os == "linux")
+        {
+            // CURA-13243: since Qt 6.10, dialogs do not appear centered on Linux, so force centering them
+            x = transientParent.x + (transientParent.width - width) / 2;
+            y = transientParent.y + (transientParent.height - height) / 2;
         }
     }
 }

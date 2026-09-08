@@ -296,7 +296,7 @@ class RotateTool(Tool):
         object_mid = node.getBoundingBox().center
         rotation_point_vector = Vector(object_mid.x, object_mid.y, face_mid[2])
         face_normal_vector = Vector(face_normal[0], face_normal[1], face_normal[2])
-        rotation_quaternion = Quaternion.rotationTo(face_normal_vector.normalized(), Vector(0.0, -1.0, 0.0))
+        rotation_quaternion = Quaternion.rotationTo(face_normal_vector, Vector(0.0, -1.0, 0.0))
 
         operation = GroupedOperation()
         current_node = node
@@ -479,7 +479,7 @@ class RotateTool(Tool):
             text=i18n_catalog.i18nc("@info", "Select a face on the model to align it to the build plate. "
                                             "The rotation controls are disabled while in this mode."),
             title=i18n_catalog.i18nc("@info:title", "Select Face Mode Active"),
-            lifetime=-1,
+            lifetime=0,
             dismissable=False,
             message_type=Message.MessageType.NEUTRAL
         )

@@ -131,6 +131,7 @@ class QtRenderer(Renderer):
         if not self._initialized:
             self._initialize()
 
+        self._gl.glFrontFace(self._gl.GL_CCW)
         self._gl.glViewport(0, 0, self._viewport_width, self._viewport_height)
         self._gl.glClearColor(self._background_color.redF(), self._background_color.greenF(), self._background_color.blueF(), self._background_color.alphaF())
         self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)

@@ -123,7 +123,8 @@ class LocalFileOutputDevice(ProjectOutputDevice):
             raise OutputDeviceError.UserCanceledError()
 
         save_path = dialog.directory().absolutePath()
-        Application.getInstance().getPreferences().setValue("local_file/dialog_save_path", save_path)
+        if not Application.getInstance().getPreferences().getValue("local_file/use_fixed_dialog_paths"):
+            Application.getInstance().getPreferences().setValue("local_file/dialog_save_path", save_path)
 
         selected_type = file_types[filters.index(dialog.selectedNameFilter())]
         Application.getInstance().getPreferences().setValue("local_file/last_used_type", selected_type["mime_type"])

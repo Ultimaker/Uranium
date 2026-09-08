@@ -31,6 +31,7 @@ Dialog
     */
     id: root
 
+    property bool selfDestroy: false  // Automatically destroys the dialog when it has been hidden, useful if it has been created with component.createObject
     property alias text: content.text //The text to show in the body of the dialogue.
 
     width: UM.Theme.getSize("small_popup_dialog").width
@@ -234,5 +235,13 @@ Dialog
                 }
             }
         }
-   }
+    }
+
+    onClosed:
+    {
+        if(selfDestroy)
+        {
+            destroy();
+        }
+    }
 }
