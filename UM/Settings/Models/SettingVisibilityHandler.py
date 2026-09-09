@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Set
-from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtCore import QObject, pyqtSignal, pyqtSlot
 
 
 class SettingVisibilityHandler(QObject):
@@ -23,3 +23,21 @@ class SettingVisibilityHandler(QObject):
 
     def forceVisibilityChanged(self) -> None:
         self.visibilityChanged.emit()
+
+    @pyqtSlot(str, result = bool)
+    def getSettingVisible(self, key: str) -> bool:
+        """Convenience method for QML to query the visibility of a single setting."""
+        return key in self._visible
+
+    @pyqtSlot(str, bool)
+    def setSettingVisible(self, key: str, visible: bool) -> None:
+        """Convenience method for QML to toggle the visibility of a single setting."""
+        if visible == (key in self._visible):
+            return
+
+        visible_settings = self.getVisible()
+        if visible:
+            visible_settings.add(key)
+        else:
+            visible_settings.remove(key)
+        self.setVisible(visible_settings)
