@@ -119,6 +119,15 @@ class MeshData:
                         file_name=file_name, center_position=center_position, zero_position=zero_position,
                         attributes=attributes, mesh_id=mesh_id, face_connections=face_connections)
 
+    def _getIndices(self):
+        if self._indices is None:
+            if self._vertices is None or self._vertex_count < 3:
+                return 0, 0
+            indices = numpy.arange(self._vertex_count, dtype=numpy.int32).reshape(-1, 3)  # 3 verts per sub-array.
+        else:
+            indices = self._indices
+        return indices
+
     def _buildFaceConnections(self) -> Optional[numpy.ndarray]:
         """Build Face connections indicate which faces are connected to each other by sharing edges.
 
@@ -126,13 +135,7 @@ class MeshData:
         """
         if self._vertices is None:
             return None
-        if self._indices is None:
-            if self._vertices is None or self._vertex_count < 3:
-                return 0, 0
-            indices = numpy.arange(self._vertex_count, dtype=numpy.int32).reshape(-1, 3)  # 3 verts per sub-array.
-        else:
-            indices = self._indices
-        return uvula.connectFaces(self._vertices, indices) #self._indices if self._indices else [])
+        return uvula.connectFaces(self._vertices, self._getIndices())
 
     def getHash(self):
         m = hashlib.sha256()
@@ -442,15 +445,8 @@ class MeshData:
 
     def calculateUnwrappedUVCoordinates(self) -> Optional[tuple[int, int]]:
         """Create a new set of unwrapped texture coordinates for the mesh."""
-        if self._indices is None:
-            if self._vertices is None or self._vertex_count < 3:
-                return 0, 0
-            indices = numpy.arange(self._vertex_count, dtype=numpy.int32).reshape(-1, 3)  # 3 verts per sub-array.
-        else:
-            indices = self._indices
-
         try:
-            self._uvs, texture_width, texture_height = uvula.unwrap(self._vertices, indices)
+            self._uvs, texture_width, texture_height = uvula.unwrap(self._vertices, self._getIndices())
             return texture_width, texture_height
         except:
             Logger.logException("e", "Error when processing mesh UV-unwrapping")
