@@ -428,17 +428,17 @@ class Controller:
     def event(self, event: Event):
         """Process an event
 
-        The event is first passed to the selection tool, then the active tool and finally the camera tool.
+        The event is first passed to the active tool, then the selection tool and finally the camera tool.
         If none of these events handle it (when they return something that does not evaluate to true)
         a context menu signal is emitted.
 
         :param event: event to be handle.
         """
 
-        if self._selection_tool and self._selection_tool.event(event):
+        if self._active_tool and self._active_tool.event(event):
             return
 
-        if self._active_tool and self._active_tool.event(event):
+        if self._selection_tool and self._selection_tool.event(event):
             return
 
         if self._camera_tool and self._camera_tool.event(event):
