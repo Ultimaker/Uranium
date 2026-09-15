@@ -30,7 +30,7 @@ class LocalFileOutputDevice(ProjectOutputDevice):
         self.setName(catalog.i18nc("@item:inmenu", "Local File"))
         self.setShortDescription(catalog.i18nc("@action:button Preceded by 'Ready to'.", "Save to Disk"))
         self.setDescription(catalog.i18nc("@info:tooltip", "Save to Disk"))
-        self.setIconName("save")
+        self.setIconName("document-save")
 
         self.shortcut = "Ctrl+S"
         self.menu_entry_text = catalog.i18nc("@item:inmenu About saving files to the hard drive", "To Disk")
