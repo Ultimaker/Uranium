@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-31 08:55+0200\n"
+"POT-Creation-Date: 2026-09-16 16:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -615,27 +615,11 @@ msgid "{application_name} {version_number} provides a better and more reliable p
 msgstr ""
 
 msgctxt "description"
-msgid "Enables saving to local files."
+msgid "Outputs log information to a file in your settings folder."
 msgstr ""
 
 msgctxt "name"
-msgid "Local File Output Device"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr ""
-
-msgctxt "name"
-msgid "Local Container Provider"
-msgstr ""
-
-msgctxt "description"
-msgid "Checks for updates of the software."
-msgstr ""
-
-msgctxt "name"
-msgid "Update Checker"
+msgid "File Logger"
 msgstr ""
 
 msgctxt "description"
@@ -647,19 +631,51 @@ msgid "Console Logger"
 msgstr ""
 
 msgctxt "description"
-msgid "Outputs log information to a file in your settings folder."
+msgid "Provides built-in setting containers that come with the installation of the application."
 msgstr ""
 
 msgctxt "name"
-msgid "File Logger"
+msgid "Local Container Provider"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides a simple solid mesh view."
+msgid "Enables saving to local files."
 msgstr ""
 
 msgctxt "name"
-msgid "Simple View"
+msgid "Local File Output Device"
+msgstr ""
+
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr ""
+
+msgctxt "name"
+msgid "Update Checker"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr ""
+
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr ""
+
+msgctxt "name"
+msgid "Scale Tool"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr ""
+
+msgctxt "name"
+msgid "Camera Tool"
 msgstr ""
 
 msgctxt "description"
@@ -679,43 +695,11 @@ msgid "Rotate Tool"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides the Mirror tool."
-msgstr ""
-
-msgctxt "name"
-msgid "Mirror Tool"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides the tool to manipulate the camera."
-msgstr ""
-
-msgctxt "name"
-msgid "Camera Tool"
-msgstr ""
-
-msgctxt "description"
-msgid "Provides the Scale tool."
-msgstr ""
-
-msgctxt "name"
-msgid "Scale Tool"
-msgstr ""
-
-msgctxt "description"
 msgid "Provides the Selection tool."
 msgstr ""
 
 msgctxt "name"
 msgid "Selection Tool"
-msgstr ""
-
-msgctxt "description"
-msgid "Makes it possible to write Wavefront OBJ files."
-msgstr ""
-
-msgctxt "name"
-msgid "Wavefront OBJ Writer"
 msgstr ""
 
 msgctxt "description"
@@ -727,11 +711,11 @@ msgid "STL Writer"
 msgstr ""
 
 msgctxt "description"
-msgid "Provides support for reading STL files."
+msgid "Makes it possible to write Wavefront OBJ files."
 msgstr ""
 
 msgctxt "name"
-msgid "STL Reader"
+msgid "Wavefront OBJ Writer"
 msgstr ""
 
 msgctxt "description"
@@ -740,4 +724,20 @@ msgstr ""
 
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr ""
+
+msgctxt "name"
+msgid "STL Reader"
+msgstr ""
+
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr ""
+
+msgctxt "name"
+msgid "Simple View"
 msgstr ""
