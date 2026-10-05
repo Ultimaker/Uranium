@@ -15,7 +15,7 @@ from UM.FileProvider import FileProvider
 from UM.FlameProfiler import pyqtSlot
 from PyQt6.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlError
 from PyQt6.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
-from PyQt6.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat
+from PyQt6.QtGui import QIcon, QPixmap, QFontMetrics, QSurfaceFormat, QKeyEvent
 from PyQt6.QtCore import QTimer
 
 from UM.Backend.Backend import Backend #For typing.
@@ -132,6 +132,9 @@ class QtApplication(QApplication, Application):
         #Metadata required for the file dialogues.
         self.setOrganizationDomain("https://ultimaker.com/")
         self.setOrganizationName("Ultimaker B.V.")
+
+        self._current_keyboard_modifiers: Qt.KeyboardModifier = Qt.KeyboardModifier.NoModifier
+        self.installEventFilter(self)
 
     def addCommandLineOptions(self) -> None:
         super().addCommandLineOptions()
@@ -720,6 +723,20 @@ class QtApplication(QApplication, Application):
     @pyqtProperty(str, constant=True)
     def applicationDisplayName(self) -> str:
         return self.getApplicationDisplayName()
+
+    currentKeyboardModifiersChanged = pyqtSignal()
+
+    @pyqtProperty(Qt.KeyboardModifier, notify=currentKeyboardModifiersChanged)
+    def currentKeyboardModifiers(self):
+        return self._current_keyboard_modifiers
+
+    def eventFilter(self, object: QObject, event: QEvent) -> bool:
+
+        if isinstance(event, QKeyEvent) and event.modifiers() != self._current_keyboard_modifiers:
+            self._current_keyboard_modifiers = event.modifiers()
+            self.currentKeyboardModifiersChanged.emit()
+
+        return super().eventFilter(object, event)
 
 
 class _QtFunctionEvent(QEvent):
