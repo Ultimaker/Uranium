@@ -24,7 +24,8 @@ RowLayout
     property alias position: slider.position
     property alias pressed: slider.pressed
     property alias snapMode: slider.snapMode
-    property alias stepSize: slider.stepSize
+    property var stepSize: 0.0
+    property var largeStepSize: 5 * stepSize
     property alias to: slider.to
     property alias touchDragThreshold: slider.touchDragThreshold
     property alias value: slider.value
@@ -58,6 +59,7 @@ RowLayout
         id: slider
 
         Layout.fillWidth: true
+        stepSize: (CuraApplication.currentKeyboardModifiers & Qt.ShiftModifier) ? root.largeStepSize : root.stepSize
 
         onPressedChanged: {
             if (typeof(root.onPressedChanged) === "function")
