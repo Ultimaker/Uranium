@@ -147,15 +147,18 @@ MouseArea
 
     onWheel: event =>
     {
-        if(event.angleDelta.y > 0)
+        if(event.angleDelta.y !== 0)
         {
-            slider.increase();
+            if(event.angleDelta.y > 0)
+            {
+                slider.increase();
+            }
+            else
+            {
+                slider.decrease();
+            }
+            root.handleValueChanged(null);
         }
-        else
-        {
-            slider.decrease();
-        }
-        root.handleValueChanged(null);
     }
 
     function handleValueChanged(pressed)
