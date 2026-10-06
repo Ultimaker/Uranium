@@ -70,7 +70,7 @@ MouseArea
             id: slider
 
             Layout.fillWidth: true
-            stepSize: (CuraApplication.currentKeyboardModifiers & Qt.ShiftModifier) ? root.largeStepSize : root.stepSize
+            stepSize: (UM.Application.currentKeyboardModifiers & Qt.ShiftModifier) ? root.largeStepSize : root.stepSize
 
             onPressedChanged: root.handleValueChanged(slider.pressed)
 
