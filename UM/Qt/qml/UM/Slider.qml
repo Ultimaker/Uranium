@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.3
 
 import UM 1.7 as UM
 
-RowLayout
+MouseArea
 {
     id: root
 
@@ -24,7 +24,8 @@ RowLayout
     property alias position: slider.position
     property alias pressed: slider.pressed
     property alias snapMode: slider.snapMode
-    property alias stepSize: slider.stepSize
+    property var stepSize: 0.0
+    property var largeStepSize: stepSize
     property alias to: slider.to
     property alias touchDragThreshold: slider.touchDragThreshold
     property alias value: slider.value
@@ -32,107 +33,144 @@ RowLayout
     property alias visualPosition: slider.visualPosition
     property alias indicatorVisible: percentageBackground.visible
 
+    // Using this property as a callback is deprecated, please use the moved signal instead
     property var onPressedChanged
     property alias backgroundTickCount: ticks.model
 
-    spacing: UM.Theme.getSize("default_margin").width
+    signal moved()
 
-    states: [
-        State {
-            name: "disabled"
-            when: !enabled
-            PropertyChanges { target: fromLabel; color: UM.Theme.getColor("text_disabled") }
-            PropertyChanges { target: toLabel; color: UM.Theme.getColor("text_disabled") }
-            PropertyChanges { target: handleButton; border.color: UM.Theme.getColor("background_2") }
-            PropertyChanges { target: percentageBackground; color: UM.Theme.getColor("background_2") }
-            PropertyChanges { target: percentageLabel; color: UM.Theme.getColor("text_disabled") }
-            PropertyChanges { target: backgroundLine; color: UM.Theme.getColor("background_2") }
-            PropertyChanges { target: ticks; color: UM.Theme.getColor("background_2") }
-        }
-    ]
+    implicitWidth: row.implicitWidth
+    implicitHeight: row.implicitHeight
 
-    UM.Label { id: fromLabel; Layout.fillWidth: false; text: slider.from }
-
-    Slider
+    RowLayout
     {
-        id: slider
+        id: row
+        anchors.fill: parent
 
-        Layout.fillWidth: true
+        spacing: UM.Theme.getSize("default_margin").width
 
-        onPressedChanged: {
-            if (typeof(root.onPressedChanged) === "function")
-            {
-                root.onPressedChanged(pressed);
+        states: [
+            State {
+                name: "disabled"
+                when: !enabled
+                PropertyChanges { target: fromLabel; color: UM.Theme.getColor("text_disabled") }
+                PropertyChanges { target: toLabel; color: UM.Theme.getColor("text_disabled") }
+                PropertyChanges { target: handleButton; border.color: UM.Theme.getColor("background_2") }
+                PropertyChanges { target: percentageBackground; color: UM.Theme.getColor("background_2") }
+                PropertyChanges { target: percentageLabel; color: UM.Theme.getColor("text_disabled") }
+                PropertyChanges { target: backgroundLine; color: UM.Theme.getColor("background_2") }
+                PropertyChanges { target: ticks; color: UM.Theme.getColor("background_2") }
             }
-        }
+        ]
 
-        //Draw line
-        background: Rectangle
+        UM.Label { id: fromLabel; Layout.fillWidth: false; text: slider.from }
+
+        Slider
         {
-            id: backgroundLine
-            height: UM.Theme.getSize("slider_widget_groove").height
-            width: parent.width - UM.Theme.getSize("slider_widget_handle").width
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            color: UM.Theme.getColor("lining")
+            id: slider
 
-            Repeater
+            Layout.fillWidth: true
+            stepSize: (UM.Application.currentKeyboardModifiers & Qt.ShiftModifier) ? root.largeStepSize : root.stepSize
+
+            onPressedChanged: root.handleValueChanged(slider.pressed)
+
+            //Draw line
+            background: Rectangle
             {
-                id: ticks
-                anchors.fill: parent
-                property var color: UM.Theme.getColor("lining")
-                model: 11
+                id: backgroundLine
+                height: UM.Theme.getSize("slider_widget_groove").height
+                width: parent.width - UM.Theme.getSize("slider_widget_handle").width
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                color: UM.Theme.getColor("lining")
 
-                Rectangle
+                Repeater
                 {
-                    id: tick
-                    color: ticks.color
-                    implicitWidth: UM.Theme.getSize("slider_widget_tickmarks").width
-                    implicitHeight: UM.Theme.getSize("slider_widget_tickmarks").height
-                    anchors.verticalCenter: parent.verticalCenter
+                    id: ticks
+                    anchors.fill: parent
+                    property var color: UM.Theme.getColor("lining")
+                    model: 11
 
-                    x: Math.round(backgroundLine.width / (ticks.count - 1) * index - width / 2)
+                    Rectangle
+                    {
+                        id: tick
+                        color: ticks.color
+                        implicitWidth: UM.Theme.getSize("slider_widget_tickmarks").width
+                        implicitHeight: UM.Theme.getSize("slider_widget_tickmarks").height
+                        anchors.verticalCenter: parent.verticalCenter
 
-                    radius: Math.round(width / 2)
+                        x: Math.round(backgroundLine.width / (ticks.count - 1) * index - width / 2)
+
+                        radius: Math.round(width / 2)
+                    }
+                }
+            }
+
+            handle: Rectangle
+            {
+                id: handleButton
+                x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
+                anchors.verticalCenter: parent.verticalCenter
+                implicitWidth: UM.Theme.getSize("slider_widget_handle").width
+                implicitHeight: UM.Theme.getSize("slider_widget_handle").height
+                radius: Math.round(width / 2)
+                color: UM.Theme.getColor("main_background")
+                border.color: UM.Theme.getColor("primary")
+                border.width: UM.Theme.getSize("wide_lining").height
+            }
+
+            UM.PointingRectangle
+            {
+                id: percentageBackground
+                arrowSize: UM.Theme.getSize("button_tooltip_arrow").width
+                width: childrenRect.width
+                height: childrenRect.height
+                target: Qt.point(handleButton.x + handleButton.width / 2, handleButton.y + handleButton.height / 2)
+                x: handleButton.x + Math.round((handleButton.width - width) / 2)
+                y: handleButton.y - height - UM.Theme.getSize("button_tooltip_arrow").height - UM.Theme.getSize("default_lining").height
+                color: UM.Theme.getColor("tooltip");
+
+                UM.Label
+                {
+                    id: percentageLabel
+                    text: `${slider.value}${root.tooltipUnit}`
+                    horizontalAlignment: TextInput.AlignHCenter
+                    leftPadding: UM.Theme.getSize("narrow_margin").width
+                    rightPadding: UM.Theme.getSize("narrow_margin").width
+                    color: UM.Theme.getColor("tooltip_text");
                 }
             }
         }
 
-        handle: Rectangle
-        {
-            id: handleButton
-            x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: UM.Theme.getSize("slider_widget_handle").width
-            implicitHeight: UM.Theme.getSize("slider_widget_handle").height
-            radius: Math.round(width / 2)
-            color: UM.Theme.getColor("main_background")
-            border.color: UM.Theme.getColor("primary")
-            border.width: UM.Theme.getSize("wide_lining").height
-        }
+        UM.Label { id: toLabel; Layout.fillWidth: false; text: slider.to }
+    }
 
-        UM.PointingRectangle
+    onWheel: event =>
+    {
+        if(event.angleDelta.y !== 0)
         {
-            id: percentageBackground
-            arrowSize: UM.Theme.getSize("button_tooltip_arrow").width
-            width: childrenRect.width
-            height: childrenRect.height
-            target: Qt.point(handleButton.x + handleButton.width / 2, handleButton.y + handleButton.height / 2)
-            x: handleButton.x + Math.round((handleButton.width - width) / 2)
-            y: handleButton.y - height - UM.Theme.getSize("button_tooltip_arrow").height - UM.Theme.getSize("default_lining").height
-            color: UM.Theme.getColor("tooltip");
-
-            UM.Label
+            if(event.angleDelta.y > 0)
             {
-                id: percentageLabel
-                text: `${slider.value}${root.tooltipUnit}`
-                horizontalAlignment: TextInput.AlignHCenter
-                leftPadding: UM.Theme.getSize("narrow_margin").width
-                rightPadding: UM.Theme.getSize("narrow_margin").width
-                color: UM.Theme.getColor("tooltip_text");
+                slider.increase();
             }
+            else
+            {
+                slider.decrease();
+            }
+            root.handleValueChanged(null);
         }
     }
 
-    UM.Label { id: toLabel; Layout.fillWidth: false; text: slider.to }
+    function handleValueChanged(pressed)
+    {
+        if (typeof (root.onPressedChanged) === "function")
+        {
+            console.warn("Using the onPressedChanged as a callback is deprecated, please use the moved signal instead");
+            root.onPressedChanged(pressed !== null ? pressed : false);
+        }
+        if(pressed === null || pressed === false)
+        {
+            root.moved();
+        }
+    }
 }
