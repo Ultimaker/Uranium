@@ -39,6 +39,9 @@ MouseArea
 
     signal moved()
 
+    implicitWidth: row.implicitWidth
+    implicitHeight: row.implicitHeight
+
     RowLayout
     {
         id: row
