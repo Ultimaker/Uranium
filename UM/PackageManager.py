@@ -65,7 +65,15 @@ class PackageManager(QObject):
         if self._user_package_management_file_path is None:  # Doesn't exist yet.
             self._user_package_management_file_path = os.path.join(Resources.getDataStoragePath(), "packages.json")
 
-        self._installation_dirs_dict: Dict[str, str] = {"plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins))}
+        # The destinations of the folders in the "files" folder of a package. The key is the name of the folder in the
+        # package and the value the folder in the configuration where its content is installed (in a sub-folder named
+        # after the package). Applications can add their own destinations, and aliases for them, to this dictionary.
+        # Folders in a package that aren't listed here are not installed.
+        self._installation_dirs_dict: Dict[str, str] = {
+            "plugins": os.path.abspath(Resources.getStoragePath(Resources.Plugins)),
+            "themes": os.path.abspath(Resources.getStoragePath(Resources.Themes)),
+            "definitions": os.path.abspath(Resources.getStoragePath(Resources.DefinitionContainers)),
+        }
 
         self._bundled_package_dict: PackageDataDict = {}  # A dict of all bundled packages
         self._installed_package_dict: PackageDataDict = {}  # A dict of all installed packages
@@ -283,7 +291,7 @@ class PackageManager(QObject):
         for package_id in self._to_remove_package_set:
             try:
                 self._purgePackage(package_id)
-                del self._installed_package_dict[package_id]
+                self._installed_package_dict.pop(package_id, None)
             except:
                 Logger.logException("w", f"Failed to remove package: [{package_id}]")
                 remove_failures.add(package_id)
@@ -586,17 +594,46 @@ class PackageManager(QObject):
 
     # Removes everything associated with the given package ID.
     def _purgePackage(self, package_id: str) -> None:
-        # Iterate through all directories in the data storage directory and look for sub-directories that belong to
-        # the package we need to remove, that is the sub-dirs with the package_id as names, and remove all those dirs.
-        data_storage_dir = os.path.abspath(Resources.getDataStoragePath())
+        for package_dir in self._getPackageInstallationPaths(package_id):
+            Logger.log("i", "Removing '%s' for package [%s]", package_dir, package_id)
+            shutil.rmtree(package_dir)
 
-        for root, dir_names, _ in os.walk(data_storage_dir):
-            for dir_name in dir_names:
-                package_dir = os.path.join(root, dir_name, package_id)
-                if os.path.exists(package_dir):
-                    Logger.log("i", "Removing '%s' for package [%s]", package_dir, package_id)
-                    shutil.rmtree(package_dir)
-            break
+    def _getPackageInstallationPaths(self, package_id: str) -> List[str]:
+        """Find all folders in which files of the given package are installed.
+
+        These are the folders named after the package in every location that a package can be installed in: the
+        registered installation folders and the folders directly in the data storage folder (which also covers
+        packages installed to destinations that are no longer registered).
+
+        :param package_id: The ID of the package to find the folders of.
+        :return: The paths of the existing folders that belong to the package.
+        """
+        root_dirs: List[str] = []
+
+        data_storage_dir = os.path.abspath(Resources.getDataStoragePath())
+        try:
+            root_dirs.extend(os.path.join(data_storage_dir, dir_name) for dir_name in os.listdir(data_storage_dir))
+        except FileNotFoundError:
+            pass
+
+        root_dirs.extend(self._installation_dirs_dict.values())
+
+        package_dirs: List[str] = []
+        for root_dir in root_dirs:
+            package_dir = os.path.abspath(os.path.join(root_dir, package_id))
+            if package_dir not in package_dirs and os.path.isdir(package_dir):
+                package_dirs.append(package_dir)
+        return package_dirs
+
+    def _getInstallationDir(self, sub_dir_name: str) -> Optional[str]:
+        """Find the folder in which the content of a folder in the "files" folder of a package gets installed.
+
+        Only the destinations registered in ``_installation_dirs_dict`` are valid.
+
+        :param sub_dir_name: The name of the folder in the "files" folder of the package.
+        :return: The folder in which to install the package folder, or ``None`` if there is no such destination.
+        """
+        return self._installation_dirs_dict.get(sub_dir_name)
 
     # Installs all files associated with the given package.
     def _installPackage(self, installation_package_data: PackageData) -> None:
@@ -634,19 +671,28 @@ class PackageManager(QObject):
             message.show()
             return
 
-        # Copy the folders there
-        for sub_dir_name, installation_root_dir in self._installation_dirs_dict.items():
-            src_dir_path = os.path.join(temp_dir.name, "files", sub_dir_name)
-            dst_dir_path = os.path.join(installation_root_dir, package_id)
+        # Every folder in the "files" folder of the package is installed in the matching folder of the configuration.
+        files_dir_path = os.path.join(temp_dir.name, "files")
+        if not os.path.isdir(files_dir_path):
+            Logger.log("w", "The path %s does not exist, so not installing the files", files_dir_path)
+        else:
+            for sub_dir_name in sorted(os.listdir(files_dir_path)):
+                src_dir_path = os.path.join(files_dir_path, sub_dir_name)
+                if not os.path.isdir(src_dir_path):
+                    Logger.log("w", "Package [%s] contains the file '%s' directly in its files folder, which can't be installed. Files must be inside a folder.", package_id, sub_dir_name)
+                    continue
 
-            if not os.path.exists(src_dir_path):
-                Logger.log("w", "The path %s does not exist, so not installing the files", src_dir_path)
-                continue
-            try:
-                self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
-            except EnvironmentError as e:
-                Logger.log("e", "Can't install package due to EnvironmentError: {err}".format(err = str(e)))
-                continue
+                installation_root_dir = self._getInstallationDir(sub_dir_name)
+                if installation_root_dir is None:
+                    Logger.log("w", "Package [%s] contains the folder '%s' for which there is no known installation location, so not installing it", package_id, sub_dir_name)
+                    continue
+
+                dst_dir_path = os.path.join(installation_root_dir, package_id)
+                try:
+                    self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
+                except EnvironmentError as e:
+                    Logger.log("e", "Can't install package due to EnvironmentError: {err}".format(err = str(e)))
+                    continue
 
         # Remove the file
         try:

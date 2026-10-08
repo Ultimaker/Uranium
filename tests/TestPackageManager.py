@@ -2,10 +2,12 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 import os
 import pytest
+import shutil
 import unittest.mock
 from unittest.mock import MagicMock, patch
 
 from UM.PackageManager import PackageManager
+from UM.Resources import Resources
 from UM.Version import Version
 
 test_package_path = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/UnitTestPackage.package")
@@ -110,6 +112,49 @@ def test_installAndRemovePackage():
     # Now to remove the package again!
     manager.removePackage("UnitTestPackage")
     assert manager.installedPackagesChanged.emit.call_count == 2
+
+
+def test_getInstallationDir():
+    manager = PackageManager(MagicMock())
+
+    # The destinations that Uranium provides.
+    assert manager._getInstallationDir("plugins") == os.path.abspath(Resources.getStoragePath(Resources.Plugins))
+    assert manager._getInstallationDir("themes") == os.path.abspath(Resources.getStoragePath(Resources.Themes))
+    assert manager._getInstallationDir("definitions") == os.path.abspath(Resources.getStoragePath(Resources.DefinitionContainers))
+
+    # Applications can register destinations and aliases.
+    manager._installation_dirs_dict["alias"] = "/some/alias/path"
+    assert manager._getInstallationDir("alias") == "/some/alias/path"
+
+    # Folders that aren't registered are not installed, even if they are a storage folder of a resource type.
+    assert manager._getInstallationDir("unknown_folder") is None
+    assert manager._getInstallationDir("stacks") is None
+
+
+def test_purgePackage(tmp_path):
+    manager = PackageManager(MagicMock())
+
+    # A folder outside of the data storage that was registered as installation folder, and one in a storage folder.
+    registered_dir = tmp_path / "registered"
+    (registered_dir / "PurgedPackage" / "nested").mkdir(parents = True)
+    (registered_dir / "OtherPackage").mkdir()
+    manager._installation_dirs_dict["registered"] = str(registered_dir)
+
+    themes_package_dir = os.path.join(Resources.getStoragePath(Resources.Themes), "PurgedPackage")
+    os.makedirs(themes_package_dir, exist_ok = True)
+
+    try:
+        paths = manager._getPackageInstallationPaths("PurgedPackage")
+        assert os.path.abspath(themes_package_dir) in paths
+        assert str(registered_dir / "PurgedPackage") in paths
+
+        manager._purgePackage("PurgedPackage")
+
+        assert not os.path.exists(themes_package_dir)
+        assert not (registered_dir / "PurgedPackage").exists()
+        assert (registered_dir / "OtherPackage").exists()
+    finally:
+        shutil.rmtree(themes_package_dir, ignore_errors = True)
 
 
 def test_getPackageInfo():
