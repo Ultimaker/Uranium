@@ -8,7 +8,7 @@ import re  # To detect back-up files in the ".../old/#/..." folders.
 import time
 import urllib.parse  # For interpreting escape characters using unquote_plus.
 import gc
-from typing import Any, Dict, Iterable, Optional, Set, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 from UM.Application import Application  # To get the current version for finding the cache directory.
 from UM.ConfigurationErrorMessage import ConfigurationErrorMessage
@@ -21,6 +21,7 @@ from UM.Settings.ContainerProvider import ContainerProvider  # The class we're i
 from UM.Settings.ContainerRegistry import ContainerRegistry  # To get the resource types for containers.
 from UM.Settings.DefinitionContainer import DefinitionContainer  # To check if we need to cache this container.
 from UM.Settings.DefinitionContainerUnpickler import DefinitionContainerUnpickler
+from UM.Version import Version  # To compare the versions of container files that share an ID.
 
 MYPY = False
 if MYPY:  # Things to import for type checking only.
@@ -43,6 +44,8 @@ class LocalContainerProvider(ContainerProvider):
 
         self._is_read_only_cache = {}  # type: Dict[str, bool]
 
+        self._conflicting_ids = set()  # type: Set[str]  # IDs that are provided by multiple files (e.g. bundled and user-installed).
+
         self._storage_path = ""
 
     def getContainerFilePathById(self, container_id: str) -> Optional[str]:
@@ -59,6 +62,11 @@ class LocalContainerProvider(ContainerProvider):
         return self._id_to_path.keys()
 
     def getLastModifiedTime(self, container_id: str) -> float:
+        if container_id in self._conflicting_ids:
+            # Which of the files is used can change between runs without the used file itself being modified (for
+            # instance when a newer version is bundled with the application). The cached metadata could then belong to
+            # a different file, so make sure that it is always refreshed.
+            return time.time()
         try:
             return os.path.getmtime(self._id_to_path[container_id])
         except OSError:  # File system can be corrupt.
@@ -69,7 +77,7 @@ class LocalContainerProvider(ContainerProvider):
         file_path = self._id_to_path[container_id]  # Raises KeyError if container ID does not exist in the (cache of the) files.
         base_id = self._pathToId(file_path)
         if not base_id:
-            raise Exception("The file where container {container_id} supposedly comes from is not a container file.".format(container_id = container_id))
+            raise Exception(f"The file where container {container_id} supposedly comes from is not a container file.")
 
         container = None  # type: Optional[ContainerInterface]
 
@@ -101,12 +109,12 @@ class LocalContainerProvider(ContainerProvider):
         except NotImplementedError:
             return
         except Exception:
-            Logger.logException("e", "An exception occurred when serializing container %s", container.getId())
+            Logger.logException("e", f"An exception occurred when serializing container {container.getId()}")
             return
 
         mime_type = ContainerRegistry.getMimeTypeForContainer(type(container))
         if mime_type is None:
-            Logger.log("w", "Failed to get MIME type for container type [%s]", type(container))
+            Logger.warning(f"Failed to get MIME type for container type [{type(container)}]")
             return
         file_name = urllib.parse.quote_plus(container.getId()) + "." + mime_type.preferredSuffix
         container_type = container.getMetaDataEntry("type")
@@ -117,7 +125,7 @@ class LocalContainerProvider(ContainerProvider):
                 with SaveFile(path, "wt") as f:
                     f.write(data)
             except OSError as e:
-                Logger.log("e", "Unable to store local container to path {path}: {err}".format(path = path, err = str(e)))
+                Logger.error(f"Unable to store local container to path {path}: {e}")
                 return
             container.setPath(path)
             # Register it internally as being saved
@@ -126,7 +134,7 @@ class LocalContainerProvider(ContainerProvider):
             if mime is not None:
                 self._id_to_mime[container.getId()] = mime
             else:
-                Logger.log("e", "Failed to find MIME type for container ID [%s] with path [%s]", container.getId(), path)
+                Logger.error(f"Failed to find MIME type for container ID [{container.getId()}] with path [{path}]")
 
             base_file = container.getMetaData().get("base_file")
             if base_file:
@@ -136,9 +144,9 @@ class LocalContainerProvider(ContainerProvider):
                     if mime is not None:
                         self._id_to_mime[container_md["id"]] = mime
                     else:
-                        Logger.log("e", "Failed to find MIME type for container ID [%s] with path [%s]", container.getId(), path)
+                        Logger.error(f"Failed to find MIME type for container ID [{container.getId()}] with path [{path}]")
         else:
-            Logger.log("w", "Dirty container [%s] is not saved because the resource type is unknown in ContainerRegistry", container_type)
+            Logger.warning(f"Dirty container [{container.getId()}] is not saved because the resource type [{container_type}] is unknown in ContainerRegistry")
 
     def loadMetadata(self, container_id: str) -> Dict[str, Any]:
         """Load the metadata of a specified container.
@@ -160,17 +168,17 @@ class LocalContainerProvider(ContainerProvider):
             with open(filename, "r", encoding = "utf-8") as f:
                 result_metadatas = clazz.deserializeMetadata(f.read(), container_id) #pylint: disable=no-member
         except IOError as e:
-            Logger.log("e", "Unable to load metadata from file {filename}: {error_msg}".format(filename = filename, error_msg = str(e)))
+            Logger.error(f"Unable to load metadata from file {filename}: {e}")
             ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id)
             return {}
         except Exception as e:
-            Logger.logException("e", "Unable to deserialize metadata for container {filename}: {container_id}: {error_msg}".format(filename = filename, container_id = container_id, error_msg = str(e)))
+            Logger.logException("e", f"Unable to deserialize metadata for container {filename}: {container_id}: {e}")
             ConfigurationErrorMessage.getInstance().addFaultyContainers(container_id)
             return {}
 
         for metadata in result_metadatas:
             if "id" not in metadata:
-                Logger.log("w", "Metadata obtained from deserializeMetadata of {class_name} didn't contain an ID.".format(class_name = clazz.__name__))
+                Logger.warning(f"Metadata obtained from deserializeMetadata of {clazz.__name__} didn't contain an ID.")
                 continue
             if metadata["id"] == container_id:
                 requested_metadata = metadata
@@ -220,7 +228,7 @@ class LocalContainerProvider(ContainerProvider):
         """Remove or unregister an id."""
 
         if container_id not in self._id_to_path:
-            Logger.log("w", "Tried to remove unknown container: {container_id}".format(container_id = container_id))
+            Logger.warning(f"Tried to remove unknown container: {container_id}")
             return
         path_to_delete = self._id_to_path[container_id]
         del self._id_to_path[container_id]
@@ -233,10 +241,10 @@ class LocalContainerProvider(ContainerProvider):
         # path.
         try:
             if os.path.isfile(path_to_delete):
-                Logger.log("i", "Deleting file {filepath}.".format(filepath = path_to_delete))
+                Logger.info(f"Deleting file {path_to_delete}.")
                 os.remove(path_to_delete)
         except Exception:
-            Logger.log("w", "Tried to delete file [%s], but it failed", path_to_delete)
+            Logger.warning(f"Tried to delete file [{path_to_delete}], but it failed")
 
     def _loadCachedDefinition(self, definition_id) -> Optional[DefinitionContainer]:
         """Load a pre-parsed definition container.
@@ -261,7 +269,7 @@ class LocalContainerProvider(ContainerProvider):
 
         if definition_mtime > cache_mtime:
             # The definition is newer than the cached version, so ignore the cached version.
-            Logger.log("d", "Definition file {path} is newer than cache. Ignoring cached version.".format(path = definition_path))
+            Logger.debug(f"Definition file {definition_path} is newer than cache. Ignoring cached version.")
             return None
 
         try:
@@ -270,7 +278,7 @@ class LocalContainerProvider(ContainerProvider):
                 # The DefinitionContainerUnpickler has a list of whitelisted globals
                 definition = DefinitionContainerUnpickler(f).load()
         except (OSError, PermissionError, IOError, AttributeError, EOFError, ImportError, IndexError, pickle.UnpicklingError) as e:
-            Logger.log("w", "Failed to load definition {definition_id} from cached file: {error_msg}".format(definition_id = definition_id, error_msg = str(e)))
+            Logger.warning(f"Failed to load definition {definition_id} from cached file: {e}")
             return None
         finally:
             gc.enable()
@@ -299,7 +307,7 @@ class LocalContainerProvider(ContainerProvider):
         try:
             os.makedirs(os.path.dirname(cache_path), exist_ok = True)
         except PermissionError:
-            Logger.log("w", "The definition cache for definition {definition_id} failed to save because you don't have permissions to write in the cache directory.".format(definition_id = definition.getId()))
+            Logger.warning(f"The definition cache for definition {definition.getId()} failed to save because you don't have permissions to write in the cache directory.")
             return  # No rights to save it. Better give up.
 
         recursionlimit = sys.getrecursionlimit()
@@ -312,15 +320,15 @@ class LocalContainerProvider(ContainerProvider):
             # The cause is unknown. It must be some circular reference in the definition instances or definition containers.
             # Instead of saving a partial cache and raising an exception, simply fail to save the cache.
             # See CURA-4024.
-            Logger.log("w", "The definition cache for definition {definition_id} failed to pickle.".format(definition_id = definition.getId()))
+            Logger.warning(f"The definition cache for definition {definition.getId()} failed to pickle.")
             if os.path.exists(cache_path):
                 try:
                     os.remove(cache_path)  # The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
                 except PermissionError:
                     # Someone else is touching this file.
-                    Logger.log("w", "Unable to remove picked file as another process has access to it %s", cache_path)
+                    Logger.warning(f"Unable to remove picked file as another process has access to it {cache_path}")
         except PermissionError:
-            Logger.log("w", "Cura didn't get permission to save the definition {definition_id}".format(definition_id = definition.getId()))
+            Logger.warning(f"Cura didn't get permission to save the definition {definition.getId()}")
         finally:
             sys.setrecursionlimit(recursionlimit)
 
@@ -332,23 +340,78 @@ class LocalContainerProvider(ContainerProvider):
 
         self._id_to_path = {}  # Clear cache first.
         self._id_to_mime = {}
+        self._conflicting_ids = set()
 
         old_file_expression = re.compile(r"\{sep}old\{sep}\d+\{sep}".format(sep = os.sep))  # To detect files that are back-ups. Matches on .../old/#/...
 
-        all_resources = set()  # type: Set[str]
+        # Collect all files that provide each container ID, in order of priority. The same container can be available
+        # in several locations, for instance bundled with the application and in the user's configuration folder.
+        candidates = {}  # type: Dict[str, List[Tuple[str, MimeType]]]
         for resource_type in ContainerRegistry.getInstance().getResourceTypes().values():
-            all_resources |= set(Resources.getAllResourcesOfType(resource_type))  # Remove duplicates, since the Resources only finds resources by their directories.
-        for filename in all_resources:
-            if re.search(old_file_expression, filename):
-                continue  # This is a back-up file from an old version.
+            for paths in Resources.getAllResourceCandidatesOfType(resource_type).values():
+                for filename in paths:
+                    if re.search(old_file_expression, filename):
+                        continue  # This is a back-up file from an old version.
 
-            container_id, mime = self._pathToIdAndMime(filename)
-            if not container_id:
-                continue
-            if not mime:
-                continue
+                    container_id, mime = self._pathToIdAndMime(filename)
+                    if not container_id:
+                        continue
+                    if not mime:
+                        continue
+                    container_candidates = candidates.setdefault(container_id, [])
+                    if all(path != filename for path, _ in container_candidates):
+                        container_candidates.append((filename, mime))
+
+        for container_id, container_candidates in candidates.items():
+            if len(container_candidates) > 1:
+                self._conflicting_ids.add(container_id)
+            filename, mime = self._selectNewestCandidate(container_id, container_candidates)
             self._id_to_path[container_id] = filename
             self._id_to_mime[container_id] = mime
+
+    def _selectNewestCandidate(self, container_id: str, candidates: List[Tuple[str, MimeType]]) -> Tuple[str, MimeType]:
+        """Selects which of the files providing a container is the one that should be used.
+
+        The file with the highest version wins. If versions are equal, the file with the highest priority wins, i.e. the
+        one in the user's storage location before the ones that are bundled with the application.
+
+        :param container_id: The ID of the container that all candidates provide.
+        :param candidates: The paths and MIME types of the files providing the container, ordered by priority.
+        :return: The path and MIME type of the file to use.
+        """
+
+        best = candidates[0]
+        if len(candidates) == 1:
+            return best
+
+        best_version = self._getContainerVersion(container_id, best[0], best[1])
+        for candidate in candidates[1:]:
+            version = self._getContainerVersion(container_id, candidate[0], candidate[1])
+            if version > best_version:
+                best = candidate
+                best_version = version
+        Logger.debug(f"Container {container_id} is provided by multiple files. Using {best[0]} (version {best_version}).")
+        return best
+
+    @staticmethod
+    def _getContainerVersion(container_id: str, path: str, mime: MimeType) -> Version:
+        """Reads the version of a container from its file.
+
+        :return: The version in the metadata of the container, or version 0 if it has none or can't be read.
+        """
+
+        container_class = ContainerRegistry.mime_type_map[mime.name]
+        try:
+            with open(path, "r", encoding = "utf-8") as f:
+                all_metadata = container_class.deserializeMetadata(f.read(), container_id)  #pylint: disable=no-member
+        except Exception as e:
+            Logger.warning(f"Unable to read the version of container {container_id} from {path}: {e}")
+            return Version("0")
+
+        for metadata in all_metadata:
+            if metadata.get("id") == container_id:
+                return Version(str(metadata.get("version", "0")))
+        return Version("0")
 
     @staticmethod
     def _pathToIdAndMime(path: str) -> Tuple[Optional[str], Optional[MimeType]]:
@@ -360,7 +423,7 @@ class LocalContainerProvider(ContainerProvider):
         try:
             mime = MimeTypeDatabase.getMimeTypeForFile(path)
         except MimeTypeDatabase.MimeTypeNotFoundError:
-            Logger.log("w", "MIME type could not be found for file: {path}, ignoring it.".format(path = path))
+            Logger.warning(f"MIME type could not be found for file: {path}, ignoring it.")
             return None, None
         if mime.name not in ContainerRegistry.mime_type_map:  # The MIME type is known, but it's not a container.
             return None, None
@@ -379,7 +442,7 @@ class LocalContainerProvider(ContainerProvider):
         try:
             mime = MimeTypeDatabase.getMimeTypeForFile(path)
         except MimeTypeDatabase.MimeTypeNotFoundError:
-            Logger.log("w", "MIME type could not be found for file: {path}, ignoring it.".format(path = path))
+            Logger.warning(f"MIME type could not be found for file: {path}, ignoring it.")
             return None
         if mime.name not in ContainerRegistry.mime_type_map:  # The MIME type is known, but it's not a container.
             return None

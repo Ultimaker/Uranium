@@ -53,9 +53,9 @@ class PackageManager(QObject):
                     if not os.path.isfile(file_path):
                         continue
                     self._bundled_package_management_file_paths.append(file_path)
-                    Logger.log("i", "Found bundled packages JSON file: {location}".format(location = file_path))
+                    Logger.info(f"Found bundled packages JSON file: {file_path}")
             except EnvironmentError as e:  # Unable to read directory. Could be corrupt disk or insufficient access to list the directory.
-                Logger.log("e", f"Unable to read package directory to search for packages JSON files: {str(e)}")
+                Logger.error(f"Unable to read package directory to search for packages JSON files: {str(e)}")
                 pass
 
         for search_path in (Resources.getDataStoragePath(), Resources.getConfigStoragePath()):
@@ -163,7 +163,7 @@ class PackageManager(QObject):
     def _loadManagementData(self) -> None:
         # The bundled package management file should always be there
         if len(self._bundled_package_management_file_paths) == 0:
-            Logger.log("w", "Bundled package management files could not be found!")
+            Logger.warning("Bundled package management files could not be found!")
             return
         # Load the bundled packages:
         self._bundled_package_dict = {}
@@ -171,7 +171,7 @@ class PackageManager(QObject):
             try:
                 with open(search_path, "r", encoding = "utf-8") as f:
                     self._bundled_package_dict.update(json.load(f))
-                    Logger.log("i", "Loaded bundled packages data from %s", search_path)
+                    Logger.info(f"Loaded bundled packages data from {search_path}")
             except (UnicodeDecodeError, JSONDecodeError):
                 Logger.logException("e", "Can't decode package management files. File is corrupt.")
                 return
@@ -198,9 +198,9 @@ class PackageManager(QObject):
                     self._to_remove_package_set = set(management_dict.get("to_remove", []))
                     self._to_install_package_dict = management_dict.get("to_install", {})
                     self._dismissed_packages = set(management_dict.get("dismissed", []))
-                    Logger.log("i", "Loaded user packages management file from %s", self._user_package_management_file_path)
+                    Logger.info(f"Loaded user packages management file from {self._user_package_management_file_path}")
             except FileNotFoundError:
-                Logger.log("i", "User package management file %s doesn't exist, do nothing", self._user_package_management_file_path)
+                Logger.info(f"User package management file {self._user_package_management_file_path} doesn't exist, do nothing")
                 return
             except EnvironmentError:
                 Logger.warning("User package management file is inaccessible! Can't see if we need to install packages!")
@@ -271,9 +271,9 @@ class PackageManager(QObject):
                                  "to_install": self._to_install_package_dict,
                                  "dismissed": list(self._dismissed_packages)}
                     json.dump(data_dict, f, sort_keys = True, indent = 4)
-                    Logger.log("i", "Package management file %s was saved", self._user_package_management_file_path)
+                    Logger.info(f"Package management file {self._user_package_management_file_path} was saved")
             except EnvironmentError as e:  # Can't save for whatever reason (permissions, missing directory, hard drive full, etc).
-                Logger.error("Unable to save package management file to {path}: {err}".format(path = self._user_package_management_file_path, err = str(e)))
+                Logger.error(f"Unable to save package management file to {self._user_package_management_file_path}: {str(e)}")
 
     # (for initialize) Removes all packages that have been scheduled to be removed.
     def _removeAllScheduledPackages(self) -> None:
@@ -282,6 +282,13 @@ class PackageManager(QObject):
         remove_failures = set()
         for package_id in self._to_remove_package_set:
             try:
+                # A package that is removed and installed again is being updated, and a package that is also bundled
+                # is only being replaced by the bundled version. Only a real uninstall also cleans up the user's data.
+                if package_id not in self._to_install_package_dict and package_id not in self._bundled_package_dict:
+                    try:
+                        self._cleanUpUninstalledPackage(package_id)
+                    except Exception:
+                        Logger.logException("w", f"Failed to clean up the user data of package [{package_id}]")
                 self._purgePackage(package_id)
                 del self._installed_package_dict[package_id]
             except:
@@ -512,8 +519,7 @@ class PackageManager(QObject):
 
             # Need to use the lock file to prevent concurrent I/O issues.
             with self._container_registry.lockFile():
-                Logger.log("i", "Package [%s] version [%s] is scheduled to be installed.",
-                           package_id, package_info["package_version"])
+                Logger.info(f"Package [{package_id}] version [{package_info['package_version']}] is scheduled to be installed.")
                 # Copy the file to cache dir so we don't need to rely on the original file to be present
                 package_cache_dir = os.path.join(os.path.abspath(Resources.getCacheStoragePath()), "cura_packages")
                 if not os.path.exists(package_cache_dir):
@@ -547,10 +553,10 @@ class PackageManager(QObject):
     # \param force_add is used when updating. In that case you actually want to uninstall & install
     @pyqtSlot(str)
     def removePackage(self, package_id: str, force_add: bool = False) -> None:
-        Logger.log("i", "Removing package [%s]", package_id)
+        Logger.info(f"Removing package [{package_id}]")
         # Check the delayed installation and removal lists first
         if not self.isPackageInstalled(package_id):
-            Logger.log("w", "Attempt to remove package [%s] that is not installed, do nothing.", package_id)
+            Logger.warning(f"Attempt to remove package [{package_id}] that is not installed, do nothing.")
             return
 
         if package_id not in self._to_install_package_dict or force_add:
@@ -584,6 +590,16 @@ class PackageManager(QObject):
 
         return package_id in self._bundled_package_dict
 
+    def _cleanUpUninstalledPackage(self, package_id: str) -> None:
+        """Remove the user data that depends on a package that is being uninstalled.
+
+        This is called right before the files of the package are removed, but only for an uninstall and not when the
+        package is updated. Applications can override this to remove the data that refers to the package's content.
+
+        :param package_id: The ID of the package that is being uninstalled.
+        """
+        pass
+
     # Removes everything associated with the given package ID.
     def _purgePackage(self, package_id: str) -> None:
         # Iterate through all directories in the data storage directory and look for sub-directories that belong to
@@ -594,7 +610,7 @@ class PackageManager(QObject):
             for dir_name in dir_names:
                 package_dir = os.path.join(root, dir_name, package_id)
                 if os.path.exists(package_dir):
-                    Logger.log("i", "Removing '%s' for package [%s]", package_dir, package_id)
+                    Logger.info(f"Removing '{package_dir}' for package [{package_id}]")
                     shutil.rmtree(package_dir)
             break
 
@@ -604,11 +620,11 @@ class PackageManager(QObject):
         filename = installation_package_data["filename"]
 
         package_id = package_info["package_id"]
-        Logger.log("i", "Installing package [%s] from file [%s]", package_id, filename)
+        Logger.info(f"Installing package [{package_id}] from file [{filename}]")
 
         # Load the cached package file and extract all contents to a temporary directory
         if not os.path.exists(filename):
-            Logger.log("w", "Package [%s] file '%s' is missing, cannot install this package", package_id, filename)
+            Logger.warning(f"Package [{package_id}] file '{filename}' is missing, cannot install this package")
             return
         try:
             with zipfile.ZipFile(filename, "r") as archive:
@@ -640,32 +656,32 @@ class PackageManager(QObject):
             dst_dir_path = os.path.join(installation_root_dir, package_id)
 
             if not os.path.exists(src_dir_path):
-                Logger.log("w", "The path %s does not exist, so not installing the files", src_dir_path)
+                Logger.warning(f"The path {src_dir_path} does not exist, so not installing the files")
                 continue
             try:
                 self.__installPackageFiles(package_id, src_dir_path, dst_dir_path)
             except EnvironmentError as e:
-                Logger.log("e", "Can't install package due to EnvironmentError: {err}".format(err = str(e)))
+                Logger.error(f"Can't install package due to EnvironmentError: {str(e)}")
                 continue
 
         # Remove the file
         try:
             os.remove(filename)
         except Exception:
-            Logger.log("w", "Tried to delete file [%s], but it failed", filename)
+            Logger.warning(f"Tried to delete file [{filename}], but it failed")
 
         # Move the info to the installed list of packages only when it succeeds
         self._installed_package_dict[package_id] = self._to_install_package_dict[package_id]
         self._installed_package_dict[package_id]["package_info"]["is_installed"] = True
 
     def __installPackageFiles(self, package_id: str, src_dir: str, dst_dir: str) -> None:
-        Logger.log("i", "Moving package {package_id} from {src_dir} to {dst_dir}".format(package_id=package_id, src_dir=src_dir, dst_dir=dst_dir))
+        Logger.info(f"Moving package {package_id} from {src_dir} to {dst_dir}")
         try:
             shutil.move(src_dir, dst_dir)
         except FileExistsError:
-            Logger.log("w", "Not moving %s to %s as the destination already exists", src_dir, dst_dir)
+            Logger.warning(f"Not moving {src_dir} to {dst_dir} as the destination already exists")
         except EnvironmentError as e:
-            Logger.log("e", "Can't install package, operating system is blocking it: {err}".format(err = str(e)))
+            Logger.error(f"Can't install package, operating system is blocking it: {str(e)}")
 
     # Gets package information from the given file.
     def getPackageInfo(self, filename: str) -> PackageData:
@@ -675,7 +691,7 @@ class PackageManager(QObject):
                 # Go through all the files and use the first successful read as the result
                 for file_info in archive.infolist():
                     if file_info.filename.endswith("package.json"):
-                        Logger.log("d", "Found potential package.json file '%s'", file_info.filename)
+                        Logger.debug(f"Found potential package.json file '{file_info.filename}'")
                         try:
                             with archive.open(file_info.filename, "r") as f:
                                 package_json = json.loads(f.read().decode("utf-8"))
@@ -703,7 +719,7 @@ class PackageManager(QObject):
                 # Go through all the files and use the first successful read as the result
                 license_files = sorted(filter(is_license, archive.infolist()), key = lambda x: len(x.filename))  # Find the one with the shortest path.
                 for file_info in license_files:
-                    Logger.log("d", "Found potential license file '{filename}'".format(filename = file_info.filename))
+                    Logger.debug(f"Found potential license file '{file_info.filename}'")
                     try:
                         with archive.open(file_info.filename, "r") as f:
                             data = f.read()
@@ -713,7 +729,7 @@ class PackageManager(QObject):
                         Logger.logException("e", "Failed to load potential license file '%s' as text file.", file_info.filename)
                         license_string = None
         except zipfile.BadZipFile as e:
-            Logger.error("Package is corrupt: {err}".format(err = str(e)))
+            Logger.error(f"Package is corrupt: {str(e)}")
             license_string = None
         except (UnicodeDecodeError, LookupError):
             Logger.error("Package filenames are not UTF-8 encoded! Encoding unknown.")

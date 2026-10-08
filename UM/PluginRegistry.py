@@ -35,6 +35,13 @@ if TYPE_CHECKING:
 
 plugin_path_ignore_list = ["__pycache__", "tests", ".git"]
 
+resource_plugin_package_types = ["definition"]
+"""The values of "package_type" in the plugin.json of plugins that only provide resources.
+
+The resources (definitions, materials, quality profiles, etc.) of these plugins are used directly from the folder of the
+plugin, instead of being copied to the configuration folder. They don't contain any code that needs to be loaded.
+"""
+
 
 class PluginRegistry(QObject):
     """A central object to dynamically load modules as plugins.
@@ -426,6 +433,9 @@ class PluginRegistry(QObject):
             if plugin_id in self.preloaded_plugins:
                 continue  # Already loaded this before.
 
+            if self._registerResourcePlugin(plugin_id):
+                continue  # A plugin that only provides resources has no code to load.
+
             self.pluginLoadStarted.emit(plugin_id)
 
             # Get the plugin metadata:
@@ -454,6 +464,59 @@ class PluginRegistry(QObject):
 
         self.pluginLoadStarted.emit("")
         Logger.log("d", "Loading all plugins took %s seconds", time.time() - start_time)
+
+    def _registerResourcePlugin(self, plugin_id: str) -> bool:
+        """Use the resources inside the folder of a plugin that only provides resources.
+
+        This applies to plugins of which the plugin.json has a "package_type" listed in `resource_plugin_package_types`,
+        such as "definition". The resources (definitions, materials, quality profiles, etc.) are in sub-folders of the
+        plugin with the same names as in the resources folder of the application. Instead of copying them to the
+        configuration folder, the plugin folder is added as a resource search path. Uninstalling the plugin then removes
+        the resources with it. If several plugins provide the same resource, the consumers of the resources are
+        responsible for choosing between them.
+
+        This must be done before the resources are loaded.
+
+        :param plugin_id: The ID of the plugin.
+        :return: Whether the plugin is a plugin that only provides resources. If so, it must not be loaded as code.
+        """
+        is_resource_plugin = False
+        for folder in self._plugin_locations:
+            location = self._locatePlugin(plugin_id, folder)
+            if not location:
+                continue
+
+            plugin_path = os.path.join(location, plugin_id)
+            try:
+                with open(os.path.join(plugin_path, "plugin.json"), "r", encoding = "utf-8") as file_stream:
+                    plugin_info = json.load(file_stream)
+            except (OSError, ValueError):  # Not readable or no valid JSON. Let the regular loading report this.
+                continue
+            if not isinstance(plugin_info, dict) or plugin_info.get("package_type") not in resource_plugin_package_types:
+                continue
+            is_resource_plugin = True
+
+            if plugin_id in self._disabled_plugins:
+                Logger.info(f"Resource plugin [{plugin_id}] has been disabled. Skip using its resources.")
+                continue
+
+            try:
+                supported_sdk_versions = [Version(version) for version in plugin_info.get("supported_sdk_versions", [])]
+                if "api" in plugin_info:
+                    supported_sdk_versions.append(Version(plugin_info["api"]))
+            except (TypeError, ValueError):
+                Logger.warning(f"The plugin.json of resource plugin [{plugin_id}] has an invalid API version.")
+                continue
+            if not any(self.isPluginApiVersionCompatible(version) for version in supported_sdk_versions):
+                Logger.warning(f"Resource plugin [{plugin_id}] with supported sdk versions {[str(version) for version in supported_sdk_versions]} is incompatible with the current sdk version [{self._api_version}].")
+                if plugin_id not in self._outdated_plugins:
+                    self._outdated_plugins.append(plugin_id)
+                continue
+
+            Logger.info(f"Using the resources of plugin [{plugin_id}] from '{plugin_path}'.")
+            Resources.addSearchPath(plugin_path)
+
+        return is_resource_plugin
 
     def isPluginApiVersionCompatible(self, plugin_api_version: "Version") -> bool:
         """

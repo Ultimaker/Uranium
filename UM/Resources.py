@@ -105,7 +105,23 @@ class Resources:
 
         :param resource_type: The resource type to get the paths for.
 
-        :return: A list of absolute paths to resources of the specified type.
+        :return: A list of absolute paths to resources of the specified type. If the same file name occurs in multiple
+            locations, only the one with the highest priority (see getAllPathsForType) is returned.
+        """
+
+        return [paths[0] for paths in cls.getAllResourceCandidatesOfType(resource_type).values()]
+
+    @classmethod
+    def getAllResourceCandidatesOfType(cls, resource_type: int) -> Dict[str, List[str]]:
+        """Get the paths to all resources of a certain type, grouped by file name.
+
+        Unlike getAllResourcesOfType, this does not discard files that share a name with a file in a location with a
+        higher priority. This allows the caller to decide which of them to use, e.g. based on their version.
+
+        :param resource_type: The resource type to get the paths for.
+
+        :return: A dictionary mapping each file name to the paths of all files with that name. The paths are ordered by
+            priority: the storage location first, followed by the search paths in the order they were added.
         """
 
         files = {} #type: Dict[str, List[str]]
@@ -125,11 +141,7 @@ class Resources:
                             files[entry] = []
                         files[entry].append(os.path.join(root, entry))
 
-        result = []
-        for name, paths in files.items():
-            result.append(paths[0])
-
-        return result
+        return files
 
     @classmethod
     def getStoragePath(cls, resource_type: int, *args) -> str:
@@ -150,7 +162,8 @@ class Resources:
         """Return a list of paths for a certain resource type.
 
         :param resource_type: The type of resource to retrieve.
-        :return: A list of absolute paths where the resource type can be found.
+        :return: A list of absolute paths where the resource type can be found, ordered by priority: the storage
+            location first, followed by the search paths in the order they were added.
 
         :exception TypeError Raised when type is an unknown value.
         """
@@ -158,17 +171,19 @@ class Resources:
         if resource_type not in cls.__types:
             raise ResourceTypeError("Unknown type {0}".format(resource_type))
 
-        paths = set()
+        paths = []  # type: List[str]
 
         try:
-            paths.add(cls.getStoragePathForType(resource_type))
+            paths.append(cls.getStoragePathForType(resource_type))
         except UnsupportedStorageTypeError:
             pass
 
         for path in cls.__paths:
-            paths.add(os.path.join(path, cls.__types[resource_type]))
+            type_path = os.path.join(path, cls.__types[resource_type])
+            if type_path not in paths:
+                paths.append(type_path)
 
-        return list(paths)
+        return paths
 
     @classmethod
     def getStoragePathForType(cls, resource_type: int) -> str:
