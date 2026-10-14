@@ -35,13 +35,6 @@ if TYPE_CHECKING:
 
 plugin_path_ignore_list = ["__pycache__", "tests", ".git"]
 
-resource_plugin_package_types = ["definition"]
-"""The values of "package_type" in the plugin.json of plugins that only provide resources.
-
-The resources (definitions, materials, quality profiles, etc.) of these plugins are used directly from the folder of the
-plugin, instead of being copied to the configuration folder. They don't contain any code that needs to be loaded.
-"""
-
 
 class PluginRegistry(QObject):
     """A central object to dynamically load modules as plugins.
@@ -104,6 +97,11 @@ class PluginRegistry(QObject):
         self._plugin_folder_cache: Dict[str, List[Tuple[str, str]]] = {}  # Cache to speed up _locatePlugin
 
         self._bundled_plugin_cache: Dict[str, bool] = {}
+
+        # The values of "package_type" in the plugin.json of plugins that only provide resources.
+        # The resources (definitions, materials, quality profiles, etc.) of these plugins are used directly from the
+        # folder of the plugin.
+        self._resource_plugin_package_types: Set[str] = {"definition", "definitions"}
 
         self._supported_file_types: Dict[str, str] = {"umplugin": "Uranium Plugin"}
 
@@ -468,7 +466,7 @@ class PluginRegistry(QObject):
     def _registerResourcePlugin(self, plugin_id: str) -> bool:
         """Use the resources inside the folder of a plugin that only provides resources.
 
-        This applies to plugins of which the plugin.json has a "package_type" listed in `resource_plugin_package_types`,
+        This applies to plugins of which the plugin.json has a "package_type" listed in `_resource_plugin_package_types`,
         such as "definition". The resources (definitions, materials, quality profiles, etc.) are in sub-folders of the
         plugin with the same names as in the resources folder of the application. Instead of copying them to the
         configuration folder, the plugin folder is added as a resource search path. Uninstalling the plugin then removes
@@ -492,7 +490,7 @@ class PluginRegistry(QObject):
                     plugin_info = json.load(file_stream)
             except (OSError, ValueError):  # Not readable or no valid JSON. Let the regular loading report this.
                 continue
-            if not isinstance(plugin_info, dict) or plugin_info.get("package_type") not in resource_plugin_package_types:
+            if not isinstance(plugin_info, dict) or plugin_info.get("package_type") not in self._resource_plugin_package_types:
                 continue
             is_resource_plugin = True
 
