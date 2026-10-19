@@ -202,7 +202,7 @@ class PluginRegistry(QObject):
         :param location: The location (folder) to look for
         """
         if not os.path.isdir(location):
-            Logger.warning("Plugin location {0} must be a folder.".format(location))
+            Logger.info(f"Checked from the potential plugin locations: {location}, but did not find a valid folder.")
             return
 
         self._plugin_locations.append(location)
