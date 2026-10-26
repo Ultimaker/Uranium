@@ -152,10 +152,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "파일 수정됨"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "디스크에서"
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "일반"

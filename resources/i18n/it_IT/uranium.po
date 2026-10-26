@@ -144,10 +144,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Il file è stato modificato"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "Dal disco"
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Generale"

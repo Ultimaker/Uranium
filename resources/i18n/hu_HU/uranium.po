@@ -156,10 +156,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "A fájl módosult"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr ""
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Általános"

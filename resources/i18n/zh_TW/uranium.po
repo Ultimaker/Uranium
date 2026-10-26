@@ -159,10 +159,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "檔案已被修改"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "從磁碟"
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "一般"
