@@ -152,10 +152,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Файл был изменен"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "С диска"
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Общее"

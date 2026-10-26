@@ -157,10 +157,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Soubor byl upraven"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "Z disku"
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Obecné"

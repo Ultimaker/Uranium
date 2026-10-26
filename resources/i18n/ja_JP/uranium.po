@@ -152,10 +152,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "ファイルが変更されました"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "ディスクから"
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "一般"

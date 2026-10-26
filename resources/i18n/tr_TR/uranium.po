@@ -152,10 +152,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Dosya değiştirildi"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "Diskten"
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Genel"

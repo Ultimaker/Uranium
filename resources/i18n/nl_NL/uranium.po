@@ -152,10 +152,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Het bestand is gewijzigd"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "Vanaf schijf"
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Algemeen"
