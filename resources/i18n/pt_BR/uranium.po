@@ -1,3 +1,7 @@
+# Uranium
+# Copyright (C) 2023 UltiMaker
+# This file is distributed under the same license as the Uranium package.
+#
 # SPDX-FileCopyrightText: 2026 Claudio Sampaio (Patola)
 msgid ""
 msgstr ""
