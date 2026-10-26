@@ -20,6 +20,7 @@ Window
     minimumHeight: screenScaleFactor * 480;
     width: minimumWidth
     height: minimumHeight
+    transientParent: QtApplication.mainWindow
 
     property int margin: UM.Theme.getSize("default_margin").width
     property bool closeOnAccept: true;  // Automatically close the window when the window is "accepted" (eg using the return key)

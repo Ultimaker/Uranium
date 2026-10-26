@@ -457,6 +457,7 @@ class QtApplication(QApplication, Application):
         return self._is_shutting_down
 
     def registerObjects(self, engine) -> None: #type: ignore #Don't type engine, because the type depends on the platform you're running on so it always gives an error somewhere.
+        engine.rootContext().setContextProperty("QtApplication", self)
         engine.rootContext().setContextProperty("PluginRegistry", PluginRegistry.getInstance())
 
     def makeRenderer(self) -> QtRenderer:
@@ -467,8 +468,6 @@ class QtApplication(QApplication, Application):
             self._renderer = self.makeRenderer()
 
         return cast(QtRenderer, self._renderer)
-
-    mainWindowChanged = Signal()
 
     def getMainWindow(self) -> Optional[MainWindow]:
         return self._main_window
@@ -482,6 +481,9 @@ class QtApplication(QApplication, Application):
             if self._main_window is not None:
                 self._main_window.windowStateChanged.connect(self._onMainWindowStateChanged)
             self.mainWindowChanged.emit()
+
+    mainWindowChanged = Signal()
+    mainWindow = pyqtProperty(QQuickWindow, fget=getMainWindow, constant=True)
 
     def setVisible(self, visible: bool) -> None:
         if self._main_window is not None:
@@ -609,31 +611,25 @@ class QtApplication(QApplication, Application):
         if not visible:
             self._sub_windows.remove(self.sender())
 
-    def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None, initial_properties: Dict[str, "QObject"] = {}, manage_lifecycle: bool = True) -> Optional["QQuickWindow"]:
+    def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None, initial_properties: Dict[str, "QObject"] = {}) -> Optional["QQuickWindow"]:
         """
         Create a QML window from a QML file. This method uses createQmlComponent internally, but adds a few specific
         features for windows management:
             * The created object is a QQuickWindow instance
-            * The transient parent of the window is explicitly set to be the main window
-            * When lifecycle management is enabled, the window ownership is handled and it will be destroyed as soon
-              as it's no longer visible, so the caller should not keep a reference to it
+            * The window ownership is handled and it will be destroyed as soon as it's no longer visible,
+              so the caller should not keep a reference to it
         :param qml_file_path: The absolute file path to the root qml file.
         :param context_properties: Optional dictionary containing the properties that will be set on the context of the
         qml instance before creation.
-        :param manage_lifecycle: Whether the application should retain the window until it is hidden and then release it.
-            Set to False when the caller retains and manages the window itself.
         :return: The created QQuickWindow instance, or None in case the creation failed (qml error)
         """
         result = self.createQmlComponent(qml_file_path, context_properties, initial_properties)
         if result is None:
             return None
 
-        result.setTransientParent(self._main_window)
-
-        if manage_lifecycle:
-            # Keep a link to the window so that it is not garbage-collected, then register it for destruction.
-            self._sub_windows.append(result)
-            result.visibleChanged.connect(self._onWindowVisibleChange, Qt.ConnectionType.QueuedConnection)
+        # Keep a link to the window so that it is not garbage-collected, then register it for destruction.
+        self._sub_windows.append(result)
+        result.visibleChanged.connect(self._onWindowVisibleChange, Qt.ConnectionType.QueuedConnection)
 
         return result
 
