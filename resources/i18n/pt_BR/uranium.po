@@ -525,7 +525,7 @@ msgstr "O arquivo <filename>{0}</filename> já existe. Tem certeza que deseja so
 msgctxt "@info:status"
 msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
 msgstr ""
-"O complemento foi instalado."
+"O complemento foi instalado.\n"
 "Por favor reinicie a aplicação para ativar o complemento."
 
 msgctxt "@info:status"
