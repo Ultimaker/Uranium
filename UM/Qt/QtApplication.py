@@ -609,17 +609,19 @@ class QtApplication(QApplication, Application):
         if not visible:
             self._sub_windows.remove(self.sender())
 
-    def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None, initial_properties: Dict[str, "QObject"] = {}) -> Optional["QQuickWindow"]:
+    def createQmlSubWindow(self, qml_file_path: str, context_properties: Dict[str, "QObject"] = None, initial_properties: Dict[str, "QObject"] = {}, manage_lifecycle: bool = True) -> Optional["QQuickWindow"]:
         """
         Create a QML window from a QML file. This method uses createQmlComponent internally, but adds a few specific
         features for windows management:
             * The created object is a QQuickWindow instance
             * The transient parent of the window is explicitly set to be the main window
-            * The window ownership is handled and it will be destroyed as soon as it's no longer visible,
-              so the caller should not keep a reference to it
+            * When lifecycle management is enabled, the window ownership is handled and it will be destroyed as soon
+              as it's no longer visible, so the caller should not keep a reference to it
         :param qml_file_path: The absolute file path to the root qml file.
         :param context_properties: Optional dictionary containing the properties that will be set on the context of the
         qml instance before creation.
+        :param manage_lifecycle: Whether the application should retain the window until it is hidden and then release it.
+            Set to False when the caller retains and manages the window itself.
         :return: The created QQuickWindow instance, or None in case the creation failed (qml error)
         """
         result = self.createQmlComponent(qml_file_path, context_properties, initial_properties)
@@ -628,9 +630,10 @@ class QtApplication(QApplication, Application):
 
         result.setTransientParent(self._main_window)
 
-        # Keep a link to the window so that it is not garbage-collected, then register it for destruction
-        self._sub_windows.append(result)
-        result.visibleChanged.connect(self._onWindowVisibleChange, Qt.ConnectionType.QueuedConnection)
+        if manage_lifecycle:
+            # Keep a link to the window so that it is not garbage-collected, then register it for destruction.
+            self._sub_windows.append(result)
+            result.visibleChanged.connect(self._onWindowVisibleChange, Qt.ConnectionType.QueuedConnection)
 
         return result
 
