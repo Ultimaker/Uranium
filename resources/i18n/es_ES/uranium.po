@@ -514,12 +514,12 @@ msgstr "El archivo <filename>{0}</filename> ya existe. ¿Está seguro de que des
 
 msgctxt "@info:status"
 msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
-msgstr "El complemento se ha instalado."
+msgstr "El complemento se ha instalado.\n"
 "Reinicie la aplicación para activarlo."
 
 msgctxt "@info:status"
 msgid "The plugin has been removed.\nPlease restart {0} to finish uninstall."
-msgstr "El complemento se ha eliminado."
+msgstr "El complemento se ha eliminado.\n"
 "Pulse «Reiniciar» {0} para finalizar el proceso de desinstalación."
 
 msgctxt "@error"
@@ -540,8 +540,8 @@ msgstr "No existe malla en la que escribir."
 
 msgctxt "@error:update"
 msgid "There was an error uninstalling the package {package} before installing new version:\n{error}.\nPlease try to upgrade again later."
-msgstr "Se ha producido un error al desinstalar el paquete {package} antes de instalar la nueva versión:"
-"{error}."
+msgstr "Se ha producido un error al desinstalar el paquete {package} antes de instalar la nueva versión:\n"
+"{error}.\n"
 "Vuelva a intentar actualizar más tarde."
 
 msgctxt "@error:uninstall"
@@ -639,8 +639,8 @@ msgstr "Parece que la configuración está dañada."
 
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:"
-"- {profiles}"
+msgstr "Parece que la configuración está dañada. Se ha producido un error en los siguientes perfiles:\n"
+"- {profiles}\n"
 " ¿Desea restablecer los valores predeterminados de fábrica? Si los restablece se borrarán sus impresoras y perfiles actuales."
 
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
