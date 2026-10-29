@@ -1,9 +1,6 @@
-import sys
 from unittest.mock import patch, MagicMock
 
 import pytest
-
-import pyArcus as Arcus
 
 from UM.Backend.Backend import Backend
 
@@ -50,49 +47,10 @@ def test_startEngine(backend, process):
 def test_startEngineWithoutCommand(backend):
     backend.getEngineCommand = MagicMock(return_value = None)
 
-    backend._createSocket = MagicMock()
+    backend._prepareBackendServer = MagicMock()
 
     backend.startEngine()
-    backend._createSocket.assert_called_once_with()
-
-
-def test__onSocketStateChanged_listening(backend):
-    backend.startEngine = MagicMock()
-    with patch("UM.Application.Application.getInstance") as get_app:
-        app = MagicMock()
-        app.getUseExternalBackend.return_value = False
-        get_app.return_value = app
-        backend._onSocketStateChanged(Arcus.SocketState.Listening)
-    backend.startEngine.assert_called_once_with()
-
-
-def test_onSocketStateChanged_connected(backend):
-    backend.backendConnected = MagicMock()
-    backend._onSocketStateChanged(Arcus.SocketState.Connected)
-    backend.backendConnected.emit.assert_called_once_with()
-
-
-def test_handleKnownMessage(backend):
-    handler = MagicMock()
-    backend._message_handlers = {"beep": handler}
-    socket = MagicMock()
-    message = MagicMock()
-    message.getTypeName = MagicMock(return_value = "beep")
-    socket.takeNextMessage = MagicMock(return_value = message)
-    backend._socket = socket
-    backend._onMessageReceived()
-
-    handler.assert_called_once_with(message)
-
-
-def test_onSocketBindFailed(backend):
-    port = backend._port
-    backend._createSocket = MagicMock()
-    bind_failed_error = MagicMock()
-    bind_failed_error.getErrorCode = MagicMock(return_value = Arcus.ErrorCode.BindFailedError)
-    backend._onSocketError(bind_failed_error)
-    assert backend._createSocket.call_count == 1
-    assert port + 1 == backend._port
+    backend._prepareBackendServer.assert_called_once_with()
 
 
 def test_getLog(backend):
@@ -115,21 +73,9 @@ def test_runEngineProcessException(backend, exception):
         assert backend._runEngineProcess([""]) is None
 
 
-def test_createSocket(backend):
-    # We're not testing the signal socket here, so mock it
-    mocked_signal_socket = MagicMock()
-    with patch("UM.Backend.Backend.SignalSocket", MagicMock(return_value = mocked_signal_socket)):
-        with patch("UM.Application.Application.getInstance"):
-            backend._createSocket("beep")
-
-            if sys.platform == "win32":
-                mocked_signal_socket.registerAllMessageTypes.assert_called_once_with(b"beep")
-            else:
-                mocked_signal_socket.registerAllMessageTypes.assert_called_once_with("beep")
-
-            # Try to create it again.
-            backend._createSocket("beep")
-            mocked_signal_socket.close.assert_called_once_with()
-
-            backend.close()
-            assert mocked_signal_socket.close.call_count == 2
+def test_closeStopsGrpcServer(backend):
+    server = MagicMock()
+    backend._grpc_server = server
+    backend.close()
+    server.stop.assert_called_once_with()
+    assert backend._grpc_server is None
