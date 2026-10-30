@@ -99,3 +99,24 @@ def test_sendMessageRejectsWhenServerStopped():
     server._stopping.set()
 
     assert not server.send_message(object())
+
+
+def test_exitInstructionClosesStreamAfterQueuedMessages():
+    with patch("UM.Backend.GrpcBackendServer.Application.getInstance") as application:
+        application.return_value.callLater = MagicMock()
+        server = GrpcBackendServer(MagicMock(), MagicMock())
+    queued_output = MagicMock()
+    exit_envelope = MagicMock()
+    exit_envelope.WhichOneof.return_value = "exit_engine"
+    assert server.send_message(queued_output)
+    assert server.send_message(exit_envelope)
+
+    context = MagicMock()
+    context.is_active.return_value = True
+    with patch("UM.Backend.GrpcBackendServer.threading.Thread") as thread:
+        responses = server.run_stream(iter(()), context, MagicMock())
+        assert next(responses) is queued_output
+        assert next(responses) is exit_envelope
+        with pytest.raises(StopIteration):
+            next(responses)
+        thread.return_value.start.assert_called_once_with()

@@ -73,8 +73,6 @@ class GrpcBackendServer:
     def mark_connected(self) -> None:
         self._connected.set()
         self._error = None
-        if self._on_stream_connected:
-            self._application.callLater(self._on_stream_connected)
 
     def run_stream(self, request_iterator, context, on_message: Callable) -> None:
         """Yield response envelopes while reading incoming envelopes concurrently."""
@@ -94,6 +92,8 @@ class GrpcBackendServer:
                 requests_finished.set()
 
         self.mark_connected()
+        if self._on_stream_connected:
+            self._application.callLater(self._on_stream_connected)
         reader = threading.Thread(target=receive_requests, name="CuraEngineGrpcReader", daemon=True)
         reader.start()
         try:
@@ -104,8 +104,13 @@ class GrpcBackendServer:
                     if requests_finished.is_set():
                         break
                     continue
-                if response is not None:
-                    yield response
+                if response is None:
+                    break
+                yield response
+                if getattr(response, "WhichOneof", lambda _: None)("message") == "exit_engine":
+                    break
+                if getattr(response, "WhichOneof", lambda _: None)("message") == "exit_engine":
+                    break
         finally:
             with self._active_stream_lock:
                 self._active_context = None
