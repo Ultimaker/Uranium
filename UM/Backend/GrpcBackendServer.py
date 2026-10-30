@@ -1,12 +1,6 @@
 # Copyright (c) 2026 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-"""Qt-friendly lifecycle wrapper for a Cura Engine gRPC stream server.
-
-The protocol modules are generated from Cura.proto in the Cura project and are
-provided by Cura's generated protocol package.
-"""
-
 from __future__ import annotations
 
 from concurrent import futures
@@ -83,7 +77,6 @@ class GrpcBackendServer:
 
     def run_stream(self, request_iterator, context, on_message: Callable) -> None:
         """Yield response envelopes while reading incoming envelopes concurrently."""
-        outgoing = self._outgoing
         requests_finished = threading.Event()
         self._active_context = context
 
@@ -104,7 +97,7 @@ class GrpcBackendServer:
         try:
             while context.is_active() and not self._stopping.is_set():
                 try:
-                    response = outgoing.get(timeout=0.1)
+                    response = self._outgoing.get(timeout=0.1)
                 except Empty:
                     if requests_finished.is_set():
                         break
@@ -115,7 +108,7 @@ class GrpcBackendServer:
             self._connected.clear()
             while True:
                 try:
-                    outgoing.get_nowait()
+                    self._outgoing.get_nowait()
                 except Empty:
                     break
             if self._on_stream_ended:
