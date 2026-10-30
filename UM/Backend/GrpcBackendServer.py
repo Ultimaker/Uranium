@@ -27,6 +27,7 @@ class GrpcBackendServer:
         self._thread: Optional[threading.Thread] = None
         self._error: Optional[BaseException] = None
         self._active_context = None
+        self._active_stream_lock = threading.Lock()
         self._on_stream_ended: Optional[Callable] = None
         self._on_stream_connected: Optional[Callable] = None
         self._outgoing: Queue = Queue(maxsize=128)
@@ -78,7 +79,8 @@ class GrpcBackendServer:
     def run_stream(self, request_iterator, context, on_message: Callable) -> None:
         """Yield response envelopes while reading incoming envelopes concurrently."""
         requests_finished = threading.Event()
-        self._active_context = context
+        with self._active_stream_lock:
+            self._active_context = context
 
         def receive_requests() -> None:
             try:
@@ -102,9 +104,11 @@ class GrpcBackendServer:
                     if requests_finished.is_set():
                         break
                     continue
-                yield response
+                if response is not None:
+                    yield response
         finally:
-            self._active_context = None
+            with self._active_stream_lock:
+                self._active_context = None
             self._connected.clear()
             while True:
                 try:
@@ -115,8 +119,8 @@ class GrpcBackendServer:
                 self._application.callLater(self._on_stream_ended, self._error)
 
     def send_message(self, envelope) -> bool:
-        """Queue an envelope for the currently connected engine stream."""
-        if self._stopping.is_set() or not self._connected.is_set():
+        """Queue an envelope for the current or next engine stream."""
+        if self._stopping.is_set():
             return False
         try:
             self._outgoing.put_nowait(envelope)
@@ -127,8 +131,13 @@ class GrpcBackendServer:
     def stop(self, grace: float = 1.0) -> None:
         self._stopping.set()
         self._connected.clear()
-        if self._active_context is not None:
-            self._active_context.cancel()
+        with self._active_stream_lock:
+            if self._active_context is not None:
+                self._active_context.cancel()
+        try:
+            self._outgoing.put_nowait(None)
+        except Full:
+            pass
         while True:
             try:
                 self._outgoing.get_nowait()
