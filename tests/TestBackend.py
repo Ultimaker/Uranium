@@ -3,6 +3,7 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 from UM.Backend.Backend import Backend
+from UM.Backend.GrpcBackendServer import GrpcBackendServer
 
 @pytest.fixture
 def backend():
@@ -79,3 +80,22 @@ def test_closeStopsGrpcServer(backend):
     backend.close()
     server.stop.assert_called_once_with()
     assert backend._grpc_server is None
+
+
+def test_sendMessageQueuesBeforeEngineConnection():
+    with patch("UM.Backend.GrpcBackendServer.Application.getInstance") as application:
+        application.return_value.callLater = MagicMock()
+        server = GrpcBackendServer(MagicMock(), MagicMock())
+    envelope = object()
+
+    assert server.send_message(envelope)
+    assert server._outgoing.get_nowait() is envelope
+
+
+def test_sendMessageRejectsWhenServerStopped():
+    with patch("UM.Backend.GrpcBackendServer.Application.getInstance") as application:
+        application.return_value.callLater = MagicMock()
+        server = GrpcBackendServer(MagicMock(), MagicMock())
+    server._stopping.set()
+
+    assert not server.send_message(object())
