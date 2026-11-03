@@ -7,9 +7,11 @@ from concurrent import futures
 from queue import Empty, Full, Queue
 import threading
 from typing import Callable, Optional
-
 import grpc
+
+from UM.Logger import Logger
 from UM.Application import Application
+from UM.Signal import Signal
 
 
 class GrpcBackendServer:
@@ -32,6 +34,8 @@ class GrpcBackendServer:
         self._on_stream_connected: Optional[Callable] = None
         self._outgoing: Queue = Queue(maxsize=128)
         self._application = Application.getInstance()
+
+        self.messageReceived = Signal()
 
     @property
     def port(self) -> int:
@@ -58,13 +62,17 @@ class GrpcBackendServer:
                         ("grpc.max_receive_message_length", 500 * 1024 * 1024),
                     ),
                 )
+
                 self._add_servicer(self._servicer, server)
                 port = server.add_insecure_port(f"{self._host}:{self._port}")
+
                 if port:
                     self._server = server
                     self._server.start()
                     return self._port
+
                 self._port += 1
+
             raise RuntimeError("Could not bind the Cura Engine gRPC endpoint")
 
     def wait_for_connection(self, timeout: float = 10.0) -> bool:
@@ -85,7 +93,9 @@ class GrpcBackendServer:
                 for envelope in request_iterator:
                     if self._stopping.is_set() or not context.is_active():
                         break
-                    self._application.callLater(on_message, envelope)
+                    # self._application.callLater(on_message, envelope)
+                    Logger.debug(f"Received GRPC message {envelope.WhichOneof("message")}")
+                    self.messageReceived.emit(envelope)
             except BaseException as error:
                 self._error = error
             finally:
@@ -94,32 +104,39 @@ class GrpcBackendServer:
         self.mark_connected()
         if self._on_stream_connected:
             self._application.callLater(self._on_stream_connected)
+
         reader = threading.Thread(target=receive_requests, name="CuraEngineGrpcReader", daemon=True)
         reader.start()
+
         try:
             while context.is_active() and not self._stopping.is_set():
                 try:
                     response = self._outgoing.get(timeout=0.1)
+
+                    if getattr(response, "WhichOneof", lambda _: None)("message") == "exit_engine":
+                        Logger.debug("Sending an EXIT ENGINE message")
+
                 except Empty:
                     if requests_finished.is_set():
                         break
                     continue
+
                 if response is None:
                     break
+
                 yield response
-                if getattr(response, "WhichOneof", lambda _: None)("message") == "exit_engine":
-                    break
-                if getattr(response, "WhichOneof", lambda _: None)("message") == "exit_engine":
-                    break
         finally:
             with self._active_stream_lock:
                 self._active_context = None
+
             self._connected.clear()
+
             while True:
                 try:
                     self._outgoing.get_nowait()
                 except Empty:
                     break
+
             if self._on_stream_ended:
                 self._application.callLater(self._on_stream_ended, self._error)
 
@@ -127,6 +144,7 @@ class GrpcBackendServer:
         """Queue an envelope for the current or next engine stream."""
         if self._stopping.is_set():
             return False
+
         try:
             self._outgoing.put_nowait(envelope)
             return True
@@ -136,19 +154,24 @@ class GrpcBackendServer:
     def stop(self, grace: float = 1.0) -> None:
         self._stopping.set()
         self._connected.clear()
+
         with self._active_stream_lock:
             if self._active_context is not None:
                 self._active_context.cancel()
+
         try:
             self._outgoing.put_nowait(None)
         except Full:
             pass
+
         while True:
             try:
                 self._outgoing.get_nowait()
             except Empty:
                 break
+
         with self._lock:
             server, self._server = self._server, None
+
         if server is not None:
             server.stop(grace).wait(timeout=max(grace + 1.0, 2.0))
