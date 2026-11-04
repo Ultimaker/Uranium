@@ -17,9 +17,7 @@ from UM.Signal import Signal
 class GrpcBackendServer:
     """Runs one gRPC server endpoint and forwards stream messages to Qt's loop."""
 
-    def __init__(self, servicer, add_servicer: Callable, host: str = "127.0.0.1", first_port: int = 49674):
-        self._servicer = servicer
-        self._add_servicer = add_servicer
+    def __init__(self, host: str = "127.0.0.1", first_port: int = 49674):
         self._host = host
         self._port = first_port
         self._server: Optional[grpc.Server] = None
@@ -30,11 +28,11 @@ class GrpcBackendServer:
         self._error: Optional[BaseException] = None
         self._active_context = None
         self._active_stream_lock = threading.Lock()
-        self._on_stream_ended: Optional[Callable] = None
-        self._on_stream_connected: Optional[Callable] = None
         self._outgoing: Queue = Queue(maxsize=128)
         self._application = Application.getInstance()
 
+        self.streamConnected = Signal()
+        self.streamEnded = Signal()
         self.messageReceived = Signal()
 
     @property
@@ -49,7 +47,7 @@ class GrpcBackendServer:
     def error(self) -> Optional[BaseException]:
         return self._error
 
-    def start(self) -> int:
+    def start(self, servicer, add_servicer) -> int:
         with self._lock:
             if self._server is not None:
                 return self._port
@@ -63,7 +61,7 @@ class GrpcBackendServer:
                     ),
                 )
 
-                self._add_servicer(self._servicer, server)
+                add_servicer(servicer, server)
                 port = server.add_insecure_port(f"{self._host}:{self._port}")
 
                 if port:
@@ -82,7 +80,7 @@ class GrpcBackendServer:
         self._connected.set()
         self._error = None
 
-    def run_stream(self, request_iterator, context, on_message: Callable) -> None:
+    def run_stream(self, request_iterator, context) -> None:
         """Yield response envelopes while reading incoming envelopes concurrently."""
         requests_finished = threading.Event()
         with self._active_stream_lock:
@@ -93,8 +91,6 @@ class GrpcBackendServer:
                 for envelope in request_iterator:
                     if self._stopping.is_set() or not context.is_active():
                         break
-                    # self._application.callLater(on_message, envelope)
-                    Logger.debug(f"Received GRPC message {envelope.WhichOneof("message")}")
                     self.messageReceived.emit(envelope)
             except BaseException as error:
                 self._error = error
@@ -102,8 +98,7 @@ class GrpcBackendServer:
                 requests_finished.set()
 
         self.mark_connected()
-        if self._on_stream_connected:
-            self._application.callLater(self._on_stream_connected)
+        self.streamConnected.emit()
 
         reader = threading.Thread(target=receive_requests, name="CuraEngineGrpcReader", daemon=True)
         reader.start()
@@ -137,8 +132,7 @@ class GrpcBackendServer:
                 except Empty:
                     break
 
-            if self._on_stream_ended:
-                self._application.callLater(self._on_stream_ended, self._error)
+            self.streamEnded.emit(self._error)
 
     def send_message(self, envelope) -> bool:
         """Queue an envelope for the current or next engine stream."""
