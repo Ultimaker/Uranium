@@ -4,15 +4,19 @@
 from enum import IntEnum
 import subprocess
 import sys
+import grpc
 import threading
-from typing import Any, Dict, Optional, List, Callable, TextIO
+from typing import Any, Dict, Optional, List, Callable, TextIO, Tuple, TYPE_CHECKING
 
 from UM.Backend.GrpcBackendServer import GrpcBackendServer
 from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
-import UM.Application
+from UM.Application import Application
 from UM.PluginObject import PluginObject
-from UM.Platform import Platform
+
+if TYPE_CHECKING:
+    import google.protobuf.message.Message as ProtoMessage
+    from grpc.framework.interfaces.base.base import Servicer as GrpcServicer
 
 class BackendState(IntEnum):
     """
@@ -39,12 +43,13 @@ class BackendState(IntEnum):
 class Backend(PluginObject):
     """
     Base class for any backend communication (separate piece of software).
-    Cura supplies the Cura-specific gRPC service and protobuf message handlers.
+    The message_handlers dict should be filled with (string (name of proto message), callback function) pairs.
     """
 
     def __init__(self) -> None:
         super().__init__()
 
+        self._message_handlers: Dict[str, Callable[[ProtoMessage], None]] = {}
         self._grpc_server: Optional[GrpcBackendServer] = None
         self._port = 49674
         self._process: Optional[subprocess.Popen] = None
@@ -53,7 +58,7 @@ class Backend(PluginObject):
 
         self._backend_state: BackendState = BackendState.NotStarted
 
-        UM.Application.Application.getInstance().callLater(self._prepareBackendServer)
+        Application.getInstance().callLater(self._prepareBackendServer)
 
     processingProgress = Signal()
     backendStateChange = Signal()
@@ -74,6 +79,9 @@ class Backend(PluginObject):
         Start the backend / engine.
         Runs the engine, this is only called when the socket is fully opened & ready to accept connections
         """
+
+        if Application.getInstance().getUseExternalBackend():
+            return
 
         command = self.getEngineCommand()
         if not command:
@@ -206,22 +214,30 @@ class Backend(PluginObject):
                 break
             self._backendLog(line)
 
-    def _prepareBackendServer(self) -> None:
-        """Cura overrides this to install its generated Cura gRPC service."""
-        raise NotImplementedError("Cura must install the Cura Engine gRPC service")
+    def _onMessageReceived(self, envelope: "ProtoMessage") -> None:
+        message_case = envelope.WhichOneof("message")
+        handler = self._message_handlers.get(message_case)
 
-    def _createGrpcBackendServer(self, servicer, add_servicer) -> GrpcBackendServer:
-        """Bind the localhost service endpoint and start its gRPC server."""
-        if self._grpc_server:
-            self._grpc_server.stop()
-        self._grpc_server = GrpcBackendServer(servicer, add_servicer, first_port=self._port)
-        self._grpc_server._on_stream_connected = self._onEngineConnected
-        self._port = self._grpc_server.start()
-        if UM.Application.Application.getInstance().getUseExternalBackend():
-            Logger.log("i", "Listening for engine connections on %s", self._port)
-        else:
-            self.startEngine()
-        return self._grpc_server
+        if handler is None:
+            Logger.error(f"Unhandled backend gRPC message: {message_case}")
+            return
+
+        handler(getattr(envelope, message_case))
+
+    def _prepareBackendServer(self) -> None:
+        """Ensure the Cura gRPC endpoint exists and start an internal engine if needed."""
+        if self._grpc_server is None:
+            servicer, add_servicer = self._makeGrpcServicerAndAdder()
+            self._grpc_server = GrpcBackendServer(servicer, add_servicer, first_port=self._port)
+            self._grpc_server._on_stream_connected = self._onEngineConnected
+            self._grpc_server._on_stream_ended = self._onGrpcStreamEnded
+            self._grpc_server.messageReceived.connect(self._onMessageReceived)
+            self._port = self._grpc_server.start()
+
+        self.startEngine()
+
+    def _makeGrpcServicerAndAdder(self) -> Tuple["GrpcServicer", Callable[["GrpcServicer", grpc.server], None]]:
+        raise NotImplementedError("Engine handler should define the gRPC servicer and add_servicer function")
 
     def _onEngineConnected(self) -> None:
         Logger.log("d", "Engine connected on port %s", self._port)
