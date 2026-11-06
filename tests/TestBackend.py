@@ -1,3 +1,5 @@
+from concurrent.futures import ThreadPoolExecutor
+from threading import Event
 from unittest.mock import patch, MagicMock
 
 import pytest
@@ -83,31 +85,71 @@ def test_closeStopsGrpcServer(backend):
 
 
 def test_sendMessageQueuesBeforeEngineConnection():
-    with patch("UM.Backend.GrpcBackendServer.Application.getInstance") as application:
-        application.return_value.callLater = MagicMock()
-        server = GrpcBackendServer(MagicMock(), MagicMock())
+    server = GrpcBackendServer()
     envelope = object()
 
     assert server.send_message(envelope)
     assert server._outgoing.get_nowait() is envelope
 
 
-def test_exitInstructionClosesStreamAfterQueuedMessages():
-    with patch("UM.Backend.GrpcBackendServer.Application.getInstance") as application:
-        application.return_value.callLater = MagicMock()
-        server = GrpcBackendServer(MagicMock(), MagicMock())
+def test_streamYieldsExitInstructionAndRemainsOpenUntilClientEnds():
+    server = GrpcBackendServer()
     queued_output = MagicMock()
     exit_envelope = MagicMock()
     exit_envelope.WhichOneof.return_value = "exit_engine"
-    assert server.send_message(queued_output)
-    assert server.send_message(exit_envelope)
 
     context = MagicMock()
     context.is_active.return_value = True
-    with patch("UM.Backend.GrpcBackendServer.threading.Thread") as thread:
-        responses = server.run_stream(iter(()), context, MagicMock())
-        assert next(responses) is queued_output
-        assert next(responses) is exit_envelope
-        with pytest.raises(StopIteration):
-            next(responses)
-        thread.return_value.start.assert_called_once_with()
+    release_client = Event()
+    request_received = Event()
+
+    def requests():
+        yield MagicMock()
+        release_client.wait()
+
+    server.messageReceived.emit = lambda _envelope: request_received.set()
+    server.streamEnded.emit = MagicMock()
+    responses = server.run_stream(requests(), context)
+    end_of_stream = object()
+
+    def next_response():
+        try:
+            return next(responses)
+        except StopIteration:
+            return end_of_stream
+
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        response_future = executor.submit(next_response)
+        try:
+            assert request_received.wait(timeout=2)
+
+            assert server.send_message(queued_output)
+            assert response_future.result(timeout=2) is queued_output
+
+            response_future = executor.submit(next_response)
+            assert server.send_message(exit_envelope)
+            assert response_future.result(timeout=2) is exit_envelope
+
+            # ExitEngine is delivered to the engine, but the bidirectional stream stays
+            # alive until the engine closes its request side.
+            assert server.connected
+            server.streamEnded.emit.assert_not_called()
+
+            response_future = executor.submit(next_response)
+            assert not response_future.done()
+        finally:
+            release_client.set()
+
+        assert response_future.result(timeout=2) is end_of_stream
+
+    assert not server.connected
+    server.streamEnded.emit.assert_called_once_with(None)
+
+
+def test_sendMessageReturnsFalseWhenQueueIsFull():
+    server = GrpcBackendServer()
+
+    for _ in range(server._outgoing.maxsize):
+        assert server.send_message(object())
+
+    assert not server.send_message(object())
