@@ -235,7 +235,7 @@ class Backend(PluginObject):
 
         self.startEngine()
 
-    def _makeGrpcServicerAndAdder(self) -> Tuple["GrpcServicer", Callable[["GrpcServicer", grpc.server], None]]:
+    def _makeGrpcServicerAndAdder(self) -> Tuple["GrpcServicer", Callable[["GrpcServicer", grpc.Server], None]]:
         raise NotImplementedError("Engine handler should define the gRPC servicer and add_servicer function")
 
     def _onEngineConnected(self) -> None:

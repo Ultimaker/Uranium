@@ -6,8 +6,7 @@ from __future__ import annotations
 from concurrent import futures
 from queue import Empty, Full, Queue
 import threading
-from typing import Optional, Callable, TYPE_CHECKING
-from urllib import response
+from typing import Callable, Iterator, Optional, TYPE_CHECKING
 
 import grpc
 
@@ -15,22 +14,22 @@ from UM.Signal import Signal
 from UM.Logger import Logger
 
 if TYPE_CHECKING:
-    import google.protobuf.message.Message as ProtoMessage
+    from google.protobuf.message import Message as ProtoMessage
     from grpc.framework.interfaces.base.base import Servicer as GrpcServicer
 
 
 class GrpcBackendServer:
     """Runs one gRPC server endpoint and forwards stream messages to Qt's loop."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._port: int = 0
         self._server: Optional[grpc.Server] = None
         self._connected: threading.Event = threading.Event()
         self._server_stopping: threading.Event = threading.Event()
         self._error: Optional[BaseException] = None
-        self._active_client_context = None
+        self._active_client_context: Optional[grpc.ServicerContext] = None
         self._active_client_context_lock = threading.Lock()
-        self._outgoing: Queue["ProtoMessage"] = Queue(maxsize=128)
+        self._outgoing: Queue[Optional["ProtoMessage"]] = Queue(maxsize=128)
 
         self.streamConnected = Signal()
         self.streamEnded = Signal()
@@ -40,7 +39,13 @@ class GrpcBackendServer:
     def connected(self) -> bool:
         return self._connected.is_set()
 
-    def start(self, host: str, first_port: int, servicer: "GrpcServicer", add_servicer: Callable[["GrpcServicer", grpc.server], None]) -> int:
+    def start(
+        self,
+        host: str,
+        first_port: int,
+        servicer: "GrpcServicer",
+        add_servicer: Callable[["GrpcServicer", grpc.Server], None],
+    ) -> int:
         if self._server is not None:
             return self._port
 
@@ -66,7 +71,11 @@ class GrpcBackendServer:
 
         raise RuntimeError("Could not bind the Cura Engine gRPC endpoint")
 
-    def run_stream(self, request_iterator, context) -> Optional[ProtoMessage]:
+    def run_stream(
+        self,
+        request_iterator: Iterator["ProtoMessage"],
+        context: grpc.ServicerContext,
+    ) -> Iterator["ProtoMessage"]:
         """Yield response envelopes while reading incoming envelopes concurrently."""
         with self._active_client_context_lock:
             self._active_client_context = context
@@ -125,7 +134,7 @@ class GrpcBackendServer:
 
             self.streamEnded.emit(self._error)
 
-    def send_message(self, envelope) -> bool:
+    def send_message(self, envelope: "ProtoMessage") -> bool:
         """Queue an envelope for the current or next engine stream."""
         try:
             self._outgoing.put_nowait(envelope)
