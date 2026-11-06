@@ -4,19 +4,19 @@
 from enum import IntEnum
 import subprocess
 import sys
+import grpc
 import threading
-from time import sleep
-from typing import Any, Dict, Optional, List, Callable, TextIO
+from typing import Any, Dict, Optional, List, Callable, TextIO, Tuple, TYPE_CHECKING
 
-from UM.Backend.SignalSocket import SignalSocket
+from UM.Backend.GrpcBackendServer import GrpcBackendServer
 from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
-import UM.Application
+from UM.Application import Application
 from UM.PluginObject import PluginObject
-from UM.Platform import Platform
 
-import pyArcus as Arcus
-
+if TYPE_CHECKING:
+    import google.protobuf.message.Message as ProtoMessage
+    from grpc.framework.interfaces.base.base import Servicer as GrpcServicer
 
 class BackendState(IntEnum):
     """
@@ -43,16 +43,14 @@ class BackendState(IntEnum):
 class Backend(PluginObject):
     """
     Base class for any backend communication (separate piece of software).
-    It makes use of the Socket class from libArcus for the actual communication bits.
-    The message_handlers dict should be filled with string (full name of proto message), function pairs.
+    The message_handlers dict should be filled with (string (name of proto message), callback function) pairs.
     """
 
     def __init__(self) -> None:
         super().__init__()
 
-        self._message_handlers: Dict[str, Callable[Arcus.PythonMessage]] = {}
-
-        self._socket = None
+        self._message_handlers: Dict[str, Callable[[ProtoMessage], None]] = {}
+        self._grpc_server: Optional[GrpcBackendServer] = None
         self._port = 49674
         self._process: Optional[subprocess.Popen] = None
         self._backend_log: List[bytes] = []
@@ -60,7 +58,7 @@ class Backend(PluginObject):
 
         self._backend_state: BackendState = BackendState.NotStarted
 
-        UM.Application.Application.getInstance().callLater(self._createSocket)
+        Application.getInstance().callLater(self._prepareBackendServer)
 
     processingProgress = Signal()
     backendStateChange = Signal()
@@ -82,9 +80,12 @@ class Backend(PluginObject):
         Runs the engine, this is only called when the socket is fully opened & ready to accept connections
         """
 
+        if Application.getInstance().getUseExternalBackend():
+            return
+
         command = self.getEngineCommand()
         if not command:
-            self._createSocket()
+            self._prepareBackendServer()
             return
 
         self._flushBackendLog()
@@ -122,10 +123,9 @@ class Backend(PluginObject):
             self._backend_log = []
 
     def close(self) -> None:
-        if self._socket:
-            while self._socket.getState() == Arcus.SocketState.Opening:
-                sleep(0.1)
-            self._socket.close()
+        if self._grpc_server:
+            self._grpc_server.stop()
+            self._grpc_server = None
 
     @staticmethod
     def _decodeLine(line: bytes) -> str:
@@ -154,7 +154,7 @@ class Backend(PluginObject):
     def getEngineCommand(self) -> List[str]:
         """Get the command used to start the backend executable """
 
-        return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "--port", str(self._socket.getPort())]
+        return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "connect", f"127.0.0.1:{self._port}"]
 
     def _runEngineProcess(self, command_list: List[str]) -> Optional[subprocess.Popen]:
         """
@@ -214,105 +214,30 @@ class Backend(PluginObject):
                 break
             self._backendLog(line)
 
-    def _onSocketStateChanged(self, state: Arcus.SocketState) -> None:
-        """Private socket state changed handler."""
+    def _onMessageReceived(self, envelope: "ProtoMessage") -> None:
+        message_case = envelope.WhichOneof("message")
+        handler = self._message_handlers.get(message_case)
 
-        self._logSocketState(state)
-        if state == Arcus.SocketState.Listening:
-            if not UM.Application.Application.getInstance().getUseExternalBackend():
-                self.startEngine()
-        elif state == Arcus.SocketState.Connected:
-            Logger.log("d", "Backend connected on port %s", self._port)
-            self.backendConnected.emit()
-
-    def _logSocketState(self, state: Arcus.SocketState) -> None:
-        """Debug function created to provide more info for CURA-2127"""
-
-        if state == Arcus.SocketState.Listening:
-            Logger.log("d", "Socket state changed to Listening")
-        elif state == Arcus.SocketState.Connecting:
-            Logger.log("d", "Socket state changed to Connecting")
-        elif state == Arcus.SocketState.Connected:
-            Logger.log("d", "Socket state changed to Connected")
-        elif state == Arcus.SocketState.Error:
-            Logger.log("d", "Socket state changed to Error")
-        elif state == Arcus.SocketState.Closing:
-            Logger.log("d", "Socket state changed to Closing")
-        elif state == Arcus.SocketState.Closed:
-            Logger.log("d", "Socket state changed to Closed")
-
-    def _onMessageReceived(self) -> None:
-        """Protected message handler"""
-
-        message = self._socket.takeNextMessage()
-
-        if message.getTypeName() not in self._message_handlers:
-            Logger.log("e", "No handler defined for message of type %s", message.getTypeName())
+        if handler is None:
+            Logger.error(f"Unhandled backend gRPC message: {message_case}")
             return
 
-        self._message_handlers[message.getTypeName()](message)
+        handler(getattr(envelope, message_case))
 
-    def _onSocketError(self, error: Arcus.ErrorCode) -> None:
-        """Private socket error handler"""
+    def _prepareBackendServer(self) -> None:
+        """Ensure the Cura gRPC endpoint exists and start an internal engine if needed."""
+        if self._grpc_server is None:
+            self._grpc_server = GrpcBackendServer()
+            servicer, add_servicer = self._makeGrpcServicerAndAdder()
+            self._grpc_server.streamConnected.connect(self._onEngineConnected)
+            self._grpc_server.messageReceived.connect(self._onMessageReceived)
+            self._port = self._grpc_server.start("127.0.0.1", self._port, servicer, add_servicer)
 
-        if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
-            self._port += 1
-            Logger.log("d", "Socket was unable to bind to port, increasing port number to %s", self._port)
-        elif error.getErrorCode() == Arcus.ErrorCode.ConnectionResetError:
-            Logger.log("i", "Backend crashed or closed.")
-        elif error.getErrorCode() == Arcus.ErrorCode.Debug:
-            Logger.log("d", "Socket debug: %s", str(error))
-            return
-        elif error.getErrorCode() == Arcus.ErrorCode.MessageTooBigError:
-            Logger.log("w", "Message was too big to be sent", str(error))
-            return
-        else:
-            Logger.log("w", "Unhandled socket error %s", str(error.getErrorCode()))
+        self.startEngine()
 
-        self._createSocket()
+    def _makeGrpcServicerAndAdder(self) -> Tuple["GrpcServicer", Callable[["GrpcServicer", grpc.Server], None]]:
+        raise NotImplementedError("Engine handler should define the gRPC servicer and add_servicer function")
 
-    def _cleanupExistingSocket(self) -> None:
-        self._socket.stateChanged.disconnect(self._onSocketStateChanged)
-        self._socket.messageReceived.disconnect(self._onMessageReceived)
-        self._socket.error.disconnect(self._onSocketError)
-        # Hack for (at least) Linux. If the socket is connecting, the close will deadlock.
-        while self._socket.getState() == Arcus.SocketState.Opening:
-            sleep(0.1)
-        # If the error occurred due to parsing, both connections believe that connection is okay.
-        # So we need to force a close.
-        self._socket.close()
-
-    def _createSocket(self, protocol_file: Optional[str] = None) -> None:
-        """
-        Create a socket for communication with an external backend.
-
-        :param protocol_file: Optional. The path to the protocol file. Default is None.
-        :return: None
-        """
-        if not protocol_file:
-            Logger.warn("Unable to create socket without protocol file!")
-            return
-
-        if self._socket:
-            Logger.log("d", "Previous socket existed. Closing that first.") # temp debug logging
-            self._cleanupExistingSocket()
-
-        self._socket = SignalSocket()
-        self._socket.stateChanged.connect(self._onSocketStateChanged)
-        self._socket.messageReceived.connect(self._onMessageReceived)
-        self._socket.error.connect(self._onSocketError)
-
-        if Platform.isWindows():
-            # On Windows, the Protobuf DiskSourceTree does stupid things with paths.
-            # So convert to forward slashes here so it finds the proto file properly.
-            # Using sys.getfilesystemencoding() avoid the application crashing if it is
-            # installed on a path with non-ascii characters GitHub issue #3907
-            protocol_file = protocol_file.replace("\\", "/").encode(sys.getfilesystemencoding())
-
-        if not self._socket.registerAllMessageTypes(protocol_file):
-            Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
-
-        if UM.Application.Application.getInstance().getUseExternalBackend():
-            Logger.log("i", "Listening for backend connections on %s", self._port)
-
-        self._socket.listen("127.0.0.1", self._port)
+    def _onEngineConnected(self) -> None:
+        Logger.log("d", "Engine connected on port %s", self._port)
+        self.backendConnected.emit()
