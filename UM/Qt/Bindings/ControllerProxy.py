@@ -3,7 +3,7 @@
 import os
 from typing import Any
 
-from PyQt6.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty, QUrl, QVariant
+from PyQt6.QtCore import QObject, pyqtSlot, pyqtSignal, pyqtProperty, QUrl, QVariant, QTimer, Qt
 
 from UM.Application import Application
 from UM.Scene.Selection import Selection
@@ -26,6 +26,12 @@ class ControllerProxy(QObject):
 
         self._active_tool = None
         self._properties = {}
+        # Coalesce panel refreshes during a tool operation without delaying transforms.
+        self._property_update_timer = QTimer(self)
+        self._property_update_timer.setSingleShot(True)
+        self._property_update_timer.setInterval(16)
+        self._property_update_timer.setTimerType(Qt.TimerType.PreciseTimer)
+        self._property_update_timer.timeout.connect(self._updateProperties)
         Application.getInstance().getController().activeToolChanged.connect(self._onActiveToolChanged)
         self._onActiveToolChanged()
 
@@ -124,6 +130,9 @@ class ControllerProxy(QObject):
         self.toolsEnabledChanged.emit()
 
     def _onToolOperationStopped(self, tool):
+        if self._property_update_timer.isActive():
+            self._property_update_timer.stop()
+            self._updateProperties()
         self._tools_enabled = True
         self._controller.setToolsEnabled(True)
         self.toolsEnabledChanged.emit()
@@ -206,9 +215,14 @@ class ControllerProxy(QObject):
             setattr(self._active_tool, property, value)
 
     def _onPropertyChanged(self):
+        if not self._tools_enabled:
+            if not self._property_update_timer.isActive():
+                self._property_update_timer.start()
+            return
         self._updateProperties()
 
     def _onActiveToolChanged(self):
+        self._property_update_timer.stop()
         if self._active_tool:
             self._active_tool.propertyChanged.disconnect(self._onPropertyChanged)
 

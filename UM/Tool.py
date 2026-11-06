@@ -97,7 +97,10 @@ class Tool(PluginObject):
                 self._handle.setParent(self.getController().getScene().getRoot())
                 self._handle.setEnabled(True)
 
-        if event.type == Event.MouseMoveEvent and self._handle:
+        if (event.type == Event.MouseMoveEvent and self._handle
+                and self._drag_plane is None
+                and MouseEvent.RightButton not in cast(MouseEvent, event).buttons
+                and MouseEvent.MiddleButton not in cast(MouseEvent, event).buttons):
             event = cast(MouseEvent, event)
             if self._locked_axis != ToolHandle.NoAxis:
                 return False
