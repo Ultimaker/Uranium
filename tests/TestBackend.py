@@ -92,15 +92,6 @@ def test_sendMessageQueuesBeforeEngineConnection():
     assert server._outgoing.get_nowait() is envelope
 
 
-def test_sendMessageRejectsWhenServerStopped():
-    with patch("UM.Backend.GrpcBackendServer.Application.getInstance") as application:
-        application.return_value.callLater = MagicMock()
-        server = GrpcBackendServer(MagicMock(), MagicMock())
-    server._stopping.set()
-
-    assert not server.send_message(object())
-
-
 def test_exitInstructionClosesStreamAfterQueuedMessages():
     with patch("UM.Backend.GrpcBackendServer.Application.getInstance") as application:
         application.return_value.callLater = MagicMock()

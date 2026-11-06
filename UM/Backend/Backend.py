@@ -227,11 +227,11 @@ class Backend(PluginObject):
     def _prepareBackendServer(self) -> None:
         """Ensure the Cura gRPC endpoint exists and start an internal engine if needed."""
         if self._grpc_server is None:
-            self._grpc_server = GrpcBackendServer(first_port=self._port)
+            self._grpc_server = GrpcBackendServer()
             servicer, add_servicer = self._makeGrpcServicerAndAdder()
             self._grpc_server.streamConnected.connect(self._onEngineConnected)
             self._grpc_server.messageReceived.connect(self._onMessageReceived)
-            self._port = self._grpc_server.start(servicer, add_servicer)
+            self._port = self._grpc_server.start("127.0.0.1", self._port, servicer, add_servicer)
 
         self.startEngine()
 

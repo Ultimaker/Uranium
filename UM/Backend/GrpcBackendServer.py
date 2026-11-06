@@ -6,166 +6,144 @@ from __future__ import annotations
 from concurrent import futures
 from queue import Empty, Full, Queue
 import threading
-from typing import Callable, Optional
+from typing import Optional, Callable, TYPE_CHECKING
+from urllib import response
+
 import grpc
 
-from UM.Logger import Logger
-from UM.Application import Application
 from UM.Signal import Signal
+from UM.Logger import Logger
+
+if TYPE_CHECKING:
+    import google.protobuf.message.Message as ProtoMessage
+    from grpc.framework.interfaces.base.base import Servicer as GrpcServicer
 
 
 class GrpcBackendServer:
     """Runs one gRPC server endpoint and forwards stream messages to Qt's loop."""
 
-    def __init__(self, host: str = "127.0.0.1", first_port: int = 49674):
-        self._host = host
-        self._port = first_port
+    def __init__(self):
+        self._port: int = 0
         self._server: Optional[grpc.Server] = None
-        self._lock = threading.Lock()
-        self._connected = threading.Event()
-        self._stopping = threading.Event()
-        self._thread: Optional[threading.Thread] = None
+        self._connected: threading.Event = threading.Event()
+        self._server_stopping: threading.Event = threading.Event()
         self._error: Optional[BaseException] = None
-        self._active_context = None
-        self._active_stream_lock = threading.Lock()
-        self._outgoing: Queue = Queue(maxsize=128)
-        self._application = Application.getInstance()
+        self._active_client_context = None
+        self._active_client_context_lock = threading.Lock()
+        self._outgoing: Queue["ProtoMessage"] = Queue(maxsize=128)
 
         self.streamConnected = Signal()
         self.streamEnded = Signal()
         self.messageReceived = Signal()
 
     @property
-    def port(self) -> int:
-        return self._port
-
-    @property
     def connected(self) -> bool:
         return self._connected.is_set()
 
-    @property
-    def error(self) -> Optional[BaseException]:
-        return self._error
+    def start(self, host: str, first_port: int, servicer: "GrpcServicer", add_servicer: Callable[["GrpcServicer", grpc.server], None]) -> int:
+        if self._server is not None:
+            return self._port
 
-    def start(self, servicer, add_servicer) -> int:
-        with self._lock:
-            if self._server is not None:
+        self._port = first_port
+        while self._port < 65535:
+            server = grpc.server(
+                futures.ThreadPoolExecutor(max_workers=4),
+                options=(
+                    ("grpc.max_send_message_length", 500 * 1024 * 1024),
+                    ("grpc.max_receive_message_length", 500 * 1024 * 1024),
+                ),
+            )
+
+            add_servicer(servicer, server)
+            port = server.add_insecure_port(f"{host}:{self._port}")
+
+            if port:
+                self._server = server
+                self._server.start()
                 return self._port
 
-            while self._port < 65535:
-                server = grpc.server(
-                    futures.ThreadPoolExecutor(max_workers=4),
-                    options=(
-                        ("grpc.max_send_message_length", 500 * 1024 * 1024),
-                        ("grpc.max_receive_message_length", 500 * 1024 * 1024),
-                    ),
-                )
+            self._port += 1
 
-                add_servicer(servicer, server)
-                port = server.add_insecure_port(f"{self._host}:{self._port}")
+        raise RuntimeError("Could not bind the Cura Engine gRPC endpoint")
 
-                if port:
-                    self._server = server
-                    self._server.start()
-                    return self._port
-
-                self._port += 1
-
-            raise RuntimeError("Could not bind the Cura Engine gRPC endpoint")
-
-    def wait_for_connection(self, timeout: float = 10.0) -> bool:
-        return self._connected.wait(timeout)
-
-    def mark_connected(self) -> None:
-        self._connected.set()
-        self._error = None
-
-    def run_stream(self, request_iterator, context) -> None:
+    def run_stream(self, request_iterator, context) -> Optional[ProtoMessage]:
         """Yield response envelopes while reading incoming envelopes concurrently."""
-        requests_finished = threading.Event()
-        with self._active_stream_lock:
-            self._active_context = context
+        with self._active_client_context_lock:
+            self._active_client_context = context
 
-        def receive_requests() -> None:
-            try:
-                for envelope in request_iterator:
-                    if self._stopping.is_set() or not context.is_active():
-                        break
-                    self.messageReceived.emit(envelope)
-            except BaseException as error:
-                self._error = error
-            finally:
-                requests_finished.set()
+        client_stopping = threading.Event()
 
-        self.mark_connected()
-        self.streamConnected.emit()
-
-        reader = threading.Thread(target=receive_requests, name="CuraEngineGrpcReader", daemon=True)
-        reader.start()
-
-        try:
-            while context.is_active() and not self._stopping.is_set():
-                try:
-                    response = self._outgoing.get(timeout=0.1)
-
-                    if getattr(response, "WhichOneof", lambda _: None)("message") == "exit_engine":
-                        Logger.debug("Sending an EXIT ENGINE message")
-
-                except Empty:
-                    if requests_finished.is_set():
-                        break
-                    continue
-
-                if response is None:
-                    break
-
-                yield response
-        finally:
-            with self._active_stream_lock:
-                self._active_context = None
-
-            self._connected.clear()
-
-            while True:
-                try:
-                    self._outgoing.get_nowait()
-                except Empty:
-                    break
-
-            self.streamEnded.emit(self._error)
-
-    def send_message(self, envelope) -> bool:
-        """Queue an envelope for the current or next engine stream."""
-        if self._stopping.is_set():
-            return False
-
-        try:
-            self._outgoing.put_nowait(envelope)
-            return True
-        except Full:
-            return False
-
-    def stop(self, grace: float = 1.0) -> None:
-        self._stopping.set()
-        self._connected.clear()
-
-        with self._active_stream_lock:
-            if self._active_context is not None:
-                self._active_context.cancel()
-
-        try:
-            self._outgoing.put_nowait(None)
-        except Full:
-            pass
-
+        # Clear the outgoing messages queue
         while True:
             try:
                 self._outgoing.get_nowait()
             except Empty:
                 break
 
-        with self._lock:
-            server, self._server = self._server, None
+        def receive_requests() -> None:
+            try:
+                for envelope in request_iterator:
+                    if self._server_stopping.is_set() or client_stopping.set() or not context.is_active():
+                        break
+                    Logger.debug(f"<<<<<<<<<<<<< Received message {envelope.WhichOneof("message")}")
+                    self.messageReceived.emit(envelope)
+            except BaseException as error:
+                self._error = error
+            finally:
+                client_stopping.set()
 
-        if server is not None:
-            server.stop(grace).wait(timeout=max(grace + 1.0, 2.0))
+        self._connected.set()
+        self._error = None
+
+        self.streamConnected.emit()
+
+        # Secondary co-routine path, spawned in a separate thread, handles the received of messages
+        reader = threading.Thread(target=receive_requests, name="CuraEngineGrpcReader", daemon=True)
+        reader.start()
+
+        # Primary co-routine path handles the writing of messages
+        while context.is_active() and not self._server_stopping.is_set() and not client_stopping.is_set():
+            try:
+                response = self._outgoing.get(timeout=0.1)
+            except Empty:
+                continue
+
+            if response is None:
+                continue
+
+            Logger.debug(f">>>>>>>>>>>>> Sending message {response.WhichOneof("message")}")
+            yield response
+
+        with self._active_client_context_lock:
+            self._active_client_context = None
+
+        self._connected.clear()
+
+        self.streamEnded.emit(self._error)
+
+    def send_message(self, envelope) -> bool:
+        """Queue an envelope for the current or next engine stream."""
+        try:
+            self._outgoing.put_nowait(envelope)
+            return True
+        except Full:
+            return False
+
+    def stop(self) -> None:
+        self._connected.clear()
+
+        # Notify the read loop to gently stop by setting stopping to true and cancelling the client context
+        self._server_stopping.set()
+        with self._active_client_context_lock:
+            if self._active_client_context is not None:
+                self._active_client_context.cancel()
+                self._active_client_context = None
+
+        try:
+            # Notify the send loop to gently stop by adding an empty message
+            self._outgoing.put_nowait(None)
+        except Full:
+            pass
+
+        self._server.stop(1.0).wait(timeout=2.0)
+        self._server = None
