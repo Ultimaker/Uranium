@@ -83,7 +83,7 @@ class GrpcBackendServer:
         def receive_requests() -> None:
             try:
                 for envelope in request_iterator:
-                    if self._server_stopping.is_set() or client_stopping.set() or not context.is_active():
+                    if self._server_stopping.is_set() or client_stopping.is_set() or not context.is_active():
                         break
                     Logger.debug(f"<<<<<<<<<<<<< Received message {envelope.WhichOneof("message")}")
                     self.messageReceived.emit(envelope)
