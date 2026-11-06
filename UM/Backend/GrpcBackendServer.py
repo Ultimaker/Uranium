@@ -101,25 +101,28 @@ class GrpcBackendServer:
         reader = threading.Thread(target=receive_requests, name="CuraEngineGrpcReader", daemon=True)
         reader.start()
 
-        # Primary co-routine path handles the writing of messages
-        while context.is_active() and not self._server_stopping.is_set() and not client_stopping.is_set():
-            try:
-                response = self._outgoing.get(timeout=0.1)
-            except Empty:
-                continue
+        try:
+            # Primary co-routine path handles the writing of messages
+            while context.is_active() and not self._server_stopping.is_set() and not client_stopping.is_set():
+                try:
+                    response = self._outgoing.get(timeout=0.1)
+                except Empty:
+                    continue
 
-            if response is None:
-                continue
+                if response is None:
+                    continue
 
-            Logger.debug(f">>>>>>>>>>>>> Sending message {response.WhichOneof("message")}")
-            yield response
+                Logger.debug(f">>>>>>>>>>>>> Sending message {response.WhichOneof("message")}")
+                yield response
+        finally:
+            client_stopping.set()
 
-        with self._active_client_context_lock:
-            self._active_client_context = None
+            with self._active_client_context_lock:
+                self._active_client_context = None
 
-        self._connected.clear()
+            self._connected.clear()
 
-        self.streamEnded.emit(self._error)
+            self.streamEnded.emit(self._error)
 
     def send_message(self, envelope) -> bool:
         """Queue an envelope for the current or next engine stream."""
