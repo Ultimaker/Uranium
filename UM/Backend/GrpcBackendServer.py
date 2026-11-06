@@ -118,6 +118,7 @@ class GrpcBackendServer:
             client_stopping.set()
 
             with self._active_client_context_lock:
+                self._active_client_context.cancel()
                 self._active_client_context = None
 
             self._connected.clear()
