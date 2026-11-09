@@ -94,7 +94,6 @@ class GrpcBackendServer:
                 for envelope in request_iterator:
                     if self._server_stopping.is_set() or client_stopping.is_set() or not context.is_active():
                         break
-                    Logger.debug(f"<<<<<<<<<<<<< Received message {envelope.WhichOneof("message")}")
                     self.messageReceived.emit(envelope)
             except BaseException as error:
                 self._error = error
@@ -121,7 +120,6 @@ class GrpcBackendServer:
                 if response is None:
                     continue
 
-                Logger.debug(f">>>>>>>>>>>>> Sending message {response.WhichOneof("message")}")
                 yield response
         finally:
             client_stopping.set()
