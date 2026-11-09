@@ -37,8 +37,6 @@ class UpdateChecker(Extension):
         super().__init__()
 
         self.latest_url = Application.getInstance().latest_url
-        self._download_url: Optional[str] = None
-        self._whatsnew_txt: Optional[str] = None
 
         self.setMenuName(i18n_catalog.i18nc("@item:inmenu", "Update Checker"))
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
@@ -69,7 +67,6 @@ class UpdateChecker(Extension):
         http_manager = HttpRequestManager.getInstance()
         Logger.log("i", "Checking for new version")
         http_manager.get(self.latest_url, callback = lambda reply: self._onRequestCompleted(reply, silent, display_same_version))
-        self._download_url = None
 
     @classmethod
     def _extractVersionAndInfoFromData(cls, data: Dict, application_name: str) -> Tuple[Optional[Version], Optional[str], Optional[str]]:
@@ -132,33 +129,27 @@ class UpdateChecker(Extension):
             Logger.log("w", "Unable to extract BETA version from the provided data.")
             newest_beta_version = Version("0.0.0")
 
-        if download_url is not None:
-            self._download_url = download_url
-
-        if whatsnew_txt is not None:
-            self._whatsnew_txt = whatsnew_txt
-
         local_version = Version(app_version)
         preferences = Application.getInstance().getPreferences()
-        if preferences.getValue("info/latest_update_source") == "beta":
-            if newest_version >= newest_beta_version:
-                # The stable release is higher than the beta, check if we need to show that!
-                self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewVersionMessage,
-                                         "info/latest_update_version_shown")
-            else:
-                # Beta version is the highest, check for that
-                if beta_download_url is not None:
-                    self._download_url = beta_download_url
-                if beta_whatsnew_txt is not None:
-                    self._whatsnew_txt = beta_whatsnew_txt
-                self._handleLatestUpdate(local_version, newest_beta_version, silent, display_same_version,
-                                         NewBetaVersionMessage, "info/latest_beta_update_version_shown")
+        if preferences.getValue("info/latest_update_source") == "beta" and newest_beta_version > newest_version:
+            # Beta version is the highest, check for that
+            self._handleLatestUpdate(local_version, newest_beta_version, silent, display_same_version,
+                                     NewBetaVersionMessage, "info/latest_beta_update_version_shown", beta_download_url,
+                                     beta_whatsnew_txt)
         else:
             # Only handle stable release!
             self._handleLatestUpdate(local_version, newest_version, silent, display_same_version, NewVersionMessage,
-                                     "info/latest_update_version_shown")
+                                     "info/latest_update_version_shown", download_url, whatsnew_txt)
 
-    def _handleLatestUpdate(self, local_version: Version, newest_version: Version, silent: bool, display_same_version: bool, message_class: Type, preference_key: str) -> bool:
+    def _handleLatestUpdate(self,
+                            local_version: Version,
+                            newest_version: Version,
+                            silent: bool,
+                            display_same_version: bool,
+                            message_class: Type,
+                            preference_key: str,
+                            download_url: Optional[str],
+                            whatsnew_txt: Optional[str]) -> bool:
         """
 
         :param local_version: Local version of the application
@@ -167,6 +158,8 @@ class UpdateChecker(Extension):
         :param display_same_version: Should a message be shown if there is no new version?
         :param message_class: What message class should be used to spawn the message if a new version was found
         :param preference_key: What preference key should be used to check (and set) the latest shown version?
+        :param download_url: The URL to be called to download the new version
+        :param whatsnew_txt: The detailed description message to be displayed in the popup
         :return: True if an action was taken, false otherwise
         """
 
@@ -195,8 +188,8 @@ class UpdateChecker(Extension):
         message = message_class(
             application_display_name = Application.getInstance().getApplicationDisplayName().title(),
             newest_version = newest_version,
-            whatsnew_txt = self._whatsnew_txt)
-        message.download_url = self._download_url  # At this point 'our own' _download_url is set to the correct value.
+            whatsnew_txt = whatsnew_txt)
+        message.download_url = download_url
         message.actionTriggered.connect(self._onActionTriggered)
         message.show()
         return True
@@ -208,7 +201,7 @@ class UpdateChecker(Extension):
         connections, so the callback functions need to be long-lived.
         """
         if action == "download":
-            if self._download_url is not None:
+            if message.download_url is not None:
                 QDesktopServices.openUrl(QUrl(message.download_url))
         elif action == "new_features":
             QDesktopServices.openUrl(QUrl(message.change_log_url))

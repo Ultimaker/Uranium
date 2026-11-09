@@ -307,13 +307,21 @@ def test_eventHandling(application):
     random_tool.event.assert_called_once_with(event)
 
     controller.setSelectionTool(selection_tool)
+    random_tool.event.reset_mock()
     controller.event(event)
+    # The active tool handles the event first, so the selection and camera tools should not get a call
+    random_tool.event.assert_called_once_with(event)
+    selection_tool.event.assert_not_called()
+    camera_tool.event.assert_called_once_with(event)
+
+    # If the active tool doesn't handle the event, the selection tool gets it
+    random_tool.event.reset_mock()
+    random_tool.event.return_value = False
+    controller.event(event)
+    random_tool.event.assert_called_once_with(event)
+    selection_tool.event.assert_called_once_with(event)
     # The camera tool should not get an extra call
     camera_tool.event.assert_called_once_with(event)
-    # The active tool should not get an extra call
-    random_tool.event.assert_called_once_with(event)
-    # But the selection tool should have gotten one
-    selection_tool.event.assert_called_once_with(event)
 
 
 def test_setSelectionTool(application):

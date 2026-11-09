@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Ultimaker B.V.
+# Copyright (c) 2026 UltiMaker
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Qt.ListModel import ListModel
@@ -51,7 +51,9 @@ class DefinitionContainersModel(ListModel):
 
         items = []
         definition_containers = ContainerRegistry.getInstance().findDefinitionContainersMetadata(ignore_case = True, **self._filter_dict)
-        definition_containers.sort(key = self._sortKey)
+        definition_containers.sort(key = self._sortKeyItem, reverse = True)
+        if self._section_property:
+            definition_containers.sort(key = self._sortKeySection)
 
         for metadata in definition_containers:
             metadata = dict(metadata) # For fully loaded definitions, the metadata is an OrderedDict which does not pass to QML correctly
@@ -100,18 +102,18 @@ class DefinitionContainersModel(ListModel):
     def filter(self):
         return self._filter_dict
 
-    def _sortKey(self, item):
+    def _sortKeySection(self, item):
         result = []
+        section_value = item.get(self._section_property, "")
+        section_weight = self._preferred_sections.get(section_value, 0)
+        result.append(section_weight)
+        result.append(section_value.lower())
+        return result
 
-        if self._section_property:
-            section_value = item.get(self._section_property, "")
-            section_weight = self._preferred_sections.get(section_value, 0)
-            result.append(section_weight)
-            result.append(section_value.lower())
-
-        result.append(int(item.get("weight", 0))) #Weight within a section.
+    def _sortKeyItem(self, item):
+        result = []
+        result.append(-int(item.get("weight", 0))) #Weight within a section.
         result.append(item["name"].lower())
-
         return result
 
     def _updateMetaData(self, container):

@@ -41,7 +41,7 @@ def update_checker():
     (data_files[1],     "whatever",         None,               None)
     ])
 def test__extractVersionAndURLFromData(data, application_name, expected_version, expected_url):
-    version, update_url = UpdateChecker._extractVersionAndURLFromData(data, application_name)
+    version, update_url, whatsnew_txt = UpdateChecker._extractVersionAndInfoFromData(data, application_name)
     if expected_version is None:
         assert version is None
     else:
@@ -68,10 +68,13 @@ def test__handleLatestUpdate(update_checker, local_version, latest_version, late
     latest_version_shown = Version(latest_version_shown)
     message_class = MagicMock()
     preference_key = "whatever"
+    download_url = None
+    whatsnew_txt = None
 
     application = MagicMock()
     preferences = MagicMock(name = "preferences")
     application.getPreferences = MagicMock(return_value = preferences)
     preferences.getValue = MagicMock(return_value = latest_version_shown)
     with patch("UM.Application.Application.getInstance", MagicMock(return_value=application)):
-        assert update_checker._handleLatestUpdate(local_version, latest_version, False, display_same_version, message_class, preference_key) == result
+        assert update_checker._handleLatestUpdate(local_version, latest_version, False, display_same_version,
+                                                  message_class, preference_key, download_url, whatsnew_txt) == result

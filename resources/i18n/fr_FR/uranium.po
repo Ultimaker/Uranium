@@ -144,10 +144,6 @@ msgctxt "@info:title"
 msgid "File has been modified"
 msgstr "Le fichier a été modifié"
 
-msgctxt "@menu"
-msgid "From Disk"
-msgstr "À partir du disque"
-
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Général"
@@ -518,12 +514,12 @@ msgstr "Le fichier <filename>{0}</filename> existe déjà. Êtes-vous sûr de vo
 
 msgctxt "@info:status"
 msgid "The plugin has been installed.\nPlease re-start the application to activate the plugin."
-msgstr "Le plug-in a été installé."
+msgstr "Le plug-in a été installé.\n"
 "Veuillez redémarrer l'application pour activer le plug-in."
 
 msgctxt "@info:status"
 msgid "The plugin has been removed.\nPlease restart {0} to finish uninstall."
-msgstr "Le plug-in a été supprimé."
+msgstr "Le plug-in a été supprimé.\n"
 "Veuillez redémarrer {0} pour terminer la désinstallation."
 
 msgctxt "@error"
@@ -544,8 +540,8 @@ msgstr "Il n'y a pas de maillage à écrire."
 
 msgctxt "@error:update"
 msgid "There was an error uninstalling the package {package} before installing new version:\n{error}.\nPlease try to upgrade again later."
-msgstr "Il y a eu une erreur lors de la désinstallation du paquet {package} avant d'installer la nouvelle version :"
-"{error}."
+msgstr "Il y a eu une erreur lors de la désinstallation du paquet {package} avant d'installer la nouvelle version :\n"
+"{error}.\n"
 "Veuillez réessayer la mise à jour plus tard."
 
 msgctxt "@error:uninstall"
@@ -643,8 +639,8 @@ msgstr "Votre configuration semble corrompue."
 
 msgctxt "@info:status"
 msgid "Your configuration seems to be corrupt. Something seems to be wrong with the following profiles:\n- {profiles}\n Would you like to reset to factory defaults? Reset will remove all your current printers and profiles."
-msgstr "Votre configuration semble corrompue. Un problème est survenu avec les profils suivants :"
-"- {profiles}"
+msgstr "Votre configuration semble corrompue. Un problème est survenu avec les profils suivants :\n"
+"- {profiles}\n"
 " Souhaitez-vous restaurer les paramètres d'usine par défaut ? Cette réinitialisation supprimera toutes vos imprimantes et profils actuels."
 
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
