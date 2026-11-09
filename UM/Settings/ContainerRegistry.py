@@ -756,6 +756,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         if "settings_container" not in metadata or "mimetype" not in metadata["settings_container"]:
             raise Exception("Plugin {plugin} has incorrect metadata: Expected a 'settings_container' block with a 'mimetype' entry".format(plugin = plugin_id))
         cls.addContainerTypeByName(container.__class__, plugin_id, metadata["settings_container"]["mimetype"])
+        if metadata["settings_container"].get("independently_versioned", False):
+            cls.independently_versioned_mime_types.add(metadata["settings_container"]["mimetype"])
 
     @classmethod
     def addContainerTypeByName(cls, container_type: type, type_name: str, mime_type: str) -> None:
@@ -919,6 +921,13 @@ class ContainerRegistry(ContainerRegistryInterface):
         "application/x-uranium-containerstack": ContainerStack,
         "application/x-uranium-extruderstack": ContainerStack
     }  # type: Dict[str, Type[ContainerInterface]]
+
+    independently_versioned_mime_types = set()  # type: Set[str]
+    """Mime types of containers that have their own release versions, regardless of the package they come in.
+
+    When several packages provide the same container of such a type, the version of the container itself decides
+    which one is used, instead of the version of the package.
+    """
 
     __instance = None  # type: ContainerRegistry
 

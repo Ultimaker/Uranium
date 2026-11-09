@@ -23,6 +23,7 @@ from UM.Platform import Platform
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.PluginObject import PluginObject  # For type hinting
 from UM.Resources import Resources
+from UM.SemanticVersion import SemanticVersion
 from UM.Trust import Trust, TrustBasics, TrustException
 from UM.Version import Version
 from UM.i18n import i18nCatalog
@@ -469,9 +470,10 @@ class PluginRegistry(QObject):
         This applies to plugins of which the plugin.json has a "package_type" listed in `_resource_plugin_package_types`,
         such as "definition". The resources (definitions, materials, quality profiles, etc.) are in sub-folders of the
         plugin with the same names as in the resources folder of the application. Instead of copying them to the
-        configuration folder, the plugin folder is added as a resource search path. Uninstalling the plugin then removes
-        the resources with it. If several plugins provide the same resource, the consumers of the resources are
-        responsible for choosing between them.
+        configuration folder, the plugin folder is added as a resource search path, together with the semantic version in
+        its plugin.json, which applies to all of its resources. Plugins without a valid version are not used.
+        Uninstalling the plugin then removes the resources with it. If several plugins provide the same resource, the
+        version of the plugin decides which one is used (see the container providers).
 
         This must be done before the resources are loaded.
 
@@ -511,8 +513,14 @@ class PluginRegistry(QObject):
                     self._outdated_plugins.append(plugin_id)
                 continue
 
-            Logger.info(f"Using the resources of plugin [{plugin_id}] from '{plugin_path}'.")
-            Resources.addSearchPath(plugin_path)
+            try:
+                package_version = SemanticVersion(plugin_info.get("version"))
+            except ValueError as e:
+                Logger.error(f"Resource plugin [{plugin_id}] was not used: its plugin.json needs a valid semantic version in \"version\". {e}")
+                continue
+
+            Logger.info(f"Using the resources of plugin [{plugin_id}] version {package_version} from '{plugin_path}'.")
+            Resources.registerPackageSearchPath(plugin_path, plugin_id, package_version, self.isBundledPlugin(plugin_id))
 
         return is_resource_plugin
 

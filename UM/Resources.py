@@ -8,13 +8,25 @@ import re
 import shutil
 import tempfile
 import time  # To reduce chance of concurrency issues when deleting files if the OS is slow to register whether a file exists or not.
-from typing import Dict, Generator, List, Optional, Union, cast
+from typing import Dict, Generator, List, NamedTuple, Optional, Union, cast
 
 from PyQt6.QtWidgets import QMessageBox, QApplication
 
 from UM.Logger import Logger
 from UM.Platform import Platform
+from UM.SemanticVersion import SemanticVersion
 from UM.Version import Version
+
+
+class ResourcePackage(NamedTuple):
+    """A set of resources that is released together, and is found in its own search path."""
+
+    package_id: str
+    version: SemanticVersion
+    is_bundled: bool
+    """Whether the package ships with the application, as opposed to being installed afterwards."""
+    path: str
+    """The search path that contains the resources of the package."""
 
 
 class ResourceTypeError(Exception):
@@ -229,6 +241,63 @@ class Resources:
             cls.__paths.append(path)
 
     @classmethod
+    def getSearchPathForFile(cls, path: str) -> Optional[str]:
+        """Find the search path that a resource file is in.
+
+        :param path: The path to a resource file.
+        :return: The innermost search path that contains the file, or None if it is not in any search path.
+        """
+
+        normalized_path = cls.__normalizePath(path)
+        best = None  # type: Optional[str]
+        for search_path in cls.__paths:
+            normalized_search_path = cls.__normalizePath(search_path)
+            if normalized_path.startswith(normalized_search_path + os.sep) and (best is None or len(search_path) > len(best)):
+                best = search_path
+        return best
+
+    @classmethod
+    def registerPackageSearchPath(cls, path: str, package_id: str, version: SemanticVersion, is_bundled: bool = False) -> None:
+        """Add a search path that holds the resources of a versioned package.
+
+        Apart from adding the search path, this remembers which package the resources in it belong to. This lets
+        consumers choose between files that are provided by multiple packages, see getPackageForPath.
+
+        :param path: The search path that contains the resources of the package.
+        :param package_id: The ID of the package.
+        :param version: The release version of the package. This applies to all resources in the path.
+        :param is_bundled: Whether the package ships with the application instead of being installed afterwards.
+        """
+
+        if not isinstance(version, SemanticVersion):
+            raise TypeError(f"The version of package {package_id} must be a SemanticVersion, not {type(version).__name__}.")
+        if not os.path.isdir(path):
+            return
+        cls.addSearchPath(path)
+        cls.__packages[cls.__normalizePath(path)] = ResourcePackage(package_id, version, is_bundled, path)
+
+    @classmethod
+    def getPackageForPath(cls, path: str) -> Optional[ResourcePackage]:
+        """Find the package that a resource file belongs to.
+
+        :param path: The path to a resource file, or a folder in one.
+        :return: The package of which the registered search path contains the given path, or None if the path is not in
+            any registered package. If package search paths are nested, the innermost one is used.
+        """
+
+        normalized_path = cls.__normalizePath(path)
+        best_root = None  # type: Optional[str]
+        for root in cls.__packages:
+            if normalized_path == root or normalized_path.startswith(root + os.sep):
+                if best_root is None or len(root) > len(best_root):
+                    best_root = root
+        return cls.__packages[best_root] if best_root is not None else None
+
+    @staticmethod
+    def __normalizePath(path: str) -> str:
+        return os.path.normcase(os.path.abspath(path)).rstrip(os.sep)
+
+    @classmethod
     def addSecureSearchPath(cls, path: str) -> None:
         """Add a path relative to which resources should be searched for.
         This path should be secure, such as the install directory.
@@ -249,6 +318,7 @@ class Resources:
 
         if path in cls.__paths:
             del cls.__paths[cls.__paths.index(path)]
+        cls.__packages.pop(cls.__normalizePath(path), None)
 
     @classmethod
     def addType(cls, resource_type: int, path: str) -> None:
@@ -716,6 +786,7 @@ class Resources:
 
     __paths: List[str] = []
     __secure_paths: List[str] = []
+    __packages: Dict[str, ResourcePackage] = {}  # Normalized search path -> the package that provides it.
     __types: Dict[str, str] = {
         Resources: "",
         Preferences: "",

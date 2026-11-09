@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
+import os
 import collections
 import copy
 
@@ -470,12 +471,29 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     # Load a file from disk, used to handle inheritance and includes
     def _loadFile(self, file_name: str) -> Dict[str, Any]:
-        path = Resources.getPath(Resources.DefinitionContainers, file_name + ".def.json")
+        path = self._findDefinitionFile(file_name)
         with open(path, encoding = "utf-8") as f:
             contents = json.load(f, object_pairs_hook=collections.OrderedDict)
 
         self._inherited_files.append(path)
         return contents
+
+    # Find the file of a definition that this definition inherits from or includes.
+    # If the same definition is provided by multiple files (for instance by several packages), the container registry
+    # knows which one is in use. That one must also be used here, or the definition would inherit from another file
+    # than the one that its own package was released with.
+    @staticmethod
+    def _findDefinitionFile(file_name: str) -> str:
+        import UM.Settings.ContainerRegistry  # To find which file is in use.
+        registry = UM.Settings.ContainerRegistry.ContainerRegistry.getInstance()
+        if registry is not None:
+            try:
+                registered_path = registry.getContainerFilePathById(file_name)
+            except NotImplementedError:  # The provider of the definition can't tell where it is.
+                registered_path = None
+            if registered_path and registered_path.endswith(".def.json") and os.path.isfile(registered_path):
+                return registered_path
+        return Resources.getPath(Resources.DefinitionContainers, file_name + ".def.json")
 
     # Recursively resolve loading inherited files
     def _resolveInheritance(self, file_name: str) -> Dict[str, Any]:

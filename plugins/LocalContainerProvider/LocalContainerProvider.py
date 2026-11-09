@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import sys # For setrecursionlimit
+import json  # To read the package version of definitions.
 import os  # For getting the IDs from a filename.
 import pickle  # For caching definitions.
 import re  # To detect back-up files in the ".../old/#/..." folders.
@@ -17,11 +18,14 @@ from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType  # To get the type of
 from UM.Platform import Platform
 from UM.Resources import Resources
 from UM.SaveFile import SaveFile
+from UM.SemanticVersion import SemanticVersion  # To rank the packages that provide the same container.
 from UM.Settings.ContainerProvider import ContainerProvider  # The class we're implementing.
 from UM.Settings.ContainerRegistry import ContainerRegistry  # To get the resource types for containers.
 from UM.Settings.DefinitionContainer import DefinitionContainer  # To check if we need to cache this container.
 from UM.Settings.DefinitionContainerUnpickler import DefinitionContainerUnpickler
 from UM.Version import Version  # To compare the versions of container files that share an ID.
+
+_NO_PACKAGE_VERSION = SemanticVersion("0.0.0")  # The version of files that are not in a versioned package.
 
 MYPY = False
 if MYPY:  # Things to import for type checking only.
@@ -290,7 +294,25 @@ class LocalContainerProvider(ContainerProvider):
         except FileNotFoundError:
             return None  # Cache for parent doesn't exist yet.
 
+        if not self._isCacheFromCurrentFiles(definition):
+            return None
+
         return definition
+
+    def _isCacheFromCurrentFiles(self, definition: DefinitionContainer) -> bool:
+        """Checks that a cached definition was made from the files that are in use now.
+
+        If several files provide the same container, which one is used can change without any of the files changing,
+        e.g. when a package is installed or removed. Modification times can't detect that.
+        """
+
+        if not self._conflicting_ids:
+            return True
+        for file_path in [definition.getPath(), *definition.getInheritedFiles()]:
+            file_id = self._pathToId(file_path) if file_path else None
+            if file_id in self._conflicting_ids and os.path.normcase(os.path.normpath(self._id_to_path[file_id])) != os.path.normcase(os.path.normpath(file_path)):
+                return False
+        return True
 
     def _saveCachedDefinition(self, definition: DefinitionContainer) -> None:
         """Cache a definition container on disk.
@@ -372,8 +394,14 @@ class LocalContainerProvider(ContainerProvider):
     def _selectNewestCandidate(self, container_id: str, candidates: List[Tuple[str, MimeType]]) -> Tuple[str, MimeType]:
         """Selects which of the files providing a container is the one that should be used.
 
-        The file with the highest version wins. If versions are equal, the file with the highest priority wins, i.e. the
-        one in the user's storage location before the ones that are bundled with the application.
+        The files are ranked by the release version of the package that they are in, as the files in a package are
+        released together. Files that are not in a package count as version 0.0.0. If the package versions are equal,
+        a file of an installed package wins over one that ships with the application. After that, the version of the
+        container itself is compared. If that is equal too, the file with the highest priority wins, i.e. the one in the
+        user's storage location before the ones that are bundled with the application.
+
+        Containers of a type that is versioned independently of packages (such as materials) are only ranked by their
+        own version and priority.
 
         :param container_id: The ID of the container that all candidates provide.
         :param candidates: The paths and MIME types of the files providing the container, ordered by priority.
@@ -384,14 +412,99 @@ class LocalContainerProvider(ContainerProvider):
         if len(candidates) == 1:
             return best
 
-        best_version = self._getContainerVersion(container_id, best[0], best[1])
+        best_rank = self._getCandidateRank(container_id, best[0], best[1])
         for candidate in candidates[1:]:
-            version = self._getContainerVersion(container_id, candidate[0], candidate[1])
-            if version > best_version:
+            rank = self._getCandidateRank(container_id, candidate[0], candidate[1])
+            if rank > best_rank:
                 best = candidate
-                best_version = version
-        Logger.debug(f"Container {container_id} is provided by multiple files. Using {best[0]} (version {best_version}).")
+                best_rank = rank
+        Logger.debug(f"Container {container_id} is provided by multiple files. Using {best[0]} (rank {best_rank}).")
         return best
+
+    def _getCandidateRank(self, container_id: str, path: str, mime: MimeType) -> Tuple[SemanticVersion, bool, Version]:
+        """Gets the key by which the files that provide a container are ranked. A higher key is preferred."""
+
+        container_version = self._getContainerVersion(container_id, path, mime)
+        if mime.name in ContainerRegistry.independently_versioned_mime_types:
+            return _NO_PACKAGE_VERSION, False, container_version
+
+        package = Resources.getPackageForPath(path)
+        if package is not None:
+            return package.version, not package.is_bundled, container_version
+
+        # The resources that ship with the application are not in a package. Each printer has its own version, which
+        # is in its definition and applies to all the files of that printer.
+        printer_version = self._getBundledPrinterVersion(container_id, path, mime)
+        if printer_version is None:
+            Logger.warning(f"Container {container_id} in {path} has no valid package version, so it is treated as version {_NO_PACKAGE_VERSION}.")
+            printer_version = _NO_PACKAGE_VERSION
+        return printer_version, False, container_version
+
+    def _getBundledPrinterVersion(self, container_id: str, path: str, mime: MimeType) -> Optional[SemanticVersion]:
+        """Gets the version of a file that ships with the application.
+
+        A file can have its own "package_version" in its metadata. Without one, it has the version of the printer that
+        it belongs to, which is the "package_version" in the metadata of the definition of that printer. For a
+        definition of a printer, that is the file itself. For an extruder definition it is the machine definition that
+        it is for, and for other containers, such as quality profiles, the definition that they are for.
+
+        :return: The version, or None if there is no valid version.
+        """
+
+        search_path = Resources.getSearchPathForFile(path)
+        container_class = ContainerRegistry.mime_type_map.get(mime.name)
+        if search_path is None or container_class is None:
+            return None
+
+        try:
+            with open(path, "r", encoding = "utf-8") as f:
+                serialized = f.read()
+            if issubclass(container_class, DefinitionContainer):
+                metadata = json.loads(serialized).get("metadata", {})
+                printer_id = metadata.get("machine", container_id)
+            else:
+                all_metadata = container_class.deserializeMetadata(serialized, container_id)  #pylint: disable=no-member
+                metadata = next((m for m in all_metadata if m.get("id") == container_id), {})
+                printer_id = metadata.get("definition")
+        except Exception as e:
+            Logger.warning(f"Unable to find the printer of container {container_id} in {path}: {e}")
+            return None
+
+        if "package_version" in metadata:
+            own_version = SemanticVersion.tryParse(metadata["package_version"])
+            if own_version is not None:
+                return own_version
+            Logger.warning(f"Container {container_id} in {path} has an invalid package version '{metadata['package_version']}'.")
+        if not isinstance(printer_id, str):
+            return None
+        return self._getDefinitionVersion(search_path, printer_id)
+
+    @staticmethod
+    def _getDefinitionVersion(search_path: str, definition_id: str) -> Optional[SemanticVersion]:
+        """Reads the "package_version" of a definition in a search path.
+
+        A definition without its own version has the version of the definition that it inherits from.
+        """
+
+        definition_dirs = [d for d in Resources.getAllPathsForType(Resources.DefinitionContainers)
+                           if os.path.normcase(d).startswith(os.path.normcase(search_path) + os.sep)]
+        visited = set()  # type: Set[str]
+        while definition_id and definition_id not in visited:
+            visited.add(definition_id)
+            definition_path = next((p for p in (os.path.join(d, definition_id + ".def.json") for d in definition_dirs) if os.path.isfile(p)), None)
+            if definition_path is None:
+                return None
+            try:
+                with open(definition_path, "r", encoding = "utf-8") as f:
+                    parsed = json.load(f)
+                metadata = parsed.get("metadata", {})
+                if "package_version" in metadata:
+                    return SemanticVersion.tryParse(metadata["package_version"])
+                definition_id = parsed.get("inherits")
+            except (OSError, ValueError, AttributeError) as e:
+                Logger.warning(f"Unable to read the package version from {definition_path}: {e}")
+                return None
+        return None
 
     @staticmethod
     def _getContainerVersion(container_id: str, path: str, mime: MimeType) -> Version:
