@@ -493,7 +493,7 @@ pip_requirements_dev:
     pytest-benchmark: {}
     sip: {}
     grpcio-tools:
-      version: "1.85.0"
+      version: "1.85.1"
 
 python_translation_source_folders:
   - UM
