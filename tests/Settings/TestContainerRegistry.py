@@ -486,6 +486,34 @@ def test_isDataUpdatedWhenFileOnDiskIsNewer(container_registry):
     profile_handler.update.assert_called_once()
 
 
+def test_isDataUpdatedWhenFileOnDiskIsOlder(container_registry):
+    # The file that provides a container can be replaced by an older one, for instance when a package that has a newer
+    # version of the container is uninstalled. The metadata in the database is then from a file that isn't used anymore.
+    profile_handler = MagicMock()
+    container_registry._database_handlers["profile"] = profile_handler
+
+    container_registry.loadAllMetadata()
+    profile_handler.insert.assert_called_once()
+
+    # The database says that the container was modified long after the file on disk was.
+    container_registry._db_connection.execute("UPDATE containers SET last_modified = 100 WHERE id = 'setting_values'")
+    container_registry._db_connection.execute("commit")
+
+    container_registry.loadAllMetadata()
+    profile_handler.update.assert_called_once()
+
+
+def test_isDataNotUpdatedWhenFileOnDiskIsUnchanged(container_registry):
+    profile_handler = MagicMock()
+    container_registry._database_handlers["profile"] = profile_handler
+
+    container_registry.loadAllMetadata()
+    container_registry.loadAllMetadata()
+
+    profile_handler.insert.assert_called_once()
+    profile_handler.update.assert_not_called()
+
+
 def test_findLazyLoadedContainers(container_registry):
     container_registry.loadAllMetadata()
     container_registry.containerLoadComplete.emit = MagicMock()

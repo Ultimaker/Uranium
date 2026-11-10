@@ -148,36 +148,48 @@ def makeCachedDefinition(own_path, inherited_paths):
     return definition
 
 
-def test_cacheIsCurrentWithoutConflicts(provider_class, tmp_path):
+def providerWithSelectedFiles(provider_class, id_to_path):
+    """A provider that uses the given files, as it would after looking for the containers."""
     provider = provider_class()
+    provider._id_to_path = {container_id: str(path) for container_id, path in id_to_path.items()}
+    provider._selected_paths = {provider._normalizePath(path) for path in provider._id_to_path.values()}
+    return provider
+
+
+def test_cacheIsCurrentWhenMadeFromTheFilesInUse(provider_class, tmp_path):
+    provider = providerWithSelectedFiles(provider_class, {"base": tmp_path / "a" / "base.def.json", "child": tmp_path / "a" / "child.def.json"})
     definition = makeCachedDefinition(tmp_path / "a" / "child.def.json", [tmp_path / "a" / "base.def.json"])
 
     assert provider._isCacheFromCurrentFiles(definition)
 
 
 def test_cacheIsStaleWhenParentChoiceChanged(provider_class, tmp_path):
-    provider = provider_class()
-    provider._conflicting_ids = {"base"}
-    provider._id_to_path = {"base": str(tmp_path / "b" / "base.def.json"), "child": str(tmp_path / "a" / "child.def.json")}
+    provider = providerWithSelectedFiles(provider_class, {"base": tmp_path / "b" / "base.def.json", "child": tmp_path / "a" / "child.def.json"})
     definition = makeCachedDefinition(tmp_path / "a" / "child.def.json", [tmp_path / "a" / "base.def.json"])
 
     assert not provider._isCacheFromCurrentFiles(definition)
 
 
 def test_cacheIsStaleWhenOwnFileChoiceChanged(provider_class, tmp_path):
-    provider = provider_class()
-    provider._conflicting_ids = {"child"}
-    provider._id_to_path = {"child": str(tmp_path / "b" / "child.def.json")}
+    provider = providerWithSelectedFiles(provider_class, {"child": tmp_path / "b" / "child.def.json"})
     definition = makeCachedDefinition(tmp_path / "a" / "child.def.json", [])
 
     assert not provider._isCacheFromCurrentFiles(definition)
 
 
-def test_cacheIsCurrentWhenConflictingFilesAreTheSame(provider_class, tmp_path):
-    provider = provider_class()
-    provider._conflicting_ids = {"base", "child"}
-    provider._id_to_path = {"base": str(tmp_path / "a" / "base.def.json"), "child": str(tmp_path / "a" / "child.def.json")}
-    definition = makeCachedDefinition(tmp_path / "a" / "child.def.json", [tmp_path / "a" / "base.def.json"])
+def test_cacheIsStaleWhenTheFileWasProvidedByAnotherLocationBefore(provider_class, tmp_path):
+    # E.g. the package that provided the cached files was uninstalled, so the bundled files are used now. Nothing
+    # conflicts anymore, but the cache was made from other files.
+    provider = providerWithSelectedFiles(provider_class, {"base": tmp_path / "bundled" / "base.def.json", "child": tmp_path / "bundled" / "child.def.json"})
+
+    assert not provider._isCacheFromCurrentFiles(makeCachedDefinition(tmp_path / "plugin" / "child.def.json", [tmp_path / "plugin" / "base.def.json"]))
+    assert not provider._isCacheFromCurrentFiles(makeCachedDefinition(tmp_path / "bundled" / "child.def.json", [tmp_path / "plugin" / "base.def.json"]))
+    assert provider._isCacheFromCurrentFiles(makeCachedDefinition(tmp_path / "bundled" / "child.def.json", [tmp_path / "bundled" / "base.def.json"]))
+
+
+def test_cacheComparesPathsIndependentOfTheirNotation(provider_class, tmp_path):
+    provider = providerWithSelectedFiles(provider_class, {"base": tmp_path / "a" / "base.def.json"})
+    definition = makeCachedDefinition(tmp_path / "a" / "sub" / ".." / "base.def.json", [])
 
     assert provider._isCacheFromCurrentFiles(definition)
 
