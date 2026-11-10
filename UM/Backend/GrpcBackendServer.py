@@ -60,14 +60,16 @@ class GrpcBackendServer:
             )
 
             add_servicer(servicer, server)
-            port = server.add_insecure_port(f"{host}:{self._port}")
 
-            if port:
-                self._server = server
-                self._server.start()
-                return self._port
-
-            self._port += 1
+            try:
+                port = server.add_insecure_port(f"{host}:{self._port}")
+            except RuntimeError:
+                self._port += 1
+            else:
+                if port:
+                    self._server = server
+                    self._server.start()
+                    return self._port
 
         raise RuntimeError("Could not bind the Cura Engine gRPC endpoint")
 
