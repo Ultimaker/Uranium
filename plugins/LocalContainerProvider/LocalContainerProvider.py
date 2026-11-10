@@ -49,6 +49,7 @@ class LocalContainerProvider(ContainerProvider):
         self._is_read_only_cache = {}  # type: Dict[str, bool]
 
         self._conflicting_ids = set()  # type: Set[str]  # IDs that are provided by multiple files (e.g. bundled and user-installed).
+        self._selected_paths = set()  # type: Set[str]  # The (normalized) paths of the files that are in use.
 
         self._storage_path = ""
 
@@ -302,17 +303,16 @@ class LocalContainerProvider(ContainerProvider):
     def _isCacheFromCurrentFiles(self, definition: DefinitionContainer) -> bool:
         """Checks that a cached definition was made from the files that are in use now.
 
-        If several files provide the same container, which one is used can change without any of the files changing,
-        e.g. when a package is installed or removed. Modification times can't detect that.
+        Which file provides a container can change without any of the files changing, e.g. when a package that has a
+        newer version of a definition is installed or removed. Modification times can't detect that.
         """
 
-        if not self._conflicting_ids:
-            return True
-        for file_path in [definition.getPath(), *definition.getInheritedFiles()]:
-            file_id = self._pathToId(file_path) if file_path else None
-            if file_id in self._conflicting_ids and os.path.normcase(os.path.normpath(self._id_to_path[file_id])) != os.path.normcase(os.path.normpath(file_path)):
-                return False
-        return True
+        return all(self._normalizePath(file_path) in self._selected_paths
+                   for file_path in [definition.getPath(), *definition.getInheritedFiles()] if file_path)
+
+    @staticmethod
+    def _normalizePath(path: str) -> str:
+        return os.path.normcase(os.path.normpath(path))
 
     def _saveCachedDefinition(self, definition: DefinitionContainer) -> None:
         """Cache a definition container on disk.
@@ -390,7 +390,7 @@ class LocalContainerProvider(ContainerProvider):
             filename, mime = self._selectNewestCandidate(container_id, container_candidates)
             self._id_to_path[container_id] = filename
             self._id_to_mime[container_id] = mime
-
+        self._selected_paths = {self._normalizePath(path) for path in self._id_to_path.values()}
     def _selectNewestCandidate(self, container_id: str, candidates: List[Tuple[str, MimeType]]) -> Tuple[str, MimeType]:
         """Selects which of the files providing a container is the one that should be used.
 
