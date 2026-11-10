@@ -521,7 +521,9 @@ class ContainerRegistry(ContainerRegistryInterface):
                         Logger.warning(f"Could not get last modified time of {container_id}.")
                         # Record is purged below.
                         continue
-                    if modified_time > db_last_modified_time:
+                    # When a package is uninstalled, the older bundled file provides the container again, so
+                    # any change of the modification time means that the cached metadata is from another file.
+                    if modified_time != db_last_modified_time:
                         # Metadata is outdated, so load from file and update the database
                         metadata = provider.loadMetadata(container_id)
                         try:
