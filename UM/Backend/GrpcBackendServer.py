@@ -125,9 +125,9 @@ class GrpcBackendServer:
                 yield response
         finally:
             client_stopping.set()
+            context.cancel()
 
             with self._active_client_context_lock:
-                self._active_client_context.cancel()
                 self._active_client_context = None
 
             self._connected.clear()
