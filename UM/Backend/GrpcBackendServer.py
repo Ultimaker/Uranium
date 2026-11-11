@@ -29,7 +29,7 @@ class GrpcBackendServer:
         self._error: Optional[BaseException] = None
         self._active_client_context: Optional[grpc.ServicerContext] = None
         self._active_client_context_lock = threading.Lock()
-        self._outgoing: Queue[Optional["ProtoMessage"]] = Queue(maxsize=128)
+        self._outgoing: Queue[Optional["ProtoMessage"]] = Queue()
 
         self.streamConnected = Signal()
         self.streamEnded = Signal()
