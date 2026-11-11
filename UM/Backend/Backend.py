@@ -154,7 +154,7 @@ class Backend(PluginObject):
     def getEngineCommand(self) -> List[str]:
         """Get the command used to start the backend executable """
 
-        return [UM.Application.Application.getInstance().getPreferences().getValue("backend/location"), "connect", f"127.0.0.1:{self._port}"]
+        return [Application.getInstance().getPreferences().getValue("backend/location"), "connect", f"127.0.0.1:{self._port}"]
 
     def _runEngineProcess(self, command_list: List[str]) -> Optional[subprocess.Popen]:
         """
