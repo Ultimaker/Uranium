@@ -1,11 +1,11 @@
-import sys
+from concurrent.futures import ThreadPoolExecutor
+from threading import Event
 from unittest.mock import patch, MagicMock
 
 import pytest
 
-import pyArcus as Arcus
-
 from UM.Backend.Backend import Backend
+from UM.Backend.GrpcBackendServer import GrpcBackendServer
 
 @pytest.fixture
 def backend():
@@ -50,49 +50,10 @@ def test_startEngine(backend, process):
 def test_startEngineWithoutCommand(backend):
     backend.getEngineCommand = MagicMock(return_value = None)
 
-    backend._createSocket = MagicMock()
+    backend._prepareBackendServer = MagicMock()
 
     backend.startEngine()
-    backend._createSocket.assert_called_once_with()
-
-
-def test__onSocketStateChanged_listening(backend):
-    backend.startEngine = MagicMock()
-    with patch("UM.Application.Application.getInstance") as get_app:
-        app = MagicMock()
-        app.getUseExternalBackend.return_value = False
-        get_app.return_value = app
-        backend._onSocketStateChanged(Arcus.SocketState.Listening)
-    backend.startEngine.assert_called_once_with()
-
-
-def test_onSocketStateChanged_connected(backend):
-    backend.backendConnected = MagicMock()
-    backend._onSocketStateChanged(Arcus.SocketState.Connected)
-    backend.backendConnected.emit.assert_called_once_with()
-
-
-def test_handleKnownMessage(backend):
-    handler = MagicMock()
-    backend._message_handlers = {"beep": handler}
-    socket = MagicMock()
-    message = MagicMock()
-    message.getTypeName = MagicMock(return_value = "beep")
-    socket.takeNextMessage = MagicMock(return_value = message)
-    backend._socket = socket
-    backend._onMessageReceived()
-
-    handler.assert_called_once_with(message)
-
-
-def test_onSocketBindFailed(backend):
-    port = backend._port
-    backend._createSocket = MagicMock()
-    bind_failed_error = MagicMock()
-    bind_failed_error.getErrorCode = MagicMock(return_value = Arcus.ErrorCode.BindFailedError)
-    backend._onSocketError(bind_failed_error)
-    assert backend._createSocket.call_count == 1
-    assert port + 1 == backend._port
+    backend._prepareBackendServer.assert_called_once_with()
 
 
 def test_getLog(backend):
@@ -115,21 +76,80 @@ def test_runEngineProcessException(backend, exception):
         assert backend._runEngineProcess([""]) is None
 
 
-def test_createSocket(backend):
-    # We're not testing the signal socket here, so mock it
-    mocked_signal_socket = MagicMock()
-    with patch("UM.Backend.Backend.SignalSocket", MagicMock(return_value = mocked_signal_socket)):
-        with patch("UM.Application.Application.getInstance"):
-            backend._createSocket("beep")
+def test_closeStopsGrpcServer(backend):
+    server = MagicMock()
+    backend._grpc_server = server
+    backend.close()
+    server.stop.assert_called_once_with()
+    assert backend._grpc_server is None
 
-            if sys.platform == "win32":
-                mocked_signal_socket.registerAllMessageTypes.assert_called_once_with(b"beep")
-            else:
-                mocked_signal_socket.registerAllMessageTypes.assert_called_once_with("beep")
 
-            # Try to create it again.
-            backend._createSocket("beep")
-            mocked_signal_socket.close.assert_called_once_with()
+def test_sendMessageQueuesBeforeEngineConnection():
+    server = GrpcBackendServer()
+    envelope = object()
 
-            backend.close()
-            assert mocked_signal_socket.close.call_count == 2
+    assert server.send_message(envelope)
+    assert server._outgoing.get_nowait() is envelope
+
+
+def test_streamYieldsExitInstructionAndRemainsOpenUntilClientEnds():
+    server = GrpcBackendServer()
+    queued_output = MagicMock()
+    exit_envelope = MagicMock()
+    exit_envelope.WhichOneof.return_value = "exit_engine"
+
+    context = MagicMock()
+    context.is_active.return_value = True
+    release_client = Event()
+    request_received = Event()
+
+    def requests():
+        yield MagicMock()
+        release_client.wait()
+
+    server.messageReceived.emit = lambda _envelope: request_received.set()
+    server.streamEnded.emit = MagicMock()
+    responses = server.run_stream(requests(), context)
+    end_of_stream = object()
+
+    def next_response():
+        try:
+            return next(responses)
+        except StopIteration:
+            return end_of_stream
+
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        response_future = executor.submit(next_response)
+        try:
+            assert request_received.wait(timeout=2)
+
+            assert server.send_message(queued_output)
+            assert response_future.result(timeout=2) is queued_output
+
+            response_future = executor.submit(next_response)
+            assert server.send_message(exit_envelope)
+            assert response_future.result(timeout=2) is exit_envelope
+
+            # ExitEngine is delivered to the engine, but the bidirectional stream stays
+            # alive until the engine closes its request side.
+            assert server.connected
+            server.streamEnded.emit.assert_not_called()
+
+            response_future = executor.submit(next_response)
+            assert not response_future.done()
+        finally:
+            release_client.set()
+
+        assert response_future.result(timeout=2) is end_of_stream
+
+    assert not server.connected
+    server.streamEnded.emit.assert_called_once_with(None)
+
+
+def test_sendMessageReturnsFalseWhenQueueIsFull():
+    server = GrpcBackendServer()
+
+    for _ in range(server._outgoing.maxsize):
+        assert server.send_message(object())
+
+    assert not server.send_message(object())

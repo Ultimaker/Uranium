@@ -90,7 +90,6 @@ class UraniumConan(ConanFile):
             raise ConanInvalidConfiguration("Unable to extract translations on Windows without Bash installed")
 
     def configure(self):
-        self.options["pyarcus"].shared = True
         self.options["cpython"].shared = True
         if self.settings.os == "Linux":
             self.options["openssl"].shared = True
