@@ -239,5 +239,5 @@ class Backend(PluginObject):
         raise NotImplementedError("Engine handler should define the gRPC servicer and add_servicer function")
 
     def _onEngineConnected(self) -> None:
-        Logger.log("d", "Engine connected on port %s", self._port)
+        Logger.info(f"Engine connected on port {self._port}")
         self.backendConnected.emit()

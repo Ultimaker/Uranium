@@ -49,13 +49,14 @@ class GrpcBackendServer:
         if self._server is not None:
             return self._port
 
+        max_message_size = 500 * 1024 * 1024
         self._port = first_port
         while self._port < 65535:
             server = grpc.server(
                 futures.ThreadPoolExecutor(max_workers=4),
                 options=(
-                    ("grpc.max_send_message_length", 500 * 1024 * 1024),
-                    ("grpc.max_receive_message_length", 500 * 1024 * 1024),
+                    ("grpc.max_send_message_length", max_message_size),
+                    ("grpc.max_receive_message_length", max_message_size),
                 ),
             )
 
@@ -107,7 +108,7 @@ class GrpcBackendServer:
 
         self.streamConnected.emit()
 
-        # Secondary co-routine path, spawned in a separate thread, handles the received of messages
+        # Secondary co-routine path, spawned in a separate thread, handles the received messages.
         reader = threading.Thread(target=receive_requests, name="CuraEngineGrpcReader", daemon=True)
         reader.start()
 
